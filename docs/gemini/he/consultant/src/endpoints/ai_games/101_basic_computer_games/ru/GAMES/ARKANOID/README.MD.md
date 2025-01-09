@@ -1,210 +1,265 @@
-# Анализ кода модуля `ARKANOID`
+## Анализ кода модуля Арканоид
 
 **Качество кода**
--  **Соответствие требованиям к формату кода (1-10):**
-    -  **Преимущества:**
-        - Код в основном хорошо структурирован, с разделением на классы `Ball` и `Platform`, что способствует его читаемости и модульности.
-        - Используются docstrings для документирования классов и методов, что облегчает понимание кода.
-        - Есть базовая логика игры, включая движение мяча, платформы, обнаружение столкновений и завершение игры.
-        - В коде есть попытка использования ООП.
-    -  **Недостатки:**
-        - Не используются константы для числовых значений (например, размеры окна, скорость, координаты), что усложняет изменение параметров игры.
-        - Нет обработки ошибок, что может привести к некорректной работе при неожиданных ситуациях.
-        - Использование `pygame` импортировано, но не используется.
-        - Отсутствуют проверки типов, что может привести к ошибкам при неправильном использовании кода.
-        -  Код не использует `j_loads` или `j_loads_ns`.
-        -  Импорты не отсортированы.
-        -  Стиль кода не соответствует PEP8.
-        -  Для обработки исключений используется `try-except` в основном цикле.
+- **Cоответствие требованиям к формату кода (1-10)**
+    - **Преимущества**
+        - Код соответствует формату Markdown.
+        - Предоставлено описание игры, правил и код.
+    - **Недостатки**
+        - Отсутствует Python код для игры.
+        - Нет описания функций, переменных и методов.
+        - Не используются docstrings и reStructuredText (RST).
+        - Отсутствуют необходимые импорты.
+        - Нет обработки ошибок и логирования.
+        - Нет примеров использования.
 
 **Рекомендации по улучшению**
 
-1.  **Форматирование и стиль:**
-    -   Используйте `reStructuredText` для всех комментариев и docstrings.
-    -   Используйте константы для всех магических чисел.
-    -   Исправьте несоответствия PEP8.
-2.  **Обработка ошибок:**
-    -   Добавьте обработку ошибок через `logger.error` для обработки возможных исключений, особенно в графической части.
-3.  **Импорты:**
-    -   Удалить неиспользуемый импорт `pygame`.
-    -   Упорядочить импорты в алфавитном порядке.
-4.  **Общая организация кода:**
-    -   Разделить логику игры от графической части для лучшей читаемости.
-    -   Добавить проверки типов для функций и методов.
-5.  **Улучшение функциональности:**
-    -   Улучшить обработку столкновений, чтобы мяч отскакивал от платформы более естественно.
-    -   Добавить возможность перезапуска игры после проигрыша.
-    -   Добавить уровни сложности.
-6.  **Документация:**
-    -   Переписать docstrings в соответствии с RST.
-7.  **Использование утилит:**
-    -   Использовать `j_loads` или `j_loads_ns` для чтения JSON файлов (если это необходимо в будущих версиях).
+1.  **Добавить reStructuredText (RST) форматирование**: Добавьте docstring с использованием RST для всех функций, классов и методов.
+2.  **Использовать j_loads или j_loads_ns**: Если будет работа с JSON файлами, используйте `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.load`.
+3.  **Добавить импорты**: Добавьте все необходимые импорты для работы кода.
+4.  **Логирование ошибок**: Используйте `logger.error` из `src.logger.logger` для логирования ошибок.
+5.  **Обработка ошибок**: Избегайте частого использования `try-except`, предпочитая логировать ошибки с помощью `logger.error`.
+6.  **Комментарии**: Добавьте комментарии для объяснения кода, используя `#` для комментариев в строке и RST для docstring.
+7.  **Код**: Реализуйте код игры, используя все рекомендации.
+8.  **Примеры**: Добавьте примеры использования кода в RST формате.
 
 **Улучшенный код**
-
 ```python
 """
-Модуль реализации игры Арканоид.
-=========================================================================================
+Модуль для реализации игры Арканоид
+====================================
 
-Этот модуль содержит классы Ball и Platform для реализации классической игры Арканоид.
-Игра происходит в окне Tkinter, где игрок управляет платформой, отбивая мяч, который отскакивает от стен и платформы.
+Этот модуль содержит реализацию классической аркадной игры Арканоид,
+включая классы для управления платформой, мячом и игровым процессом.
 
 Пример использования
 --------------------
 
-Для запуска игры просто запустите этот скрипт.
+Пример создания и запуска игры:
 
 .. code-block:: python
 
-    python arkanoid.py
+    game = Arkanoid()
+    game.run()
+
 """
+import pygame # Импорт библиотеки pygame для создания игр #
+import random # Импорт библиотеки random для случайных чисел #
+from src.logger.logger import logger # Импорт логгера для записи ошибок и отладки #
+from typing import Tuple, List # Импорт типов для статической типизации #
 
-import random
-import time
-from tkinter import Canvas, Tk
-
-from src.logger.logger import logger  # Импорт логгера
-# from src.utils.jjson import j_loads, j_loads_ns  # TODO: Включить если нужно будет читать JSON
-
-
-# Константы для параметров игры
-WINDOW_WIDTH = 500  # Ширина окна
-WINDOW_HEIGHT = 400  # Высота окна
-BALL_SIZE = 15  # Размер мяча
-PLATFORM_WIDTH = 100  # Ширина платформы
-PLATFORM_HEIGHT = 10  # Высота платформы
-PLATFORM_Y = 300  # Положение платформы по оси Y
-BALL_SPEED_X = 3  # Скорость мяча по оси X
-BALL_SPEED_Y = -3  # Скорость мяча по оси Y
-PLATFORM_SPEED = 2 # Скорость платформы
+#TODO: Добавить возможность загрузки настроек из файла json #
+#TODO: Добавить меню для настроек игры #
 
 class Ball:
     """
-    Класс, представляющий мяч в игре.
+    Класс для представления мяча в игре.
+
+    :ivar pygame.Rect rect: Прямоугольник, представляющий позицию и размер мяча.
+    :ivar int speed_x: Скорость мяча по оси X.
+    :ivar int speed_y: Скорость мяча по оси Y.
+
+    """
+    def __init__(self, x: int, y: int, size: int, speed_x: int, speed_y: int):
+        """
+        Инициализирует мяч.
+
+        :param x: Начальная координата X мяча.
+        :param y: Начальная координата Y мяча.
+        :param size: Размер мяча.
+        :param speed_x: Начальная скорость мяча по оси X.
+        :param speed_y: Начальная скорость мяча по оси Y.
+        """
+        self.rect = pygame.Rect(x, y, size, size) # Создание прямоугольника для мяча #
+        self.speed_x = speed_x # Скорость по оси X #
+        self.speed_y = speed_y # Скорость по оси Y #
+
+    def move(self):
+        """
+        Перемещает мяч, обновляя его координаты.
+
+        """
+        self.rect.x += self.speed_x # Изменение положения по X #
+        self.rect.y += self.speed_y # Изменение положения по Y #
+
+    def bounce(self, normal_vector: Tuple[int, int]):
+        """
+        Изменяет направление мяча при столкновении с поверхностью.
+
+        :param normal_vector: Вектор нормали к поверхности столкновения.
+        """
+        self.speed_x *= normal_vector[0] # Отражение скорости по X #
+        self.speed_y *= normal_vector[1] # Отражение скорости по Y #
+
+class Paddle:
+    """
+    Класс для представления платформы игрока.
+
+    :ivar pygame.Rect rect: Прямоугольник, представляющий позицию и размер платформы.
+    :ivar int speed: Скорость платформы.
+    """
+    def __init__(self, x: int, y: int, width: int, height: int, speed: int):
+        """
+        Инициализирует платформу.
+
+        :param x: Начальная координата X платформы.
+        :param y: Начальная координата Y платформы.
+        :param width: Ширина платформы.
+        :param height: Высота платформы.
+        :param speed: Скорость платформы.
+        """
+        self.rect = pygame.Rect(x, y, width, height) # Создание прямоугольника платформы #
+        self.speed = speed # Скорость платформы #
+
+    def move(self, direction: int, screen_width: int):
+        """
+        Перемещает платформу в заданном направлении.
+
+        :param direction: Направление движения (-1 для влево, 1 для вправо, 0 для остановки).
+        :param screen_width: Ширина экрана для проверки границ.
+        """
+        self.rect.x += direction * self.speed # Изменение положения по X #
+        self.rect.clamp_ip(pygame.Rect(0, self.rect.y, screen_width, self.rect.height)) # Ограничение движения границами экрана #
+
+class Brick:
+    """
+    Класс для представления кирпича.
+
+    :ivar pygame.Rect rect: Прямоугольник, представляющий позицию и размер кирпича.
+    :ivar bool is_alive: Флаг, показывающий, жив ли кирпич.
+
+    """
+    def __init__(self, x: int, y: int, width: int, height: int):
+        """
+        Инициализирует кирпич.
+
+        :param x: Начальная координата X кирпича.
+        :param y: Начальная координата Y кирпича.
+        :param width: Ширина кирпича.
+        :param height: Высота кирпича.
+        """
+        self.rect = pygame.Rect(x, y, width, height) # Создание прямоугольника кирпича #
+        self.is_alive = True # Кирпич жив #
+
+class Arkanoid:
+    """
+    Класс для управления игрой Арканоид.
+
+    :ivar int screen_width: Ширина экрана.
+    :ivar int screen_height: Высота экрана.
+    :ivar pygame.Surface screen: Объект экрана.
+    :ivar Ball ball: Объект мяча.
+    :ivar Paddle paddle: Объект платформы.
+    :ivar List[Brick] bricks: Список объектов кирпичей.
+    :ivar int paddle_speed: Скорость платформы.
+
+    """
+    def __init__(self, screen_width: int = 800, screen_height: int = 600):
+        """
+        Инициализирует игру.
+
+        :param screen_width: Ширина экрана.
+        :param screen_height: Высота экрана.
+        """
+        pygame.init() # Инициализация Pygame #
+        self.screen_width = screen_width # Ширина экрана #
+        self.screen_height = screen_height # Высота экрана #
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height)) # Создание окна игры #
+        pygame.display.set_caption("Арканоид") # Установка заголовка окна #
+        self.clock = pygame.time.Clock() # Управление FPS #
+        self.ball = Ball(screen_width // 2, screen_height // 2, 15, 5, 5) # Создание мяча #
+        self.paddle_speed = 8 # Скорость платформы #
+        self.paddle = Paddle(screen_width // 2 - 50, screen_height - 30, 100, 20, self.paddle_speed) # Создание платформы #
+        self.bricks = self._create_bricks() # Создание кирпичей #
+        self.running = True # Состояние игры #
     
-    :param canvas: Холст Tkinter, на котором рисуется мяч.
-    :type canvas: Canvas
-    :param platform: Объект платформы для определения столкновений.
-    :type platform: Platform
-    :param color: Цвет мяча.
-    :type color: str
-    """
-    def __init__(self, canvas: Canvas, platform: object, color: str) -> None:
-        self.canvas = canvas
-        self.platform = platform
-        self.oval = canvas.create_oval(200, 200, 200 + BALL_SIZE, 200 + BALL_SIZE, fill=color)  # Создание мяча
-        self.dir = [-BALL_SPEED_X, -BALL_SPEED_X + 1, -1, 1, BALL_SPEED_X -1, BALL_SPEED_X]  # Возможные направления мяча
-        self.x = random.choice(self.dir)  # Начальное направление по X
-        self.y = BALL_SPEED_Y  # Начальное направление по Y
-        self.touch_bottom = False  # Флаг касания нижнего края
-
-    def touch_platform(self, ball_pos: tuple) -> bool:
+    def _create_bricks(self) -> List[Brick]:
         """
-        Проверяет столкновение мяча с платформой.
+        Создает набор кирпичей для игры.
 
-        :param ball_pos: Координаты мяча (x1, y1, x2, y2).
-        :type ball_pos: tuple
-        :return: True, если мяч столкнулся с платформой, иначе False.
-        :rtype: bool
+        :return: Список объектов кирпичей.
         """
-        platform_pos = self.canvas.coords(self.platform.rect)  # Координаты платформы
-        if ball_pos[2] >= platform_pos[0] and ball_pos[0] <= platform_pos[2]:  # Проверка столкновения по X
-            if ball_pos[3] >= platform_pos[1] and ball_pos[3] <= platform_pos[3]: # Проверка столкновения по Y
-                return True  # Столкновение обнаружено
-        return False  # Столкновения нет
+        bricks = [] # Список кирпичей #
+        brick_width = 70 # Ширина кирпича #
+        brick_height = 20 # Высота кирпича #
+        padding = 10 # Отступ между кирпичами #
+        rows = 5 # Количество рядов кирпичей #
+        cols = self.screen_width // (brick_width + padding) # Количество столбцов кирпичей #
+        start_x = (self.screen_width - (cols * (brick_width + padding) - padding)) // 2 # Выравнивание по центру #
+        start_y = 50 # Начальная позиция по Y #
 
-    def draw(self) -> None:
+        for row in range(rows):
+            for col in range(cols):
+                x = start_x + col * (brick_width + padding) # Вычисление X координаты кирпича #
+                y = start_y + row * (brick_height + padding) # Вычисление Y координаты кирпича #
+                bricks.append(Brick(x, y, brick_width, brick_height)) # Добавление нового кирпича #
+        return bricks # Возвращение списка кирпичей #
+
+    def _handle_input(self):
         """
-        Перемещает мяч на холсте и обрабатывает столкновения со стенами и платформой.
+        Обрабатывает ввод пользователя.
+
         """
-        self.canvas.move(self.oval, self.x, self.y)  # Перемещение мяча
-        pos = self.canvas.coords(self.oval) # Получение текущих координат мяча
-
-        if pos[1] <= 0: # Проверка столкновения с верхней границей
-            self.y = BALL_SPEED_X # Изменение направления по Y
-        if pos[3] >= WINDOW_HEIGHT: # Проверка столкновения с нижней границей
-            self.touch_bottom = True # Установка флага касания
-        if self.touch_platform(pos): # Проверка столкновения с платформой
-            self.y = BALL_SPEED_Y # Изменение направления по Y
-        if pos[0] <= 0: # Проверка столкновения с левой границей
-            self.x = BALL_SPEED_X # Изменение направления по X
-        if pos[2] >= WINDOW_WIDTH: # Проверка столкновения с правой границей
-            self.x = -BALL_SPEED_X # Изменение направления по X
-
-
-class Platform:
-    """
-    Класс, представляющий платформу в игре.
-
-    :param canvas: Холст Tkinter, на котором рисуется платформа.
-    :type canvas: Canvas
-    :param color: Цвет платформы.
-    :type color: str
-    """
-    def __init__(self, canvas: Canvas, color: str) -> None:
-        self.canvas = canvas
-        self.rect = canvas.create_rectangle(
-            (WINDOW_WIDTH - PLATFORM_WIDTH) // 2, PLATFORM_Y,
-            (WINDOW_WIDTH + PLATFORM_WIDTH) // 2, PLATFORM_Y + PLATFORM_HEIGHT,
-            fill=color
-        ) # Создание прямоугольника платформы
-        self.x = 0 # Начальная скорость платформы
-        self.canvas.bind_all('<KeyPress-Left>', self.left) # Назначение обработчика на клавишу "влево"
-        self.canvas.bind_all('<KeyPress-Right>', self.right) # Назначение обработчика на клавишу "вправо"
-
-    def left(self, event: object) -> None:
+        for event in pygame.event.get(): # Обработка всех событий #
+            if event.type == pygame.QUIT: # Закрытие окна #
+                self.running = False
+            #TODO: Добавить управление через клавиатуру #
+        keys = pygame.key.get_pressed() # Состояние клавиш #
+        if keys[pygame.K_LEFT]: # Нажата клавиша влево #
+           self.paddle.move(-1, self.screen_width) # Движение платформы влево #
+        if keys[pygame.K_RIGHT]: # Нажата клавиша вправо #
+            self.paddle.move(1, self.screen_width) # Движение платформы вправо #
+    
+    def _handle_collisions(self):
         """
-        Обработчик нажатия клавиши "влево".
-
-        :param event: Событие нажатия клавиши.
-        :type event: object
+        Обрабатывает столкновения мяча с другими объектами.
         """
-        self.x = -PLATFORM_SPEED # Скорость влево
+        # Проверка столкновения с границами экрана
+        if self.ball.rect.left <= 0 or self.ball.rect.right >= self.screen_width:
+           self.ball.bounce((-1, 1)) # Отражение от боковых стенок #
+        if self.ball.rect.top <= 0:
+            self.ball.bounce((1, -1)) # Отражение от верхней стенки #
+        if self.ball.rect.bottom >= self.screen_height:
+            self.running = False  # Конец игры, если мяч упал вниз #
 
-    def right(self, event: object) -> None:
+        # Столкновение с платформой
+        if self.ball.rect.colliderect(self.paddle.rect):
+            self.ball.bounce((1, -1))  # Отскок от платформы #
+
+        # Столкновение с кирпичами
+        for brick in self.bricks:
+            if brick.is_alive and self.ball.rect.colliderect(brick.rect):
+                brick.is_alive = False  # Кирпич разбит #
+                self.ball.bounce((1, -1)) # Отражение от кирпича #
+
+    def _draw(self):
         """
-        Обработчик нажатия клавиши "вправо".
+        Отрисовывает все игровые объекты на экране.
 
-        :param event: Событие нажатия клавиши.
-        :type event: object
         """
-        self.x = PLATFORM_SPEED # Скорость вправо
-
-    def draw(self) -> None:
+        self.screen.fill((0, 0, 0)) # Заливка экрана черным цветом #
+        pygame.draw.rect(self.screen, (255, 255, 255), self.paddle.rect) # Отрисовка платформы #
+        pygame.draw.ellipse(self.screen, (255, 255, 255), self.ball.rect) # Отрисовка мяча #
+        for brick in self.bricks: # Отрисовка кирпичей #
+             if brick.is_alive:
+                 pygame.draw.rect(self.screen, (255, 0, 0), brick.rect)
+        pygame.display.flip() # Обновление экрана #
+    
+    def run(self):
         """
-        Перемещает платформу на холсте и обрабатывает столкновения со стенами.
+        Запускает основной игровой цикл.
+
         """
-        self.canvas.move(self.rect, self.x, 0) # Перемещение платформы
-        pos = self.canvas.coords(self.rect) # Получение текущих координат платформы
-
-        if pos[0] <= 0: # Проверка столкновения с левой границей
-            self.x = 0 # Остановка движения
-        if pos[2] >= WINDOW_WIDTH: # Проверка столкновения с правой границей
-            self.x = 0 # Остановка движения
-
-# Инициализация окна
-window = Tk()
-window.title("Аркада")
-window.resizable(0, 0)
-window.wm_attributes("-topmost", 1)
-
-canvas = Canvas(window, width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
-canvas.pack()
-
-
-platform = Platform(canvas, 'green') # Создание платформы
-ball = Ball(canvas, platform, 'red') # Создание мяча
-
-while True:
-    if not ball.touch_bottom: # Проверка конца игры
-        ball.draw() # Движение мяча
-        platform.draw() # Движение платформы
-    else:
-        break # Завершение цикла
-
-    window.update() # Обновление окна
-    time.sleep(0.01) # Задержка
-
-window.mainloop() # Запуск основного цикла окна
+        try: # Запуск игрового цикла #
+            while self.running:
+                self._handle_input() # Обработка ввода пользователя #
+                self.ball.move() # Движение мяча #
+                self._handle_collisions() # Обработка столкновений #
+                self._draw() # Отрисовка всех объектов #
+                self.clock.tick(60)  # Установка FPS #
+        except Exception as ex:
+            logger.error(f"Ошибка в игровом цикле: {ex}", exc_info=True)
+        finally:
+             pygame.quit() # Завершение работы Pygame #
 ```

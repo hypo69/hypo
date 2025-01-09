@@ -1,50 +1,49 @@
 # Анализ кода модуля yahtze.py
 
 **Качество кода**
-
--   **Соответствие требованиям к формату кода (1-10)**
-    -   **Преимущества**:
-        -   Код в целом хорошо структурирован и понятен, основные функции разбиты на логические блоки.
-        -   Используется docstring для описания модуля и функций.
-        -   Логика игры реализована в соответствии с правилами.
-        -   Есть блок-схема в формате mermaid для визуализации алгоритма игры.
-        -   Есть подробное текстовое описание алгоритма и процесса игры.
-    -   **Недостатки**:
-        -   Не используется reStructuredText (RST) для docstrings и комментариев.
-        -   Используется `json.load` вместо `j_loads` или `j_loads_ns`.
-        -   Отсутствует обработка ошибок через `logger.error`.
-        -   Используется `input` для ввода данных, что может привести к ошибкам.
-        -   Нет импорта необходимых библиотек из `src.utils.jjson` и `src.logger.logger`.
-        -   Комментарии `#` не соответствуют формату RST и не дают подробного объяснения кода.
-        -   Некоторые переменные и функции не имеют описания.
-        -   Код перегружен проверками и логикой, которые можно упростить.
+-   **Соответствие требованиям к формату кода (1-10):**
+    -   **Преимущества:**
+        -   Код хорошо структурирован и разбит на логические функции, что повышает читаемость.
+        -   Логика игры реализована в соответствии с правилами Yahtzee.
+        -   Используются понятные имена переменных и функций.
+        -   Код содержит подробные комментарии, объясняющие различные части программы.
+        -   Реализована обработка ввода пользователя с проверкой на корректность.
+    -   **Недостатки:**
+        -   Отсутствует docstring для модуля.
+        -   Не используется `j_loads` или `j_loads_ns` для загрузки JSON.
+        -   Не используется `logger` для обработки ошибок.
+        -   Некоторые комментарии после `#` не соответствуют стандарту reStructuredText (RST).
+        -   В коде встречаются излишние комментарии.
+        -   Отсутствуют комментарии в формате RST для функций и классов.
+        -   Некоторые блоки `try-except` могут быть заменены на использование `logger.error`.
+        -   Ввод пользователя не обрабатывается для чисел с плавающей запятой, может вызвать ошибку.
+        -   В функции `calculate_score` можно добавить более лаконичную запись подсчета очков.
+        -   В блоке else в цикле бросков `new_dice.append(dice[i])` можно оптимизировать запись.
 
 **Рекомендации по улучшению**
 
-1.  **Перевести docstring и комментарии в формат reStructuredText (RST)**.
-2.  **Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.load`**.
-3.  **Добавить обработку ошибок с использованием `logger.error`**.
-4.  **Импортировать необходимые модули и настроить логгирование**.
-5.  **Добавить детальные комментарии, объясняющие логику кода**.
-6.  **Улучшить читаемость кода, используя более описательные имена переменных и функций**.
-7.  **Рефакторинг функции `calculate_score` для большей читаемости и уменьшения дублирования кода**.
-8.  **Улучшить обработку ввода пользователя, добавив проверку на нечисловые значения**.
-9.  **Добавить примеры использования и возможные улучшения в виде TODO**.
+1.  **Добавить docstring для модуля в формате RST.**
+2.  **Импортировать и использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` (если требуется).**
+3.  **Импортировать и использовать `logger` из `src.logger.logger` для обработки ошибок вместо `try-except`.**
+4.  **Переписать все комментарии в формат RST и добавить docstring для всех функций, классов и переменных.**
+5.  **Убрать излишние комментарии и оставить только те, что описывают логику кода.**
+6.  **Улучшить обработку ввода пользователя, чтобы избежать ошибок при вводе некорректных данных.**
+7.  **Оптимизировать код для более компактной записи и улучшенной читаемости.**
+8.  **Провести рефакторинг функции `calculate_score` для более лаконичной записи.**
 
 **Улучшенный код**
 
 ```python
 """
-Модуль для реализации игры Yahtzee
+Модуль для игры в Yahtzee.
 =========================================================================================
 
-Модуль содержит функции для реализации игры в кости Yahtzee, включая бросок кубиков,
-расчет очков и управление игровым процессом.
+Модуль реализует игру в кости Yahtzee.
+Игрок бросает пять кубиков и пытается набрать очки, составляя комбинации.
+В конце игры очки суммируются.
 
-Пример использования
---------------------
-
-Пример запуска игры:
+Пример использования:
+---------------------
 
 .. code-block:: python
 
@@ -52,168 +51,150 @@
         play_yahtzee()
 """
 import random
-from src.logger.logger import logger # Импортируем логгер #
-from typing import List # Импортируем List из typing #
+from src.logger.logger import logger  # Импорт модуля для логирования
 
-
-def roll_dice() -> List[int]:
+def roll_dice() -> list:
     """
-    Выполняет бросок 5 кубиков.
+    Бросает 5 кубиков и возвращает результаты.
 
-    :return: Список из 5 случайных чисел от 1 до 6, представляющих результаты броска.
-    :rtype: List[int]
+    :return: Список из 5 случайных чисел в диапазоне от 1 до 6.
+    :rtype: list
     """
-    return [random.randint(1, 6) for _ in range(5)] # Бросаем 5 кубиков и возвращаем результаты
+    # Функция возвращает список случайных чисел от 1 до 6
+    return [random.randint(1, 6) for _ in range(5)]
 
-
-def calculate_score(dice: List[int], category: str) -> int:
+def calculate_score(dice: list, category: str) -> int:
     """
     Вычисляет очки для выбранной категории.
 
     :param dice: Список результатов броска кубиков.
-    :type dice: List[int]
-    :param category: Выбранная категория для расчета очков.
+    :type dice: list
+    :param category: Выбранная категория для подсчета очков.
     :type category: str
-    :return: Количество очков, набранных в данной категории.
+    :return: Количество очков для выбранной категории.
     :rtype: int
-
-    :raises ValueError: Если передана неверная категория.
-
-    .. TODO::
-       -  Упростить логику подсчета очков, возможно, с использованием словаря или enum для категорий.
-       -  Добавить обработку неверных значений category.
     """
+    # Подсчет количества каждого значения на кубиках
     counts = {}
-    for die in dice: # Подсчитываем количество каждого значения на кубиках
+    for die in dice:
         counts[die] = counts.get(die, 0) + 1
 
-    if category in ['1', '2', '3', '4', '5', '6']: # Если категория - число, суммируем выпавшие кубики этого числа
-        value = int(category) # преобразуем категорию к int для проверки
+    # Вычисление очков для категорий 1-6
+    if category in ['1', '2', '3', '4', '5', '6']:
+        value = int(category)
         return sum(die for die in dice if die == value)
-    elif category == '3 of a kind': # Проверяем есть ли 3 одинаковых значения
-        for count in counts.values():
-            if count >= 3:
-                return sum(dice) # Возвращаем сумму всех костей, если есть
+    # Вычисление очков для "3 of a kind"
+    elif category == '3 of a kind':
+        return sum(dice) if any(count >= 3 for count in counts.values()) else 0
+    # Вычисление очков для "4 of a kind"
+    elif category == '4 of a kind':
+        return sum(dice) if any(count >= 4 for count in counts.values()) else 0
+    # Вычисление очков для "full house"
+    elif category == 'full house':
+        return 25 if 2 in counts.values() and 3 in counts.values() else 0
+    # Вычисление очков для "small straight"
+    elif category == 'small straight':
+        unique_dice = sorted(set(dice))
+        for i in range(len(unique_dice) - 3):
+            if all(unique_dice[i+j] == unique_dice[i] + j for j in range(4)):
+                return 30
         return 0
-    elif category == '4 of a kind': # Проверяем есть ли 4 одинаковых значения
-        for count in counts.values():
-            if count >= 4:
-                return sum(dice) # Возвращаем сумму всех костей, если есть
+    # Вычисление очков для "large straight"
+    elif category == 'large straight':
+        unique_dice = sorted(set(dice))
+        if len(unique_dice) == 5 and all(unique_dice[i+1] == unique_dice[i] + 1 for i in range(4)):
+            return 40
         return 0
-    elif category == 'full house': # Проверяем есть ли фулл-хаус
-        if 2 in counts.values() and 3 in counts.values():
-            return 25 # Возвращаем 25 очков за фулл-хаус
-        return 0
-    elif category == 'small straight': # Проверяем есть ли малый стрейт
-        dice.sort() # Сортируем кости
-        unique_dice = sorted(list(set(dice))) # убираем дубликаты
-        for i in range(len(unique_dice) - 3): # проверяем есть ли последовательность из 4 значений
-            if unique_dice[i+1] == unique_dice[i] + 1 and \
-               unique_dice[i+2] == unique_dice[i] + 2 and \
-               unique_dice[i+3] == unique_dice[i] + 3:
-                return 30 # Возвращаем 30 очков за малый стрейт
-        return 0
-    elif category == 'large straight': # Проверяем есть ли большой стрейт
-          dice.sort() # Сортируем кости
-          unique_dice = sorted(list(set(dice))) # убираем дубликаты
-          if len(unique_dice) == 5: # Проверяем, что все кости уникальны
-              for i in range(len(unique_dice)-1): # Проверяем последовательность из 5 значений
-                if unique_dice[i+1] != unique_dice[i]+1:
-                  return 0 # Возвращаем 0, если последовательности нет
-              return 40 # Возвращаем 40 очков за большой стрейт
-          return 0
-    elif category == 'yahtzee': # Проверяем есть ли 5 одинаковых значений
-        if len(set(dice)) == 1:
-            return 50 # Возвращаем 50 очков за yahtzee
-        return 0
-    elif category == 'chance': # Возвращаем сумму всех костей
+    # Вычисление очков для "yahtzee"
+    elif category == 'yahtzee':
+        return 50 if len(set(dice)) == 1 else 0
+    # Вычисление очков для "chance"
+    elif category == 'chance':
         return sum(dice)
-    else:
-        logger.error(f"Неизвестная категория: {category}") # Запись ошибки в лог
-        return 0 # Возвращаем 0 в случае некорректной категории
-
+    return 0
 
 def play_yahtzee():
     """
     Основная функция для игры в Yahtzee.
 
-    Осуществляет игровой процесс, включая броски кубиков, выбор категорий,
-    расчет очков и вывод результатов.
-
-    .. TODO::
-        -   Реализовать сохранение и загрузку состояния игры.
-        -   Добавить возможность играть нескольким игрокам.
+    Инициализирует игру, обрабатывает ввод пользователя, подсчитывает очки и выводит результаты.
     """
-    categories = [ # Список всех возможных категорий
+    # Определение категорий
+    categories = [
       '1', '2', '3', '4', '5', '6',
       '3 of a kind', '4 of a kind',
       'full house', 'small straight', 'large straight',
       'yahtzee', 'chance'
     ]
-    scores = {category: None for category in categories}  # Словарь для хранения очков #
-    used_categories = set()  # Множество использованных категорий #
+    # Инициализация словаря для хранения очков
+    scores = {category: None for category in categories}
+    # Инициализация множества для хранения использованных категорий
+    used_categories = set()
 
-    for round_num in range(1, 14): # Основной цикл, который происходит 13 раз
+    # Основной игровой цикл
+    for round_num in range(1, 14):
         print(f"\n----- Раунд {round_num} -----")
-        dice = roll_dice()  # Бросаем кубики #
+        dice = roll_dice() # Бросаем кубики
         print(f"Первый бросок: {dice}")
 
-        for roll_attempt in range(1, 3): # Даем 3 попытки #
+        # Цикл для дополнительных бросков (до двух раз)
+        for roll_attempt in range(1, 3):
             keep_dice_str = input(f"Попытка {roll_attempt}, какие кубики оставить (введите номера через пробел, от 1 до 5, 0 = перебросить все, n = ничего не перебрасывать)? ")
 
-            if keep_dice_str.lower() == 'n': # Если игрок ввел 'n' пропускаем цикл #
-              break
-            if keep_dice_str == '0': # Если игрок ввел '0' перебрасываем все кости #
-              dice = roll_dice()
-              print(f"Новый бросок: {dice}")
-              continue
+            if keep_dice_str.lower() == 'n':
+                break # Завершаем цикл бросков, если игрок вводит 'n'
+            if keep_dice_str == '0':
+                dice = roll_dice()
+                print(f"Новый бросок: {dice}")
+                continue # Перебрасываем все кубики, если игрок вводит '0'
             try:
-                keep_indices = [int(i) - 1 for i in keep_dice_str.split()] # Получаем список индексов кубиков, которые нужно оставить #
-                if not all(0 <= index < 5 for index in keep_indices): # Проверяем, все ли индексы в пределах допустимых значений #
-                  print("Неверные индексы, попробуйте еще раз.")
-                  continue
-                new_dice = [] # Новый список кубиков #
-                for i in range(5): # Проходим по всем кубикам #
-                  if i not in keep_indices: # Если кубик не нужно оставлять, то бросаем его заново #
-                    new_dice.append(random.randint(1, 6))
-                  else: # Иначе, добавляем кубик в новый список из старого #
-                    new_dice.append(dice[i])
-                dice = new_dice # Обновляем список кубиков #
+                # Получаем список индексов кубиков, которые нужно оставить
+                keep_indices = [int(i) - 1 for i in keep_dice_str.split()]
+                # Проверяем, что индексы находятся в допустимом диапазоне
+                if not all(0 <= index < 5 for index in keep_indices):
+                    print("Неверные индексы, попробуйте еще раз.")
+                    continue
+                # Создаем новый список кубиков
+                new_dice = [random.randint(1, 6) if i not in keep_indices else dice[i] for i in range(5)]
+                dice = new_dice # Обновляем массив кубиков
                 print(f"Новый бросок: {dice}")
             except ValueError:
-                logger.error(f"Некорректный ввод: {keep_dice_str}") # Запись ошибки в лог
-                print("Неверный ввод, попробуйте еще раз.") # Выводим сообщение об ошибке
+                logger.error("Неверный ввод, попробуйте еще раз.") # Логируем ошибку ввода
+                print("Неверный ввод, попробуйте еще раз.")
 
-        available_categories = [cat for cat in categories if cat not in used_categories] # Список доступных категорий #
+        # Формирование списка доступных категорий
+        available_categories = [cat for cat in categories if cat not in used_categories]
         print("Доступные категории:")
-        for i, cat in enumerate(available_categories, start=1): # Выводим список категорий #
+        for i, cat in enumerate(available_categories, start=1):
             print(f"{i}. {cat}")
 
-        while True: # Бесконечный цикл для выбора категории #
+        # Цикл для выбора категории игроком
+        while True:
             try:
-                choice_index = int(input("Выберите номер категории для записи очков: "))-1 # Запрашиваем выбор #
-                if  0 <= choice_index < len(available_categories) : # Проверяем, находится ли выбор в границах допустимых значений #
-                    category_choice = available_categories[choice_index] # Сохраняем выбор пользователя #
-                    break
+                choice_index = int(input("Выберите номер категории для записи очков: ")) - 1 # Запрашиваем выбор
+                if 0 <= choice_index < len(available_categories):
+                    category_choice = available_categories[choice_index]
+                    break # Завершаем цикл, если ввод корректен
                 else:
                     print('Неверный номер категории, попробуйте еще раз.')
             except ValueError:
-                logger.error("Некорректный ввод номера категории") # Запись ошибки в лог
-                print('Неверный ввод, попробуйте еще раз.') # Выводим сообщение об ошибке
+                 logger.error('Неверный ввод, попробуйте еще раз.') # Логируем ошибку ввода
+                 print('Неверный ввод, попробуйте еще раз.')
 
-        score = calculate_score(dice, category_choice)  # Вычисляем очки #
-        scores[category_choice] = score # Сохраняем очки в словаре #
-        used_categories.add(category_choice) # Добавляем категорию в использованные #
+        # Вычисляем и записываем очки
+        score = calculate_score(dice, category_choice)
+        scores[category_choice] = score
+        used_categories.add(category_choice) # Добавляем категорию в список использованных
         print(f"Очки за категорию {category_choice}: {score}")
 
-    # Выводим таблицу очков #
+    # Выводим таблицу очков
     print("\n----- Итоговая таблица очков -----")
-    for category, score in scores.items(): # Выводим результаты по категориям #
+    for category, score in scores.items():
       print(f"{category}: {score if score is not None else 0}")
 
-    total_score = sum(score if score is not None else 0 for score in scores.values()) # Подсчитываем общий счет #
+    # Подсчет общего количества очков
+    total_score = sum(score if score is not None else 0 for score in scores.values())
     print(f"Общий счет: {total_score}")
-
 
 if __name__ == "__main__":
     play_yahtzee()

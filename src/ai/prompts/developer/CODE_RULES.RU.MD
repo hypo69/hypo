@@ -278,4 +278,20 @@ def add_numbers(a: int, b: int) -> int:
     """
     return a + b
 ```
-```
+
+
+В коде НЕ должен исюользоваться `Union` 
+Неправильно: 
+def recursively_yield_file_path(
+    root_dir: Union[str, Path], patterns: Union[str, list[str]] = "*", exc_info: bool = True
+) -> Generator[Path, None, None]:
+
+Парвильно: 
+def recursively_read_text_files(
+    root_dir: str | Path, 
+    patterns: str | list[str], 
+    as_list: bool = False, 
+    exc_info: bool = True
+) -> list[str]:
+    """
+

@@ -1,129 +1,134 @@
 # Анализ кода модуля `ACE`
 
 **Качество кода**
--   **Соответствие требованиям к формату кода (1-10):** 7
-    -   **Преимущества:**
-        -   Описание игры и алгоритм представлены в структурированном виде.
-        -   Блок-схема наглядно демонстрирует логику игры.
-    -   **Недостатки:**
-        -   В тексте используются смешанные стили форматирования (например, bold).
-        -   Отсутствует нумерация шагов алгоритма.
-        -   Нет нумерации шагов в описании правил игры.
-        -   Легенда к блок-схеме местами дублирует информацию из блок-схемы.
-        -   Текст не отформатирован согласно reStructuredText (RST) и правилам, которые должны быть применены к документации.
+- **Соответствие требованиям к формату кода (1-10):** 
+   -  **Преимущества:**
+        - Документ содержит подробное описание игры, ее правил и алгоритма.
+        - Приведена блок-схема в формате Mermaid, что помогает визуализировать игровой процесс.
+        - Есть подробная легенда к блок-схеме, объясняющая каждый шаг.
+   - **Недостатки:**
+        - Документ не содержит код на языке Python.
+        - Отсутствуют docstring и комментарии в формате RST.
+        - Не используются `j_loads` или `j_loads_ns` для работы с данными.
+        - Отсутствуют необходимые импорты.
+
 **Рекомендации по улучшению**
-1.  **Форматирование**: Применить reStructuredText (RST) к описаниям, алгоритму и блок-схеме.
-2.  **Нумерация**: Добавить нумерацию к правилам игры и шагам алгоритма для улучшения читаемости.
-3.  **Избегание дублирования**: Упростить легенду к блок-схеме, убрав дублирование информации, которая уже представлена на схеме.
-4.  **Единообразие**: Использовать единый стиль форматирования (например, не использовать bold для выделения в середине предложений).
-5.  **Документация**: Улучшить описание, добавив информацию о том, как работают карты и как рассчитываются очки.
-6.  **Комментарии**:  Добавить более детальные комментарии к коду, если это уместно, в RST формате.
-7.  **Поддержка**: Добавить поддержку `j_loads` или `j_loads_ns` для чтения данных из файлов.
-8. **Логирование**: Добавить логирование ошибок и важных событий, используя `from src.logger.logger import logger`.
+1.  Добавить код на языке Python, реализующий игру.
+2.  Использовать reStructuredText (RST) для оформления комментариев и docstring.
+3.  Применить `j_loads` или `j_loads_ns` для загрузки данных, если это необходимо.
+4.  Добавить необходимые импорты.
+5.  Реализовать обработку ошибок с использованием `logger.error`.
+6.  Обеспечить соответствие наименований функций, переменных и импортов ранее обработанным файлам.
+7.  Избегать избыточного использования try-except, предпочтительно обрабатывать ошибки через `logger.error`.
+8.  Добавить примеры использования кода в формате RST и TODO.
 
 **Улучшенный код**
-```markdown
+```python
 """
-Модуль описывает правила и алгоритм игры "ACE".
-==================================================
+Модуль для реализации карточной игры ACE.
+=========================================================================================
 
-Игра "ACE" - это карточная игра для двух игроков, в которой каждый игрок поочередно тянет карты, стремясь набрать наибольшее количество очков.
+Этот модуль реализует игру ACE, в которой два игрока по очереди тянут карты из колоды и
+пытаются набрать больше очков.
 
-Правила игры:
--------------
-1. В игре участвуют два игрока.
-2. Игроки по очереди тянут карты из колоды.
-3. Каждая карта имеет определенное количество очков:
-   - Туз (A) приносит 1 очко.
-   - Карты от 2 до 10 приносят очки, равные номиналу.
-   - Валет (J), Дама (Q) и Король (K) приносят 10 очков.
-4. Цель каждого раунда - набрать как можно больше очков.
-5. По итогам раунда сравниваются очки обоих игроков.
-6. Игра состоит из заданного количества раундов.
-7. Победителем становится игрок, набравший наибольшее количество очков за все раунды.
+Пример использования
+--------------------
 
-Алгоритм:
----------
-1.  Инициализируются очки обоих игроков (player1Score и player2Score) нулями.
-2.  Запрашивается количество раундов у пользователя.
-3.  Начинается цикл для каждого раунда:
-    3.1. Игрок 1 вытягивает карту и получает значение карты (card1Value).
-    3.2. Выводится информация о карте и полученных очках игрока 1.
-    3.3. Очки игрока 1 обновляются: к player1Score добавляется card1Value.
-    3.4. Игрок 2 вытягивает карту и получает значение карты (card2Value).
-    3.5. Выводится информация о карте и полученных очках игрока 2.
-    3.6. Очки игрока 2 обновляются: к player2Score добавляется card2Value.
-    3.7. Проверяется, кто выиграл раунд:
-         - Если player1Score > player2Score, выводится сообщение "PLAYER 1 WINS THE ROUND".
-         - Если player2Score > player1Score, выводится сообщение "PLAYER 2 WINS THE ROUND".
-         - Если player1Score == player2Score, выводится сообщение "TIE GAME THIS ROUND".
-4.  Выводится общее количество очков игрока 1 (player1Score).
-5.  Выводится общее количество очков игрока 2 (player2Score).
-6.  Определяется победитель игры:
-    - Если player1Score > player2Score, выводится сообщение "PLAYER 1 WINS THE GAME".
-    - Если player2Score > player1Score, выводится сообщение "PLAYER 2 WINS THE GAME".
-    - Если player1Score == player2Score, выводится сообщение "TIE GAME".
-7.  Завершение игры.
+Пример запуска игры ACE:
 
-Блок-схема:
-------------
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializeScores["<p align='left'>Инициализация переменных:<br><code><b>player1Score = 0</b></code><br><code><b>player2Score = 0</b></code></p>"]
-    InitializeScores --> InputRounds["Ввод количества раундов: <code><b>numberOfRounds</b></code>"]
-    InputRounds --> RoundLoopStart{"Начало цикла по раундам"}
-    RoundLoopStart -- Да --> Player1DrawsCard["Игрок 1 тянет карту: <code><b>card1, card1Value</b></code>"]
-    Player1DrawsCard --> OutputPlayer1Card["Вывод карты и очков игрока 1: <code><b>card1, card1Value</b></code>"]
-    OutputPlayer1Card --> UpdatePlayer1Score["<code><b>player1Score = player1Score + card1Value</b></code>"]
-    UpdatePlayer1Score --> Player2DrawsCard["Игрок 2 тянет карту: <code><b>card2, card2Value</b></code>"]
-    Player2DrawsCard --> OutputPlayer2Card["Вывод карты и очков игрока 2: <code><b>card2, card2Value</b></code>"]
-    OutputPlayer2Card --> UpdatePlayer2Score["<code><b>player2Score = player2Score + card2Value</b></code>"]
-    UpdatePlayer2Score --> CompareScores{"Сравнение очков за раунд: <code><b>card1Value > card2Value?</b></code>"}
-    CompareScores -- Да --> OutputPlayer1RoundWin["Вывод: <b>PLAYER 1 WINS THE ROUND</b>"]
-    CompareScores -- Нет --> CompareScores2{"Сравнение очков за раунд: <code><b>card2Value > card1Value?</b></code>"}
-    CompareScores2 -- Да --> OutputPlayer2RoundWin["Вывод: <b>PLAYER 2 WINS THE ROUND</b>"]
-    CompareScores2 -- Нет --> OutputTieRound["Вывод: <b>TIE GAME THIS ROUND</b>"]
-    OutputPlayer1RoundWin --> RoundLoopEnd
-    OutputPlayer2RoundWin --> RoundLoopEnd
-    OutputTieRound --> RoundLoopEnd
-    RoundLoopEnd --> RoundLoopStart {"Начало цикла по раундам"}
+.. code-block:: python
 
-    RoundLoopStart -- Нет --> OutputTotalPlayer1Score["Вывод общего количества очков игрока 1: <code><b>player1Score</b></code>"]
-    OutputTotalPlayer1Score --> OutputTotalPlayer2Score["Вывод общего количества очков игрока 2: <code><b>player2Score</b></code>"]
-    OutputTotalPlayer2Score --> CompareTotalScores{"Сравнение общих очков: <code><b>player1Score > player2Score?</b></code>"}
-    CompareTotalScores -- Да --> OutputPlayer1GameWin["Вывод: <b>PLAYER 1 WINS THE GAME</b>"]
-    CompareTotalScores -- Нет --> CompareTotalScores2{"Сравнение общих очков: <code><b>player2Score > player1Score?</b></code>"}
-    CompareTotalScores2 -- Да --> OutputPlayer2GameWin["Вывод: <b>PLAYER 2 WINS THE GAME</b>"]
-    CompareTotalScores2 -- Нет --> OutputTieGame["Вывод: <b>TIE GAME</b>"]
-    OutputPlayer1GameWin --> End["Конец"]
-    OutputPlayer2GameWin --> End
-    OutputTieGame --> End
-```
-**Легенда:**
-
--   **Start:** Начало программы.
--   **InitializeScores:** Инициализация переменных очков игроков (`player1Score` и `player2Score`) нулями.
--   **InputRounds:** Запрос у пользователя количества раундов (`numberOfRounds`) для игры.
--   **RoundLoopStart:** Начало цикла для каждого раунда игры. Цикл выполняется `numberOfRounds` раз.
--   **Player1DrawsCard:** Игрок 1 тянет карту (`card1`) и определяется ее значение (`card1Value`).
--   **OutputPlayer1Card:** Вывод на экран информации о карте игрока 1 (`card1`) и ее значении (`card1Value`).
--   **UpdatePlayer1Score:** Обновление общего счета игрока 1, добавляя к `player1Score` значение `card1Value`.
--   **Player2DrawsCard:** Игрок 2 тянет карту (`card2`) и определяется ее значение (`card2Value`).
--   **OutputPlayer2Card:** Вывод на экран информации о карте игрока 2 (`card2`) и ее значении (`card2Value`).
--   **UpdatePlayer2Score:** Обновление общего счета игрока 2, добавляя к `player2Score` значение `card2Value`.
--   **CompareScores:** Сравнение значений карт (`card1Value` и `card2Value`) для определения победителя раунда.
--   **OutputPlayer1RoundWin:** Вывод сообщения о победе игрока 1 в раунде.
--   **CompareScores2:** Сравнение значений карт (`card2Value` и `card1Value`) для определения победителя раунда.
--   **OutputPlayer2RoundWin:** Вывод сообщения о победе игрока 2 в раунде.
--   **OutputTieRound:** Вывод сообщения о ничьей в раунде.
--   **RoundLoopEnd:** Конец цикла по раундам.
--  **OutputTotalPlayer1Score:** Вывод на экран общего количества очков игрока 1 (`player1Score`).
--   **OutputTotalPlayer2Score:** Вывод на экран общего количества очков игрока 2 (`player2Score`).
--   **CompareTotalScores:** Сравнение общего счета игроков (`player1Score` и `player2Score`) для определения победителя игры.
--   **OutputPlayer1GameWin:** Вывод сообщения о победе игрока 1 в игре.
--   **CompareTotalScores2:** Сравнение общего счета игроков (`player2Score` и `player1Score`) для определения победителя игры.
--   **OutputPlayer2GameWin:** Вывод сообщения о победе игрока 2 в игре.
--   **OutputTieGame:** Вывод сообщения о ничьей в игре.
--   **End:** Конец программы.
+    game = ACEGame()
+    game.play_game()
 """
+import random  # Импорт модуля random для генерации случайных карт #
+from src.logger.logger import logger #  Импорт логгера для обработки ошибок #
+
+class ACEGame:
+    """
+    Класс, реализующий игру ACE.
+
+    :ivar player1_score: Общее количество очков игрока 1.
+    :vartype player1_score: int
+    :ivar player2_score: Общее количество очков игрока 2.
+    :vartype player2_score: int
+    """
+    def __init__(self):
+        """
+        Инициализирует игру ACE, устанавливая начальные значения очков игроков.
+        """
+        self.player1_score = 0 # Инициализация очков игрока 1 #
+        self.player2_score = 0 # Инициализация очков игрока 2 #
+
+    def get_card_value(self) -> int:
+        """
+        Генерирует случайное значение карты.
+
+        Туз - 1 очко, карты от 2 до 10 - по номиналу, валет, дама и король - 10 очков.
+        :return: Значение карты.
+        :rtype: int
+        """
+        card = random.randint(1, 13) # Генерация случайной карты (от 1 до 13) #
+        if card == 1:
+            return 1 # Туз - 1 очко #
+        elif card > 10:
+            return 10 # Валет, дама и король - 10 очков #
+        else:
+            return card # Карты от 2 до 10 - по номиналу #
+
+    def play_round(self) -> tuple[int, int]:
+        """
+        Проводит один раунд игры.
+
+        Игроки по очереди тянут карты, их очки добавляются к общему счету,
+        а также выводится сообщение о победителе раунда.
+        :return: Очки игрока 1 и игрока 2 в текущем раунде.
+        :rtype: tuple[int, int]
+        """
+        card1_value = self.get_card_value() # Игрок 1 вытягивает карту #
+        print(f'Игрок 1 вытянул карту со значением {card1_value}') # Вывод карты игрока 1 и ее значения #
+        self.player1_score += card1_value # Добавление очков игроку 1 #
+
+        card2_value = self.get_card_value() # Игрок 2 вытягивает карту #
+        print(f'Игрок 2 вытянул карту со значением {card2_value}') # Вывод карты игрока 2 и ее значения #
+        self.player2_score += card2_value # Добавление очков игроку 2 #
+
+        if card1_value > card2_value:
+            print('PLAYER 1 WINS THE ROUND') # Вывод сообщения о победе игрока 1 в раунде #
+        elif card2_value > card1_value:
+            print('PLAYER 2 WINS THE ROUND') # Вывод сообщения о победе игрока 2 в раунде #
+        else:
+            print('TIE GAME THIS ROUND') # Вывод сообщения о ничьей в раунде #
+        return card1_value, card2_value # Возврат очков игроков за раунд #
+
+    def play_game(self) -> None:
+        """
+        Запускает игру ACE.
+
+        Запрашивает количество раундов, проводит игру и определяет победителя.
+        """
+        try: # Обработка исключений #
+            num_rounds = int(input('Введите количество раундов: ')) # Запрос количества раундов #
+            if num_rounds <= 0:
+                raise ValueError("Количество раундов должно быть положительным числом.") # Проверка на положительность количества раундов #
+        except ValueError as ex: # Обработка исключения ValueError #
+             logger.error(f"Ошибка ввода количества раундов: {ex}") # Логирование ошибки #
+             return # Завершение игры, если произошла ошибка при вводе #
+
+        for _ in range(num_rounds): # Цикл по раундам #
+            self.play_round() # Проведение раунда #
+
+        print(f'Общее количество очков игрока 1: {self.player1_score}') # Вывод общего количества очков игрока 1 #
+        print(f'Общее количество очков игрока 2: {self.player2_score}') # Вывод общего количества очков игрока 2 #
+
+        if self.player1_score > self.player2_score: # Сравнение общего количества очков игроков #
+            print('PLAYER 1 WINS THE GAME') # Вывод сообщения о победе игрока 1 #
+        elif self.player2_score > self.player1_score: # Сравнение общего количества очков игроков #
+            print('PLAYER 2 WINS THE GAME') # Вывод сообщения о победе игрока 2 #
+        else:
+            print('TIE GAME') # Вывод сообщения о ничьей в игре #
+if __name__ == '__main__':
+    game = ACEGame() # Создание экземпляра игры #
+    game.play_game() # Запуск игры #
+    
 ```

@@ -1,147 +1,124 @@
-# DOGS
+# מודול משחק "כלבים"
 
 ## סקירה כללית
 
-משחק "כלבים" הוא משחק טקסט בו השחקן שולט בשני כלבים ומנסה לתפוס גנבים. השחקן מזין פקודות להזזת הכלבים, והגנבים נעים באופן אקראי. מטרת המשחק היא לתפוס את הגנבים במספר המינימלי של מהלכים.
+המודול הזה מיישם משחק טקסטואלי פשוט בשם "כלבים". במשחק, השחקן שולט בשני כלבים ומנסה לתפוס שני גנבים שזזים באופן אקראי על גבי לוח 10x10. השחקן יכול להזיז את הכלבים באמצעות פקודות שונות (לדוגמא: שמאלה, ימינה, למעלה, למטה, או הזזת כלב ספציפי אחד בכל פעם).
 
 ## תוכן עניינים
 
-1. [סקירה כללית](#סקירה-כללית)
-2. [פונקציות](#פונקציות)
-    - [create_field](#create_field)
-    - [place_object](#place_object)
-    - [print_field](#print_field)
-    - [get_user_command](#get_user_command)
-    - [move_dogs](#move_dogs)
-    - [move_thieves](#move_thieves)
-    - [check_catch](#check_catch)
-    - [play_dogs_game](#play_dogs_game)
+- [פונקציות](#פונקציות)
+  - [`create_field`](#create_field)
+  - [`place_object`](#place_object)
+  - [`print_field`](#print_field)
+  - [`get_user_command`](#get_user_command)
+  - [`move_dogs`](#move_dogs)
+  - [`move_thieves`](#move_thieves)
+  - [`check_catch`](#check_catch)
+  - [`play_dogs_game`](#play_dogs_game)
 
 ## פונקציות
 
 ### `create_field`
 
-**תיאור**: יוצרת את לוח המשחק בגודל `FIELD_SIZE` x `FIELD_SIZE`, המיוצג כרשימה של רשימות.
+**תיאור**: יוצרת לוח משחק בגודל FIELD_SIZE x FIELD_SIZE, כאשר כל תא מאותחל לנקודה (`.`).
 
-```python
-def create_field() -> list[list[str]]:
-    """
-    Args:
-        None
+**פרמטרים**:
 
-    Returns:
-        list[list[str]]: לוח המשחק.
-    """
-```
+- אין
+
+**החזרות**:
+
+- `list[list[str]]`: רשימה דו-ממדית המייצגת את לוח המשחק.
 
 ### `place_object`
 
-**תיאור**: ממקמת אובייקט (כלב או גנב) במיקום פנוי אקראי בלוח.
+**תיאור**: ממקמת אובייקט (כלב או גנב) באופן אקראי על לוח המשחק בתא ריק.
 
-```python
-def place_object(field: list[list[str]], symbol: str) -> tuple[int, int]:
-    """
-    Args:
-        field (list[list[str]]): רשימה דו-ממדית המייצגת את לוח המשחק.
-        symbol (str): סמל האובייקט למיקום בלוח.
+**פרמטרים**:
 
-    Returns:
-        tuple[int, int]: קואורדינטות (שורה, טור) של האובייקט שמוקם.
-    """
-```
+-   `field` (list[list[str]]): רשימה דו-ממדית המייצגת את לוח המשחק.
+-   `symbol` (str): סמל האובייקט שיש למקם על הלוח (למשל, 'D' לכלב, 'T' לגנב).
+
+**החזרות**:
+
+- `tuple[int, int]`:  קואורדינטות (שורה, עמודה) של האובייקט שמוקם.
 
 ### `print_field`
 
-**תיאור**: מדפיסה את המצב הנוכחי של לוח המשחק למסך.
+**תיאור**: מדפיסה את לוח המשחק הנוכחי לקונסולה.
 
-```python
-def print_field(field: list[list[str]]) -> None:
-    """
-    Args:
-        field (list[list[str]]): רשימה דו-ממדית המייצגת את לוח המשחק.
+**פרמטרים**:
 
-    Returns:
-        None
-    """
-```
+-   `field` (list[list[str]]): רשימה דו-ממדית המייצגת את לוח המשחק.
+
+**החזרות**:
+
+- אין
 
 ### `get_user_command`
 
-**תיאור**: מבקשת מהמשתמש פקודה להזזת הכלבים.
+**תיאור**: מקבלת פקודה מהמשתמש עבור תזוזת הכלבים.
 
-```python
-def get_user_command() -> str:
-    """
-    Args:
-         None
-    Returns:
-        str: הפקודה שהזין המשתמש.
-    """
-```
+**פרמטרים**:
+
+- אין
+
+**החזרות**:
+
+- `str`: מחרוזת המייצגת את הפקודה של המשתמש (L, R, U, D, F או S).
 
 ### `move_dogs`
 
 **תיאור**: מזיזה את הכלבים בהתאם לפקודת המשתמש.
 
-```python
-def move_dogs(field: list[list[str]], dog1: tuple[int, int], dog2: tuple[int, int], command: str) -> tuple[tuple[int, int], tuple[int, int]]:
-    """
-    Args:
-        field (list[list[str]]): לוח המשחק.
-        dog1 (tuple[int, int]): קואורדינטות הכלב הראשון.
-        dog2 (tuple[int, int]): קואורדינטות הכלב השני.
-        command (str): פקודת המשתמש.
+**פרמטרים**:
 
-    Returns:
-        tuple[tuple[int, int], tuple[int, int]]: קואורדינטות הכלבים לאחר התזוזה.
-    """
-```
+- `field` (list[list[str]]): רשימה דו-ממדית המייצגת את לוח המשחק.
+- `dog1` (tuple[int, int]): קואורדינטות של הכלב הראשון (שורה, עמודה).
+- `dog2` (tuple[int, int]): קואורדינטות של הכלב השני (שורה, עמודה).
+- `command` (str): הפקודה של המשתמש (L, R, U, D, F או S).
+
+**החזרות**:
+
+- `tuple[tuple[int, int], tuple[int, int]]`: קואורדינטות חדשות של הכלב הראשון והשני לאחר התזוזה.
 
 ### `move_thieves`
 
 **תיאור**: מזיזה את הגנבים באופן אקראי על גבי לוח המשחק.
 
-```python
-def move_thieves(field: list[list[str]], thief1: tuple[int, int], thief2: tuple[int, int]) -> tuple[tuple[int, int], tuple[int, int]]:
-    """
-    Args:
-        field (list[list[str]]): רשימה דו-ממדית המייצגת את לוח המשחק.
-        thief1 (tuple[int, int]): קואורדינטות הגנב הראשון (row, col).
-        thief2 (tuple[int, int]): קואורדינטות הגנב השני (row, col).
+**פרמטרים**:
 
-    Returns:
-        tuple[tuple[int, int], tuple[int, int]]: קואורדינטות הגנבים לאחר התזוזה.
-    """
-```
+-   `field` (list[list[str]]): רשימה דו-ממדית המייצגת את לוח המשחק.
+-   `thief1` (tuple[int, int]): קואורדינטות של הגנב הראשון (שורה, עמודה).
+-   `thief2` (tuple[int, int]): קואורדינטות של הגנב השני (שורה, עמודה).
+
+**החזרות**:
+
+- `tuple[tuple[int, int], tuple[int, int]]`: קואורדינטות חדשות של הגנב הראשון והשני לאחר התזוזה.
 
 ### `check_catch`
 
 **תיאור**: בודקת האם הכלבים תפסו את הגנבים.
 
-```python
-def check_catch(dog1: tuple[int, int], dog2: tuple[int, int], thief1: tuple[int, int], thief2: tuple[int, int]) -> bool:
-    """
-    Args:
-        dog1 (tuple[int, int]): קואורדינטות הכלב הראשון.
-        dog2 (tuple[int, int]): קואורדינטות הכלב השני.
-        thief1 (tuple[int, int]): קואורדינטות הגנב הראשון.
-        thief2 (tuple[int, int]): קואורדינטות הגנב השני.
+**פרמטרים**:
 
-    Returns:
-        bool: האם הכלבים תפסו את הגנבים.
-    """
-```
+- `dog1` (tuple[int, int]): קואורדינטות של הכלב הראשון (שורה, עמודה).
+- `dog2` (tuple[int, int]): קואורדינטות של הכלב השני (שורה, עמודה).
+- `thief1` (tuple[int, int]): קואורדינטות של הגנב הראשון (שורה, עמודה).
+- `thief2` (tuple[int, int]): קואורדינטות של הגנב השני (שורה, עמודה).
+
+**החזרות**:
+
+- `bool`:  `True` אם הכלבים תפסו את הגנבים, אחרת `False`.
 
 ### `play_dogs_game`
 
-**תיאור**: פונקציית המשחק הראשית.
+**תיאור**: פונקצית המשחק הראשית, שמאפשרת למשתמש לשחק את משחק "כלבים".
 
-```python
-def play_dogs_game() -> None:
-    """
-    Args:
-         None
+**פרמטרים**:
 
-    Returns:
-        None
-    """
+- אין
+
+**החזרות**:
+
+- אין

@@ -45,8 +45,9 @@ from src.endpoints.advertisement.facebook.scenarios.post_message import (
 
 # Утилиты
 from src.utils.file import read_text_file, save_text_file, get_filenames
-from src.utils.jjson import j_loads_ns, j_dumps
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import get_image_bytes, get_raw_image_data
+from src.utils.convertors.ns import ns2dict
 
 # Логирование
 from src.logger.logger import logger
@@ -160,9 +161,6 @@ class EmilDesign:
             described_images.append(img_path)
             save_text_file(described_images_path, described_images)
 
-            
-
-
         
 
 
@@ -217,8 +215,9 @@ class EmilDesign:
             f.id_supplier = 11366 #  https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
             f.description = product_ns.description
             f.images_urls = product_ns.local_saved_image
-
-            product_id = await presta.create('product', f)
+            
+            fields_dict:dict = j_dumps (f)            
+            product_id = await presta.create('products', fields_dict)
             ...
 
         

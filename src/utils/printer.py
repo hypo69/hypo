@@ -9,13 +9,7 @@
     :synopsis: Utility functions for pretty printing and text styling.
 
 This module provides functions to print data in a human-readable format with optional text styling, including color, background, and font styles.
-
-Functions:
-    - :func:`_color_text`
-    - :func:`pprint`
 """
-
-
 
 import json
 import csv

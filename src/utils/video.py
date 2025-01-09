@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils 
+.. module:: src.utils.video 
 	:platform: Windows, Unix
 	:synopsis: Video Saving Utilities
 

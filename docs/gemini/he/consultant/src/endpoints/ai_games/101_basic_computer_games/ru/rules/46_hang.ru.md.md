@@ -1,202 +1,188 @@
 # Анализ кода модуля `46_hang.ru.md`
 
 **Качество кода**
-
-- **Соответствие требованиям к формату кода (1-10):**
-  -   **Преимущества:**
-        - Документ содержит подробное описание игры "Виселица" на русском языке, включая правила, пошаговые инструкции, пример работы программы, возможные ограничения и рекомендации по реализации.
-        - Структура документа логичная и хорошо организована, что облегчает понимание и использование информации.
-        - Есть примеры работы программы, которые помогают понять игровой процесс.
-        - Описаны возможные ограничения и рекомендации по реализации, что полезно для разработчиков.
-  -  **Недостатки:**
-        - Документ представлен в формате `markdown`, а не в виде кода `python`.
-        - Отсутствуют конкретные блоки кода, которые можно было бы проверить на соответствие требованиям.
-        - Нет информации о необходимых импортах или функциях, которые следует использовать при реализации.
+*   **Соблюдение требований к формату кода (1-10):**
+    *   **Преимущества:**
+        *   Документ подробно описывает правила игры "Виселица" на русском языке.
+        *   Присутствует пошаговая инструкция по реализации игры.
+        *   Есть пример работы программы, иллюстрирующий игровой процесс.
+        *   Перечислены возможные ограничения и особенности реализации.
+        *   Даны рекомендации по реализации игры на Python.
+    *   **Недостатки:**
+        *   Файл представляет собой описание игры в формате Markdown, а не код Python, поэтому требования к коду Python не применимы.
+        *   Отсутствуют docstring, reStructuredText комментарии, а также нет кода для проверки.
+        *   Нет импортов, классов, функций для анализа.
+        *   Не требуется использование `j_loads` или `j_loads_ns`.
 
 **Рекомендации по улучшению**
-
-1.  Преобразовать `markdown` в `python` код, разделив его на логические блоки.
-2.  Добавить docstring для модуля и функций.
-3.  Реализовать функциональность, описанную в документе.
-4.  Использовать `j_loads` или `j_loads_ns` для работы с файлами JSON, если это необходимо.
-5.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-6.  Использовать `reStructuredText` для комментариев.
-7.  Привести переменные и функции к общему стилю именования.
-8.  Добавить обработку исключений для возможных ошибок.
+1.  Преобразовать описание игры в код Python.
+2.  Добавить reStructuredText (RST) комментарии для каждой функции, метода и класса в Python.
+3.  Использовать `j_loads` или `j_loads_ns` для загрузки данных из JSON, если это необходимо.
+4.  Реализовать обработку ошибок с помощью `logger.error`.
+5.  Добавить примеры документации в формате RST для функций.
+6.  Обеспечить возможность повторной игры.
+7.  Разработать базовую реализацию игры с учетом заданных правил.
+8.  Добавить визуализацию виселицы.
+9.  Предусмотреть уровни сложности.
 
 **Улучшенный код**
+
 ```python
 """
 Модуль для реализации игры "Виселица".
 =========================================================================================
 
-Модуль содержит функции и логику для игры "Виселица", позволяющей игроку
-угадывать слово по буквам.
+Модуль содержит функции для управления игровым процессом "Виселицы",
+включая выбор случайного слова, обработку ввода пользователя, подсчет ошибок и
+отображение состояния игры.
 
 Пример использования
 --------------------
 
-Пример запуска игры:
-
 .. code-block:: python
 
-    from src.games.hang import HangGame
-
-    game = HangGame()
-    game.play()
+    if __name__ == "__main__":
+        play_hangman()
 """
-import random # импорт модуля random для выбора случайного слова
-from src.logger.logger import logger # импорт модуля logger для логирования ошибок
-from src.utils.jjson import j_loads_ns # импорт функции для загрузки json
+import random
+from src.logger.logger import logger # Импорт logger для обработки ошибок
 
-class HangGame:
+def choose_word() -> str:
     """
-    Класс, представляющий игру "Виселица".
+    Выбирает случайное слово из списка.
 
-    :ivar words: Список слов для игры.
-    :vartype words: list
-    :ivar max_attempts: Максимальное количество попыток.
-    :vartype max_attempts: int
-    :ivar guessed_word: Слово, которое нужно угадать.
-    :vartype guessed_word: str
-    :ivar guessed_letters: Список угаданных букв.
-    :vartype guessed_letters: list
-    :ivar attempts_left: Количество оставшихся попыток.
-    :vartype attempts_left: int
+    :return: Случайное слово из списка.
     """
-    def __init__(self, words_file='words.json', max_attempts=6):
-        """
-        Инициализация игры.
+    words = ['python', 'джава', 'программа', 'алгоритм', 'данные', 'функция']
+    return random.choice(words)
 
-        :param words_file: Путь к файлу со списком слов.
-        :type words_file: str
-        :param max_attempts: Максимальное количество попыток.
-        :type max_attempts: int
-        """
-        try:
-            # Загрузка списка слов из json-файла #
-            self.words = j_loads_ns(words_file).get('words', [])
-        except Exception as e:
-            logger.error(f'Ошибка при загрузке слов из файла {words_file}: {e}')
-            self.words = ['слово', 'игра', 'код', 'виселица'] # Дефолтные слова если произошла ошибка
 
-        self.max_attempts = max_attempts
-        self.guessed_word = self._choose_word()
-        self.guessed_letters = []
-        self.attempts_left = self.max_attempts
+def display_word(word: str, guessed_letters: list) -> str:
+    """
+    Отображает слово с угаданными буквами и подчеркиваниями для остальных.
 
-    def _choose_word(self) -> str:
-         """
-         Выбирает случайное слово из списка.
-
-         :return: Случайное слово.
-         :rtype: str
-         """
-         return random.choice(self.words)
-
-    def _display_word(self) -> str:
-        """
-        Отображает слово с угаданными буквами и прочерками.
-
-        :return: Строка с отображением слова.
-        :rtype: str
-        """
-        display = ''
-        for letter in self.guessed_word:
-            if letter in self.guessed_letters:
-                display += letter + ' '
-            else:
-                display += '_ '
-        return display.strip()
-
-    def _get_input(self) -> str:
-        """
-        Получает ввод буквы от пользователя.
-
-        :return: Введенная буква.
-        :rtype: str
-        """
-        while True:
-            letter = input('Введите букву: ').lower()
-            if len(letter) == 1 and letter.isalpha():
-                return letter
-            else:
-                print('Некорректный ввод. Введите одну букву.')
-
-    def _check_letter(self, letter: str) -> bool:
-        """
-        Проверяет, есть ли буква в слове.
-
-        :param letter: Буква для проверки.
-        :type letter: str
-        :return: True, если буква есть в слове, иначе False.
-        :rtype: bool
-        """
-        if letter in self.guessed_word:
-            return True
-        return False
-
-    def _update_game_state(self, letter: str) -> None:
-        """
-        Обновляет состояние игры.
-
-        :param letter: Введенная буква.
-        :type letter: str
-        """
-        if self._check_letter(letter):
-            self.guessed_letters.append(letter)
+    :param word: Загаданное слово.
+    :param guessed_letters: Список угаданных букв.
+    :return: Строка с отображением текущего состояния слова.
+    """
+    display = ''
+    for letter in word:
+        if letter in guessed_letters:
+            display += letter + ' '
         else:
-            self.attempts_left -= 1
-            print(f'Буквы "{letter}" нет в слове. Осталось попыток: {self.attempts_left}')
+            display += '_ '
+    return display.strip()
 
-    def _is_game_won(self) -> bool:
+
+def play_hangman():
+    """
+    Запускает игровой процесс "Виселицы".
+    """
+    word = choose_word()
+    guessed_letters = []
+    attempts = 6
+    hangman_stages = [
         """
-        Проверяет, выиграл ли игрок.
-
-        :return: True, если игрок выиграл, иначе False.
-        :rtype: bool
+          ------
+          |    |
+          |
+          |
+          |
+          |
+        """,
         """
-        return all(letter in self.guessed_letters for letter in self.guessed_word)
-
-    def _is_game_lost(self) -> bool:
-         """
-         Проверяет, проиграл ли игрок.
-
-         :return: True, если игрок проиграл, иначе False.
-         :rtype: bool
-         """
-         return self.attempts_left == 0
-
-    def play(self) -> None:
+          ------
+          |    |
+          |    O
+          |
+          |
+          |
+        """,
         """
-        Запускает игровой процесс.
+          ------
+          |    |
+          |    O
+          |    |
+          |
+          |
+        """,
         """
-        print('Добро пожаловать в игру Виселица!')
-        print('Угадайте слово. У вас есть 6 попыток.')
+          ------
+          |    |
+          |    O
+          |   /|
+          |
+          |
+        """,
+        """
+          ------
+          |    |
+          |    O
+          |   /|\\
+          |
+          |
+        """,
+        """
+          ------
+          |    |
+          |    O
+          |   /|\\
+          |   /
+          |
+        """,
+        """
+          ------
+          |    |
+          |    O
+          |   /|\\
+          |   / \\
+          |
+        """
+    ]
 
-        while not self._is_game_won() and not self._is_game_lost():
-            print(f'Загаданное слово: {self._display_word()}')
-            letter = self._get_input()
-            self._update_game_state(letter)
-        if self._is_game_won():
-             print(f'Поздравляем! Вы угадали слово "{self.guessed_word}"!')
+
+    print("Добро пожаловать в игру HANG!")
+    print(f"Угадайте слово. У вас {attempts} попыток.")
+    while attempts > 0:
+        current_display = display_word(word, guessed_letters)
+        print(hangman_stages[6-attempts]) # Отображаем текущий этап виселицы
+        print(f"Загаданное слово: {current_display}")
+        letter = input("Введите букву: ").lower() # Запрашиваем ввод буквы
+
+        if not letter.isalpha() or len(letter) != 1:
+            print("Пожалуйста, введите одну букву.")
+            continue # Если ввод не буква или не один символ, переходим к следующей итерации
+
+        if letter in guessed_letters:
+            print("Вы уже вводили эту букву. Попробуйте другую.")
+            continue # Если буква уже вводилась, переходим к следующей итерации
+
+        guessed_letters.append(letter) # Добавляем угаданную букву в список
+
+        if letter in word:
+            print(f'Буква "{letter}" есть в слове.')
+            if '_' not in display_word(word,guessed_letters):
+                print(f"Поздравляем! Вы угадали слово {word}!")
+                break # Если все буквы угаданы, игра заканчивается
         else:
-             print(f'Вы проиграли! Загаданное слово было "{self.guessed_word}".')
+            attempts -= 1
+            print(f'Буквы "{letter}" нет в слове.')
+            print(f"Осталось попыток: {attempts}")
+    else:
+        print(hangman_stages[6])
+        print(f"Вы проиграли. Загаданное слово было: {word}")
 
-        while True:
-                play_again = input('Хотите сыграть снова? (да/нет): ').lower()
-                if play_again in ['да', 'нет']:
-                     break
-                else:
-                     print('Введите "да" или "нет".')
+    play_again = input("Хотите сыграть снова? (да/нет): ").lower() # Предлагаем сыграть еще раз
+    if play_again == "да":
+        play_hangman() # Если игрок хочет сыграть снова, запускаем новую игру
+    else:
+        print("Спасибо за игру!") # Иначе завершаем работу
 
-        if play_again == 'да':
-               self.__init__()
-               self.play()
-        else:
-               print('Спасибо за игру!')
 
-if __name__ == '__main__':
-    game = HangGame()
-    game.play()
+
+if __name__ == "__main__":
+    try:
+        play_hangman()
+    except Exception as e:
+        logger.error("Произошла ошибка во время игры:", exc_info=e)  # Логируем ошибку
 ```

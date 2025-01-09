@@ -2,58 +2,67 @@
 
 ## סקירה כללית
 
-המשחק "HURKLE" הוא משחק ניחושים בו השחקן מנסה למצוא את מיקום ה-"HURKLE" המוסתר על גבי מפה בגודל 10x10. השחקן מבצע ניחושים על ידי הזנת קואורדינטות, ומקבל רמזים על כיוון מיקומו של ה-"HURKLE" יחסית לניחושים. המטרה היא למצוא את ה-"HURKLE" במספר מינימלי של ניסיונות.
+המשחק "HURKLE" הוא משחק ניחושים שבו המטרה היא למצוא את המיקום של "HURKLE" המוחבא במפה בגודל 10x10. השחקן מבצע ניחושים על ידי הזנת קואורדינטות, ומקבל רמזים לגבי מיקומו של HURKLE יחסית לניחושים שלו. המטרה היא למצוא את HURKLE במספר המינימלי של ניסיונות.
 
 ## תוכן עניינים
-
-- [סקירה כללית](#סקירה-כללית)
-- [פונקציות](#פונקציות)
+1. [סקירה כללית](#סקירה-כללית)
+2. [פונקציות](#פונקציות)
     - [`get_direction`](#get_direction)
+3. [משתנים](#משתנים)
+4. [לולאה ראשית](#לולאה-ראשית)
 
 ## פונקציות
 
 ### `get_direction`
 
-**Description**:
-   פונקציה המגדירה את הכיוון של ה-HURKLE מקואורדינטות המשתמש.
+**תיאור**:
+קובעת את הכיוון מקואורדינטות המשתמש לקואורדינטות HURKLE.
 
-**Parameters**:
-   - `user_x` (int): קואורדינטת X שהזין המשתמש.
-   - `user_y` (int): קואורדינטת Y שהזין המשתמש.
-   - `hurkle_x` (int): קואורדינטת X של ה-HURKLE.
-   - `hurkle_y` (int): קואורדינטת Y של ה-HURKLE.
+**פרמטרים**:
+- `user_x` (int): קואורדינטת X שהוזנה על ידי המשתמש.
+- `user_y` (int): קואורדינטת Y שהוזנה על ידי המשתמש.
+- `hurkle_x` (int): קואורדינטת X של HURKLE.
+- `hurkle_y` (int): קואורדינטת Y של HURKLE.
 
-**Returns**:
-   - `str`: מחזירה מחרוזת שמייצגת את הכיוון.
-
-**Raises**:
-   - אין
+**ערך מוחזר**:
+- `str`: מחזירה מחרוזת המייצגת את הכיוון.
 
 ```python
-def get_direction(user_x, user_y, hurkle_x, hurkle_y):
+def get_direction(user_x, user_y, hurkle_x, hurkle_y) -> str:
     """
     Args:
-        user_x (int): קואורדינטת X שהזין המשתמש.
-        user_y (int): קואורדינטת Y שהזין המשתמש.
-        hurkle_x (int): קואורדינטת X של ה-HURKLE.
-        hurkle_y (int): קואורדינטת Y של ה-HURKLE.
+        user_x (int): קואורדינטת X שהוזנה על ידי המשתמש.
+        user_y (int): קואורדינטת Y שהוזנה על ידי המשתמש.
+        hurkle_x (int): קואורדינטת X של HURKLE.
+        hurkle_y (int): קואורדינטת Y של HURKLE.
 
     Returns:
-        str: מחזירה מחרוזת שמייצגת את הכיוון.
+        str: מחרוזת המייצגת את הכיוון.
     """
-    if user_x < hurkle_x and user_y < hurkle_y:
-        return "СЕВЕРО-ВОСТОК"
-    elif user_x < hurkle_x and user_y > hurkle_y:
-        return "ЮГО-ВОСТОК"
-    elif user_x > hurkle_x and user_y < hurkle_y:
-        return "СЕВЕРО-ЗАПАД"
-    elif user_x > hurkle_x and user_y > hurkle_y:
-        return "ЮГО-ЗАПАД"
-    elif user_x < hurkle_x:
-        return "ВОСТОК"
-    elif user_x > hurkle_x:
-        return "ЗАПАД"
-    elif user_y < hurkle_y:
-        return "СЕВЕР"
-    else:
-        return "ЮГ"
+```
+## משתנים
+- `hurkle_x` (int): קואורדינטת ה-X של HURKLE, נוצרת באופן אקראי בטווח שבין 1 ל-10.
+- `hurkle_y` (int): קואורדינטת ה-Y של HURKLE, נוצרת באופן אקראי בטווח שבין 1 ל-10.
+- `numberOfGuesses` (int): מונה מספר הניחושים של השחקן, מאותחל ל-0.
+
+## לולאה ראשית
+קוד המשחק כולל לולאה ראשית שרצה עד שהשחקן מוצא את HURKLE:
+- בכל איטרציה, מספר הניחושים גדל ב-1.
+- השחקן מתבקש להזין קואורדינטות X ו-Y.
+- אם הקואורדינטות שהוזנו תואמות לקואורדינטות של HURKLE, מודפסת הודעת ניצחון ומספר הניחושים, והלולאה מסתיימת.
+- אם לא, מחושב הכיוון בין קואורדינטות השחקן לקואורדינטות של HURKLE, ומוצג הכיוון.
+- אם ישנה שגיאת ערך בהזנת הקואורדינטות, תודפס הודעת שגיאה והלולאה תמשיך.
+```python
+while True:
+    numberOfGuesses += 1
+    try:
+        user_x = int(input("Введите X координату (1-10): "))
+        user_y = int(input("Введите Y координату (1-10): "))
+    except ValueError:
+        print("Пожалуйста, введите целые числа.")
+        continue
+    if user_x == hurkle_x and user_y == hurkle_y:
+        print(f"ПОЗДРАВЛЯЮ! Вы нашли HURKLE за {numberOfGuesses} ходов!")
+        break
+    direction = get_direction(user_x, user_y, hurkle_x, hurkle_y)
+    print(direction)

@@ -1,124 +1,167 @@
-## ניתוח קוד: `ask.py`
+## ניתוח קוד: ask.py
 
 ### 1. <algorithm>
 
-הקוד מגדיר מחלקה בשם `GoogleGenerativeAI` המאפשרת אינטראקציה עם מודלים של Google Generative AI.
+**תרשים זרימה צעד-אחר-צעד:**
 
-**תרשים זרימה צעד אחר צעד:**
-
-1.  **ייבוא**: ייבוא הספריה `google.generativeai` בשם `genai`.
-    *   דוגמה: `import google.generativeai as genai`
-2.  **הגדרת מחלקה**: הגדרת מחלקה `GoogleGenerativeAI`.
-    *   המחלקה מכילה רשימה של מודלים אפשריים (`MODELS`).
-3.  **פונקציית `__init__`**:
-    *   **קבלת פרמטרים**: קבלת מפתח API (`api_key`), הוראה למערכת (`system_instruction`, אופציונלי) ושם מודל (`model_name`, אופציונלי).
-    *   דוגמה: `__init__(api_key="YOUR_API_KEY", system_instruction="You are helpful bot", model_name='gemini-2-13b')`
-    *   **שמירת הפרמטרים**: שמירת הפרמטרים במשתני המופע `self.api_key`, `self.model_name`.
-    *   **תצורת הספרייה**: קריאה ל `genai.configure()` עם מפתח ה-API.
-    *   **יצירת מודל**: יצירת מודל עם `genai.GenerativeModel()` עם שם המודל והוראות המערכת.
-4.  **פונקציית `ask`**:
-    *   **קבלת פרמטר**: קבלת שאלה (מחרוזת) `q`.
-    *   דוגמה: `ask(q="What is the capital of France?")`
-    *   **שליחת שאלה למודל**: קריאה לשיטת `generate_content` של המודל עם השאלה `q`.
-    *   **טיפול בשגיאות**: טיפול בשגיאות באמצעות בלוק `try-except`.
-        *   במקרה של שגיאה, החזרת מחרוזת שגיאה.
-    *   **החזרת תשובה**: החזרת הטקסט מהתגובה של המודל.
-5.  **קבלת מפתח API מהמשתמש**: קבלת מפתח API באמצעות `input()`.
-6.  **יצירת מופע של המחלקה**: יצירת מופע של המחלקה `GoogleGenerativeAI` בשם `model` עם מפתח ה-API שהוזן.
-    *   דוגמה: `model = GoogleGenerativeAI(api_key="YOUR_API_KEY")`
-7.  **קבלת שאלה מהמשתמש**: קבלת שאלה מהמשתמש באמצעות `input()`.
-8.  **קריאה לפונקציה ask**: קריאה לפונקציה `ask` של המופע `model` עם השאלה.
-9.  **הדפסת תשובה**: הדפסת התשובה שהתקבלה.
+1.  **התחלה:** התוכנית מתחילה.
+    
+2.  **ייבוא ספריות:** ייבוא הספרייה `google.generativeai` בשם `genai` לשימוש ב-Gemini API.
+    
+    *   **דוגמה:** `import google.generativeai as genai`
+    
+3.  **הגדרת מחלקה:** הגדרת המחלקה `GoogleGenerativeAI` לטיפול באינטראקציה עם מודלי Gemini.
+    
+    *   **דוגמה:**
+        ```python
+        class GoogleGenerativeAI:
+        	def __init__(self, api_key, system_instruction, model_name):
+        		...
+        	def ask(self, q):
+        		...
+        ```
+    
+4.  **אתחול המחלקה `GoogleGenerativeAI`:**
+    * קבלת `api_key`, `system_instruction` ו- `model_name`.
+    * הגדרת `self.api_key`, `self.model_name`.
+    * קביעת תצורה של הספרייה `genai` באמצעות מפתח ה-API.
+    * יצירת מופע של המודל `genai.GenerativeModel` עם `model_name` ו- `system_instruction`.
+       *   **דוגמה:** `self.model = genai.GenerativeModel(model_name=self.model_name, system_instruction=system_instruction)`
+5.  **קבלת מפתח API:**
+    
+    *   התוכנית מבקשת מהמשתמש להזין את מפתח ה-API של Gemini.
+    *   **דוגמה:** `API_KEY = input("API ключ от \`gemini\`")`
+    
+6.  **יצירת מופע של המחלקה `GoogleGenerativeAI`:**
+    
+    *   יצירת מופע של המחלקה `GoogleGenerativeAI` באמצעות מפתח ה-API שסופק.
+    *   **דוגמה:** `model = GoogleGenerativeAI(api_key = API_KEY)`
+    
+7.  **קבלת שאלה מהמשתמש:**
+    
+    *   התוכנית מבקשת מהמשתמש להזין שאלה.
+    *   **דוגמה:** `q = input("Вопрос: ")`
+    
+8.  **שליחת השאלה למודל:**
+    
+    *   קריאה לפונקציה `ask` של המופע של המחלקה `GoogleGenerativeAI` עם השאלה שסופקה.
+    *   **דוגמה:** `response = model.ask(q)`
+    
+9.  **קבלת תגובה מהמודל:**
+    
+    *   בתוך הפונקציה `ask` השאלה נשלחת ל-Gemini.
+    *   התגובה של המודל מוחזרת. אם מתרחשת שגיאה, מוחזרת הודעת שגיאה.
+    *   **דוגמה:** `response = self.model.generate_content(q)`
+    
+10. **הדפסת התגובה:**
+    
+    *   התגובה של המודל מודפסת למסוף.
+    *   **דוגמה:** `print(response)`
+    
+11. **סיום:** התוכנית מסתיימת.
+    
 
 **זרימת נתונים:**
 
-*   המשתמש מספק `api_key` ושאלה.
-*   המחלקה `GoogleGenerativeAI` משתמשת ב `api_key` כדי ליצור מופע של מודל.
-*   השאלה מועברת למודל.
-*   המודל מחזיר תשובה.
-*   התשובה מודפסת למסך.
+*   `API_KEY` -> `GoogleGenerativeAI.__init__` -> `genai.configure`
+*   `system_instruction` -> `GoogleGenerativeAI.__init__` -> `genai.GenerativeModel`
+*   `model_name` -> `GoogleGenerativeAI.__init__` -> `genai.GenerativeModel`
+*   `q` -> `GoogleGenerativeAI.ask` -> `self.model.generate_content`
+*   `response.text` ->  `GoogleGenerativeAI.ask` -> הדפסה למסוף
+    
 
 ### 2. <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[התחלה] --> Import_GenAI[ייבוא ספריית genai: `import google.generativeai as genai`]
-    Import_GenAI --> Class_Definition[הגדרת המחלקה `GoogleGenerativeAI`]
-    Class_Definition --> Init_Method[שיטת `__init__`:<br>איתחול מודל Gemini]
-    Init_Method -->  Configure_GenAI[קריאה ל-`genai.configure(api_key)`]
-    Configure_GenAI --> Create_GenModel[יצירת מודל GenerativeModel]
-    Create_GenModel --> Ask_Method[שיטת `ask(q)`:<br>שליחת שאלה וקבלת תשובה]
-     Ask_Method --> Generate_Content[קריאה ל- `model.generate_content(q)`]
-    Generate_Content --> Return_Response[החזרת `response.text`]
-    Return_Response --> Get_API_Key[קבלת מפתח API מהמשתמש]
-    Get_API_Key --> Create_Model_Instance[יצירת מופע של `GoogleGenerativeAI`]
-    Create_Model_Instance --> Get_Question[קבלת שאלה מהמשתמש]
-    Get_Question --> Call_Ask_Method[קריאה לשיטת `ask`]
-    Call_Ask_Method --> Print_Response[הדפסת התשובה]
-    Print_Response --> End[סיום]
+    A[Start] --> B{קבלת API Key מהמשתמש};
+    B --> C{יצירת מופע של GoogleGenerativeAI};
+    C --> D{קבלת שאלה מהמשתמש};
+    D --> E{קריאה לפונקציה ask};
+     E --> F{שליחת השאלה למודל Gemini};
+    F --> G{קבלת תגובה מהמודל};
+    G --> H{הדפסת התגובה};
+    H --> I[End];
+    
+   subgraph GoogleGenerativeAI Class
+      C -- api_key, model_name, system_instruction --> init_method[<code>__init__</code><br>אתחול המודל]
+       init_method --> genai_configure[<code>genai.configure</code> <br> קביעת תצורה עם מפתח API]
+      init_method --> generative_model[<code>genai.GenerativeModel</code> <br>יצירת מודל]
+      E -- q --> ask_method[<code>ask</code> <br> שליחת שאלה למודל];
+      ask_method --> generative_content[<code>model.generate_content</code><br> קבלת תגובה מהמודל];
+       generative_content --> ask_return[<code>return</code><br>החזרת התגובה]
+      end
+   
 ```
 
-**ניתוח תלויות ייבוא:**
+**ניתוח תלויות:**
 
-*   `import google.generativeai as genai`: הספרייה `google.generativeai` היא ספריה של גוגל המאפשרת אינטראקציה עם מודלים של Generative AI, כמו Gemini. הייבוא בשם `genai` מאפשר קיצור הקריאה לפונקציות ושיטות הספריה.
+הקוד תלוי בספריית `google.generativeai` (מיובא בשם `genai`). ספרייה זו מספקת כלים לתקשורת עם מודלי הבינה המלאכותית של גוגל, כגון Gemini.
 
 ### 3. <explanation>
 
 **ייבואים (Imports):**
 
-*   `import google.generativeai as genai`: מייבאת את ספריית Google Generative AI, המאפשרת אינטראקציה עם מודלים של גוגל, כמו Gemini. הייבוא נעשה תחת השם `genai` לצורך נוחות השימוש. ספריה זו אינה חלק מ-`src.` אלא ספריה חיצונית.
+*   `import google.generativeai as genai`: ייבוא הספרייה `google.generativeai` בשם `genai`. ספרייה זו מאפשרת תקשורת עם מודלי ה-Gemini של גוגל. היא לא קשורה ישירות לספריות אחרות ב-`src.`, מכיוון שהיא ספרייה חיצונית.
 
 **מחלקות (Classes):**
 
 *   `class GoogleGenerativeAI`:
-    *   **תפקיד**: מחלקה זו נועדה לעטוף את האינטראקציה עם מודלים של Google Generative AI. היא מאפשרת שליחת שאילתות טקסט וקבלת תשובות מהמודל.
-    *   **מאפיינים**:
-        *   `MODELS`: רשימה של שמות מודלים אפשריים (לא בשימוש פעיל בקוד הנוכחי).
-        *   `api_key`: מפתח API לאימות מול Google Generative AI.
-        *   `model_name`: שם המודל הנבחר.
-        *   `model`: מופע של המודל עצמו.
-    *   **שיטות**:
-        *   `__init__(self, api_key: str, system_instruction: str = '', model_name: str = 'gemini-2.0-flash-exp')`: מאתחלת את המופע של המחלקה. מקבלת מפתח API, הוראות למערכת (אופציונלי) ושם מודל (אופציונלי). מגדירה את המודל באמצעות `genai.GenerativeModel`.
-        *   `ask(self, q: str) -> str`: שולחת שאלה `q` למודל ומחזירה את התשובה מהמודל כטקסט. מטפלת בשגיאות באמצעות בלוק `try-except`.
-    *   **אינטראקציה**: המחלקה יוצרת מופע של מודל Gemini באמצעות ספריית `google.generativeai` ומאפשרת לשלוח שאילתות למודל ולקבל את התשובות.
+    *   **תפקיד:** עוטפת את הפונקציונליות של מודל Gemini ומספקת ממשק פשוט לתקשורת איתו.
+    *   **מאפיינים:**
+        *   `MODELS`: רשימה של מודלים אפשריים של Gemini (לא בשימוש ישיר כרגע).
+        *   `api_key`: מפתח ה-API לגישה ל-Gemini.
+        *   `model_name`: שם המודל Gemini שבו יש להשתמש.
+        *   `model`: מופע של `genai.GenerativeModel`.
+    *   **שיטות:**
+        *   `__init__(self, api_key, system_instruction, model_name)`: מאתחלת את המחלקה, קובעת את התצורה של `genai` עם מפתח ה-API ומייצרת מופע של המודל.
+        *   `ask(self, q)`: שולחת שאלה למודל Gemini ומחזירה את התגובה או הודעת שגיאה.
+    *   **אינטראקציה:** המחלקה משתמשת ב-`genai` לצורך קריאה למודל הבינה המלאכותית. היא עובדת באופן עצמאי מול ה-API של גוגל ואינה תלויה בחלקים אחרים בפרויקט.
+    
 
 **פונקציות (Functions):**
 
-*   `__init__(self, api_key: str, system_instruction: str = '', model_name: str = 'gemini-2.0-flash-exp')` :
-    *   **פרמטרים**:
-        *   `api_key`: מחרוזת המכילה את מפתח ה API של ג'מיני.
-        *    `system_instruction`: מחרוזת המכילה הוראות למודל (אופציונלי, ברירת מחדל היא מחרוזת ריקה).
-        *   `model_name`: מחרוזת המכילה את שם המודל (אופציונלי, ברירת המחדל היא `'gemini-2.0-flash-exp'`).
-    *   **ערך מוחזר**: אין.
-    *   **מטרה**: לאתחל את המופע של המחלקה עם מפתח ה API, הוראות למודל ושם המודל.
-    *   **דוגמה**:
-        ```python
-         model = GoogleGenerativeAI(api_key="YOUR_API_KEY", system_instruction="You are helpful bot", model_name='gemini-2-13b')
-        ```
-*   `ask(self, q: str) -> str`:
-    *   **פרמטרים**:
-        *   `q`: מחרוזת המכילה את השאלה שרוצים לשלוח למודל.
-    *   **ערך מוחזר**: מחרוזת המכילה את התשובה של המודל, או הודעת שגיאה אם הייתה שגיאה.
-    *   **מטרה**: לשלוח שאלה למודל ולחזור עם התשובה.
-    *   **דוגמה**:
-        ```python
-        response = model.ask("What is the capital of France?")
-        print(response) # יציג את התשובה מהמודל
-        ```
+*   `GoogleGenerativeAI.__init__(self, api_key, system_instruction, model_name)`:
+    *   **פרמטרים:**
+        *   `api_key` (str): מפתח ה-API ל-Gemini.
+        *   `system_instruction` (str): הוראה למודל (פרומפט סיסטם).
+        *   `model_name` (str): שם מודל Gemini לשימוש. ברירת מחדל:  `gemini-2.0-flash-exp`.
+    *   **ערך מוחזר:** אין (None).
+    *   **מטרה:** מאתחלת את המופע של המחלקה, קובעת את תצורת `genai` עם מפתח ה-API ומייצרת מופע של המודל.
+    *   **דוגמא:** `model = GoogleGenerativeAI(api_key = "your_api_key", system_instruction="You are a helpful AI", model_name='gemini-2-13b')`
+    
+*   `GoogleGenerativeAI.ask(self, q)`:
+    *   **פרמטרים:**
+        *   `q` (str): השאלה לשליחה ל-Gemini.
+    *   **ערך מוחזר:**
+        *   str: התגובה של המודל או הודעת שגיאה.
+    *   **מטרה:** שולחת שאלה למודל Gemini ומחזירה את התשובה או הודעת שגיאה במקרה של שגיאה.
+    *   **דוגמא:** `response = model.ask("What is the meaning of life?")`
 
 **משתנים (Variables):**
 
-*   `API_KEY`: משתנה גלובלי המכיל את מפתח ה API שנקלט מהמשתמש.
-*    `model`: מופע של המחלקה `GoogleGenerativeAI`, אשר מאפשר אינטראקציה עם המודל.
-*   `q`: משתנה המכיל את השאלה שנקלטה מהמשתמש.
-*    `response`: משתנה המכיל את התשובה מהמודל.
+*   `API_KEY`:
+    *   **סוג:** str
+    *   **שימוש:** מאחסן את מפתח ה-API של Gemini שהמשתמש מספק.
+*   `model`:
+    *   **סוג:** GoogleGenerativeAI
+    *   **שימוש:**  מופע של המחלקה `GoogleGenerativeAI`.
+*   `q`:
+    *   **סוג:** str
+    *   **שימוש:** מאחסן את השאלה שהמשתמש מספק.
+*   `response`:
+    *   **סוג:** str
+    *   **שימוש:** מאחסן את התגובה שמתקבלת מהמודל.
 
 **בעיות אפשריות ותחומים לשיפור:**
 
-*   **ניהול שגיאות**: הטיפול בשגיאות בפונקציה `ask` הוא בסיסי. מומלץ להוסיף טיפול ספציפי יותר לסוגי שגיאות שונים.
-*   **קשיחות קוד**: קוד המפתח API מוזן ישירות דרך הקלט של המשתמש. דבר זה בעייתי בסביבת ייצור. מומלץ לטעון את המפתח מסביבה או מקובץ הגדרות.
-*   **רשימת מודלים**: רשימת המודלים (`MODELS`) אינה בשימוש פעיל בקוד, וניתן לייעל את קוד המשתמש.
+*   **טיפול בשגיאות:** הקוד כולל טיפול בשגיאות בסיסי, אך ניתן לשפר את הטיפול בשגיאות על ידי רישום לוג או טיפול מפורט יותר בסוגים שונים של שגיאות.
+*   **הגדרות מודל:** ניתן להוסיף אפשרויות נוספות לקביעת תצורה של המודל, כמו הגדרות טמפרטורה וכו'.
+*   **אימות מפתח API:** הקוד אינו מאמת את תקינות מפתח ה-API. ניתן להוסיף בדיקה לאימות המפתח.
 
 **שרשרת קשרים עם חלקים אחרים בפרויקט:**
 
-*   הקוד הזה עומד בפני עצמו ואין לו קשר ישיר עם חלקי פרויקט אחרים, מעבר לתלות בספרייה `google.generativeai`. הוא יכול לשמש כמודול עצמאי או כחלק מאינטגרציה רחבה יותר.
+*   אין תלות ישירה בקוד אחר בפרויקט מלבד ייבוא ספריית `google.generativeai`.
+*   קוד זה הוא בלתי תלוי וניתן להשתמש בו באופן עצמאי כמודול לגישה למודל Gemini.
+
+בנוסף, הקוד כולל שורה של בקשת קלט מהמשתמש לקבלת מפתח ה-API באופן ישיר. בדרך כלל, מפתחות API לא צריכים להיות מוזנים ישירות על ידי המשתמש, אלא מוגדרים באמצעות משתנה סביבה או בדרך אחרת.

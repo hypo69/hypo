@@ -2,57 +2,57 @@
 
 ## סקירה כללית
 
-מודול זה מספק מחלקה `FakeDataGenerator` ליצירת נתונים מזויפים, כגון שמות, כתובות אימייל, מספרי טלפון וכתובות. הוא שימושי ליצירת נתוני בדיקה או מילוי נתונים ביישומים.
+מודול זה מספק מחלקה `FakeDataGenerator` ליצירת נתונים מזויפים כמו שמות, כתובות דוא"ל, מספרי טלפון וכתובות.
 
 ## תוכן עניינים
 
-1. [מחלקות](#מחלקות)
-   - [`FakeDataGenerator`](#FakeDataGenerator)
-2. [פונקציות](#פונקציות)
-   - [`random_name`](#random_name)
-   - [`random_email`](#random_email)
-   - [`random_phone`](#random_phone)
-   - [`random_address`](#random_address)
-   - [`random_string`](#random_string)
-   - [`random_int`](#random_int)
-   - [`random_choice`](#random_choice)
+- [מחלקות](#מחלקות)
+    - [`FakeDataGenerator`](#FakeDataGenerator)
+- [פונקציות](#פונקציות)
+    - [`random_name`](#random_name)
+    - [`random_email`](#random_email)
+    - [`random_phone`](#random_phone)
+    - [`random_address`](#random_address)
+    - [`random_string`](#random_string)
+    - [`random_int`](#random_int)
+    - [`random_choice`](#random_choice)
 
 ## מחלקות
 
 ### `FakeDataGenerator`
 
-**Description**: מחלקה זו מספקת שיטות ליצירת נתונים מזויפים. היא כוללת רשימות סטטיות של שמות פרטיים, שמות משפחה, ערים, רחובות ודומיינים כדי ליצור נתונים מציאותיים.
+**Description**: מחלקה זו מייצגת גנרטור נתונים מזויפים. היא מיישמת פונקציות ליצירת נתונים שונים כמו שמות, כתובות דוא"ל, מספרי טלפון וכתובות.
 
 **Methods**:
-- [`random_name`](#random_name): מחזירה שם מלא אקראי.
-- [`random_email`](#random_email): מחזירה כתובת דוא"ל אקראית.
-- [`random_phone`](#random_phone): מחזירה מספר טלפון אקראי.
-- [`random_address`](#random_address): מחזירה כתובת אקראית.
-- [`random_string`](#random_string): מחזירה מחרוזת אקראית באורך שצוין.
-- [`random_int`](#random_int): מחזירה מספר שלם אקראי בטווח שצוין.
-- [`random_choice`](#random_choice): מחזירה פריט אקראי מרשימה שסופקה.
+- `random_name`: יצירת שם מלא אקראי.
+- `random_email`: יצירת כתובת דוא"ל אקראית.
+- `random_phone`: יצירת מספר טלפון אקראי.
+- `random_address`: יצירת כתובת אקראית.
+- `random_string`: יצירת מחרוזת אקראית.
+- `random_int`: יצירת מספר שלם אקראי.
+- `random_choice`: בחירת ערך אקראי מרשימה.
 
 ## פונקציות
 
 ### `random_name`
 
-**Description**: יוצר שם מלא אקראי על ידי שילוב של שם פרטי אקראי ושם משפחה אקראי.
+**Description**: יוצר שם מלא אקראי.
 
 **Parameters**:
 - אין פרמטרים.
 
 **Returns**:
-- `str`: שם מלא אקראי.
+- `str`: שם מלא, המורכב משם פרטי אקראי ושם משפחה אקראי.
 
 ### `random_email`
 
-**Description**: יוצר כתובת דוא"ל אקראית על ידי שילוב של שם פרטי אקראי, שם משפחה אקראי ודומיין אקראי.
+**Description**: יוצר כתובת דוא"ל אקראית.
 
 **Parameters**:
 - אין פרמטרים.
 
 **Returns**:
-- `str`: כתובת דוא"ל אקראית בפורמט `first_name.last_name@domain`.
+- `str`: כתובת דוא"ל בפורמט `firstname.lastname@domain`.
 
 ### `random_phone`
 
@@ -62,45 +62,45 @@
 - אין פרמטרים.
 
 **Returns**:
-- `str`: מספר טלפון אקראי.
+- `str`: מספר טלפון.
 
 ### `random_address`
 
-**Description**: יוצר כתובת אקראית על ידי שילוב של מספר בית אקראי, רחוב אקראי ועיר אקראית.
+**Description**: יוצר כתובת אקראית בפורמט `מספר רחוב, עיר`.
 
 **Parameters**:
 - אין פרמטרים.
 
 **Returns**:
-- `str`: כתובת אקראית בפורמט `house_number street, city`.
+- `str`: כתובת.
 
 ### `random_string`
 
-**Description**: יוצר מחרוזת אקראית באורך שצוין, המורכבת מאותיות ומספרים.
+**Description**: יוצר מחרוזת אקראית באורך נתון.
 
 **Parameters**:
 - `length` (int, optional): אורך המחרוזת. ברירת מחדל: 10.
 
 **Returns**:
-- `str`: מחרוזת אקראית.
+- `str`: מחרוזת אקראית המכילה אותיות ומספרים.
 
 ### `random_int`
 
-**Description**: יוצר מספר שלם אקראי בטווח מינימום ומקסימום שצוין.
+**Description**: יוצר מספר שלם אקראי בטווח נתון.
 
 **Parameters**:
-- `min_value` (int, optional): הערך המינימלי. ברירת מחדל: 0.
-- `max_value` (int, optional): הערך המקסימלי. ברירת מחדל: 100.
+- `min_value` (int, optional): ערך מינימלי. ברירת מחדל: 0.
+- `max_value` (int, optional): ערך מקסימלי. ברירת מחדל: 100.
 
 **Returns**:
 - `int`: מספר שלם אקראי.
 
 ### `random_choice`
 
-**Description**: בוחר פריט אקראי מרשימה שסופקה.
+**Description**: בוחר ערך אקראי מרשימת אפשרויות.
 
 **Parameters**:
 - `options` (List[str]): רשימת ערכים לבחירה.
 
 **Returns**:
-- `str`: פריט אקראי מהרשימה.
+- `str`: ערך אקראי מהרשימה.

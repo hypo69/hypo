@@ -225,6 +225,7 @@ from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.category import Category
 from src.utils.file import read_text_file
+from src.utils.convertors.ns import ns2dict
 from src.logger.logger import logger
 from src.logger.exceptions import ProductFieldException 
 
@@ -253,6 +254,8 @@ class ProductFields:
             'images_urls': []
         }
         self._payload()
+
+
 
     def _load_product_fields_list(self) -> List[str]:
         """

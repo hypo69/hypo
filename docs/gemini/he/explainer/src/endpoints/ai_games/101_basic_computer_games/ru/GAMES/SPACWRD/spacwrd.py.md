@@ -1,121 +1,114 @@
-# ניתוח קוד: משחק "מילת חלל"
+## ניתוח קוד: `spacwrd.py`
 
-## 1. <algorithm>
+### 1. **<algorithm>**
 
-### תרשים זרימה:
-1.  **התחלה:**
-    -   המשחק מתחיל.
-2.  **אתחול משתנים:**
-    -   `word_list`: רשימת מילים אפשריות (`["APPLE", "BANANA", "CHERRY", ... ]`).
-    -   `target_word`: מילה שנבחרה באקראי מתוך `word_list` (למשל, "APPLE").
-    -   `guessed_word`: מילה המורכבת מתווים "_" כמספר האותיות ב-`target_word` (למשל, "_ _ _ _ _").
-    -   `guessed_letters`: רשימה ריקה לשמירת האותיות שנוחשו (למשל, `[]`).
-    -   `correct_guesses`: מונה המאותחל ל-0 לספירת מספר האותיות שאותרו.
-3.  **לולאה ראשית (כל עוד המילה לא פוצחה):**
-    -   הדפסת המצב הנוכחי של `guessed_word` (למשל, "_ _ _ _ _").
-    -   קבלת קלט מהמשתמש - אות אחת (למשל, "A").
-    -   בדיקה אם האות שהוזנה נמצאת ב-`target_word`.
-        -   **אם כן:**
-            -   עדכון `guessed_word` עם האות במקומות הרלוונטיים (למשל, "A _ _ _ _").
-            -   הוספת האות ל-`guessed_letters` (למשל, `["A"]`).
-            -   עדכון מספר הניחושים הנכונים (`correct_guesses`).
-        -   **אם לא:**
-            -   המשך ללולאה הבאה.
-    -   בדיקה אם `correct_guesses` שווה לאורך ה-`target_word`.
-        -   **אם כן:**
-            -   הודעת ניצחון "YOU GOT IT!".
-            -   יציאה מהלולאה.
-        -   **אם לא:**
-            -   חזרה לתחילת הלולאה.
-4.  **סיום:**
-    -   סיום המשחק.
+**תיאור תהליך העבודה:**
 
-### זרימת נתונים:
--   `choose_word` מקבלת `word_list` ומחזירה `target_word`.
--   `display_word` מקבלת `word` ו-`guessed_letters` ומחזירה מחרוזת תצוגה.
--   `update_word` מקבלת `target_word`, `guessed_word` ו-`user_letter` ומחזירה את `updated_word`.
--   `correct_guesses` מקבלת `guessed_letters` ו-`target_word` ומחזירה את מספר הניחושים הנכונים (`count`).
--   `play_spaceword_game` משתמשת בכל הפונקציות הללו על מנת להריץ את המשחק.
+הקוד מיישם משחק ניחוש מילים בשם "מילת החלל". המשחק בוחר מילה באופן אקראי מרשימה מוגדרת מראש והשחקן צריך לנחש את המילה על ידי ניחוש אותיות בודדות.
 
-## 2. <mermaid>
+1.  **אתחול:**
+    *   רשימת המילים (`word_list`) מוגדרת מראש.
+    *   מילה אקראית נבחרת מהרשימה (`target_word`).
+    *   משתנה המציג את המילה עם קווים תחתונים במקום אותיות (`guessed_word`) מאותחל.
+    *   רשימה ריקה לאחסון אותיות שניחשו נכון (`guessed_letters`) מאותחלת.
+    *   מונה עבור אותיות שניחשו נכון `correct_guesses_count` מאותחל.
+2.  **לולאת משחק:**
+    *   כל עוד השחקן לא ניחש את כל אותיות המילה:
+        *   המילה המנוחשת המוצגת עם קווים תחתונים מודפסת למסך.
+        *   השחקן מתבקש להזין אות.
+        *   אם האות נמצאת במילה המטרה:
+            *   האות מתווספת לרשימת האותיות שניחשו.
+            *   המילה המוצגת מעודכנת כך שהאות המנוחשת נחשפת בכל המיקומים בהם היא מופיעה.
+            *   מונה האותיות המנוחשות מעודכן.
+        *  אם האות לא נמצאת, מתקבלת הודעה שהאות לא במילה.
+    *   אם כל אותיות המילה נוחשו, המשחק מסתיים ומודפסת הודעת ניצחון.
+
+**דוגמאות לבלוקים לוגיים:**
+
+*   **בחירת מילה אקראית:** `target_word = choose_word(word_list)`. אם `word_list` הוא `["APPLE", "BANANA", "CHERRY"]`, ו-`choose_word` מחזירה "BANANA", אז `target_word` יהיה "BANANA".
+*   **אתחול המילה המנוחשת:** `guessed_word = "_ " * len(target_word)`. אם `target_word` הוא "APPLE", אז `guessed_word` יהיה "_ _ _ _ _ ".
+*   **ניחוש אות:** אם השחקן מזין "A" ו-`target_word` הוא "APPLE", אז הרשימה `guessed_letters` תהפוך ל `['A']`, והמילה המוצגת תעודכן ל `A _ _ _ _`.
+*  **עדכון ספירת האותיות שניחשו:** פונקציה `correct_guesses(guessed_letters, target_word)`: אם `guessed_letters` זה `['A', 'P']` ו- `target_word` זה "APPLE", אז הערך המוחזר יהיה 2.
+
+**זרימת נתונים:**
+
+1.  פונקציה `play_spaceword_game` קוראת לפונקציה `choose_word` כדי לקבל מילה.
+2.  פונקציה `play_spaceword_game` קוראת לפונקציה `display_word` כדי להציג את המילה עם קווים תחתונים.
+3.  הפונקציה `play_spaceword_game` מקבלת קלט מהמשתמש.
+4.  הפונקציה `play_spaceword_game` קוראת לפונקציה `update_word` כדי לעדכן את המילה המוצגת.
+5.  הפונקציה `play_spaceword_game` קוראת לפונקציה `correct_guesses` כדי לספור את האותיות שניחשו נכון.
+
+### 2.  **<mermaid>**
 
 ```mermaid
 flowchart TD
-    Start["התחלה"] --> InitializeVariables["<p align='left'>אתחול משתנים:\n    <code><b>\n    wordList = [\'APPLE\', \'BANANA\', \'CHERRY\', ...]\n    targetWord = choose_word(wordList)\n    guessedWord = \'_ \' * len(targetWord)\n    guessedLetters = []\n    correctGuesses = 0\n    </b></code></p>"]
-    InitializeVariables --> LoopStart{"לולאה: כל עוד לא פוצחה"}
-    LoopStart -- כן --> OutputWord["הדפסת: <code><b>guessedWord</b></code>"]
-    OutputWord --> InputLetter["קבלת קלט: <code><b>userLetter</b></code>"]
+    Start["התחלה"] --> InitializeVariables["<p align='left'>אתחול משתנים:\n    <code><b>\n    wordList = ['APPLE', 'BANANA', 'CHERRY', ...]\n    targetWord = choose_word(wordList)\n    guessedWord = '_ ' * len(targetWord)\n    guessedLetters = []\n    correctGuessesCount = 0\n    </b></code></p>"]
+    InitializeVariables --> LoopStart{"תחילת לולאה: כל עוד לא נוחשה כל המילה"}
+    LoopStart -- כן --> OutputWord["הצגה: <code><b>guessedWord</b></code>"]
+    OutputWord --> InputLetter["קליטת קלט: <code><b>userLetter</b></code>"]
     InputLetter --> CheckLetter{"בדיקה: <code><b>userLetter in targetWord?</b></code>"}
-    CheckLetter -- כן --> UpdateWord["<p align='left'>עדכון:\n    <code><b>\n    guessedWord = update_word(targetWord, guessedWord, userLetter)\n    guessedLetters.append(userLetter)\n    correctGuesses = correct_guesses(guessedLetters,targetWord)\n    </b></code></p>"]
-    UpdateWord --> CheckWin{"בדיקה: <code><b>correctGuesses == len(targetWord)?</b></code>"}
-    CheckLetter -- לא --> CheckWin
-    CheckWin -- כן --> OutputWin["הדפסה: <b>YOU GOT IT!</b>"]
-    OutputWin --> End["סיום"]
+    CheckLetter -- כן --> UpdateWord["<p align='left'>עדכון:\n    <code><b>\n    guessedLetters.append(userLetter)\n    guessedWord = update_word(targetWord, guessedWord, userLetter)\n    correctGuessesCount = correct_guesses(guessedLetters, targetWord)\n    </b></code></p>"]
+     UpdateWord --> CheckWin{ "בדיקה:<code><b>correctGuessesCount == len(targetWord)?</b></code>"}
+    CheckLetter -- לא --> MessageNoLetter["הצגה: 'האות לא במילה'"]
+    MessageNoLetter --> CheckWin
+    CheckWin -- כן --> OutputWin["הצגה: <b>YOU GOT IT!</b>"]
+    OutputWin --> End["סוף"]
     CheckWin -- לא --> LoopStart
     LoopStart -- לא --> End
 
 ```
 
-**הסבר:**
--   **Start**: תחילת המשחק.
--   **InitializeVariables**: אתחול משתני המשחק, כולל רשימת המילים, המילה הנבחרת, מצב הניחוש, רשימת הניחושים ומונה הניחושים הנכונים.
--   **LoopStart**: תחילת הלולאה הראשית של המשחק, המתבצעת כל עוד המילה לא פוצחה.
--   **OutputWord**: הדפסת מצב הניחוש הנוכחי של המילה.
--   **InputLetter**: קבלת קלט מהמשתמש - ניחוש אות.
--   **CheckLetter**: בדיקה אם האות המנוחשת נמצאת במילה הנבחרת.
--   **UpdateWord**: עדכון מצב הניחוש עם האות המנוחשת, הוספת האות לרשימת הניחושים ועדכון מונה הניחושים הנכונים.
--  **CheckWin**: בדיקה אם כל אותיות המילה נוחשו.
--   **OutputWin**: הדפסת הודעת ניצחון.
--   **End**: סיום המשחק.
+**ניתוח התלויות:**
+* אין תלויות מיובאות בקוד. הקוד משתמש בפונקציות בסיסיות של פייתון ובמודול `random`.
 
-**ניתוח תלויות:**
--   הקוד משתמש במודול `random` לצורך בחירת מילה אקראית מהרשימה.
+### 3. **<explanation>**
 
-## 3. <explanation>
+**ייבואים (Imports):**
 
-### ייבוא (Imports):
--   `import random`: מייבא את המודול random, המשמש ליצירת אקראיות, לצורך בחירת מילה אקראית מרשימה.
+*   `import random`: מייבא את מודול ה-`random`, המשמש ליצירת מספרים אקראיים, ובפרט לבחירת מילה אקראית מרשימת המילים.
 
-### פונקציות (Functions):
--   `choose_word(word_list)`:
-    -   **פרמטרים**: `word_list` - רשימת מילים.
-    -   **ערך מוחזר**: מילה אקראית מתוך רשימת המילים.
-    -   **מטרה**: בחירת מילה אקראית מהרשימה לשימוש במשחק.
-    -   **דוגמה**: `choose_word(["APPLE", "BANANA"])` עשויה להחזיר "APPLE" או "BANANA".
--   `display_word(word, guessed_letters)`:
-     -  **פרמטרים**: `word` - המילה לניחוש, `guessed_letters` - רשימת אותיות שניחשו.
-     -  **ערך מוחזר**: מחרוזת המציגה את המילה, עם אותיות מנוחשות וסימני מקום לאותיות שלא נוחשו.
-     -  **מטרה**: הצגת מצב המילה עם האותיות המנוחשות.
-     -  **דוגמה**: `display_word("APPLE", ["A", "E"])` תחזיר "A _ _ _ E".
--   `update_word(word, guessed_word, user_letter)`:
-    -   **פרמטרים**: `word` - המילה לניחוש, `guessed_word` - מצב המילה הנוכחי, `user_letter` - האות שנוחשה.
-    -   **ערך מוחזר**: מחרוזת המציגה את המילה, עם האותיות המנוחשות במקומן.
-    -   **מטרה**: עדכון מצב המילה כאשר אות נוחשה.
-    -   **דוגמה**: `update_word("APPLE", "_ _ _ _ _", "P")` תחזיר "_ P P _ _".
--   `correct_guesses(guessed_letters, target_word)`:
-    -   **פרמטרים**: `guessed_letters` - רשימת האותיות שניחשו, `target_word` - המילה לניחוש.
-    -   **ערך מוחזר**: מספר האותיות הנכונות.
-    -   **מטרה**: חישוב מספר האותיות הנכונות שנוחשו.
-    -   **דוגמה**: `correct_guesses(["A", "P"], "APPLE")` תחזיר 2.
--   `play_spaceword_game()`:
-    -   **פרמטרים**: אין.
-    -   **ערך מוחזר**: אין.
-    -   **מטרה**: מנהל את הלוגיקה של משחק "מילת חלל".
-    -   **דוגמה**: מריץ את המשחק, כולל בחירת מילה, קבלת ניחושים מהמשתמש, עדכון מצב המילה, בדיקת ניצחון והדפסת תוצאות.
+**פונקציות (Functions):**
 
-### משתנים (Variables):
--   `word_list`: רשימת מילים למשחק (סוג: list).
--   `target_word`: המילה האקראית שנבחרה למשחק (סוג: str).
--  `guessed_word`: מילה המוצגת למשתמש עם מקומות ריקים במקום האותיות (סוג: str).
--   `guessed_letters`: רשימה של אותיות שנוחשו (סוג: list).
--   `correct_guesses_count`: מספר האותיות שנוחשו נכון (סוג: int).
--   `user_letter`: האות שמשתמש מזין (סוג: str).
+*   `choose_word(word_list)`:
+    *   פרמטר: `word_list` - רשימה של מילים.
+    *   ערך מוחזר: מילה אקראית מהרשימה.
+    *   מטרה: לבחור מילה אקראית מתוך רשימת המילים למשחק.
+    *   דוגמה: אם `word_list` הוא `["CAT", "DOG", "BIRD"]`, הפונקציה יכולה להחזיר "DOG".
+*   `display_word(word, guessed_letters)`:
+    *   פרמטרים: `word` - המילה שצריך להציג, `guessed_letters` - רשימה של אותיות שניחשו.
+    *   ערך מוחזר: מחרוזת המציגה את המילה עם קווים תחתונים לאותיות שלא נוחשו.
+    *   מטרה: להציג את המילה עם אותיות גלויות רק אם הן נמצאות ברשימה של אותיות שניחשו.
+    *   דוגמה: אם `word` הוא "APPLE" ו-`guessed_letters` הוא `['A', 'E']`, הפונקציה תחזיר "A _ _ _ E".
+*  `update_word(word, guessed_word, user_letter)`:
+    *   פרמטרים: `word` - המילה המקורית, `guessed_word` - המילה הנוכחית עם קווים תחתונים ואותיות מנוחשות, `user_letter` - האות שהמשתמש ניחש.
+    *   ערך מוחזר: מחרוזת מעודכנת שמציגה את האותיות המנוחשות.
+    *   מטרה: לעדכן את המילה המוצגת על ידי חשיפת כל המיקומים של האות המנוחשת.
+    *   דוגמה: אם `word` הוא "APPLE", `guessed_word` הוא "A _ _ _ E" ו-`user_letter` הוא "P", הפונקציה תחזיר "A P P _ E".
+*   `correct_guesses(guessed_letters, target_word)`:
+    *   פרמטרים: `guessed_letters` - רשימה של אותיות שניחשו, `target_word` - המילה הנכונה.
+    *   ערך מוחזר: מספר האותיות שניחשו נכון.
+    *   מטרה: לחשב כמה אותיות מנוחשות יש במילה הנכונה.
+    *   דוגמה: אם `guessed_letters` זה `['A', 'P']` ו- `target_word` זה "APPLE", אז הערך המוחזר יהיה 2.
 
-### בעיות אפשריות ותחומים לשיפור:
-1.  **טיפול בקלט שגוי:** הקוד לא בודק אם הקלט הוא אות בודדת, או אם המשתמש הזין קלט שהוא לא אות.
-2.  **ממשק משתמש:** ממשק המשתמש בסיסי מאוד. ניתן לשפר את התצוגה ולספק מידע נוסף למשתמש.
-3.  **מספר נסיונות:** אין הגבלה למספר הננסיונות של השחקן, ואין לו מידע על ניסיונות קודמים.
-4.  **קושי:** אין אפשרות בחירת קושי משחק (כגון בחירת אורך המילה או בחירת קטגוריית מילים).
+*   `play_spaceword_game()`:
+    *   פרמטרים: אין.
+    *   ערך מוחזר: אין.
+    *   מטרה: מממשת את לוגיקת המשחק הכוללת בחירת מילה, הצגת המילה, קבלת קלט מהמשתמש, עידכון מצב המשחק והודעת ניצחון.
 
-### קשרי שרשרת עם חלקים אחרים בפרויקט:
--   אין תלות ישירה בקבצים אחרים, הוא קובץ עצמאי.
+**משתנים (Variables):**
+
+*   `word_list`: רשימה קבועה של מילים המשמשות במשחק.
+*   `target_word`: המילה האקראית שנבחרה למשחק.
+*   `guessed_word`: מחרוזת המציגה את המילה עם קווים תחתונים לאותיות שלא נוחשו.
+*   `guessed_letters`: רשימה של אותיות שניחשו נכון.
+*   `correct_guesses_count`: ספירה של האותיות שניחשו נכון.
+
+**בעיות אפשריות ותחומים לשיפור:**
+
+*   **בדיקת קלט:** הקוד לא בודק האם קלט המשתמש הוא אות בודדת. שיפור אפשרי יהיה לבדוק את תקינות הקלט.
+*   **התייחסות לאותיות כפולות:** כרגע, אם השחקן מנחש אות כפולה, הספירה לא תתעדכן כראוי.
+*   **חווית משתמש:** ניתן לשפר את חוויית המשתמש על ידי הוספת מספר נסיונות, רמזים, ועוד.
+*   **יעילות:** הפונקציה `correct_guesses` עוברת על הרשימה ומוחקת איברים ממנה, מה שאינו יעיל. אפשר לייעל זאת על ידי שימוש ב-`set` בתחילת הפונקציה.
+
+**שרשרת קשרים עם חלקים אחרים בפרויקט:**
+* אין קשרים ישירים עם חלקים אחרים בפרויקט, הקוד עומד בפני עצמו.

@@ -1,7 +1,10 @@
+## \file /src/utils/image.py
 # -*- coding: utf-8 -*-
 
+#! venv/bin/python/python3.12
+
 """
-.. module:: src.utils
+.. module:: src.utils.image
     :platform: Windows, Unix
     :synopsis: Image Processing Utilities
 

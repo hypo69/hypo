@@ -1,122 +1,165 @@
 ## <algorithm>
+1. **התחלה**:
+   - אתחל את גודל צבא האיחוד (unionForce) ל-1000.
+   - אתחל את גודל צבא הקונפדרציה (confederateForce) ל-800.
+   
+   דוגמה:
+   ```
+   unionForce = 1000
+   confederateForce = 800
+   ```
+2. **לולאת משחק ראשית**: כל עוד לשני הצבאות יש חיילים (unionForce > 0 וגם confederateForce > 0), המשחק ממשיך.
+    
+   דוגמה:
+   ```
+   while unionForce > 0 and confederateForce > 0:
+       #המשך המשחק
+   ```
+3.  **קבלת קלט שחקן - כוח תקיפה**:
+    - בקש מהשחקן להזין את מספר החיילים מהקונפדרציה שישלחו להתקפה (attackForce).
+    - בדוק שהערך שהוזן הוא מספר שלם.
+    - אם attackForce גדול מ- confederateForce, הדפס "לא מספיק חיילים" וחזור על השלב הנוכחי.
+    
+    דוגמה:
+    ```
+    while True:
+       try:
+           attackForce = int(input("כמה חיילים תשלח להתקפה?"))
+           if attackForce > confederateForce:
+               print("לא מספיק חיילים")
+           else:
+               break
+       except ValueError:
+           print("הזן מספר שלם")
+    ```
+4.  **קבלת קלט שחקן - סוג התקפה**:
+    - בקש מהשחקן להזין סוג התקפה: 1 - ישיר או 2 - עוקף.
+    - בדוק שהערך שהוזן הוא מספר שלם 1 או 2.
+    - אם סוג ההתקפה אינו 1 או 2, הדפס "סוג התקפה לא תקין" וחזור על השלב הנוכחי.
 
-הקוד מדמה קרב בין שתי ארמיות, קונפדרציה ואיחוד, כאשר השחקן שולט על הקונפדרציה. המטרה היא לנצח את האיחוד תוך מזעור הפסדים. הנה תרשים זרימה של הקוד:
-
-1.  **התחלה:**
-    *   אתחול `unionForce` (כוחות האיחוד) ל-1000.
-    *   אתחול `confederateForce` (כוחות הקונפדרציה) ל-800.
-
-2.  **לולאת משחק (while unionForce > 0 and confederateForce > 0):**
-    *   **קלט כוח תקיפה:**
-        *   השחקן מתבקש להזין את מספר החיילים לתקיפה (`attackForce`).
-        *   **דוגמה:** השחקן מזין 200.
-        *   אם `attackForce` גדול מ-`confederateForce`, מוצגת הודעת שגיאה וחוזרים לשלב הזנת הנתונים.
-        *   **דוגמה:** אם `confederateForce` הוא 150, והשחקן מזין 200, תוצג שגיאה.
-    *   **קלט סוג התקפה:**
-        *   השחקן מתבקש לבחור סוג התקפה: 1 ל"ישירה" או 2 ל"מעקפת" (`attackType`).
-        *   **דוגמה:** השחקן בוחר 1 (ישירה).
-        *   אם `attackType` אינו 1 או 2, מוצגת הודעה וחוזרים לשלב הזנת הנתונים.
-    *   **חישוב הפסדי קונפדרציה:**
-        *   אם `attackType` הוא 1 (ישירה), הפסדים מחושבים כ: `confederateLosses = int(attackForce * random.random() * 0.4)`.
-            *   **דוגמה:** אם `attackForce` הוא 200, `confederateLosses` יהיה מספר אקראי בין 0 ל-80.
-        *   אם `attackType` הוא 2 (מעקפת), הפסדים מחושבים כ: `confederateLosses = int(attackForce * random.random() * 0.2)`.
-             *   **דוגמה:** אם `attackForce` הוא 200, `confederateLosses` יהיה מספר אקראי בין 0 ל-40.
-        *   אם `confederateLosses` גדול מ-`attackForce`, אז `confederateLosses` שווה ל-`attackForce`.
-    *   **חישוב הפסדי האיחוד:**
-        *   הפסדי האיחוד מחושבים כ: `unionLosses = int(attackForce * random.random() * 0.3)`.
-            *   **דוגמה:** אם `attackForce` הוא 200, `unionLosses` יהיה מספר אקראי בין 0 ל-60.
-        *   אם `attackType` הוא 2 (מעקפת), `unionLosses` גדל בערך אקראי בין 0 ל-100.
-            *   **דוגמה:** אם `attackForce` הוא 200 וההתקפה היא "מעקפת",  `unionLosses` עשוי להיות מספר אקראי בין 0 ל-160.
-    *   **עדכון כוחות:**
-        *   `confederateForce` פוחת ב-`confederateLosses`.
-        *   `unionForce` פוחת ב-`unionLosses`.
-    *   **הצגת סטטוס:**
-        *   הצגת כוח הקונפדרציה הנוכחי (`confederateForce`).
-        *   הצגת כוח האיחוד הנוכחי (`unionForce`).
-    *   **בדיקת ניצחון:**
-        *   אם `unionForce` קטן או שווה ל-0, הקונפדרציה מנצחת.
-        *   אם `confederateForce` קטן או שווה ל-0, האיחוד מנצח.
-
-3.  **סוף:** המשחק מסתיים כאשר אחד מהצדדים מנצח.
+    דוגמה:
+    ```
+    while True:
+       try:
+          attackType = int(input("בחר סוג התקפה (1- ישיר, 2- עוקף): "))
+          if attackType in [1, 2]:
+             break
+          else:
+            print("סוג התקפה לא תקין")
+       except ValueError:
+          print("הזן מספר שלם 1 או 2")
+    ```
+5. **חישוב אבדות של הקונפדרציה**:
+   - אם סוג ההתקפה הוא ישיר (attackType == 1), חשב את האבדות של הקונפדרציה על ידי הכפלת attackForce במספר אקראי בין 0 ל-0.4.
+   - אם סוג ההתקפה הוא עוקף (attackType == 2), חשב את האבדות של הקונפדרציה על ידי הכפלת attackForce במספר אקראי בין 0 ל-0.2.
+   - אם האבדות גדולות מכוח התקיפה, הגדר את האבדות שוות לכוח התקיפה.
+   
+   דוגמה:
+   ```
+   if attackType == 1:
+       confederateLosses = int(attackForce * random.random() * 0.4)
+   else:
+       confederateLosses = int(attackForce * random.random() * 0.2)
+   if confederateLosses > attackForce:
+       confederateLosses = attackForce
+   ```
+6. **חישוב אבדות של האיחוד**:
+   - חשב את האבדות של האיחוד על ידי הכפלת attackForce במספר אקראי בין 0 ל-0.3.
+   - אם סוג ההתקפה הוא עוקף (attackType == 2), הוסף לאבדות האיחוד מספר אקראי בין 0 ל-100.
+   
+   דוגמה:
+   ```
+   unionLosses = int(attackForce * random.random() * 0.3)
+   if attackType == 2:
+      unionLosses += random.randint(0, 100)
+   ```
+7. **עדכון גודל צבאות**:
+   - הפחת את אבדות הקונפדרציה (confederateLosses) מגודל הצבא של הקונפדרציה (confederateForce).
+   - הפחת את אבדות האיחוד (unionLosses) מגודל צבא האיחוד (unionForce).
+   
+   דוגמה:
+   ```
+   confederateForce -= confederateLosses
+   unionForce -= unionLosses
+   ```
+8. **הדפס גודל צבאות נוכחי**:
+    - הצג את מספר החיילים הנוכחי של כל צבא.
+    
+    דוגמה:
+    ```
+    print(f"קונפדרציה: {confederateForce} חיילים")
+    print(f"איחוד: {unionForce} חיילים")
+    ```
+9. **בדיקת תנאי ניצחון**:
+   - אם גודל צבא האיחוד (unionForce) קטן או שווה ל-0, הצג "הקונפדרציה ניצחה!" והמשחק נגמר.
+   - אם גודל צבא הקונפדרציה (confederateForce) קטן או שווה ל-0, הצג "האיחוד ניצח!" והמשחק נגמר.
+    
+    דוגמה:
+    ```
+    if unionForce <= 0:
+       print("הקונפדרציה ניצחה!")
+    elif confederateForce <= 0:
+        print("האיחוד ניצח!")
+    ```
+10. **סיום**: המשחק הסתיים.
 
 ## <mermaid>
-
 ```mermaid
 flowchart TD
-    Start(התחלה) --> Initialize(אתחול כוחות)
-    Initialize --> GameLoopStart{כוחות האיחוד > 0 AND כוחות הקונפדרציה > 0?}
-    GameLoopStart -- כן --> InputAttackForce(קבלת כוח תקיפה מהמשתמש)
-    InputAttackForce --> ValidateAttackForce{כוח התקיפה <= כוחות הקונפדרציה?}
-    ValidateAttackForce -- כן --> InputAttackType(קבלת סוג התקיפה מהמשתמש)
-    ValidateAttackForce -- לא --> ErrorMessage1(הודעת שגיאה "לא מספיק כוחות")
-    ErrorMessage1 --> InputAttackForce
+    Start(התחלה) --> InitializeForces[אתחול גודל צבאות: <br> unionForce = 1000, <br> confederateForce = 800];
+    InitializeForces --> GameLoopStart{Game Loop: <br> (unionForce > 0 and confederateForce > 0)?};
+    GameLoopStart -- Yes --> GetAttackForceInput[קבל קלט: כמות חיילים להתקפה <br> (attackForce)];
+    GetAttackForceInput --> ValidateAttackForce{attackForce > confederateForce?};
+     ValidateAttackForce -- Yes --> InsufficientForceMessage[הדפס: "לא מספיק חיילים"];
+    InsufficientForceMessage --> GetAttackForceInput;
+    ValidateAttackForce -- No --> GetAttackTypeInput[קבל קלט: סוג התקפה <br> (attackType: 1=ישיר, 2=עוקף)];
+    GetAttackTypeInput --> ValidateAttackType{attackType in [1,2]?};
+    ValidateAttackType -- No --> InvalidAttackTypeMessage[הדפס: "סוג התקפה לא תקין"];
+     InvalidAttackTypeMessage --> GetAttackTypeInput;
+     ValidateAttackType -- Yes --> CalculateConfederateLosses[חשב אבדות קונפדרציה (confederateLosses)];
+    CalculateConfederateLosses --> CheckConfederateLosses{confederateLosses > attackForce?};
+    CheckConfederateLosses -- Yes --> SetConfederateLosses[confederateLosses = attackForce];
+     SetConfederateLosses --> CalculateUnionLosses[חשב אבדות איחוד <br> (unionLosses)];
+      CheckConfederateLosses -- No --> CalculateUnionLosses
+    CalculateUnionLosses --> UpdateForces[עדכן גודל צבאות: <br> confederateForce -= confederateLosses, <br> unionForce -= unionLosses];
+    UpdateForces --> DisplayForces[הצג גודל צבאות נוכחי];
+    DisplayForces --> CheckWinConditions[בדיקת תנאי ניצחון: <br> (unionForce <= 0) or <br> (confederateForce <= 0)?];
+    CheckWinConditions -- Yes --> UnionWin{unionForce <= 0?};
+     UnionWin -- Yes --> ConfederateWinMessage[הדפס: "הקונפדרציה ניצחה!"];
+     UnionWin -- No -->  ConfederateWinMessage[הדפס: "האיחוד ניצח!"];
+   ConfederateWinMessage --> End(סיום);
+    CheckWinConditions -- No --> GameLoopStart;
+     GameLoopStart -- No --> End
 
-    InputAttackType --> ValidateAttackType{סוג התקיפה == 1 OR סוג התקיפה == 2?}
-    ValidateAttackType -- כן --> CalculateConfederateLosses(חישוב הפסדי הקונפדרציה)
-    ValidateAttackType -- לא --> ErrorMessage2(הודעת שגיאה "סוג תקיפה לא חוקי")
-    ErrorMessage2 --> InputAttackType
-    
-    CalculateConfederateLosses --> CheckConfederateLosses{הפסדי הקונפדרציה > כוח התקיפה?}
-    CheckConfederateLosses -- כן --> SetConfederateLosses(הגדרת הפסדי הקונפדרציה = כוח התקיפה)
-    SetConfederateLosses --> CalculateUnionLosses(חישוב הפסדי האיחוד)
-    CheckConfederateLosses -- לא --> CalculateUnionLosses
-    
-
-    CalculateUnionLosses --> UpdateForces(עדכון כוחות)
-    UpdateForces --> DisplayForces(הצגת מצב הכוחות)
-    DisplayForces --> CheckWinCondition{כוחות האיחוד <= 0 OR כוחות הקונפדרציה <= 0?}
-    CheckWinCondition -- לא --> GameLoopStart
-    CheckWinCondition -- כן --> CheckUnionWin{כוחות האיחוד <=0?}
-    CheckUnionWin -- כן --> ConfederateWin(הודעה "הקונפדרציה ניצחה!")
-    CheckUnionWin -- לא --> UnionWin(הודעה "האיחוד ניצח!")
-   
-    ConfederateWin --> End(סוף)
-    UnionWin --> End
-
-   
-    
 ```
-
-### תלויות מיובאות:
-*   `random`: משמש ליצירת מספרים אקראיים לחישוב הפסדים של כל צד.
-
 ## <explanation>
+**ייבואים (Imports):**
+   - `import random`: מביא את מודול random שמאפשר לייצר מספרים אקראיים לחישוב אבדות במהלך הקרב. המודול הוא חלק מהספרייה הסטנדרטית של פייתון.
 
-### ייבוא:
-*   `import random`: מייבא את המודול `random`, המאפשר יצירת מספרים אקראיים. מודול זה הכרחי לסימולציה של הפסדים בקרב, מכיוון שהוא מוסיף אלמנט של אקראיות ואי ודאות לתוצאה.
+**משתנים (Variables):**
+   - `unionForce`: משתנה המייצג את גודל צבא האיחוד. הוא מאותחל ל-1000 בתחילת המשחק.
+   - `confederateForce`: משתנה המייצג את גודל צבא הקונפדרציה. הוא מאותחל ל-800 בתחילת המשחק.
+   - `attackForce`: משתנה המייצג את מספר החיילים מהקונפדרציה שנשלחים להתקפה, הערך מתקבל כקלט מהמשתמש.
+   - `attackType`: משתנה המייצג את סוג ההתקפה: 1 עבור התקפה ישירה, 2 עבור התקפה עוקפת, הערך מתקבל כקלט מהמשתמש.
+   - `confederateLosses`: משתנה המייצג את האבדות של צבא הקונפדרציה במהלך קרב, מחושב בצורה אקראית בהתאם לסוג ההתקפה.
+   - `unionLosses`: משתנה המייצג את האבדות של צבא האיחוד במהלך קרב, מחושב בצורה אקראית בהתאם לסוג ההתקפה.
+   
+**פונקציות (Functions):**
+  - אין פונקציות המוגדרות בקוד הזה, כל הפעולות מתבצעות בתוך לולאת ה-`while` הראשית.
 
-### משתנים:
-*   `unionForce` (int): מייצג את מספר החיילים של צבא האיחוד. הוא מאותחל ל-1000.
-*   `confederateForce` (int): מייצג את מספר החיילים של צבא הקונפדרציה. הוא מאותחל ל-800.
-*   `attackForce` (int): מספר החיילים של הקונפדרציה המשמשים לתקיפה. ערך זה נקלט מהמשתמש בכל סבב.
-*   `attackType` (int): סוג ההתקפה שנבחר על ידי השחקן (1 - ישירה, 2 - מעקפת). ערך זה נקלט מהמשתמש בכל סבב.
-*    `confederateLosses` (int): מספר החיילים שאבדו לקונפדרציה במהלך סבב.
-*   `unionLosses` (int): מספר החיילים שאבדו לאיחוד במהלך סבב.
+**הסברים מפורטים:**
+   - הקוד מדמה משחק מלחמה בין שני צבאות: הקונפדרציה והאיחוד.
+   - המשחק נמשך כל עוד לשני הצבאות יש חיילים.
+   - בכל סיבוב, השחקן (ששולט על הקונפדרציה) צריך להזין:
+        - מספר החיילים שיישלחו להתקפה.
+        - סוג ההתקפה (ישירה או עוקפת).
+   - בהתבסס על הקלט וערכים אקראיים, מחושבות האבדות של שני הצבאות.
+   - גודל הצבאות מעודכן, ומוצג גודלם הנוכחי.
+   - המשחק מסתיים כאשר אחד הצבאות מגיע ל-0 חיילים או פחות, והמנצח מוכרז.
+   - **בעיות אפשריות:**
+        - הקוד משתמש ב-`input()` לקבלת קלט מהמשתמש, מה שאומר שצריך להריץ אותו בטרמינל.
+        - חסר טיפול שגיאות מעמיק יותר, כמו קלט שאינו מספר או קלט שלילי עבור כמות החיילים לתקיפה.
+        - אפשר להוסיף יותר פיצ'רים ואיזונים כדי להפוך את המשחק ליותר מעניין.
 
-### פונקציות:
-אין פונקציות מוגדרות בקוד, כל הלוגיקה מבוצעת ישירות בתוך הלולאה הראשית.
-
-### לוגיקה:
-
-1.  **אתחול:** הקוד מתחיל באתחול כוחות הצבאות היריבים, הקונפדרציה והאיחוד.
-2.  **לולאת המשחק:** הלולאה הראשית ממשיכה כל עוד לשני הצבאות יש חיילים.
-    *   **קלט:** השחקן מזין את מספר החיילים לתקיפה ובוחר סוג תקיפה.
-    *   **אימות קלט:** קיימת לולאה שמוודאת שהקלט תקין: מספר החיילים לא יעלה על מספר החיילים של הקונפדרציה וסוג התקיפה הוא 1 או 2.
-    *   **חישוב הפסדים:** הקוד מחשב הפסדים של שני הצדדים בהתבסס על גודל הכוח התוקף, סוג התקיפה ואקראיות.
-        *    עבור הקונפדרציה, הפסדים נקבעים ע"י כוח התקיפה כפול ערך אקראי בין 0 ל-0.4 (עבור תקיפה ישירה) או בין 0 ל-0.2 (עבור תקיפת מעקפת).
-        *   עבור האיחוד, הפסדים נקבעים ע"י כוח התקיפה כפול ערך אקראי בין 0 ל-0.3. בתקיפה מסוג "מעקפת" מתווסף הפסד אקראי נוסף בין 0 ל-100.
-    *   **עדכון כוחות:** הקוד מעדכן את כוחות הצבאות על ידי הפחתת מספר החיילים שאבדו.
-    *   **הצגת סטטוס:** מוצג מצב כוחות הצבאות הנוכחיים.
-    *   **תנאי ניצחון:** הקוד בודק אם אחד מהצבאות איבד את כל חייליו. אם כן, מודפסת הודעה מתאימה והמשחק מסתיים.
-
-### בעיות אפשריות ושיפורים:
-
-*   **חוסר בפונקציות:** הקוד מבוצע כולו בתוך לולאה אחת, מה שהופך אותו לקשה לקריאה ולתחזוקה. פיצול הקוד לפונקציות היה משפר את הקריאות.
-*   **הודעות שגיאה:** הודעות השגיאה מאוד בסיסיות, כדאי להוסיף הודעות שגיאה ברורות יותר.
-*   **משחק משעמם:** חסרים אלמנטים של משחק מעניינים יותר, כמו סוגים שונים של יחידות, תנאי שטח, ועוד.
-*   **מגבלת חישוב הפסדים:** ההפסדים של שני הצדדים נקבעים רק לפי גודל הכוח התוקף וסוג התקיפה. היה ניתן להוסיף גורמים נוספים שמשפיעים על הפסדים, כמו טקטיקה והגנה.
-
-### קשריות עם חלקים אחרים בפרויקט:
-בשלב זה, אין קשרים ישירים עם חלקים אחרים בפרויקט. זהו משחק עצמאי, אך הוא יכול להיות משולב בעתיד עם ממשק משתמש גרפי או מערכת ניהול משחקים.
-
-בסך הכל, הקוד מייצג סימולציה בסיסית של קרב. למרות שהקוד קל להבנה, ישנם מקומות רבים שניתן לשפר את הקוד ואת חווית המשחק.
+**שרשרת קשרים עם חלקים אחרים בפרויקט:**
+   - הקוד הזה עומד בפני עצמו ואין לו יחסי תלות ישירים עם חלקים אחרים בפרויקט. עם זאת, אם ירצו להרחיב את המשחק, אפשר לשלב אותו עם מודולים אחרים כמו מודול GUI ליצירת משק משתמש גרפי.

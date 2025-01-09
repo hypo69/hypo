@@ -1,122 +1,120 @@
-## <algorithm>
+## ניתוח קוד משחק בלאק ג'ק
 
-1.  **אתחול חפיסת קלפים:**
-    *   יוצר רשימה של 52 קלפים, כאשר כל קלף מיוצג על ידי ערכו (2-10, כאשר וולט, דאם ומלך שווים 10, ואס שווה 11).
+### <algorithm>
+
+הקוד מממש משחק בלאק ג'ק פשוט בין שחקן לדילר. להלן תרשים זרימה מפורט של שלבי המשחק:
+
+1.  **אתחול חפיסה**:
+    *   יוצרים חפיסה סטנדרטית של 52 קלפים, כאשר כל קלף מיוצג על ידי ערכו המספרי (2-10, כאשר הנסיך, המלכה והמלך שווים ל-10, והאס שווה ל-11).
     *   דוגמה: `deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11] * 4`
-2.  **ערבוב החפיסה:**
-    *   מערבב את סדר הקלפים בחפיסה באופן אקראי.
+2.  **ערבוב חפיסה**:
+    *   מערבבים את סדר הקלפים בחפיסה באופן אקראי.
     *   דוגמה: `random.shuffle(deck)`
-3.  **חלוקת קלפים התחלתית:**
-    *   מחלק שני קלפים לשחקן ושני קלפים לדילר.
-    *   דוגמה: `player_hand = [deal_card(deck), deal_card(deck)]`, `dealer_hand = [deal_card(deck), deal_card(deck)]`
-    *   הפונקציה `deal_card` מחזירה את הקלף האחרון מהחפיסה (מורידה אותו מהרשימה).
-4.  **הצגת ידיים:**
-    *   מציג את קלפי השחקן וקלף אחד של הדילר (השני מוסתר).
-    *   דוגמה: `display_cards(player_hand, dealer_hand)`
-5.  **תור השחקן:**
-    *   השחקן יכול לבחור:
-        *   **HIT:** לקחת עוד קלף.
-            *   מוסיף קלף ליד השחקן.
+3.  **חלוקת קלפים התחלתית**:
+    *   מחלקים שני קלפים לשחקן ושני קלפים לדילר. קלף אחד של הדילר נשאר גלוי.
+    *   דוגמה:
+        ```python
+        player_hand = [deal_card(deck), deal_card(deck)]
+        dealer_hand = [deal_card(deck), deal_card(deck)]
+        ```
+4.  **תור השחקן**:
+    *   מציגים את הקלפים של השחקן ואת הקלף הגלוי של הדילר.
+    *   השחקן בוחר אם לקחת עוד קלף (HIT) או לעצור (STAND).
+        *   **HIT**: אם השחקן בוחר לקחת קלף, קלף נוסף מתווסף ליד שלו. אם סכום הקלפים של השחקן גדול מ-21, השחקן מפסיד. אחרת, חוזרים לאפשרות הבחירה.
             *   דוגמה: `player_hand.append(deal_card(deck))`
-            *   מחשב מחדש את סכום הקלפים של השחקן.
-            *   אם הסכום גדול מ-21, השחקן מפסיד, ומסתיים התור.
-            *   אם השחקן קיבל 21, השחקן מנצח, ומסתיים המשחק.
-        *   **STAND:** להפסיק לקחת קלפים.
-            *   מעביר את התור לדילר.
-    *   הפעולה חוזרת עד שהשחקן בוחר לעצור או שהסכום שלו גדול מ-21.
-6.  **תור הדילר:**
-    *   הדילר לוקח קלפים עד שסכום קלפיו גדול מ-16.
-    *   דוגמה: `while calculate_hand_value(dealer_hand) <= 16:`
-    *   אם סכום קלפי הדילר גדול מ-21, הדילר מפסיד והשחקן מנצח.
-7.  **קביעת המנצח:**
-    *   אם סכום קלפי השחקן גדול מסכום קלפי הדילר ולא עובר את 21, השחקן מנצח.
-    *   אם סכום קלפי הדילר גדול מסכום קלפי השחקן ולא עובר את 21, הדילר מנצח.
-    *   אם הסכומים שווים, יש תיקו.
-    *   מציג את תוצאת המשחק.
-8.  **סוף המשחק:**
-    *   משחק מסתיים.
+        *   **STAND**: אם השחקן בוחר לעצור, התור עובר לדילר.
+5.  **תור הדילר**:
+    *   הדילר לוקח קלפים עד שסכום הקלפים שלו גדול מ-16.
+    *   אם סכום הקלפים של הדילר גדול מ-21, השחקן מנצח.
+6.  **הכרעת המנצח**:
+    *   אם סכום הקלפים של הדילר לא גדול מ-21, משווים את סכום הקלפים של השחקן לזה של הדילר.
+        *   אם סכום הקלפים של השחקן קרוב יותר ל-21 (אך לא מעל) מאשר סכום הקלפים של הדילר, השחקן מנצח.
+        *   אם סכום הקלפים של הדילר קרוב יותר ל-21 (אך לא מעל) מאשר סכום הקלפים של השחקן, הדילר מנצח.
+        *   אם הסכומים שווים, יש תיקו.
 
-## <mermaid>
+### <mermaid>
 
 ```mermaid
 flowchart TD
-    Start["התחלה"] --> InitializeDeck["<p align='left'>אתחול חפיסת קלפים: \n    <code><b>deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11] * 4</b></code></p>"]
-    InitializeDeck --> ShuffleDeck["ערבוב חפיסת קלפים: <code><b>random.shuffle(deck)</b></code>"]
-    ShuffleDeck --> DealInitialCards["<p align='left'>חלוקת קלפים:\n    <code><b>\n    playerHand = [deal_card(deck), deal_card(deck)]\n    dealerHand = [deal_card(deck), deal_card(deck)]\n    </b></code></p>"]
-    DealInitialCards --> ShowHands["<p align='left'>הצגת קלפי השחקן וקלף גלוי של הדילר</p>"]
-    ShowHands --> PlayerTurnStart{"תחילת תור השחקן"}
-    PlayerTurnStart --> PlayerActionChoice{"קבלת פעולת שחקן: HIT או STAND"}
-    PlayerActionChoice -- HIT --> PlayerHit["<p align='left'>השחקן לוקח קלף: <code><b>playerHand.append(deal_card(deck))</b></code></p>"]
-    PlayerHit --> CalculatePlayerHandValue["<p align='left'>חישוב ערך יד השחקן: <code><b>player_value = calculate_hand_value(playerHand)</b></code></p>"]
-    CalculatePlayerHandValue --> CheckPlayerBust["<p align='left'>בדיקה: <code><b>player_value > 21?</b></code></p>"]
-    CheckPlayerBust -- כן --> PlayerBust["<p align='left'>השחקן הפסיד: <code><b>print('השחקן הפסיד!')</b></code></p>"]
-    PlayerBust --> End["סיום"]
-    CheckPlayerBust -- לא --> PlayerTurnStart
-    PlayerActionChoice -- STAND --> DealerTurnStart{"תחילת תור הדילר"}
-    DealerTurnStart --> DealerHit["<p align='left'>הדילר לוקח קלף, כל עוד <code><b>dealer_value <= 16</b></code></p>"]
-    DealerHit --> CalculateDealerHandValue["<p align='left'>חישוב ערך יד הדילר: <code><b>dealer_value = calculate_hand_value(dealerHand)</b></code></p>"]
-    CalculateDealerHandValue --> CheckDealerBust["<p align='left'>בדיקה: <code><b>dealer_value > 21?</b></code></p>"]
-    CheckDealerBust -- כן --> DealerBust["<p align='left'>הדילר הפסיד: <code><b>print('הדילר הפסיד!')</b></code></p>"]
+    Start["התחלת המשחק"] --> InitializeDeck["אתחול חפיסה:\n<code>deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11] * 4</code>"]
+    InitializeDeck --> ShuffleDeck["ערבוב חפיסה:\n<code>random.shuffle(deck)</code>"]
+    ShuffleDeck --> DealInitialCards["חלוקת קלפים התחלתית:\n<code>player_hand = [deal_card(deck), deal_card(deck)]<br>dealer_hand = [deal_card(deck), deal_card(deck)]</code>"]
+    DealInitialCards --> DisplayHands["הצגת קלפים: <br> קלפי השחקן וקלף גלוי של הדילר"]
+    DisplayHands --> PlayerTurnStart{"תחילת תור השחקן"}
+    PlayerTurnStart --> PlayerActionChoice{"בחירת פעולת השחקן:\n<code>'HIT' או 'STAND'</code>"}
+    PlayerActionChoice -- "HIT" --> PlayerHit["השחקן לוקח קלף:\n<code>player_hand.append(deal_card(deck))</code>"]
+    PlayerHit --> CalculatePlayerValue["חישוב ערך יד השחקן: \n<code>player_value = calculate_hand_value(player_hand)</code>"]
+    CalculatePlayerValue --> CheckPlayerBust{"האם סכום קלפי השחקן > 21?"}
+    CheckPlayerBust -- "כן" --> PlayerBust["השחקן הפסיד!"]
+    PlayerBust --> End["סיום המשחק"]
+    CheckPlayerBust -- "לא" --> PlayerTurnStart
+    PlayerActionChoice -- "STAND" --> DealerTurnStart["תחילת תור הדילר"]
+     DealerTurnStart --> DealerHit{"הדילר לוקח קלפים כל עוד הערך <= 16:\n<code>while calculate_hand_value(dealer_hand) <= 16</code>"}
+     DealerHit --> CalculateDealerValue["חישוב ערך יד הדילר: \n<code>dealer_value = calculate_hand_value(dealer_hand)</code>"]
+    CalculateDealerValue --> CheckDealerBust{"האם סכום קלפי הדילר > 21?"}
+    CheckDealerBust -- "כן" --> DealerBust["הדילר הפסיד!"]
     DealerBust --> End
-    CheckDealerBust -- לא --> DetermineWinner["<p align='left'>קביעת מנצח והצגת תוצאות</p>"]
+    CheckDealerBust -- "לא" --> DetermineWinner["הכרעת המנצח והצגת תוצאה"]
     DetermineWinner --> End
     
+
 ```
 
-```mermaid
-flowchart TD
-    Start --> Header[<code>header.py</code><br> קביעת שורש הפרויקט]
+### <explanation>
 
-    Header --> import[ייבוא הגדרות גלובליות: <br><code>from src import gs</code>]
-```
+**ייבוא (Imports)**:
 
-## <explanation>
+*   `import random`: המודול `random` משמש לייצור מספרים אקראיים, ובמקרה הזה הוא משמש לערבוב חפיסת הקלפים לפני תחילת המשחק.
 
-**ייבואים (Imports):**
+**פונקציות (Functions)**:
 
-*   `import random`: מייבא את המודול `random`, המאפשר פעולות אקראיות כמו ערבוב חפיסה.
+1.  `deal_card(deck)`:
+    *   **פרמטרים**: מקבלת את רשימת הקלפים (חפיסה) כקלט.
+    *   **ערך מוחזר**: מחזירה את הקלף האחרון מהחפיסה (באמצעות `deck.pop()`) ומסירה אותו מהחפיסה.
+    *   **מטרה**:  מספקת קלף מהחפיסה לשחקן או לדילר.
+    *   **דוגמה לשימוש**: `card = deal_card(deck)`
+2.  `calculate_hand_value(hand)`:
+    *   **פרמטרים**: מקבלת את רשימת הקלפים ביד כשחקן.
+    *   **ערך מוחזר**: מחזירה את הסכום הכולל של הקלפים ביד. אס יכול להיות 1 או 11, תלוי בסכום הכולל של היד.
+    *   **מטרה**: מחשבת את ערך היד (סכום הקלפים) תוך טיפול מיוחד במקרה של אס (1 או 11).
+    *   **דוגמה לשימוש**: `total_value = calculate_hand_value(player_hand)`
+3.  `display_cards(player_hand, dealer_hand, show_dealer_full=False)`:
+    *   **פרמטרים**: מקבלת את הידיים של השחקן והדילר, וכן פרמטר אופציונלי `show_dealer_full` המציין אם להציג את כל הקלפים של הדילר או רק אחד.
+    *   **ערך מוחזר**: אין ערך מוחזר (פונקציה מסוג void).
+    *   **מטרה**: מציגה את הקלפים של השחקן והדילר בצורה קריאה למשתמש.
+    *   **דוגמה לשימוש**:
+        *   `display_cards(player_hand, dealer_hand)`: מציג קלפי שחקן וקלף אחד של הדילר.
+        *    `display_cards(player_hand, dealer_hand, True)`: מציג קלפי שחקן וכל קלפי הדילר.
+4. `play_blackjack()`:
+   *   **פרמטרים**: אין פרמטרים.
+   *   **ערך מוחזר**: אין ערך מוחזר.
+   *   **מטרה**: הפונקציה הראשית שמתחילה את המשחק ומנהלת את מהלכי השחקן והדילר, ומכריעה מי ניצח.
+   *   **תהליך**:
+         1. **אתחול חפיסה:** יוצר חפיסה חדשה של קלפים.
+         2. **חלוקת קלפים:** מחלק 2 קלפים לכל שחקן.
+         3. **תור שחקן:** השחקן בוחר לקחת עוד קלף או לעצור. אם השחקן עובר 21, הוא מפסיד.
+         4. **תור דילר:** הדילר לוקח קלפים עד לסכום של לפחות 17.
+         5. **הכרעה:** משווה את סכום הקלפים בין השחקן לדילר ומכריע מי ניצח.
 
-**פונקציות (Functions):**
+**משתנים (Variables)**:
 
-*   `deal_card(deck)`:
-    *   פרמטר: `deck` (רשימת קלפים).
-    *   מחזיר: את הקלף האחרון מחפיסת הקלפים (ומוחק אותו מהחפיסה).
-    *   מטרה: לוקח קלף מהחפיסה.
-    *   דוגמה: `card = deal_card(deck)`
-*   `calculate_hand_value(hand)`:
-    *   פרמטר: `hand` (רשימת קלפים ביד).
-    *   מחזיר: סכום ערך הקלפים ביד, תוך התחשבות בכך שאס יכול להיות 1 או 11.
-    *   מטרה: חישוב סכום הנקודות ביד, מתקן את ערך האס במידת הצורך.
-    *   דוגמה: `total = calculate_hand_value(player_hand)`
-*   `display_cards(player_hand, dealer_hand, show_dealer_full=False)`:
-    *   פרמטרים: `player_hand` (יד השחקן), `dealer_hand` (יד הדילר), `show_dealer_full` (דגל בוליאני אם להציג את כל קלפי הדילר).
-    *   מחזיר: כלום (הפונקציה מדפיסה לקונסולה).
-    *   מטרה: הצגת קלפי השחקן והדילר (אם כי רק קלף אחד של הדילר מוצג בהתחלה).
-    *   דוגמה: `display_cards(player_hand, dealer_hand, True)` - מציג את כל הקלפים של הדילר.
-*   `play_blackjack()`:
-    *   פרמטרים: אין.
-    *   מחזיר: כלום (המשחק מודפס לקונסולה).
-    *   מטרה: מכיל את הלוגיקה הראשית של משחק הבלאק ג'ק.
-    *   דוגמה: `play_blackjack()`
+*   `deck` (רשימה): מייצגת את חפיסת הקלפים.
+*   `player_hand` (רשימה): מייצגת את הקלפים ביד של השחקן.
+*   `dealer_hand` (רשימה): מייצגת את הקלפים ביד של הדילר.
+*   `player_value` (מספר): מייצג את הערך המספרי של הקלפים ביד של השחקן.
+*   `dealer_value` (מספר): מייצג את הערך המספרי של הקלפים ביד של הדילר.
+* `action` (מחרוזת): מייצגת את בחירת הפעולה של השחקן ('HIT' או 'STAND').
+* `ace_count` (מספר): סופר את כמות האסים ביד.
+* `total` (מספר): סוכם את הערך של כל הקלפים ביד.
 
-**משתנים (Variables):**
+**בעיות אפשריות או תחומים לשיפור**:
 
-*   `deck`: רשימה המייצגת את חפיסת הקלפים.
-*   `player_hand`: רשימה המייצגת את הקלפים ביד השחקן.
-*   `dealer_hand`: רשימה המייצגת את הקלפים ביד הדילר.
-*   `player_value`: סכום ערך הקלפים ביד השחקן.
-*   `dealer_value`: סכום ערך הקלפים ביד הדילר.
-*   `action`: קלט מהמשתמש - האם לבחור 'HIT' או 'STAND'.
-*   `ace_count` : סופר את מספר האסים ביד.
+*   **ממשק משתמש**: הקוד משתמש בפונקציות `print` ו-`input` בלבד. ניתן לשפר אותו על ידי שימוש בספריית GUI ליצירת ממשק משתמש גרפי.
+*   **בדיקת קלט**: הקוד לא בודק באופן מקיף את קלט המשתמש (למשל, אם המשתמש מכניס קלט שאינו "HIT" או "STAND").
+*   **טיפול בשגיאות**: אין טיפול בשגיאות, למשל אם החפיסה ריקה או קלט לא חוקי.
+*   **אסטרטגיית דילר**: האסטרטגיה של הדילר פשוטה (לוקח קלפים עד שהוא מגיע ל-17). ניתן להוסיף אסטרטגיות דילר מורכבות יותר.
 
-**בעיות אפשריות ושיפורים:**
+**קשרים עם חלקים אחרים בפרויקט**:
+בשלב זה, הקוד הוא עצמאי ואין לו קשרים ישירים עם חלקים אחרים בפרויקט, אך הוא יכול להיות חלק ממודול רחב יותר של משחקי AI.
 
-*   **ממשק משתמש:** הקוד משתמש בהדפסה לקונסולה, ולא בממשק משתמש גרפי, מה שיכול להגביל את חווית המשתמש.
-*   **טיפול בשגיאות:** אין טיפול מפורש בשגיאות קלט (למשל, אם המשתמש מזין משהו שאינו 'HIT' או 'STAND').
-*   **הערות קוד:** קיימות הערות קוד, אך ניתן להוסיף הערות נוספות להסבר מפורט יותר של לוגיקת הקוד.
-*   **ניתוק לוגיקות:** ניתן לנתק את הלוגיקה של המשחק לקבצים/מחלקות נוספות לצורך תחזוקה וקריאות קוד יותר טובים.
-
-**שרשרת קשרים:**
-
-*   הקוד אינו תלוי בחלקים אחרים של הפרויקט. הוא משחק בפני עצמו.
-*   השימוש ב`random` הוא עצמאי ואינו תלוי בקוד אחר.
+בנוסף, הקוד מספק חווית משחק בסיסית ופונקציונלית למשחק הבלאק ג'ק.

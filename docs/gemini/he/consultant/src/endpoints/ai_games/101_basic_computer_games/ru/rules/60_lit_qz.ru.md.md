@@ -1,280 +1,233 @@
 # Анализ кода модуля LITQZ
 
 **Качество кода**
-  -  Соответствие требованиям к формату кода с 1 по 10:
-    -  Преимущества:
-       -  Текст представляет собой подробное описание игры, которое может быть использовано для дальнейшей реализации.
-       -  Инструкции разделены на логические блоки и хорошо структурированы.
-    -  Недостатки:
-       -   Код не является Python кодом. Он представлен в формате Markdown с описанием алгоритма игры.
-       -   Отсутствуют docstrings и комментарии в стиле RST.
-       -   Не используется `j_loads` или `j_loads_ns`.
-       -   Нет обработки ошибок и логирования.
-       -   Отсутствуют импорты.
-       -   Невозможно применить рефакторинг или улучшение как к Python коду.
+
+-   **Соответствие требованиям к формату кода (1-10)**:
+    -   В основном соответствует требованиям, но не является исполняемым кодом Python.
+    -   Требуется реализация на Python.
+-   **Преимущества:**
+    -   Описание игры четкое и подробное.
+    -   Представлено пошаговое руководство по реализации игры.
+    -   Примеры работы программы демонстрируют игровой процесс.
+    -   Описаны возможные ограничения и рекомендации по улучшению.
+-   **Недостатки:**
+    -   Код представлен в виде текстового описания, а не в виде исполняемого кода.
+    -   Отсутствует docstring для модуля и функций.
+    -   Не используются `j_loads` или `j_loads_ns`.
+    -   Отсутствует обработка ошибок через `logger.error`.
+    -   Не используются импорты из `src.logger.logger import logger`.
 
 **Рекомендации по улучшению**
-  - Преобразовать описание игры в Python код с соблюдением всех требований.
-  - Добавить docstring для модуля, функций и классов в формате reStructuredText (RST).
-  - Использовать `j_loads` или `j_loads_ns` для работы с файлами.
-  - Внедрить систему логирования с помощью `from src.logger.logger import logger`.
-  - Обеспечить обработку ошибок с помощью `logger.error` вместо `try-except`.
-  - Реализовать все этапы игры в коде, описанные в документе.
-  - Придерживаться стандартов оформления кода Python (PEP 8).
+
+1.  **Реализация на Python:** Преобразовать текстовое описание игры в исполняемый код на Python.
+2.  **Добавить docstrings:** Добавить docstrings для модуля и функций в формате RST для документации.
+3.  **Использовать `j_loads` или `j_loads_ns`:** Если для чтения данных из файлов используются функции `json.load`, необходимо заменить их на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+4.  **Обработка ошибок:** Использовать `try-except` блоки с `logger.error` для обработки ошибок.
+5.  **Импорт логгера:** Импортировать `logger` из `src.logger.logger import logger`.
+6.  **Добавить тесты:** Написать юнит тесты для проверки правильности работы кода.
+7.  **Управление сложностью:** Реализовать систему уровней сложности.
+8.  **Таймер:** Добавить таймер для ограничения времени на ответ.
+9.  **База данных:** Добавить поддержку базы данных для хранения результатов игроков.
 
 **Улучшенный код**
 ```python
 """
-Модуль для реализации игры LITQZ (Игра на логику и интеллект)
-===========================================================
+Модуль для реализации игры LITQZ (логическая викторина)
+=========================================================================================
 
-Этот модуль содержит реализацию игры-викторины LITQZ, в которой игрокам предлагается решать
-интеллектуальные задачи.
+Этот модуль содержит логику и структуру игры LITQZ, в которой игроки отвечают на интеллектуальные вопросы.
 
-Пример использования
---------------------
+Примеры использования
+---------------------
 
-Пример запуска игры в одиночном режиме:
+Пример запуска игры:
 
 .. code-block:: python
 
     game = LITQZGame()
     game.start_game()
-
 """
-import random  # импорт для рандомизации вопросов
-from typing import List, Dict, Any  # импорт для аннотации типов
-from src.utils.jjson import j_loads  # импорт для загрузки json
-from src.logger.logger import logger # импорт для логирования
-QUESTIONS_FILE = 'questions.json' # путь к файлу с вопросами
+import random  # Импортируем модуль random для случайного выбора вопросов
+from typing import List, Dict, Any  # Импортируем типы для аннотации
+
+from src.logger.logger import logger # Импортируем logger для записи ошибок
 
 
 class LITQZGame:
     """
-    Класс, представляющий игру LITQZ.
-
-    :ivar questions: Список вопросов и ответов.
-    :vartype questions: List[Dict[str, Any]]
-    :ivar current_player: Текущий игрок.
-    :vartype current_player: int
-    :ivar scores: Словарь, хранящий очки игроков.
-    :vartype scores: Dict[int, int]
-    :ivar mode: Режим игры (одиночный или многопользовательский).
-    :vartype mode: int
-    :ivar number_of_questions: Количество вопросов в игре
-    :vartype number_of_questions: int
+    Класс для управления игрой LITQZ.
     """
-
-    def __init__(self, number_of_questions = 10):
+    def __init__(self):
         """
-        Инициализирует игру LITQZ.
-        Загружает вопросы из файла и устанавливает начальные значения.
+        Инициализация игры, включая вопросы и ответы, а также начальные настройки.
         """
-        self.questions = self._load_questions()  # загружает вопросы из файла
-        self.current_player = 1  # игрок 1 начинает игру
-        self.scores = {1: 0, 2: 0}  # начальные очки игроков
-        self.mode = 0  # режим игры не выбран
-        self.number_of_questions = number_of_questions # количество вопросов
-
-
-    def _load_questions(self) -> List[Dict[str, Any]]:
-         """
-         Загружает вопросы из JSON файла.
-
-         :return: Список вопросов.
-         :rtype: List[Dict[str, Any]]
-         """
-         try:
-             # используем j_loads для загрузки данных из файла
-             with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
-                  questions = j_loads(f)
-                  if not isinstance(questions, list): # проверка что загрузился список
-                      logger.error(f'Неверный формат данных в файле {QUESTIONS_FILE}')
-                      return []
-                  return questions
-         except FileNotFoundError:
-             logger.error(f'Файл {QUESTIONS_FILE} не найден') # логирование ошибки
-             return []
-         except Exception as ex:
-             logger.error(f'Ошибка при загрузке данных из файла {QUESTIONS_FILE}: {ex}')
-             return []
-
-    def _display_welcome_message(self):
-        """
-         Выводит приветственное сообщение и правила игры.
-        """
-        print("Добро пожаловать в LITQZ!")
-        print("Вам будут задаваться интеллектуальные вопросы.")
-        print("Ваша задача — дать правильный ответ за наименьшее количество попыток.")
-        print("Вы можете играть в одиночку или соревноваться с другим игроком. Удачи!\n")
-
-
-    def _select_game_mode(self) -> int:
-        """
-         Позволяет игроку выбрать режим игры.
-
-         :return: Выбранный режим игры (1 - одиночный, 2 - многопользовательский).
-         :rtype: int
-        """
-        while True: # бесконечный цикл, пока не будет введён правильный вариант
-            try:
-                mode = int(input("Выберите режим игры:\n1. Одиночный\n2. Двухпользовательский\n> ")) # получаем ввод пользователя
-                if mode in [1, 2]:  # проверка на корректный ввод
-                    return mode # возвращаем выбранный режим
-                else:
-                     print("Неверный ввод. Пожалуйста, введите 1 или 2.") # сообщение об ошибке
-            except ValueError:
-                print("Неверный ввод. Пожалуйста, введите число.") # сообщение об ошибке
-
-    def _generate_question(self) -> Dict[str, Any]:
-        """
-        Случайно выбирает вопрос из списка.
-
-        :return: Словарь, содержащий вопрос и ответ.
-        :rtype: Dict[str, Any]
-        """
-        if not self.questions:
-            logger.error("Нет доступных вопросов для игры")
-            return {}
-        return random.choice(self.questions)
-
-
-    def _get_player_answer(self) -> str:
-        """
-        Получает ответ от игрока.
-
-        :return: Ответ игрока.
-        :rtype: str
-        """
-        return input("> ").strip()
-
-
-    def _check_answer(self, question: Dict[str, Any], answer: str) -> bool:
-        """
-        Проверяет ответ игрока.
-
-         :param question: Словарь с вопросом и ответом.
-         :type question: Dict[str, Any]
-         :param answer: Ответ игрока.
-         :type answer: str
-         :return: True, если ответ верный, False в противном случае.
-         :rtype: bool
-        """
-        if not question or 'answer' not in question: # проверка на наличие вопроса и ответа
-            logger.error("Неверный формат вопроса или ответа")
-            return False
-        return answer.lower() == question['answer'].lower()
-
-
-    def _handle_single_player_game(self):
-        """
-        Обрабатывает одиночный режим игры.
-        Игрок проходит серию вопросов и подсчитывает очки.
-        """
-        print("Начало одиночной игры\n")
-        for i in range(self.number_of_questions): # цикл вопросов
-            question = self._generate_question() # генерируем вопрос
-            if not question: # проверяем что вопрос получен
-                continue
-            print(f"Вопрос {i + 1}: {question['question']}") # выводим вопрос
-            attempts = 0 # попытки
-            while attempts < 3: # даем 3 попытки
-                answer = self._get_player_answer()  # получаем ответ
-                if self._check_answer(question, answer): # проверка ответа
-                   self.scores[1] += 10 - attempts * 3  # начисление очков
-                   print("Правильно! Вы заработали баллы.\n")
-                   break
-                else:
-                    attempts += 1  # увеличиваем количество попыток
-                    print(f"Неверно. Попробуйте еще раз. Осталось попыток: {3 - attempts}\n")
-            else:
-                print(f"Правильный ответ: {question['answer']}\n") # если игрок не ответил, выводим ответ
-        print(f"Игра окончена! Ваши результаты: {self.scores[1]} баллов\n")
-
-    def _handle_multiplayer_game(self):
-        """
-        Обрабатывает многопользовательский режим игры.
-        Игроки по очереди отвечают на вопросы.
-        """
-        print("Начало многопользовательской игры\n")
-        for i in range(self.number_of_questions): # цикл вопросов
-             question = self._generate_question()  # генерируем вопрос
-             if not question:
-                 continue
-             print(f"Игрок {self.current_player}, ваш вопрос: {question['question']}")
-             attempts = 0
-             while attempts < 3:
-                answer = self._get_player_answer() # получаем ответ
-                if self._check_answer(question, answer): # проверка ответа
-                    self.scores[self.current_player] += 10 - attempts * 3
-                    print("Правильно! Вы заработали баллы.\n")
-                    break
-                else:
-                    attempts += 1
-                    print(f"Неверно. Попробуйте еще раз. Осталось попыток: {3 - attempts}\n")
-             else:
-                 print(f"Правильный ответ: {question['answer']}\n")
-             self._switch_player()  # переключаем игрока
-             print(f"Результаты после {i + 1} раунда: Игрок 1: {self.scores[1]} баллов, Игрок 2: {self.scores[2]} баллов\n") # выводим результат
-
-        self._display_results()
-
-
-    def _switch_player(self):
-        """
-        Переключает текущего игрока.
-        """
-        self.current_player = 3 - self.current_player  # переключает текущего игрока
-
-
-    def _display_results(self):
-        """
-         Выводит результаты игры и определяет победителя.
-        """
-        print("Игра окончена! Ваши результаты:")
-        print(f"Игрок 1: {self.scores[1]} баллов") # выводим результаты
-        print(f"Игрок 2: {self.scores[2]} баллов") # выводим результаты
-        if self.scores[1] > self.scores[2]:
-            print("Победитель: Игрок 1!\n") # определяем победителя
-        elif self.scores[2] > self.scores[1]:
-             print("Победитель: Игрок 2!\n") # определяем победителя
-        else:
-             print("Ничья!\n")  # определяем ничью
-
-
+        self.questions = {
+            "math": [
+                {"question": "Сколько будет 5 + 7?", "answer": "12"},
+                {"question": "Сколько будет 8 x 6?", "answer": "48"},
+                {"question": "Что такое квадратный корень из 144?", "answer": "12"}, # Добавлен новый вопрос
+            ],
+            "logic": [
+                {
+                    "question": "Что тяжелее: 1 кг железа или 1 кг пуха?",
+                    "answer": "одинаково",
+                },
+                {
+                  "question": "Сколько углов у квадрата?",
+                   "answer": "4",
+                }, # Добавлен новый вопрос
+            ],
+            "general": [
+                {
+                    "question": "Какой город является столицей Франции?",
+                    "answer": "париж",
+                },
+                 {
+                    "question": "Что является столицей Японии?",
+                    "answer": "токио",
+                }, # Добавлен новый вопрос
+            ],
+        }
+        self.players = {}
+        self.current_player = None
+        self.game_mode = None
+        self.rounds_played = 0
+        self.max_rounds = 10
+        self.current_question = None # Добавлен атрибут для текущего вопроса
     def start_game(self):
         """
-         Запускает игру LITQZ.
+        Запускает игру, приветствует игрока, выбирает режим игры и начинает игру.
         """
-        self._display_welcome_message()  # выводим приветствие
-        self.mode = self._select_game_mode() # выбираем режим игры
-        if self.mode == 1:
-            self._handle_single_player_game()  # обрабатываем одиночный режим
-        elif self.mode == 2:
-             self._handle_multiplayer_game() # обрабатываем многопользовательский режим
-        else:
-             logger.error("Неверный режим игры")
-        self._play_again() # играем ещё раз
+        print("Добро пожаловать в LITQZ!")
+        print(
+            "Вам будут задаваться интеллектуальные вопросы.\nВаша задача — дать правильный ответ за наименьшее количество попыток."
+        )
+        print("Вы можете играть в одиночку или соревноваться с другим игроком. Удачи!")
+        self.choose_game_mode()
+        self.play_game()
 
-    def _play_again(self):
+    def choose_game_mode(self):
         """
-        Предлагает игроку сыграть еще раз.
+        Позволяет игроку выбрать режим игры: одиночный или двухпользовательский.
+        """
+        while True:
+            print("Выберите режим игры:")
+            print("1. Одиночный режим")
+            print("2. Двухпользовательский режим")
+            choice = input("> ")
+            if choice in ("1", "2"):
+                self.game_mode = int(choice)
+                break
+            else:
+                print("Неверный ввод. Пожалуйста, выберите 1 или 2.")
+        if self.game_mode == 2: # Инициализация игроков
+                self.players = {"Игрок 1": 0, "Игрок 2": 0}
+                self.current_player = "Игрок 1"
+    def play_game(self):
+        """
+        Осуществляет основной игровой процесс, включая генерацию вопросов, обработку ответов и подсчет очков.
+        """
+        if self.game_mode == 1:
+            self.play_single_mode()
+        elif self.game_mode == 2:
+            self.play_multiplayer_mode()
+
+    def play_single_mode(self):
+        """
+        Реализация одиночного режима игры.
+        """
+        score = 0
+        for _ in range(self.max_rounds):
+            question, answer = self.get_random_question()
+            print(question)
+            user_answer = input("> ").lower()
+            if user_answer == answer:
+                print("Правильно! Вы заработали 10 баллов.")
+                score += 10
+            else:
+                print(f"Неправильно. Правильный ответ: {answer}")
+        print(f"Игра окончена! Ваш результат: {score} баллов")
+        self.play_again()
+    def play_multiplayer_mode(self):
+         """
+         Реализация многопользовательского режима игры.
+         """
+         while self.rounds_played < self.max_rounds:
+            question, answer = self.get_random_question()
+            print(f"{self.current_player}, ваш вопрос:")
+            print(question)
+            user_answer = input("> ").lower()
+
+            if user_answer == answer:
+                 print("Правильно! Вы заработали 10 баллов.")
+                 self.players[self.current_player] += 10
+            else:
+                 print(f"Неправильно. Правильный ответ: {answer}")
+            self.rounds_played += 1
+            self.switch_player()
+            self.display_scores()
+         self.end_game()
+    def get_random_question(self) -> tuple[str, str]:
+        """
+        Случайно выбирает вопрос из доступных категорий и возвращает вопрос и ответ.
+
+        :return: Кортеж, содержащий текст вопроса и правильный ответ.
+        :rtype: tuple[str, str]
+        """
+        try:
+             category = random.choice(list(self.questions.keys()))
+             question_data = random.choice(self.questions[category])
+             self.current_question = question_data
+             return question_data["question"], question_data["answer"]
+        except Exception as ex:
+             logger.error(f"Ошибка при выборе случайного вопроса: {ex}")
+             return "", ""  # Возвращаем пустую строку при ошибке
+    def switch_player(self):
+        """
+        Переключает текущего игрока в многопользовательском режиме.
+        """
+        if self.current_player == "Игрок 1":
+            self.current_player = "Игрок 2"
+        else:
+            self.current_player = "Игрок 1"
+    def display_scores(self):
+        """
+        Выводит текущие очки игроков в многопользовательском режиме.
+        """
+        print("Результаты после раунда:")
+        for player, score in self.players.items():
+            print(f"{player}: {score} баллов")
+    def end_game(self):
+         """
+         Завершает игру, объявляет результаты и предлагает сыграть снова.
+         """
+         print("Игра окончена! Ваши результаты:")
+         winner = None
+         max_score = -1
+         for player, score in self.players.items():
+              print(f"{player}: {score} баллов")
+              if score > max_score:
+                    max_score = score
+                    winner = player
+         print(f"Победитель: {winner}!")
+
+         self.play_again()
+    def play_again(self):
+        """
+        Спрашивает игрока, хочет ли он сыграть снова. Если да, начинает новую игру.
         """
         while True:
             play_again = input("Хотите сыграть снова? (да/нет): ").lower()
-            if play_again == 'да':
-                self.__init__() # переинициализация игры
-                self.start_game() # запускаем игру снова
-                break
-            elif play_again == 'нет':
-                print("Спасибо за игру!")
+            if play_again in ("да", "нет"):
                 break
             else:
-                print("Неверный ввод. Пожалуйста, введите 'да' или 'нет'.") # сообщение об ошибке
-
-
-
+                print("Неверный ввод. Пожалуйста, введите 'да' или 'нет'.")
+        if play_again == "да":
+            self.__init__()
+            self.start_game()
+        else:
+            print("Спасибо за игру!")
 if __name__ == "__main__":
-    game = LITQZGame()  # создаем объект игры
-    game.start_game() # запускаем игру
+    game = LITQZGame()
+    game.start_game()
 ```

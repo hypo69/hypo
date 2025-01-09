@@ -1,137 +1,118 @@
-# ניתוח קוד: משחק התלייה
-
 ## <algorithm>
 
-1.  **אתחול:**
-    *   רשימת מילים `WORDS` מאותחלת: `WORDS = ["python", "java", "kotlin", "javascript", "swift", "ruby", "csharp"]`.
-    *   דוגמה: המחשב יכול לבחור באופן אקראי מילה אחת מהרשימה, למשל, "python".
+1. **Initialization:**
+   - The program starts by importing the `random` module, which is used for selecting a random word.
+   - A list of words (`WORDS`) is defined.
+   - **Example:** `WORDS = ["python", "java", "kotlin", ...]`
 
-2.  **בחירת מילה אקראית:**
-    *   המילה `target_word` נבחרת באופן אקראי מהרשימה `WORDS` והופכת לאותיות גדולות: `target_word = random.choice(WORDS).upper()`.
-    *   דוגמה: `target_word` הופכת להיות "PYTHON".
+2. **Game Start (`play_hangman` function):**
+   - A random word is chosen from `WORDS`, converted to uppercase and assigned to `target_word`.
+     - **Example:** `target_word` could be "PYTHON".
+   - A string of underscores (`_`) named `guess_string`, with the same length as `target_word` is created.
+      - **Example:** If `target_word` is "PYTHON", then `guess_string` will be "______".
+   - The `number_of_errors` counter is set to 0.
 
-3.  **יצירת מחרוזת ניחוש:**
-    *   מחרוזת הניחוש `guess_string` נוצרת כמחרוזת של קווים תחתונים, שאורכה כאורך המילה הנבחרת: `guess_string = "_" * len(target_word)`.
-    *   דוגמה: `guess_string` הופכת להיות "______".
+3. **Game Loop:**
+    - A loop starts (`while number_of_errors < 6 and "_" in guess_string`) which continues as long as the player has not made 6 errors, and has not yet guessed the word (still some underscores in `guess_string`).
+        - The current state of `guess_string` is printed.
+        - The player is asked to input a letter. The input is converted to uppercase.
+            - **Example:** User inputs 'A', converted to 'A'.
+        - If the input letter is found in `target_word`:
+            -  A new `new_guess_string` string is initialized as an empty string.
+            - The program goes through each letter in `target_word`:
+                - If a letter matches the user's input, this letter is appended to `new_guess_string`.
+                - If not, the character from `guess_string` at that index is appended.
+                  - **Example:** if the target is "PYTHON" and the user entered 'O', `new_guess_string` will be "__O___".
+            - `guess_string` is updated to `new_guess_string`.
+            - If `guess_string` is equal to `target_word`, the player wins, a congratulatory message is printed, and the function returns, ending the game.
+        - If the letter is not in the word, the `number_of_errors` is incremented by 1, and the hangman drawing function `draw_hangman` is called.
+          - **Example:** if number of errors is 3, the third drawing of the hangman is displayed.
 
-4.  **אתחול מונה שגיאות:**
-    *   המשתנה `number_of_errors` מאותחל ל-0: `number_of_errors = 0`.
-    *   דוגמה: `number_of_errors` מתחיל ב-0.
+4. **Game Over Check:**
+    - After the loop ends, if `number_of_errors` is 6, then it means the player has lost, and a message is printed along with the correct word.
 
-5.  **לולאת משחק:**
-    *   הלולאה `while number_of_errors < 6 and "_" in guess_string:` פועלת כל עוד מספר השגיאות קטן מ-6 ועדיין יש קווים תחתונים ב-`guess_string`.
-
-    *   **תצוגת מצב נוכחי:**
-        *   המחרוזת `guess_string` מוצגת למשתמש: `print("Слово:", guess_string)`.
-        *   דוגמה: "Слово: ______".
-
-    *   **קבלת קלט מהמשתמש:**
-        *   קלט המשתמש נלקח והופך לאותיות גדולות: `user_letter = input("Введите букву: ").upper()`.
-        *   דוגמה: אם המשתמש הזין "a", `user_letter` הופכת ל-"A".
-
-    *   **בדיקה אם האות נמצאת במילה:**
-        *   הקוד בודק אם `user_letter` נמצאת ב-`target_word`: `if user_letter in target_word:`.
-            *   דוגמה: אם `user_letter` היא "P" ו-`target_word` היא "PYTHON", התנאי מתקיים.
-
-        *   **עדכון מחרוזת ניחוש:**
-            *   לולאה עוברת על כל אות ב-`target_word` ומשווה אותה ל-`user_letter`.
-            *   אם האות תואמת, האות מתווספת ל-`new_guess_string`.
-            *   אם לא, האות מתווספת מ-`guess_string`.
-            *   `guess_string` מתעדכנת בערך החדש: `guess_string = new_guess_string`.
-            *   דוגמה: אם `user_letter` היא "O" ו-`guess_string` היא "P_____", `new_guess_string` הופכת ל-"P_O___", ו-`guess_string` מתעדכנת ל-"P_O___".
-
-        *   **בדיקה אם המילה פוענחה:**
-            *   הקוד בודק אם `guess_string` שווה ל-`target_word`: `if guess_string == target_word:`.
-            *   אם המילה פוענחה: הודעה "YOU GOT IT!" מוצגת, המילה המקורית מוצגת והפונקציה מסיימת את פעולתה.
-            *   דוגמה: אם `guess_string` היא "PYTHON" ו-`target_word` היא "PYTHON", התנאי מתקיים והמשחק מסתיים.
-
-        *   **אם האות לא נמצאת:**
-            *   המונה `number_of_errors` גדל ב-1: `number_of_errors += 1`.
-            *   הפונקציה `draw_hangman` נקראת להצגת שלב ההנגמן המתאים: `draw_hangman(number_of_errors)`.
-            *   דוגמה: אם `user_letter` היא "Z", `number_of_errors` הופכת מ-0 ל-1 ומוצג שלב הנגמן הראשון.
-
-6.  **בדיקת הפסד:**
-    *   אם `number_of_errors` שווה ל-6: הודעה "SORRY, YOU DIDN\'T GET IT." מוצגת, המילה המקורית מוצגת.
-    *   דוגמה: אם `number_of_errors` היא 6, המשחק מסתיים והודעה מופיעה.
-
-7.  **סיום המשחק:**
-    *   הפונקציה `play_hangman` מסתיימת.
-
-8.  **הפעלה ראשית (Main):**
-    *   אם הקובץ מורץ ישירות, הפונקציה `play_hangman` נקראת: `if __name__ == "__main__":  play_hangman()`.
+5. **Starting the Game:**
+    - The `if __name__ == "__main__":` condition ensures that the `play_hangman()` function is called only if the script is executed directly.
+    
+**Data flow:**
+- `WORDS` list is used to pick the `target_word`.
+- `target_word` is used to initialize `guess_string` and compared with `user_letter`
+- `user_letter` input is compared with `target_word` and `guess_string` updated
+- `number_of_errors` is incremented, if needed, and passed to the `draw_hangman` function to show the updated drawing.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start(התחלה) --> InitWords[אתחול רשימת מילים WORDS]
-    InitWords --> ChooseWord[בחירת מילה אקראית target_word]
-    ChooseWord --> CreateGuessString[יצירת מחרוזת ניחוש guess_string]
-    CreateGuessString --> InitErrors[אתחול מונה שגיאות number_of_errors=0]
-    InitErrors --> GameLoopStart[התחלת לולאת המשחק]
-    GameLoopStart --> PrintGuessString[הדפסת מחרוזת הניחוש]
-    PrintGuessString --> GetUserLetter[קבלת קלט מהמשתמש user_letter]
-    GetUserLetter --> CheckLetterInWord{האם user_letter נמצא ב-target_word?}
-    CheckLetterInWord -- כן --> UpdateGuessString[עדכון guess_string]
-    UpdateGuessString --> CheckWordGuessed{האם guess_string == target_word?}
-    CheckWordGuessed -- כן --> WinMessage[הודעת ניצחון]
-    WinMessage --> End(סוף)
-    CheckWordGuessed -- לא --> GameLoopStart
-    CheckLetterInWord -- לא --> IncrementErrors[הגדלת number_of_errors]
-    IncrementErrors --> DrawHangman[ציור הנגמן]
-    DrawHangman --> CheckErrorsLimit{האם number_of_errors == 6?}
-     CheckErrorsLimit -- כן --> LoseMessage[הודעת הפסד]
-    LoseMessage --> End
-    CheckErrorsLimit -- לא --> GameLoopStart
+    Start --> ChooseWord[בחר מילה אקראית מתוך רשימה WORDS<br><code>target_word = random.choice(WORDS).upper()</code>]
+    ChooseWord --> InitGuessString[אתחל מחרוזת ניחוש `guess_string` <br> עם קווים תחתונים באורך המילה `target_word` <br><code>guess_string = "_" * len(target_word)</code>]
+    InitGuessString --> InitErrors[אתחל מספר שגיאות<br><code>number_of_errors = 0</code>]
+    InitErrors --> GameLoopStart{האם מספר שגיאות < 6<br>וגם האם יש קווים תחתונים ב `guess_string`?}
+    GameLoopStart -- כן --> PrintGuessString[הדפס את המחרוזת ניחוש הנוכחית<br><code>print("Слово:", guess_string)</code>]
+    PrintGuessString --> GetUserInput[קבל קלט משתמש<br>המר לאות גדולה<br><code>user_letter = input("Введите букву: ").upper()</code>]
+    GetUserInput --> CheckLetter[האם `user_letter` במילה `target_word`?]
+    CheckLetter -- כן --> UpdateGuessString[עדכן את `guess_string` עם האות שניחשה <br><code>new_guess_string = ""</code><br><code>for...</code>]
+    UpdateGuessString --> CheckWin{האם `guess_string` שווה ל `target_word`?}
+    CheckWin -- כן --> PrintWin[הדפס הודעת ניצחון<br><code>print("ПОЗДРАВЛЯЮ! Вы угадали слово:", target_word)</code>]
+     PrintWin --> End
+    CheckWin -- לא --> GameLoopStart
+    CheckLetter -- לא --> IncrementErrors[הגדל את מספר השגיאות<br><code>number_of_errors += 1</code>]
+    IncrementErrors --> DrawHangman[הדפס את תליית האיש בהתאם למספר השגיאות<br><code>draw_hangman(number_of_errors)</code>]
+    DrawHangman --> GameLoopStart
+    GameLoopStart -- לא --> CheckLose{האם מספר השגיאות שווה 6?}
+    CheckLose -- כן --> PrintLose[הדפס הודעת הפסד<br><code>print("СОЖАЛЕЮ, вы не отгадали слово. Загаданное слово:", target_word)</code>]
+    PrintLose --> End
+    CheckLose -- לא --> End
+     End --> Stop[סיום]
+```
+
+**Imports:**
+-   `import random`: מייבאת את המודול `random` שמאפשר לבחור מילה באקראי מתוך רשימת המילים.
+
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> קביעת שורש הפרויקט]
+    Header --> import[ייבוא הגדרות גלובליות: <br><code>from src import gs</code>]
 ```
 
 ## <explanation>
 
-### ייבואים (Imports)
+**Imports:**
 
-*   `import random`: מייבא את המודול `random` שמאפשר יצירת מספרים אקראיים. משמש לבחירת מילה אקראית מרשימת המילים.
+*   `import random`: המודול `random` משמש לייצור מספרים אקראיים, ובקוד הזה משמש לבחירת מילה אקראית מתוך רשימת המילים `WORDS`. אין קשר ישיר לחבילות `src.` אחרות.
 
-### מחלקות (Classes)
+**Variables:**
 
-*   אין מחלקות בשימוש בקוד זה.
+*   `WORDS`: רשימה (list) של מחרוזות (strings), כל מחרוזת מייצגת מילה. רשימה זו משמשת כמקור המילים למשחק התלייה.
+*   `target_word`: מחרוזת (string) שמכילה את המילה שנבחרה באקראי למשחק, באותיות גדולות.
+*   `guess_string`: מחרוזת (string) שמכילה את הניחוש הנוכחי של המילה, בהתחלה היא מכילה קווים תחתונים ("_") באורך המילה `target_word`, לאחר מכן האותיות שנוחשו נכונה מחליפות את הקו התחתון במקום המתאים.
+*   `number_of_errors`: מספר שלם (integer) שמכיל את מספר השגיאות שהשחקן עשה, מתחיל מאפס.
+*  `user_letter`: מחרוזת שמכילה את האות שהמשתמש הכניס, כאשר היא מומרת לאות גדולה.
+* `hangman_stages`: רשימה של מחרוזות, כאשר כל מחרוזת היא ייצוג טקסטואלי של מצב הציור של תליית האיש בהתאם למספר הטעויות.
 
-### פונקציות (Functions)
+**Functions:**
 
-1.  **`draw_hangman(errors)`:**
-    *   **פרמטרים:**
-        *   `errors` (מספר שלם): מספר השגיאות שביצע השחקן.
-    *   **ערך מוחזר:** אין (הפונקציה מדפיסה פלט בלבד).
-    *   **מטרה:** מדפיסה את שלב הנגמן המתאים לפי מספר השגיאות.
-    *   **דוגמה:** `draw_hangman(3)` תדפיס את שלב הנגמן השלישי (עם ראש, גוף וזרוע אחת).
+*   **`draw_hangman(errors)`:**
+    *   **Parameters**: `errors` - מספר שלם המייצג את מספר השגיאות.
+    *   **Returns**: None.
+    *   **Purpose**: הפונקציה מדפיסה את ציור תליית האיש המתאים למספר השגיאות שנעשו, באמצעות גישה לאלמנטים ברשימה `hangman_stages`.
+    *   **Example:** `draw_hangman(3)` תדפיס את הציור השלישי של תליית האיש.
+*   **`play_hangman()`:**
+    *   **Parameters**: None.
+    *   **Returns**: None.
+    *   **Purpose**: פונקציה זו מכילה את הלוגיקה המרכזית של המשחק. היא בוחרת מילה אקראית, מאפשרת לשחקן לנחש אותיות, ומדפיסה הודעת ניצחון או הפסד בסיום המשחק.
+    *   **דוגמה לשימוש:** הפונקציה מופעלת כאשר הקובץ מורץ, דרך הקריאה `play_hangman()` בתוך הבלוק `if __name__ == "__main__":`.
 
-2.  **`play_hangman()`:**
-    *   **פרמטרים:** אין.
-    *   **ערך מוחזר:** אין.
-    *   **מטרה:** מנהלת את משחק התלייה.
-    *   **דוגמה:**
-        *   בוחרת מילה אקראית מהרשימה `WORDS`.
-        *   מציגה את מצב המילה עם קווים תחתונים במקום אותיות.
-        *   מבקשת מהמשתמש להזין אות.
-        *   בודקת האם האות קיימת במילה.
-        *   מעדכנת את המילה או מוסיפה שגיאה בהתאם.
-        *   ממשיכה את המשחק עד שהמילה נוחשה או שנעשו 6 שגיאות.
+**Problems and Improvements:**
 
-### משתנים (Variables)
+*   **Hardcoded word list**: The `WORDS` list is hardcoded, which makes the game limited. This could be improved by reading the word list from a file or using a database.
+*   **Limited input validation**:  The code does not handle invalid user input (e.g. multiple characters).
+*   **No clear UI**: The game has a very basic text-based interface. It could be improved by using a GUI framework.
+*   **No replay option**: The game ends after one round. It would be nice to have an option to play again without restarting the script.
+*  **No difficulty levels:** The game does not have different difficulty levels. This could be improved by grouping the word list into different difficulties.
 
-*   `WORDS` (רשימה של מחרוזות): רשימה המכילה את המילים שמהן המחשב בוחר מילה למשחק.
-*   `target_word` (מחרוזת): המילה האקראית שנבחרה למשחק, באותיות גדולות.
-*   `guess_string` (מחרוזת): מחרוזת המכילה קווים תחתונים במקום אותיות, מתעדכנת כשהשחקן מנחש אותיות נכונות.
-*   `number_of_errors` (מספר שלם): מונה שגיאות. גדל ב-1 בכל ניחוש שגוי.
-*   `user_letter` (מחרוזת): האות שהזין המשתמש.
-
-### בעיות אפשריות ותחומים לשיפור
-
-*   **קלט לא תקין:** הקוד לא בודק האם הקלט של המשתמש הוא אות בודדת. אפשר להוסיף בדיקה.
-*   **אפשרויות משחק מוגבלות:** רשימת המילים קצרה ולא ניתנת להרחבה קלה. אפשר להוסיף קריאת מילים מקובץ חיצוני.
-*   **ממשק משתמש:** הממשק בסיסי מאוד וניתן לשיפור מבחינת תצוגה ואינטראקציה עם המשתמש.
-*   **טיפול בשגיאות:** אין טיפול בשגיאות כלל. אפשר להוסיף טיפול במקרים של קלט שגוי, למשל.
-
-### שרשרת קשרים עם חלקים אחרים בפרויקט
-
-*   קוד זה הוא משחק עצמאי ואין לו קשרים ישירים עם חלקים אחרים בפרויקט.
-*   אפשר להשתמש בו כחלק ממערכת גדולה יותר, למשל, מערכת משחקים. במקרה זה, אפשר להוסיף קישוריות להצגת נתונים (כמו ניקוד, שמירת שיאים), או כל קשר אחר הנדרש על ידי המערכת הגדולה יותר.
+**Relations to other parts of the project:**
+*   This file is part of `hypotez`'s project, under `src/endpoints/ai_games/101_basic_computer_games/ru/GAMES/HANG`.
+*   It uses general logic of a hangman game.
+*   This file contains `play_hangman` function that is executed from inside of the block `if __name__ == "__main__":`
+*   It doesn't have any relations with `header.py` or other parts of `src`

@@ -20,7 +20,7 @@ import json
 import csv
 from types import SimpleNamespace
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Any
 from src.utils.convertors import xml2dict
 from src.utils.csv import save_csv_file
 from src.utils.xls import save_xls_file
@@ -29,20 +29,27 @@ from src.logger.logger import logger
 
 from types import SimpleNamespace
 from typing import Any, Dict
+from types import SimpleNamespace
+from typing import Any, Dict
 
-def ns2dict(ns_obj: SimpleNamespace) -> Dict[str, Any]:
+from types import SimpleNamespace
+from typing import Any, Dict
+
+def ns2dict(obj: Any) -> Dict[str, Any]:
     """
-    Recursively convert a SimpleNamespace object to a dictionary.
+    Recursively convert an object with key-value pairs to a dictionary.
+    Handles empty keys by substituting them with an empty string.
 
     Args:
-        ns_obj (SimpleNamespace): The SimpleNamespace object to convert.
+        obj (Any): The object to convert. Can be SimpleNamespace, dict, or any object
+                   with a similar structure.
 
     Returns:
         Dict[str, Any]: Converted dictionary with nested structures handled.
     """
     def convert(value: Any) -> Any:
         """
-        Recursively process values to handle nested SimpleNamespace, dict, or list.
+        Recursively process values to handle nested structures and empty keys.
 
         Args:
             value (Any): Value to process.
@@ -50,15 +57,19 @@ def ns2dict(ns_obj: SimpleNamespace) -> Dict[str, Any]:
         Returns:
             Any: Converted value.
         """
-        if isinstance(value, SimpleNamespace):
-            return {key: convert(val) for key, val in vars(value).items()}
-        elif isinstance(value, dict):
-            return {key: convert(val) for key, val in value.items()}
+        # If the value has a `__dict__` attribute (e.g., SimpleNamespace or custom objects)
+        if hasattr(value, '__dict__'):
+            return {key or "": convert(val) for key, val in vars(value).items()}
+        # If the value is a dictionary-like object (has .items())
+        elif hasattr(value, 'items'):
+            return {key or "": convert(val) for key, val in value.items()}
+        # If the value is a list or other iterable
         elif isinstance(value, list):
             return [convert(item) for item in value]
         return value
 
-    return convert(ns_obj)
+    return convert(obj)
+
 
 
 

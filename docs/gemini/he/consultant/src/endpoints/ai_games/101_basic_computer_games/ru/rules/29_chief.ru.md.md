@@ -1,164 +1,126 @@
 # Анализ кода модуля `29_chief.ru.md`
 
 **Качество кода**
-
-- **Соответствие требованиям к формату кода (1-10):**
-  - **Плюсы:**
-    - Документ представлен в формате markdown.
-    - Содержит подробное описание игры, включая пошаговые инструкции и примеры.
-    - Текст хорошо структурирован и понятен.
-  - **Минусы:**
-    - Код не является исполняемым и представляет собой только описание алгоритма игры.
-    - Отсутствуют какие-либо комментарии в формате reStructuredText (RST) и docstring.
-    - Нет разделения на модули, функции, классы и т.д.
-    - Нет обработки ошибок и логирования.
-    - Не используются функции из `src.utils.jjson` и `src.logger.logger`.
-    - Отсутствуют импорты.
+  
+   - Соответствие требованиям к формату кода (1-10):
+        -  Преимущества:
+            - Документ содержит подробные инструкции для реализации игры "CHIEF" с четким описанием шагов, примерами и ограничениями.
+            - Структура документа логична и последовательна, что облегчает понимание игры и ее реализации.
+            - Приведены примеры взаимодействия пользователя с программой, что помогает представить работу игры.
+        - Недостатки:
+            - Документ не содержит кода, а только описание правил игры, поэтому нет возможности оценить качество кода.
+            - Отсутствует код на Python.
 
 **Рекомендации по улучшению**
 
-1.  **Перевод в исполняемый код:** Необходимо реализовать код игры на Python.
-2.  **Структурирование кода:** Разделить код на функции и классы для лучшей организации.
-3.  **Документация:** Добавить docstring в формате RST для всех функций, классов и методов.
-4.  **Логирование:** Использовать `src.logger.logger` для записи ошибок и отладочной информации.
-5.  **Обработка ошибок:** Добавить обработку исключений.
-6.  **Ввод/вывод:** Использовать корректные методы для ввода и вывода данных.
-7.  **Импорты:** Добавить необходимые импорты.
-8.  **Переменные:** Переименовать переменные в соответствии со стилем кода.
+  - Добавить код на Python для реализации описанной игры.
+  - Применить форматирование reStructuredText (RST) для документирования кода.
+  - Использовать `j_loads` или `j_loads_ns` для чтения данных из файлов, если это необходимо.
+  - Добавить импорты, если они необходимы в Python.
+  - Добавить обработку ошибок с использованием `logger.error`.
+  - Добавить docstring к функциям, методам и классам.
+  - Улучшить читаемость кода за счет добавления комментариев.
+  - Следовать стандартам кодирования Python.
 
 **Улучшенный код**
 
 ```python
 """
-Модуль для реализации математической игры "Chief".
-=====================================================
+Модуль реализует игру CHIEF - математическую игру для тренировки арифметических навыков.
 
-Модуль содержит функции для имитации игры "Chief", в которой пользователю предлагается
-решать арифметические задачи.
+=========================================================================================
 
-Пример использования:
+Модуль содержит функции для запуска и управления ходом игры, проверки ответов и предоставления объяснений.
+
+Пример использования
 --------------------
+
+Пример запуска игры:
 
 .. code-block:: python
 
-    play_game()
+    play_chief()
 """
 
-from src.logger.logger import logger  # Импорт модуля логирования
-from typing import Any  # Импорт Any для аннотации типов
-import re
+import random
+from src.utils.jjson import j_loads
+from src.logger.logger import logger # Импорт logger для записи ошибок.
 
-
-def validate_input(user_input: str) -> str:
+def generate_task(number: int) -> tuple[str, float]:
     """
-    Проверяет, что пользователь ввел "yes" или "no", и преобразует ввод к нижнему регистру.
-
-    :param user_input: Строка, введенная пользователем.
-    :return: Строка "yes" или "no" в нижнем регистре, если ввод корректен, иначе None.
+    Генерирует арифметическую задачу и вычисляет правильный ответ.
+    
+    :param number: Начальное число для задачи.
+    :type number: int
+    :return: Кортеж из текста задачи и правильного ответа.
+    :rtype: tuple[str, float]
     """
-    if user_input.lower() in ['yes', 'no']:
-        return user_input.lower()
-    else:
-        logger.error(f'Некорректный ввод: {user_input}. Ожидается "yes" или "no".')
-        return None
+    operations = [
+        ('добавить', 3, '+'),
+        ('поделить на', 5, '/'),
+        ('умножить на', 8, '*'),
+        ('поделить на', 5, '/'),
+        ('добавить это же число', number, '+'),
+        ('вычесть', 1, '-'),
+    ]
+    task_text = f'Возьмите число {number}, '
+    result = number
+    steps = []
+    for operation_name, value, operation_symbol in operations:
+        task_text += f'{operation_name} {value}, '
+        if operation_symbol == '+':
+            result += value
+            steps.append(f'{result - value} плюс {value} = {result}')
+        elif operation_symbol == '-':
+            result -= value
+            steps.append(f'{result + value} минус {value} = {result}')
+        elif operation_symbol == '*':
+            result *= value
+            steps.append(f'{result / value} умножить на {value} = {result}')
+        elif operation_symbol == '/':
+            try:
+                result /= value
+                steps.append(f'{result * value} разделить на {value} = {result}')
+            except ZeroDivisionError as ex:
+                logger.error('Деление на ноль', ex)
+                return 'Ошибка: деление на ноль', 0  # Возвращаем ошибку, если деление на ноль.
+    task_text = task_text.strip(', ') + '. Какой результат?'
+    return task_text, result, steps
 
 
-def calculate_answer(number: float) -> float:
+def play_chief():
     """
-    Выполняет арифметические операции с заданным числом.
-
-    :param number: Исходное число типа float.
-    :return: Результат арифметических операций типа float.
+    Запускает игровой процесс "CHIEF".
     """
-    step1 = number + 3
-    step2 = step1 / 5
-    step3 = step2 * 8
-    step4 = step3 / 5
-    step5 = step4 + number
-    step6 = step5 - 1
-    return step6
-
-
-def explain_solution(number: float) -> str:
-    """
-    Генерирует текстовое пояснение для решения задачи.
-
-    :param number: Исходное число типа float.
-    :return: Строка с пояснением шагов решения.
-    """
-    step1 = number + 3
-    step2 = step1 / 5
-    step3 = step2 * 8
-    step4 = step3 / 5
-    step5 = step4 + number
-    step6 = step5 - 1
-    return (
-        f'Ваш ответ был неправильным! Давайте проверим шаги:\n'
-        f'(1) {number} плюс 3 = {step1}\n'
-        f'(2) Разделить на 5 = {step2}\n'
-        f'(3) Умножить на 8 = {step3}\n'
-        f'(4) Разделить на 5 = {step4}\n'
-        f'(5) Добавить {number} = {step5}\n'
-        f'(6) Вычитаем 1 = {step6}\n'
-    )
-
-
-def check_answer(user_answer: str, correct_answer: float) -> bool:
-    """
-    Проверяет ответ пользователя на правильность.
-
-    :param user_answer: Ответ пользователя в виде строки.
-    :param correct_answer: Правильный ответ в виде числа типа float.
-    :return: True, если ответ верный, False в противном случае.
-    """
-    try:
-        user_answer_float = float(user_answer)
-        return abs(user_answer_float - correct_answer) < 1e-6
-    except ValueError as e:
-        logger.error(f'Некорректный формат ответа: {user_answer}', exc_info=True)
-        return False
-
-
-def play_game():
-    """
-    Основная функция игры, управляющая процессом игры.
-    """
-    print('Я ЧИФ МАТЕМАТИКИ, ВЕЛИКИЙ ИНДИЙСКИЙ БОГ МАТЕМАТИКИ.\nГОТОВЫ ЛИ ВЫ ПРИНИМАТЬ МОЙ ТЕСТ?')
-    while True: # исправлена опечатка: while True
-        user_input = input("> ")
-        start_game = validate_input(user_input)
-        if start_game == 'yes':
-           break
-        elif start_game == 'no':
-            print("Спасибо за игру!")
-            return
-        else:
-           print("Пожалуйста, введите 'yes' или 'no'.")
-
-
+    print('Я ЧИФ МАТЕМАТИКИ, ВЕЛИКИЙ ИНДИЙСКИЙ БОГ МАТЕМАТИКИ.')
     while True:
-        print('Возьмите число, добавьте 3, поделите на 5, умножьте на 8, разделите на 5 и добавьте это же число. Вычтите 1. Какой результат?')
-        number = 12  # Задано начальное число
-        correct_answer = calculate_answer(number)
-        user_answer = input("> ")
-        if check_answer(user_answer, correct_answer):
-            print('Вы правы! Это правильный ответ.')
+        start = input('ГОТОВЫ ЛИ ВЫ ПРИНИМАТЬ МОЙ ТЕСТ? (YES/NO): ').strip().upper()
+        if start == 'YES':
+            while True:
+                number = random.randint(1, 20) # Генерация случайного числа
+                task_text, correct_answer, steps = generate_task(number)
+                print(task_text)
+                while True:
+                    try:
+                        user_answer = float(input('> '))
+                        break
+                    except ValueError:
+                        print('Некорректный ввод. Пожалуйста, введите число.')
+                if abs(user_answer - correct_answer) < 0.0001:  # Сравнение с небольшой погрешностью для float
+                   print('Вы правы! Это правильный ответ.')
+                else:
+                    print('Ваш ответ был неправильным! Давайте проверим шаги:')
+                    for i, step in enumerate(steps, 1):
+                       print(f'({i}) {step}')
+                play_again = input('Хотите сыграть снова? (YES/NO): ').strip().upper()
+                if play_again != 'YES':
+                   break
+        elif start == 'NO':
+           print('Спасибо за игру!')
+           break
         else:
-            print(explain_solution(number))
-
-        while True:
-           play_again = input('Хотите сыграть снова? (YES/NO)\n> ')
-           start_again = validate_input(play_again)
-           if start_again == 'yes':
-                break
-           elif start_again == 'no':
-               print("Спасибо за игру!")
-               return
-           else:
-               print("Пожалуйста, введите 'yes' или 'no'.")
-
-
+           print('Некорректный ввод. Пожалуйста, введите YES или NO.')
 
 if __name__ == '__main__':
-    play_game()
+    play_chief()
 ```

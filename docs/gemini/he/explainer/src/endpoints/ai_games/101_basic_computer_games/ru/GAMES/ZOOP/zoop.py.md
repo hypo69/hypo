@@ -1,104 +1,87 @@
-## ניתוח קוד המשחק "ZOOP"
+## <algorithm>
+1. **אתחול `previousNumber`**:
+   - המשתנה `previousNumber` מאותחל ל-0. זהו הערך ההתחלתי שייצג את המספר הקודם שנוצר.
+   - לדוגמה: `previousNumber = 0`.
 
-### 1. <algorithm>
+2. **לולאה אינסופית**:
+   - מתחיל לולאה `while True` שתרוץ עד שהיא תופסק על ידי פקודת `break`.
+   - הלולאה הזו מייצגת את המשחק עצמו, שרץ עד שהשחקן מפסיד או מחליט לעזוב.
 
-**תרשים זרימה של תהליך העבודה:**
+3. **יצירת מספר אקראי `currentNumber`**:
+   - נוצר מספר אקראי בין 0 ל-7 (כולל) באמצעות `random.randint(0, 7)`. המספר האקראי הזה נשמר במשתנה `currentNumber`.
+   - לדוגמה: `currentNumber` יכול להיות 3, 5, 0 וכו'.
 
-1. **התחלה:** המשחק מתחיל עם אתחול של משתנה `previousNumber` ל-0.
-   * _דוגמה:_ `previousNumber = 0`.
+4. **בדיקה אם השחקן רוצה לסיים את המשחק**:
+   - נבדק האם `currentNumber` שווה ל-0. אם כן, המשחק מסתיים, ומוצגת ההודעה "YOU BLEW IT!".
+   - דוגמה: אם `currentNumber == 0`, המשחק נגמר.
 
-2. **לולאה ראשית:** מתחילה לולאה אינסופית `while True:`.
+5. **בדיקה אם המספר הנוכחי שווה למספר הקודם**:
+   - נבדק האם `currentNumber` שווה ל-`previousNumber`. אם כן, השחקן הפסיד, ומוצגת ההודעה "YOU BLEW IT!".
+   - דוגמה: אם `previousNumber = 3` ו-`currentNumber = 3`, המשחק נגמר.
 
-3. **יצירת מספר אקראי:** נוצר מספר אקראי שלם בין 0 ל-7 (כולל) ושומרים אותו במשתנה `currentNumber`.
-   * _דוגמה:_ `currentNumber = 5`.
+6. **הדפסת המספר הנוכחי**:
+   - אם שני התנאים הקודמים לא התקיימו, מדפיסים את הערך של `currentNumber`.
 
-4. **בדיקת סיום:** נבדק אם `currentNumber` שווה ל-0. אם כן, המשחק מסתיים ומודפסת הודעה "YOU BLEW IT!".
-   * _דוגמה:_ אם `currentNumber = 0` -> "YOU BLEW IT!".
+7. **עדכון `previousNumber`**:
+   - הערך של `currentNumber` מועבר לתוך `previousNumber` כדי להכין את עצמנו לסיבוב הבא.
 
-5. **בדיקת כפילות:** אם `currentNumber` אינו 0, נבדק אם הוא שווה ל-`previousNumber`. אם כן, המשחק מסתיים ומודפסת הודעה "YOU BLEW IT!".
-   * _דוגמה:_ אם `previousNumber = 5` וגם `currentNumber = 5` -> "YOU BLEW IT!".
+8. **חזרה לשלב 2**:
+   - הלולאה חוזרת לשלב 2 כדי ליצור מספר אקראי נוסף.
+   - התהליך יחזור עד שהמשחק ייגמר או שהלולאה תופסק.
 
-6. **הדפסת המספר הנוכחי:** אם שתי הבדיקות לעיל נכשלו, `currentNumber` מודפס למסך.
-   * _דוגמה:_ אם `currentNumber = 3` ו- `previousNumber` לא שווה ל- 3-> מודפס `3`.
-
-7. **עדכון מספר קודם:** הערך של `currentNumber` נשמר בתוך `previousNumber` לקראת האיטרציה הבאה.
-    * _דוגמה:_ `previousNumber` מקבל את הערך של `currentNumber` (לדוגמה, אם `currentNumber = 3` אז `previousNumber = 3`).
-
-8. **חזרה ללולאה:** חוזרים לשלב 2, ממשיכים ליצור מספר אקראי ולבדוק את התנאים עד שאחד התנאים להפסקת המשחק מתקיים או שהמשתמש בוחר לסיים את המשחק.
-
-**זרימת נתונים:**
-
--   הערך ההתחלתי של `previousNumber` הוא 0.
--   `random.randint()` יוצר מספר אקראי ומשייך אותו ל-`currentNumber`.
--   הערך של `currentNumber` משמש לבדיקות השוואה ולפלט.
--   הערך של `currentNumber` מושם לתוך `previousNumber` לקראת הסיבוב הבא.
-
-### 2. <mermaid>
-
+## <mermaid>
 ```mermaid
 flowchart TD
-    Start["התחלה"] --> InitializePreviousNumber["<p align='left'>אתחול:<br><code>previousNumber = 0</code></p>"]
-    InitializePreviousNumber --> LoopStart{"תחילת לולאה"}
-    LoopStart --> GenerateRandomNumber["יצירת מספר אקראי:<br><code>currentNumber = random(0, 7)</code>"]
-    GenerateRandomNumber --> CheckQuit{"בדיקה:<br><code>currentNumber == 0</code>?"}
-    CheckQuit -- כן --> OutputBlowIt["פלט:<br><code>YOU BLEW IT!</code>"]
-    OutputBlowIt --> End["סוף"]
-    CheckQuit -- לא --> CheckSame{"בדיקה:<br><code>currentNumber == previousNumber</code>?"}
-    CheckSame -- כן --> OutputBlowIt
-    CheckSame -- לא --> OutputCurrentNumber["פלט:<br><code>currentNumber</code>"]
-    OutputCurrentNumber --> SetPreviousNumber["<code>previousNumber = currentNumber</code>"]
-    SetPreviousNumber --> LoopStart
-
-    classDef box fill:#f9f,stroke:#333,stroke-width:2px
-    class Start,End box;
-    class InitializePreviousNumber,GenerateRandomNumber,OutputCurrentNumber,SetPreviousNumber box;
-    class LoopStart,CheckQuit,CheckSame,OutputBlowIt box;
+    Start["התחלה"] --> InitializePreviousNumber[/"אתחול: <br> <code><b>previousNumber = 0</b></code>"/]
+    InitializePreviousNumber --> LoopStart{{"לולאה אינסופית"}};
+    LoopStart --> GenerateRandomNumber[/"יצירת מספר אקראי: <br> <code><b>currentNumber = random(0, 7)</b></code>"/];
+    GenerateRandomNumber --> CheckQuit{/"בדיקה: <br> <code><b>currentNumber == 0</b></code>?"/};
+    CheckQuit -- "כן" --> OutputBlowIt[/"הדפסה: <b>YOU BLEW IT!</b>"/];
+    OutputBlowIt --> End["סיום"];
+    CheckQuit -- "לא" --> CheckSame{/"בדיקה: <br> <code><b>currentNumber == previousNumber</b></code>?"/};
+    CheckSame -- "כן" --> OutputBlowIt;
+    CheckSame -- "לא" --> OutputCurrentNumber[/"הדפסה: <br> <code><b>currentNumber</b></code>"/];
+    OutputCurrentNumber --> SetPreviousNumber[/"עדכון: <br> <code><b>previousNumber = currentNumber</b></code>"/];
+    SetPreviousNumber --> LoopStart;
+    
+    
+  
 ```
 
-**ניתוח תלויות:**
+**הסבר תלויות ב-Mermaid:**
+- **flowchart TD**: מגדיר את סוג התרשים כתרשים זרימה מלמעלה למטה.
+- **Start, InitializePreviousNumber, LoopStart, GenerateRandomNumber, CheckQuit, OutputBlowIt, End, CheckSame, OutputCurrentNumber, SetPreviousNumber**: אלו הם צמתים שונים בתרשים, המייצגים שלבים או נקודות קריטיות בזרימת הקוד.
+- **-->**: החצים שמחברים בין הצמתים מייצגים את כיוון זרימת השליטה או המידע.
+- **"/..."/**: תווית על גבי הצומת, הכוללת תיאור מפורט של השלב, בפורמט markdown, כולל קטעי קוד להמחשה.
 
--   הקוד משתמש במודול `random` של פייתון כדי ליצור מספרים אקראיים. לכן, הוא מיובא בתחילת הקוד: `import random`.
--   אין תלויות נוספות שדורשות ייבוא של מודולים אחרים.
--   התרשים מתאר באופן ישיר את זרימת הקוד ואת תהליך קבלת ההחלטות של המשחק, ללא תלויות חיצוניות.
+## <explanation>
+### ייבואים (Imports)
+- `import random`: מייבא את מודול `random` של פייתון, המכיל פונקציות ליצירת מספרים אקראיים. הוא משמש ליצירת המספרים האקראיים במשחק. אין תלות בחבילות אחרות תחת `src`.
 
-### 3. <explanation>
+### משתנים (Variables)
+- `previousNumber`: משתנה שלם המאחסן את המספר האקראי שנוצר בסיבוב הקודם. מאותחל ל-0 בתחילת המשחק. הוא משמש כדי לוודא שלא נוצרים שני מספרים זהים רצופים.
+- `currentNumber`: משתנה שלם שמאחסן את המספר האקראי שנוצר בסיבוב הנוכחי. הערך שלו משתנה בכל איטרציה של הלולאה.
 
-**ייבוא (Imports):**
+### פונקציות (Functions)
+- אין בקוד פונקציות מוגדרות על ידי המשתמש. השימוש בפונקציות נעשה באופן ישיר דרך מודולים, לדוגמה `random.randint()`.
 
--   `import random`: מודול `random` משמש לייצור מספרים אקראיים, חיוני ליצירת המספרים האקראיים במשחק. אין לו קשר לחבילות אחרות בפרויקט `src.`.
+### לולאה (Loop)
+- `while True:`: לולאה אינסופית. תמשיך לרוץ עד שתופסק על ידי פקודת `break`. הלולאה הזו היא הליבה של המשחק.
 
-**מחלקות (Classes):**
-    - בקוד אין שימוש במחלקות, לכן אין ניתוח או הסבר למחלקות.
+### תנאים (Conditions)
+- `if currentNumber == 0:`: בודק האם המשתמש רצה לסיים את המשחק על ידי יצירת 0. אם כן, המשחק מסתיים.
+- `if currentNumber == previousNumber:`: בודק האם המספר הנוכחי זהה לקודם. אם כן, השחקן הפסיד והמשחק מסתיים.
 
-**פונקציות (Functions):**
+### פעולות
+- `random.randint(0, 7)`: יוצר מספר אקראי שלם בין 0 ל-7.
+- `print("YOU BLEW IT!")`: מדפיס את ההודעה המציינת שהמשחק נגמר (במקרה של הפסד או סיום יזום).
+- `print(currentNumber)`: מדפיס את המספר האקראי הנוכחי.
 
--   `random.randint(a, b)`:
-    -   **פרמטרים:** `a` ו-`b` הם מספרים שלמים שמגדירים את הטווח (כולל) של המספר האקראי שיכול להיות מיוצר.
-    -   **ערך מוחזר:** מחזיר מספר שלם אקראי בטווח שצוין.
-    -   **מטרה:** מייצר מספר שלם אקראי המשמש ליצירת המספרים במשחק.
-    -   **דוגמה:** `random.randint(0, 7)` יחזיר מספר שלם אקראי בין 0 ל-7.
+### בעיות אפשריות ותחומים לשיפור:
+- **משחק טקסטואלי בסיסי**: המשחק פשוט מאוד, ואין ממשק משתמש אינטראקטיבי.
+- **הודעה סיום קשיחה**: ההודעה "YOU BLEW IT!" אינה ידידותית, וניתן להחליפה בהודעה טובה יותר, עם התייחסות גם לסיבת הסיום (הפסד או סיום יזום).
+- **חוסר בקלט מהמשתמש**: מעבר ללחיצה על "0" אין אינטראקציה עם השחקן (יכול להיות אפשרות לשחק סיבוב נוסף).
+- **המשחק לא מוגדר מראש**: קשה לחזות את זמן סיום המשחק.
 
-**משתנים (Variables):**
-
--   `previousNumber`:
-    -   **סוג:** מספר שלם (integer).
-    -   **שימוש:** מאחסן את המספר האקראי שנוצר באיטרציה הקודמת. משמש כדי לבדוק אם המספר הנוכחי זהה לקודם.
-
--   `currentNumber`:
-    -   **סוג:** מספר שלם (integer).
-    -   **שימוש:** מאחסן את המספר האקראי שנוצר באיטרציה הנוכחית. משמש לבדיקות השוואה ולהדפסה.
-
-**בעיות אפשריות או תחומים לשיפור:**
-
--   **חוויית משתמש:** המשחק פשוט מאוד ואינו מספק אינטראקציה משמעותית מעבר לייצור מספרים. ניתן לשפר את חוויית המשתמש על ידי הוספת ממשק משתמש ידידותי יותר.
--   **הודעת סיום:** ההודעה "YOU BLEW IT!" אינה מאוד ידידותית. ניתן להציג הודעה יותר נעימה או להוסיף אפשרות להתחיל את המשחק מחדש.
--   **אימות קלט:** הקוד לא בודק קלט משתמש, כך שהתוכנית תפסיק לפעול רק כאשר המספר האקראי שנוצר יהיה 0.
--  **שמות משתנים:** שמות המשתנים יכולים להיות יותר ברורים, כמו `randomNumber` במקום `currentNumber`.
-
-**שרשרת קשרים:**
-
--   הקוד הנוכחי הוא עצמאי ואינו תלוי בחלקים אחרים של הפרויקט. הוא משתמש רק במודול `random` סטנדרטי של פייתון.
-
-**לסיכום:**
-
-הקוד מממש משחק פשוט בו המטרה היא ליצור רצף של מספרים אקראיים ללא חזרות, עד שהמשתמש יקבל 0 או שיווצרו שני מספרים זהים ברצף. הקוד פשוט להבנה, אך הוא מוגבל בפונקציונליות ובחוויית משתמש.
+### שרשרת קשרים עם חלקים אחרים בפרויקט:
+- משחק זה אינו תלוי בחלקים אחרים בפרויקט. הוא משתמש רק במודול `random` של פייתון.

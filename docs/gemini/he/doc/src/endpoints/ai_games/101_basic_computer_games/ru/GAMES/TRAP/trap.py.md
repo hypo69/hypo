@@ -2,161 +2,172 @@
 
 ## סקירה כללית
 
-קובץ זה מיישם את משחק הלוח "מלכודת" לשני שחקנים. מטרת המשחק היא להקיף משבצות של היריב עם המשבצות שלך, ובכך להשתלט עליהן. השחקן עם מספר המשבצות הגדול ביותר בסוף המשחק מנצח.
+קובץ זה מיישם את משחק הלוח "מלכודת" לשני שחקנים. המטרה היא להקיף את הריבועים של היריב עם הריבועים שלך כדי ללכוד אותם.
 
 ## תוכן עניינים
 
+- [קבועים](#constants)
 - [פונקציות](#functions)
-    - [`create_board`](#create_board)
-    - [`display_board`](#display_board)
-    - [`is_valid_move`](#is_valid_move)
-    - [`is_cell_empty`](#is_cell_empty)
-    - [`get_neighbors`](#get_neighbors)
-    - [`can_capture`](#can_capture)
-    - [`capture_cell`](#capture_cell)
-    - [`make_move`](#make_move)
-    - [`switch_player`](#switch_player)
-    - [`is_board_full`](#is_board_full)
-    - [`calculate_scores`](#calculate_scores)
-    - [`determine_winner`](#determine_winner)
-    - [`play_trap_game`](#play_trap_game)
+  - [`create_board`](#create_board)
+  - [`display_board`](#display_board)
+  - [`is_valid_move`](#is_valid_move)
+  - [`is_cell_empty`](#is_cell_empty)
+  - [`get_neighbors`](#get_neighbors)
+  - [`can_capture`](#can_capture)
+  - [`capture_cell`](#capture_cell)
+  - [`make_move`](#make_move)
+  - [`switch_player`](#switch_player)
+  - [`is_board_full`](#is_board_full)
+  - [`calculate_scores`](#calculate_scores)
+  - [`determine_winner`](#determine_winner)
+  - [`play_trap_game`](#play_trap_game)
+
+## קבועים
+
+### `BOARD_SIZE`
+- **Description**: גודל לוח המשחק.
+- **Type**: `int`
+- **Value**: 7
 
 ## פונקציות
 
 ### `create_board`
 
-**תיאור**: יוצרת לוח משחק ריק.
+**Description**: יוצר לוח משחק ריק.
 
 **Returns**:
-- `list[list[int]]`: לוח משחק בגודל `BOARD_SIZE` x `BOARD_SIZE` המאוכלס באפסים (תאים ריקים).
+- `list[list[int]]`: לוח משחק דו-ממדי, המיוצג על ידי רשימה של רשימות, כאשר כל תא מאותחל ל-0.
 
 ### `display_board`
 
-**תיאור**: מציגה את מצב לוח המשחק הנוכחי בקונסולה.
+**Description**: מציג את המצב הנוכחי של לוח המשחק.
 
 **Parameters**:
-- `board` (list[list[int]]): לוח המשחק להצגה.
+- `board` (list[list[int]]): לוח המשחק.
 
 **Returns**:
-- `None`: פונקציה זו אינה מחזירה דבר.
+- `None`: הפונקציה לא מחזירה דבר, אלא מדפיסה את מצב הלוח לקונסולה.
 
 ### `is_valid_move`
 
-**תיאור**: בודקת אם מהלך מסוים (שורה ועמודה) נמצא בתוך גבולות לוח המשחק.
+**Description**: בודק אם מהלך נתון הוא חוקי.
 
 **Parameters**:
-- `row` (int): מספר השורה של המהלך.
-- `col` (int): מספר העמודה של המהלך.
+- `row` (int): מספר השורה.
+- `col` (int): מספר העמודה.
 
 **Returns**:
-- `bool`: `True` אם המהלך תקף, אחרת `False`.
+- `bool`: `True` אם המהלך חוקי, אחרת `False`.
 
 ### `is_cell_empty`
 
-**תיאור**: בודקת האם תא מסוים בלוח המשחק ריק.
+**Description**: בודק אם תא נתון בלוח ריק.
 
 **Parameters**:
 - `board` (list[list[int]]): לוח המשחק.
-- `row` (int): מספר השורה של התא.
-- `col` (int): מספר העמודה של התא.
+- `row` (int): מספר השורה.
+- `col` (int): מספר העמודה.
 
 **Returns**:
-- `bool`: `True` אם התא ריק (מכיל 0), אחרת `False`.
+- `bool`: `True` אם התא ריק (ערכו 0), אחרת `False`.
 
 ### `get_neighbors`
 
-**תיאור**: מחזירה את רשימת התאים השכנים לתא נתון.
+**Description**: מחזירה את הקואורדינטות של התאים השכנים לתא נתון.
 
 **Parameters**:
-- `row` (int): מספר השורה של התא.
-- `col` (int): מספר העמודה של התא.
+- `row` (int): מספר השורה.
+- `col` (int): מספר העמודה.
 
 **Returns**:
-- `list[tuple[int, int]]`: רשימה של קואורדינטות (שורה, עמודה) עבור השכנים.
+- `list[tuple[int, int]]`: רשימה של צמדי קואורדינטות של השכנים.
 
 ### `can_capture`
 
-**תיאור**: בודקת האם ניתן ללכוד תא של היריב.
+**Description**: בודק אם ניתן ללכוד תא של היריב.
 
 **Parameters**:
 - `board` (list[list[int]]): לוח המשחק.
 - `row` (int): מספר השורה של התא.
 - `col` (int): מספר העמודה של התא.
-- `current_player` (int): מספר השחקן הנוכחי (1 או 2).
+- `current_player` (int): השחקן הנוכחי (1 או 2).
 
 **Returns**:
-- `bool`: `True` אם התא יכול להילכד, אחרת `False`.
+- `bool`: `True` אם ניתן ללכוד את התא, אחרת `False`.
 
 ### `capture_cell`
 
-**תיאור**: לוכדת תא מסוים על ידי החלפת התוכן שלו בשחקן הנוכחי.
+**Description**: לוכד תא על ידי החלפת הערך שלו בערך של השחקן הנוכחי.
 
 **Parameters**:
 - `board` (list[list[int]]): לוח המשחק.
 - `row` (int): מספר השורה של התא.
 - `col` (int): מספר העמודה של התא.
-- `current_player` (int): מספר השחקן הנוכחי (1 או 2).
+- `current_player` (int): השחקן הנוכחי (1 או 2).
 
 **Returns**:
-- `None`: פונקציה זו אינה מחזירה דבר.
+- `None`: הפונקציה לא מחזירה דבר, אלא משנה את לוח המשחק ישירות.
 
 ### `make_move`
 
-**תיאור**: מבצעת מהלך של שחקן על ידי הצבת סממן בלוח המשחק ולוכדת משבצות של היריב אם יש כאלה.
+**Description**: מבצע מהלך על ידי הצבת סימן של השחקן הנוכחי בתא נתון ולכידת תאים אפשריים של היריב.
 
 **Parameters**:
 - `board` (list[list[int]]): לוח המשחק.
-- `row` (int): מספר השורה של המהלך.
-- `col` (int): מספר העמודה של המהלך.
-- `current_player` (int): מספר השחקן הנוכחי (1 או 2).
+- `row` (int): מספר השורה.
+- `col` (int): מספר העמודה.
+- `current_player` (int): השחקן הנוכחי (1 או 2).
 
 **Returns**:
-- `None`: פונקציה זו אינה מחזירה דבר.
+- `None`: הפונקציה לא מחזירה דבר, אלא משנה את לוח המשחק ישירות.
 
 ### `switch_player`
 
-**תיאור**: מחליפה בין השחקן הנוכחי לשחקן היריב.
+**Description**: מחליף בין השחקנים.
 
 **Parameters**:
-- `current_player` (int): מספר השחקן הנוכחי (1 או 2).
+- `current_player` (int): השחקן הנוכחי (1 או 2).
 
 **Returns**:
-- `int`: מספר השחקן היריב (2 אם השחקן הנוכחי הוא 1, 1 אם השחקן הנוכחי הוא 2).
+- `int`: השחקן הבא (1 או 2).
 
 ### `is_board_full`
 
-**תיאור**: בודקת האם כל לוח המשחק מלא.
+**Description**: בודק אם לוח המשחק מלא.
 
 **Parameters**:
 - `board` (list[list[int]]): לוח המשחק.
 
 **Returns**:
-- `bool`: `True` אם לוח המשחק מלא, אחרת `False`.
+- `bool`: `True` אם הלוח מלא, אחרת `False`.
 
 ### `calculate_scores`
 
-**תיאור**: מחשבת את הניקוד עבור כל שחקן.
+**Description**: מחשב את הניקוד של כל שחקן.
 
 **Parameters**:
 - `board` (list[list[int]]): לוח המשחק.
 
 **Returns**:
-- `tuple[int, int]`: מספר הנקודות של שחקן 1 ושחקן 2.
+- `tuple[int, int]`: צמד המכיל את ניקוד השחקן הראשון ואת ניקוד השחקן השני.
 
 ### `determine_winner`
 
-**תיאור**: קובעת את המנצח על סמך הניקוד.
+**Description**: קובע את המנצח על סמך הניקוד.
 
 **Parameters**:
-- `player1_score` (int): הניקוד של שחקן 1.
-- `player2_score` (int): הניקוד של שחקן 2.
+- `player1_score` (int): ניקוד השחקן הראשון.
+- `player2_score` (int): ניקוד השחקן השני.
 
 **Returns**:
-- `str`: הודעה המציינת את המנצח או תיקו.
+- `str`: הודעה על המנצח או על תיקו.
 
 ### `play_trap_game`
 
-**תיאור**: פונקציית המשחק הראשית שיוזמת את המשחק, מקבלת קלט מהמשתמש, מבצעת מהלכים, ומציגה את התוצאה.
+**Description**: הפונקציה הראשית המנהלת את משחק המלכודת.
 
 **Returns**:
-- `None`: פונקציה זו אינה מחזירה דבר.
+- `None`: הפונקציה לא מחזירה דבר, אלא מנהלת את כל מהלך המשחק, כולל תצוגה, קבלת קלט, עיבוד לוגיקה והצגת תוצאה.
+
+**Raises**:
+- ValueError: כאשר הקלט של השחקן אינו מספר שלם.

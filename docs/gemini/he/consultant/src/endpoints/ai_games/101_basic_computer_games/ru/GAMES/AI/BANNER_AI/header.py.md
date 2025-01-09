@@ -2,84 +2,83 @@
 
 **Качество кода**
 
-*   **Соответствие требованиям к формату кода (1-10):**
-    *   **Преимущества:**
-        *   Код хорошо структурирован и легко читается.
-        *   Используется аннотация типов для функций и переменных.
-        *   Присутствует docstring для модуля и функции.
-        *   Логика функции `set_project_root` понятна и соответствует назначению.
-    *   **Недостатки:**
-        *   Вводятся переменные без docstring.
-        *   Отсутствует импорт `src.utils.jjson` и использование `j_loads` или `j_loads_ns`.
-        *   Не используется `logger` для логирования ошибок.
-        *   Комментарии после `#` не полные.
-        *   Не хватает комментариев в reStructuredText.
+-  Соответствие требованиям к формату кода (от 1 до 10): 8
+    -  Преимущества:
+        - Код написан в соответствии с PEP 8.
+        - Имеется docstring для модуля и функции.
+        - Используется `pathlib` для работы с путями.
+    -  Недостатки:
+        - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+        - Нет импорта `logger` из `src.logger.logger`.
+        - Docstring не полностью соответствует reStructuredText (RST).
 
 **Рекомендации по улучшению**
 
-1.  Добавить более подробные docstring для модуля, функции и переменных в формате RST.
-2.  Использовать `from src.utils.jjson import j_loads, j_loads_ns` для работы с файлами.
-3.  Использовать `from src.logger.logger import logger` для логирования.
-4.  Заменить простые комментарии `#` на более информативные в стиле RST.
-5.  Добавить обработку исключений с помощью `try-except` и `logger.error`.
-6.  Избавиться от излишнего `__root__` объявления перед циклом, так как оно переопределяется.
+1.  Добавить импорт `logger` из `src.logger.logger` для логирования ошибок.
+2.  Использовать reStructuredText (RST) для docstring, включая использование  `:param:` и `:return:`.
+3.  Убрать  `__root__: Path` из области видимости модуля, сделать переменной в функции `set_project_root`.
+4.  Добавить проверку типа для `marker_files` в  `set_project_root` .
+5.  Удалить неиспользуемый импорт `sys`.
+6.  Добавить более подробный комментарий к  `__root__: Path = set_project_root(('__root__'))`
 
 **Улучшенный код**
 
 ```python
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
-
 """
-Модуль для определения корневой директории проекта.
-====================================================
+Модуль для определения и установки корневой директории проекта.
+=========================================================================================
 
-Модуль предоставляет функцию :func:`set_project_root` для определения
-корневой директории проекта на основе наличия маркерных файлов.
+Этот модуль предоставляет функцию :func:`set_project_root`, которая определяет
+корневую директорию проекта на основе наличия маркерных файлов.
+Найденная директория добавляется в `sys.path`, если её нет.
 
 Пример использования:
 --------------------
 
 .. code-block:: python
 
-   from pathlib import Path
-   
-   root_path: Path = set_project_root()
-   print(root_path)
+    from pathlib import Path
+    from src.endpoints.ai_games._101_basic_computer_games.ru.GAMES.AI.BANNER_AI.header import set_project_root
+
+    root_dir: Path = set_project_root(('__root__'))
+    print(f"Корневая директория проекта: {root_dir}")
+
 """
-import sys
 from pathlib import Path
-from src.logger.logger import logger # импорт модуля для логирования ошибок
+from src.logger.logger import logger # Добавлен импорт logger
 
 def set_project_root(marker_files: tuple = ('__root__', 'pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневую директорию проекта, начиная с текущей директории файла.
-    
-    Поиск ведется путем подъема по родительским директориям, пока не будет
-    найден один из маркерных файлов.
-    
-    :param marker_files: кортеж имен файлов или директорий, служащих маркерами корневой директории.
+    Находит корневую директорию проекта, начиная с текущей директории файла,
+    и поднимаясь вверх, пока не найдет один из маркерных файлов.
+
+    :param marker_files: Список файлов или директорий для идентификации корневой директории.
     :type marker_files: tuple
-    :return: путь к корневой директории проекта или директории, где находится скрипт, если маркер не найден.
+    :return: Путь к корневой директории, если найдена, иначе директория, где находится скрипт.
     :rtype: Path
-    
-    :raises Exception: в случае возникновения непредвиденной ошибки.
     """
-    current_path: Path = Path(__file__).resolve().parent # получение абсолютного пути к директории, в которой находится файл
-    __root__: Path = current_path # инициализация переменной __root__ начальным значением
-    for parent in [current_path] + list(current_path.parents): # итерация по родительским директориям
-        if any((parent / marker).exists() for marker in marker_files): # проверка наличия маркерных файлов
-            __root__ = parent # если маркер найден, то __root__ присваивается путь к этой директории
+    if not isinstance(marker_files, tuple): # Проверка типа для marker_files
+        logger.error(f'Тип {marker_files=} должен быть tuple') # Логируем ошибку если marker_files не tuple
+        return Path(__file__).resolve().parent # Возвращаем текущую директорию если ошибка
+    current_path: Path = Path(__file__).resolve().parent
+    root_dir: Path = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            root_dir = parent
             break
-    if __root__ not in sys.path: # если __root__ нет в sys.path
-        sys.path.insert(0, str(__root__)) # добавляем __root__ в sys.path
-    return __root__ # возвращаем __root__
+    # Добавляем найденную корневую директорию в sys.path, если её там нет
+    # Эта проверка гарантирует, что путь к проекту будет доступен для импорта модулей
+    # из разных подпапок проекта.
+    if str(root_dir) not in sys.path:
+        sys.path.insert(0, str(root_dir))
+    return root_dir
 
 # Получение корневой директории проекта
-__root__: Path = set_project_root(('__root__',)) # вызываем функцию для определения корневой директории
+# __root__: Path = set_project_root(('__root__'))
 """
-:type: Path
-:var __root__: путь к корневой директории проекта.
+Path: Путь к корневой директории проекта
 """
+__root__ = set_project_root(('__root__')) # Переменная __root__ устанавливается через вызов функции
 ```

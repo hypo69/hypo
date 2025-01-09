@@ -1,97 +1,115 @@
 ## <algorithm>
-1. **התחלה**: המשחק מתחיל עם `isGameOver` מוגדר כ-`False`.
-   - דוגמה: `isGameOver = False`.
-2. **לולאה ראשית**: הלולאה ממשיכה עד ש-`isGameOver` הופך ל-`True`.
-   - דוגמה: `while not isGameOver:`.
-3. **יצירת מספרים אקראיים**:
-    - שני מספרים שלמים אקראיים, `number1` ו-`number2`, נוצרים בטווח של 1 עד 10.
-     - דוגמה: `number1 = 5`, `number2 = 3`.
-4. **בחירת פעולה אקראית**:
-    - פעולה אקראית נבחרת מתוך רשימת הפעולות: "+", "-", "*", "/".
-     - דוגמה: `operation = "*"`.
-5. **יצירת ביטוי מתמטי**:
-    - ביטוי מתמטי נוצר כמחרוזת באמצעות שרשור של המספרים והפעולה.
-     - דוגמה: `expression = "5 * 3"`.
-6. **הצגת הביטוי למשתמש**:
-    - הביטוי המתמטי מוצג למשתמש עם בקשה לפתור אותו.
-     - דוגמה: `print("פתור: 5 * 3 = ?")`.
-7. **קבלת תשובת משתמש**:
-    - תשובת המשתמש מתקבלת כקלט והופכת למספר עשרוני.
-     - דוגמה: `userAnswer = 15.0`.
-8. **חישוב התוצאה הנכונה**:
-    - הביטוי המתמטי מחושב באמצעות `eval()` כדי לקבל את התוצאה הנכונה.
-     - דוגמה: `correctResult = 15.0`.
-9. **בדיקת התשובה**:
-    - התשובה של המשתמש נבדקת מול התוצאה הנכונה.
-10. **תשובה נכונה**:
-    - אם התשובה נכונה, ההודעה "CORRECT" מוצגת, ו-`isGameOver` מוגדר כ-`True`, מה שמסיים את המשחק.
-    - דוגמה: `print("CORRECT"); isGameOver = True`.
-11. **תשובה לא נכונה**:
-     - אם התשובה לא נכונה, ההודעה "INCORRECT. TRY AGAIN." מוצגת, והמשחק חוזר לשלב 2.
-     - דוגמה: `print("INCORRECT. TRY AGAIN.")`.
-12. **סיום**: המשחק מסתיים כאשר `isGameOver` הוא `True`.
+
+1. **התחלה:**
+   - המשחק מתחיל עם הגדרת משתנה `isGameOver` כ-`False`.
+   - דוגמה: `isGameOver = False`
+
+2. **לולאת משחק:**
+   - הלולאה מתחילה ורצה כל עוד `isGameOver` הוא `False`.
+   - דוגמה: `while not isGameOver:`
+
+3. **יצירת מספרים רנדומליים:**
+   - נוצרים שני מספרים שלמים רנדומליים בין 1 ל-10.
+   - דוגמה: `number1 = 5`, `number2 = 3`
+
+4. **בחירת פעולה רנדומלית:**
+   - נבחרת פעולה מתמטית רנדומלית מתוך רשימת הפעולות: "+", "-", "*", "/".
+   - דוגמה: `operation = "*"`.
+
+5. **יצירת ביטוי מתמטי:**
+   - נוצר ביטוי מתמטי כמחרוזת המורכבת מהמספרים והפעולה שנבחרו.
+   - דוגמה: `expression = "5 * 3"`
+
+6. **הצגת הביטוי למשתמש:**
+   - הביטוי המתמטי מוצג למשתמש.
+   - דוגמה: "Решите: 5 * 3 = ?"
+
+7. **קבלת תשובה מהמשתמש:**
+   - התשובה מהמשתמש נקלטת כקלט וממירה למספר עשרוני.
+   - דוגמה: `userAnswer = 15.0`.
+
+8. **חישוב התוצאה הנכונה:**
+   - התוצאה הנכונה של הביטוי המתמטי מחושבת באמצעות הפונקציה `eval()`.
+   - דוגמה: `correctResult = 15`
+
+9. **בדיקת תשובת המשתמש:**
+   - התשובה שהזין המשתמש נבדקת האם היא שווה לתוצאה הנכונה.
+   - אם התשובה נכונה:
+     - מוצגת הודעה "CORRECT".
+     - `isGameOver` מוגדר כ-`True` כדי לסיים את הלולאה.
+   - אם התשובה אינה נכונה:
+     - מוצגת הודעה "INCORRECT. TRY AGAIN.".
+
+10. **סוף לולאת המשחק:**
+    - אם `isGameOver` מוגדר כ-`True`, הלולאה מסתיימת.
+
+11. **סוף:**
+    - המשחק מסתיים.
 
 ## <mermaid>
 ```mermaid
 flowchart TD
-    Start[התחלה] --> InitializeVariables[<p align='left'>אתחול משתנים:<br><code><b>isGameOver = False</b></code></p>]
-    InitializeVariables --> LoopStart[לולאה: <br><code><b>while not isGameOver:</b></code>]
-    LoopStart -- נכון --> GenerateNumbers[<p align='left'>יצירת מספרים אקראיים:<br><code><b>number1 = random(1, 10)</b><br><b>number2 = random(1, 10)</b></code></p>]
-    GenerateNumbers --> SelectOperation[<p align='left'>בחירת פעולה אקראית:<br><code><b>operations = ["+", "-", "*", "/"]<br>operation = random.choice(operations)</b></code></p>]
-    SelectOperation --> CreateExpression[<p align='left'>יצירת ביטוי:<br><code><b>expression = f"{number1} {operation} {number2}"</b></code></p>]
-    CreateExpression --> OutputExpression[הצגת ביטוי: <br><code><b>print(f"פתור: {expression} = ?")</b></code>]
-    OutputExpression --> InputAnswer[קבלת תשובת משתמש:<br><code><b>userAnswer = float(input("התשובה שלך: "))</b></code>]
-    InputAnswer --> CalculateResult[<p align='left'>חישוב תוצאה נכונה:<br><code><b>correctResult = eval(expression)</b></code></p>]
-    CalculateResult --> CheckAnswer{בדיקה: <br><code><b>userAnswer == correctResult?</b></code>}
-    CheckAnswer -- נכון --> OutputCorrect[הודעה: <b>CORRECT</b>]
-    OutputCorrect --> SetGameOver[<code><b>isGameOver = True</b></code>]
-     SetGameOver--> LoopEnd
-    CheckAnswer -- לא נכון --> OutputIncorrect[הודעה: <b>INCORRECT. TRY AGAIN.</b>]
+    Start["התחלה"] --> InitializeVariables["<p align='left'><code><b>isGameOver = False</b></code></p>"]
+    InitializeVariables --> LoopStart{"<code><b>while not isGameOver:</b></code>"}
+    LoopStart -- "True" --> GenerateNumbers["<p align='left'><code><b>number1 = random.randint(1, 10)</b></code><br><code><b>number2 = random.randint(1, 10)</b></code></p>"]
+    GenerateNumbers --> SelectOperation["<p align='left'><code><b>operations = [\"+\", \"-\", \"*\", \"/\"]</b></code><br><code><b>operation = random.choice(operations)</b></code></p>"]
+    SelectOperation --> CreateExpression["<p align='left'><code><b>expression = f\"{number1} {operation} {number2}\"</b></code></p>"]
+    CreateExpression --> OutputExpression["<code><b>print(f\"Решите: {expression} = ?\")</b></code>"]
+    OutputExpression --> InputAnswer["<p align='left'><code><b>userAnswer = float(input(\"Ваш ответ: \"))</b></code></p>"]
+    InputAnswer --> CalculateResult["<p align='left'><code><b>correctResult = eval(expression)</b></code></p>"]
+    CalculateResult --> CheckAnswer{"<code><b>userAnswer == correctResult</b></code>?"}
+    CheckAnswer -- "True" --> OutputCorrect["<code><b>print(\"CORRECT\")</b></code>"]
+    OutputCorrect --> SetGameOver["<code><b>isGameOver = True</b></code>"]
+    SetGameOver --> LoopEnd
+    CheckAnswer -- "False" --> OutputIncorrect["<code><b>print(\"INCORRECT. TRY AGAIN.\")</b></code>"]
     OutputIncorrect --> LoopStart
-    LoopStart -- לא נכון --> LoopEnd[סיום לולאה: <br><code><b>isGameOver == True</b></code>]
-   LoopEnd --> End[סיום]
+    LoopStart -- "False" --> LoopEnd["סיום הלולאה"]
+    LoopEnd --> End["סיום"]
 ```
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> קביעת שורש הפרויקט]
+
+    Header --> import[ייבוא הגדרות גלובליות: <br><code>from src import gs</code>]
+```
+
 ## <explanation>
-### ייבואים (Imports)
--   `import random`: מביא את מודול `random`, המשמש לייצור מספרים אקראיים ובחירת פעולות אקראיות.
 
-### משתנים (Variables)
--   `isGameOver`: משתנה בוליאני השולט על הלולאה הראשית של המשחק. מתחיל ב-`False`, והופך ל-`True` כאשר המשתמש עונה נכון, מה שמסיים את המשחק.
--   `number1`, `number2`: משתנים שלמים שמכילים מספרים אקראיים שנוצרו בטווח של 1 עד 10, המשמשים בביטוי המתמטי.
--   `operations`: רשימה של מחרוזות המייצגות את הפעולות האפשריות (+, -, *, /).
--   `operation`: מחרוזת המכילה את הפעולה האקראית שנבחרה מתוך רשימת הפעולות.
--  `expression`: מחרוזת המכילה את הביטוי המתמטי שנוצר מ-`number1`, `operation` ו-`number2`.
--   `userAnswer`: מספר עשרוני המכיל את התשובה שהמשתמש הזין.
--   `correctResult`: מספר עשרוני המכיל את התוצאה הנכונה של הביטוי המתמטי.
+**ייבואים (Imports):**
 
-### פונקציות (Functions)
--   `random.randint(a, b)`: מחזירה מספר שלם אקראי בטווח שבין `a` ל-`b` כולל.
-    - דוגמה: `random.randint(1, 10)` יכול להחזיר כל מספר שלם בין 1 ל-10.
--   `random.choice(sequence)`: מחזירה רכיב אקראי מהרצף שניתן כארגומנט.
-     - דוגמה: `random.choice(["+", "-", "*", "/"])` תחזיר אחד מהסימנים הללו באופן אקראי.
--   `input(prompt)`: מציג הודעה למשתמש ומחזיר את הקלט שהוזן כמחרוזת.
-     - דוגמה: `input("הכנס תשובה:")` יציג "הכנס תשובה:" למשתמש ויחזיר את הקלט שלו.
--   `float(x)`: ממירה מספר או מחרוזת למספר עשרוני.
-     - דוגמה: `float("15")` יחזיר 15.0.
--  `eval(expression)`: מקבלת מחרוזת המכילה ביטוי מתמטי ומחשבת אותו, מחזירה את התוצאה.
-      - דוגמה: `eval("5 * 3")` יחזיר 15.
--   `print(message)`: מציגה הודעה למשתמש.
-     - דוגמה: `print("CORRECT")` תציג את המילה "CORRECT" למשתמש.
-### לולאה (Loop)
--   `while not isGameOver:`: לולאה ראשית של המשחק. כל עוד התשובה לא נכונה והמשתנה `isGameOver` שווה ל-`False` הלולאה תמשיך לרוץ.
+- `import random`: מייבא את מודול `random` של פייתון, המספק פונקציות ליצירת מספרים אקראיים וביצוע בחירות אקראיות מתוך רשימה. מודול זה משמש במשחק כדי ליצור מספרים רנדומליים ופעולות מתמטיות שונות. אין תלות ישירה בין מודול זה לבין חבילות אחרות בתוך `src`.
 
-### מחלקות (Classes)
-- הקוד הנוכחי אינו משתמש במחלקות.
+**משתנים (Variables):**
 
-### בעיות אפשריות או תחומים לשיפור
--   **טיפול שגיאות**:
-    -   הקוד מטפל בשגיאת `ValueError` אם המשתמש מזין קלט שאינו מספר בעזרת `try-except` block.
-    - הקוד מטפל בשגיאת `ZeroDivisionError` (חילוק באפס) בעזרת `try-except` block, אך לא מונע אותה מלהתרחש בשלב יצירת הביטוי.
--   **שימוש ב-`eval()`**: שימוש ב-`eval()` עלול להיות מסוכן אם הקלט מגיע ממקור לא מהימן (אמנם זה לא רלוונטי כאן), ומומלץ להשתמש בשיטות חישוב בטוחות יותר.
--   **ממשק משתמש**: ממשק המשתמש מאוד בסיסי.
-- **מניעת חלוקה באפס**: יש לשפר את בחירת המספרים כדי לוודא שהם לא יוצרים אפשרות לחילוק באפס. לדוגמה, לוודא ש`number2` לא יהיה 0 כאשר הפעולה היא חילוק.
+- `isGameOver`: משתנה בוליאני (`bool`) ששומר האם המשחק הסתיים. ערכו ההתחלתי הוא `False`, ומשתנה ל-`True` כאשר המשתמש מנצח.
+- `number1`, `number2`: שני משתנים מסוג מספר שלם (`int`) השומרים את המספרים הרנדומליים שנוצרים בכל סיבוב של המשחק. הם מקבלים ערכים בין 1 ל-10.
+- `operations`: משתנה מסוג רשימה (`list`) השומר את הפעולות המתמטיות האפשריות: "+", "-", "*", "/".
+- `operation`: משתנה מסוג מחרוזת (`str`) השומר את הפעולה המתמטית שנבחרה רנדומלית מתוך `operations`.
+- `expression`: משתנה מסוג מחרוזת (`str`) השומר את הביטוי המתמטי שנוצר, המורכב מ-`number1`, `operation`, ו-`number2`.
+- `userAnswer`: משתנה מסוג מספר עשרוני (`float`) השומר את התשובה שהזין המשתמש.
+- `correctResult`: משתנה מסוג מספר עשרוני (`float`) השומר את התוצאה הנכונה של הביטוי המתמטי שחושב באמצעות `eval()`.
 
-### שרשרת קשרים עם חלקים אחרים בפרויקט
--  הקוד הנוכחי עומד בפני עצמו ואין לו קשר ישיר עם חלקים אחרים בפרויקט. עם זאת, הוא ממוקם בתיקייה `src/endpoints/ai_games/101_basic_computer_games/ru/GAMES/MATHDI/`, שמרמזת כי הוא חלק מפרויקט גדול יותר שכולל משחקים מבוססי AI.
+**פונקציות (Functions):**
 
-לסיכום, קוד זה מיישם משחק מתמטי בסיסי שבו המשתמש פותר ביטוי אקראי. הקוד משתמש בלולאה כדי להמשיך את המשחק עד שהמשתמש עונה נכון, ומספק טיפול בסיסי בשגיאות קלט. עם זאת, יש מקום לשיפורים נוספים.
+- אין פונקציות מוגדרות מחוץ ללולאה הראשית, אך נעשה שימוש בפונקציות מובנות של פייתון:
+    - `random.randint(a, b)`: מחזיר מספר שלם רנדומלי בין `a` ל-`b`.
+    - `random.choice(seq)`: בוחר באופן רנדומלי איבר מתוך רצף (`seq`).
+    - `input(prompt)`: מציג הודעה (`prompt`) למשתמש ומחזיר את הקלט שלו כמחרוזת.
+    - `float(x)`: ממיר את הערך `x` למספר עשרוני.
+    - `print(...)`: מדפיס מידע לקונסולה.
+    - `eval(expression)`: מעריך ביטוי מתמטי הנתון כמחרוזת ומחזיר את התוצאה.
+    - `try...except`: מטפל בשגיאות אפשריות במהלך קליטת הקלט מהמשתמש (ValueError) ובזמן החישוב(ZeroDivisionError).
+
+**בעיות אפשריות ותחומים לשיפור:**
+
+1. **שימוש ב-`eval()`:** הפונקציה `eval()` יכולה להיות מסוכנת אם הקלט של המשתמש אינו מבוקר כראוי, מכיוון שמשתמש יכול להזין קוד פייתון זדוני. ניתן להחליף את `eval()` בפתרון בטוח יותר לחישוב ביטויים מתמטיים (למשל, שימוש בספרייה חיצונית או כתיבת פונקציית ניתוח משלכם).
+2. **קלט משתמש:** למרות שיש טיפול בשגיאת `ValueError` עבור קלט שאינו מספר, עדיין יש לאמת את הקלט כדי להבטיח שהוא בפורמט תקין, למשל, למנוע הכנסה של תוים מיוחדים.
+3. **טיפול בשגיאת חלוקה באפס**: ניתן לשפר את הטיפול בשגיאה ולתת למשתמש אפשרות לנסות שוב במקום להפסיק את הסיבוב.
+4. **הודעות למשתמש:** ההודעות למשתמש יכולות להיות יותר אינפורמטיביות ומוכוונות למשתמש (למשל, להראות למשתמש את התוצאה הנכונה לאחר טעות).
+5. **גמישות המשחק:** ניתן לשפר את המשחק ע"י הוספת אפשרויות נוספות כגון: רמות קושי, סוגי פעולות נוספות או מספר שאלות בכל סיבוב.
+
+**קשר עם חלקים אחרים בפרויקט:**
+קוד זה הוא משחק בפני עצמו ואין לו תלות ישירה בקודים אחרים בתוך הפרויקט, אולם, הוא יכול להיות חלק מחבילת משחקים של הפרויקט ולהשתמש במודולים נוספים לצורך ניהול המשחק. לדוגמא:
+- מודולים ליצירת ממשק משתמש.
+- מודולים לניהול ההתקדמות של משתמש.
+- מודולים לשמירת נתונים.

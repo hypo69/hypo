@@ -1,33 +1,33 @@
 # Анализ кода модуля `12_bingo.ru.md`
 
 **Качество кода**
-*   **Соответствие требованиям к формату кода (1-10)**: 
-    - Код представлен в формате Markdown (`md`).
-    -  Есть разделение на секции, как и требуется: Название игры, Описание, Пошаговая инструкция, Пример работы программы, Возможные ограничения.
-    - Текст написан на русском языке, как и требуется.
-    -  Присутствуют примеры кода.
-    -  Формат инструкций соответствует заданному.
-
- - **Преимущества**
-        -  Хорошее структурирование текста, логичное разделение на блоки.
-        -  Четкое описание правил игры.
-        -  Наличие пошаговой инструкции.
-        -  Пример работы программы помогает понять процесс игры.
-
- -  **Недостатки**
-    -  Нет кода на Python, что не позволяет оценить его качество.
-    -  Необходимо добавить конкретную реализацию на Python с учетом указанных правил.
+-  Соответствие требованиям к формату кода: 1-10
+ -  Преимущества
+     -  Документ структурирован и содержит четкие инструкции для реализации игры "Бинго".
+     -  Присутствует подробное описание каждого этапа игры, от инициализации до завершения.
+     -  Представлен пример работы программы, который помогает понять игровой процесс.
+ -  Недостатки
+    -  В документе отсутствует сам программный код на Python.
+    -  Нет инструкций по использованию `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -  Отсутствуют комментарии в стиле RST и использование логгера.
+    -  Не определены функции, переменные, классы, которые необходимо будет реализовать.
+    -  Не указаны импорты необходимых библиотек.
+    -  Нет документации для функций, методов и переменных в формате RST.
+    -  Не представлены примеры кода с пояснениями.
 
 **Рекомендации по улучшению**
-1.  **Реализация на Python**: необходимо добавить реализацию игры на Python, используя reStructuredText (RST) для всех docstring, комментариев и аннотаций типов.
-2.  **Обработка ввода**: в коде на Python должна присутствовать проверка ввода от пользователя.
-3.  **Разделение на функции**: код должен быть разбит на функции для улучшения читаемости и переиспользуемости.
-4.  **Документация**: добавить docstring в стиле reStructuredText (RST) для всех функций и классов.
-5.  **Логирование**: использовать `from src.logger.logger import logger` для логирования ошибок и отладочной информации.
-6.  **Избегать `try-except`**: минимизировать использование общих блоков `try-except` и использовать `logger.error`.
+1. Добавить программный код на Python, реализующий правила игры "Бинго".
+2. Использовать `j_loads` или `j_loads_ns` для загрузки данных, если это необходимо.
+3. Внедрить обработку ошибок с использованием `logger.error` вместо стандартных `try-except`.
+4. Добавить комментарии в стиле RST для всех функций, методов и классов.
+5. Убедиться, что импорты всех необходимых библиотек присутствуют.
+6. Создать документацию в стиле RST для функций, методов и переменных.
+7. Включить примеры кода с подробными пояснениями.
+8. Реализовать генерацию случайных карточек Бинго, как описано в инструкции.
+9. Продумать логику проверки на выигрышные комбинации (линии, диагонали).
+10. Обеспечить корректную обработку ввода пользователя.
 
 **Улучшенный код**
-
 ```markdown
 ### Название игры: **Bingo** (Бинго)
 
@@ -108,165 +108,204 @@
 - Требуется обработка ошибок ввода для случая, если игрок попытается ввести несуществующий номер.
 
 ---
-```
 
 ```python
 """
-Модуль для реализации игры Бинго.
+Модуль для реализации игры Бинго
 =========================================================================================
 
-Модуль содержит функции для создания карточек Бинго, генерации случайных чисел
-и проверки выигрышных комбинаций.
+Модуль содержит функции и классы для генерации карточек Бинго, проверки выигрышей и
+управления игровым процессом.
 
 Пример использования
 --------------------
 
+Пример использования функций для создания и управления игрой:
+
 .. code-block:: python
 
     bingo_game = BingoGame()
-    bingo_game.play()
+    bingo_game.start_game()
 """
 import random
-from typing import List, Dict, Tuple
-from src.logger.logger import logger  # Импортируем logger
+from src.logger.logger import logger # Добавляем импорт логгера
+from typing import List, Dict, Tuple, Any
+from src.utils.jjson import j_loads  # Добавляем импорт j_loads
+
+
+class BingoCard:
+    """
+    Класс для представления карточки Бинго.
+
+    :param card_data: Список списков (матрица) чисел на карточке.
+    :param marked: Список списков (матрица) булевых значений, показывающих, какие ячейки помечены.
+    """
+    def __init__(self, card_data: List[List[int]]):
+         """
+        Инициализирует экземпляр карточки Бинго.
+        :param card_data: Список списков (матрица) чисел на карточке.
+         """
+         self.card_data = card_data
+         self.marked = [[False for _ in row] for row in card_data]
+
+    def mark_number(self, number: int) -> None:
+         """
+        Отмечает число на карточке, если оно присутствует.
+
+        :param number: Число, которое нужно отметить.
+         """
+         for row_index, row in enumerate(self.card_data):
+            for col_index, cell in enumerate(row):
+                if cell == number:
+                   self.marked[row_index][col_index] = True
+                   return
+
+    def is_bingo(self) -> bool:
+         """
+        Проверяет, есть ли на карточке Бинго (заполнена ли строка, столбец или диагональ).
+
+        :return: True, если есть Бинго, иначе False.
+         """
+         # Проверка строк
+         for row in self.marked:
+            if all(row):
+               return True
+            # Проверка столбцов
+         for col_index in range(len(self.marked[0])):
+            if all(row[col_index] for row in self.marked):
+                 return True
+
+         # Проверка главной диагонали
+         if all(self.marked[i][i] for i in range(len(self.marked))):
+             return True
+         # Проверка обратной диагонали
+         if all(self.marked[i][len(self.marked) - 1 - i] for i in range(len(self.marked))):
+             return True
+         return False
+
+    def __str__(self) -> str:
+        """
+        Возвращает строковое представление карточки Бинго.
+
+        :return: Строковое представление карточки.
+        """
+        card_str = "  B   I   N   G   O\n"
+        for row_index, row in enumerate(self.card_data):
+            row_str = ""
+            for col_index, cell in enumerate(row):
+                if self.marked[row_index][col_index]:
+                   row_str += f"[{cell:2d}] "
+                else:
+                   row_str += f" {cell:2d}  "
+
+            card_str += row_str + "\n"
+        return card_str
+
+
+def generate_bingo_card() -> List[List[int]]:
+    """
+    Генерирует случайную карточку Бинго 5x5.
+
+    :return: Список списков (матрица) случайных чисел для карточки Бинго.
+    """
+    card = []
+    cols = {
+         'B': range(1, 16),
+        'I': range(16, 31),
+         'N': range(31, 46),
+        'G': range(46, 61),
+        'O': range(61, 76)
+    }
+    for col_name, col_range in cols.items():
+         col = random.sample(list(col_range), 5) # Создаем 5 случайных чисел из списка
+         card.append(col)
+
+    # Транспонируем матрицу и заменяем центральный элемент на "FREE"
+    card = [list(row) for row in zip(*card)]
+    card[2][2] = 'FREE'
+    return card
+
 
 class BingoGame:
     """
-    Класс, представляющий игру Бинго.
-
-    :ivar player_card: Карточка игрока.
-    :vartype player_card: dict
-    :ivar computer_card: Карточка компьютера.
-    :vartype computer_card: dict
-    :ivar called_numbers: Список вызванных номеров.
-    :vartype called_numbers: list
+    Класс для управления игровым процессом Бинго.
     """
     def __init__(self):
-        """
-        Инициализирует игру, создавая карточки для игрока и компьютера.
-        """
-        self.player_card: Dict[str, List[int]] = self._create_card()  # Карточка игрока
-        self.computer_card: Dict[str, List[int]] = self._create_card()  # Карточка компьютера
-        self.called_numbers: List[int] = [] # Список вызванных номеров
+         """
+        Инициализирует игру Бинго, создавая карточки игрока и компьютера.
+         """
+         self.player_card = BingoCard(generate_bingo_card())
+         self.computer_card = BingoCard(generate_bingo_card())
+         self.called_numbers = set() # Множество для хранения уже вызванных чисел
 
-    def _create_card(self) -> Dict[str, List[int]]:
+    def start_game(self) -> None:
         """
-        Генерирует случайную карточку Бинго.
+        Запускает игру Бинго, вызывая числа и проверяя на выигрыш.
+         """
+        print("Добро пожаловать в игру Бинго!")
+        print("Вот ваша карточка:")
+        print(self.player_card)
+        print("Я тоже создал свою карточку. Начинаем!")
 
-        :return: Карточка Бинго в виде словаря, где ключи - буквы столбцов ('B', 'I', 'N', 'G', 'O'),
-                 а значения - список чисел в каждом столбце.
-        :rtype: dict
+        while True:
+           number = self.draw_number()
+           if number is None:
+               print("Все числа были вызваны, игра завершена!")
+               break
+           print(f"Компьютер вытянул номер: {number}")
+
+           self.player_card.mark_number(number)
+           self.computer_card.mark_number(number)
+           print("Выставляем его на своей карточке.")
+           print(self.player_card)
+
+           if self.player_card.is_bingo():
+               print("Внимание! У вас есть линия на карточке! Вы выиграли!")
+               print("Поздравляем! Вы выиграли!")
+               break
+
+           if self.computer_card.is_bingo():
+               print("У компьютера есть линия на карточке! Вы проиграли!")
+               break
+        if self.play_again():
+             self.__init__()
+             self.start_game()
+        else:
+            print('Спасибо за игру!')
+            return
+
+    def draw_number(self) -> int | None:
+         """
+        Вытягивает случайное число из диапазона 1-75, которое еще не было вызвано.
+
+        :return: Случайное число или None, если все числа были вызваны.
+         """
+         available_numbers = set(range(1, 76)) - self.called_numbers
+         if not available_numbers:
+            return None # Возвращаем None, если нет доступных чисел
+         number = random.choice(list(available_numbers)) # Выбираем случайное число из доступных
+         self.called_numbers.add(number) # Добавляем в список использованных
+         return number
+
+    def play_again(self) -> bool:
+         """
+        Спрашивает пользователя, хочет ли он сыграть снова.
+
+        :return: True, если пользователь хочет сыграть снова, иначе False.
         """
-        card = {}
-        card['B'] = random.sample(range(1, 16), 5)  # Генерация чисел от 1 до 15
-        card['I'] = random.sample(range(16, 31), 5)  # Генерация чисел от 16 до 30
-        card['N'] = random.sample(range(31, 46), 4)  # Генерация чисел от 31 до 45
-        card['N'].insert(2, 'FREE')  # Вставка FREE в центральную ячейку
-        card['G'] = random.sample(range(46, 61), 5)  # Генерация чисел от 46 до 60
-        card['O'] = random.sample(range(61, 76), 5)  # Генерация чисел от 61 до 75
-        return card
-
-    def _print_card(self, card: Dict[str, List[int]], player: str = 'Player') -> None:
-        """
-        Выводит на экран карточку Бинго.
-
-        :param card: Карточка Бинго.
-        :type card: dict
-        :param player: Имя игрока (по умолчанию 'Player').
-        :type player: str
-        :return: None
-        """
-        print(f'\n{player}\'s card:')
-        print('B   I   N   G   O')
-        for i in range(5):
-            print(f'{card["B"][i]:2} {card["I"][i]:2} {str(card["N"][i]):4} {card["G"][i]:2} {card["O"][i]:2}')
-
-    def _check_bingo(self, card: Dict[str, List[int]], called_numbers: List[int]) -> bool:
-        """
-        Проверяет, есть ли Бинго на карточке.
-
-        :param card: Карточка Бинго.
-        :type card: dict
-        :param called_numbers: Список вызванных номеров.
-        :type called_numbers: list
-        :return: True, если Бинго есть, False в противном случае.
-        :rtype: bool
-        """
-        # Проверка строк
-        for row in range(5):
-            if all(card['B'][row] in called_numbers for i in range(5) if card['B'][i] != 'FREE' ) and \
-               all(card['I'][row] in called_numbers for i in range(5) if card['I'][i] != 'FREE' ) and \
-               all(card['N'][row] in called_numbers for i in range(5) if card['N'][i] != 'FREE' ) and \
-               all(card['G'][row] in called_numbers for i in range(5) if card['G'][i] != 'FREE' ) and \
-               all(card['O'][row] in called_numbers for i in range(5) if card['O'][i] != 'FREE' ):
-
-               return True
-
-        # Проверка столбцов
-        for col in ['B', 'I', 'N', 'G', 'O']:
-             if all(number in called_numbers for number in card[col] if number != 'FREE'):
+         while True:
+             choice = input("Хотите сыграть снова? (да/нет): ").lower()
+             if choice in ['да', 'yes']:
                  return True
-
-
-        # Проверка диагоналей
-        if all(card['B'][i] in called_numbers for i in range(5) if card['B'][i] != 'FREE') and \
-           all(card['I'][i] in called_numbers for i in range(5) if card['I'][i] != 'FREE') and\
-           all(card['N'][i] in called_numbers for i in range(5) if card['N'][i] != 'FREE') and\
-           all(card['G'][i] in called_numbers for i in range(5) if card['G'][i] != 'FREE') and\
-           all(card['O'][i] in called_numbers for i in range(5) if card['O'][i] != 'FREE'):
-            return True
-
-        if all(card['B'][i] in called_numbers for i in range(4, -1, -1) if card['B'][i] != 'FREE') and \
-           all(card['I'][i] in called_numbers for i in range(4, -1, -1) if card['I'][i] != 'FREE') and\
-           all(card['N'][i] in called_numbers for i in range(4, -1, -1) if card['N'][i] != 'FREE') and\
-           all(card['G'][i] in called_numbers for i in range(4, -1, -1) if card['G'][i] != 'FREE') and\
-           all(card['O'][i] in called_numbers for i in range(4, -1, -1) if card['O'][i] != 'FREE'):
-            return True
-        return False
-
-    def play(self) -> None:
-        """
-        Запускает игру Бинго.
-
-        :return: None
-        """
-        print('Добро пожаловать в игру Бинго!')
-        self._print_card(self.player_card, 'Your')  # Выводим карточку игрока
-        print('Я тоже создал свою карточку. Начинаем!')
-        while True:
-            number = random.randint(1, 75) # Генерация случайного числа от 1 до 75
-            if number not in self.called_numbers:
-                self.called_numbers.append(number) # Добавляем число в список вызванных номеров
-                print(f'Компьютер вытянул номер: {number}') # Выводим вытянутый номер
-                if self._check_bingo(self.player_card, self.called_numbers):  # Проверка Бинго для игрока
-                    print('Внимание! У вас есть линия на карточке! Вы выиграли!') # Выводим сообщение о победе
-                    print('Поздравляем! Вы выиграли!') # Выводим сообщение о победе
-                    break
-                if self._check_bingo(self.computer_card, self.called_numbers): # Проверка Бинго для компьютера
-                    print('Компьютер выиграл!') # Выводим сообщение о победе компьютера
-                    break
-            else:
-                continue
-
-        while True:
-            play_again = input('Хотите сыграть снова? (да/нет): ').lower() # Предлагаем сыграть еще раз
-            if play_again == 'да':
-                self.__init__() # Перезапуск игры
-                self.play()
-                break
-            elif play_again == 'нет':
-                print('Спасибо за игру!') # Выводим благодарность за игру
-                break
-            else:
-                print('Некорректный ввод. Пожалуйста, введите "да" или "нет".')  # Выводим сообщение о некорректном вводе
+             elif choice in ['нет', 'no']:
+                 return False
+             else:
+                 print("Пожалуйста, введите 'да' или 'нет'.")
 
 if __name__ == '__main__':
-    """
-    Точка входа в программу.
-    """
-    try:
-        game = BingoGame() # Создаем объект игры
-        game.play() # Запускаем игру
-    except Exception as e:
-        logger.error('Произошла ошибка при выполнении игры', exc_info=True) # Логируем ошибки
+     try:
+        bingo_game = BingoGame() # Создаем экземпляр игры
+        bingo_game.start_game() # Запускаем игру
+     except Exception as e:
+        logger.error(f'Ошибка при запуске игры: {e}')  # Обрабатываем ошибки через логгер
 ```

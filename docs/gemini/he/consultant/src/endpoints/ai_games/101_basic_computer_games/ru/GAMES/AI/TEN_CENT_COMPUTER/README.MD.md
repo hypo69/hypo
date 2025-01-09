@@ -1,69 +1,133 @@
-# Анализ кода модуля 
+# Анализ кода модуля
 
-## Качество кода
-**Соответствие требованиям к формату кода (1-10):**
+## Анализ кода модуля `README.MD`
 
--   **Преимущества:**
-    *   Код содержит достаточно подробные комментарии, объясняющие основные моменты реализации.
-    *   Присутствует описание игр и их правил, что делает код понятным для использования в образовательных целях.
-    *   Используется класс `GoogleGenerativeAI` для инкапсуляции логики взаимодействия с моделями Gemini.
-    *   Системные инструкции разделены для разных игр, что способствует более четкому разделению ответственности.
-    *   Примеры использования демонстрируют, как можно взаимодействовать с моделями, используя предоставленный код.
+**Качество кода**
 
--   **Недостатки:**
-    *   Не используется reStructuredText (RST) для комментариев и docstring, как требуется.
-    *   Отсутствуют импорты необходимых библиотек, которые используются в коде, например, `src.utils.jjson`.
-    *   В коде присутствуют стандартные блоки `try-except`, но не используется `logger.error` для обработки ошибок.
-    *   Используется прямой `json.load`, а не `j_loads` или `j_loads_ns`.
-    *   Необходимо переписать docstring в соответствии с форматом RST.
-    *   Не используются константы для системных инструкций, что снижает читаемость.
-    *   Отсутствует logging для отладки и мониторинга.
-    *   Не соблюдена последовательность операций с кодом (чтение файла, обработка, запись).
-    *   Отсутствуют проверки типов и параметров функций.
+-   **Соответствие требованиям к формату кода (1-10):**
+    -   **Преимущества:**
+        -   Документ содержит подробное описание двух математических игр и их реализации с помощью Google Gemini.
+        -   Представлен код на Python для класса `GoogleGenerativeAI` и примеры его использования.
+        -   Приведены инструкции для системного промпта для обеих игр.
+        -   Даны примеры использования игр.
+    -   **Недостатки:**
+        -   Необходимо добавить комментарии в стиле reStructuredText (RST) для функций и классов.
+        -   Отсутствуют импорты необходимых библиотек, кроме `google.generativeai`.
+        -   Необходимо использование `j_loads` или `j_loads_ns` для чтения файлов.
+        -   Необходимо добавить обработку ошибок с помощью `logger.error`.
+        -   Формат `README.MD` не соответствует формату, требуемому для `python` кода.
+        -   Отсутствует описание модуля в формате RST.
+        -   Не все переменные имеют docstrings.
+        -   Используется `try-except` без конкретной обработки ошибок через `logger.error`.
 
-## Рекомендации по улучшению
-1.  **Переписать комментарии и docstring:** Использовать reStructuredText (RST) для всех комментариев и docstring, включая описания модулей, функций, методов и переменных.
-2.  **Импорт необходимых библиотек:** Добавить импорты для всех необходимых модулей, включая `src.utils.jjson` и `src.logger.logger`.
-3.  **Обработка ошибок:** Заменить стандартные блоки `try-except` на использование `logger.error` для обработки ошибок.
-4.  **Чтение файлов:** Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.load`.
-5.  **Константы:** Определить константы для системных инструкций, чтобы сделать код более читаемым.
-6.  **Логирование:** Добавить логирование для отладки и мониторинга.
-7.  **Типизация:** Добавить аннотации типов для параметров функций и возвращаемых значений.
-8.  **Обработка ввода:** Добавить валидацию ввода для API ключа и запросов к модели.
-9.  **Разделение логики:** Разделить код на более мелкие функции для улучшения читаемости и переиспользования.
-10. **Удалить лишнее:** Убрать комментарии, которые не добавляют смысловой нагрузки (например, `Замените "YOUR_API_KEY" на свой API-ключ`).
+**Рекомендации по улучшению**
 
-## Улучшенный код
+1.  **Формат документации:**
+    -   Переформатировать документ в reStructuredText (RST) для лучшей интеграции с документацией Python.
+    -   Добавить описание модуля в формате RST.
+    -   Перевести все комментарии к коду в формат RST (docstrings).
+
+2.  **Импорт библиотек:**
+    -   Добавить импорты необходимых модулей, таких как `src.utils.jjson` и `src.logger.logger`.
+3.  **Чтение файлов:**
+    -   Заменить использование `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`, если это применимо.
+4.  **Обработка ошибок:**
+    -   Заменить общие блоки `try-except` на специфическую обработку ошибок с использованием `logger.error`.
+5.  **Docstrings:**
+    -   Добавить docstrings в формате RST для всех функций, классов и методов.
+
+**Улучшенный код**
+
 ```python
 """
-Модуль для реализации интерактивных обучающих математических игр с использованием Google Gemini.
-=========================================================================================
+Модуль для интерактивного обучения математике с использованием Google Gemini.
+==========================================================================
 
-Модуль предоставляет классы и функции для создания и взаимодействия с моделями Google Gemini,
-а также реализует две математические игры: "Ввод-Вывод" и "10-центовый компьютер".
+Модуль содержит классы и функции для реализации игр "Ввод-Вывод" и "10-центовый компьютер",
+использующих модели Google Gemini для создания интерактивного обучающего опыта.
 
-Примеры использования:
-----------------------
-
-Пример использования класса `GoogleGenerativeAI` и игр:
+Примеры использования
+--------------------
 
 .. code-block:: python
 
-    api_key = "YOUR_API_KEY" # Замените на свой API-ключ
-    input_output_game = GoogleGenerativeAI(api_key=api_key, system_instruction=SYSTEM_INSTRUCTION_INPUT_OUTPUT)
-    binary_computer = GoogleGenerativeAI(api_key=api_key, system_instruction=SYSTEM_INSTRUCTION_BINARY)
+    # Замените "YOUR_API_KEY" на свой API-ключ
+    api_key = "YOUR_API_KEY"
+
+    # Инициализация игры "Ввод-Вывод"
+    input_output_game = GoogleGenerativeAI(api_key=api_key, system_instruction=system_instruction_input_output)
+
+    # Инициализация "10-центового компьютера"
+    binary_computer = GoogleGenerativeAI(api_key=api_key, system_instruction=system_instruction_binary)
+
+    # Примеры использования:
     print("Игра Ввод-Вывод:")
     print(input_output_game.ask("Ввод: 7"))
+    print(input_output_game.ask("Ввод: 12"))
+    print(input_output_game.ask("Задайте машину x / 2"))
+    print(input_output_game.ask("Ввод: 12"))
+
+    print("\\n10-центовый компьютер:")
     print(binary_computer.ask("Десятичное: 6"))
+    print(binary_computer.ask("Лампочки: 0111"))
+    print(binary_computer.ask("Объясните как 13"))
 """
+import google.generativeai as genai  # импорт библиотеки для работы с моделями Gemini
+from typing import List  # импорт для аннотации типов
+from src.logger.logger import logger  # импорт логгера для записи ошибок
 
-import google.generativeai as genai # Импорт библиотеки для работы с Google Gemini
-from typing import Any # Импорт для аннотации типов
-from src.logger.logger import logger # Импорт логгера для обработки ошибок
-# from src.utils.jjson import j_loads, j_loads_ns # TODO: не используется, но если в дальнейшем понадобится - раскомментировать
+class GoogleGenerativeAI:
+    """
+    Класс для взаимодействия с моделями Google Generative AI.
 
-# Константы для системных инструкций
-SYSTEM_INSTRUCTION_INPUT_OUTPUT = """
+    :param api_key: Ключ API для доступа к Gemini.
+    :type api_key: str
+    :param system_instruction: Инструкция для модели (системный промпт).
+    :type system_instruction: str
+    :param model_name: Название используемой модели Gemini. По умолчанию 'gemini-2-13b'.
+    :type model_name: str
+    """
+
+    MODELS: List[str] = [
+        'gemini-1.5-flash-8b',
+        'gemini-2-13b',
+        'gemini-3-20b'
+    ]  # список доступных моделей
+
+    def __init__(self, api_key: str, system_instruction: str, model_name: str = 'gemini-2-13b'):
+        """
+        Инициализация модели GoogleGenerativeAI.
+
+        :param api_key: Ключ API для доступа к Gemini.
+        :type api_key: str
+        :param system_instruction: Инструкция для модели (системный промпт).
+        :type system_instruction: str
+        :param model_name: Название используемой модели Gemini. По умолчанию 'gemini-2-13b'.
+        :type model_name: str
+        """
+        self.api_key = api_key  # сохранение ключа API
+        self.model_name = model_name  # сохранение имени модели
+        genai.configure(api_key=self.api_key)  # Конфигурация библиотеки с API ключом
+        self.model = genai.GenerativeModel(model_name=self.model_name, system_instruction=system_instruction)  # Инициализация модели с инструкцией
+
+    def ask(self, q: str) -> str:
+        """
+        Отправка запроса модели и получение ответа.
+
+        :param q: Текст запроса.
+        :type q: str
+        :return: Ответ модели или сообщение об ошибке.
+        :rtype: str
+        """
+        try:
+            response = self.model.generate_content(q)  # Отправка запроса модели
+            return response.text  # Получение текстового ответа
+        except Exception as ex:
+            logger.error(f'Error processing request: {ex}', exc_info=True)  # Обработка и логирование ошибки
+            return f'Error: {str(ex)}'  # Возврат сообщения об ошибке
+
+# Системные инструкции
+system_instruction_input_output = """
 Вы - игровой движок для математической игры "Ввод-Вывод". Ваша задача - преобразовать число, которое поступает в "Ввод" в соответствии с заданным правилом (скрытой "машиной") и выдать результат в "Вывод".
 
 Вы должны придерживаться следующих правил:
@@ -91,9 +155,9 @@ SYSTEM_INSTRUCTION_INPUT_OUTPUT = """
 Вы: `Окей, машина: x*2`
 
 **Начните игру с любым простым правилом.**
-""" # Системная инструкция для игры "Ввод-Вывод"
+"""  # системная инструкция для игры "Ввод-Вывод"
 
-SYSTEM_INSTRUCTION_BINARY = """
+system_instruction_binary = """
 Вы - симулятор "10-центового компьютера" для обучения детей двоичной системе счисления. Ваша задача - представлять числа в двоичной форме с помощью 4 "лампочек" (0 - лампа выключена, 1 - лампа включена). 
 
 Ваши лампочки обозначают 1, 2, 4 и 8 в двоичной системе (справа налево).
@@ -121,82 +185,26 @@ SYSTEM_INSTRUCTION_BINARY = """
 Вы: `Двоичное: 1110, объяснение: Включены лампочки 1,2 и 4. 1+2+4 = 7`
 
 **Начните симуляцию с любого простого числа.**
-""" # Системная инструкция для игры "10-центовый компьютер"
-
-class GoogleGenerativeAI:
-    """
-    Класс для взаимодействия с моделями Google Generative AI.
-
-    :param api_key: Ключ API для доступа к Gemini.
-    :type api_key: str
-    :param system_instruction: Инструкция для модели (системный промпт).
-    :type system_instruction: str
-    :param model_name: Название используемой модели Gemini. По умолчанию 'gemini-2-13b'.
-    :type model_name: str
-    """
-    MODELS = [
-        'gemini-1.5-flash-8b',
-        'gemini-2-13b',
-        'gemini-3-20b'
-    ] # Список доступных моделей
-
-    def __init__(self, api_key: str, system_instruction: str, model_name: str = 'gemini-2-13b'):
-        """
-        Инициализация модели GoogleGenerativeAI.
-
-        :param api_key: Ключ API для доступа к Gemini.
-        :type api_key: str
-        :param system_instruction: Инструкция для модели (системный промпт).
-        :type system_instruction: str
-        :param model_name: Название используемой модели Gemini. По умолчанию 'gemini-2-13b'.
-        :type model_name: str
-        """
-        try:
-            if not api_key:
-               raise ValueError('API ключ не может быть пустым') # Проверка наличия API ключа
-            self.api_key = api_key
-            self.model_name = model_name
-            genai.configure(api_key=self.api_key) # Конфигурация библиотеки с API ключом
-            self.model = genai.GenerativeModel(model_name=self.model_name, system_instruction=system_instruction) # Инициализация модели с инструкцией
-        except Exception as ex: # Обработка ошибок при инициализации
-            logger.error(f'Ошибка при инициализации GoogleGenerativeAI: {ex}') # Логирование ошибки
-            raise # Проброс исключения
-    
-    def ask(self, q: str) -> str:
-        """
-        Отправка запроса модели и получение ответа.
-
-        :param q: Текст запроса.
-        :type q: str
-        :return: Ответ модели или сообщение об ошибке.
-        :rtype: str
-        """
-        try:
-            if not q:
-                raise ValueError('Запрос не может быть пустым') # Проверка наличия запроса
-            response = self.model.generate_content(q) # Отправка запроса модели
-            return response.text # Получение текстового ответа
-        except Exception as ex: # Обработка ошибок при выполнении запроса
-            logger.error(f'Ошибка при выполнении запроса к модели: {ex}') # Логирование ошибки
-            return f'Error: {str(ex)}' # Возврат сообщения об ошибке
+"""  # системная инструкция для "10-центового компьютера"
 
 # Замените "YOUR_API_KEY" на свой API-ключ
 api_key = "YOUR_API_KEY"
 
 # Инициализация игры "Ввод-Вывод"
-input_output_game = GoogleGenerativeAI(api_key=api_key, system_instruction=SYSTEM_INSTRUCTION_INPUT_OUTPUT)
+input_output_game = GoogleGenerativeAI(api_key=api_key, system_instruction=system_instruction_input_output) # создание экземпляра класса для игры "Ввод-Вывод"
 
 # Инициализация "10-центового компьютера"
-binary_computer = GoogleGenerativeAI(api_key=api_key, system_instruction=SYSTEM_INSTRUCTION_BINARY)
+binary_computer = GoogleGenerativeAI(api_key=api_key, system_instruction=system_instruction_binary)  # создание экземпляра класса для игры "10-центовый компьютер"
 
 # Примеры использования:
-print("Игра Ввод-Вывод:") # Вывод заголовка игры "Ввод-Вывод"
-print(input_output_game.ask("Ввод: 7")) # Запрос к модели для игры "Ввод-Вывод"
-print(input_output_game.ask("Ввод: 12")) # Запрос к модели для игры "Ввод-Вывод"
-print(input_output_game.ask("Задайте машину x / 2")) # Запрос к модели для игры "Ввод-Вывод"
-print(input_output_game.ask("Ввод: 12")) # Запрос к модели для игры "Ввод-Вывод"
+print("Игра Ввод-Вывод:")
+print(input_output_game.ask("Ввод: 7"))
+print(input_output_game.ask("Ввод: 12"))
+print(input_output_game.ask("Задайте машину x / 2"))
+print(input_output_game.ask("Ввод: 12"))
 
-print("\n10-центовый компьютер:") # Вывод заголовка игры "10-центовый компьютер"
-print(binary_computer.ask("Десятичное: 6")) # Запрос к модели для игры "10-центовый компьютер"
-print(binary_computer.ask("Лампочки: 0111")) # Запрос к модели для игры "10-центовый компьютер"
-print(binary_computer.ask("Объясните как 13")) # Запрос к модели для игры "10-центовый компьютер"
+print("\n10-центовый компьютер:")
+print(binary_computer.ask("Десятичное: 6"))
+print(binary_computer.ask("Лампочки: 0111"))
+print(binary_computer.ask("Объясните как 13"))
+```

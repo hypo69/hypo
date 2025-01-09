@@ -2,104 +2,56 @@
 
 ## סקירה כללית
 
-סקריפט זה משתמש במודל Melody RNN של Magenta ליצירת קטעי מוזיקה המבוססים על ז'אנר וטמפו מועדפים על המשתמש. בנוסף, הוא מוסיף אקורדים ותבנית תופים בסיסית לקטע המוזיקלי.
+מודול זה יוצר קטעי מוזיקה באמצעות מודל Melody RNN, מאפשר בחירת ז'אנר וקצב, וכולל ליווי של תופים.
 
 ## תוכן עניינים
 
-- [סקירה כללית](#סקירה-כללית)
-- [פונקציות](#פונקציות)
-- [משתנים](#משתנים)
-- [לולאות](#לולאות)
+- [פונקציות](#functions)
+- [משתנים גלובליים](#global-variables)
 
 ## פונקציות
 
-אין פונקציות מוגדרות במפורש בסקריפט זה. הסקריפט משתמש במודול `magenta`  ובפונקציות שלו.
+### `main`
 
-## משתנים
+**Description**: פונקציה ראשית שמגדירה את תהליך יצירת המוזיקה. מקבלת קלט מהמשתמש עבור ז'אנר וקצב, ויוצרת מספר קטעי מוזיקה.
+
+**Parameters**:
+- אין פרמטרים.
+
+**Returns**:
+- אין ערך מוחזר.
+
+**Raises**:
+- אין חריגות ספציפיות שמתועדות.
+
+## משתנים גלובליים
 
 ### `output_dir`
-**Description**: תיקייה לשמירת קבצי MIDI שנוצרו.
-
-**Type**: `str`
-
-**Default**: `'generated_music'`
+**Description**: נתיב לספרייה בה יישמרו קבצי ה-MIDI שנוצרו.
 
 ### `model_name`
-**Description**: שם מודל Melody RNN המשמש ליצירת מוזיקה.
-
-**Type**: `str`
-
-**Default**: `'attention_rnn'`
+**Description**: שם המודל Melody RNN בשימוש.
 
 ### `melody_rnn`
-**Description**: מודל Melody RNN המשמש ליצירת רצפים מלודיים.
-
-**Type**: `melody_rnn_sequence_generator.MelodyRnnSequenceGenerator`
+**Description**: מופע של המחלקה `MelodyRnnSequenceGenerator`.
 
 ### `temperature`
-**Description**: ערך השולט על רנדומליות יצירת המוזיקה (ערכים גבוהים יותר מובילים ליותר אקראיות).
-
-**Type**: `float`
-
-**Default**: `1.0`
+**Description**: ערך טמפרטורה המשפיע על רמת האקראיות ביצירת המוזיקה.
 
 ### `num_music_pieces`
-**Description**: מספר קטעי המוזיקה שיש ליצור.
-
-**Type**: `int`
-
-**Default**: `3`
+**Description**: מספר קטעי המוזיקה שייוצרו.
 
 ### `steps_per_music_piece`
-**Description**: מספר הצעדים (step) בכל קטע מוזיקלי.
-
-**Type**: `int`
-
-**Default**: `128`
+**Description**: מספר הצעדים (step) בקטע מוזיקלי.
 
 ### `preferred_genre`
-**Description**: הז'אנר המועדף על המשתמש (לדוגמה, "classical", "jazz", "rock").
-
-**Type**: `str`
-
-**User Input**: משתמש כקלט מהמשתמש.
+**Description**: הז'אנר המועדף של המשתמש.
 
 ### `preferred_tempo`
-**Description**: הטמפו המועדף על המשתמש (BPM).
-
-**Type**: `int`
-
-**User Input**: משתמש כקלט מהמשתמש.
+**Description**: הקצב המועדף של המשתמש.
 
 ### `chord_progressions`
-**Description**: מילון של התקדמות אקורדים עבור ז'אנרים שונים.
-
-**Type**: `dict`
-
-**Default**:
-```python
-{
-    "classical": ["C", "Am", "F", "G"],
-    "jazz": ["Cmaj7", "Dm7", "Em7", "A7"],
-    "rock": ["C", "G", "Am", "F"],
-}
-```
+**Description**: מילון המכיל אקורדים לפי ז'אנר.
 
 ### `drum_pattern`
-**Description**: תבנית תופים בסיסית לליווי המוזיקה.
-
-**Type**: `mm.DrumTrack`
-
-## לולאות
-
-### `for i in range(num_music_pieces)`
-
-**Description**: לולאה היוצרת מספר קטעי מוזיקה לפי `num_music_pieces`.
-בתוך הלולאה:
-- יוצר רצף מלודיה באמצעות `melody_rnn.generate`.
-- יוצר רצף אקורדים המבוסס על הז'אנר המועדף.
-- משלב את המלודיה והאקורדים יחד.
-- יוצר רצף מוזיקלי סופי על ידי הוספת תבנית תופים.
-- שומר את הרצף כקובץ MIDI.
-- מדפיס הודעה על יצירת קטע המוזיקה.
-```markdown
+**Description**: תבנית תופים בסיסית.

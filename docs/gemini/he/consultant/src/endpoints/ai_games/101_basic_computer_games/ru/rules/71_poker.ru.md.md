@@ -1,270 +1,399 @@
-# Анализ кода модуля `71_poker.ru.md`
+# Анализ кода модуля POKER
 
 **Качество кода**
-* Соответствие требованиям к формату кода (1-10): 7
-    * Преимущества:
-        *  Текст хорошо структурирован и понятен.
-        *  Присутствует подробное описание шагов реализации игры в покер.
-        *  Представлены примеры работы программы.
-    * Недостатки:
-        *  Формат кода не соответствует требованиям, поскольку отсутствует код на Python.
-        *  В тексте нет использования reStructuredText (RST) для документации.
-        *  Не хватает детального описания реализации на Python, только общие рекомендации.
-        *  Отсутствуют импорты, которые нужно было бы добавить.
-        *  Нет примеров использования `j_loads` или `j_loads_ns`.
-        *  Нет использования `logger.error` для обработки ошибок.
-        *  Нет docstring и аннотаций типов.
+
+- **Соответствие требованиям к формату кода (1-10):** 
+    -  Документ в формате markdown, что соответствует заданию.
+    -  Присутствует подробное описание игры, её правил и процесса.
+    -  Есть пошаговая инструкция для реализации игры, пример работы программы и возможные ограничения.
+    -  Содержит рекомендации по улучшению и использованию Python.
+- **Преимущества:**
+    -  Описание игры POKER достаточно подробное и понятное.
+    -  Пошаговая инструкция хорошо структурирована и логична.
+    -  Пример работы программы помогает понять процесс игры.
+    -  Использует markdown для форматирования, что удобно для чтения.
+- **Недостатки:**
+    -  Нет явного программного кода на Python, только описание алгоритма.
+    -  Не хватает конкретных примеров кода для функций и классов.
+    -  Не используются reStructuredText для документирования кода, как это требовалось в задании.
 
 **Рекомендации по улучшению**
 
-1.  **Преобразование в формат Python:**
-    *   Необходимо создать Python-скрипт на основе предоставленного описания игры.
-    *   Включать в него функции для создания колоды, раздачи карт, оценки комбинаций и т.д.
-2.  **Документация в формате reStructuredText (RST):**
-    *   Добавить docstring в формате RST для модуля, функций и методов.
-    *   Использовать RST для всех комментариев и документации.
-3.  **Обработка ошибок:**
-    *   Использовать `logger.error` для обработки ошибок.
-    *   Избегать чрезмерного использования `try-except` блоков.
-4.  **Импорты:**
-    *   Добавить необходимые импорты (например, `random`, `src.utils.jjson`, `src.logger.logger`).
-5.  **Адаптация к предыдущим файлам:**
-    *   Использовать соглашения об именах, принятые в предыдущих файлах.
-6.  **Улучшения:**
-    *   Добавить возможность ставок.
-    *   Реализовать режим игры с компьютером.
-    *   Добавить графический интерфейс.
+1.  **Добавить программный код:**
+    -  Необходимо добавить реализацию игры на Python с классами, функциями и методами.
+    -  Обеспечить соответствие документации в формате reStructuredText (RST).
+
+2.  **Использовать reStructuredText (RST) для документирования:**
+    -  Вместо обычного markdown, использовать RST для документирования функций, классов и методов.
+    -  Добавить docstrings для каждой функции и метода.
+
+3.  **Добавить обработку ошибок:**
+    -  Предусмотреть обработку некорректного ввода от пользователя.
+    -  Использовать `logger.error` для логирования ошибок.
+
+4.  **Разбить на модули:**
+    -  Разделить код на модули для более удобной разработки и поддержки.
+    -  Например, модуль для работы с колодой карт, модуль для оценки комбинаций, модуль для логики игры.
+
+5.  **Использовать `j_loads` или `j_loads_ns`:**
+    -  Если требуется загрузка данных из JSON, использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+
+6.  **Реализовать классы и методы:**
+    -  Создать классы, такие как `Card`, `Deck`, `Player` и `PokerGame`, для структурирования кода.
+    -  Использовать методы для действий, таких как перемешивание колоды, раздача карт, оценка комбинаций.
+
+7.  **Привести примеры документирования в формате RST**:
+   - добавить примеры документирования в формате RST для функций и классов.
 
 **Улучшенный код**
 
 ```python
 """
-Модуль для реализации игры в покер.
+Модуль для реализации карточной игры POKER.
 =========================================================================================
 
-Модуль содержит функции для создания колоды, раздачи карт, оценки комбинаций,
-и управления игровым процессом.
+Этот модуль содержит классы и функции для создания и управления карточной игрой POKER.
+Включает в себя логику создания колоды, раздачи карт, оценки комбинаций и управления игровым процессом.
 
-Пример использования:
+Пример использования
 --------------------
 
-Пример запуска игры:
+Пример использования класса `PokerGame`:
 
 .. code-block:: python
 
     game = PokerGame()
     game.start_game()
 """
-import random # Импорт модуля random для перемешивания карт #
-from typing import List, Tuple # Импорт типов для аннотации #
-from src.logger.logger import logger # Импорт логера для обработки ошибок #
-from src.utils.jjson import j_loads_ns # Импорт для загрузки JSON #
 
+import random
+from typing import List, Tuple
+from src.logger.logger import logger # Импорт логгера
 
 class Card:
     """
-    Представляет игральную карту.
+    Представляет карту в колоде.
 
-    :param suit: Масть карты.
+    :param suit: Масть карты (червы, бубны, трефы, пики).
     :type suit: str
-    :param rank: Достоинство карты.
+    :param rank: Ранг карты (2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, A).
     :type rank: str
+
+    .. attribute:: suit
+       :type: str
+       Масть карты.
+
+    .. attribute:: rank
+       :type: str
+       Ранг карты.
     """
     def __init__(self, suit: str, rank: str):
-        """
-        Инициализирует карту.
-        """
-        self.suit = suit # Устанавливает масть карты #
-        self.rank = rank # Устанавливает достоинство карты #
+        self.suit = suit
+        self.rank = rank
 
     def __str__(self) -> str:
-        """
-        Возвращает строковое представление карты.
+        """Возвращает строковое представление карты (например, '10 червы')."""
+        return f"{self.rank} {self.suit}"
 
-        :return: Строковое представление карты.
-        :rtype: str
-        """
-        return f"{self.rank} {self.suit}" # Возвращает строку в формате "достоинство масть" #
+    def __repr__(self) -> str:
+      """Возвращает строковое представление объекта карты для отладки."""
+      return f"Card(suit='{self.suit}', rank='{self.rank}')"
 
+
+class Deck:
+    """
+    Представляет колоду карт.
+
+    .. attribute:: cards
+       :type: list[Card]
+       Список карт в колоде.
+    """
+    def __init__(self):
+        suits = ['червы', 'бубны', 'трефы', 'пики']
+        ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+        self.cards = [Card(suit, rank) for suit in suits for rank in ranks]
+
+    def shuffle(self):
+        """Перемешивает колоду карт."""
+        random.shuffle(self.cards)
+
+    def deal_card(self) -> Card:
+        """Раздает одну карту из колоды.
+
+        :raises IndexError: Если колода пуста.
+        :return: Карта из колоды.
+        :rtype: Card
+        """
+        if not self.cards:
+            logger.error("Колода пуста") #  Логируем ошибку, если колода пуста
+            raise IndexError("Колода пуста")
+        return self.cards.pop()
+
+    def __len__(self) -> int:
+      """Возвращает количество карт в колоде."""
+      return len(self.cards)
+
+class Player:
+    """
+    Представляет игрока в игре.
+
+    :param name: Имя игрока.
+    :type name: str
+
+    .. attribute:: name
+       :type: str
+       Имя игрока.
+
+    .. attribute:: hand
+       :type: list[Card]
+       Список карт на руках у игрока.
+
+    .. attribute:: score
+       :type: int
+       Счет игрока.
+    """
+    def __init__(self, name: str):
+        self.name = name
+        self.hand: List[Card] = []
+        self.score = 0
+
+    def add_card(self, card: Card):
+        """Добавляет карту в руку игрока.
+
+        :param card: Карта для добавления.
+        :type card: Card
+        """
+        self.hand.append(card)
+
+    def discard_cards(self, card_indexes: List[int], deck: Deck) -> None:
+      """
+      Игрок сбрасывает выбранные карты и берёт новые из колоды.
+      
+      :param card_indexes: Список индексов карт для сброса.
+      :type card_indexes: list[int]
+      :param deck: Колода карт.
+      :type deck: Deck
+      
+      """
+      try:
+          new_hand = []
+          discarded_cards = []
+          for i, card in enumerate(self.hand):
+              if i+1 not in card_indexes:
+                  new_hand.append(card)
+              else:
+                discarded_cards.append(card) # сохраняем сбрасываемые карты для отладки
+          
+          for _ in range(len(discarded_cards)): # добавляем новые карты на место сброшенных
+              if len(deck) > 0:
+                new_hand.append(deck.deal_card())
+              else:
+                logger.error('Недостаточно карт в колоде')
+                raise IndexError("Недостаточно карт в колоде") # выводим ошибку, если в колоде нет карт
+          self.hand = new_hand
+      except Exception as ex:
+        logger.error(f'Ошибка при сбросе карт {ex}')
+        raise
+
+    def show_hand(self) -> str:
+      """Возвращает строковое представление руки игрока."""
+      return f"{', '.join(map(str, self.hand))}"
 
 class PokerGame:
     """
-    Класс для управления игрой в покер.
+    Представляет основную логику игры в покер.
+
+    .. attribute:: deck
+       :type: Deck
+       Колода карт для игры.
+
+    .. attribute:: players
+       :type: list[Player]
+       Список игроков в игре.
+
+    .. attribute:: rounds_played
+       :type: int
+       Количество сыгранных раундов.
+
+    .. attribute:: max_rounds
+       :type: int
+       Максимальное количество раундов.
+
+    .. attribute:: max_score
+       :type: int
+       Максимальное количество очков для победы.
     """
-    def __init__(self):
-        """
-        Инициализирует игру.
-        """
-        self.suits = ["червы", "бубны", "трефы", "пики"] # Список мастей #
-        self.ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"] # Список достоинств #
-        self.deck = self._create_deck() # Создаем колоду #
-        self.players = [] # Инициализируем список игроков #
+    def __init__(self, max_rounds: int = 10, max_score: int = 5):
+        self.deck = Deck()
+        self.players: List[Player] = []
+        self.rounds_played = 0
+        self.max_rounds = max_rounds
+        self.max_score = max_score
 
-    def _create_deck(self) -> List[Card]:
-         """
-         Создает колоду из 52 карт.
+    def add_player(self, player: Player):
+        """Добавляет нового игрока в игру.
 
-         :return: Колода карт.
-         :rtype: List[Card]
-         """
-         deck = [] # Создаем пустой список для колоды #
-         for suit in self.suits: # Проходим по всем мастям #
-             for rank in self.ranks: # Проходим по всем достоинствам #
-                 deck.append(Card(suit, rank)) # Добавляем карту в колоду #
-         return deck # Возвращаем колоду #
-
-    def _shuffle_deck(self) -> None:
+        :param player: Игрок для добавления.
+        :type player: Player
         """
-        Перемешивает колоду.
-        """
-        random.shuffle(self.deck) # Перемешиваем колоду #
+        self.players.append(player)
 
-    def _deal_cards(self, num_players: int) -> List[List[Card]]:
-        """
-        Раздает карты игрокам.
+    def deal_initial_hands(self):
+      """
+      Раздаёт начальные карты всем игрокам.
+      
+      Каждому игроку раздаётся по 5 карт.
+      """
+      try:
+          for player in self.players:
+              player.hand = []
+              for _ in range(5):
+                if len(self.deck) > 0:
+                  player.add_card(self.deck.deal_card())
+                else:
+                  logger.error("Недостаточно карт в колоде для раздачи")
+                  raise IndexError("Недостаточно карт в колоде")
+      except Exception as ex:
+        logger.error(f'Ошибка при раздаче карт {ex}')
+        raise
 
-        :param num_players: Количество игроков.
-        :type num_players: int
-        :return: Список карт для каждого игрока.
-        :rtype: List[List[Card]]
-        """
-        hands = [[] for _ in range(num_players)] # Создаем пустые руки для каждого игрока #
-        for _ in range(5): # Раздаем по 5 карт каждому игроку #
-            for i in range(num_players): # Проходим по каждому игроку #
-                try:
-                    hands[i].append(self.deck.pop()) # Раздаем карту игроку #
-                except IndexError as ex:
-                    logger.error("Недостаточно карт в колоде", ex) # Логируем ошибку если в колоде недостаточно карт #
-                    return [] # Возвращаем пустой список если произошла ошибка #
-        return hands # Возвращаем список рук #
+    def get_player_input(self, player: Player) -> List[int]:
+      """
+      Получает от игрока номера карт, которые он хочет заменить.
 
+      :param player: Игрок, вводящий данные.
+      :type player: Player
+      :return: Список индексов карт для замены.
+      :rtype: list[int]
+      """
+      while True:
+          try:
+              card_indexes_str = input(f"{player.name}, ваши карты: {player.show_hand()}\nВведите номера карт, которые хотите заменить (через запятую): ")
+              card_indexes = [int(x.strip()) for x in card_indexes_str.split(',')]
+              if all(1 <= index <= 5 for index in card_indexes):
+                return card_indexes
+              else:
+                print("Неверный ввод. Введите номера карт от 1 до 5.") # выводим сообщение, если ввод неверный
+          except ValueError:
+              print("Неверный ввод. Введите числа через запятую.") # выводим сообщение, если ввод неверный
 
-    def _evaluate_hand(self, hand: List[Card]) -> Tuple[str, int]:
-        """
-        Оценивает комбинацию карт.
+    def evaluate_hand(self, hand: List[Card]) -> Tuple[str, int]:
+      """
+      Оценивает комбинацию карт игрока.
+      
+      :param hand: Рука игрока.
+      :type hand: list[Card]
+      :return: Комбинация и ее ранг.
+      :rtype: tuple[str, int]
+      """
+      ranks = [card.rank for card in hand]
+      suits = [card.suit for card in hand]
+      rank_counts = {}
+      for rank in ranks:
+          rank_counts[rank] = rank_counts.get(rank, 0) + 1
+          
+      is_flush = len(set(suits)) == 1
+      
+      rank_values = {
+          '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
+          '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14
+      }
+      numeric_ranks = sorted([rank_values[rank] for rank in ranks])
+      is_straight = all(numeric_ranks[i+1] - numeric_ranks[i] == 1 for i in range(4))
+      
+      if is_flush and is_straight and numeric_ranks == [10, 11, 12, 13, 14]:
+          return "Роял-флеш", 10
+      if is_flush and is_straight:
+          return "Стрит-флеш", 9
+      if 4 in rank_counts.values():
+          return "Каре", 8
+      if 3 in rank_counts.values() and 2 in rank_counts.values():
+          return "Фулл-хаус", 7
+      if is_flush:
+          return "Флеш", 6
+      if is_straight:
+          return "Стрит", 5
+      if 3 in rank_counts.values():
+          return "Тройка", 4
+      pairs = list(rank_counts.values()).count(2)
+      if pairs == 2:
+        return "Две пары", 3
+      if pairs == 1:
+        return "Пара", 2
+      return "Старшая карта", 1
 
-        :param hand: Рука игрока.
-        :type hand: List[Card]
-        :return: Комбинация и её ранг.
-        :rtype: Tuple[str, int]
-        """
-        ranks = [card.rank for card in hand] # Получаем список достоинств карт #
-        suits = [card.suit for card in hand] # Получаем список мастей карт #
-        rank_counts = {} # Словарь для подсчета количества одинаковых достоинств #
-        for rank in ranks: # Проходим по всем достоинствам #
-            rank_counts[rank] = rank_counts.get(rank, 0) + 1 # Подсчитываем количество карт каждого достоинства #
-        sorted_ranks = sorted([self.ranks.index(rank) for rank in ranks]) # Сортируем индексы достоинств #
-        is_flush = len(set(suits)) == 1 # Проверяем на флеш (все карты одной масти) #
-        is_straight = all(sorted_ranks[i+1] - sorted_ranks[i] == 1 for i in range(len(sorted_ranks)-1)) # Проверяем на стрит (последовательные значения) #
-        if is_flush and is_straight and sorted_ranks[0] == 8:
-            return "Роял-флэш", 10 # Роял-флеш #
-        if is_flush and is_straight:
-            return "Стрит-флэш", 9 # Стрит-флеш #
-        if 4 in rank_counts.values():
-            return "Каре", 8 # Каре #
-        if 3 in rank_counts.values() and 2 in rank_counts.values():
-            return "Фулл-хаус", 7 # Фулл-хаус #
-        if is_flush:
-            return "Флэш", 6 # Флэш #
-        if is_straight:
-             return "Стрит", 5 # Стрит #
-        if 3 in rank_counts.values():
-            return "Тройка", 4 # Тройка #
-        pairs = list(rank_counts.values()).count(2) # Подсчитываем количество пар #
-        if pairs == 2:
-            return "Две пары", 3 # Две пары #
-        if pairs == 1:
-            return "Пара", 2 # Пара #
-        return "Старшая карта", 1 # Старшая карта #
+    def determine_winner(self) -> Player:
+      """
+      Определяет победителя раунда.
+      
+      Сравнивает комбинации карт всех игроков и выбирает победителя.
+      Если есть несколько игроков с одинаковой комбинацией, выбирается игрок с самой старшей картой.
+      
+      :return: Победитель раунда.
+      :rtype: Player
+      """
+      best_hand_value = -1
+      winner = None
+      
+      for player in self.players:
+        hand_name, hand_value = self.evaluate_hand(player.hand)
+        print(f'{player.name}: {hand_name} ({player.show_hand()})')
+        if hand_value > best_hand_value:
+            best_hand_value = hand_value
+            winner = player
+        elif hand_value == best_hand_value: # если комбинация одинакова, выбираем по старшей карте
+            if winner:
+              current_best_card = max(card.rank for card in winner.hand) # выбираем старшую карту у текущего победителя
+              new_player_best_card = max(card.rank for card in player.hand) # выбираем старшую карту у нового игрока
+              if new_player_best_card > current_best_card: # сравниваем старшие карты
+                winner = player
+            else:
+              winner = player
+      return winner
+
+    def play_round(self):
+      """
+      Проводит один раунд игры.
+      
+      Игроки по очереди меняют карты, оцениваются комбинации, определяется победитель раунда.
+      """
+      self.deck = Deck() # Создаем новую колоду для каждого раунда
+      self.deck.shuffle() # Перемешиваем колоду
+      self.deal_initial_hands() # Раздаем начальные карты
+      
+      for player in self.players:
+        card_indexes = self.get_player_input(player)
+        player.discard_cards(card_indexes, self.deck) # Меняем карты игрока
+      
+      winner = self.determine_winner()
+      winner.score += 1 # Увеличиваем счет победителя
+      print(f"Победил {winner.name}!") # Выводим имя победителя
+      self.rounds_played += 1 # Увеличиваем счетчик раундов
+      print(f"Итоговый счет:")
+      for player in self.players:
+        print(f'{player.name}: {player.score} очков')
 
     def start_game(self):
-        """
-        Запускает игровой процесс.
-        """
-        print("Добро пожаловать в POKER!") # Приветствие #
-        num_players = 2 # Устанавливаем количество игроков #
-        self.players = [input(f"Игрок {i+1}, введите ваше имя: ") for i in range(num_players)] # Запрашиваем имена игроков #
-        max_score = 5 # Максимальное количество очков для победы #
-        player_scores = {player: 0 for player in self.players} # Инициализация очков игроков #
-        round_num = 1 # Счетчик раундов #
+        """Запускает игру в покер."""
+        print("Добро пожаловать в POKER!")
+        player_names = input("Введите имена игроков (через запятую): ").split(',')
+        for name in player_names:
+            self.add_player(Player(name.strip()))
 
-        while max(player_scores.values()) < max_score: # Пока никто не набрал нужное кол-во очков #
-             print(f"\nРаунд {round_num}")
-             self.deck = self._create_deck() # Создаем колоду для раунда #
-             self._shuffle_deck() # Перемешиваем колоду #
-             hands = self._deal_cards(num_players) # Раздаем карты игрокам #
-             if not hands:
-                return # Завершаем игру, если не удалось раздать карты #
-             for i, player in enumerate(self.players): # Проходим по каждому игроку #
-                print(f"\n{player}, ваши карты:") # Выводим карты игрока #
-                for j, card in enumerate(hands[i]): # Выводим карты #
-                    print(f"{j+1}. {card}")
-                while True:
-                     try:
-                        cards_to_replace = input("Введите номера карт, которые хотите заменить (через запятую): ") # Запрос номеров карт на замену #
-                        cards_to_replace_list = [int(x.strip()) - 1 for x in cards_to_replace.split(',')] # Получаем список индексов карт на замену #
-                        if all(0 <= index < 5 for index in cards_to_replace_list):
-                             break # Выходим из цикла, если ввод корректен #
-                        else:
-                             print("Неверный ввод. Пожалуйста, введите номера карт от 1 до 5.")
-                     except (ValueError, IndexError) as ex:
-                         logger.error("Неверный ввод, введите номера карт через запятую", ex)
-                         print("Неверный ввод. Пожалуйста, введите корректные номера карт.")
+        while self.rounds_played < self.max_rounds:
+          self.play_round() # Проводим раунд игры
+          if any(player.score >= self.max_score for player in self.players): # Проверяем, не выиграл ли кто-то досрочно
+              break
+          play_again = input("Хотите сыграть снова? (да/нет): ")
+          if play_again.lower() != "да":
+              break
+        
+        # Определение окончательного победителя
+        final_winner = max(self.players, key=lambda player: player.score) # Находим игрока с самым большим счётом
+        print(f"Игра окончена! Победил {final_winner.name} с {final_winner.score} очками.") # Выводим имя победителя
 
-                for index in sorted(cards_to_replace_list, reverse=True):
-                    if self.deck:
-                      try:
-                           hands[i][index] = self.deck.pop() # Заменяем карты #
-                      except IndexError as ex:
-                           logger.error("Недостаточно карт в колоде", ex) # Логируем ошибку если в колоде недостаточно карт #
-                           return # Завершаем игру, если не удалось раздать карты #
-                    else:
-                         print("Недостаточно карт в колоде.")
-                         return
 
-                print("Ваши новые карты:") # Выводим новые карты #
-                for j, card in enumerate(hands[i]): # Выводим новые карты #
-                    print(f"{j+1}. {card}") #
-
-             player_combinations = {} # Словарь для комбинаций игроков #
-             for i, player in enumerate(self.players): # Проходим по каждому игроку #
-                 combination, _ = self._evaluate_hand(hands[i]) # Оцениваем комбинацию #
-                 print(f"\n{player}: {combination}") # Выводим комбинацию #
-                 player_combinations[player] = (combination, _)  # Сохраняем комбинацию и ее ранг #
-
-             winner = self._determine_winner(player_combinations) # Определяем победителя раунда #
-             print(f"\nПобедил {winner}!")
-             player_scores[winner] += 1 # Обновляем очки победителя #
-             print("\nИтоговый счёт:") # Выводим счет #
-             for player, score in player_scores.items(): # Проходим по всем игрокам #
-                 print(f"{player}: {score} очка") # Выводим счет #
-             round_num += 1 # Увеличиваем счетчик раундов #
-        print(f"\nИгра окончена! Победил {max(player_scores, key=player_scores.get)} с {max(player_scores.values())} очками.") # Выводим победителя игры #
-        play_again = input("Хотите сыграть снова? (да/нет): ") # Предлагаем сыграть снова #
-        if play_again.lower() == 'да': # Если игрок хочет сыграть еще раз #
-            self.start_game()  # Начинаем игру заново #
-        else:
-            print("Спасибо за игру!") # Выводим сообщение #
-
-    def _determine_winner(self, player_combinations: dict) -> str:
-        """
-        Определяет победителя раунда.
-
-        :param player_combinations: Словарь комбинаций игроков.
-        :type player_combinations: dict
-        :return: Имя победителя.
-        :rtype: str
-        """
-        best_player = None # Переменная для имени лучшего игрока #
-        best_rank = 0 # Переменная для ранга лучшей комбинации #
-
-        for player, (combination, rank) in player_combinations.items(): # Проходим по каждому игроку #
-            if rank > best_rank: # Если текущий ранг больше лучшего ранга #
-                 best_rank = rank # Обновляем лучший ранг #
-                 best_player = player  # Обновляем лучшего игрока #
-        return best_player # Возвращаем лучшего игрока #
-
-if __name__ == "__main__": # Запускаем игру если скрипт запустился напрямую #
+if __name__ == "__main__":
     game = PokerGame()
     game.start_game()
 ```

@@ -44,7 +44,7 @@ from .convertors.dict import dict2ns
 
 
 def j_dumps(
-    data: Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace],
+    data: Any,
     file_path: Optional[Path] = None,
     ensure_ascii: bool = True,
     mode: str = "w",
@@ -87,17 +87,40 @@ def j_dumps(
         Returns:
             Any: Converted value.
         """
-        if isinstance(value, SimpleNamespace):
-            return {key: _convert(val) for key, val in vars(value).items()}
-        elif isinstance(value, dict):
-            return {key: _convert(val) for key, val in value.items()}
-        elif isinstance(value, list):
-            return [_convert(item) for item in value]
-        return value
+        # if isinstance(value, SimpleNamespace):
+        #     return {key: _convert(val) for key, val in vars(value).items()}
+        # elif isinstance(value, dict):
+        #     return {key: _convert(val) for key, val in value.items()}
+        # elif isinstance(value, list):
+        #     return [_convert(item) for item in value]
+        # return value
+        def _convert(value: Any) -> Any:
+            """
+            Recursively process values to handle nested structures and empty keys.
+
+            Args:
+                value (Any): Value to process.
+
+            Returns:
+                Any: Converted value.
+            """
+            # If the value has a `__dict__` attribute (e.g., SimpleNamespace or custom objects)
+            if hasattr(value, '__dict__'):
+                return {key or "": convert(val) for key, val in vars(value).items()}
+            # If the value is a dictionary-like object (has .items())
+            elif hasattr(value, 'items'):
+                return {key or "": convert(val) for key, val in value.items()}
+            # If the value is a list or other iterable
+            elif isinstance(value, list):
+                return [convert(item) for item in value]
+            return value
 
 
     # Конвертация входных данных в валидный словарь `dict` 
     data = _convert(data)
+
+
+    # ----------- ЗАПИСЬ В ФАЙЛ ----------------
 
     # если указан неверный режим записи в файл - будет установлен 'w',
     if mode not in {"w", "a+", "+a"}:     
@@ -105,7 +128,9 @@ def j_dumps(
 
     # Чтение существующих данных из файла (если файл существует и режим 'a+' или '+a')
     existing_data = {}
-    if path and path.exists() and mode in {"a+", "+a"}:
+    
+    if path and path.exists():
+       if mode in {"a+", "+a"}:
         try:
             with path.open("r", encoding="utf-8") as f:  # Чтение в режиме 'r'
                 existing_data = json.load(f)
@@ -118,29 +143,35 @@ def j_dumps(
             ...
             return 
 
-    # Обработка данных в зависимости от режима
-    if mode == "a+":
-        # Присоединение новых данных в начало существующего словаря
-        try:
-            if isinstance(data, list) and isinstance(existing_data, list):
-                existing_data = data + existing_data  # Добавляем элементы из списка в начало
-            else:
-                data.update(existing_data)
-        except Exception as ex:
-            logger.error(ex)
+        # Обработка данных в зависимости от режима
+        if mode == "a+":
+            # Присоединение новых данных в начало существующего словаря
+            try:
+                if isinstance(data, list) and isinstance(existing_data, list):
+                    data = data + existing_data  # Добавляем элементы из списка в начало
+                else:
+                    data.update(existing_data)
+                    """ :todo: а если один из них не словарь? """
+                    return True
+            except Exception as ex:
+                logger.error(ex)
+                ...
+
+        elif mode == "+a":
+            # Присоединение новых данных в конец существующего словаря
+            try:
+                if isinstance(data, list) and isinstance(existing_data, list):
+                    data = existing_data.extend(data)  # Добавляем элементы из списка в конец
+                else:
+                    data = existing_data.update(data)
+                data = existing_data
+            except Exception as ex:
+                logger.error(ex)
             ...
 
-    elif mode == "+a":
-        # Присоединение новых данных в конец существующего словаря
-        try:
-            if isinstance(data, list) and isinstance(existing_data, list):
-                existing_data.extend(data)  # Добавляем элементы из списка в конец
-            else:
-                existing_data.update(data)
-            data = existing_data
-        except Exception as ex:
-            logger.error(ex)
-            ...
+        with path.open("w", encoding="utf-8") as f:
+                        json.dump(data, f, ensure_ascii=ensure_ascii, indent=4)
+
 
     # Режим 'w' - перезаписывает файл новыми данными
     if path:
@@ -152,10 +183,11 @@ def j_dumps(
             logger.error(f"Failed to write to {path}: ",ex, exc_info=exc_info)
             ...
             return
+
+    # Не указан целевой файл. Возврат форматиронавого словаря из объекта
     else:
         return data
 
-    return data
 
 def j_loads(
     jjson: dict | SimpleNamespace | str | Path | list,

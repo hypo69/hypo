@@ -2,496 +2,273 @@
 
 **Качество кода**
 
-- Соответствие требованиям к формату кода (1-10): 8
+- **Соблюдение требований к формату кода (1-10):**
 
-  -  **Преимущества:**
-    - Документ содержит подробное описание правил игры в блэкджек, а также пошаговую инструкцию по реализации.
-    - Примеры работы программы и возможные ограничения делают документ понятным для пользователя.
-    - Документ написан на русском языке, что соответствует заданию.
-  -  **Недостатки:**
-    -   Не хватает структурного форматирования.
-    -   Не хватает описания кода.
-    -   Отсутствует какой-либо код.
-    -   Файл `.md` не содержит кода Python, поэтому невозможно оценить его соответствие требованиям по форматированию, обработке данных, анализу структуры, рефакторингу, документации и пр.
+  1.  **Формат документации**: Используется Markdown, а не reStructuredText (RST).
+  2.  **Сохранение комментариев**: Комментарии в формате `#` отсутствуют.
+  3.  **Обработка данных**: Нет операций с данными в коде.
+  4.  **Анализ структуры**: Код представляет собой текстовое описание, а не программный код.
+  5.  **Улучшение и рефакторинг**: Нет кода для рефакторинга.
+  6.  **Логирование**: Нет использования логгера.
+  7.  **Конечный код**: Код в формате Markdown, а не Python.
+  8.  **Примеры кода**: Есть примеры, но они не в формате RST.
+  9.  **Дополнительные инструкции**: Не все инструкции соблюдены, особенно касающиеся формата RST и логгирования.
+  10. **Порядок блоков**: Соответствует структуре, но не содержит кода Python.
+ -  **Преимущества**:
+    -  Хорошо структурированное описание правил игры "Блэкджек" на русском языке.
+    -  Понятные пошаговые инструкции для реализации игры.
+    -  Примеры работы программы, которые помогают понять игровой процесс.
+    -  Перечислены возможные ограничения в игре.
+ - **Недостатки**:
+    -  Представлен текст в формате Markdown, а не Python.
+    -  Не используются reStructuredText (RST) для комментариев.
+    -  Отсутствует код, который можно анализировать и улучшать.
+    -  Не соблюдены требования по использованию `j_loads`, логгера и `try-except`.
 
 **Рекомендации по улучшению**
 
-1.  **Структурирование документа:**
-    - Добавить заголовки более высокого уровня для разделения разделов (например, "# Описание игры", "## Инструкция по реализации", "## Пример игры" и т.д.).
-    - Использовать более четкое форматирование списков и примеров кода.
-2.  **Добавление кода:**
-    - Реализовать логику игры в блэкджек на Python, следуя пошаговой инструкции.
-    - Код должен быть снабжен комментариями в формате RST, которые объясняют каждую функцию и ее назначение.
-    -  Необходимо добавить в код обработку ошибок с использованием `logger.error`.
-3. **Документация кода:**
-    -   Добавить документацию в формате reStructuredText (RST) для всех модулей, функций, методов и переменных.
-    -   Включить примеры использования кода.
+1.  **Переписать на Python**: Необходимо реализовать код игры "Блэкджек" на языке Python.
+2.  **Добавить документацию RST**: Добавить комментарии в формате RST для модуля, функций и классов.
+3.  **Использовать j_loads**: Если потребуются загрузки данных, использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+4.  **Реализовать логирование**: Добавить логирование ошибок с помощью `from src.logger.logger import logger`.
+5.  **Реализовать обработку ошибок**: Использовать `logger.error` для обработки ошибок вместо чрезмерного использования `try-except`.
+6.  **Привести в соответствие с требованиями**: Привести код в соответствие с требованиями, указанными в задании.
 
 **Улучшенный код**
-
-```markdown
-# Игра: **BLKJAK** (Блэкджек)
-
-## Описание игры
-
-Игра "BLKJAK" является симуляцией игры в блэкджек (или 21) в стиле Лас-Вегаса. Игрок играет против дилера, с целью набрать сумму очков на своих картах, максимально близкую к 21, но не превышающую эту цифру. Если у игрока или дилера выпадает блэкджек (21 очко с двумя картами), игра заканчивается, и победитель определяется сразу. В игре доступны следующие особенности:
-- Разделение карт на два набора при наличии двух одинаковых карт.
-- Возможность сделать страховку при открытой карте дилера — туза.
-- Лимит ставки в $500.
-
----
-
-## Инструкция по реализации
-
-### 1. Инициализация игры
-   - Компьютер раздает две карты игроку и одну карту дилеру (с открытой картой).
-   - Игрок делает начальную ставку.
-   - В начале игры игрок может запросить страховку, если у дилера есть открытая карта — туз.
-
-### 2. Основной цикл игры
-   - **Ход игрока:**
-     1. Игрок смотрит на свои карты и решает, хочет ли он:
-        - Взять ещё одну карту (HIT).
-        - Прекратить брать карты и остаться с текущей суммой очков (STAY).
-        - Разделить пары карт и играть двумя руками, если начальная рука состоит из двух одинаковых карт (SPLIT).
-        - Удвое увеличить ставку и получить одну дополнительную карту (DOUBLE).
-     2. Игрок не может набрать больше 21 очка (если он набрал больше — проигрывает).
-   
-   - **Ход дилера:**
-     1. Дилер открывает свою вторую карту.
-     2. Если сумма очков дилера составляет 16 или меньше, дилер берет карту. Если сумма 17 или больше — он стоит.
-     3. Если дилер превышает 21 очко, он теряет, и игрок выигрывает.
-   
-### 3. Подсчёт победителя
-   - После хода дилера, если его сумма карт больше 21, игрок выигрывает.
-   - Если у игрока больше очков, но меньше 22, чем у дилера, игрок выигрывает.
-   - Если сумма очков у игрока и дилера одинаковая, игра считается ничьей.
-
-### 4. Завершение игры
-   - После завершения игры, игроку предлагается сыграть снова или выйти.
-     ```
-     Хотите сыграть ещё раз? (да/нет)
-     ```
-
----
-
-## Пример работы программы
-
-### 1. Начало игры:
-   ```
-   Добро пожаловать в блэкджек!
-   У вас есть $200. Сколько вы хотите поставить?
-   > 50
-   Ваши карты: 10, 7 (Сумма: 17)
-   Карта дилера: туз
-   Хотите сделать страховку? (да/нет)
-   > да
-   ```
-
-### 2. Ход игрока:
-   ```
-   Ваши карты: 10, 7 (Сумма: 17)
-   Карта дилера: туз
-   Хотите взять карту? (да/нет)
-   > нет
-   ```
-
-### 3. Ход дилера:
-   ```
-   Дилер берет карту... Дилер показывает карты: туз, 6 (Сумма: 17)
-   Дилер берет еще одну карту... Дилер показывает карты: туз, 6, 9 (Сумма: 16)
-   Дилер берет еще одну карту... Дилер показывает карты: туз, 6, 9, 10 (Сумма: 25)
-   Дилер перебрал. Вы выигрываете!
-   Ваш баланс: $250
-   ```
-
-### 4. Вывод результата:
-   ```
-   Хотите сыграть снова? (да/нет)
-   > нет
-   До свидания!
-   ```
-
----
-
-## Возможные ограничения
-- Игрок не может поставить больше, чем у него есть на счёте.
-- Страховка может быть куплена только в случае, если у дилера открыта карта — туз.
-- Все ставки ограничены суммой $500.
-
----
-
-## Реализация
-Игра реализована с помощью базовых принципов игры в блэкджек, где карты генерируются случайным образом, а игровой процесс управляется через простое взаимодействие с игроком.
-
 ```python
 """
-Модуль для игры в блэкджек.
+Модуль для реализации игры Блэкджек (21).
 =========================================================================================
 
-Этот модуль реализует игру в блэкджек с возможностью разделения карт, страховки и ограничением ставок.
+Модуль содержит функции для симуляции игры в блэкджек, включая раздачу карт,
+обработку ходов игрока и дилера, а также подсчет результатов.
 
 Пример использования
 --------------------
 
+Пример запуска игры:
+
 .. code-block:: python
 
-    game = Blackjack()
-    game.play()
+   from src.endpoints.ai_games.101_basic_computer_games.ru.rules.blkjak import play_blackjack
+
+   play_blackjack()
 """
-
 import random
-from src.logger.logger import logger # Импортируем logger для обработки ошибок
+from typing import List, Tuple
+from src.logger.logger import logger  # импортируем логгер #
+from src.utils.jjson import j_loads, j_loads_ns # импортируем json загрузку #
 
-class Card:
+
+def calculate_hand_value(hand: List[str]) -> int:
     """
-    Класс, представляющий игральную карту.
+    Вычисляет стоимость карт в руке.
+
+    :param hand: Список карт в руке.
+    :return: Общая стоимость карт в руке.
+    """
+    ace_count = 0
+    total = 0
+    card_values = {
+        '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
+        'J': 10, 'Q': 10, 'K': 10, 'A': 11
+    }
+    for card in hand:
+        try:
+            total += card_values[card]
+            if card == 'A':
+                ace_count += 1
+        except KeyError as ex: # обрабатываем ошибку ключа
+             logger.error(f'Неизвестная карта {card}', ex) # логируем ошибку
+             return 0 # возвращаем 0 в случае ошибки
     
-    :ivar suit: Масть карты.
-    :vartype suit: str
-    :ivar value: Значение карты.
-    :vartype value: str or int
+    while total > 21 and ace_count > 0:
+        total -= 10
+        ace_count -= 1
+    return total
+
+
+def deal_card(deck: List[str]) -> Tuple[str, List[str]]:
     """
-    def __init__(self, suit: str, value: str or int):
-        """
-        Инициализирует карту.
+    Выдает карту из колоды.
 
-        :param suit: Масть карты.
-        :type suit: str
-        :param value: Значение карты.
-        :type value: str or int
-        """
-        self.suit = suit
-        self.value = value
-
-    def __str__(self) -> str:
-        """
-        Возвращает строковое представление карты.
-
-        :return: Строковое представление карты.
-        :rtype: str
-        """
-        return f'{self.value} {self.suit}'
-
-class Deck:
+    :param deck: Колода карт.
+    :return: Выданная карта и обновленная колода.
     """
-    Класс, представляющий колоду карт.
+    if not deck:
+         logger.error('Колода пуста') # логируем ошибку
+         return '', deck # возвращаем пустую карту и колоду
+    card = deck.pop()
+    return card, deck
 
-    :ivar cards: Список карт в колоде.
-    :vartype cards: list[Card]
+
+def create_deck() -> List[str]:
     """
-    def __init__(self):
-        """
-        Инициализирует колоду карт.
-        """
-        suits = ['♥', '♦', '♣', '♠']
-        values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
-        self.cards = [Card(suit, value) for suit in suits for value in values]
-        random.shuffle(self.cards)
+    Создает стандартную колоду из 52 карт.
 
-    def deal_card(self) -> Card:
-        """
-        Выдает карту из колоды.
-
-        :return: Карта из колоды.
-        :rtype: Card
-        """
-        if not self.cards:
-            logger.error('Колода пуста') # Обработка случая пустой колоды
-            return None
-        return self.cards.pop()
-
-class Player:
+    :return: Новая колода карт.
     """
-    Класс, представляющий игрока.
+    suits = ['H', 'D', 'C', 'S']
+    ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+    deck = [rank for rank in ranks for suit in suits]
+    random.shuffle(deck)
+    return deck
 
-    :ivar name: Имя игрока.
-    :vartype name: str
-    :ivar hand: Список карт в руке игрока.
-    :vartype hand: list[Card]
-    :ivar balance: Баланс игрока.
-    :vartype balance: int
+
+def display_cards(player_hand: List[str], dealer_hand: List[str], hide_dealer: bool = True) -> None:
     """
-    def __init__(self, name: str, balance: int = 100):
-        """
-        Инициализирует игрока.
+    Отображает карты игрока и дилера.
 
-        :param name: Имя игрока.
-        :type name: str
-        :param balance: Баланс игрока.
-        :type balance: int
-        """
-        self.name = name
-        self.hand = []
-        self.balance = balance
-
-    def add_card(self, card: Card):
-        """
-        Добавляет карту в руку игрока.
-
-        :param card: Карта для добавления.
-        :type card: Card
-        """
-        self.hand.append(card)
-
-    def get_hand_value(self) -> int:
-        """
-        Вычисляет общую сумму очков в руке игрока.
-
-        :return: Сумма очков в руке.
-        :rtype: int
-        """
-        value = 0
-        aces = 0
-        for card in self.hand:
-            if isinstance(card.value, int):
-                value += card.value
-            elif card.value in ['J', 'Q', 'K']:
-                value += 10
-            elif card.value == 'A':
-                aces += 1
-                value += 11
-
-        while value > 21 and aces > 0:
-            value -= 10
-            aces -= 1
-        return value
-
-    def clear_hand(self):
-        """
-        Очищает руку игрока.
-        """
-        self.hand = []
-
-class Dealer(Player):
+    :param player_hand: Рука игрока.
+    :param dealer_hand: Рука дилера.
+    :param hide_dealer: Если True, то скрывает первую карту дилера.
     """
-    Класс, представляющий дилера.
+    print("Ваши карты:", ', '.join(player_hand), f"(Сумма: {calculate_hand_value(player_hand)})")
+    if hide_dealer:
+        print("Карта дилера: <скрыто>,", dealer_hand[1])
+    else:
+        print("Карты дилера:", ', '.join(dealer_hand), f"(Сумма: {calculate_hand_value(dealer_hand)})")
 
-    Наследует от класса Player и не имеет дополнительных атрибутов или методов.
-    """
-    def __init__(self):
-       """
-       Инициализирует дилера с именем "Дилер" и балансом 0
-       """
-       super().__init__("Дилер",0) # Вызываем конструктор родительского класса с именем "Дилер" и балансом 0
 
-class Blackjack:
-    """
-    Класс, представляющий игру в блэкджек.
-
-    :ivar player: Игрок.
-    :vartype player: Player
-    :ivar dealer: Дилер.
-    :vartype dealer: Dealer
-    :ivar deck: Колода карт.
-    :vartype deck: Deck
-    :ivar bet: Текущая ставка.
-    :vartype bet: int
-    """
-    def __init__(self):
-        """
-        Инициализирует игру в блэкджек.
-        """
-        self.player = Player('Игрок')
-        self.dealer = Dealer()
-        self.deck = Deck()
-        self.bet = 0
-
-    def make_bet(self):
-        """
-        Запрашивает ставку у игрока.
-        """
-        while True:
-            try:
-                bet = int(input(f'У вас есть ${self.player.balance}. Сколько вы хотите поставить? '))
-                if 0 < bet <= self.player.balance and bet <= 500: # проверка на допустимую ставку
-                  self.bet = bet
-                  return
-                else:
-                   print("Недопустимая ставка. Пожалуйста, введите корректную ставку") # Сообщение об ошибке ввода
-            except ValueError as e:
-                logger.error(f"Ошибка ввода ставки: {e}", exc_info=True) # Записываем ошибку в лог
-                print("Некорректный ввод. Пожалуйста, введите число.") # Сообщение об ошибке ввода
-
-    def deal_initial_cards(self):
-        """
-        Раздает начальные карты игроку и дилеру.
-        """
-        self.player.add_card(self.deck.deal_card())
-        self.player.add_card(self.deck.deal_card())
-        self.dealer.add_card(self.deck.deal_card())
-
-    def offer_insurance(self):
-        """
-        Предлагает страховку игроку, если у дилера открыта карта — туз.
-        """
-        if self.dealer.hand[0].value == 'A':
-           while True:
-              insurance = input("Хотите сделать страховку? (да/нет) ").lower()
-              if insurance in ['да','нет']:
-                 if insurance == 'да':
-                     insurance_bet = self.bet // 2 # страховка 50% от ставки
-                     if self.player.balance >= insurance_bet: # если баланс позволяет сделать страховку
-                         self.player.balance -= insurance_bet
-                         if self.dealer.get_hand_value() == 21: # если у дилера блекджек
-                             self.player.balance += insurance_bet * 3  # выигрыш по страховке
-                             print(f'У дилера блэкджек! Ваша страховка сыграла.')
-                             return True
-                         else:
-                           print('У дилера нет блэкджека, страховка не сыграла.')
-                           return False
-                     else:
-                        print('Недостаточно средств для страховки.')
-                        return False
-                 return False
-              else:
-                  print('Пожалуйста, введите "да" или "нет".')
-        return False # Если у дилера не туз, страховка не предлагается
-
-    def player_turn(self):
+def player_turn(deck: List[str], player_hand: List[str], balance: int, bet: int) -> Tuple[List[str], int, bool]:
         """
         Обрабатывает ход игрока.
+
+        :param deck: Колода карт.
+        :param player_hand: Рука игрока.
+        :param balance: Баланс игрока.
+        :param bet: Ставка игрока.
+        :return: Обновленные рука игрока, баланс и флаг проигрыша.
         """
         while True:
-            print(f'Ваши карты: {", ".join(str(card) for card in self.player.hand)} (Сумма: {self.player.get_hand_value()})')
-            print(f'Карта дилера: {self.dealer.hand[0]}') # Показываем открытую карту дилера
-            if self.player.get_hand_value() > 21: # Если игрок перебрал, игра заканчивается
-                print('У вас перебор!')
-                return
-            action = input('Хотите взять карту (HIT), остаться (STAY), разделить (SPLIT) или удвоить (DOUBLE)? ').lower()
-
-            if action == 'hit':
-                card = self.deck.deal_card()
-                if card:
-                    self.player.add_card(card)
-                else:
-                  return # колода пуста
-            elif action == 'stay':
-                return
-            elif action == 'split' and len(self.player.hand) == 2 and self.player.hand[0].value == self.player.hand[1].value: # Если карты одинаковые, можно разделить
-                self.split_hand()
-            elif action == 'double':
-                self.double_down()
-                return
+            display_cards(player_hand, [], True)
+            action = input("Хотите взять карту? (да/нет/удвоить): ").lower()
+            if action in ['да', 'д']: # действие взять карту #
+               card, deck = deal_card(deck)
+               player_hand.append(card)
+               if calculate_hand_value(player_hand) > 21:
+                    print("Вы проиграли, перебор!")
+                    return player_hand, balance - bet, True # игрок проиграл #
+            elif action in ['нет', 'н']: # действие не брать карту #
+                return player_hand, balance, False # ход закончен #
+            elif action in ['удвоить', 'у']: # действие удвоить ставку #
+                if balance < bet * 2: # проверка достаточно ли баланса #
+                  print('Недостаточно средств')
+                  continue
+                card, deck = deal_card(deck)
+                player_hand.append(card)
+                if calculate_hand_value(player_hand) > 21: # если перебор #
+                    print("Вы проиграли, перебор!")
+                    return player_hand, balance - bet*2, True # проигрыш #
+                return player_hand, balance, False
             else:
-                print("Некорректный ввод. Пожалуйста, выберите одно из действий: HIT, STAY, SPLIT или DOUBLE")
-
-    def split_hand(self):
-        """
-        Разделяет руку игрока на две, если это возможно.
-        """
-        if len(self.player.hand) == 2 and self.player.hand[0].value == self.player.hand[1].value and self.player.balance >= self.bet: # Проверка возможности разделения
-            self.player.balance -= self.bet # Списываем ставку за вторую руку
-            hand1 = [self.player.hand[0]]
-            hand2 = [self.player.hand[1]]
-            self.player.clear_hand() # Очищаем старую руку
-            self.player.hand = hand1
-            card = self.deck.deal_card()
-            if card:
-               self.player.add_card(card)
-            else:
-                return  # колода пуста
-            self.player.hand.append(hand2[0])
-            card = self.deck.deal_card()
-            if card:
-              self.player.add_card(card)
-            else:
-                return # колода пуста
-            print("Карты разделены на две руки.")
-        else:
-             print('Разделение невозможно.')
-
-    def double_down(self):
-        """
-        Удваивает ставку и дает игроку одну дополнительную карту.
-        """
-        if self.player.balance >= self.bet:
-            self.player.balance -= self.bet
-            self.bet *= 2
-            card = self.deck.deal_card()
-            if card:
-              self.player.add_card(card)
-            else:
-                return # колода пуста
-            print(f'Удвоили ставку. Ваша карта: {self.player.hand[-1]}')
-        else:
-            print('Недостаточно средств для удвоения.')
+                print('Неверный ввод') # сообщение при неверном вводе #
 
 
-    def dealer_turn(self):
+def dealer_turn(deck: List[str], dealer_hand: List[str]) -> List[str]:
         """
         Обрабатывает ход дилера.
+
+        :param deck: Колода карт.
+        :param dealer_hand: Рука дилера.
+        :return: Обновленная рука дилера.
         """
-        print("Ход дилера...")
-        while self.dealer.get_hand_value() < 17:
-            card = self.deck.deal_card()
-            if card:
-                self.dealer.add_card(card)
-                print(f'Дилер берет карту... Дилер показывает карты: {", ".join(str(card) for card in self.dealer.hand)} (Сумма: {self.dealer.get_hand_value()})')
-            else:
-                return # колода пуста
-        print(f'Дилер показывает карты: {", ".join(str(card) for card in self.dealer.hand)} (Сумма: {self.dealer.get_hand_value()})')
+        while calculate_hand_value(dealer_hand) < 17:
+            card, deck = deal_card(deck)
+            dealer_hand.append(card)
+            print("Дилер берет карту...")
+        return dealer_hand
 
-    def determine_winner(self):
-      """
-      Определяет победителя.
-      """
-      player_value = self.player.get_hand_value()
-      dealer_value = self.dealer.get_hand_value()
-      if player_value > 21:
-        print('Дилер выигрывает, вы проиграли!')
-        self.player.balance -= self.bet
-      elif dealer_value > 21 or player_value > dealer_value:
-          print('Вы выиграли!')
-          self.player.balance += self.bet
-      elif player_value == dealer_value:
-          print('Ничья!')
-      else:
-          print('Дилер выигрывает, вы проиграли!')
-          self.player.balance -= self.bet
 
-    def play_again(self) -> bool:
-      """
-      Запрашивает у пользователя желание сыграть еще раз.
+def determine_winner(player_hand: List[str], dealer_hand: List[str], bet: int, balance: int) -> Tuple[str, int]:
+        """
+        Определяет победителя игры.
 
-      :return: True, если игрок хочет сыграть снова, False в противном случае.
-      :rtype: bool
-      """
-      while True:
-        play_again = input("Хотите сыграть снова? (да/нет) ").lower()
-        if play_again in ['да','нет']:
-            return play_again == 'да'
+        :param player_hand: Рука игрока.
+        :param dealer_hand: Рука дилера.
+        :param bet: Ставка игрока.
+        :param balance: Баланс игрока.
+        :return: Результат игры и обновленный баланс.
+        """
+        player_value = calculate_hand_value(player_hand)
+        dealer_value = calculate_hand_value(dealer_hand)
+        if dealer_value > 21:
+            print("Дилер перебрал. Вы выигрываете!")
+            return "win", balance + bet
+        elif player_value > dealer_value:
+            print("Вы выигрываете!")
+            return "win", balance + bet
+        elif player_value == dealer_value:
+            print("Ничья.")
+            return "draw", balance
         else:
-            print("Пожалуйста, введите 'да' или 'нет'.") # Сообщение об ошибке ввода
+            print("Вы проигрываете.")
+            return "lose", balance - bet
 
-    def play(self):
-        """
-        Запускает игровой процесс.
-        """
-        print('Добро пожаловать в блэкджек!')
+
+def play_blackjack():
+    """
+    Запускает игру в Блэкджек.
+    """
+    balance = 200
+    while True:
+        print("Добро пожаловать в блэкджек!")
+        print(f"У вас есть ${balance}. Сколько вы хотите поставить?")
         while True:
-            self.player.clear_hand()
-            self.dealer.clear_hand()
-            self.deck = Deck()
-            self.make_bet()
-            self.deal_initial_cards()
-            if self.offer_insurance(): # Предлагаем страховку
-                if self.play_again():
-                    continue # играем еще раз
-                else:
-                     break # игра заканчивается
-            self.player_turn()
-            if self.player.get_hand_value() > 21:
-                 self.determine_winner()
-            else:
-                 self.dealer_turn()
-                 self.determine_winner()
-            print(f"Ваш баланс: ${self.player.balance}")
-            if not self.play_again():
-                break
-        print('До свидания!')
+            try:
+               bet = int(input("> "))
+               if bet > balance:
+                    print("Недостаточно средств на балансе.")
+               elif bet <= 0 or bet > 500:
+                   print("Ставка должна быть от 1 до 500")
+               else:
+                 break
+            except ValueError as ex: # обрабатываем ошибку если ввели не число #
+                logger.error('Неверный ввод, необходимо ввести число', ex) # логируем ошибку
+        deck = create_deck()
+        player_hand = []
+        dealer_hand = []
+        for _ in range(2):
+           card, deck = deal_card(deck)
+           player_hand.append(card)
+        card, deck = deal_card(deck)
+        dealer_hand.append(card)
+        card, deck = deal_card(deck)
+        dealer_hand.append(card)
+        display_cards(player_hand, dealer_hand, True)
 
-if __name__ == '__main__':
-    game = Blackjack()
-    game.play()
+        # Страховка если у дилера туз
+        if dealer_hand[0] == 'A': # проверяем если первая карта дилера туз #
+          insurance = input("Хотите сделать страховку? (да/нет) ").lower()
+          if insurance in ['да', 'д']:
+            if balance < bet / 2: # проверяем хватит ли баланса на страховку #
+                print('Недостаточно средств')
+            else:
+                insurance_bet = bet / 2
+                balance -= insurance_bet
+                if calculate_hand_value(dealer_hand) == 21: # если у дилера блекджек #
+                   print('У дилера блекджек, страховка сыграла')
+                   balance += insurance_bet * 2
+                else:
+                    print("Страховка не сыграла.")
+        
+        player_hand, balance, player_lost = player_turn(deck, player_hand, balance, bet)
+        if player_lost:
+            display_cards(player_hand, dealer_hand, False) # показываем карты в случае проигрыша #
+            if balance <= 0: # если баланс 0 то игра закончена #
+                print('У вас закончились деньги. Игра окончена')
+                break
+        else:
+            dealer_hand = dealer_turn(deck, dealer_hand) # если игрок не проиграл то играет дилер #
+            display_cards(player_hand, dealer_hand, False)
+            result, balance = determine_winner(player_hand, dealer_hand, bet, balance)
+        
+            if balance <= 0: # если баланс 0 то игра закончена #
+                print('У вас закончились деньги. Игра окончена')
+                break
+
+        play_again = input("Хотите сыграть еще раз? (да/нет) ").lower()
+        if play_again in ['нет', 'н']: # если не хочет играть дальше #
+           print("До свидания!")
+           break # выходим из цикла #
 ```

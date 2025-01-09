@@ -1,241 +1,273 @@
-# Анализ кода модуля `9_basket.ru.md`
+# Анализ кода модуля
 
-**Качество кода**
+## Качество кода
+**Соответствие требованиям к формату кода (1-10):**
 
-- **Соответствие требованиям к формату кода (1-10)**:
-    -   **Преимущества**:
-        -   Документ содержит четкое описание правил игры "Баскетбол" и инструкций для ИИ.
-        -   Присутствует пример диалога, демонстрирующий игровой процесс.
-    -   **Недостатки**:
-        -   Формат документа Markdown, а не reStructuredText (RST), что не соответствует требованиям.
-        -   Отсутствуют docstring для функций, классов и модулей в формате RST.
-        -   Нет явного кода на Python, что затрудняет проверку соответствия стандартам.
-        -   Не используется `j_loads` или `j_loads_ns` для загрузки данных.
-        -   Отсутствует обработка ошибок через `logger.error`.
-        -   Не проводится анализ кода и его улучшение.
-        -   Нет примеров кода, оформленных как в инструкциях.
+- **Преимущества:**
+    - Описание игры "Basketball" представлено в структурированном виде, что облегчает понимание правил и процесса игры.
+    - Присутствует описание основных правил, инструкций для ИИ, примеров диалогов и примечаний.
+    - Описания достаточно подробные для реализации игры.
 
-**Рекомендации по улучшению**
+- **Недостатки:**
+    - Код не представлен. Это просто текстовое описание, а не исполняемый код.
+    - Отсутствует работа с `reStructuredText (RST)`, как указано в требованиях.
+    - Нет обработки ошибок.
+    - Нет разделения на модули, классы или функции.
+    - Нет описаний функций, методов и переменных в формате RST.
 
-1.  **Изменить формат документа**: Перевести документ из Markdown в reStructuredText (RST).
-2.  **Добавить код на Python**:  Необходимо добавить реализацию игры на Python, соответствующую инструкциям.
-3.  **Добавить docstring**: Добавить docstring для всех функций, классов и модулей в формате RST.
-4.  **Использовать `j_loads` или `j_loads_ns`**: При загрузке данных использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-5.  **Обработка ошибок**: Использовать `logger.error` для обработки ошибок.
-6.  **Формат кода**: Привести код к единому стандарту, соответствующему PEP 8.
-7.  **Примеры кода**: Добавить примеры кода с использованием RST для комментариев и возможных улучшений в формате `TODO`.
-8.  **Логирование**: Использовать `from src.logger.logger import logger` для логирования ошибок.
-9.  **Структурирование**: Разбить код на модули и функции для более ясной структуры.
+## Рекомендации по улучшению
+1. **Реализация кода:**
+    - Необходимо реализовать данный текст в виде кода на Python, следуя принципам объектно-ориентированного программирования.
+    - Использовать классы для представления игровых сущностей (игроки, команды, игра).
+    - Использовать функции для выполнения конкретных игровых действий (бросок, защита, обновление счета).
+    - Использовать `src.utils.jjson.j_loads` или `j_loads_ns` при необходимости.
+2. **Форматирование документации:**
+    - Оформить все docstring в формате RST.
+    - Добавить docstring для каждого модуля, класса, функции и метода.
+    - Следовать стандартам оформления docstring в Python.
+3. **Обработка ошибок:**
+    - Добавить обработку ошибок через `try-except` и логирование через `from src.logger.logger import logger`.
+    - Избегать чрезмерного использования `try-except`, использовать логирование ошибок.
+4. **Структурирование кода:**
+    - Разделить код на логические блоки.
+    - Добавить необходимые импорты.
+5. **Примеры:**
+   - Добавить примеры кода в docstring.
+   - Добавить TODO, если необходимы будущие улучшения.
 
-**Улучшенный код**
+## Улучшенный код
 ```python
 """
-Модуль для реализации игры "Баскетбол"
+Модуль для реализации игры "Basketball".
 =========================================================================================
 
-Этот модуль содержит функции для инициализации, управления и завершения игры "Баскетбол".
-Модель имитирует игровой процесс, где игрок выбирает действия для атаки и защиты.
+Этот модуль содержит классы и функции, необходимые для симуляции игры в баскетбол,
+где игрок управляет командой и делает стратегические решения по броскам и защите.
 
 Пример использования
 --------------------
 
+Пример запуска игры:
+
 .. code-block:: python
 
-    play_basketball()
+    game = BasketballGame()
+    game.play()
 """
 
-import random
-from src.logger.logger import logger # Импорт модуля logger #
-from src.utils.jjson import j_loads # импорт j_loads для загрузки json
+import random # импорт модуля random
+from enum import Enum  # импорт Enum из модуля enum
+from src.logger.logger import logger  # импорт logger
 
-def initialize_game():
+
+class ShotType(Enum):
     """
-    Инициализирует начальное состояние игры.
+    Перечисление возможных типов бросков.
 
-    :return: Словарь, представляющий состояние игры (счет, текущая четверть, команда).
-    :rtype: dict
+    :cvar LONG: Длинный бросок.
+    :cvar MEDIUM: Средний бросок.
+    :cvar REBOUND: Подбор.
     """
-    # Инициализация начальных параметров игры
-    game_state = {
-        'team_score': 0,
-        'opponent_score': 0,
-        'quarter': 1,
-        'attacking_team': 'player'
-    }
-    logger.info('Игра инициализирована')  # Использование logger для логирования
-    return game_state
+    LONG = 1
+    MEDIUM = 2
+    REBOUND = 3
 
 
-def get_player_action(team_type: str) -> int:
+class DefenseType(Enum):
     """
-    Запрашивает у игрока выбор действия в зависимости от фазы игры (атака/защита).
+    Перечисление возможных типов защиты.
 
-    :param team_type: Тип команды ('attack' или 'defense').
-    :type team_type: str
-    :return: Выбранное действие (число).
-    :rtype: int
+    :cvar ZONE: Зональная защита.
+    :cvar MAN_TO_MAN: Персональная защита.
+    :cvar PRESSING: Прессинг.
     """
-    # Запрос действия игрока в зависимости от фазы игры
-    while True:
-        try:
-            if team_type == 'attack':
-                action = int(input('Выберите тип броска (1 - длинный бросок, 2 - средний бросок, 3 - подбор): '))
-                if 1 <= action <= 3:
-                    return action
-            elif team_type == 'defense':
-                 action = int(input('Выберите тип защиты (1 - зона, 2 - человек на человеке, 3 - прессинг): '))
-                 if 1 <= action <= 3:
-                     return action
+    ZONE = 1
+    MAN_TO_MAN = 2
+    PRESSING = 3
+
+
+class Team:
+    """
+    Класс для представления команды.
+
+    :param name: Имя команды.
+    :vartype name: str
+    :ivar name: Имя команды.
+    :ivar score: Счет команды.
+    :vartype score: int
+    """
+    def __init__(self, name: str):
+        """
+        Инициализирует объект команды.
+
+        :param name: Имя команды.
+        """
+        self.name = name
+        self.score = 0
+
+    def add_points(self, points: int):
+        """
+        Добавляет очки к счету команды.
+
+        :param points: Количество очков для добавления.
+        :vartype points: int
+        """
+        self.score += points
+
+
+class BasketballGame:
+    """
+    Класс для представления игры "Basketball".
+
+    :ivar team1: Первая команда.
+    :vartype team1: Team
+    :ivar team2: Вторая команда.
+    :vartype team2: Team
+    :ivar current_quarter: Текущая четверть.
+    :vartype current_quarter: int
+    :ivar attacking_team: Команда, которая в данный момент атакует.
+    :vartype attacking_team: Team
+    :ivar defending_team: Команда, которая в данный момент защищается.
+    :vartype defending_team: Team
+    """
+    def __init__(self):
+        """
+        Инициализирует объект игры.
+        """
+        self.team1 = Team("Команда 1")
+        self.team2 = Team("Команда 2")
+        self.current_quarter = 1
+        self.attacking_team = self.team1
+        self.defending_team = self.team2
+
+    def _switch_teams(self):
+        """
+        Меняет команды местами.
+        """
+        self.attacking_team, self.defending_team = self.defending_team, self.attacking_team
+
+    def _get_player_choice(self, options: Enum, prompt: str) -> Enum:
+        """
+        Получает ввод от игрока и проверяет его корректность.
+
+        :param options: Перечисление допустимых вариантов.
+        :vartype options: Enum
+        :param prompt: Сообщение для вывода игроку.
+        :vartype prompt: str
+        :return: Выбор игрока, если ввод корректный, иначе None.
+        :rtype: Enum | None
+        """
+        while True:
+            try:
+                choice = int(input(prompt))
+                if any(option.value == choice for option in options):
+                    return options(choice)
+                else:
+                    logger.error(f"Неверный ввод. Пожалуйста, выберите из {', '.join(str(option.value) for option in options)}.")
+            except ValueError as ex:
+                logger.error('Ошибка ввода, введите число.', exc_info=ex)
+
+    def _determine_shot_result(self, shot_type: ShotType) -> int:
+        """
+        Определяет результат броска на основе выбранного типа и случайного числа.
+
+        :param shot_type: Тип броска.
+        :vartype shot_type: ShotType
+        :return: Количество полученных очков или 0, если промах.
+        :rtype: int
+        """
+        result = random.random()
+        if shot_type == ShotType.LONG:
+            if result > 0.3:
+                return 3
             else:
-               logger.error(f"Неверный тип команды: {team_type}") #логирование некорректного типа команды
-               return None
-        except ValueError:
-             logger.error('Некорректный ввод, попробуйте снова.')#логирование ошибки ввода
-             print('Некорректный ввод, попробуйте снова.')
-
-
-def determine_result(action: int, team_type: str) -> dict:
-    """
-     Определяет результат действия игрока на основе случайного числа и типа команды (атака/защита).
-     Логика расчета очков упрощена для примера.
-
-    :param action: Выбранное действие игрока.
-    :type action: int
-    :param team_type: Тип команды ('attack' или 'defense').
-    :type team_type: str
-    :return: Словарь с результатом действия (сообщение, очки).
-    :rtype: dict
-    """
-    # Определение результата действия на основе случайного числа и типа действия
-    result = {'message': '', 'points': 0}
-
-    if team_type == 'attack':
-       if action == 1:
-           if random.random() > 0.3:
-             result['message'] = 'Длинный бросок! Вы заработали три очка.'
-             result['points'] = 3
-           else:
-             result['message'] = 'Длинный бросок! Промах.'
-       elif action == 2:
-           if random.random() > 0.2:
-              result['message'] = 'Средний бросок! Вы заработали два очка.'
-              result['points'] = 2
-           else:
-               result['message'] = 'Средний бросок! Промах.'
-       elif action == 3:
-            if random.random() > 0.1:
-                result['message'] = 'Удачный подбор! Вы заработали два очка.'
-                result['points'] = 2
+                return 0
+        elif shot_type == ShotType.MEDIUM:
+            if result > 0.2:
+                return 2
             else:
-                result['message'] = 'Подбор! Промах.'
-    elif team_type == 'defense':
-       if action == 1:
-            if random.random() > 0.4:
-                result['message'] = 'Зона! Противник промахнулся.'
+                return 0
+        elif shot_type == ShotType.REBOUND:
+            if result > 0.4:
+                return 2
             else:
-                result['message'] = 'Зона! Противник забил.'
-       elif action == 2:
-           if random.random() > 0.5:
-             result['message'] = 'Человек на человеке! Перехват.'
-           else:
-             result['message'] = 'Человек на человеке! Противник забил.'
-       elif action == 3:
-            if random.random() > 0.3:
-                result['message'] = 'Прессинг! Противник потерял мяч.'
+                return 0
+        return 0
+
+    def _determine_defense_result(self, defense_type: DefenseType) -> bool:
+         """
+         Определяет результат защиты на основе выбранного типа и случайного числа.
+
+         :param defense_type: Тип защиты.
+         :vartype defense_type: DefenseType
+         :return: True, если защита успешна, False в противном случае.
+         :rtype: bool
+         """
+         result = random.random()
+         if defense_type == DefenseType.ZONE:
+             return result > 0.4
+         elif defense_type == DefenseType.MAN_TO_MAN:
+             return result > 0.3
+         elif defense_type == DefenseType.PRESSING:
+             return result > 0.2
+         return False
+
+    def _play_quarter(self):
+        """
+        Проводит одну четверть игры.
+        """
+        print(f"Начало четверти {self.current_quarter}. Команда {self.attacking_team.name} атакует.")
+        
+        shot_choice = self._get_player_choice(
+            ShotType,
+            "Выберите тип броска (1 - длинный бросок, 2 - средний бросок, 3 - подбор): "
+        )
+        if shot_choice:
+            points = self._determine_shot_result(shot_choice)
+            self.attacking_team.add_points(points)
+            if points > 0:
+                print(f"{shot_choice.name}! Команда заработала {points} очкa(ов). Счет: {self.team1.score}-{self.team2.score}.")
             else:
-                result['message'] = 'Прессинг! Противник забил.'
-    else:
-         logger.error(f"Неверный тип команды: {team_type}")#логирование некорректного типа команды
-         return None
-    return result
+                print(f"{shot_choice.name}! Промах. Счет: {self.team1.score}-{self.team2.score}.")
 
+        print(f"Команда {self.defending_team.name} защищается.")
+        
+        defense_choice = self._get_player_choice(
+            DefenseType,
+             "Выберите тип защиты (1 - зона, 2 - человек на человеке, 3 - прессинг): "
+         )
+        if defense_choice:
+            defense_success = self._determine_defense_result(defense_choice)
+            if defense_success:
+                print(f"{defense_choice.name}! Защита успешна.")
+            else:
+                 print(f"{defense_choice.name}! Защита не удалась.")
+        
+        self._switch_teams()
 
-def update_score(game_state: dict, result: dict, team_type: str) -> None:
-    """
-    Обновляет счет игры на основе результата текущего хода.
-    
-    :param game_state: Текущее состояние игры.
-    :type game_state: dict
-    :param result: Результат текущего действия.
-    :type result: dict
-    :param team_type: Тип команды, которая выполнила действие.
-    :type team_type: str
-    """
-    # Обновление счета в зависимости от типа команды
-    if team_type == 'attack':
-        game_state['team_score'] += result['points']
-    elif team_type == 'defense':
-        if result['points'] > 0: #Если команда защиты пропустила, увеличиваем счет противника
-            game_state['opponent_score'] += result['points']
-    logger.debug(f"Счет обновлен: {game_state['team_score']}-{game_state['opponent_score']}") # логирование обновления счета
+    def play(self):
+        """
+        Запускает игру.
+        """
+        while self.current_quarter <= 4:
+            self._play_quarter()
+            self.current_quarter += 1
+        self._end_game()
 
-def switch_teams(current_team: str) -> str:
-    """
-    Переключает команду, которая атакует или защищается.
-
-    :param current_team: Текущая команда ('player' или 'opponent').
-    :type current_team: str
-    :return: Следующая команда.
-    :rtype: str
-    """
-    # Переключение команд между атакой и защитой
-    if current_team == 'player':
-         return 'opponent'
-    else:
-        return 'player'
-
-def play_basketball():
-    """
-    Основная функция для запуска игры "Баскетбол".
-    Использует другие функции для обработки ходов игры и подсчета очков.
-    """
-    # Запуск игры и ее основной цикл
-    game_state = initialize_game()
-    while game_state['quarter'] <= 4:
-        print(f'Начало четверти {game_state["quarter"]}.')
-        if game_state['attacking_team'] == 'player':
-            print('Ваша команда атакует.')
-            action = get_player_action('attack') #получаем действие игрока, если он атакует
-            if action is None:
-                continue # если действие не корректно, переходим к началу цикла
-
-            result = determine_result(action, 'attack')
-            print(result['message'])
-            update_score(game_state, result, 'attack')
-            
-            game_state['attacking_team'] = switch_teams(game_state['attacking_team']) #переключаем команду после действия
-            print('Теперь ваша команда защищается.')
-            action = get_player_action('defense') #получаем действие игрока, если он защищается
-            if action is None:
-                 continue # если действие не корректно, переходим к началу цикла
-            result = determine_result(action, 'defense')
-            print(result['message'])
-            update_score(game_state,result,'defense')
-            game_state['attacking_team'] = switch_teams(game_state['attacking_team'])
+    def _end_game(self):
+        """
+        Завершает игру и объявляет победителя.
+        """
+        print("Игра завершена.")
+        if self.team1.score > self.team2.score:
+            print(f"Команда {self.team1.name} победила со счетом {self.team1.score}-{self.team2.score}.")
+        elif self.team2.score > self.team1.score:
+             print(f"Команда {self.team2.name} победила со счетом {self.team2.score}-{self.team1.score}.")
         else:
-             print('Команда противника атакует.') #TODO: Добавить логику ИИ для выбора действия команды противника
-             action = random.randint(1,3)
-             result = determine_result(action, 'attack')
-             print(result['message'])
-             update_score(game_state,result,'defense')
-             game_state['attacking_team'] = switch_teams(game_state['attacking_team'])
-             print('Теперь команда противника защищается.') #TODO: Добавить логику ИИ для выбора действия команды противника
-             action = random.randint(1,3)
-             result = determine_result(action,'defense')
-             print(result['message'])
-             update_score(game_state, result, 'attack')
-             game_state['attacking_team'] = switch_teams(game_state['attacking_team'])
-        game_state['quarter'] += 1
+            print(f"Ничья со счетом {self.team1.score}-{self.team2.score}.")
 
-    print('Игра окончена.')
-    print(f'Итоговый счет: {game_state["team_score"]}-{game_state["opponent_score"]}')
-    if game_state['team_score'] > game_state['opponent_score']:
-      print('Вы победили!')
-    elif game_state['team_score'] < game_state['opponent_score']:
-      print('Вы проиграли!')
-    else:
-      print('Ничья!')
 
-if __name__ == '__main__':
-    play_basketball()
+if __name__ == "__main__":
+    game = BasketballGame()
+    game.play()
 ```

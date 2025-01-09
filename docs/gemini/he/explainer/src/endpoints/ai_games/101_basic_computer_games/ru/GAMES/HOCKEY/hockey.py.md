@@ -1,121 +1,193 @@
-## <algorithm>
+## ניתוח קוד המשחק "הוקי"
 
-1. **התחלה:**
-   - התחל את התוכנית.
-   - דוגמה: התחלת ביצוע קובץ `hockey.py`.
+### <algorithm>
+1. **אתחול:**
+   - הגדר משתנה `player1Score` ושווה אותו ל-0 (סכום הנקודות של שחקן 1).
+   - הגדר משתנה `player2Score` ושווה אותו ל-0 (סכום הנקודות של שחקן 2).
 
-2. **אתחול משתנים:**
-   - אתחל את משתני הספירה של שני השחקנים ל-0.
-   - `player1Score = 0`, `player2Score = 0`.
+   *דוגמה:*
+   ```python
+   player1Score = 0
+   player2Score = 0
+   ```
 
-3. **לולאה ראשית (משחק):**
-    - כל עוד הספירה של שני השחקנים קטנה מ-10:
-        - בקש משחקן 1 להזין מהלך (1 - זריקה, 2 - הגנה, 3 - מסירה).
-          - דוגמה: אם השחקן יזין `2` (הגנה).
-        - בקש משחקן 2 להזין מהלך (1 - זריקה, 2 - הגנה, 3 - מסירה).
-          - דוגמה: אם השחקן יזין `1` (זריקה).
-        - בדוק את תנאי הזכייה:
-            - אם שחקן 1 זורק ושחקן 2 מגן, העלה את הספירה של שחקן 2 ב-1.
-              - לדוגמה: `player1Move == 1` וגם `player2Move == 2` ואז `player2Score += 1`
-            - אם שחקן 1 זורק ושחקן 2 מוסר, העלה את הספירה של שחקן 1 ב-2.
-              - לדוגמה: `player1Move == 1` וגם `player2Move == 3` ואז `player1Score += 2`
-            - אם שחקן 1 מגן ושחקן 2 זורק, העלה את הספירה של שחקן 1 ב-1.
-              - לדוגמה: `player1Move == 2` וגם `player2Move == 1` ואז `player1Score += 1`
-            - אם שחקן 1 מגן ושחקן 2 מוסר, העלה את הספירה של שחקן 1 ב-1.
-             - לדוגמה: `player1Move == 2` וגם `player2Move == 3` ואז `player1Score += 1`
-            - אם שחקן 1 מוסר ושחקן 2 זורק, העלה את הספירה של שחקן 2 ב-2.
-              - לדוגמה: `player1Move == 3` וגם `player2Move == 1` ואז `player2Score += 2`
-            - אם שחקן 1 מוסר ושחקן 2 מגן, העלה את הספירה של שחקן 2 ב-1.
-              - לדוגמה: `player1Move == 3` וגם `player2Move == 2` ואז `player2Score += 1`
-        - הדפס את הספירות הנוכחיות.
-        - חזרה לתחילת הלולאה.
-        - דוגמה: `player1Score = 3` וגם `player2Score = 7`.
+2. **לולאה ראשית:**
+   - כל עוד `player1Score` קטן מ-10 וגם `player2Score` קטן מ-10, המשך את הלולאה.
 
-4. **בדיקת מנצח:**
-    - אם הספירה של שחקן 1 גדולה או שווה ל-10:
-        - הדפס: "שחקן 1 ניצח".
-        - דוגמה: `player1Score == 10`
-    - אחרת:
-        - הדפס: "שחקן 2 ניצח".
-        - דוגמה: `player2Score == 10`
+   *דוגמה:*
+   ```python
+   while player1Score < 10 and player2Score < 10:
+       # ...
+   ```
 
-5. **סיום:**
-   - סיום התוכנית.
+3. **קלט משחקן 1:**
+   - בקש ממשתמש 1 לבחור פעולה: 1 - זריקה, 2 - הגנה, 3 - מסירה.
+   - קרא את הקלט מהמשתמש והמר אותו למספר שלם ושמור אותו במשתנה `player1Move`.
+   - אם הקלט אינו מספר בין 1 ל-3, הדפס הודעת שגיאה ובקש קלט נוסף.
 
-## <mermaid>
+   *דוגמה:*
+   ```python
+    try:
+        player1Move = int(input("Ход первого игрока (1-бросок, 2-защита, 3-пас): "))
+        if player1Move < 1 or player1Move > 3:
+          print("Неверный ввод! Введите число от 1 до 3")
+          continue
+    except ValueError:
+      print("Неверный ввод! Введите число от 1 до 3")
+      continue
+   ```
+   *הזרימה:*
+   - קלט משתמש -> בדיקה תקינות קלט -> עדכון player1Move או המשך הלולאה.
 
+4. **קלט משחקן 2:**
+   - בקש ממשתמש 2 לבחור פעולה: 1 - זריקה, 2 - הגנה, 3 - מסירה.
+   - קרא את הקלט מהמשתמש והמר אותו למספר שלם ושמור אותו במשתנה `player2Move`.
+   - אם הקלט אינו מספר בין 1 ל-3, הדפס הודעת שגיאה ובקש קלט נוסף.
+
+   *דוגמה:*
+   ```python
+    try:
+      player2Move = int(input("Ход второго игрока (1-бросок, 2-защита, 3-пас): "))
+      if player2Move < 1 or player2Move > 3:
+          print("Неверный ввод! Введите число от 1 до 3")
+          continue
+    except ValueError:
+      print("Неверный ввод! Введите число от 1 до 3")
+      continue
+   ```
+   *הזרימה:*
+   - קלט משתמש -> בדיקה תקינות קלט -> עדכון player2Move או המשך הלולאה.
+
+5. **חישוב נקודות:**
+   - בדוק את שילובי הפעולות של שני השחקנים ועדכן את הניקוד בהתאם:
+       - אם שחקן 1 זורק (1) ושחקן 2 מגן (2): הגדל את `player2Score` ב-1.
+       - אם שחקן 1 זורק (1) ושחקן 2 מוסר (3): הגדל את `player1Score` ב-2.
+       - אם שחקן 1 מגן (2) ושחקן 2 זורק (1): הגדל את `player1Score` ב-1.
+       - אם שחקן 1 מגן (2) ושחקן 2 מוסר (3): הגדל את `player1Score` ב-1.
+       - אם שחקן 1 מוסר (3) ושחקן 2 זורק (1): הגדל את `player2Score` ב-2.
+       - אם שחקן 1 מוסר (3) ושחקן 2 מגן (2): הגדל את `player2Score` ב-1.
+   - במקרים אחרים, אין שינוי בנקודות.
+
+   *דוגמה:*
+   ```python
+    if player1Move == 1 and player2Move == 2:
+        player2Score += 1
+    elif player1Move == 1 and player2Move == 3:
+        player1Score += 2
+    elif player1Move == 2 and player2Move == 1:
+        player1Score += 1
+    elif player1Move == 2 and player2Move == 3:
+        player1Score += 1
+    elif player1Move == 3 and player2Move == 1:
+        player2Score += 2
+    elif player1Move == 3 and player2Move == 2:
+        player2Score += 1
+   ```
+   *הזרימה:*
+     - player1Move, player2Move -> בדיקת שילוב פעולות -> עדכון player1Score או player2Score.
+
+6. **הצגת ניקוד:**
+    - הדפס את הניקוד הנוכחי של שני השחקנים.
+      *דוגמה:*
+    ```python
+     print(f"Счет: Игрок 1 - {player1Score}, Игрок 2 - {player2Score}")
+    ```
+     *הזרימה:*
+        - player1Score, player2Score -> הצגת הניקוד.
+
+7. **סיום המשחק:**
+   - לאחר שהלולאה מסתיימת, בדוק:
+     - אם `player1Score` גדול או שווה ל-10, הדפס הודעה ששחקן 1 ניצח.
+     - אחרת, הדפס הודעה ששחקן 2 ניצח.
+
+   *דוגמה:*
+   ```python
+   if player1Score >= 10:
+       print("ПЕРВЫЙ ИГРОК ПОБЕДИЛ")
+   else:
+       print("ВТОРОЙ ИГРОК ПОБЕДИЛ")
+   ```
+    *הזרימה:*
+       - player1Score, player2Score -> הכרזת מנצח.
+### <mermaid>
 ```mermaid
 flowchart TD
-    Start["התחלה"] --> InitializeScores["אתחול ספירה: <code>player1Score = 0, player2Score = 0</code>"]
-    InitializeScores --> GameLoopStart{"לולאת משחק: <code>player1Score < 10 וגם player2Score < 10</code>"}
-    GameLoopStart -- כן --> Player1Input["קבל קלט משחקן 1: <code>player1Move</code>"]
-    Player1Input --> Player2Input["קבל קלט משחקן 2: <code>player2Move</code>"]
-    Player2Input --> CheckMoves1["בדיקה: <code>player1Move == 1 וגם player2Move == 2</code>?"]
-    CheckMoves1 -- כן --> Player2ScoreInc1["<code>player2Score += 1</code>"]
-    Player2ScoreInc1 --> CheckMoves2["בדיקה: <code>player1Move == 1 וגם player2Move == 3</code>?"]
-    CheckMoves1 -- לא --> CheckMoves2
-    CheckMoves2 -- כן --> Player1ScoreInc2["<code>player1Score += 2</code>"]
-    Player1ScoreInc2 --> CheckMoves3["בדיקה: <code>player1Move == 2 וגם player2Move == 1</code>?"]
-     CheckMoves2 -- לא --> CheckMoves3
-    CheckMoves3 -- כן --> Player1ScoreInc1_1["<code>player1Score += 1</code>"]
-    Player1ScoreInc1_1 --> CheckMoves4["בדיקה: <code>player1Move == 2 וגם player2Move == 3</code>?"]
-     CheckMoves3 -- לא --> CheckMoves4
-    CheckMoves4 -- כן --> Player1ScoreInc1_2["<code>player1Score += 1</code>"]
-    Player1ScoreInc1_2 --> CheckMoves5["בדיקה: <code>player1Move == 3 וגם player2Move == 1</code>?"]
-     CheckMoves4 -- לא --> CheckMoves5
-    CheckMoves5 -- כן --> Player2ScoreInc2["<code>player2Score += 2</code>"]
-    Player2ScoreInc2 --> CheckMoves6["בדיקה: <code>player1Move == 3 וגם player2Move == 2</code>?"]
-     CheckMoves5 -- לא --> CheckMoves6
-     CheckMoves6 -- כן --> Player2ScoreInc1_2["<code>player2Score += 1</code>"]
-    Player2ScoreInc1_2 --> OutputScores["הדפס ספירה: <code>player1Score, player2Score</code>"]
-     CheckMoves6 -- לא --> OutputScores
-    OutputScores --> GameLoopStart
-    GameLoopStart -- לא --> CheckWinner["בדיקה: <code>player1Score >= 10</code>?"]
-    CheckWinner -- כן --> OutputWinner1["הדפס: <b>שחקן 1 ניצח</b>"]
-    OutputWinner1 --> End["סיום"]
-    CheckWinner -- לא --> OutputWinner2["הדפס: <b>שחקן 2 ניצח</b>"]
-    OutputWinner2 --> End
+    Start[התחלה] --> InitializeScores[אתחול ניקוד: <br> player1Score = 0, player2Score = 0];
+    InitializeScores --> GameLoopStart{האם <br> player1Score < 10  <br> וגם player2Score < 10?};
+    GameLoopStart -- כן --> Player1Input[קלט שחקן 1: <br> player1Move = int(input())];
+    Player1Input --> ValidatePlayer1Input{האם <br> player1Move בין 1 ל-3?};
+    ValidatePlayer1Input -- כן --> Player2Input[קלט שחקן 2: <br> player2Move = int(input())];
+    ValidatePlayer1Input -- לא --> Player1Input;
+    Player2Input --> ValidatePlayer2Input{האם <br> player2Move בין 1 ל-3?};
+    ValidatePlayer2Input -- כן --> CalculatePoints[חישוב נקודות];
+    ValidatePlayer2Input -- לא --> Player2Input;
+    CalculatePoints --> CheckMoves[בדיקת מהלכים והוספת ניקוד];
+    CheckMoves --> DisplayScore[הצגת ניקוד: <br> הדפס( player1Score, player2Score)];
+    DisplayScore --> GameLoopStart;
+    GameLoopStart -- לא --> CheckWinner[בדיקת מנצח];
+    CheckWinner --> Player1Wins{האם <br> player1Score >= 10?};
+    Player1Wins -- כן --> Player1Win[הכרז שחקן 1 ניצח];
+    Player1Wins -- לא --> Player2Win[הכרז שחקן 2 ניצח];
+    Player1Win --> End[סיום];
+    Player2Win --> End;
+    End
 ```
+הסבר:
+- **התחלה (Start)**: תחילת זרימת התוכנית.
+- **אתחול ניקוד (InitializeScores)**: אתחול משתני הנקודות של שני השחקנים ל-0.
+- **לולאת משחק (GameLoopStart)**: תחילת הלולאה הראשית, שמתקיימת כל עוד אף אחד מהשחקנים לא הגיע ל-10 נקודות.
+- **קלט שחקן 1 (Player1Input)**: קבלת הקלט משחקן 1 (מהלך: 1-זריקה, 2-הגנה, 3-מסירה).
+- **בדיקת קלט שחקן 1 (ValidatePlayer1Input)**: בדיקה שהקלט משחקן 1 הוא בין 1 ל-3. אם לא, חוזרים לקבל קלט משחקן 1.
+- **קלט שחקן 2 (Player2Input)**: קבלת הקלט משחקן 2.
+- **בדיקת קלט שחקן 2 (ValidatePlayer2Input)**: בדיקה שהקלט משחקן 2 הוא בין 1 ל-3. אם לא, חוזרים לקבל קלט משחקן 2.
+- **חישוב נקודות (CalculatePoints)**: חישוב הנקודות בהתאם למהלכים של שני השחקנים.
+- **בדיקת מהלכים והוספת ניקוד(CheckMoves)**: בודק את המהלכים השונים של השחקנים ומוסיף נקודות בהתאם לחוקי המשחק.
+- **הצגת ניקוד (DisplayScore)**: הדפסת הניקוד הנוכחי של שני השחקנים.
+- **בדיקת מנצח (CheckWinner)**: בדיקה האם יש מנצח.
+- **האם שחקן 1 ניצח (Player1Wins)**: בדיקה האם שחקן 1 ניצח (הגיע ל-10 נקודות ומעלה).
+- **הכרז שחקן 1 ניצח (Player1Win)**: אם שחקן 1 ניצח, הודעה מתאימה.
+- **הכרז שחקן 2 ניצח (Player2Win)**: אם שחקן 1 לא ניצח, שחקן 2 ניצח.
+- **סיום (End)**: סיום זרימת התוכנית.
 
-**תלות מיובאת:**
-   - אין תלויות מיובאות בקוד הזה. הוא משתמש בפונקציות מובנות של פייתון כמו `input` ו-`print`, וכן בבדיקות תנאי ובפעולות חשבוניות.
+התלויות המיובאות הן רק לצורך קבלת קלט ופלט מהמשתמש (פונקציות `input` ו- `print`). אין תלויות נוספות מחבילות חיצוניות או פנימיות בפרויקט.
 
-## <explanation>
+### <explanation>
 
-**ייבוא (Imports):**
-   - אין ייבוא בקוד הזה. הקוד משתמש רק בפונקציות מובנות של פייתון.
+1.  **ייבואים (Imports):**
+    - אין ייבוא של מודולים חיצוניים או פנימיים. הקוד משתמש בפונקציות הבסיסיות של פייתון (`input`, `print` ו- `int`).
 
-**מחלקות (Classes):**
-   - אין מחלקות בקוד הזה. הקוד בנוי כולו על פונקציות ומשתנים בלבד.
+2.  **מחלקות (Classes):**
+    - אין מחלקות בקוד זה. זהו סקריפט פשוט המבוסס על פונקציות ולולאות בלבד.
 
-**פונקציות (Functions):**
-   - אין פונקציות מוגדרות בקוד הזה. הקוד משתמש בפונקציות מובנות של פייתון:
-     - `input(prompt)`: מקבלת קלט מהמשתמש.
-       - פרמטר: `prompt` - מחרוזת המציגה הודעה למשתמש.
-       - ערך מוחזר: מחרוזת שהמשתמש הזין.
-       - דוגמה: `player1Move = int(input("הזן את המהלך שלך: "))` מקבלת קלט מהמשתמש, ממירה אותו למספר שלם ומאחסנת אותו ב`player1Move`.
-     - `int(value)`: ממירה ערך למספר שלם.
-       - פרמטר: `value` - הערך שיש להמיר.
-       - ערך מוחזר: הערך כמספר שלם.
-       - דוגמה: `int("5")` מחזיר את המספר 5.
-      - `print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)`: מדפיסה פלט למסוף.
-        - פרמטרים:
-            - `objects`: אובייקטים להדפסה.
-            - `sep`: מפריד בין אובייקטים (ברירת מחדל: רווח).
-            - `end`: מחרוזת להוספה בסוף (ברירת מחדל: שורה חדשה).
-        - דוגמה: `print(f"הספירה: שחקן 1 - {player1Score}, שחקן 2 - {player2Score}")` מדפיסה מחרוזת מעוצבת עם ספירות השחקנים.
+3.  **פונקציות (Functions):**
+    - אין פונקציות מוגדרות במפורש. הקוד משתמש בפונקציות מובנות של פייתון:
+        - `input(prompt)`:
+            - פרמטרים: `prompt` - מחרוזת המציגה הודעה למשתמש.
+            - ערך מוחזר: מחרוזת הקלט של המשתמש.
+            - מטרה: קבלת קלט מהמשתמש.
+            - דוגמה: `input("הכנס מהלך: ")`
+        - `int(x)`:
+            - פרמטרים: `x` - ערך שניתן להמיר למספר שלם.
+            - ערך מוחזר: הערך המספרי השלם של `x`.
+            - מטרה: המרת מחרוזת למספר שלם.
+            - דוגמה: `int("3")` יחזיר את הערך `3`.
+        - `print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)`:
+            - פרמטרים: `objects` - אובייקטים להדפסה, `sep` - מפריד בין האובייקטים (ברירת מחדל: רווח), `end` - סוף שורה (ברירת מחדל: שורה חדשה), `file` - מקום להדפסה (ברירת מחדל: מסך), `flush` - ריקון המאגר.
+            - ערך מוחזר: אין.
+            - מטרה: להדפיס פלט למסך.
+            - דוגמה: `print("הניקוד:", player1Score)`
 
-**משתנים (Variables):**
-   - `player1Score`: סוג: `int`. מאחסן את הספירה של שחקן 1.
-   - `player2Score`: סוג: `int`. מאחסן את הספירה של שחקן 2.
-   - `player1Move`: סוג: `int`. מאחסן את המהלך של שחקן 1 (1, 2 או 3).
-   - `player2Move`: סוג: `int`. מאחסן את המהלך של שחקן 2 (1, 2 או 3).
+4.  **משתנים (Variables):**
+    - `player1Score` (int): מאחסן את הניקוד של שחקן 1. מתחיל ב-0 ומעודכן במהלך המשחק.
+    - `player2Score` (int): מאחסן את הניקוד של שחקן 2. מתחיל ב-0 ומעודכן במהלך המשחק.
+    - `player1Move` (int): מאחסן את הקלט של שחקן 1 (1, 2 או 3). נקלט בכל תור.
+    - `player2Move` (int): מאחסן את הקלט של שחקן 2 (1, 2 או 3). נקלט בכל תור.
 
-**בעיות אפשריות או תחומי שיפור:**
-   - הקוד לא מטפל בקלט לא חוקי בצורה טובה. למשל, אם המשתמש יזין אות ולא מספר שלם, התוכנית תתרסק.
-   - ניתן לשפר את הקוד על ידי שימוש בפונקציות כדי להפריד חלקים שונים של הקוד.
-   - ניתן להוסיף תגובה למקרה בו שני השחקנים בוחרים את אותו המהלך.
-   - ניתן לשפר את הממשק המשתמש ולהוסיף יותר משוב למשתמש.
+5.  **בעיות אפשריות ותחומים לשיפור:**
+    - **בדיקת קלט לא תקינה**: הקוד בודק רק אם הקלט הוא מספר בין 1 ל-3, אך לא מטפל במקרים אחרים כמו קלט שהוא מחרוזת ריקה. יש להוסיף בדיקות נוספות.
+    - **קריאות קוד**: ניתן לשפר את הקריאות של הקוד באמצעות שימוש בקבועים (constants) עבור ערכי המהלכים (1, 2, 3) והוספת הערות נוספות להסבר הפעולות.
+    - **ארגון הקוד**: ניתן לשקול להעביר את הלוגיקה של חישוב הנקודות לפונקציה נפרדת כדי לשפר את קריאות הקוד.
+    - **ממשק משתמש**: ניתן לשפר את הממשק על ידי הצגת שמות המהלכים (זריקה, הגנה, מסירה) במקום מספרים.
 
-**שרשרת קשרים עם חלקים אחרים בפרויקט:**
-   - הקוד הזה הוא משחק עצמאי ואין לו תלות בחלקים אחרים בפרויקט.
+6.  **שרשרת קשרים עם חלקים אחרים בפרויקט:**
+    - הקוד עצמאי ואינו תלוי בחלקים אחרים בפרויקט. הוא משחק פשוט בפני עצמו. אין לו יחסי תלות עם `header.py`.

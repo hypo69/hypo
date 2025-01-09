@@ -1,192 +1,343 @@
-# Анализ кода модуля ten_cent_computer.md
+# Анализ кода модуля `ten_cent_computer.md`
 
 **Качество кода**
-  
-- Соответствие требованиям к формату кода (1-10): 7
-    -  **Преимущества**:
-        -  Четкая формулировка задачи и правил игры.
-        -  Приведены примеры взаимодействия пользователя с симулятором.
-        -  Понятный формат ввода/вывода.
-    -   **Недостатки**:
-        -  Отсутствие структурированного кода для реализации симулятора.
-        -  Нет обработки ошибок и граничных случаев.
-        -  Нет пояснений по реализации алгоритмов.
-        -  Нет документации в формате reStructuredText (RST).
-        -  Не используется `logger`.
-        -  Нет импортов и функций.
-        -  Нет разделения на логические части кода.
+  -  Соответствие требованиям к формату кода (1-10):
+    -   **Преимущества:**
+        - Документ представляет собой инструкцию для симулятора "10-центового компьютера", предназначенного для обучения двоичной системе счисления.
+        - Четко описаны правила работы симулятора, форматы ввода/вывода, и приведены примеры.
+        - Содержит понятные инструкции для пользователя.
+        - Ориентирован на целевую аудиторию (дети) с простым и понятным языком.
+    -  **Недостатки:**
+        - Документ не является кодом Python, а представляет собой текстовое описание правил и примеров.
+        - Отсутствует формат reStructuredText (RST) и docstrings, как требуется в инструкции.
+        - Нет необходимости в использовании `j_loads` или `j_loads_ns`, так как это не Python-файл.
+        - Невозможно добавить импорты или использовать логгер, так как это не исполняемый код.
 
 **Рекомендации по улучшению**
 
-1.  **Структурировать код**: Разбить задачу на функции (например, `decimal_to_binary`, `binary_to_decimal`, `explain_number`).
-2.  **Добавить обработку ошибок**: Проверять корректность входных данных (например, является ли ввод десятичным числом или двоичным представлением).
-3.  **Реализовать алгоритмы**: Прописать логику преобразования чисел из десятичной в двоичную систему и обратно.
-4.  **Документировать код**: Добавить docstring в формате reStructuredText (RST) для каждой функции.
-5.  **Использовать логгер**: Добавить логирование ошибок и отладочную информацию с помощью `src.logger.logger`.
-6.  **Добавить импорты**:  Импортировать необходимые модули.
-7.  **Использовать переменные**: Выделить константы в переменные (например, длина двоичного представления, веса битов).
-8.  **Добавить проверку на валидность ввода**: Проверять ввод пользователя на соответствие ожиданиям.
+1. **Перевести в исполняемый код:** Необходимо реализовать данный симулятор на Python, следуя приведенным правилам и форматам ввода/вывода.
+2. **Документировать код:** Добавить docstring в формате RST для всех функций, классов и методов.
+3. **Использовать логгер:** Использовать `from src.logger.logger import logger` для обработки ошибок.
+4. **Обработка ошибок:** Добавить обработку исключений с использованием `logger.error`.
+5. **Форматирование:** Привести код в соответствие PEP8, включая корректное именование переменных и функций.
+6. **Добавить примеры:** Включить примеры использования функций и методов в docstring.
+7. **Реализация логики:** Разработать логику преобразования десятичных чисел в двоичные и наоборот.
+8. **Интерактивность:** Реализовать взаимодействие с пользователем через ввод и вывод.
 
 **Улучшенный код**
 ```python
 """
-Модуль для симуляции "10-центового компьютера"
+Модуль для симулятора "10-центового компьютера"
 =========================================================================================
 
-Модуль представляет собой симулятор для обучения детей двоичной системе счисления.
-Симулятор преобразует десятичные числа в двоичное представление с помощью 4-х
-"лампочек" (0 - лампа выключена, 1 - лампа включена) и обратно.
+Этот модуль реализует симулятор, который обучает детей двоичной системе счисления,
+представляя числа в двоичной форме с помощью 4 "лампочек".
 
-Пример использования
+Примеры использования
 --------------------
-
-Пример взаимодействия с симулятором:
 
 .. code-block:: python
 
-    simulator = TenCentComputer()
-    simulator.process_input("Десятичное: 5")
-    simulator.process_input("Лампочки: 1010")
-    simulator.process_input("Объясните как 7")
+    simulator = TenCentComputerSimulator()
+    simulator.run()
 """
-from src.logger.logger import logger  # добавляем импорт логгера #
-from typing import Any # добавляем импорт для аннотации типов #
 
+from src.logger.logger import logger  # Импортируем логгер
+from typing import Any, List # Импортируем типы для аннотаций
 
-class TenCentComputer:
+class TenCentComputerSimulator:
     """
-    Класс реализует симулятор "10-центового компьютера".
+    Класс для симулятора "10-центового компьютера".
 
-    :ivar BINARY_LENGTH: Длина двоичного представления (константа).
-    :vartype BINARY_LENGTH: int
-    :ivar BIT_VALUES: Список значений битов (константа).
-    :vartype BIT_VALUES: list[int]
+    Этот класс позволяет конвертировать десятичные числа в двоичные и наоборот,
+    используя представление с 4 "лампочками".
     """
-
-    BINARY_LENGTH = 4  # длина двоичного представления #
-    BIT_VALUES = [1, 2, 4, 8]  # веса битов #
 
     def __init__(self) -> None:
         """
-        Инициализирует экземпляр класса TenCentComputer.
+        Инициализирует симулятор.
         """
-        pass # конструктор класса #
+        self.lamp_values = [1, 2, 4, 8] # Значения лампочек
 
     def decimal_to_binary(self, decimal: int) -> str:
         """
-        Преобразует десятичное число в двоичное представление.
+        Конвертирует десятичное число в двоичное представление с 4 "лампочками".
 
-        :param decimal: Десятичное число для преобразования.
-        :type decimal: int
-        :return: Двоичное представление числа в виде строки.
-        :rtype: str
-        :raises ValueError: Если десятичное число выходит за допустимый диапазон.
-
-        :Example:
-        >>> TenCentComputer().decimal_to_binary(5)
-        '0101'
+        :param decimal: Десятичное число для конвертации.
+        :return: Строка с двоичным представлением (например, '0101').
         """
-        if not 0 <= decimal <= 15: # Проверка на то, что число в допустимом диапазоне #
-            logger.error(f'Десятичное число {decimal} вне допустимого диапазона (0-15).') # Логирование ошибки #
-            raise ValueError(f"Десятичное число {decimal} должно быть в диапазоне от 0 до 15")
+        if not isinstance(decimal, int):
+             logger.error(f"Некорректный тип данных: {type(decimal)}. Ожидается int.")  # Используем logger.error для обработки ошибок
+             return '0000'
+        
+        if decimal < 0 or decimal > 15:
+            logger.error(f"Число {decimal} вне допустимого диапазона [0-15]") # Используем logger.error для обработки ошибок
+            return '0000'
 
-        binary = bin(decimal)[2:].zfill(self.BINARY_LENGTH) # Преобразуем в бинарное и дополняем нулями #
-        return binary # Возвращаем двоичное представление #
+        binary_representation = ""
+        for value in reversed(self.lamp_values):
+            if decimal >= value:
+                binary_representation += "1"
+                decimal -= value
+            else:
+                binary_representation += "0"
+        return binary_representation[::-1] # Переворачиваем строку
 
     def binary_to_decimal(self, binary: str) -> int:
         """
-        Преобразует двоичное представление в десятичное число.
+        Конвертирует двоичное представление с 4 "лампочками" в десятичное число.
 
-        :param binary: Двоичное представление числа в виде строки.
-        :type binary: str
+        :param binary: Строка с двоичным представлением (например, '0101').
         :return: Десятичное число.
-        :rtype: int
-        :raises ValueError: Если двоичная строка неверного формата.
-
-        :Example:
-        >>> TenCentComputer().binary_to_decimal('0101')
-        5
         """
-        if len(binary) != self.BINARY_LENGTH or not all(bit in '01' for bit in binary): # Проверка на валидность бинарного представления #
-           logger.error(f'Двоичное представление {binary} неверного формата. Ожидается строка из 4 символов 0 и 1') # Логирование ошибки #
-           raise ValueError(f'Двоичное представление {binary} неверного формата. Ожидается строка из 4 символов 0 и 1')
+        if not isinstance(binary, str):
+            logger.error(f"Некорректный тип данных: {type(binary)}. Ожидается str.") # Используем logger.error для обработки ошибок
+            return 0
+        if len(binary) != 4 or not all(bit in '01' for bit in binary):
+            logger.error(f"Некорректный формат двоичного числа: {binary}. Ожидается строка из 4 символов 0 или 1.")# Используем logger.error для обработки ошибок
+            return 0
 
-        decimal = 0  # Инициализируем десятичное значение #
-        for i, bit in enumerate(reversed(binary)): # Итерируем по битам в обратном порядке #
-            if bit == '1': # Если бит равен 1 #
-                decimal += self.BIT_VALUES[i] # Прибавляем вес этого бита к десятичному числу #
-        return decimal # Возвращаем десятичное значение #
+        decimal_value = 0
+        for i, bit in enumerate(reversed(binary)):
+            if bit == '1':
+                decimal_value += self.lamp_values[i]
+        return decimal_value
 
-    def explain_number(self, binary: str, decimal: int) -> str:
-         """
-         Формирует объяснение для двоичного представления.
-
-         :param binary: Двоичное представление числа в виде строки.
-         :type binary: str
-         :param decimal: Десятичное число.
-         :type decimal: int
-         :return: Объяснение в виде строки.
-         :rtype: str
-
-         :Example:
-         >>> TenCentComputer().explain_number('0101', 5)
-         'Включены лампочки 1 и 4, 1+4=5'
-         """
-         activated_bits = [] # Инициализируем список включенных битов #
-         explanation = "Включены лампочки " # Инициализируем строку объяснения #
-         for i, bit in enumerate(reversed(binary)): # Итерируем по битам в обратном порядке #
-              if bit == "1": # Если бит равен 1 #
-                   activated_bits.append(str(self.BIT_VALUES[i])) # Добавляем значение бита в список #
-         explanation += ", ".join(activated_bits) # Составляем объяснение #
-         explanation += f", {'+'.join(activated_bits)}={decimal}" # Добавляем сумму включенных битов #
-         return explanation # Возвращаем объяснение #
-
-
-    def process_input(self, user_input: str) -> str | None:
+    def explain_binary(self, binary: str) -> str:
         """
-        Обрабатывает ввод пользователя и возвращает ответ симулятора.
+        Объясняет, какие "лампочки" включены в двоичном представлении.
 
-        :param user_input: Строка ввода пользователя.
-        :type user_input: str
-        :return: Строка ответа симулятора или None, если ввод некорректен.
-        :rtype: str | None
+        :param binary: Строка с двоичным представлением (например, '0101').
+        :return: Строка с объяснением включенных лампочек.
+        """
+        explanation = "Включены лампочки "
+        included_lamps = []
+        for i, bit in enumerate(reversed(binary)):
+            if bit == '1':
+                included_lamps.append(str(self.lamp_values[i]))
+        
+        if not included_lamps:
+            return "Нет включенных лампочек."
 
-        :Example:
-        >>> simulator = TenCentComputer()
-        >>> simulator.process_input("Десятичное: 5")
-        'Двоичное: 0101, объяснение:Включены лампочки 1 и 4, 1+4=5'
-        >>> simulator.process_input("Лампочки: 1010")
-        'Десятичное: 10, объяснение:Включены лампочки 2 и 8, 2+8=10'
-        >>> simulator.process_input("Объясните как 7")
-        'Двоичное: 1110, объяснение:Включены лампочки 1, 2 и 4, 1+2+4=7'
+        explanation += ", ".join(included_lamps)
+        explanation += f". {'+'.join(included_lamps)}={self.binary_to_decimal(binary)}"
+
+        return explanation
+
+    def explain_decimal(self, decimal: int) -> str:
+        """
+        Объясняет, какие "лампочки" нужно включить для представления десятичного числа.
+
+        :param decimal: Десятичное число.
+        :return: Строка с объяснением, какие лампочки включены.
+        """
+        binary = self.decimal_to_binary(decimal)
+        explanation = self.explain_binary(binary)
+        return explanation
+
+    def process_input(self, input_str: str) -> str:
+        """
+        Обрабатывает ввод пользователя и возвращает результат.
+
+        :param input_str: Строка ввода от пользователя.
+        :return: Строка с результатом работы симулятора.
         """
         try:
-            if user_input.startswith("Десятичное: "):  # Проверяем, начинается ли ввод с "Десятичное: " #
-                decimal_str = user_input[len("Десятичное: "):].strip() # Извлекаем значение десятичного числа #
-                decimal = int(decimal_str) # Преобразуем строку в число #
-                binary = self.decimal_to_binary(decimal) # Получаем двоичное представление #
-                explanation = self.explain_number(binary, decimal) # Получаем объяснение #
-                return f"Двоичное: {binary}, объяснение:{explanation}" # Формируем и возвращаем ответ #
-
-            elif user_input.startswith("Лампочки: "): # Проверяем, начинается ли ввод с "Лампочки: " #
-                binary = user_input[len("Лампочки: "):].strip() # Извлекаем двоичное представление #
-                decimal = self.binary_to_decimal(binary) # Получаем десятичное значение #
-                explanation = self.explain_number(binary, decimal) # Получаем объяснение #
-                return f"Десятичное: {decimal}, объяснение:{explanation}" # Формируем и возвращаем ответ #
-
-            elif user_input.startswith("Объясните как "): # Проверяем, начинается ли ввод с "Объясните как " #
-                 decimal_str = user_input[len("Объясните как "):].strip() # Извлекаем значение десятичного числа #
-                 decimal = int(decimal_str) # Преобразуем строку в число #
-                 binary = self.decimal_to_binary(decimal) # Получаем двоичное представление #
-                 explanation = self.explain_number(binary, decimal) # Получаем объяснение #
-                 return f"Двоичное: {binary}, объяснение:{explanation}" # Формируем и возвращаем ответ #
+            if input_str.startswith("Десятичное:"):
+                decimal_str = input_str.split(": ")[1]
+                decimal = int(decimal_str)
+                binary = self.decimal_to_binary(decimal)
+                explanation = self.explain_decimal(decimal)
+                return f"Двоичное: {binary}, объяснение: {explanation}"
+            elif input_str.startswith("Лампочки:"):
+                binary = input_str.split(": ")[1]
+                decimal = self.binary_to_decimal(binary)
+                explanation = self.explain_binary(binary)
+                return f"Десятичное: {decimal}, объяснение: {explanation}"
+            elif input_str.startswith("Объясните как "):
+                decimal_str = input_str.split("Объясните как ")[1]
+                decimal = int(decimal_str)
+                binary = self.decimal_to_binary(decimal)
+                explanation = self.explain_decimal(decimal)
+                return f"Двоичное: {binary}, объяснение: {explanation}"
             else:
-                logger.error(f'Некорректный ввод пользователя: {user_input}') # Логирование ошибки #
-                return None  # Возвращаем None при некорректном вводе #
-        except ValueError as e: # Обрабатываем ошибки преобразования #
-             logger.error(f"Ошибка преобразования ввода: {e}") # Логирование ошибки #
-             return None # Возвращаем None при ошибке преобразования #
-        except Exception as e: # Обрабатываем прочие ошибки #
-            logger.error(f"Неожиданная ошибка: {e}") # Логирование ошибки #
-            return None # Возвращаем None при неожиданной ошибке #
+                return "Некорректный формат ввода."
+        except Exception as ex:
+            logger.error(f"Ошибка при обработке ввода: {input_str}", ex)
+            return "Ошибка при обработке ввода. Проверьте формат ввода."
+    
+    def run(self):
+        """
+        Запускает симулятор в интерактивном режиме.
+        """
+        print("Симулятор 10-центового компьютера запущен.")
+        while True:
+            user_input = input("Введите команду (или 'exit' для выхода): ")
+            if user_input.lower() == 'exit':
+                print("Симулятор завершен.")
+                break
+            response = self.process_input(user_input)
+            print(response)
+
+if __name__ == "__main__":
+    simulator = TenCentComputerSimulator() # Создаем экземпляр класса
+    simulator.run() # Запускаем симулятор
+```
+```python
+# """
+# Модуль для симулятора "10-центового компьютера" #  
+# ========================================================================================= # 
+# 
+# Этот модуль реализует симулятор, который обучает детей двоичной системе счисления, #
+# представляя числа в двоичной форме с помощью 4 "лампочек". #
+# 
+# Примеры использования #
+# -------------------- #
+# 
+# .. code-block:: python #
+# 
+#     simulator = TenCentComputerSimulator() #
+#     simulator.run() #
+# """
+# 
+# from src.logger.logger import logger  # Импортируем логгер #
+# from typing import Any, List # Импортируем типы для аннотаций #
+# 
+# class TenCentComputerSimulator:
+#     """
+#     Класс для симулятора "10-центового компьютера". #
+# 
+#     Этот класс позволяет конвертировать десятичные числа в двоичные и наоборот, #
+#     используя представление с 4 "лампочками". #
+#     """
+# 
+#     def __init__(self) -> None:
+#         """
+#         Инициализирует симулятор. #
+#         """
+#         self.lamp_values = [1, 2, 4, 8] # Значения лампочек #
+# 
+#     def decimal_to_binary(self, decimal: int) -> str:
+#         """
+#         Конвертирует десятичное число в двоичное представление с 4 "лампочками". #
+# 
+#         :param decimal: Десятичное число для конвертации. #
+#         :return: Строка с двоичным представлением (например, '0101'). #
+#         """
+#         if not isinstance(decimal, int):
+#              logger.error(f"Некорректный тип данных: {type(decimal)}. Ожидается int.")  # Используем logger.error для обработки ошибок #
+#              return '0000' #
+#         
+#         if decimal < 0 or decimal > 15:
+#             logger.error(f"Число {decimal} вне допустимого диапазона [0-15]") # Используем logger.error для обработки ошибок #
+#             return '0000' #
+# 
+#         binary_representation = ""
+#         for value in reversed(self.lamp_values):
+#             if decimal >= value:
+#                 binary_representation += "1"
+#                 decimal -= value
+#             else:
+#                 binary_representation += "0"
+#         return binary_representation[::-1] # Переворачиваем строку #
+# 
+#     def binary_to_decimal(self, binary: str) -> int:
+#         """
+#         Конвертирует двоичное представление с 4 "лампочками" в десятичное число. #
+# 
+#         :param binary: Строка с двоичным представлением (например, '0101'). #
+#         :return: Десятичное число. #
+#         """
+#         if not isinstance(binary, str):
+#             logger.error(f"Некорректный тип данных: {type(binary)}. Ожидается str.") # Используем logger.error для обработки ошибок #
+#             return 0 #
+#         if len(binary) != 4 or not all(bit in '01' for bit in binary):
+#             logger.error(f"Некорректный формат двоичного числа: {binary}. Ожидается строка из 4 символов 0 или 1.")# Используем logger.error для обработки ошибок #
+#             return 0 #
+# 
+#         decimal_value = 0
+#         for i, bit in enumerate(reversed(binary)):
+#             if bit == '1':
+#                 decimal_value += self.lamp_values[i]
+#         return decimal_value
+# 
+#     def explain_binary(self, binary: str) -> str:
+#         """
+#         Объясняет, какие "лампочки" включены в двоичном представлении. #
+# 
+#         :param binary: Строка с двоичным представлением (например, '0101'). #
+#         :return: Строка с объяснением включенных лампочек. #
+#         """
+#         explanation = "Включены лампочки "
+#         included_lamps = []
+#         for i, bit in enumerate(reversed(binary)):
+#             if bit == '1':
+#                 included_lamps.append(str(self.lamp_values[i]))
+#         
+#         if not included_lamps:
+#             return "Нет включенных лампочек."
+# 
+#         explanation += ", ".join(included_lamps)
+#         explanation += f". {'+'.join(included_lamps)}={self.binary_to_decimal(binary)}"
+# 
+#         return explanation
+# 
+#     def explain_decimal(self, decimal: int) -> str:
+#         """
+#         Объясняет, какие "лампочки" нужно включить для представления десятичного числа. #
+# 
+#         :param decimal: Десятичное число. #
+#         :return: Строка с объяснением, какие лампочки включены. #
+#         """
+#         binary = self.decimal_to_binary(decimal)
+#         explanation = self.explain_binary(binary)
+#         return explanation
+# 
+#     def process_input(self, input_str: str) -> str:
+#         """
+#         Обрабатывает ввод пользователя и возвращает результат. #
+# 
+#         :param input_str: Строка ввода от пользователя. #
+#         :return: Строка с результатом работы симулятора. #
+#         """
+#         try:
+#             if input_str.startswith("Десятичное:"):
+#                 decimal_str = input_str.split(": ")[1]
+#                 decimal = int(decimal_str)
+#                 binary = self.decimal_to_binary(decimal)
+#                 explanation = self.explain_decimal(decimal)
+#                 return f"Двоичное: {binary}, объяснение: {explanation}"
+#             elif input_str.startswith("Лампочки:"):
+#                 binary = input_str.split(": ")[1]
+#                 decimal = self.binary_to_decimal(binary)
+#                 explanation = self.explain_binary(binary)
+#                 return f"Десятичное: {decimal}, объяснение: {explanation}"
+#             elif input_str.startswith("Объясните как "):
+#                 decimal_str = input_str.split("Объясните как ")[1]
+#                 decimal = int(decimal_str)
+#                 binary = self.decimal_to_binary(decimal)
+#                 explanation = self.explain_decimal(decimal)
+#                 return f"Двоичное: {binary}, объяснение: {explanation}"
+#             else:
+#                 return "Некорректный формат ввода."
+#         except Exception as ex:
+#             logger.error(f"Ошибка при обработке ввода: {input_str}", ex) #
+#             return "Ошибка при обработке ввода. Проверьте формат ввода." #
+#     
+#     def run(self):
+#         """
+#         Запускает симулятор в интерактивном режиме. #
+#         """
+#         print("Симулятор 10-центового компьютера запущен.")
+#         while True:
+#             user_input = input("Введите команду (или 'exit' для выхода): ")
+#             if user_input.lower() == 'exit':
+#                 print("Симулятор завершен.")
+#                 break
+#             response = self.process_input(user_input)
+#             print(response)
+# 
+# if __name__ == "__main__":
+#     simulator = TenCentComputerSimulator() # Создаем экземпляр класса #
+#     simulator.run() # Запускаем симулятор #
 ```

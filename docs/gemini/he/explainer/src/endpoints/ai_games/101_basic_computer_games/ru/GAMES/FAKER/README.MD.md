@@ -1,153 +1,138 @@
 ## <algorithm>
 
-1. **ייבוא ספריות:**
-   - ייבוא הספרייה `random` עבור פעולות אקראיות.
-   - ייבוא הספרייה `string` עבור קבוצות של תווים (אותיות, ספרות).
-   - ייבוא `List`, `Optional` מהספרייה `typing` להגדרת טיפוסים.
-   
-   *דוגמה:* `import random, string`
-
-2. **יצירת מחלקה `FakeDataGenerator`:**
-   - הגדרת תכונות מחלקה (רשימות שמות, משפחות, ערים, רחובות, דומיינים).
-   
-   *דוגמה:* `first_names = ['John', 'Jane', ...]`
-
-3. **פונקציה `random_name(self)`:**
-   - בוחרת שם פרטי ושם משפחה אקראיים מהרשימות.
-   - מחזירה מחרוזת המכילה שם פרטי ושם משפחה מחוברים ברווח.
-   
-   *דוגמה:* `first_name = random.choice(self.first_names)` -> `first_name` יכול להיות `'John'` או `'Jane'`
-
-4. **פונקציה `random_email(self)`:**
-   - בוחרת שם פרטי ושם משפחה אקראיים מהרשימות והופכת אותם לאותיות קטנות.
-   - בוחרת דומיין אקראי.
-   - מחזירה מחרוזת בפורמט `שם.משפחה@דומיין`.
-   
-   *דוגמה:* `domain = random.choice(self.domains)` -> `domain` יכול להיות `'example.com'`
-
-5. **פונקציה `random_phone(self)`:**
-   - מייצרת שלושה מספרים אקראיים בטווחים שונים.
-   - מחזירה מחרוזת בפורמט `+1-XXX-XXX-XXXX`.
-   
-   *דוגמה:* `random.randint(100, 999)` -> יכול להיות `567`
-
-6. **פונקציה `random_address(self)`:**
-   - בוחרת רחוב ועיר אקראיים.
-   - מייצרת מספר בית אקראי.
-   - מחזירה מחרוזת בפורמט `מספר_בית רחוב, עיר`.
-
-   *דוגמה:* `street = random.choice(self.streets)` -> `street` יכול להיות `'Main St'`
-
-7. **פונקציה `random_string(self, length)`:**
-   - מייצרת מחרוזת אקראית באורך נתון.
-   - המחרוזת מורכבת מאותיות ומספרים.
-   - מחזירה את המחרוזת האקראית.
-   
-   *דוגמה:* `length=12` -> `random_string()` יכול להחזיר `'aB7c9D1eF3G2'`
-
-8. **פונקציה `random_int(self, min_value, max_value)`:**
-   - מייצרת מספר שלם אקראי בטווח נתון.
-   - מחזירה את המספר האקראי.
-   
-   *דוגמה:* `min_value=50, max_value=150` -> `random_int()` יכול להחזיר `98`
-
-9. **פונקציה `random_choice(self, options)`:**
-   - בוחרת ומחזירה פריט אקראי מתוך רשימה נתונה.
-   
-   *דוגמה:* `options = ["Option1", "Option2", "Option3"]` -> `random_choice()` יכול להחזיר `"Option2"`
-
-10. **תנאי הרצה (`if __name__ == '__main__':`)**
-    - יוצר מופע של המחלקה `FakeDataGenerator`.
-    - מדפיס דוגמאות לשימוש בפונקציות השונות.
+1. **אתחול:**
+   - ייבוא מודולים: `random`, `string`, `typing`.
+   - הגדרת מחלקה `FakeDataGenerator`.
+   - הגדרת רשימות של שמות פרטיים, שמות משפחה, ערים, רחובות, דומיינים (כתובות אתר).
+   *דוגמה: `first_names = ['John', 'Jane', 'Alice']`*
+2.  **פונקציה `random_name()`:**
+    - בוחרת שם פרטי ושם משפחה רנדומליים מהרשימות.
+    - מחזירה מחרוזת שמשלבת את השם הפרטי והשם משפחה.
+    *דוגמה: בחירה רנדומלית של "Alice" מהרשימה first_names ובחירה של "Smith" מהרשימה last_names, החזרה של המחרוזת "Alice Smith"*
+3. **פונקציה `random_email()`:**
+   - בוחרת שם פרטי ושם משפחה רנדומליים מהרשימות.
+   - ממירה את השם הפרטי ואת השם משפחה לאותיות קטנות.
+   - בוחרת דומיין רנדומלי מהרשימה.
+   - מחזירה מחרוזת שמשלבת את השם הפרטי, השם משפחה והדומיין.
+     *דוגמה: בחירה של "John", "Smith", "mail.com" ומחזירה "john.smith@mail.com"*
+4. **פונקציה `random_phone()`:**
+   - מייצרת 3 מספרים רנדומליים בין 100 ל-999 ומספר רנדומלי אחד בין 1000 ל-9999.
+   - מחזירה מחרוזת שמורכבת מ-+1 וארבעת המספרים שנוצרו בפורמט +1-XXX-XXX-XXXX.
+     *דוגמה: החזרה של "+1-234-567-8910"*
+5. **פונקציה `random_address()`:**
+    - בוחרת רחוב ועיר רנדומליים מהרשימות.
+    - מייצרת מספר בית רנדומלי בין 1 ל-9999.
+    - מחזירה מחרוזת שמשלבת את מספר הבית, הרחוב והעיר.
+     *דוגמה: בחירת רנדומלית של "Elm St", "Chicago" ומספר בית "123" ומחזירה "123 Elm St, Chicago"*
+6. **פונקציה `random_string()`:**
+    - מקבלת אורך כמספר שלם (ברירת מחדל היא 10).
+    - מייצרת מחרוזת רנדומלית באורך הנתון, עם אותיות קטנות, גדולות ומספרים.
+    *דוגמה: אם האורך הוא 5, מחזירה "aBc12"*
+7.  **פונקציה `random_int()`:**
+    - מקבלת מינימום ומקסימום (ברירת מחדל היא 0 ו-100).
+    - מייצרת מספר שלם רנדומלי בטווח שצוין.
+      *דוגמה: אם המינימום הוא 10 והמקסימום הוא 20, תחזיר מספר בין 10 ל-20 כמו 15*
+8. **פונקציה `random_choice()`:**
+   - מקבלת רשימת מחרוזות.
+   - בוחרת מחרוזת רנדומלית מהרשימה.
+   *דוגמה: אם הרשימה היא ["Option1", "Option2", "Option3"], תחזיר אחת מהאפשרויות כמו "Option2"*
+9.  **דוגמת שימוש:**
+    - יוצרת מופע של המחלקה `FakeDataGenerator`.
+    - משתמשת בפונקציות השונות כדי ליצור פלט רנדומלי כמו שם, אימייל, מספר טלפון וכו'.
+    - מדפיסה את הפלט.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[התחלה] --> ImportLibs[ייבוא ספריות: <br><code>random</code>, <code>string</code>, <code>typing</code>]
-    ImportLibs --> ClassDef[הגדרת מחלקה:<br><code>FakeDataGenerator</code>]
-    ClassDef --> Attributes[תכונות המחלקה:<br><code>first_names</code>, <code>last_names</code>, <code>cities</code>,<br> <code>streets</code>, <code>domains</code>]
-    Attributes --> random_name_func[פונקציה: <br><code>random_name(self)</code><br> מחזירה שם מלא אקראי]
-    random_name_func --> random_email_func[פונקציה: <br><code>random_email(self)</code><br>מחזירה אימייל אקראי]
-    random_email_func --> random_phone_func[פונקציה: <br><code>random_phone(self)</code><br>מחזירה מספר טלפון אקראי]
-    random_phone_func --> random_address_func[פונקציה: <br><code>random_address(self)</code><br>מחזירה כתובת אקראית]
-    random_address_func --> random_string_func[פונקציה: <br><code>random_string(self, length)</code><br>מחזירה מחרוזת אקראית]
-     random_string_func --> random_int_func[פונקציה: <br><code>random_int(self, min_value, max_value)</code><br>מחזירה מספר שלם אקראי]
-      random_int_func --> random_choice_func[פונקציה: <br><code>random_choice(self, options)</code><br>מחזירה פריט מרשימה אקראית]
-      random_choice_func --> ExampleUsage[שימוש לדוגמא: <br>יצירת מופע וקריאה לפונקציות]
-    ExampleUsage --> End[סוף]
-
-    style ImportLibs fill:#f9f,stroke:#333,stroke-width:2px
-    style ClassDef fill:#ccf,stroke:#333,stroke-width:2px
-    style Attributes fill:#aaf,stroke:#333,stroke-width:2px
-    style random_name_func fill:#afa,stroke:#333,stroke-width:2px
-    style random_email_func fill:#afa,stroke:#333,stroke-width:2px
-      style random_phone_func fill:#afa,stroke:#333,stroke-width:2px
-    style random_address_func fill:#afa,stroke:#333,stroke-width:2px
-        style random_string_func fill:#afa,stroke:#333,stroke-width:2px
-        style random_int_func fill:#afa,stroke:#333,stroke-width:2px
-            style random_choice_func fill:#afa,stroke:#333,stroke-width:2px
-    style ExampleUsage fill:#ffc,stroke:#333,stroke-width:2px
+    A[Start] --> B(Create FakeDataGenerator instance);
+    B --> C{random_name()};
+    C -->|Returns random name| D(Print Name);
+    B --> E{random_email()};
+    E -->|Returns random email| F(Print Email);
+    B --> G{random_phone()};
+    G -->|Returns random phone| H(Print Phone);
+    B --> I{random_address()};
+    I -->|Returns random address| J(Print Address);
+    B --> K{random_string()};
+    K -->|Returns random string| L(Print Random String);
+        B --> M{random_int()};
+    M -->|Returns random int| N(Print Random Int);
+    B --> O{random_choice()};
+    O -->|Returns random choice| P(Print Random Choice);
+    P --> Q[End];
+     L --> Q;
+     N --> Q;
+     J --> Q;
+     H --> Q;
+     F --> Q;
+     D --> Q;
+    classDef func fill:#f9f,stroke:#333,stroke-width:2px
+    class C,E,G,I,K,M,O func
 ```
+
+**ניתוח תלויות (Dependencies):**
+
+-   **random**: משמש לייצור מספרים רנדומליים, בחירת איברים רנדומליים מרשימות, ובחירה רנדומלית של תוים.
+-   **string**: מספק גישה לקבועים שמישים כמו `string.ascii_letters` ו- `string.digits` ליצירת מחרוזות רנדומליות.
+-   **typing**: משמש לציון טיפוסים של משתנים. לדוגמה, `List[str]` מציין רשימה של מחרוזות, ו `Optional` לציון ערך אופציונלי.
 
 ## <explanation>
 
-**ייבואים (Imports):**
+**ייבוא (Imports):**
 
-- `import random`: ספריית `random` משמשת ליצירת ערכים אקראיים, כגון מספרים, בחירה אקראית מתוך רשימה, ועוד. היא בסיסית עבור פונקציונליות הגנרטור.
-- `import string`: ספריית `string` מספקת קבועים של מחרוזות, כגון `string.ascii_letters` (כל האותיות באנגלית) ו`string.digits` (כל הספרות), המשמשות ליצירת מחרוזות אקראיות.
-- `from typing import List, Optional`: ספריית `typing` משמשת להוספת הערות טיפוס לקוד, מה שמשפר את הקריאות והתחזוקה. `List` מציין שמשתנה מסוים הוא רשימה ו`Optional` מציין שמשתנה יכול להיות או לא להיות בעל ערך.
+-   **`import random`**: מודול זה משמש ליצירת מספרים רנדומליים, בחירת איברים רנדומליים מרשימות וכן ליצירת תוים רנדומליים. הוא נמצא בשימוש בכל הפונקציות ליצירת ערכים רנדומליים.
+
+-   **`import string`**: מודול זה מספק קבועים שימושיים כמו `string.ascii_letters` (אותיות האלפבית) ו `string.digits` (ספרות). הוא משמש בפונקציה `random_string()` לייצור מחרוזת רנדומלית.
+-  **`from typing import List, Optional`**: משמש להוספת טיפוסי מידע לקוד עבור קריאות טובה יותר. `List` משמש לציון שמשתנה הוא רשימה, ו `Optional` משמש לציון שמשתנה הוא אופציונלי, כלומר יכול להיות ערך או `None`.  הם אינם משמשים בפועל בקוד עצמו, אבל הם עוזרים להבין את הטיפוסים שפונקציות אמורות לקבל ולהחזיר.
 
 **מחלקה (Class):**
 
-- `FakeDataGenerator`:
-    - **תפקיד:** המחלקה מספקת מנגנון ליצירת נתונים מזויפים (אקראיים) כמו שמות, אימיילים, מספרי טלפון, כתובות, וכו'.
-    - **תכונות:**
-        - `first_names`: רשימה של שמות פרטיים אפשריים.
-        - `last_names`: רשימה של שמות משפחה אפשריים.
-        - `cities`: רשימה של ערים אפשריות.
-        - `streets`: רשימה של רחובות אפשריים.
-        - `domains`: רשימה של דומיינים אפשריים.
-    - **שיטות:**
-        - `random_name(self)`: מייצר שם מלא אקראי.
-            - **פרמטרים:** `self`.
-            - **ערך מוחזר:** מחרוזת המכילה שם מלא.
-            - **שימוש:** `faker.random_name()` לדוגמה מחזירה `'Alice Brown'`
-        - `random_email(self)`: מייצר אימייל אקראי.
-            - **פרמטרים:** `self`.
-            - **ערך מוחזר:** מחרוזת המכילה אימייל.
-            - **שימוש:** `faker.random_email()` לדוגמה מחזירה `'john.smith@example.com'`
-        - `random_phone(self)`: מייצר מספר טלפון אקראי.
-            - **פרמטרים:** `self`.
-            - **ערך מוחזר:** מחרוזת המכילה מספר טלפון.
-            - **שימוש:** `faker.random_phone()` לדוגמה מחזירה `+1-234-567-8901`
-        - `random_address(self)`: מייצר כתובת אקראית.
-            - **פרמטרים:** `self`.
-            - **ערך מוחזר:** מחרוזת המכילה כתובת.
-            - **שימוש:** `faker.random_address()` לדוגמה מחזירה `123 Main St, New York`
-        - `random_string(self, length)`: מייצר מחרוזת אקראית באורך נתון.
-            - **פרמטרים:** `self`, `length` (אורך המחרוזת).
-            - **ערך מוחזר:** מחרוזת אקראית.
-            - **שימוש:** `faker.random_string(15)` לדוגמה מחזירה `aBc12DeFgH34IjK`
-        - `random_int(self, min_value, max_value)`: מייצר מספר שלם אקראי בטווח נתון.
-            - **פרמטרים:** `self`, `min_value` (ערך מינימלי), `max_value` (ערך מקסימלי).
-            - **ערך מוחזר:** מספר שלם אקראי.
-            - **שימוש:** `faker.random_int(1, 10)` לדוגמה מחזירה `7`
-        - `random_choice(self, options)`: בוחר ומחזיר פריט אקראי מתוך רשימה נתונה.
-            - **פרמטרים:** `self`, `options` (רשימת אפשרויות).
-            - **ערך מוחזר:** פריט אקראי מהרשימה.
-            - **שימוש:** `faker.random_choice(["a", "b", "c"])` לדוגמה מחזירה `"b"`
+-   **`FakeDataGenerator`**: המחלקה נועדה לספק סט של פונקציות לייצור מידע דמה (Fake Data) כמו שמות, כתובות, מספרי טלפון וכו'. היא מאפשרת ליצור מופע אחד שמחזיק את כל הפונקציונליות, וזה הופך את הקוד למאורגן יותר וקל לשימוש.
+     - המשתנים `first_names`, `last_names`, `cities`, `streets`, ו `domains` הינם רשימות של ערכים קבועים מהם הפונקציות בוחרות רנדומלית.
+
+**פונקציות (Functions):**
+
+-   **`random_name(self) -> str`**: מייצרת שם רנדומלי המורכב משם פרטי ושם משפחה רנדומליים.
+    - אין פרמטרים נוספים מלבד המופע עצמו של המחלקה (self).
+    - מחזירה מחרוזת שמכילה את השם הרנדומלי.
+    - *דוגמה*: `faker.random_name()` יכול להחזיר "Alice Brown".
+-   **`random_email(self) -> str`**: מייצרת כתובת אימייל רנדומלית.
+    - אין פרמטרים נוספים מלבד המופע עצמו של המחלקה (self).
+    - מחזירה מחרוזת שמכילה את כתובת האימייל.
+    - *דוגמה*: `faker.random_email()` יכול להחזיר "john.smith@example.com".
+-   **`random_phone(self) -> str`**: מייצרת מספר טלפון רנדומלי בפורמט "+1-XXX-XXX-XXXX".
+    - אין פרמטרים נוספים מלבד המופע עצמו של המחלקה (self).
+    - מחזירה מחרוזת שמכילה את מספר הטלפון.
+    - *דוגמה*: `faker.random_phone()` יכול להחזיר "+1-234-567-8901".
+-   **`random_address(self) -> str`**: מייצרת כתובת רנדומלית.
+    - אין פרמטרים נוספים מלבד המופע עצמו של המחלקה (self).
+    - מחזירה מחרוזת שמכילה את הכתובת.
+    - *דוגמה*: `faker.random_address()` יכול להחזיר "123 Main St, New York".
+-   **`random_string(self, length: int = 10) -> str`**: מייצרת מחרוזת רנדומלית באורך נתון, כאשר האורך המוגדר כברירת מחדל הוא 10.
+    - מקבלת פרמטר אופציונלי `length` המציין את אורך המחרוזת.
+    - מחזירה מחרוזת רנדומלית.
+     - *דוגמה*: `faker.random_string(5)` יכול להחזיר "abc12".
+-   **`random_int(self, min_value: int = 0, max_value: int = 100) -> int`**: מייצרת מספר שלם רנדומלי בטווח נתון, עם ערכי ברירת מחדל של 0 ו-100.
+    - מקבלת פרמטרים אופציונליים `min_value` ו `max_value` המציינים את טווח הערכים.
+    - מחזירה מספר שלם.
+     - *דוגמה*: `faker.random_int(50, 150)` יכול להחזיר 85.
+-  **`random_choice(self, options: List[str]) -> str`**: בוחרת איבר רנדומלי מתוך רשימת האפשרויות הנתונה.
+  - מקבלת רשימה של מחרוזות `options`.
+  - מחזירה מחרוזת שנבחרה רנדומלית מהרשימה.
+   - *דוגמה:* `faker.random_choice(["Option1", "Option2", "Option3"])` יכול להחזיר "Option2".
 
 **משתנים (Variables):**
 
-- תכונות המחלקה (`first_names`, `last_names`, וכו'): אלו רשימות קבועות המשמשות בשיטות המחלקה ליצירת נתונים אקראיים.
+-   המשתנים `first_names`, `last_names`, `cities`, `streets`, ו- `domains` הם רשימות המאחסנות נתוני מקור מהם נבחרים ערכים רנדומליים לפונקציות הגנרציה.
+-   הפרמטרים בפונקציות משמשים לקבלת נתונים לפונקציה, לדוגמה, `length` ב `random_string`, `min_value` ו `max_value` ב `random_int`, ו`options` ב `random_choice`.
 
-**בעיות אפשריות או תחומים לשיפור:**
+**בעיות אפשריות ושיפורים:**
 
-- **הגבלת ערכים:** הרשימות של שמות, משפחות, ערים וכו' הן קבועות. ניתן לשפר את הקוד בכך שיתאפשר להעביר רשימות שונות בהתאם לצרכים.
-- **פורמט:** חלק מהפורמטים (מספרי טלפון וכתובות) הם קבועים. ניתן להוסיף אפשרות להתאמה אישית של פורמטים.
-- **איכות אקראיות:** השימוש ב-`random` הוא פשוט. עבור יישומים שדורשים רנדומיזציה חזקה יותר, יש לשקול להשתמש בספריות או מנגנונים מתקדמים יותר.
+-   **גיוון נתונים:** ניתן להוסיף יותר ערכים לרשימות כדי להגביר את הגיוון של הנתונים המופקים. לדוגמה, רשימות גדולות יותר של שמות פרטיים, שמות משפחה, ערים ורחובות.
+-   **פורמטים מותאמים:** אפשר להוסיף פונקציות עם פורמטים מותאמים אישית לנתונים, כמו פורמט טלפון אחר או פורמט כתובת שונה.
+-   **התאמה אישית:** הוספת פרמטרים לפונקציות כדי לאפשר למשתמשים לקבוע את פורמט הנתונים המופקים (לדוגמה, האם להשתמש בנקודות או מקפים בכתובת האימייל).
 
-**שרשרת קשרים:**
+**שרשרת קשרים עם חלקים אחרים בפרויקט:**
 
-הקוד עומד בפני עצמו ואינו תלוי ישירות בחלקים אחרים בפרויקט. הוא מהווה כלי שניתן להשתמש בו בכל מקום בפרויקט בו נדרש ייצור נתונים אקראיים. אפשר להשתמש בו כחלק ממערכת בדיקות, ייצור דאטה לדוגמה, או לצורך מילוי נתונים באפליקציה.
+-   קוד זה יכול להיות חלק ממערכת גדולה יותר, לדוגמה, כלי ליצירת מידע לבדיקות, או כחלק ממערכת שמייצרת מידע לדמו או להדגמה של אפליקציה. הקוד הזה יכול לשמש ככלי עצמאי ליצירת דאטה דמה בקלות ובמהירות.

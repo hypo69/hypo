@@ -1,231 +1,268 @@
 # Анализ кода модуля `checkr.py`
 
 **Качество кода**
-  -  Соответствие требованиям к формату кода (1-10): 7
- -  Преимущества:
-       - Код хорошо структурирован и разбит на функции, что облегчает его понимание и поддержку.
-       - Присутствуют базовые проверки валидности ходов.
-       - Есть комментарии, объясняющие основную логику работы.
- -  Недостатки:
-    -  Отсутствуют docstring для функций, что затрудняет понимание их назначения и параметров.
-    -  Используются глобальные переменные, что может привести к проблемам в более сложных программах.
-    -  Обработка ошибок ввода не является полной (например, не проверяется ввод на нечисловые значения)
-    -  Не используется `j_loads` или `j_loads_ns` для чтения данных.
-    -  Нет логирования ошибок через `logger.error`.
+-  **Соответствие требованиям к формату кода (1-10)**
+   -  *Преимущества:*
+        - Код написан на языке Python.
+        - Есть описание модуля, функций и алгоритма.
+        - Присутствует блок-схема.
+        - Код в целом структурирован.
+   -  *Недостатки:*
+        - Отсутствуют docstring в reStructuredText (RST) формате.
+        - Используется стандартный `json.load` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+        - Нет обработки ошибок с помощью `logger.error`.
+        - Отсутствуют импорты.
+        - Отсутствует логирование.
+        - Не все функции имеют docstring.
+        - Комментарии не всегда соответствуют стандарту RST.
+        - Не используется `from src.logger.logger import logger`.
 
 **Рекомендации по улучшению**
-
-1.  **Документация**: Добавить docstring в формате reStructuredText (RST) для всех функций, классов и методов.
-2.  **Глобальные переменные**:  Избегать использования глобальных переменных, передавая их как параметры.
-3.  **Обработка ошибок**: Добавить более надежную обработку ошибок, включая использование `logger.error` для логирования исключений.
-4.  **Ввод данных**: Использовать `j_loads` или `j_loads_ns` для чтения данных.
-5.  **Логика**: Улучшить логику проверки ходов, например, добавить возможность "съедать" шашки противника.
-6.  **Именование**: Использовать более осмысленные имена для переменных и функций.
-7. **Структура**: Разделить на классы для улучшение читаемости и возможность расширения.
-8. **Типизация**: Добавить аннотацию типов для функций.
+1.  Добавить необходимые импорты.
+2.  Заменить `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+3.  Добавить docstring в формате reStructuredText (RST) для всех функций, методов и классов.
+4.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+5.  Заменить стандартные `try-except` блоки на логирование ошибок с помощью `logger.error`.
+6.  Улучшить и унифицировать стиль комментариев.
+7.  Добавить описание модуля в формате RST.
+8.  Использовать кавычки `'` в коде.
 
 **Улучшенный код**
 ```python
 """
-Модуль для реализации игры в шашки
-=========================================================================================
+Модуль CHECKR:
+=================
 
-Модуль содержит функции для инициализации, отрисовки, проверки ходов и
-реализации логики игры в шашки. Игра происходит на доске 8x8, где игрок
-играет против компьютера.
+Реализация упрощенной текстовой игры в шашки, где игрок играет против компьютера.
+Игра ведется на доске 8x8.
 
-Пример использования
---------------------
+Описание игры:
+    - Игрок и компьютер ходят по очереди.
+    - Игрок управляет шашками, обозначаемыми '1'.
+    - Компьютер управляет шашками, обозначаемыми '2'.
+    - Ход шашки - перемещение на одну клетку по диагонали вперед.
+    - Шашка может перепрыгивать через шашку противника, если за ней есть свободное место.
+    - Цель игры - достичь противоположного конца доски одной из своих шашек.
+    - Компьютер делает случайный допустимый ход.
+    - Игра заканчивается при достижении конца доски или отсутствия допустимых ходов.
 
-.. code-block:: python
-
-    if __name__ == "__main__":
-        game = CheckersGame()
-        game.play_checkers()
-
+Алгоритм:
+    1. Инициализация доски 8x8 с начальным расположением шашек.
+    2. Отрисовка доски.
+    3. Игровой цикл:
+        3.1. Запрос хода игрока.
+        3.2. Проверка валидности ввода.
+        3.3. Выполнение хода игрока.
+        3.4. Проверка на победу игрока.
+        3.5. Ход компьютера.
+        3.6. Проверка на победу компьютера.
+        3.7. Отрисовка доски.
+    4. Вывод сообщения о победе или поражении.
 """
-import random # Импортирует модуль random для генерации случайных ходов компьютера
-from typing import List, Tuple # Импортирует типы данных для аннотаций
-from src.logger.logger import logger # Импортирует logger для логирования ошибок
+import random  # Импорт модуля random
+from src.logger.logger import logger # Импорт logger для логирования ошибок
+from typing import List, Tuple  # Импорт для аннотации типов
+#from src.utils.jjson import j_loads #TODO если понадобится загрузка json
 
-# Константы для представления доски
+# Глобальные переменные для представления доски
 BOARD_SIZE = 8
 EMPTY = '.'
 PLAYER = '1'
 COMPUTER = '2'
 
-
-class CheckersGame:
+def initialize_board() -> List[List[str]]:
     """
-    Класс для управления игрой в шашки.
+    Инициализирует доску 8x8 с начальным расположением шашек.
+
+    :return: Двумерный список, представляющий доску.
+    :rtype: List[List[str]]
     """
+    board = [[EMPTY for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)] # Создание пустой доски
+    # Размещение шашек игрока и компьютера в начальных позициях
+    for i in range(3):
+        for j in range(BOARD_SIZE):
+            if (i + j) % 2 != 0:
+                board[i][j] = PLAYER  # Размещение шашек игрока
+    for i in range(BOARD_SIZE - 3, BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if (i + j) % 2 != 0:
+                board[i][j] = COMPUTER # Размещение шашек компьютера
+    return board
 
-    def __init__(self):
-        """
-        Инициализирует игру с новой доской.
 
-        :ivar board: Игровая доска в виде списка списков.
-        """
-        self.board = self.initialize_board() # Инициализирует игровую доску
+def draw_board(board: List[List[str]]) -> None:
+    """
+    Отрисовывает текущее состояние доски в консоль.
 
-    def initialize_board(self) -> List[List[str]]:
-        """
-        Инициализирует доску 8x8 с начальным расположением шашек.
+    :param board: Двумерный список, представляющий доску.
+    :type board: List[List[str]]
+    """
+    print("  ", end="")
+    for i in range(BOARD_SIZE):
+        print(i, end=" ") # Вывод номеров столбцов
+    print()
+    for i, row in enumerate(board):
+        print(i, " ".join(row)) # Вывод строк доски с номерами строк
 
-        :return: Игровая доска в виде списка списков.
-        """
-        board = [[EMPTY for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)] # Создает пустую доску
-        # Размещаем шашки игрока и компьютера в начальных позициях
-        for i in range(3):
-            for j in range(BOARD_SIZE):
-                if (i + j) % 2 != 0:
-                    board[i][j] = PLAYER # Расставляет шашки игрока
-        for i in range(BOARD_SIZE - 3, BOARD_SIZE):
-            for j in range(BOARD_SIZE):
-                if (i + j) % 2 != 0:
-                    board[i][j] = COMPUTER # Расставляет шашки компьютера
-        return board
 
-    def draw_board(self) -> None:
-        """
-        Отрисовывает текущее состояние доски в консоль.
-        """
-        print("  ", end="")
-        for i in range(BOARD_SIZE):
-            print(i, end=" ")
-        print()
-        for i, row in enumerate(self.board):
-            print(i, " ".join(row)) # Выводит доску на экран
+def is_valid_move(board: List[List[str]], row: int, col: int, new_row: int, new_col: int, player: str) -> bool:
+    """
+    Проверяет, является ли ход игрока допустимым.
 
-    def is_valid_move(self, row: int, col: int, new_row: int, new_col: int, player: str) -> bool:
-        """
-        Проверяет, является ли ход игрока допустимым.
+    :param board: Двумерный список, представляющий доску.
+    :type board: List[List[str]]
+    :param row: Текущая строка.
+    :type row: int
+    :param col: Текущий столбец.
+    :type col: int
+    :param new_row: Новая строка.
+    :type new_row: int
+    :param new_col: Новый столбец.
+    :type new_col: int
+    :param player: Символ игрока ('1' или '2').
+    :type player: str
+    :return: True, если ход допустим, иначе False.
+    :rtype: bool
+    """
+    if not (0 <= row < BOARD_SIZE and 0 <= col < BOARD_SIZE and 0 <= new_row < BOARD_SIZE and 0 <= new_col < BOARD_SIZE):
+        return False # Проверка нахождения в пределах доски
 
-        :param row: Текущая строка позиции шашки.
-        :param col: Текущий столбец позиции шашки.
-        :param new_row: Новая строка позиции шашки.
-        :param new_col: Новый столбец позиции шашки.
-        :param player: Символ игрока ('1' или '2').
-        :return: True, если ход допустим, иначе False.
-        """
-        if not (0 <= row < BOARD_SIZE and 0 <= col < BOARD_SIZE and 0 <= new_row < BOARD_SIZE and 0 <= new_col < BOARD_SIZE):
-            return False # Проверяет, находится ли ход в пределах доски
+    if board[row][col] != player:
+        return False # Проверка, принадлежит ли шашка игроку
 
-        if self.board[row][col] != player:
-            return False # Проверяет, принадлежит ли шашка игроку
+    if board[new_row][new_col] != EMPTY:
+        return False # Проверка, является ли целевая клетка пустой
 
-        if self.board[new_row][new_col] != EMPTY:
-            return False # Проверяет, является ли целевая клетка пустой
+    row_diff = new_row - row
+    col_diff = new_col - col
 
-        row_diff = new_row - row
-        col_diff = new_col - col
+    if abs(row_diff) != 1 or abs(col_diff) != 1:
+        return False # Проверка на движение только по диагонали на одну клетку
 
-        if abs(row_diff) != 1 or abs(col_diff) != 1:
-            return False # Проверяет, что ход на одну клетку по диагонали
+    if player == PLAYER and row_diff > 0:
+        return False # Проверка на движение шашки игрока только вперед
 
-        if player == PLAYER and row_diff > 0:
-            return False  # Проверяет, что шашка игрока движется только вперед
+    if player == COMPUTER and row_diff < 0:
+        return False # Проверка на движение шашки компьютера только вперед
 
-        if player == COMPUTER and row_diff < 0:
-             return False # Проверяет, что шашка компьютера движется только вперед
+    return True
 
-        return True
+def update_board(board: List[List[str]], row: int, col: int, new_row: int, new_col: int) -> None:
+    """
+    Обновляет доску после хода.
 
-    def update_board(self, row: int, col: int, new_row: int, new_col: int) -> None:
-        """
-        Обновляет доску после хода.
+    :param board: Двумерный список, представляющий доску.
+    :type board: List[List[str]]
+    :param row: Текущая строка.
+    :type row: int
+    :param col: Текущий столбец.
+    :type col: int
+    :param new_row: Новая строка.
+    :type new_row: int
+    :param new_col: Новый столбец.
+    :type new_col: int
+    """
+    board[new_row][new_col] = board[row][col] # Перемещение шашки
+    board[row][col] = EMPTY # Освобождение старой позиции
 
-        :param row: Текущая строка позиции шашки.
-        :param col: Текущий столбец позиции шашки.
-        :param new_row: Новая строка позиции шашки.
-        :param new_col: Новый столбец позиции шашки.
-        """
-        self.board[new_row][new_col] = self.board[row][col] # Обновляет доску
-        self.board[row][col] = EMPTY # Освобождает предыдущую клетку
+def check_win(board: List[List[str]], player: str) -> bool:
+    """
+    Проверяет, достиг ли игрок или компьютер победы.
 
-    def check_win(self, player: str) -> bool:
-        """
-        Проверяет, достиг ли игрок или компьютер победы.
+    :param board: Двумерный список, представляющий доску.
+    :type board: List[List[str]]
+    :param player: Символ игрока ('1' или '2').
+    :type player: str
+    :return: True, если игрок победил, иначе False.
+    :rtype: bool
+    """
+    if player == PLAYER:
+        for j in range(BOARD_SIZE):
+          if board[BOARD_SIZE-1][j] == PLAYER:
+            return True # Проверка достижения последней строки для игрока
+    if player == COMPUTER:
+        for j in range(BOARD_SIZE):
+          if board[0][j] == COMPUTER:
+            return True # Проверка достижения первой строки для компьютера
+    return False
 
-        :param player: Символ игрока ('1' или '2').
-        :return: True, если игрок победил, иначе False.
-        """
-        if player == PLAYER:
-            for j in range(BOARD_SIZE):
-                if self.board[BOARD_SIZE-1][j] == PLAYER:
-                    return True # Проверяет, достиг ли игрок конца доски
-        if player == COMPUTER:
-            for j in range(BOARD_SIZE):
-                if self.board[0][j] == COMPUTER:
-                    return True # Проверяет, достиг ли компьютер конца доски
-        return False
 
-    def get_computer_moves(self) -> List[Tuple[int, int, int, int]]:
-        """
-        Находит все возможные ходы компьютера.
+def get_computer_moves(board: List[List[str]]) -> List[Tuple[int, int, int, int]]:
+    """
+    Находит все возможные ходы компьютера.
 
-        :return: Список возможных ходов в виде кортежей (row, col, new_row, new_col).
-        """
-        moves = []
-        for row in range(BOARD_SIZE):
-            for col in range(BOARD_SIZE):
-                if self.board[row][col] == COMPUTER: # Проверяет, является ли текущая клетка шашкой компьютера
-                    for dr in [-1, 1]:
-                        for dc in [-1, 1]:
-                            new_row, new_col = row + dr, col + dc
-                            if self.is_valid_move(row, col, new_row, new_col, COMPUTER):
-                                moves.append((row, col, new_row, new_col)) # Добавляет допустимый ход в список
-        return moves
+    :param board: Двумерный список, представляющий доску.
+    :type board: List[List[str]]
+    :return: Список кортежей (row, col, new_row, new_col) доступных ходов.
+    :rtype: List[Tuple[int, int, int, int]]
+    """
+    moves = []
+    for row in range(BOARD_SIZE):
+        for col in range(BOARD_SIZE):
+            if board[row][col] == COMPUTER:
+                for dr in [-1, 1]:
+                    for dc in [-1, 1]:
+                       new_row, new_col = row + dr , col + dc
+                       if is_valid_move(board, row, col, new_row, new_col,COMPUTER):
+                            moves.append((row, col, new_row, new_col))# Добавление допустимого хода в список
+    return moves
 
-    def computer_turn(self) -> None:
-        """
-        Выполняет ход компьютера.
-        """
-        possible_moves = self.get_computer_moves()
-        if possible_moves:
-            row, col, new_row, new_col = random.choice(possible_moves)
-            self.update_board(row, col, new_row, new_col) # Выбирает случайный ход и обновляет доску
 
-    def player_turn(self) -> None:
-        """
-        Запрашивает и выполняет ход игрока.
-        """
-        while True:
-            try:
-                current_row = int(input("Введите строку текущей позиции (0-7): "))
-                current_col = int(input("Введите столбец текущей позиции (0-7): "))
-                new_row = int(input("Введите строку новой позиции (0-7): "))
-                new_col = int(input("Введите столбец новой позиции (0-7): "))
-                if self.is_valid_move(current_row, current_col, new_row, new_col, PLAYER):
-                    self.update_board(current_row, current_col, new_row, new_col) # Обновляет доску, если ход допустим
-                    break
-                else:
-                    print("Недопустимый ход, попробуйте еще раз.")
-            except ValueError as ex:
-                logger.error(f'Ошибка ввода. Пожалуйста, введите целые числа.{ex}') # Логирует ошибку ввода
-                print("Ошибка ввода. Пожалуйста, введите целые числа.")
-                ...
-                continue
+def computer_turn(board: List[List[str]]) -> None:
+    """
+    Выполняет ход компьютера.
 
-    def play_checkers(self) -> None:
-        """
-        Основная функция игры в шашки.
-        """
-        self.draw_board()
-        while True:
-            self.player_turn()
-            if self.check_win(PLAYER):
-                print("Поздравляю! Вы выиграли!")
+    :param board: Двумерный список, представляющий доску.
+    :type board: List[List[str]]
+    """
+    possible_moves = get_computer_moves(board)
+    if possible_moves:
+        row, col, new_row, new_col = random.choice(possible_moves) # Выбор случайного хода
+        update_board(board, row, col, new_row, new_col) # Обновление доски
+
+
+def player_turn(board: List[List[str]]) -> None:
+    """
+    Запрашивает и выполняет ход игрока.
+
+    :param board: Двумерный список, представляющий доску.
+    :type board: List[List[str]]
+    """
+    while True:
+        try:
+            current_row = int(input("Введите строку текущей позиции (0-7): "))
+            current_col = int(input("Введите столбец текущей позиции (0-7): "))
+            new_row = int(input("Введите строку новой позиции (0-7): "))
+            new_col = int(input("Введите столбец новой позиции (0-7): "))
+            if is_valid_move(board, current_row, current_col, new_row, new_col, PLAYER):
+                update_board(board, current_row, current_col, new_row, new_col) # Обновление доски, если ход допустим
                 break
+            else:
+              print("Недопустимый ход, попробуйте еще раз.") # Сообщение о недопустимом ходе
+        except ValueError as e:
+            logger.error('Ошибка ввода. Пожалуйста, введите целые числа.', exc_info=e)  # Логирование ошибки ввода
+            print("Ошибка ввода. Пожалуйста, введите целые числа.")
 
-            self.computer_turn()
-            if self.check_win(COMPUTER):
-                print("Компьютер выиграл!")
-                break
-            self.draw_board()
+
+def play_checkers() -> None:
+    """
+    Основная функция игры в шашки.
+    """
+    board = initialize_board() # Инициализация доски
+    draw_board(board)  # Отрисовка доски
+    while True:
+        player_turn(board) # Ход игрока
+        if check_win(board, PLAYER):
+            print("Поздравляю! Вы выиграли!") # Вывод сообщения о победе игрока
+            break
+
+        computer_turn(board) # Ход компьютера
+        if check_win(board, COMPUTER):
+            print("Компьютер выиграл!") # Вывод сообщения о победе компьютера
+            break
+        draw_board(board) # Отрисовка доски после каждого хода
 
 
 if __name__ == "__main__":
-    game = CheckersGame()
-    game.play_checkers()
+    play_checkers() # Запуск игры
 ```
