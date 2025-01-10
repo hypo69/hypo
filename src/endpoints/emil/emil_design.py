@@ -44,7 +44,7 @@ from src.endpoints.advertisement.facebook.scenarios.post_message import (
 )
 
 # Утилиты
-from src.utils.file import read_text_file, save_text_file, get_filenames
+from src.utils.file_async import read_text_file, save_text_file, get_filenames_from_directory
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import get_image_bytes, get_raw_image_data
 from src.utils.convertors.ns import ns2dict
@@ -159,7 +159,7 @@ class EmilDesign:
 
             # Add the processed image path to the list and save to file
             described_images.append(img_path)
-            save_text_file(described_images_path, described_images)
+            await save_text_file(described_images_path, described_images)
 
         
 

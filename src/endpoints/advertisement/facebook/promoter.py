@@ -30,8 +30,8 @@ from src.endpoints.advertisement.facebook.scenarios import (post_message,
                                                   post_ad,
                                                     )
 
-from src.utils.file import (read_text_file,
-                        get_filenames,
+from src.utils.file_async import (read_text_file,
+                        get_filenames_from_directory,
                         get_directory_names,
                         )
 from src.utils.jjson import j_loads_ns, j_dumps

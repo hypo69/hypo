@@ -210,61 +210,41 @@ empty fields template
             f.width = None
 """
 
-
+import asyncio
+import logging
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List, Dict, Optional, Callable, Any
-from pydantic import BaseModel, Field, validator
-from types import SimpleNamespace, MappingProxyType
-from sqlite3 import Date
-from langdetect import detect
-from functools import wraps
-from enum import Enum
-
-import header
-from src import gs
-from src.utils.jjson import j_loads, j_loads_ns
-from src.category import Category
-from src.utils.file import read_text_file
-from src.utils.convertors.ns import ns2dict
-from src.logger.logger import logger
-from src.logger.exceptions import ProductFieldException 
-
-"""Класс, описывающий поля товара в формате API PrestaShop."""
-import header
-from src.logger.logger import logger
-from src.utils.jjson import j_loads
-from pathlib import Path
-from types import SimpleNamespace
 from typing import List, Dict, Optional
+from types import SimpleNamespace
+from json import loads as j_loads
 
+# Предполагаемые импорты из вашего проекта, которые нужно будет адаптировать
+from your_module import gs
+from your_module import read_text_file
+# from your_module import ProductFieldException  # If you have this exception class
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
 class ProductFields:
     """Класс, описывающий поля товара в формате API PrestaShop."""
 
-    def __init__(self):
-        """
-        Инициализация класса. Загружаются данные полей, языков и их идентификаторов.
-        """
+    lang_index: int
+    product_fields_list: List[str] = field(init=False)
+    presta_fields: SimpleNamespace = field(init=False)
+    assist_fields_dict: Dict[str, any] = field(default_factory=lambda: {
+        'default_image_url': '',
+        'images_urls': []
+    })
+
+    def __post_init__(self):
+        """Инициализация класса после создания экземпляра. Загружаются данные полей, языков и их идентификаторов."""
         self.product_fields_list = self._load_product_fields_list()
-        self.language = {'en': 1, 'he': 2, 'ru': 3}
-        # TODO: изменить логику так, чтобы словарь языков получался из presatshop клиента 
+        self.presta_fields = 
+        if not self._payload():
+             logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
 
-        self.presta_fields = SimpleNamespace(**{key: None for key in self.product_fields_list})
-        self.assist_fields_dict = {
-            'default_image_url': '', 
-            'images_urls': []
-        }
-        self._payload()
-
-
-
-    def _load_product_fields_list(self) -> List[str]:
-        """
-        Загрузка списка полей из файла.
-
-        Returns:
-            List[str]: Список полей, загруженных из текстового файла.
-        """
-        return read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True)
 
     def _payload(self) -> bool:
         """
@@ -273,14 +253,18 @@ class ProductFields:
         Returns:
             bool: True, если загрузка прошла успешно, иначе False.
         """
+
+        presta_fields_list:list = asyncio.run(read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True))
+        presta_fields:SimpleNamespace = SimpleNamespace(**{key: None for key in self.product_fields_list})
+        return presta_fields
+
         data = j_loads(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
         if not data:
             logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
             return False
         for name, value in data.items():
-            setattr(self, name, value)
+            setattr(self.presta_fields, name, value)  # Use setattr on presta_fields
         return True
-
 
     @property
     def associations(self) -> Optional[Dict]:
@@ -454,7 +438,7 @@ class ProductFields:
     def id_shop_default(self) -> int:
         """  <sub>*[property]*</sub>  `ps_product.id_shop_default: int(10) unsigned`
         field DB type: int(10) unsigned
-         @details: ID магазина по умолчанию . Используется multishop"""
+         @details: ID магазина по умолчанию . Используется в multishop"""
 
         return self.presta_fields.id_shop_default or ''
     
@@ -463,7 +447,7 @@ class ProductFields:
         """  <sub>*[setter]*</sub>   `ps_product.id_shop_default: int(10) unsigned`
             `ID` магазина заказчика """
         try:
-            self.presta_fields.id_shop_default = value
+            self.presta_fields.id_shop_default = value or 1
 
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'id_shop_default' данными {value}
@@ -486,7 +470,7 @@ class ProductFields:
         """  <sub>*[setter]*</sub>   `ps_product.id_shop: int(10) unsigned`
             `ID` магазина заказчика """
         try:
-            self.presta_fields.id_shop = value
+            self.presta_fields.id_shop = value or 1
 
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'id_shop' данными {value}
@@ -574,7 +558,7 @@ class ProductFields:
         return self.presta_fields.ean13 or ''
 
     @ean13.setter
-    def ean13(self, value:str = None, lang:str = 'en') -> bool:
+    def ean13(self, value:str = None) -> bool:
         """   <sub>*[setter]*</sub>   `ean13`
         field DB type:  varchar(13)
          @details: __prod_desc__"""
@@ -594,7 +578,7 @@ class ProductFields:
         return self.presta_fields.isbn or ''
         
     @isbn.setter
-    def isbn(self, value:str = None, lang:str = 'en') -> bool:
+    def isbn(self, value:str = None) -> bool:
         """   <sub>*[setter]*</sub>   `isbn`
         field DB type: varchar(32)
          @details: __prod_desc__"""
@@ -617,7 +601,7 @@ class ProductFields:
     
     
     @upc.setter
-    def upc(self, value:str = None, lang:str = 'en') -> str | None:
+    def upc(self, value:str = None) -> str | None:
         """   <sub>*[setter]*</sub>   `ps_product.upc`
         field DB type: varchar(12)
          @details: __prod_desc__"""
@@ -640,7 +624,7 @@ class ProductFields:
 
     
     @mpn.setter
-    def mpn(self, value:str = None, lang:str = 'en') -> bool:
+    def mpn(self, value:str = None) -> bool:
         """   <sub>*[setter]*</sub>  """
         try:
             self.presta_fields.mpn = value
@@ -662,7 +646,7 @@ class ProductFields:
         return self.presta_fields.ecotax or ''
 
     @ecotax.setter
-    def ecotax(self, value:str = None, lang:str = 'en') -> bool:
+    def ecotax(self, value:str = None) -> bool:
         """   <sub>*[setter]*</sub>  """
         try:
             self.presta_fields.ecotax = value
@@ -791,7 +775,7 @@ class ProductFields:
     
     @wholesale_price.setter
      
-    def wholesale_price(self, value:str = None, lang:str = 'en') -> float:
+    def wholesale_price(self, value:str = None) -> float:
         """  <sub>*[setter]*</sub>   """
         try:
             #self.presta_fields.wholesale_price = str (StringNormalizer.normalize_price (value) )
@@ -813,7 +797,7 @@ class ProductFields:
     
     @unity.setter
      
-    def unity(self, value:str = None, lang:str = 'en') -> bool:
+    def unity(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             self.presta_fields.unity = value
@@ -888,7 +872,7 @@ class ProductFields:
     
     @reference.setter
      
-    def reference(self, value:str = None, lang:str = 'en') -> bool:
+    def reference(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             self.presta_fields.reference = str(value)
@@ -911,7 +895,7 @@ class ProductFields:
     
     @supplier_reference.setter
      
-    def supplier_reference(self, value:str = None, lang:str = 'en') -> bool:
+    def supplier_reference(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             self.presta_fields.supplier_reference = str(value)
@@ -933,7 +917,7 @@ class ProductFields:
     
     @location.setter
      
-    def location(self, value:str = None, lang:str = 'en') -> bool:
+    def location(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             self.presta_fields.location = value
@@ -1814,7 +1798,7 @@ class ProductFields:
 
 
     @description.setter
-    def description(self, value: str | list = '', lang:str = 'en') -> bool:
+    def description(self, value: str | list = '') -> bool:
         """<sub>*[setter]*</sub>"""
         try:
             # # Convert list to string if necessary
@@ -1844,10 +1828,10 @@ class ProductFields:
     
     @description_short.setter
     
-    def description_short(self, value:str = None, lang:str = 'en') -> bool:
+    def description_short(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.description_short: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.description_short: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'description_short' данными {value}
@@ -1864,11 +1848,11 @@ class ProductFields:
     
     @link_rewrite.setter
      
-    def link_rewrite(self, value:str = None, lang:str = 'en') -> bool:
+    def link_rewrite(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             #self.presta_fields.link_rewrite = link_rewrite
-            self.presta_fields.link_rewrite: dict ={'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.link_rewrite: dict ={'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'link_rewrite' данными {value}
@@ -1886,10 +1870,10 @@ class ProductFields:
     
     @meta_description.setter
      
-    def meta_description(self, value:str = None, lang:str = 'en') -> bool:
+    def meta_description(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.meta_description: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.meta_description: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'meta_description' данными {value}
@@ -1907,10 +1891,10 @@ class ProductFields:
     
     @meta_keywords.setter
      
-    def meta_keywords(self, value:str = None, lang:str = 'en') -> bool:
+    def meta_keywords(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.meta_keywords: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.meta_keywords: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'meta_keywords' данными {value}
@@ -1928,10 +1912,10 @@ class ProductFields:
     
     @meta_title.setter
      
-    def meta_title(self, value:str = None, lang:str = 'en') -> bool:
+    def meta_title(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.meta_title: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.meta_title: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'meta_title' данными {value}
@@ -1948,13 +1932,12 @@ class ProductFields:
     
     
     @name.setter
-     
-    def name(self, value: str, lang:str = 'en') -> bool:
+    def name(self, value: str) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             self.presta_fields.name: dict = {'language':
                                                         [
-                                                            {'attrs':{'id':self.language[lang]}, 'value': value},
+                                                            {'attrs':{'id':self.lang_indes}, 'value': value},
                                                         ]
                                                      }
             return True
@@ -1974,13 +1957,13 @@ class ProductFields:
     
     @available_now.setter
      
-    def available_now(self, value:str = None, lang:str = 'en') -> bool:
+    def available_now(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             self.presta_fields.available_now: dict = {
                                                                 'language':
                                                                     [
-                                                                        {'attrs':{'id':self.language[lang]}, 'value':value},
+                                                                        {'attrs':{'id':self.lang_indes}, 'value':value},
                                                                     ]
                                                                 }
                 
@@ -2000,13 +1983,13 @@ class ProductFields:
     
     @available_later.setter
      
-    def available_later(self, value:str = None, lang:str = 'en') -> bool:
+    def available_later(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
             self.presta_fields.available_later: dict =  {
                                                                     'language':
                                                                         [
-                                                                            {'attrs':{'id':self.language[lang]}, 'value':value},
+                                                                            {'attrs':{'id':self.lang_indes}, 'value':value},
                                                                         ]
                                                                     }
             return True
@@ -2026,12 +2009,12 @@ class ProductFields:
     
     @delivery_in_stock.setter
      
-    def delivery_in_stock(self, value:str = None, lang:str = 'en') -> bool:
+    def delivery_in_stock(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>  Функция строит список словарей для поля `ps_product_lang.delivery_in_stock`
         @code
         {
             'language':[
-                {'attrs':{'id':self.language[lang]}, 'value':value},
+                {'attrs':{'id':self.lang_indes}, 'value':value},
                 {'attrs':{'id':'2'}, 'value':value},
                 {'attrs':{'id':'3'}, 'value':value},
             ]
@@ -2040,7 +2023,7 @@ class ProductFields:
         """
         
 
-        self.presta_fields.delivery_in_stock: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+        self.presta_fields.delivery_in_stock: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
 
 #   14
     
@@ -2052,8 +2035,8 @@ class ProductFields:
     
     @delivery_out_stock.setter
      
-    def delivery_out_stock(self, value:str = None, lang:str = 'en') -> bool:
-        self.presta_fields.delivery_out_stock: dict =   {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+    def delivery_out_stock(self, value:str = None) -> bool:
+        self.presta_fields.delivery_out_stock: dict =   {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
         
 #   15
 
@@ -2066,19 +2049,19 @@ class ProductFields:
     
     @delivery_additional_message.setter
      
-    def delivery_additional_message(self, value:str = None, lang:str = 'en') -> bool:
+    def delivery_additional_message(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub> Заметки по доставке. Например: война, хз когда доставим  
         Мультиязычное поле. Формирует словарь:
         @code
             {
             'language':[
-            {'attrs':{'id':self.language[lang]}, 'value':delivery_additional_message},
+            {'attrs':{'id':self.lang_indes}, 'value':delivery_additional_message},
             {'attrs':{'id':'2'}, 'value':delivery_additional_message},
             {'attrs':{'id':'3'}, 'value':delivery_additional_message},
             ]}
         @edcode
         """
-        self.presta_fields.delivery_additional_message: dict  =  {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+        self.presta_fields.delivery_additional_message: dict  =  {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
   
 
 #   16
@@ -2091,20 +2074,20 @@ class ProductFields:
     
     @affiliate_short_link.setter
      
-    def affiliate_short_link(self, value:str = None, lang:str = 'en') -> bool:
+    def affiliate_short_link(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub> Короткие линки на партнерские преогаммы. Мультиязычное поле.
         Формирует словарь:
         @code
          {
             'language':[
-            {'attrs':{'id':self.language[lang]}, 'value':affiliate_short_link},
+            {'attrs':{'id':self.lang_indes}, 'value':affiliate_short_link},
             {'attrs':{'id':'2'}, 'value':affiliate_short_link},
             {'attrs':{'id':'3'}, 'value':affiliate_short_link},
             ]}
             @edcode
         """
         try:
-            self.presta_fields.affiliate_short_link: dict =   {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.affiliate_short_link: dict =   {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
 
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'affiliate_short_link' данными {value}
@@ -2125,7 +2108,7 @@ class ProductFields:
             self.presta_fields.affiliate_text: dict =   {
                                                                 'language':
                                                                     [
-                                                                        {'attrs':{'id':self.language[lang]}, 'value':value},
+                                                                        {'attrs':{'id':self.lang_indes}, 'value':value},
                                                                     ]
                                                                 }
             return True
@@ -2143,10 +2126,10 @@ class ProductFields:
     
     
     @affiliate_summary.setter 
-    def affiliate_summary(self, value:str = None, lang:str = 'en') -> bool:
+    def affiliate_summary(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         if value and lang:
-            self.presta_fields.affiliate_summary: dict =   {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.affiliate_summary: dict =   {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
 
 
 
@@ -2159,10 +2142,10 @@ class ProductFields:
     
     @affiliate_summary_2.setter
      
-    def affiliate_summary_2(self, value:str = None, lang:str = 'en') -> bool:
+    def affiliate_summary_2(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.affiliate_summary_2: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.affiliate_summary_2: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'affiliate_summary_2' данными {value}
             Ошибка: """, ex)
@@ -2178,10 +2161,10 @@ class ProductFields:
 
     
     @affiliate_image_small.setter
-    def affiliate_image_small(self, value:str = None, lang:str = 'en') -> bool:
+    def affiliate_image_small(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.affiliate_image_small: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.affiliate_image_small: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'affiliate_summary_2' данными {value}
             Ошибка: """, ex)
@@ -2198,10 +2181,10 @@ class ProductFields:
     
     @affiliate_image_medium.setter
      
-    def affiliate_image_medium(self, value:str = None, lang:str = 'en') -> bool:
+    def affiliate_image_medium(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         try:
-            self.presta_fields.affiliate_image_medium: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.affiliate_image_medium: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
             return True
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'affiliate_summary_2' данными {value}
@@ -2217,9 +2200,9 @@ class ProductFields:
 
     
     @affiliate_image_large.setter
-    def affiliate_image_large(self, value:str = None, lang:str = 'en') -> bool:
+    def affiliate_image_large(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
-        self.presta_fields.affiliate_image_large: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+        self.presta_fields.affiliate_image_large: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
     ...
 
 # 23
@@ -2230,13 +2213,13 @@ class ProductFields:
 
     
     @ingredients.setter
-    def ingredients(self, value: str = None, lang:str = 'en') -> bool:
+    def ingredients(self, value: str = None) -> bool:
         """  <sub>*[setter]*</sub>  Ингридиенты. Текстовое поле - можно хранить фрагменты HTML кода 
         формирует список словарей:
         @code
         {
         'language':[
-            {'attrs':{'id':self.language[lang]}, 'value':ingredients},
+            {'attrs':{'id':self.lang_indes}, 'value':ingredients},
             {'attrs':{'id':'2'}, 'value':ingredients},
             {'attrs':{'id':'3'}, 'value':ingredients},
         ]}
@@ -2244,7 +2227,7 @@ class ProductFields:
         значение `ingredients` может быть блоком HTML
         """
         try:
-            self.presta_fields.ingredients: dict =  {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.ingredients: dict =  {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
         except ProductFieldException as ex:
             logger.error(f'Ошибка заполнения `ingredients` данными {value} Ошибка: ',ex)
             return
@@ -2259,13 +2242,13 @@ class ProductFields:
 
     
     @specification.setter
-    def specification(self, value: str = None, lang:str = 'en') -> bool:
+    def specification(self, value: str = None) -> bool:
         """  <sub>*[setter]*</sub>  specification. Текстовое поле - можно хранить фрагменты HTML кода 
         формирует список словарей:
         @code
         {
         'language':[
-            {'attrs':{'id':self.language[lang]}, 'value':ingredients},
+            {'attrs':{'id':self.lang_indes}, 'value':ingredients},
             {'attrs':{'id':'2'}, 'value':ingredients},
             {'attrs':{'id':'3'}, 'value':ingredients},
         ]}
@@ -2273,7 +2256,7 @@ class ProductFields:
         значение `ingredients` может быть блоком HTML
         """
         try:
-            self.presta_fields.specification: dict =  {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.specification: dict =  {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
         except ProductFieldException as ex:
             logger.error(f'Ошибка заполнения `specification` данными {value} Ошибка: ',ex)
             ...
@@ -2286,10 +2269,10 @@ class ProductFields:
 
     
     @how_to_use.setter
-    def how_to_use(self, value:str = None, lang:str = 'en') -> bool:
+    def how_to_use(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>  `ps_product_lang.how_to_use` """
         try:
-            self.presta_fields.how_to_use: dict = {'language':[{'attrs':{'id':self.language[lang]}, 'value':value},]}
+            self.presta_fields.how_to_use: dict = {'language':[{'attrs':{'id':self.lang_indes}, 'value':value},]}
         except ProductFieldException as ex:
             logger.error(f"""Ошибка заполнения поля: 'how_to_use' данными {value}
             Ошибка: """, ex)
@@ -2305,7 +2288,7 @@ class ProductFields:
     
     
     @id_default_image.setter
-    def id_default_image(self, value:str = None, lang:str = 'en') -> bool:
+    def id_default_image(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         ...
         try:
@@ -2376,7 +2359,7 @@ class ProductFields:
 
     
     @position_in_category.setter
-    def position_in_category(self, value:str = None, lang:str = 'en') -> bool:
+    def position_in_category(self, value:str = None) -> bool:
         """  <sub>*[setter]*</sub>   """
         self.presta_fields.position_in_category = value
 

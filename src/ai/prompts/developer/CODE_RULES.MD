@@ -1,124 +1,118 @@
-### Code Rules:
+### **System Instructions for Machine Learning Model**
 
-1. **General Principles**
-   - Use a consistent coding style to enhance readability and consistency.
-   - All changes and recommendations must adhere to this format.
+=========================================================================================
 
----
-
-2. **Comments**
-   - **Comments after the `#` symbol**:
-     - **Do not modify**: Comments after the `#` symbol should remain unchanged and be clear. Do not rewrite or delete them, even if they start with code.
-     - **Informative**: Internal comments should be informative and explain the following block of code.
-     - **Format**: Use reStructuredText (RST) format for all comments and documentation.
-     - **Terminology**: Avoid using terms like 'get', 'do' in comments. Instead, use phrases like 'check', 'send', 'code executes ...'.
-     - **Passive forms**: Prefer passive forms: 'copying', 'formatting', 'creating', etc.
-     - **Empty lines**: If there are empty lines or `...`, do not document them.
-
-   - **Comments after the `"""` symbol**:
-     - **Optimize**: Comments after the `"""` symbol can and should be optimized based on the actual behavior of the code.
+Description of functionality and rules for code generation, analysis, and improvement. Intended to ensure a consistent and readable coding style that meets requirements.
 
 ---
 
-3. **Documentation**
-   - **Docstring**: Each function, method, and class should have a docstring in Sphinx style.
-     - Example for a function:
-       ```python
-       def function(param: str, param1: Optional[str | dict] = None) -> dict | None:
-           """
-           Function description.
+### **Key Principles**
 
-           :param param: Description of the `param` parameter.
-           :param param1: (Optional) Description of the `param1` parameter.
-           :return: Description of the return value.
-           :raises SomeError: Conditions for the exception.
-           """
-       ```
-   - **Module description**: Add a module description at the beginning of each file:
-     ```python
-     """
-     Module for working with a programmer assistant
-     =========================================================================================
+#### **1. General Guidelines**:
+- Adhere to a clear coding style.
+- All changes should be justified and align with the requirements.
 
-     Description of the module functionality.
+#### **2. Comments**:
+- Use `#` for internal comments.
+- Documentation in Sphinx format must be used for all functions, methods, and classes.
+- Comments and documentation should be clear, concise, and precise.
 
-     Example usage
-     -------------
+#### **3. Code Formatting**:
+- Use single quotes.
+- Add spaces around operators.
+- All parameters must be typed.
+- Avoid using `Union`.
 
-     .. code-block:: python
-
-         example_usage()
-     """
-     ```
+#### **4. Logging**:
+- Use the `logger` module from `src.logger.logger`.
+- Error examples should be logged using `logger.error`.
 
 ---
 
-4. **Code Formatting**
-   - **Quotes**: Use single quotes instead of double quotes.
-   - **Spaces**: Use spaces around the assignment operator `=`. Example:
-     ```python
-     a = 1
-     ```
-   - **Consistency**: Apply spaces consistently in all expressions and assignments:
-     ```python
-     result = 10 if x > 5 else 20
-     ```
-   - **Import header**: Always include the `import header` line at the beginning of the file.
-   - **Debugging**: Add `...` between `logger` and `return` for debugging, example:
-     ```python
-     logger.error('Error while executing task', ex)
-     ...
-     return
-     ```
+### **Main Requirements**:
 
----
+#### **1. Markdown Format for Responses**:
+- All responses must follow the **Markdown** format.
+- The structure of the response should include:
+  - **Original code**: A block of the received code without changes.
+  - **Improved code**: A block of the improved code, properly formatted and with added comments.
+  - **Changes**: A detailed list of modifications and explanations.
+- The code should be wrapped in appropriate syntax highlighting tags (e.g., `python`, `markdown`, `json`).
 
-5. **Function Parameters**
-   - **Typing**: Parameters should be explicitly typed. If the default value is `None`, use `Optional`. Example:
-     ```python
-     def critical(self, message: str, ex: Optional = None, exc_info: Optional[bool] = True):
-     ```
-   - **Avoid Union**: Avoid using `Union`.
+#### **2. Comment Format**:
+- Use the defined style for comments and documentation in the code.
+- Example:
 
----
-
-
-7. **Logging**
-   - **Logger**: Use `from src.logger.logger import logger` for logging instead of the standard `logging`.
-   - **Error logging example**:
-     ```python
-     logger.error('Error while starting bot: ', ex)
-     ...
-     return
-     ```
-
----
-
-8. **Constants**
-   - **MODE**: Always include the global constant `MODE` in the code, even if it is not used.
-
-
-
-
-
-### Improved code:
 ```python
-def add_numbers(a: int, b: int) -> int:
-    """
-    Function that adds two numbers.
+    def read_text_file(
+        file_path: str | Path,
+        as_list: bool = False,
+        extensions: Optional[list[str]] = None,
+        chunk_size: int = 8192
+    ) -> Generator[str, None, None] | str | None:
+        """
+        Reads the contents of a file (or files from a directory) using a generator for memory efficiency.
 
-    :param a: The first number.
-    :type a: int
-    :param b: The second number.
-    :type b: int
-    :returns: The sum of numbers `a` and `b`.
-    :rtype: int
-    """
-    return a + b
+        Args:
+            file_path (str | Path): Path to the file or directory.
+            as_list (bool, optional): If `True`, returns a generator of strings.
+            extensions (list[str], optional): List of file extensions to include when reading a directory.
+            chunk_size (int, optional): The size of chunks to read the file in bytes.
+
+        Returns:
+            Generator[str, None, None] | str | None: A string generator, a concatenated string, or `None` in case of error.
+
+        Raises:
+            Exception: If an error occurs while reading the file.
+
+        Example:
+            >>> from pathlib import Path
+            >>> file_path = Path('example.txt')
+            >>> content = read_text_file(file_path)
+            >>> if content:
+            ...    print(f'File content: {content[:100]}...')
+            File content: Example text...
+        """
+        ...
+```
+- Always provide detailed explanations in comments. Avoid vague terms such as *"get"* or *"do"*. Instead, use precise terms like *"extract"*, *"check"*, *"perform"*.
+- Comments should immediately precede the described code block and explain its purpose.
+
+#### **3. Spaces Around Assignment Operators**:
+- Always add spaces around the `=` operator to improve readability.
+- Examples:
+  - **Incorrect**: `x=5`
+  - **Correct**: `x = 5`
+
+#### **4. Use of `j_loads` or `j_loads_ns`**:
+- For reading JSON or configuration files, replace the standard `open` and `json.load` with `j_loads` or `j_loads_ns`.
+- Example:
+
+```python
+# Incorrect:
+with open('config.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+# Correct:
+data = j_loads('config.json')
 ```
 
-### Changes:
-- Added RST-style documentation for the function description.
-- Added type annotations for `a` and `b`.
-- Added spaces around `+` and function parameters for better readability.
+#### **5. Preserving Comments**:
+- All existing comments starting with `#` should be preserved as-is in the "Improved code" section.
+- If a comment seems outdated or unclear, do not modify it. Instead, mark it in the "Changes" section.
 
+#### **6. Handling `...` in Code**:
+- Leave `...` as markers in the code unchanged.
+- Do not document lines with `...`.
+
+#### **7. Response Structure**:
+Each response should include the following sections:
+
+- **Improved Optimized Full Code**:
+
+```markdown
+<Improved version of the code with added comments and formatting.>
+```
+
+- **Changes**:
+<A detailed list of all modifications, including explanations and justifications.>

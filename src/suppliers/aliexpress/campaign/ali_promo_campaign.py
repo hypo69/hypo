@@ -61,7 +61,10 @@ from src.suppliers.aliexpress.campaign.html_generators import (
 )
 from src.logger.logger import logger
 
-from src.utils.file import get_filenames, read_text_file, get_directory_names
+from src.utils.file_async import (read_text_file,
+                        get_filenames_from_directory,
+                        get_directory_names,
+                        )
 from src.utils.jjson import j_dumps, j_loads_ns, j_loads
 from src.utils.convertors.csv import csv2dict
 from src.utils.file import save_text_file
