@@ -25,7 +25,7 @@
 
     # Загрузка данных о категории и продуктах
     category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-    products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+    products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
 
     # Отправка заголовка
     post_title(driver, category)
@@ -87,10 +87,10 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
     image_paths = []
     video_paths = []
     for product in products:
-        if hasattr(product, 'local_saved_image') and product.local_saved_image:
-            image_paths.append(Path(product.local_saved_image))
-        if not no_video and hasattr(product, 'local_saved_video') and product.local_saved_video:
-            video_paths.append(Path(product.local_saved_video))
+        if hasattr(product, 'local_image_path') and product.local_image_path:
+            image_paths.append(Path(product.local_image_path))
+        if not no_video and hasattr(product, 'local_video_path') and product.local_video_path:
+            video_paths.append(Path(product.local_video_path))
 
     try:
         # Код исполняет загрузку изображений
@@ -183,9 +183,9 @@ async def main():
     d = Driver(locators=locators, headless=False)
     # Загрузка тестовых данных
     category = SimpleNamespace(title='Заголовок', description='Описание')
-    products = [SimpleNamespace(local_saved_image='test_data/test_image.png',
+    products = [SimpleNamespace(local_image_path='test_data/test_image.png',
                                 description='Описание к изображению 1'),
-                SimpleNamespace(local_saved_image='test_data/test_image2.png',
+                SimpleNamespace(local_image_path='test_data/test_image2.png',
                                 description='Описание к изображению 2')]
     # Продвижение поста
     await promote_post(d, category, products)
@@ -235,7 +235,7 @@ if __name__ == '__main__':
 
     # Загрузка данных о категории и продуктах
     category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-    products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+    products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
 
     # Отправка заголовка
     post_title(driver, category)
@@ -297,10 +297,10 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
     image_paths = []
     video_paths = []
     for product in products:
-        if hasattr(product, 'local_saved_image') and product.local_saved_image:
-            image_paths.append(Path(product.local_saved_image))
-        if not no_video and hasattr(product, 'local_saved_video') and product.local_saved_video:
-            video_paths.append(Path(product.local_saved_video))
+        if hasattr(product, 'local_image_path') and product.local_image_path:
+            image_paths.append(Path(product.local_image_path))
+        if not no_video and hasattr(product, 'local_video_path') and product.local_video_path:
+            video_paths.append(Path(product.local_video_path))
 
     try:
         # Код исполняет загрузку изображений
@@ -393,9 +393,9 @@ async def main():
     d = Driver(locators=locators, headless=False)
     # Загрузка тестовых данных
     category = SimpleNamespace(title='Заголовок', description='Описание')
-    products = [SimpleNamespace(local_saved_image='test_data/test_image.png',
+    products = [SimpleNamespace(local_image_path='test_data/test_image.png',
                                 description='Описание к изображению 1'),
-                SimpleNamespace(local_saved_image='test_data/test_image2.png',
+                SimpleNamespace(local_image_path='test_data/test_image2.png',
                                 description='Описание к изображению 2')]
     # Продвижение поста
     await promote_post(d, category, products)

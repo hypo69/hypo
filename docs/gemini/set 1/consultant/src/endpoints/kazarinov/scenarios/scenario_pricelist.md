@@ -144,7 +144,7 @@ class MexironBuilder:
             return False
 
 
-        required_fields = ('id_product', 'name', 'description_short', 'description', 'specification', 'local_saved_image')
+        required_fields = ('id_product', 'name', 'description_short', 'description', 'specification', 'local_image_path')
         products_list = []
 
         for url in urls_list:

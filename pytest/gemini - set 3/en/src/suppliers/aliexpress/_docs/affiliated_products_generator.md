@@ -61,7 +61,7 @@ def test_process_affiliate_products(mock_ali_api, mock_j_dumps, mock_video_save,
 
     # Check if a specific product has been saved
     assert products[0].product_id == "valid_id"
-    assert products[0].local_saved_image
+    assert products[0].local_image_path
 
 
     # Test when no affiliate links are found for any URL
@@ -93,7 +93,7 @@ def test_process_affiliate_products(mock_ali_api, mock_j_dumps, mock_video_save,
 
 3. **Error Handling:** The tests now include checks for `None` values returned by the mocked methods to test the error handling in `process_affiliate_products`.
 
-4. **Asserting Expected Behavior:**  Assertions are included to verify that the expected attributes of the `SimpleNamespace` objects are correctly populated (e.g., `product_id`, `local_saved_image`)
+4. **Asserting Expected Behavior:**  Assertions are included to verify that the expected attributes of the `SimpleNamespace` objects are correctly populated (e.g., `product_id`, `local_image_path`)
 
 5. **pytest.raises:**  While we're mocking, we test that appropriate logging messages are generated in the absence of affiliate links or products, using mocks for the logger functions
 

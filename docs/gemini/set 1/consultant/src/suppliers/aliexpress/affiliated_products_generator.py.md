@@ -154,7 +154,7 @@ class AliAffiliatedProducts(AliApi):
             await save_png_from_url(product.product_main_image_url, image_path)
             logger.info(f"Saved image for {product.product_id=}")
 
-            product.local_saved_image = str(image_path)
+            product.local_image_path = str(image_path)
             if len(product.product_video_url) > 1:
                 parsed_url: Path = urlparse(product.product_video_url)
                 suffix: str = Path(parsed_url.path).suffix
@@ -162,7 +162,7 @@ class AliAffiliatedProducts(AliApi):
                 video_path: Path = Path(category_root) / 'videos' / \
                     f'{product.product_id}{suffix}'
                 await save_video_from_url(product.product_video_url, video_path)
-                product.local_saved_video = str(video_path)
+                product.local_video_path = str(video_path)
                 logger.info(f"Saved video for {product.product_id=}")
 
             logger.info(f"{product.product_title}")
@@ -343,7 +343,7 @@ class AliAffiliatedProducts(AliApi):
             await save_png_from_url(product.product_main_image_url, image_path)
             logger.info(f"Saved image for {product.product_id=}")
 
-            product.local_saved_image = str(image_path)
+            product.local_image_path = str(image_path)
             if len(product.product_video_url) > 1:
                 parsed_url: Path = urlparse(product.product_video_url)
                 suffix: str = Path(parsed_url.path).suffix
@@ -351,7 +351,7 @@ class AliAffiliatedProducts(AliApi):
                 video_path: Path = Path(category_root) / 'videos' / \
                     f'{product.product_id}{suffix}'
                 await save_video_from_url(product.product_video_url, video_path)
-                product.local_saved_video = str(video_path)
+                product.local_video_path = str(video_path)
                 logger.info(f"Saved video for {product.product_id=}")
 
             logger.info(f"{product.product_title}")

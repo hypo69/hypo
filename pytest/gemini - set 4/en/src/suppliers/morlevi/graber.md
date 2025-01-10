@@ -50,7 +50,7 @@ def test_grab_page_valid_input(grabber, mock_driver, product_fields):
         mock_save_png.return_value = 'test_image_path'
         asyncio.run(grabber.grab_page(mock_driver))
         
-        assert grabber.fields.local_saved_image == 'test_image_path'
+        assert grabber.fields.local_image_path == 'test_image_path'
 
 
 def test_grab_page_no_image(grabber, mock_driver):
@@ -58,7 +58,7 @@ def test_grab_page_no_image(grabber, mock_driver):
     with patch("src.suppliers.morlevi.graber.save_png") as mock_save_png:
         mock_save_png.side_effect = Exception("Error saving image")
         asyncio.run(grabber.grab_page(mock_driver))
-        assert grabber.fields.local_saved_image is None  # Correct handling of the exception
+        assert grabber.fields.local_image_path is None  # Correct handling of the exception
 
 def test_grab_page_no_image_data(grabber, mock_driver):
     """Checks that grab_page doesn't crash with incorrect image data."""
@@ -66,27 +66,27 @@ def test_grab_page_no_image_data(grabber, mock_driver):
     with patch("src.suppliers.morlevi.graber.save_png") as mock_save_png:
         mock_save_png.return_value = None # Mock save_png to return None
         asyncio.run(grabber.grab_page(mock_driver))
-        assert grabber.fields.local_saved_image is None  # Correct handling of the exception
+        assert grabber.fields.local_image_path is None  # Correct handling of the exception
 
 
-# Tests for local_saved_image
-def test_local_saved_image_valid(grabber, product_fields):
+# Tests for local_image_path
+def test_local_image_path_valid(grabber, product_fields):
     """Checks successful image saving and path retrieval."""
     with patch.object(grabber.d, 'execute_locator') as mock_execute:
         mock_execute.return_value = b"image_data"
         with patch("src.suppliers.morlevi.graber.save_png") as mock_save_png:
             mock_save_png.return_value = "test_path"
-            result = asyncio.run(grabber.local_saved_image(product_fields))
+            result = asyncio.run(grabber.local_image_path(product_fields))
             assert result is True
-            assert grabber.fields.local_saved_image == "test_path"
+            assert grabber.fields.local_image_path == "test_path"
 
 
-def test_local_saved_image_no_image_data(grabber):
+def test_local_image_path_no_image_data(grabber):
     """Checks that grab_page doesn't crash with no image data."""
     with patch.object(grabber.d, 'execute_locator') as mock_execute:
         mock_execute.side_effect = Exception("No image data")
         with patch("src.suppliers.morlevi.graber.save_png") as mock_save_png:
-            result = asyncio.run(grabber.local_saved_image())
+            result = asyncio.run(grabber.local_image_path())
             assert result is None
 
 
@@ -105,11 +105,11 @@ def test_local_saved_image_no_image_data(grabber):
 
 4. **Clearer Assertions:** Assertions are more specific and focused on the expected outcomes.
 
-5. **Edge Cases:**  `test_grab_page_no_image` and `test_local_saved_image_no_image_data` are added to cover cases where image data might not be available or saving might fail.
+5. **Edge Cases:**  `test_grab_page_no_image` and `test_local_image_path_no_image_data` are added to cover cases where image data might not be available or saving might fail.
 
-6. **`ProductFields` fixture:**  A `product_fields` fixture is created to provide a pre-populated `ProductFields` object, necessary for methods like `local_saved_image` that require a field to save to.
+6. **`ProductFields` fixture:**  A `product_fields` fixture is created to provide a pre-populated `ProductFields` object, necessary for methods like `local_image_path` that require a field to save to.
 
-7. **Asynchronous Tests:**  The `asyncio.run` is essential to properly execute the asynchronous functions (`grab_page`, `local_saved_image`) in a synchronous testing context.
+7. **Asynchronous Tests:**  The `asyncio.run` is essential to properly execute the asynchronous functions (`grab_page`, `local_image_path`) in a synchronous testing context.
 
 
 **To run these tests:**
@@ -123,7 +123,7 @@ def test_local_saved_image_no_image_data(grabber):
 -   **Real Driver:**  For production-quality tests, replace the mocks with actual webdriver interactions. You'll likely need to set up a proper `Driver` fixture and use `pytest-asyncio` to run your asynchronous tests correctly.
 -   **File Handling:**  In production, handle file paths (and errors) more robustly when saving images. The mocked file handling is enough for testing the core logic of your graber class, not the file system.  Consider using temporary directories for your test files.
 -   **Error Handling Refinement:** The mock error handling in the tests is a good start, but consider different types of exceptions and edge cases for more thorough coverage.
-- **`id_product` Issue:** The code has a hardcoded call to `id_product` in `local_saved_image`.  You will need to pass `id_product` to `grab_product_page` or the relevant method, and then handle it within that method properly. The comment is there for a reason.  Tests for this are lacking, and addressing this should be part of your test Startegy.
+- **`id_product` Issue:** The code has a hardcoded call to `id_product` in `local_image_path`.  You will need to pass `id_product` to `grab_product_page` or the relevant method, and then handle it within that method properly. The comment is there for a reason.  Tests for this are lacking, and addressing this should be part of your test Startegy.
 
 
 Remember to add tests for other methods in your class as necessary to achieve comprehensive test coverage. This expanded example demonStartes the improved approach using `pytest` for asynchronous and complex Python code.

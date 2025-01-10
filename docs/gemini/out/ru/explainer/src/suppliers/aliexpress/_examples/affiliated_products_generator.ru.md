@@ -40,9 +40,9 @@ def main():
         for product in products:
             print(f"Продукт ID: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
+            print(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Локальный путь к видео: {product.local_video_path}")
             print()
     else:
         print("Не удалось получить аффилированные продукты.")
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
 Вход: `prod_urls = ['123', 'https://...']`.
 
-Выход: `products = [<Product_1>, <Product_2>]`, где `Product_1` и `Product_2` – объекты с атрибутами `product_id`, `promotion_link`, `local_saved_image`, `local_saved_video`.
+Выход: `products = [<Product_1>, <Product_2>]`, где `Product_1` и `Product_2` – объекты с атрибутами `product_id`, `promotion_link`, `local_image_path`, `local_video_path`.
 
 
 ## <mermaid>

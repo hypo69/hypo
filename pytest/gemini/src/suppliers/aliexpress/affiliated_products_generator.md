@@ -67,8 +67,8 @@ def test_process_affiliate_products_valid_input(ali_affiliated_products, categor
     assert len(products) == 2
     assert products[0].promotion_link == "test_link"
     assert products[0].language == "EN"
-    assert products[0].local_saved_image.endswith("123.png")
-    assert products[1].local_saved_image.endswith("123.png")
+    assert products[0].local_image_path.endswith("123.png")
+    assert products[1].local_image_path.endswith("123.png")
 
 
 def test_process_affiliate_products_no_affiliate_links(ali_affiliated_products, category_root):

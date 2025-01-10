@@ -54,7 +54,7 @@ def test_post_title_locator_error(driver_mock, message_data):
 
 def test_upload_media_valid_input(driver_mock):
     """Tests upload_media with a valid SimpleNamespace product."""
-    media_data = [SimpleNamespace(local_saved_image="image.jpg")]
+    media_data = [SimpleNamespace(local_image_path="image.jpg")]
     assert upload_media(driver_mock, media_data) is True
 
 
@@ -68,7 +68,7 @@ def test_upload_media_no_image_error(driver_mock):
     driver_mock.execute_locator.side_effect = [
         True, False
     ]
-    media_data = [SimpleNamespace(local_saved_image="image.jpg")]
+    media_data = [SimpleNamespace(local_image_path="image.jpg")]
     assert upload_media(driver_mock, media_data) is False
 
 
@@ -82,7 +82,7 @@ def test_post_message_upload_media_fail(driver_mock, message_data):
     driver_mock.execute_locator.side_effect = [
         True, False
     ]
-    message_data.products = [SimpleNamespace(local_saved_image="image.jpg")]
+    message_data.products = [SimpleNamespace(local_image_path="image.jpg")]
 
     assert post_message(driver_mock, message_data) is False
 

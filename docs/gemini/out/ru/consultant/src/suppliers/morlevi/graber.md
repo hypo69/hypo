@@ -68,10 +68,10 @@ class Graber(Grbr):
 
 
     @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
+    async def local_image_path(self, value: Any = None):
         """Сохраняет изображение товара локально.
 
-        Получает скриншот изображения, сохраняет его в папку `tmp` и записывает путь к файлу в поле `local_saved_image` объекта `ProductFields`.
+        Получает скриншот изображения, сохраняет его в папку `tmp` и записывает путь к файлу в поле `local_image_path` объекта `ProductFields`.
 
         :param value: Переданное значение (не используется в текущей реализации).
         :type value: Any
@@ -94,14 +94,14 @@ class Graber(Grbr):
             # Сохранение изображения в папку tmp
             image_path = await save_png(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
             if image_path:
-                self.fields.local_saved_image = image_path
+                self.fields.local_image_path = image_path
                 return True
             else:
                 logger.error(f"Ошибка сохранения изображения")
                 return None
 
         except Exception as e:
-            logger.error(f"Ошибка при сохранении изображения в поле `local_saved_image`:", e)
+            logger.error(f"Ошибка при сохранении изображения в поле `local_image_path`:", e)
             return None
 ```
 
@@ -113,15 +113,15 @@ class Graber(Grbr):
 
 **Changes Made**
 
-*   Добавлены docstrings в формате RST для функции `local_saved_image` и класса `Graber`.
+*   Добавлены docstrings в формате RST для функции `local_image_path` и класса `Graber`.
 *   Добавлены типы для параметров функций.
 *   Изменены имена переменных для соответствия PEP 8 (например, `raw_image` вместо `raw`).
 *   Добавлен обработчик ошибок с использованием `logger.error` вместо стандартного `try-except`.
 *   Изменен способ обработки возможного списка `raw_image`.
-*   Исправлена логика сохранения пути к файлу изображения в `self.fields.local_saved_image`, теперь корректно сохраняет путь.
+*   Исправлена логика сохранения пути к файлу изображения в `self.fields.local_image_path`, теперь корректно сохраняет путь.
 *   Добавлена валидация значения `value` и вывод предупреждения если `value` не None.
 *   Добавлена функция `id_product`, которую нужно реализовать в классе.
-*   Изменён тип возвращаемого значения функции `local_saved_image`, для соответствия  `None` при ошибке.
+*   Изменён тип возвращаемого значения функции `local_image_path`, для соответствия  `None` при ошибке.
 
 
 **FULL Code**
@@ -194,10 +194,10 @@ class Graber(Grbr):
 
 
     @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
+    async def local_image_path(self, value: Any = None):
         """Сохраняет изображение товара локально.
 
-        Получает скриншот изображения, сохраняет его в папку `tmp` и записывает путь к файлу в поле `local_saved_image` объекта `ProductFields`.
+        Получает скриншот изображения, сохраняет его в папку `tmp` и записывает путь к файлу в поле `local_image_path` объекта `ProductFields`.
 
         :param value: Переданное значение (не используется в текущей реализации).
         :type value: Any
@@ -220,13 +220,13 @@ class Graber(Grbr):
             # Сохранение изображения в папку tmp
             image_path = await save_png(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
             if image_path:
-                self.fields.local_saved_image = image_path
+                self.fields.local_image_path = image_path
                 return True
             else:
                 logger.error(f"Ошибка сохранения изображения")
                 return None
 
         except Exception as e:
-            logger.error(f"Ошибка при сохранении изображения в поле `local_saved_image`:", e)
+            logger.error(f"Ошибка при сохранении изображения в поле `local_image_path`:", e)
             return None
 ```

@@ -39,9 +39,9 @@ def main():
         for product in products:
             print(f"Product ID: {product.product_id}")
             print(f"Affiliate Link: {product.promotion_link}")
-            print(f"Local Image Path: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Local Video Path: {product.local_saved_video}")
+            print(f"Local Image Path: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Local Video Path: {product.local_video_path}")
             print()
     else:
         print("No affiliate products found.")
@@ -145,7 +145,7 @@ graph TD
 - Отсутствует обработка ошибок (например, если запрос к AliExpress возвращает ошибку, или если не удалось сохранить изображение/видео).
 - Нет проверки валидности `prod_urls` (например, на корректность формата URL).
 -  Обработка ситуаций, когда продукт не найден на AliExpress.
--  Нужно больше информации о классе `Product` (атрибуты, например, `product_id`, `promotion_link`, `local_saved_image`, `local_saved_video`).
+-  Нужно больше информации о классе `Product` (атрибуты, например, `product_id`, `promotion_link`, `local_image_path`, `local_video_path`).
 
 **Взаимосвязи с другими частями проекта:**
 

@@ -21,7 +21,7 @@ Execution steps
 5. **Implement `close_pop_up` decorator (optional):** The code includes a function `close_pop_up` that creates a decorator for closing pop-up windows. This is an optional part; if you don't need to close pop-ups, you don't have to use this decorator. It leverages `Context.driver.execute_locator` to carry out the closing actions and handles potential exceptions. This decorator would need to be used as `@close_pop_up()` before a function if pop-up handling is needed.
 
 
-6. **Implement `local_saved_image` method:** This method fetches the product's default image using `execute_locator`, saves it to a temporary file in the `tmp` directory, and stores the local path in the `ProductFields` object.
+6. **Implement `local_image_path` method:** This method fetches the product's default image using `execute_locator`, saves it to a temporary file in the `tmp` directory, and stores the local path in the `ProductFields` object.
 
 
 Usage example
@@ -38,7 +38,7 @@ Usage example
         try:
             graber = Graber(driver=driver)
             product_fields = await graber.grab_page(driver=driver, id_product="12345")
-            print(product_fields.local_saved_image)
+            print(product_fields.local_image_path)
         except Exception as e:
             print(f"An error occurred: {e}")
 

@@ -151,7 +151,7 @@ class EmilDesign:
             res_ns: SimpleNamespace | list[SimpleNamespace] = j_loads_ns(response)
             res_ns: SimpleNamespace = res_ns[0] if isinstance(res_ns, list) else res_ns 
 
-            setattr(res_ns, 'local_saved_image', str( Path(images_dir / img) ) )
+            setattr(res_ns, 'local_image_path', str( Path(images_dir / img) ) )
 
             # append structured data to list of products
             data.append(res_ns)
@@ -178,7 +178,7 @@ class EmilDesign:
             setattr(message, 'title', f"{m.parent}\n{m.category}")
             setattr(message, 'description', m.description)
             message.products = SimpleNamespace()
-            setattr(message.products, 'local_saved_image', [m.local_saved_image])
+            setattr(message.products, 'local_image_path', [m.local_image_path])
            
             post_message(d, message, without_captions=True)
             ...
@@ -214,7 +214,7 @@ class EmilDesign:
             f.id_category_default = product_ns.category
             f.id_supplier = 11366 #  https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
             f.description = product_ns.description
-            f.images_urls = product_ns.local_saved_image
+            f.images_urls = product_ns.local_image_path
             
             fields_dict:dict = j_dumps (f)            
             product_id = await presta.create('products', fields_dict)

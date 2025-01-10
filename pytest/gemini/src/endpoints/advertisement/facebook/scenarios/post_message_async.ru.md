@@ -39,7 +39,7 @@ def mock_category():
 
 
 def mock_products():
-    return [SimpleNamespace(local_saved_image="test_image.jpg", caption="Caption")]
+    return [SimpleNamespace(local_image_path="test_image.jpg", caption="Caption")]
 
 
 @pytest.fixture

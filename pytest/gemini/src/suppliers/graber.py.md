@@ -108,8 +108,8 @@ def mock_locator():
         byer_protection=SimpleNamespace(attribute='test_attribute'),
         customer_reviews=SimpleNamespace(attribute='test_attribute'),
         link_to_video=SimpleNamespace(attribute='test_attribute'),
-        local_saved_image=SimpleNamespace(attribute='test_attribute'),
-        local_saved_video=SimpleNamespace(attribute='test_attribute'),
+        local_image_path=SimpleNamespace(attribute='test_attribute'),
+        local_video_path=SimpleNamespace(attribute='test_attribute'),
         close_pop_up=SimpleNamespace(attribute='test_attribute')
         )
 

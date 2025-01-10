@@ -40,8 +40,8 @@ Usage example
         title="New Product Launch",
         description="Check out our new product!",
         products=[
-            SimpleNamespace(local_saved_image="path/to/image1.jpg"),
-            SimpleNamespace(local_saved_image="path/to/image2.png")
+            SimpleNamespace(local_image_path="path/to/image1.jpg"),
+            SimpleNamespace(local_image_path="path/to/image2.png")
         ]
     )
 

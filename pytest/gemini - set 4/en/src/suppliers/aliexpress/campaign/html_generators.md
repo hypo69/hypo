@@ -18,7 +18,7 @@ def product_data():
     return SimpleNamespace(
         product_id="123",
         product_title="Test Product",
-        local_saved_image="images/test.jpg",
+        local_image_path="images/test.jpg",
         target_sale_price=10.00,
         target_sale_price_currency="USD",
         target_original_price=15.00,
@@ -52,7 +52,7 @@ def test_set_product_html_valid_input(product_data, category_path, tmp_path):
     with open(html_path, "r") as f:
         html_content = f.read()
         assert f"<h1>{html.escape(product_data.product_title)}</h1>" in html_content
-        assert f'<img src="{Path(product_data.local_saved_image).as_posix()}"' in html_content
+        assert f'<img src="{Path(product_data.local_image_path).as_posix()}"' in html_content
 
 
 @patch('hypotez.src.suppliers.aliexpress.campaign.html_generators.save_text_file')
@@ -60,7 +60,7 @@ def test_set_product_html_invalid_image_path(mock_save_text_file, product_data, 
     """Tests set_product_html with an invalid image path."""
     category_path = Path(tmp_path, category_path)
     category_path.mkdir(parents=True, exist_ok=True)
-    product_data.local_saved_image = "invalid/path/image.jpg"  # Invalid path
+    product_data.local_image_path = "invalid/path/image.jpg"  # Invalid path
     with pytest.raises(FileNotFoundError):
         ProductHTMLGenerator.set_product_html(product_data, category_path)
 

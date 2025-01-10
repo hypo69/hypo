@@ -80,8 +80,8 @@ def test_grab_page_exception(graber, mock_driver, mock_product_fields):
 
 
 
-# Tests for local_saved_image
-def test_local_saved_image_success(graber, mock_driver, mock_locator, mock_product_fields):
+# Tests for local_image_path
+def test_local_image_path_success(graber, mock_driver, mock_locator, mock_product_fields):
 
     mock_driver.execute_locator.return_value = [b'mocked_image']
     # Mock save_png to avoid file system interaction
@@ -90,27 +90,27 @@ def test_local_saved_image_success(graber, mock_driver, mock_locator, mock_produ
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    def run_local_saved_image(graber):
-        return loop.run_until_complete(graber.local_saved_image())
+    def run_local_image_path(graber):
+        return loop.run_until_complete(graber.local_image_path())
 
-    result = run_local_saved_image(graber)
+    result = run_local_image_path(graber)
 
     assert result is True
-    assert mock_product_fields.local_saved_image == "mocked_path"
+    assert mock_product_fields.local_image_path == "mocked_path"
 
 
-def test_local_saved_image_exception(graber, mock_driver, mock_locator, mock_product_fields):
+def test_local_image_path_exception(graber, mock_driver, mock_locator, mock_product_fields):
     mock_driver.execute_locator.side_effect = ExecuteLocatorException("Mock error")
     graber.fields = mock_product_fields
 
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    def run_local_saved_image(graber):
-        return loop.run_until_complete(graber.local_saved_image())
+    def run_local_image_path(graber):
+        return loop.run_until_complete(graber.local_image_path())
 
     with pytest.raises(ExecuteLocatorException):
-        run_local_saved_image(graber)
+        run_local_image_path(graber)
 
 ```
 
@@ -118,9 +118,9 @@ def test_local_saved_image_exception(graber, mock_driver, mock_locator, mock_pro
 
 1. **Mocking:**  Crucially, the code now uses `unittest.mock` to mock the `Driver` and `execute_locator` method. This avoids actual interactions with the browser or file system, making the tests much faster and more reliable.
 
-2. **Asynchronous Execution:** The tests now correctly run the asynchronous methods (`grab_page`, `local_saved_image`) within an event loop using `loop.run_until_complete`.  This is vital for testing asynchronous code.
+2. **Asynchronous Execution:** The tests now correctly run the asynchronous methods (`grab_page`, `local_image_path`) within an event loop using `loop.run_until_complete`.  This is vital for testing asynchronous code.
 
-3. **Exception Handling:**  Added a test `test_grab_page_exception` to verify that the `grab_page` function handles exceptions raised within the asynchronous logic. This is important for robustness.  Also, added `test_local_saved_image_exception` to test the specific error handling for the `ExecuteLocatorException`.
+3. **Exception Handling:**  Added a test `test_grab_page_exception` to verify that the `grab_page` function handles exceptions raised within the asynchronous logic. This is important for robustness.  Also, added `test_local_image_path_exception` to test the specific error handling for the `ExecuteLocatorException`.
 
 4. **`ProductFields` Fixture:**  Now uses a `mock_product_fields` fixture to create a mocked `ProductFields` object, which avoids needing a real `ProductFields` instance.
 
@@ -128,7 +128,7 @@ def test_local_saved_image_exception(graber, mock_driver, mock_locator, mock_pro
 
 6. **Clearer Assertions:**  The assertions are more specific and descriptive, making it easier to understand the outcome of each test case.
 
-7. **Complete Test Coverage:** The tests now cover both success and failure scenarios for `grab_page` and `local_saved_image`, including edge cases (like empty input).
+7. **Complete Test Coverage:** The tests now cover both success and failure scenarios for `grab_page` and `local_image_path`, including edge cases (like empty input).
 
 **How to run these tests:**
 

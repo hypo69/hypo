@@ -110,7 +110,7 @@ class Graber(Grbr):
             # Uncomment the following lines to fetch specific data
             await self.id_product(kwards.get("id_product", ''))
             # ... (many more functions)
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_image_path(kwards.get("local_image_path", ''))
 
         # Call the function to fetch all data
         await fetch_all_data()
@@ -146,7 +146,7 @@ graph LR
         C --> E(name);
         C --> F(price);
         ...
-        C --> G[local_saved_image];
+        C --> G[local_image_path];
         
         G --> H[self.fields];
         H --> I[return ProductFields];

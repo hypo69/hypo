@@ -31,7 +31,7 @@ This module provides classes for generating HTML content for AliExpress advertis
 
 **Raises**
 - `TypeError`: If `product` is not a SimpleNamespace object, or `category_path` is an unsupported type.
-- `FileNotFoundError`: If the image file specified in `product.local_saved_image` does not exist.
+- `FileNotFoundError`: If the image file specified in `product.local_image_path` does not exist.
 
 
 ### `CategoryHTMLGenerator`

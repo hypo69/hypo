@@ -28,7 +28,7 @@ class TestAliAffiliatedProducts:
         for product in products:
             assert hasattr(product, 'product_id')
             assert hasattr(product, 'promotion_link')
-            assert hasattr(product, 'local_saved_image')
+            assert hasattr(product, 'local_image_path')
 
 
     def test_process_affiliate_products_empty_input(self):

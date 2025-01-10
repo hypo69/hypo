@@ -42,7 +42,7 @@ def test_grab_page_valid_input(graber, driver, product_fields):
     graber.description_short = MagicMock(return_value=asyncio.Future())
     graber.name = MagicMock(return_value=asyncio.Future())
     graber.specification = MagicMock(return_value=asyncio.Future())
-    graber.local_saved_image = MagicMock(return_value=asyncio.Future())
+    graber.local_image_path = MagicMock(return_value=asyncio.Future())
     
     # Mock asyncio.gather for testing
     asyncio.gather = MagicMock(return_value=None)
@@ -69,7 +69,7 @@ def test_grab_page_empty_input(graber, driver):
     graber.description_short = MagicMock(return_value=asyncio.Future())
     graber.name = MagicMock(return_value=asyncio.Future())
     graber.specification = MagicMock(return_value=asyncio.Future())
-    graber.local_saved_image = MagicMock(return_value=asyncio.Future())
+    graber.local_image_path = MagicMock(return_value=asyncio.Future())
 
     # Mock asyncio.gather for testing
     asyncio.gather = MagicMock(return_value=None)
@@ -84,7 +84,7 @@ def test_grab_page_empty_input(graber, driver):
     assert product_fields.description_short is None
     assert product_fields.name is None
     assert product_fields.specification is None
-    assert product_fields.local_saved_image is None
+    assert product_fields.local_image_path is None
 ```
 
 **Explanation and Improvements:**

@@ -32,24 +32,24 @@ def mock_fields():
 
 
 @patch("src.suppliers.morlevi.graber.save_png", new_callable=AsyncMock)
-async def test_local_saved_image_success(mock_save_png, graber_instance, mock_driver, mock_fields):
+async def test_local_image_path_success(mock_save_png, graber_instance, mock_driver, mock_fields):
     """
     Test successful image saving.
 
-    Checks if the image is saved, and the local_saved_image field is updated correctly.
+    Checks if the image is saved, and the local_image_path field is updated correctly.
     """
     mock_save_png.return_value = Path("/tmp/123.png")
     graber_instance.fields = mock_fields
     
-    result = await graber_instance.local_saved_image()
+    result = await graber_instance.local_image_path()
 
     assert result is True
-    assert graber_instance.fields.local_saved_image == Path("/tmp/123.png")
+    assert graber_instance.fields.local_image_path == Path("/tmp/123.png")
     mock_driver.execute_locator.assert_called_once()
     mock_save_png.assert_called_once()
 
 @patch("src.suppliers.morlevi.graber.save_png", new_callable=AsyncMock)
-async def test_local_saved_image_no_id_product(mock_save_png, graber_instance, mock_driver, mock_fields):
+async def test_local_image_path_no_id_product(mock_save_png, graber_instance, mock_driver, mock_fields):
     """
     Test image saving when id_product is not set initially.
 
@@ -60,16 +60,16 @@ async def test_local_saved_image_no_id_product(mock_save_png, graber_instance, m
     graber_instance.fields = mock_fields
     graber_instance.id_product = MagicMock(return_value="123")
 
-    result = await graber_instance.local_saved_image()
+    result = await graber_instance.local_image_path()
     
     assert result is True
-    assert graber_instance.fields.local_saved_image == Path("/tmp/123.png")
+    assert graber_instance.fields.local_image_path == Path("/tmp/123.png")
     mock_driver.execute_locator.assert_called_once()
     mock_save_png.assert_called_once()
     graber_instance.id_product.assert_called_once()
 
 @patch("src.suppliers.morlevi.graber.save_png", new_callable=AsyncMock)
-async def test_local_saved_image_save_png_fails(mock_save_png, graber_instance, mock_driver, mock_fields):
+async def test_local_image_path_save_png_fails(mock_save_png, graber_instance, mock_driver, mock_fields):
     """
     Test when save_png function fails.
 
@@ -78,16 +78,16 @@ async def test_local_saved_image_save_png_fails(mock_save_png, graber_instance, 
     mock_save_png.return_value = None
     graber_instance.fields = mock_fields
     
-    result = await graber_instance.local_saved_image()
+    result = await graber_instance.local_image_path()
 
     assert result is None
-    assert not hasattr(graber_instance.fields, 'local_saved_image')  # Check if the attribute is not set
+    assert not hasattr(graber_instance.fields, 'local_image_path')  # Check if the attribute is not set
     mock_driver.execute_locator.assert_called_once()
     mock_save_png.assert_called_once()
 
 
 @patch("src.suppliers.morlevi.graber.save_png", new_callable=AsyncMock)
-async def test_local_saved_image_exception(mock_save_png, graber_instance, mock_driver, mock_fields):
+async def test_local_image_path_exception(mock_save_png, graber_instance, mock_driver, mock_fields):
     """
     Test exception handling during image saving.
 
@@ -96,10 +96,10 @@ async def test_local_saved_image_exception(mock_save_png, graber_instance, mock_
     mock_driver.execute_locator.side_effect = Exception("Test exception")
     graber_instance.fields = mock_fields
 
-    result = await graber_instance.local_saved_image()
+    result = await graber_instance.local_image_path()
 
     assert result is None
-    assert not hasattr(graber_instance.fields, 'local_saved_image')
+    assert not hasattr(graber_instance.fields, 'local_image_path')
     mock_driver.execute_locator.assert_called_once()
     mock_save_png.assert_not_called()  # Ensure save_png was not called after exception
 

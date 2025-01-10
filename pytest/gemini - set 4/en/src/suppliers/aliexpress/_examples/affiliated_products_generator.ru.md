@@ -22,8 +22,8 @@ def mock_aliexpress_api(prod_urls):
                 {
                     "product_id": prod_id,
                     "promotion_link": data["promotion_link"],
-                    "local_saved_image": data["image_path"],
-                    "local_saved_video": data["video_path"],
+                    "local_image_path": data["image_path"],
+                    "local_video_path": data["video_path"],
                 }
             )
         except KeyError:

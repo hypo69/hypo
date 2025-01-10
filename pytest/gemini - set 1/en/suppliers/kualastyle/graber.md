@@ -50,7 +50,7 @@ async def test_grab_page_success(graber: Graber, mock_driver: Driver):
     graber.description_short = Mock(return_value=mock_product_fields)
     graber.name = Mock(return_value=mock_product_fields)
     graber.specification = Mock(return_value=mock_product_fields)
-    graber.local_saved_image = Mock(return_value=mock_product_fields)
+    graber.local_image_path = Mock(return_value=mock_product_fields)
 
     result = await graber.grab_page(mock_driver)
 
@@ -68,7 +68,7 @@ async def test_grab_page_execute_locator_exception(graber: Graber, mock_driver: 
   graber.description_short = Mock()
   graber.name = Mock()
   graber.specification = Mock()
-  graber.local_saved_image = Mock()
+  graber.local_image_path = Mock()
   
   result = await graber.grab_page(mock_driver)
   assert result is not None

@@ -47,7 +47,7 @@
     async def main():
         driver = Driver(...)
         category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-        products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+        products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 
         await post_title(driver, category)
         await promote_post(driver, category, products)
@@ -102,12 +102,12 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
     """
     try:
         for product in products:
-            if not no_video and hasattr(product, 'local_saved_video'):
+            if not no_video and hasattr(product, 'local_video_path'):
                # Код загружает видеофайл, если он существует и не установлен флаг no_video
-                await d.send_keys(d.locator.upload_media_input, product.local_saved_video)
-            elif hasattr(product, 'local_saved_image'):
+                await d.send_keys(d.locator.upload_media_input, product.local_video_path)
+            elif hasattr(product, 'local_image_path'):
                 # Код загружает изображение
-                await d.send_keys(d.locator.upload_media_input, product.local_saved_image)
+                await d.send_keys(d.locator.upload_media_input, product.local_image_path)
         return True
     except Exception as ex:
          logger.error('Ошибка загрузки медиафайлов', exc_info=ex)

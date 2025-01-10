@@ -26,27 +26,27 @@ class MockDriver:
 
 class MockGraber:
     async def grab_page(self, driver):
-        return ProductFields(name={"language": [{"value": "Mock Product"}]}, id_product=123, description_short={"language": [{"value": "Short Desc"}]}, description={"language": [{"value": "Long Desc"}]}, specification={"language": [{"value": "Spec"}]}, local_saved_image=Path("mock.png"))
+        return ProductFields(name={"language": [{"value": "Mock Product"}]}, id_product=123, description_short={"language": [{"value": "Short Desc"}]}, description={"language": [{"value": "Long Desc"}]}, specification={"language": [{"value": "Spec"}]}, local_image_path=Path("mock.png"))
 
 
 class MockProductFields:
-    def __init__(self, name, id_product, description_short, description, specification, local_saved_image):
+    def __init__(self, name, id_product, description_short, description, specification, local_image_path):
         self.name = name
         self.id_product = id_product
         self.description_short = description_short
         self.description = description
         self.specification = specification
-        self.local_saved_image = local_saved_image
+        self.local_image_path = local_image_path
 
 # Dummy class to mock ProductFields for testing
 class ProductFields:
-    def __init__(self, name=None, id_product=None, description_short=None, description=None, specification=None, local_saved_image=None):
+    def __init__(self, name=None, id_product=None, description_short=None, description=None, specification=None, local_image_path=None):
       self.name = name
       self.id_product = id_product
       self.description_short = description_short
       self.description = description
       self.specification = specification
-      self.local_saved_image = local_saved_image
+      self.local_image_path = local_image_path
 
 
 @pytest.fixture
@@ -60,7 +60,7 @@ def mock_graber():
 
 @pytest.fixture
 def mock_product_fields():
-  return MockProductFields(name={"language": [{"value": "Mock Product"}]}, id_product=123, description_short={"language": [{"value": "Short Desc"}]}, description={"language": [{"value": "Long Desc"}]}, specification={"language": [{"value": "Spec"}]}, local_saved_image=Path("mock.png"))
+  return MockProductFields(name={"language": [{"value": "Mock Product"}]}, id_product=123, description_short={"language": [{"value": "Short Desc"}]}, description={"language": [{"value": "Long Desc"}]}, specification={"language": [{"value": "Spec"}]}, local_image_path=Path("mock.png"))
 
 
 @pytest.fixture
@@ -80,7 +80,7 @@ def test_convert_product_fields(mock_product_fields):
     assert isinstance(product_data, dict)
     assert "product_title" in product_data
     assert "product_id" in product_data
-    assert "local_saved_image" in product_data
+    assert "local_image_path" in product_data
 
 
 def test_save_product_data(mock_mexiron, mock_product_fields):

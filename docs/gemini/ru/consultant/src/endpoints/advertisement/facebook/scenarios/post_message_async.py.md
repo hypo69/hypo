@@ -55,7 +55,7 @@ Selenium WebDriver. Функции обеспечивают загрузку м�
     async def main():
         driver = Driver()
         category = j_loads_ns({'title': "Заголовок", 'description': "Описание"})
-        products = [j_loads_ns({'local_saved_image': "path/to/image.jpg", 'product_title': "Продукт", 'original_price': "100", 'sale_price': "50", 'discount': "50%", 'evaluate_rate': "5", 'promotion_link': "https://example.com", 'tags': "#tag1 #tag2", 'language': 'ru'})]
+        products = [j_loads_ns({'local_image_path': "path/to/image.jpg", 'product_title': "Продукт", 'original_price': "100", 'sale_price': "50", 'discount': "50%", 'evaluate_rate': "5", 'promotion_link': "https://example.com", 'tags': "#tag1 #tag2", 'language': 'ru'})]
         await promote_post(driver, category, products)
 
     if __name__ == "__main__":
@@ -138,7 +138,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video:bool
 
     # Загрузка медиафайлов
     for product in products:
-        media_path = product.local_saved_video if hasattr(product, 'local_saved_video') and not no_video else product.local_saved_image
+        media_path = product.local_video_path if hasattr(product, 'local_video_path') and not no_video else product.local_image_path
         try:
             # Загрузка медиафайла
             if d.execute_locator(locator.foto_video_input, media_path):

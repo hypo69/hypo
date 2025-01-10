@@ -81,8 +81,8 @@ volume
 weight
 wholesale_price
 width
-local_saved_image
-local_saved_video
+local_image_path
+local_video_path
 ```
 
 # Improved Code
@@ -177,8 +177,8 @@ PRODUCT_FIELDS = [
     'weight',
     'wholesale_price',
     'width',
-    'local_saved_image',
-    'local_saved_video',
+    'local_image_path',
+    'local_video_path',
 ]
 
 # Этот код был прокомментирован для демонстрации изменений.
@@ -288,7 +288,7 @@ PRODUCT_FIELDS = [
     'weight',
     'wholesale_price',
     'width',
-    'local_saved_image',
-    'local_saved_video',
+    'local_image_path',
+    'local_video_path',
 ]
 ```

@@ -45,8 +45,8 @@ def product_fields():
   return ProductFields(id_product=123)
 
 
-# Test cases for local_saved_image
-async def test_local_saved_image_success(graber, mock_driver, product_fields):
+# Test cases for local_image_path
+async def test_local_image_path_success(graber, mock_driver, product_fields):
     """Tests successful image saving."""
 
     graber.d = mock_driver  
@@ -57,12 +57,12 @@ async def test_local_saved_image_success(graber, mock_driver, product_fields):
     graber.l.default_image_url.return_value = b'test_image'
 
 
-    await graber.local_saved_image()
+    await graber.local_image_path()
 
-    assert graber.fields.local_saved_image is not None
-    assert Path(graber.fields.local_saved_image).exists()
+    assert graber.fields.local_image_path is not None
+    assert Path(graber.fields.local_image_path).exists()
 
-async def test_local_saved_image_error(graber, mock_driver, product_fields):
+async def test_local_image_path_error(graber, mock_driver, product_fields):
   """Tests error handling during image saving."""
   graber.d = mock_driver
   graber.l = MockLocator()
@@ -71,21 +71,21 @@ async def test_local_saved_image_error(graber, mock_driver, product_fields):
   graber.l.default_image_url.side_effect = Exception("Simulate error") # Simulate error
 
   with pytest.raises(Exception): # Expecting exception because of the error in the method
-     await graber.local_saved_image()
+     await graber.local_image_path()
 
 
 
 
-async def test_local_saved_image_no_value(graber, mock_driver, product_fields):
+async def test_local_image_path_no_value(graber, mock_driver, product_fields):
     """Test if function works correctly with no additional value."""
     graber.d = mock_driver
     graber.l = MockLocator()
     graber.fields = product_fields
 
-    await graber.local_saved_image()  
+    await graber.local_image_path()  
 
-    assert graber.fields.local_saved_image is not None
-    assert Path(graber.fields.local_saved_image).exists()
+    assert graber.fields.local_image_path is not None
+    assert Path(graber.fields.local_image_path).exists()
 
 
 # Test cases for grab_page (more comprehensive)
@@ -117,14 +117,14 @@ async def test_grab_page_success(graber, mock_driver, product_fields):
 **Explanation and Improvements:**
 
 * **Mocking:** The code now effectively mocks `Driver`, `Context`, and other parts of the dependencies, preventing actual interactions with the web driver or external resources. This is crucial for isolating tests.  The `MockDriver` class mocks the `execute_locator` method.
-* **`pytest.raises` for Error Handling:** The `test_local_saved_image_error` test uses `pytest.raises` to verify that the `Exception` is correctly caught.
+* **`pytest.raises` for Error Handling:** The `test_local_image_path_error` test uses `pytest.raises` to verify that the `Exception` is correctly caught.
 * **`ProductFields` Fixture:** Created a `ProductFields` fixture to provide a `ProductFields` instance for testing, instead of creating it directly in each test. This makes tests more readable.
 * **`mock_context` Fixture:** A fixture for `mock_context` was added to pass the necessary context object to the tests.
 * **Comprehensive `grab_page` test:**  A placeholder test case for `grab_page` is included. This is significantly more complex, so you'll need to add mocks to the necessary functions within `grab_page` to make the test complete. The tests now include checks for the type of the returned value.
 * **`async def` for Tests:** All tests are `async def` to properly test asynchronous methods within the `Graber` class.
-* **Clearer Error Messages:** Error messages in the `test_local_saved_image_error`  test have been made more descriptive.
+* **Clearer Error Messages:** Error messages in the `test_local_image_path_error`  test have been made more descriptive.
 * **Additional Assertions:** Add specific assertions to verify the content of `fields` after calling `grab_page`.
-* **Testing with Valid Inputs:** The `test_local_saved_image_success` test verifies that the image was correctly saved.
+* **Testing with Valid Inputs:** The `test_local_image_path_success` test verifies that the image was correctly saved.
 * **Complete Async Mock:** Correctly mocking `execute_locator` to return an `asyncio.Future` for `test_grab_page_success`.
 
 

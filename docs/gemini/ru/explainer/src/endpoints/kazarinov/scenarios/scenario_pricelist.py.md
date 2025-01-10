@@ -14,7 +14,7 @@
 2.  **Выполнение сценария `run_scenario`:**
     *   Принимает `update` (объект Telegram Update), `context` (контекст Telegram), `urls` (список URL-адресов продуктов), `price` (необязательная цена) и `mexiron_name` (необязательное имя мехирона).
     *   Устанавливает атрибуты `update` и `context`.
-    *   Определяются необходимые поля товара `required_fields` (`id_product`, `name`, `description_short`, `description`, `specification`, `local_saved_image`).
+    *   Определяются необходимые поля товара `required_fields` (`id_product`, `name`, `description_short`, `description`, `specification`, `local_image_path`).
     *   Итерируется по списку `urls`:
         *   Получает грабер (`get_graber_by_supplier_url`) в зависимости от URL. Если грабер не найден, пропускает URL.
         *   Отправляет уведомление в Telegram о начале обработки URL.
@@ -50,7 +50,7 @@
         *   `description_short`: краткое описание.
         *   `description`: полное описание.
         *   `specification`: спецификация.
-        *    `local_saved_image`: путь к локально сохраненному изображению.
+        *    `local_image_path`: путь к локально сохраненному изображению.
     *   Возвращает сформированный словарь.
 
 5.  **Сохранение данных `save_product_data`:**

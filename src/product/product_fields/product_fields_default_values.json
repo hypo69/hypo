@@ -152,5 +152,8 @@
   "volume": "",
   "weight": "",
   "wholesale_price": "",
-  "width": ""
+  "width": "",
+  "local_image_path": "",
+  "local_video_path": ""
+
 }

@@ -105,7 +105,7 @@ def upload_media(d: Driver, media: Union[SimpleNamespace, List[SimpleNamespace],
 
     :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
     :type d: Driver
-    :param media: Пути к медиафайлам или список путей, а также может быть `SimpleNamespace` с атрибутами `local_saved_video`, `local_saved_image`.
+    :param media: Пути к медиафайлам или список путей, а также может быть `SimpleNamespace` с атрибутами `local_video_path`, `local_image_path`.
     :type media: Union[SimpleNamespace, List[SimpleNamespace], str, List[str]]
     :param no_video: Флаг, указывающий, не использовать видео.
     :type no_video: bool
@@ -117,7 +117,7 @@ def upload_media(d: Driver, media: Union[SimpleNamespace, List[SimpleNamespace],
 
     :Example:
         >>> driver = Driver(...)
-        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> upload_media(driver, products)
         True
     """
@@ -137,7 +137,7 @@ def upload_media(d: Driver, media: Union[SimpleNamespace, List[SimpleNamespace],
     for m in media_list:
         try:
             if isinstance(m, SimpleNamespace):
-                media_path = m.local_saved_video if hasattr(m, 'local_saved_video') and not no_video else m.local_saved_image
+                media_path = m.local_video_path if hasattr(m, 'local_video_path') and not no_video else m.local_image_path
             elif isinstance(m, (str, Path)):
                 media_path = m
             else:
@@ -328,7 +328,7 @@ def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleName
     :Example:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
     if not post_title(d, category):
@@ -367,7 +367,7 @@ def post_message(d: Driver, message: SimpleNamespace, no_video: bool = False,
     :Example:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
     if not post_title(d, message):

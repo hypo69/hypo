@@ -59,7 +59,7 @@ def test_process_affiliate_products_valid_input(ali_affiliated_products):
     assert products is not None
     assert len(products) == 1
     assert products[0].product_id == "123"
-    assert products[0].local_saved_image == str(Path("test_campaign/test_category/images/123.png"))
+    assert products[0].local_image_path == str(Path("test_campaign/test_category/images/123.png"))
     
     # Check for proper logger use.  Testing this by patching the logger function.
     with patch('src.logger.logger.info_red') as mock_logger:

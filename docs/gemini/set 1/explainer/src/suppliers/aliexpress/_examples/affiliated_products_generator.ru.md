@@ -35,9 +35,9 @@ def main():
         for product in products:
             print(f"Продукт ID: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
+            print(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Локальный путь к видео: {product.local_video_path}")
             print()
     else:
         print("Не удалось получить аффилированные продукты.")
@@ -108,7 +108,7 @@ graph TD
 
 **Классы:**
 
-`AliAffiliatedProducts`: Этот класс отвечает за сбор данных о продуктах с AliExpress и создание аффилированных ссылок.  В примере мы видим, что у него есть метод `process_affiliate_products()`.  Предполагается, что класс имеет атрибуты `product_id`, `promotion_link`, `local_saved_image`, `local_saved_video` для хранения необходимых данных о продуктах и обработанных данных.  Без доступа к определению класса `AliAffiliatedProducts` сложно определить его полную функциональность, но по коду можно предположить, что он выполняет операции по парсингу ссылок, загрузке изображений/видео и формированию аффилированных ссылок.
+`AliAffiliatedProducts`: Этот класс отвечает за сбор данных о продуктах с AliExpress и создание аффилированных ссылок.  В примере мы видим, что у него есть метод `process_affiliate_products()`.  Предполагается, что класс имеет атрибуты `product_id`, `promotion_link`, `local_image_path`, `local_video_path` для хранения необходимых данных о продуктах и обработанных данных.  Без доступа к определению класса `AliAffiliatedProducts` сложно определить его полную функциональность, но по коду можно предположить, что он выполняет операции по парсингу ссылок, загрузке изображений/видео и формированию аффилированных ссылок.
 
 **Функции:**
 

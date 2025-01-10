@@ -170,7 +170,7 @@ class EmilDesign:
             try:
                 # Преобразование ответа в структурированный формат
                 res_ns: SimpleNamespace = j_loads_ns(response)
-                setattr(res_ns, 'local_saved_image', str(Path(images_dir / image_path)))
+                setattr(res_ns, 'local_image_path', str(Path(images_dir / image_path)))
                 data.append(res_ns)
                 j_dumps(data, output_file)
                 updated_images_list.append(image_path)
@@ -206,14 +206,14 @@ class EmilDesign:
                 setattr(message, 'title', f"{m.parent}\\n{m.category}")
                 setattr(message, 'description', m.description)
                 message.products = SimpleNamespace()
-                setattr(message.products, 'local_saved_image', [m.local_saved_image])
+                setattr(message.products, 'local_image_path', [m.local_image_path])
 
                 # Публикация сообщения в Facebook
                 post_message(d, message, without_captions=True)
-                logger.info(f'Сообщение успешно опубликовано для изображения {m.local_saved_image}')
+                logger.info(f'Сообщение успешно опубликовано для изображения {m.local_image_path}')
                 #  time.sleep(20) # закоментирован код
             except Exception as ex:
-                logger.error(f'Ошибка при публикации сообщения для {m.local_saved_image}: {ex}')
+                logger.error(f'Ошибка при публикации сообщения для {m.local_image_path}: {ex}')
                 continue
             ...  # точка остановки
         return True

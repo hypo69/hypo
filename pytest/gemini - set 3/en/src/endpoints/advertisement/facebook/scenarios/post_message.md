@@ -22,7 +22,7 @@ def mock_driver():
 
 @pytest.fixture
 def mock_message():
-    return SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[SimpleNamespace(local_saved_image="image.jpg")])
+    return SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[SimpleNamespace(local_image_path="image.jpg")])
 
 
 @pytest.fixture

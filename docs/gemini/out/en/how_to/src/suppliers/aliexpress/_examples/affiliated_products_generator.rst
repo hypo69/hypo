@@ -61,9 +61,9 @@ Usage example
             for product in products:
                 print(f"Product ID: {product.product_id}")
                 print(f"Affiliate link: {product.promotion_link}")
-                print(f"Local image path: {product.local_saved_image}")
-                if product.local_saved_video:
-                    print(f"Local video path: {product.local_saved_video}")
+                print(f"Local image path: {product.local_image_path}")
+                if product.local_video_path:
+                    print(f"Local video path: {product.local_video_path}")
                 print()
         else:
             print("Failed to retrieve affiliate products.")

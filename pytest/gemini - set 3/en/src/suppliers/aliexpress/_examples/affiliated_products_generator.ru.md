@@ -25,11 +25,11 @@ def test_process_affiliate_products_valid_input(mock_api_call):
     assert len(products) == 2
     assert products[0].product_id == '123'
     assert products[0].promotion_link == 'affiliate_link_123'
-    assert products[0].local_saved_image == 'image123.jpg'
+    assert products[0].local_image_path == 'image123.jpg'
     assert products[1].product_id == '456'
     assert products[1].promotion_link == 'affiliate_link_456'
-    assert products[1].local_saved_image == 'image456.jpg'
-    assert products[1].local_saved_video == 'video456.mp4'
+    assert products[1].local_image_path == 'image456.jpg'
+    assert products[1].local_video_path == 'video456.mp4'
 
 
 def test_process_affiliate_products_valid_input_urls(mock_api_call):
@@ -73,7 +73,7 @@ def test_process_affiliate_products_empty_input(mock_api_call):
    - Empty input list.
 
 
-4. **Asserting Expected Behavior:** The assertions are now more specific, verifying the correct values for `product_id`, `promotion_link`, `local_saved_image`, and `local_saved_video` (which is now correctly tested using `assert products[1].local_saved_video == 'video456.mp4'`).
+4. **Asserting Expected Behavior:** The assertions are now more specific, verifying the correct values for `product_id`, `promotion_link`, `local_image_path`, and `local_video_path` (which is now correctly tested using `assert products[1].local_video_path == 'video456.mp4'`).
 
 
 **Before Running:**

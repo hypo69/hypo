@@ -20,7 +20,7 @@ def product_data():
     return SimpleNamespace(
         product_id=123,
         product_title="Test Product",
-        local_saved_image=Path("image.jpg"),
+        local_image_path=Path("image.jpg"),
         target_sale_price=10.99,
         target_sale_price_currency="USD",
         target_original_price=15.99,
@@ -46,7 +46,7 @@ def products_list():
         SimpleNamespace(
             product_id=1,
             product_title="Product 1",
-            local_saved_image=Path("image1.jpg"),
+            local_image_path=Path("image1.jpg"),
             target_sale_price=10,
             target_sale_price_currency="USD",
             target_original_price=20,
@@ -57,7 +57,7 @@ def products_list():
         SimpleNamespace(
             product_id=2,
             product_title="Product 2",
-            local_saved_image=Path("image2.jpg"),
+            local_image_path=Path("image2.jpg"),
             target_sale_price=20,
             target_sale_price_currency="USD",
             target_original_price=30,

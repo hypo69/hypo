@@ -100,8 +100,8 @@
     -   [`byer_protection`](#byer_protection)
     -   [`customer_reviews`](#customer_reviews)
      - [`link_to_video`](#link_to_video)
-    - [`local_saved_image`](#local_saved_image)
-    - [`local_saved_video`](#local_saved_video)
+    - [`local_image_path`](#local_image_path)
+    - [`local_video_path`](#local_video_path)
     
 ## Классы
 

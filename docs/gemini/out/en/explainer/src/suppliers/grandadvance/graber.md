@@ -107,7 +107,7 @@ class Graber(Grbr):
             # Uncomment the following lines to fetch specific data
             await self.id_product(kwards.get("id_product", ''))
             # ... (many more await calls)
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_image_path(kwards.get("local_image_path", ''))
             # ...
 
         # Call the function to fetch all data
@@ -122,7 +122,7 @@ class Graber(Grbr):
 **Step 2:** A helper function `fetch_all_data` is defined. This function takes keyword arguments.
 
 
-**Step 3:** `fetch_all_data` calls several functions (e.g., `id_product`, `local_saved_image`, etc.) that presumably fetch specific data from the webpage based on the provided keyword arguments (e.g., `id_product`). Each call is awaited, allowing the asynchronous operations to run concurrently.
+**Step 3:** `fetch_all_data` calls several functions (e.g., `id_product`, `local_image_path`, etc.) that presumably fetch specific data from the webpage based on the provided keyword arguments (e.g., `id_product`). Each call is awaited, allowing the asynchronous operations to run concurrently.
 
 
 **Step 4:** The `grab_page` function then calls `fetch_all_data` to retrieve all data and returns the collected data as `self.fields`.
@@ -135,7 +135,7 @@ graph TD
     A[Graber] --> B{grab_page(driver)};
     B --> C[fetch_all_data(**kwards)];
     C --> D[id_product];
-    C --> E[local_saved_image];
+    C --> E[local_image_path];
     C -.-> F...;
     F --> G[other_functions];
     G -.-> H[ProductFields];
@@ -184,7 +184,7 @@ The imports are crucial for the project's functionality.  They define the necess
 
 * **Global Variable `d`:**  Using a global variable is generally discouraged as it reduces code modularity and readability.  It should be a `self.d` attribute within the `Graber` class.
 
-* **Error Handling:** While error handling is present within some individual functions for certain exceptions (like `ExecuteLocatorException`), it's crucial to ensure that each data retrieval function (e.g., `id_product`, `local_saved_image`) handles potential errors like timeouts, connection issues, or incorrect element locations to avoid unexpected program behavior.
+* **Error Handling:** While error handling is present within some individual functions for certain exceptions (like `ExecuteLocatorException`), it's crucial to ensure that each data retrieval function (e.g., `id_product`, `local_image_path`) handles potential errors like timeouts, connection issues, or incorrect element locations to avoid unexpected program behavior.
 
 * **Redundant `get` calls:** Each call to `kwards.get("field_name", '')` could be consolidated and passed as an argument to reduce redundancy and make the code more readable.
 

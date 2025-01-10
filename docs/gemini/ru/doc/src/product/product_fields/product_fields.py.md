@@ -95,8 +95,8 @@
     - [`id_default_image`](#id_default_image)
     - [`link_to_video`](#link_to_video)
     - [`images_urls`](#images_urls)
-    - [`local_saved_image`](#local_saved_image)
-    - [`local_saved_video`](#local_saved_video)
+    - [`local_image_path`](#local_image_path)
+    - [`local_video_path`](#local_video_path)
     - [`position_in_category`](#position_in_category)
     - [`page_lang`](#page_lang)
   

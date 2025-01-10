@@ -37,55 +37,55 @@ def product_fields():
     return ProductFields(id_product=123)
 
 
-async def test_local_saved_image_success(graber, product_fields):
+async def test_local_image_path_success(graber, product_fields):
     """Tests saving image when successful."""
     Context.fields = product_fields # Setting Context.fields for use in the function
-    result = await graber.local_saved_image()
+    result = await graber.local_image_path()
     assert result is True
-    assert product_fields.local_saved_image is not None
+    assert product_fields.local_image_path is not None
 
 
 @patch('src.suppliers.grandadvance.graber.save_png', return_value=True)
-async def test_local_saved_image_with_save_png_success(mock_save_png, graber, product_fields):
+async def test_local_image_path_with_save_png_success(mock_save_png, graber, product_fields):
     """Tests saving image when save_png is successful."""
     Context.fields = product_fields # Setting Context.fields for use in the function
-    result = await graber.local_saved_image()
+    result = await graber.local_image_path()
     assert result is True
-    assert product_fields.local_saved_image is not None
+    assert product_fields.local_image_path is not None
     mock_save_png.assert_called_once()
 
 
-async def test_local_saved_image_invalid_image_data(graber, product_fields):
+async def test_local_image_path_invalid_image_data(graber, product_fields):
   """Tests image saving with invalid image data."""
   Context.fields = product_fields
   with patch('src.suppliers.grandadvance.graber.save_png', return_value=None):
-    result = await graber.local_saved_image()
+    result = await graber.local_image_path()
     assert result is None
 
     # Assert the correct error message is logged (modify this based on expected logs)
     assert "Ошибка сохранения изображения" in logger.debug_messages[-1]
 
 
-async def test_local_saved_image_exception(graber, product_fields, monkeypatch):
+async def test_local_image_path_exception(graber, product_fields, monkeypatch):
     """Tests image saving with exception during execute_locator."""
     Context.fields = product_fields
     monkeypatch.setattr(graber.d, 'execute_locator', lambda locator:
                         asyncio.sleep(0.001) or raise asyncio.TimeoutError())
     with pytest.raises(asyncio.TimeoutError):  # Or any specific exception you expect
-        await graber.local_saved_image()
+        await graber.local_image_path()
 
 
 @pytest.mark.parametrize("value", [None, "some_value"])
-async def test_local_saved_image_with_value(graber, product_fields, value):
+async def test_local_image_path_with_value(graber, product_fields, value):
     Context.fields = product_fields
     if value is not None:
-        result = await graber.local_saved_image(value=value)
+        result = await graber.local_image_path(value=value)
         assert result is None or result is True
-        assert product_fields.local_saved_image == value
+        assert product_fields.local_image_path == value
     else:
-       result = await graber.local_saved_image()
+       result = await graber.local_image_path()
        assert result is True or result is False
-       assert product_fields.local_saved_image is not None
+       assert product_fields.local_image_path is not None
 ```
 
 **Explanation and Improvements:**
@@ -94,7 +94,7 @@ async def test_local_saved_image_with_value(graber, product_fields, value):
 * **`graber` fixture:** The `graber` fixture now correctly instantiates the `Graber` class using the mock driver, setting up the necessary environment.
 * **`product_fields` fixture:** This fixture provides a pre-populated `ProductFields` object, reducing test setup complexity.
 * **Comprehensive Test Cases:** Added various test cases, including success, failure, exceptions, and the parameterization on the `value` argument.
-* **Exception Handling:** The `test_local_saved_image_exception` test specifically checks for an exception during the `execute_locator` call, which would not happen when using the actual browser.
+* **Exception Handling:** The `test_local_image_path_exception` test specifically checks for an exception during the `execute_locator` call, which would not happen when using the actual browser.
 * **Edge Cases:** Tests for cases where `save_png` returns `None` or an error.  Tests for cases where the `value` parameter is provided and not provided.
 * **Clear Assertions:** Assertions are more specific, checking for the correct return values and the expected updates to the `ProductFields`.
 * **Logging:** The code now uses `logger.debug_messages` for assertions and checks for expected error messages.

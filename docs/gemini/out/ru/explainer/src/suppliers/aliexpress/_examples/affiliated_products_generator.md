@@ -78,9 +78,9 @@ def main():
         for product in products:
             print(f"Продукт ID: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
+            print(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Локальный путь к видео: {product.local_video_path}")
             print()
     else:
         print("Не удалось получить аффилированные продукты.")
@@ -128,7 +128,7 @@ graph TD
 - **Импорты:** `from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts` импортирует класс `AliAffiliatedProducts` из модуля `affiliated_products_generator` внутри пакета `aliexpress`.  Это указывает на иерархическую структуру проекта (`src` - корневая директория, `suppliers` - поставщики данных, `aliexpress` - данные для AliExpress).
 
 - **Классы:**
-    - `AliAffiliatedProducts`: Этот класс отвечает за получение аффилированных ссылок для продуктов AliExpress.  Он принимает параметры кампании и список URL/ID продуктов в конструктор.  Метод `process_affiliate_products` обрабатывает список продуктов.  Подробной реализации в примере не показано, но предполагается, что он использует API AliExpress для получения данных и сохраняет результаты (ссылки и изображения) в `product_id`, `promotion_link`, `local_saved_image`, `local_saved_video`.
+    - `AliAffiliatedProducts`: Этот класс отвечает за получение аффилированных ссылок для продуктов AliExpress.  Он принимает параметры кампании и список URL/ID продуктов в конструктор.  Метод `process_affiliate_products` обрабатывает список продуктов.  Подробной реализации в примере не показано, но предполагается, что он использует API AliExpress для получения данных и сохраняет результаты (ссылки и изображения) в `product_id`, `promotion_link`, `local_image_path`, `local_video_path`.
     - `Product`: предполагается, что этот класс описывает структуру продукта, включая аффилированную ссылку и другие данные.
 
 - **Функции:**
@@ -141,7 +141,7 @@ graph TD
 
 **Возможные ошибки/улучшения:**
 - Отсутствие реализации `AliAffiliatedProducts` и `Product` делает код неполным.  Нужно реализовать логику работы класса `AliAffiliatedProducts`, включая обращение к API AliExpress, обработку ошибок (например, если продукт недоступен или API вернуло ошибку) и обработку изображений/видео.
--  Не указано, как именно `product_id`, `local_saved_image`, `local_saved_video` и т.д. сохраняются. Нужно реализовать механизм сохранения данных (например, использование `requests`, `BeautifulSoup` для работы с веб-страницами и файлами для хранения результатов).
+-  Не указано, как именно `product_id`, `local_image_path`, `local_video_path` и т.д. сохраняются. Нужно реализовать механизм сохранения данных (например, использование `requests`, `BeautifulSoup` для работы с веб-страницами и файлами для хранения результатов).
 - Нет проверки корректности вводимых данных (например, проверка типа данных `prod_urls`).
 
 **Цепочка взаимосвязей:**

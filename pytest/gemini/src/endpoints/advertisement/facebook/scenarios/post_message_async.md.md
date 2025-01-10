@@ -50,9 +50,9 @@ def example_category():
 def example_products():
     """Provides a list of sample products for testing."""
     return [
-        SimpleNamespace(local_saved_image="path/to/image1.jpg", description="Description 1"),
-        SimpleNamespace(local_saved_image="path/to/image2.jpg", description="Description 2"),
-        SimpleNamespace(local_saved_video="path/to/video.mp4", description="Video description 1")
+        SimpleNamespace(local_image_path="path/to/image1.jpg", description="Description 1"),
+        SimpleNamespace(local_image_path="path/to/image2.jpg", description="Description 2"),
+        SimpleNamespace(local_video_path="path/to/video.mp4", description="Video description 1")
     ]
 
 @pytest.fixture

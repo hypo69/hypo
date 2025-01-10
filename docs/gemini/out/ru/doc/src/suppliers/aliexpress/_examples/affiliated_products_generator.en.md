@@ -52,8 +52,8 @@
 
 ```python
 [
-  Product(product_id='123', promotion_link='affiliate_link_123', local_saved_image='path/to/image.jpg', local_saved_video=None),
-  Product(product_id='456', promotion_link='affiliate_link_456', local_saved_image='path/to/image_456.jpg', local_saved_video='path/to/video.mp4')
+  Product(product_id='123', promotion_link='affiliate_link_123', local_image_path='path/to/image.jpg', local_video_path=None),
+  Product(product_id='456', promotion_link='affiliate_link_456', local_image_path='path/to/image_456.jpg', local_video_path='path/to/video.mp4')
 ]
 ```
 

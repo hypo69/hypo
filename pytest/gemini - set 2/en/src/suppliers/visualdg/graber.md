@@ -51,7 +51,7 @@ def test_grab_page_valid_input(graber):
         graber.description_short,
         graber.name,
         graber.specification,
-        graber.local_saved_image,
+        graber.local_image_path,
     ]:
         setattr(graber, func.__name__, mock_function)
 
@@ -69,7 +69,7 @@ def test_grab_page_no_input(graber):
         graber.description_short,
         graber.name,
         graber.specification,
-        graber.local_saved_image,
+        graber.local_image_path,
     ]:
         setattr(graber, func.__name__, mock_function)
 
@@ -93,7 +93,7 @@ def test_grab_page_empty_data(graber):
         graber.description_short,
         graber.name,
         graber.specification,
-        graber.local_saved_image,
+        graber.local_image_path,
     ]:
         setattr(graber, func.__name__, mock_function)
 

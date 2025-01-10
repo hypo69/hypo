@@ -233,7 +233,7 @@ class AliAffiliatedProducts(AliApi):
             # Код сохраняет изображение продукта
             image_path = self.campaign_path / 'images' / f"{product.product_id}.png"
             save_png_from_url(product.product_main_image_url, image_path, exc_info=False)
-            product.local_saved_image = str(image_path)
+            product.local_image_path = str(image_path)
             # Код проверяет наличие видео продукта
             if len(product.product_video_url) > 1:
                 # Код получает расширение видео
@@ -242,7 +242,7 @@ class AliAffiliatedProducts(AliApi):
                 # Код сохраняет видео продукта
                 video_path = self.campaign_path / 'videos' / f'{product.product_id}.{suffix}'
                 save_video_from_url(product.product_video_url, video_path, exc_info=False)
-                product.local_saved_video = str(video_path)
+                product.local_video_path = str(video_path)
 
             pprint(f'caught product - {product.product_id}', end=print_flag)
             print_flag = 'inline'

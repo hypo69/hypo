@@ -52,7 +52,7 @@ def mock_category():
 def mock_products():
     return [
         SimpleNamespace(
-            local_saved_image="path/to/image.jpg", product_title="Product 1"
+            local_image_path="path/to/image.jpg", product_title="Product 1"
         )
     ]
 

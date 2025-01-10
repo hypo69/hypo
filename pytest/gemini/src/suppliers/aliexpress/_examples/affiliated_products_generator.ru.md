@@ -24,8 +24,8 @@ class MockProduct:
     def __init__(self, prod_url):
         self.product_id = prod_url.split("/")[-1].split(".")[0] if "https" in prod_url else prod_url
         self.promotion_link = f"https://affiliate.com/{self.product_id}"
-        self.local_saved_image = f"images/{self.product_id}.jpg"
-        self.local_saved_video = None  # Initially set to None
+        self.local_image_path = f"images/{self.product_id}.jpg"
+        self.local_video_path = None  # Initially set to None
 
 
 # Test cases
@@ -49,7 +49,7 @@ def test_process_affiliate_products_valid_urls():
     for product in products:
         assert isinstance(product.product_id, str)
         assert isinstance(product.promotion_link, str)
-        assert isinstance(product.local_saved_image, str)
+        assert isinstance(product.local_image_path, str)
 
 
 

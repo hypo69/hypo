@@ -29,7 +29,7 @@ def category():
 @pytest.fixture
 def products():
     """Product data for testing."""
-    return [SimpleNamespace(local_saved_image="image.jpg")]
+    return [SimpleNamespace(local_image_path="image.jpg")]
 
 
 class MockDriver:

@@ -43,7 +43,7 @@ async def test_grab_page_valid_input(graber, mock_driver):
     with patch.object(graber, 'id_product', return_value=asyncio.sleep(0)) as mock_id_product:
         with patch.object(graber, 'name', return_value=asyncio.sleep(0)) as mock_name:
             with patch.object(graber, 'specification', return_value=asyncio.sleep(0)) as mock_specification:
-                with patch.object(graber, 'local_saved_image', return_value=asyncio.sleep(0)) as mock_local_saved_image:
+                with patch.object(graber, 'local_image_path', return_value=asyncio.sleep(0)) as mock_local_image_path:
                     # Assert fields are set correctly
                     result = await graber.grab_page(mock_driver)
                     assert result == fields

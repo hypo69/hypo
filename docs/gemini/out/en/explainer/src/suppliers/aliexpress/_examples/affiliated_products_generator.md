@@ -77,9 +77,9 @@ def main():
         for product in products:
             print(f"Продукт ID: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
+            print(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Локальный путь к видео: {product.local_video_path}")
             print()
     else:
         print("Не удалось получить аффилированные продукты.")
@@ -143,7 +143,7 @@ The mermaid diagram illuStartes the `AliAffiliatedProducts` class interacting wi
   - `from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts`: Imports the `AliAffiliatedProducts` class from the `affiliated_products_generator` module within the `aliexpress` supplier package. This shows that the `aliexpress` supplier package contains the necessary classes and functions for processing affiliate product information.
 
 - **Classes:**
-  - `AliAffiliatedProducts`: This class encapsulates the logic for retrieving affiliate product information from AliExpress. It likely has methods to make API calls, process the response, and store the results (attributes, such as `promotion_link`, `local_saved_image`, `local_saved_video`).  The attributes `campaign_name`, `campaign_category`, `language`, `currency` are likely used as parameters to filter the results and to be passed to the API request.  `process_affiliate_products` is a crucial method for processing the returned information and making the API calls, potentially retrieving product data and generating affiliate links.
+  - `AliAffiliatedProducts`: This class encapsulates the logic for retrieving affiliate product information from AliExpress. It likely has methods to make API calls, process the response, and store the results (attributes, such as `promotion_link`, `local_image_path`, `local_video_path`).  The attributes `campaign_name`, `campaign_category`, `language`, `currency` are likely used as parameters to filter the results and to be passed to the API request.  `process_affiliate_products` is a crucial method for processing the returned information and making the API calls, potentially retrieving product data and generating affiliate links.
 
 - **Functions:**
   - `main()`: This function is the entry point of the program. It sets up campaign parameters, creates an instance of `AliAffiliatedProducts`, calls its `process_affiliate_products` method, and then prints the results.

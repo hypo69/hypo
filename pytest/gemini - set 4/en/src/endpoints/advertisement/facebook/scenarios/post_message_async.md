@@ -36,7 +36,7 @@ def mock_category():
 
 @pytest.fixture
 def mock_products():
-    return [SimpleNamespace(local_saved_image="path/to/image.jpg")]
+    return [SimpleNamespace(local_image_path="path/to/image.jpg")]
 
 
 def test_post_title_success(mock_driver, mock_category):

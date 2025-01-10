@@ -21,7 +21,7 @@ class MockData:
     description_short: str = "Short description"
     description: str = "Detailed description"
     specification: str = "Specifications"
-    local_saved_image: str = "image.png"
+    local_image_path: str = "image.png"
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ class MockDriver:
 
 class MockGraber:
     async def grab_page(self, driver):
-        return ProductFields(name={"language": [{"value": "Test product"}]}, id_product=1, description_short={"language": [{"value": "short"}]}, description={"language": [{"value": "long"}]}, specification={"language": [{"value": "spec"}]}, local_saved_image="image.png")
+        return ProductFields(name={"language": [{"value": "Test product"}]}, id_product=1, description_short={"language": [{"value": "short"}]}, description={"language": [{"value": "long"}]}, specification={"language": [{"value": "spec"}]}, local_image_path="image.png")
     
 # Mocks for external dependencies
 @pytest.fixture
@@ -70,7 +70,7 @@ def test_get_graber_by_supplier_url(mock_driver):
     assert graber is not None
 
 def test_convert_product_fields(mock_driver):
-    f = ProductFields(name={"language": [{"value": "Test product"}]}, id_product=1, description_short={"language": [{"value": "short"}]}, description={"language": [{"value": "long"}]}, specification={"language": [{"value": "spec"}]}, local_saved_image="image.png")
+    f = ProductFields(name={"language": [{"value": "Test product"}]}, id_product=1, description_short={"language": [{"value": "short"}]}, description={"language": [{"value": "long"}]}, specification={"language": [{"value": "spec"}]}, local_image_path="image.png")
     product_data = asyncio.run(Mexiron(mock_driver).convert_product_fields(f))
     assert product_data["product_title"] == "Test product"
 

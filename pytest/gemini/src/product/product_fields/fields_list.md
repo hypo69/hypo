@@ -88,8 +88,8 @@ def test_field_list_length():
         'weight',
         'wholesale_price',
         'width',
-        'local_saved_image',
-        'local_saved_video'
+        'local_image_path',
+        'local_video_path'
     ]
     assert len(fields) == 88, "The list of product fields has an incorrect length."
 
@@ -177,8 +177,8 @@ def test_field_list_contains_specific_field():
         'weight',
         'wholesale_price',
         'width',
-        'local_saved_image',
-        'local_saved_video'
+        'local_image_path',
+        'local_video_path'
     ]
     assert 'name' in fields, "The field 'name' is missing from the list."
 ```

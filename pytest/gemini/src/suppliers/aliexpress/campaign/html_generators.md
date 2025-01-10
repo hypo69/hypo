@@ -20,7 +20,7 @@ def product_data():
     return SimpleNamespace(
         product_id="123",
         product_title="Test Product",
-        local_saved_image="images/test.jpg",
+        local_image_path="images/test.jpg",
         target_sale_price="10",
         target_sale_price_currency="USD",
         target_original_price="15",

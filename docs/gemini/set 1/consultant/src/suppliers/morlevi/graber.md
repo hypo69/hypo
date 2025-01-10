@@ -46,18 +46,18 @@ class Graber(Grbr):
 
 
     @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
+    async def local_image_path(self, value: Any = None):
         """Сохраняет изображение товара локально.
 
         Аргументы:
-            value (Any): Значение для поля local_saved_image.
+            value (Any): Значение для поля local_image_path.
                 Передаётся в словаре kwargs.
-                Если передан, значение подставляется в поле ProductFields.local_saved_image.
+                Если передан, значение подставляется в поле ProductFields.local_image_path.
         Возвращает:
             bool: True, если изображение успешно сохранено; иначе None.
         """
         if value is not None:
-            self.fields.local_saved_image = value
+            self.fields.local_image_path = value
             return True
         
         try:
@@ -71,14 +71,14 @@ class Graber(Grbr):
             if raw_image:
               img_tmp_path = await save_png(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
               if img_tmp_path:
-                  self.fields.local_saved_image = img_tmp_path
+                  self.fields.local_image_path = img_tmp_path
                   return True
               else:
                   logger.error(f"Ошибка сохранения изображения: путь не определен")
             else:
               logger.error("Ошибка получения изображения")
         except Exception as ex:
-            logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+            logger.error(f'Ошибка сохранения изображения в поле `local_image_path`', ex)
             return False
 ```
 
@@ -104,12 +104,12 @@ class Graber(Grbr):
  
 -    # # \
 -    # @close_pop_up()\
--    # async def local_saved_image(self, value: Any = None):
--    #     """Fetch and save image locally.\n    #     Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`\n    #     Args:\n    #     value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.\n    #     Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.\n    #     .. note:\n    #         путь к изображению ведет в директорию  `tmp`\n    #     .. todo:\n    #         - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`\n    #         - Как передать путь кроме жестко указанного   \n    #     """\n-       \n-    #     if not value:\n-    #         try:\n-    #             if not self.fields.id_product:\n-    #                 self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`\n-    #             raw = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` \n-    #             img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f\'{self.fields.id_product}.png\'))\n-    #             if img_tmp_path:\n-    #                 self.fields.local_saved_image = img_tmp_path\n-    #                 return True\n-    #             else:\n-    #                 logger.debug(f"Ошибка сохранения изображения")\n-    #                 ...\n-    #                 return\n-    #         except Exception as ex:\n-    #             logger.error(f\'Ошибка сохранения изображения в поле `local_saved_image`\', ex)\n-    #             ...\n-    #             return\+    @close_pop_up()
-+    async def local_saved_image(self, value: Any = None):
+-    # async def local_image_path(self, value: Any = None):
+-    #     """Fetch and save image locally.\n    #     Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_image_path` объекта `ProductFields`\n    #     Args:\n    #     value (Any): это значение можно передать в словаре kwargs через ключ {local_image_path = `value`} при определении класса.\n    #     Если `value` был передан, его значение подставляется в поле `ProductFields.local_image_path`.\n    #     .. note:\n    #         путь к изображению ведет в директорию  `tmp`\n    #     .. todo:\n    #         - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`\n    #         - Как передать путь кроме жестко указанного   \n    #     """\n-       \n-    #     if not value:\n-    #         try:\n-    #             if not self.fields.id_product:\n-    #                 self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`\n-    #             raw = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` \n-    #             img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f\'{self.fields.id_product}.png\'))\n-    #             if img_tmp_path:\n-    #                 self.fields.local_image_path = img_tmp_path\n-    #                 return True\n-    #             else:\n-    #                 logger.debug(f"Ошибка сохранения изображения")\n-    #                 ...\n-    #                 return\n-    #         except Exception as ex:\n-    #             logger.error(f\'Ошибка сохранения изображения в поле `local_image_path`\', ex)\n-    #             ...\n-    #             return\+    @close_pop_up()
++    async def local_image_path(self, value: Any = None):
 +        """Сохраняет изображение товара локально.
 +
-+        :param value: Значение для поля `local_saved_image`.
++        :param value: Значение для поля `local_image_path`.
 +        :type value: Any
 +        :raises TypeError: Если тип value не подходит.
 +        :raises Exception: Общие ошибки.
@@ -118,7 +118,7 @@ class Graber(Grbr):
 +        if value is not None:
 +            if not isinstance(value, str):
 +                raise TypeError("Значение value должно быть строкой.")
-+            self.fields.local_saved_image = value
++            self.fields.local_image_path = value
 +            return True
 +
 +        # ... (код сохранения изображения)
@@ -135,7 +135,7 @@ class Graber(Grbr):
 
 # Changes Made
 
-- Добавлена документация RST к функции `local_saved_image` с описанием параметров, возвращаемого значения и возможных исключений.
+- Добавлена документация RST к функции `local_image_path` с описанием параметров, возвращаемого значения и возможных исключений.
 - Удалены комментарии `#` без смысла.
 - Изменена логика обработки аргумента `value`. Теперь функция обрабатывает случай, когда `value` передан, и случай, когда `value` не передан.
 - Добавлена проверка типа данных `value`.
@@ -190,10 +190,10 @@ class Graber(Grbr):
 
 
     @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
+    async def local_image_path(self, value: Any = None):
         """Сохраняет изображение товара локально.
 
-        :param value: Значение для поля `local_saved_image`.
+        :param value: Значение для поля `local_image_path`.
         :type value: Any
         :raises TypeError: Если тип value не подходит.
         :raises Exception: Общие ошибки.
@@ -202,7 +202,7 @@ class Graber(Grbr):
         if value is not None:
             if not isinstance(value, str):
                 raise TypeError("Значение value должно быть строкой.")
-            self.fields.local_saved_image = value
+            self.fields.local_image_path = value
             return True
         
         try:
@@ -215,12 +215,12 @@ class Graber(Grbr):
             if raw_image:
               img_tmp_path = await save_png(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
               if img_tmp_path:
-                  self.fields.local_saved_image = img_tmp_path
+                  self.fields.local_image_path = img_tmp_path
                   return True
               else:
                   logger.error(f"Ошибка сохранения изображения: путь не определен")
             else:
               logger.error("Ошибка получения изображения")
         except Exception as ex:
-            logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+            logger.error(f'Ошибка сохранения изображения в поле `local_image_path`', ex)
             return False

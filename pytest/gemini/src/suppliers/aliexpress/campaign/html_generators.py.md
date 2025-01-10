@@ -12,7 +12,7 @@ def sample_product():
     return SimpleNamespace(
         product_id=123,
         product_title="Test Product",
-        local_saved_image="images/test_image.jpg",
+        local_image_path="images/test_image.jpg",
         target_sale_price=10.00,
         target_sale_price_currency="USD",
         target_original_price=20.00,
@@ -54,7 +54,7 @@ def test_set_product_html_with_html_chars(sample_category_path):
     product = SimpleNamespace(
         product_id=123,
         product_title="Test <Product>",
-        local_saved_image="images/test_image.jpg",
+        local_image_path="images/test_image.jpg",
         target_sale_price=10.00,
         target_sale_price_currency="USD",
         target_original_price=20.00,
@@ -141,7 +141,7 @@ def test_set_category_html_with_html_chars(sample_category_path):
     product = SimpleNamespace(
         product_id=123,
         product_title="Test <Product>",
-        local_saved_image="images/test_image.jpg",
+        local_image_path="images/test_image.jpg",
         target_sale_price=10.00,
         target_sale_price_currency="USD",
         target_original_price=20.00,

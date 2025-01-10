@@ -37,7 +37,7 @@ def mock_products():
     """Provides a mock products list of SimpleNamespace."""
     return [
         SimpleNamespace(
-            local_saved_image="path/to/image1.jpg",
+            local_image_path="path/to/image1.jpg",
             language="EN",
             product_title="Product 1 Title",
             description="Product 1 Description",
@@ -50,8 +50,8 @@ def mock_products():
             
         ),
         SimpleNamespace(
-            local_saved_image="path/to/image2.jpg",
-            local_saved_video = "path/to/video1.mp4",
+            local_image_path="path/to/image2.jpg",
+            local_video_path = "path/to/video1.mp4",
             language="RU",
             product_title="Продукт 2 Название",
             description="Продукт 2 Описание",
@@ -207,14 +207,14 @@ def test_upload_media_no_textareas(mock_driver, mock_products):
 def test_upload_media_with_string_path(mock_driver, mock_products):
     """Checks upload_media returns True with string path."""
     with patch('src.endpoints.advertisement.facebook.scenarios.post_message.update_images_captions', return_value=None) as mock_update_images_captions:
-        assert upload_media(mock_driver, [mock_products[0].local_saved_image]) == True
+        assert upload_media(mock_driver, [mock_products[0].local_image_path]) == True
         mock_driver.execute_locator.assert_called()
         mock_update_images_captions.assert_called_once()
 
 def test_upload_media_with_pathlib_path(mock_driver, mock_products):
     """Checks upload_media returns True with pathlib path."""
     with patch('src.endpoints.advertisement.facebook.scenarios.post_message.update_images_captions', return_value=None) as mock_update_images_captions:
-        assert upload_media(mock_driver, [Path(mock_products[0].local_saved_image)]) == True
+        assert upload_media(mock_driver, [Path(mock_products[0].local_image_path)]) == True
         mock_driver.execute_locator.assert_called()
         mock_update_images_captions.assert_called_once()
 def test_upload_media_with_video(mock_driver, mock_products):

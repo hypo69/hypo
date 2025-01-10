@@ -80,7 +80,7 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
 
     Examples:
         >>> driver = Driver(...)
-        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> upload_media(driver, products)
         True
     """
@@ -100,9 +100,9 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
     for m in media_list:
         if isinstance(m, SimpleNamespace):
             try:
-                media_path = m.local_saved_video if hasattr(m, 'local_saved_video') and not no_video else m.local_saved_image
+                media_path = m.local_video_path if hasattr(m, 'local_video_path') and not no_video else m.local_image_path
             except Exception as ex:
-                logger.debug(f"Ошибка в поле 'local_saved_image'")
+                logger.debug(f"Ошибка в поле 'local_image_path'")
                 ...
         elif isinstance(m, (str, Path)):
             media_path = m
@@ -278,7 +278,7 @@ def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleName
     Examples:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
     if not post_title(d, category): 
@@ -307,7 +307,7 @@ def post_message(d: Driver, message: SimpleNamespace,  no_video: bool = False,  
     Examples:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
     if not post_title(d, message): 

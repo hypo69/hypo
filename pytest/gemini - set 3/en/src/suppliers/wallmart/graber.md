@@ -36,7 +36,7 @@ def mock_product_fields():
 def test_grab_page_valid_input(graber, mock_driver, mock_product_fields):
     """Checks correct behavior with valid input and mock calls."""
     # Mock the data fetching functions to return mock values
-    for func in [graber.id_product, graber.name, graber.specification, graber.local_saved_image]:
+    for func in [graber.id_product, graber.name, graber.specification, graber.local_image_path]:
         func.return_value = asyncio.Future()
         func.return_value.set_result(mock_product_fields)
 
@@ -72,7 +72,7 @@ def test_grab_page_no_data(graber, mock_driver):
     """Test the scenario where no data is returned from any function."""
 
     # Mock all functions to return None (no data)
-    for func in [graber.id_product, graber.name, graber.specification, graber.local_saved_image]:
+    for func in [graber.id_product, graber.name, graber.specification, graber.local_image_path]:
         func.return_value = asyncio.Future()
         func.return_value.set_result(None)
 

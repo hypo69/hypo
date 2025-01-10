@@ -44,7 +44,7 @@ def test_grab_page_valid_input(graber, mock_driver):
     fields_mock = ProductFields(
         name="test_product_name",
         description_short='test_short_description',
-        local_saved_image = "local_image.jpg"
+        local_image_path = "local_image.jpg"
 
 
     )

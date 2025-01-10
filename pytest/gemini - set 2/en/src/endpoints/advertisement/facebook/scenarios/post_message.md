@@ -91,7 +91,7 @@ def test_post_title_invalid_input(mock_driver):
 
 def test_upload_media_valid_input(mock_driver):
     """Tests upload_media with valid SimpleNamespace input."""
-    media = [SimpleNamespace(local_saved_image="image.jpg")]
+    media = [SimpleNamespace(local_image_path="image.jpg")]
     result = upload_media(mock_driver, media)
     assert result is True
 
@@ -104,7 +104,7 @@ def test_upload_media_empty_input(mock_driver):
 
 def test_post_message_valid_input(mock_driver):
   """Tests post_message with valid input."""
-  message = SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[SimpleNamespace(local_saved_image="image.jpg")])
+  message = SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[SimpleNamespace(local_image_path="image.jpg")])
   result = post_message(mock_driver, message)
   assert result is True
 

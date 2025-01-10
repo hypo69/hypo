@@ -87,8 +87,8 @@ volume
 weight
 wholesale_price
 width
-local_saved_image
-local_saved_video
+local_image_path
+local_video_path
 ```
 
 **Note**: This document simply lists the field names.  Detailed descriptions and data types for each field would need to be referenced from the actual Python files defining the product model and associated data.

@@ -138,7 +138,7 @@ graph TD
         C --> D[fetch_all_data(**kwards)];
         D --> E[id_product(id_product=value)];
         D --> F[description_short(description_short=value)];
-        D ... --> Z[local_saved_image(local_saved_image=value)];
+        D ... --> Z[local_image_path(local_image_path=value)];
         C -- self.fields --> G[Return ProductFields];
     end
     subgraph Driver Class

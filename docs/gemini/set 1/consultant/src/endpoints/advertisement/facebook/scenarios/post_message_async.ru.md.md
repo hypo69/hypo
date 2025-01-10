@@ -24,7 +24,7 @@
 
         # Загрузка категории и продуктов
         category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-        products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+        products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 
         # Отправка заголовка
         if await post_title(driver, category):
@@ -92,10 +92,10 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
         upload_button = await d.find_element(locators.upload_media_button)
         for product in products:
             # Проверка, является ли файл видео и нужно ли пропускать загрузку
-            if no_video and str(product.local_saved_video).lower().endswith(('.mp4', '.mov', '.avi')):
+            if no_video and str(product.local_video_path).lower().endswith(('.mp4', '.mov', '.avi')):
                 continue
             # Код исполняет загрузку медиа файла
-            media_path = product.local_saved_image or product.local_saved_video
+            media_path = product.local_image_path or product.local_video_path
             if media_path:
                 await d.send_keys_to_element(upload_button, str(media_path))
 
@@ -177,7 +177,7 @@ async def promote_post(d: Driver, category: SimpleNamespace, products: List[Simp
     *   Сообщения об ошибках стали более информативными.
 4.  **Улучшена обработка загрузки медиа:**
     *   Добавлена проверка на тип файла перед загрузкой, чтобы пропустить видео, если `no_video` установлен в `True`.
-    *   Обработка путей к медиафайлам унифицирована через `product.local_saved_image or product.local_saved_video`.
+    *   Обработка путей к медиафайлам унифицирована через `product.local_image_path or product.local_video_path`.
 5.  **Улучшена обработка ошибок в функциях `post_title`, `upload_media`, `promote_post`:**
     *   Функции теперь возвращают `True` или `False` в зависимости от успеха операции.
     *   Возврат `False` позволяет вызывающему коду определить, что произошла ошибка, и предпринять соответствующие действия.
@@ -210,7 +210,7 @@ async def promote_post(d: Driver, category: SimpleNamespace, products: List[Simp
 
         # Загрузка категории и продуктов
         category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-        products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+        products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 
         # Отправка заголовка
         if await post_title(driver, category):
@@ -279,10 +279,10 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
         upload_button = await d.find_element(locators.upload_media_button)
         for product in products:
             # Проверка, является ли файл видео и нужно ли пропускать загрузку
-            if no_video and str(product.local_saved_video).lower().endswith(('.mp4', '.mov', '.avi')):
+            if no_video and str(product.local_video_path).lower().endswith(('.mp4', '.mov', '.avi')):
                 continue
             # Код исполняет загрузку медиа файла
-            media_path = product.local_saved_image or product.local_saved_video
+            media_path = product.local_image_path or product.local_video_path
             if media_path:
                 await d.send_keys_to_element(upload_button, str(media_path))
 

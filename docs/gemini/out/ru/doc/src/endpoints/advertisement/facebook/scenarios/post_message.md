@@ -48,7 +48,7 @@ post_title(driver, category)
 
 ```python
 driver = Driver(...)
-products = [SimpleNamespace(local_saved_image='path/to/image.jpg')]
+products = [SimpleNamespace(local_image_path='path/to/image.jpg')]
 upload_media(driver, products)
 ```
 

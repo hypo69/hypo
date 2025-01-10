@@ -105,9 +105,9 @@ def test_error_handler(mock_graber):
 def test_image_save_valid_url(mock_graber):
    mocker = Mock()
    mocker.patch('hypotez.src.suppliers.graber.save_png_from_url', return_value='saved_image_path')
-   asyncio.run(mock_graber.local_saved_image(value='some_url'))
+   asyncio.run(mock_graber.local_image_path(value='some_url'))
    mocker.patch('hypotez.src.suppliers.graber.save_png_from_url', return_value='saved_image_path')
-   assert asyncio.run(mock_graber.local_saved_image())
+   assert asyncio.run(mock_graber.local_image_path())
 
 # Example for testing an exception
 def test_execute_locator_exception(mock_graber, mocker):

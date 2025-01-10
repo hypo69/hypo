@@ -86,8 +86,8 @@ def product_fields():
         "weight",
         "wholesale_price",
         "width",
-        "local_saved_image",
-        "local_saved_video"
+        "local_image_path",
+        "local_video_path"
     ]
 
 
@@ -175,8 +175,8 @@ def test_all_fields_present(product_fields):
         "weight",
         "wholesale_price",
         "width",
-        "local_saved_image",
-        "local_saved_video"
+        "local_image_path",
+        "local_video_path"
     ]
     assert set(product_fields) == set(expected_fields), "Not all expected fields are present"
 

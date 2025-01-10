@@ -15,8 +15,8 @@
         ```python
         category = SimpleNamespace(title="Заголовок", description="Описание")
         products = [
-          SimpleNamespace(local_saved_image="path/to/image1.jpg"),
-          SimpleNamespace(local_saved_image="path/to/image2.jpg")
+          SimpleNamespace(local_image_path="path/to/image1.jpg"),
+          SimpleNamespace(local_image_path="path/to/image2.jpg")
         ]
         ```
 
@@ -106,10 +106,10 @@ graph TD
     -   **Назначение:** Загружает медиафайлы (изображения и видео) на пост Facebook.
     -   **Аргументы:**
         -   `d`: Экземпляр класса `Driver`.
-        -   `products`: Список объектов `SimpleNamespace`, каждый из которых содержит пути к медиафайлам (например, `local_saved_image`).
+        -   `products`: Список объектов `SimpleNamespace`, каждый из которых содержит пути к медиафайлам (например, `local_image_path`).
         -   `no_video`: Флаг, определяющий, нужно ли пропускать загрузку видео (по умолчанию `False`).
     -   **Возвращаемое значение:** `True`, если медиафайлы успешно загружены, `None` в случае неудачи.
-    -   **Пример:** `upload_media(driver, products=[SimpleNamespace(local_saved_image="path/to/image.jpg")], no_video=True)`
+    -   **Пример:** `upload_media(driver, products=[SimpleNamespace(local_image_path="path/to/image.jpg")], no_video=True)`
 
 3.  **`update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None`**:
 
@@ -130,7 +130,7 @@ graph TD
         -   `products`: Список объектов `SimpleNamespace` с деталями продуктов (пути к медиа).
         -   `no_video`: Флаг для пропуска загрузки видео.
     -   **Возвращаемое значение:** `True`, если пост успешно продвинут, `None` в случае неудачи.
-    -   **Пример:** `promote_post(driver, category=SimpleNamespace(title="Заголовок", description="Описание"), products=[SimpleNamespace(local_saved_image="path/to/image.jpg")], no_video=True)`
+    -   **Пример:** `promote_post(driver, category=SimpleNamespace(title="Заголовок", description="Описание"), products=[SimpleNamespace(local_image_path="path/to/image.jpg")], no_video=True)`
 
 **Переменные:**
 

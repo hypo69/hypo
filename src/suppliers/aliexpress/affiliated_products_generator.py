@@ -30,6 +30,7 @@ from src.utils.video import save_video_from_url
 from src.utils.file_async import (read_text_file,
                         get_filenames_from_directory,
                         get_directory_names,
+                        save_text_file
                         )
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.printer import pprint
@@ -205,7 +206,7 @@ class AliAffiliatedProducts(AliApi):
             #pprint(f"Saved image for {product.product_id=}", end=print_flag)
             logger.info(f"Saved image for {product.product_id=}")
             
-            product.local_saved_image = str(image_path)
+            product.local_image_path = str(image_path)
             if len(product.product_video_url) > 1:
                 parsed_url:Path = urlparse(product.product_video_url)
                 suffix:str = Path(parsed_url.path).suffix
@@ -213,7 +214,7 @@ class AliAffiliatedProducts(AliApi):
                 video_path:Path = Path(category_root) / 'videos' / \
                     f'{product.product_id}{suffix}'
                 await save_video_from_url(product.product_video_url, video_path)
-                product.local_saved_video = str(video_path)
+                product.local_video_path = str(video_path)
                 logger.info(f"Saved video for {product.product_id=}")
 
             #product.tags = f"#{f_normalizer.simplify_string(product.first_level_category_name)}, #{f_normalizer.simplify_string(product.second_level_category_name)}"
@@ -224,7 +225,7 @@ class AliAffiliatedProducts(AliApi):
             affiliated_products_list.append(product)
         #print_flag = 'newline'
         product_titles_path:Path = category_root / f"{self.language}_{self.currency}" / 'product_titles.txt'
-        save_text_file(product_titles, product_titles_path)
+        await save_text_file(product_titles, product_titles_path)
         return affiliated_products_list
 
 

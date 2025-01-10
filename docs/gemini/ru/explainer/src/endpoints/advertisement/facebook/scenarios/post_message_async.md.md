@@ -42,7 +42,7 @@
     *   Пример:
         ```python
         category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+        products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         ```
 
 3.  **Отправка заголовка:**
@@ -155,7 +155,7 @@ graph TD
     *   **Возвращаемое значение**: `True`, если загрузка прошла успешно, иначе `None`.
     *   **Пример**:
         ```python
-        products = [SimpleNamespace(local_saved_image='path/to/image.jpg', local_saved_video='path/to/video.mp4')]
+        products = [SimpleNamespace(local_image_path='path/to/image.jpg', local_video_path='path/to/video.mp4')]
         upload_media(driver, products, no_video=True) # пропускаем видео
         ```
 
@@ -184,7 +184,7 @@ graph TD
     *   **Пример**:
         ```python
         category = SimpleNamespace(title="Заголовок", description="Описание")
-        products = [SimpleNamespace(local_saved_image='path/to/image.jpg', description='Описание изображения')]
+        products = [SimpleNamespace(local_image_path='path/to/image.jpg', description='Описание изображения')]
         promote_post(driver, category, products, no_video=False)
         ```
 

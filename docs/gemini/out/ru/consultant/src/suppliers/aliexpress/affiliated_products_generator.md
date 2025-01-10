@@ -106,14 +106,14 @@ class AliAffiliatedProducts(AliApi):
             await save_png_from_url(product.product_main_image_url, image_path)
             logger.info(f"Изображение сохранено для {product.product_id=}")
             
-            product.local_saved_image = str(image_path)
+            product.local_image_path = str(image_path)
             if product.product_video_url: # Проверка наличия видео URL
                 parsed_url = urlparse(product.product_video_url)
                 suffix = Path(parsed_url.path).suffix
                 video_path = Path(category_root) / 'videos' / f"{product.product_id}{suffix}"
                 await save_video_from_url(product.product_video_url, video_path)
                 logger.info(f"Видео сохранено для {product.product_id=}")
-                product.local_saved_video = str(video_path)
+                product.local_video_path = str(video_path)
             
 
             #product.tags = f"#{f_normalizer.simplify_string(product.first_level_category_name)}, #{f_normalizer.simplify_string(product.second_level_category_name)}"
@@ -224,14 +224,14 @@ class AliAffiliatedProducts(AliApi):
                         image_path = category_root / 'images' / f"{product.product_id}.png"
                         await save_png_from_url(product.product_main_image_url, image_path)
                         logger.info(f'Изображение сохранено для {product.product_id=}')
-                        product.local_saved_image = str(image_path)
+                        product.local_image_path = str(image_path)
                         if product.product_video_url:
                             parsed_url = urlparse(product.product_video_url)
                             suffix = Path(parsed_url.path).suffix
                             video_path = category_root / 'videos' / f"{product.product_id}{suffix}"
                             await save_video_from_url(product.product_video_url, video_path)
                             logger.info(f'Видео сохранено для {product.product_id=}')
-                            product.local_saved_video = str(video_path)
+                            product.local_video_path = str(video_path)
                         j_dumps(product, category_root / f"{self.language}_{self.currency}" / f"{product.product_id}.json")
                         affiliate_products.append(product)
                         logger.info(f'{product.product_title=}')
@@ -359,7 +359,7 @@ class AliAffiliatedProducts(AliApi):
                         try:
                             await save_png_from_url(product.product_main_image_url, image_path)
                             logger.info(f'Изображение сохранено для {product.product_id=}')
-                            product.local_saved_image = str(image_path)
+                            product.local_image_path = str(image_path)
                         except Exception as e:
                             logger.error(f"Ошибка при сохранении изображения: {e}")
                             continue
@@ -370,7 +370,7 @@ class AliAffiliatedProducts(AliApi):
                                 video_path = category_root / 'videos' / f"{product.product_id}{suffix}"
                                 await save_video_from_url(product.product_video_url, video_path)
                                 logger.info(f'Видео сохранено для {product.product_id=}')
-                                product.local_saved_video = str(video_path)
+                                product.local_video_path = str(video_path)
                             except Exception as e:
                                 logger.error(f"Ошибка при сохранении видео: {e}")
                                 continue

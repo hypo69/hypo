@@ -37,7 +37,7 @@ This module contains functions for posting messages to Facebook advertisements. 
 
 **Parameters**:
 - `d` (Driver): The driver instance used for interacting with the webpage.
-- `media` (SimpleNamespace | List[SimpleNamespace] | str | list[str]): The media to upload. Can be a single `SimpleNamespace` object with a `local_saved_image` or `local_saved_video` attribute or a list of such objects, or a string or list of strings representing media file paths.
+- `media` (SimpleNamespace | List[SimpleNamespace] | str | list[str]): The media to upload. Can be a single `SimpleNamespace` object with a `local_image_path` or `local_video_path` attribute or a list of such objects, or a string or list of strings representing media file paths.
 - `no_video` (bool, optional): Flag to skip video upload if present. Defaults to `False`.
 - `without_captions` (bool, optional): Flag to skip caption update. Defaults to `False`.
 

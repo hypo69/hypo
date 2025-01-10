@@ -118,7 +118,7 @@ class AliAffiliatedProducts(AliApi):
               save_png_from_url(product.product_main_image_url, image_path)
             except Exception as e:
               logger.error(f"Ошибка при сохранении изображения для {product.product_id}: {e}")
-            product.local_saved_image = str(image_path)
+            product.local_image_path = str(image_path)
             
             if len(product.product_video_url) > 1:
                 try:
@@ -126,7 +126,7 @@ class AliAffiliatedProducts(AliApi):
                     suffix = Path(parsed_url.path).suffix
                     video_path = self.campaign_path / 'videos' / f"{product.product_id}{suffix}"
                     save_video_from_url(product.product_video_url, video_path)
-                    product.local_saved_video = str(video_path)
+                    product.local_video_path = str(video_path)
                 except Exception as e:
                     logger.error(f"Ошибка при сохранении видео для {product.product_id}: {e}")
 

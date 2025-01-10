@@ -86,7 +86,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
 
     # Итерируется по продуктам и загружает медиа.
     for product in products:
-        media_path = product.local_saved_video if hasattr(product, 'local_saved_video') and not no_video else product.local_saved_image
+        media_path = product.local_video_path if hasattr(product, 'local_video_path') and not no_video else product.local_image_path
         try:
             # Загрузка медиафайла.
             if not d.execute_locator(locator.foto_video_input, media_path):

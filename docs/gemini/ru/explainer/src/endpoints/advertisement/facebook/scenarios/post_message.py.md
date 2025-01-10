@@ -25,7 +25,7 @@ post_title(driver, "Простое сообщение") # Вернёт True ес
    - **Открытие формы:** Открывает форму добавления медиа, используя локатор `locator.open_add_foto_video_form`.
    - **Нормализация списка:** Преобразует `media` в список `media_list`.
    - **Цикл загрузки:** Цикл по `media_list` для загрузки каждого медиафайла.
-       - **Определение пути:** Определяет путь к медиафайлу `media_path` из `SimpleNamespace`(`local_saved_video` если `no_video=False`, иначе `local_saved_image`) или непосредственно из строки или `Path`.
+       - **Определение пути:** Определяет путь к медиафайлу `media_path` из `SimpleNamespace`(`local_video_path` если `no_video=False`, иначе `local_image_path`) или непосредственно из строки или `Path`.
        - **Загрузка:** Загружает медиа, используя локатор `locator.foto_video_input`.
        - **Задержка:** Делает паузу (1.5 сек) после загрузки.
    - **Проверка подписей:** Если `without_captions = True`, функция завершается успешно.
@@ -39,12 +39,12 @@ post_title(driver, "Простое сообщение") # Вернёт True ес
 ```python
 driver = Driver(...)
 media_files = [
-    SimpleNamespace(local_saved_image="path/to/image1.jpg", ...),
-    SimpleNamespace(local_saved_image="path/to/image2.png", ...)
+    SimpleNamespace(local_image_path="path/to/image1.jpg", ...),
+    SimpleNamespace(local_image_path="path/to/image2.png", ...)
 ]
 upload_media(driver, media_files) # Вернёт True если всё успешно
 
-media_video = SimpleNamespace(local_saved_video="path/to/video.mp4", ...)
+media_video = SimpleNamespace(local_video_path="path/to/video.mp4", ...)
 upload_media(driver, media_video, no_video=False)  # Вернёт True если всё успешно
 upload_media(driver, "path/to/image.jpg",  without_captions=True) # Вернёт True если всё успешно
 ```
@@ -150,7 +150,7 @@ flowchart TD
     -   **Аргументы**:
         -   `d`: Объект драйвера для управления браузером.
         -   `media`: Данные о медиафайлах (путь, список путей).
-            - Может быть как `SimpleNamespace`, который содержит атрибут  `local_saved_image` (путь к изображению) или `local_saved_video` (путь к видео), так и список таких объектов.
+            - Может быть как `SimpleNamespace`, который содержит атрибут  `local_image_path` (путь к изображению) или `local_video_path` (путь к видео), так и список таких объектов.
             -  Так же можно передать путь к изображению/видео в виде строки.
         -   `no_video`: Флаг для отмены загрузки видео.
         -   `without_captions`: Флаг отмены подписей к изображениям.
@@ -159,8 +159,8 @@ flowchart TD
     -   **Примеры**:
 
         ```python
-        upload_media(driver, [SimpleNamespace(local_saved_image="path/to/image.jpg")])
-        upload_media(driver, SimpleNamespace(local_saved_video="path/to/video.mp4"), no_video=False)
+        upload_media(driver, [SimpleNamespace(local_image_path="path/to/image.jpg")])
+        upload_media(driver, SimpleNamespace(local_video_path="path/to/video.mp4"), no_video=False)
         upload_media(driver, "path/to/image.jpg", without_captions=True)
         ```
 

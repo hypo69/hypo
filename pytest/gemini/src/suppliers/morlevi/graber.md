@@ -22,7 +22,7 @@ class MockDriver:
 
 class MockProductFields:
     id_product = "123"
-    local_saved_image = None
+    local_image_path = None
 
 
 class MockGS:
@@ -42,44 +42,44 @@ def graber(mocker):
     return graber_instance
 
 
-# Tests for local_saved_image function
-def test_local_saved_image_valid_input(graber):
-    """Test local_saved_image with valid input."""
-    result = graber.local_saved_image()
+# Tests for local_image_path function
+def test_local_image_path_valid_input(graber):
+    """Test local_image_path with valid input."""
+    result = graber.local_image_path()
     assert result
-    assert graber.fields.local_saved_image == Path('test_image.png')
+    assert graber.fields.local_image_path == Path('test_image.png')
     assert graber.fields.id_product == '123'  # Verify id_product is set
 
 
-def test_local_saved_image_no_value(graber, mocker):
-    """Test local_saved_image with no value passed."""
+def test_local_image_path_no_value(graber, mocker):
+    """Test local_image_path with no value passed."""
     mocker.patch('hypotez.src.suppliers.morlevi.graber.logger.debug', return_value=None)
-    result = graber.local_saved_image()
+    result = graber.local_image_path()
     assert result
-    assert graber.fields.local_saved_image == Path('test_image.png')
+    assert graber.fields.local_image_path == Path('test_image.png')
     assert graber.fields.id_product == '123'
 
 
 @pytest.mark.parametrize('mocked_image', [b'mocked_image'], ids=lambda x: f'input {x}')
-def test_local_saved_image_mocked_image(mocker, graber, mocked_image):
+def test_local_image_path_mocked_image(mocker, graber, mocked_image):
     mocker.patch('hypotez.src.suppliers.morlevi.graber.Driver.execute_locator', return_value=mocked_image)
-    result = graber.local_saved_image()
+    result = graber.local_image_path()
     assert result
-    assert graber.fields.local_saved_image == Path('test_image.png')
+    assert graber.fields.local_image_path == Path('test_image.png')
 
 
 @pytest.mark.parametrize('exception', [Exception('mocked_exception')], ids=lambda x: f'exception {x}')
-def test_local_saved_image_exception(mocker, graber, exception):
+def test_local_image_path_exception(mocker, graber, exception):
     mocker.patch('hypotez.src.suppliers.morlevi.graber.Driver.execute_locator', side_effect=exception)
     mocker.patch('hypotez.src.suppliers.morlevi.graber.logger.error', autospec=True)
-    result = graber.local_saved_image()
+    result = graber.local_image_path()
     assert result is None
 
 
 
 @patch('hypotez.src.suppliers.morlevi.graber.save_png', side_effect=Exception('mocked exception'))  # Mock save_png to raise an exception
-def test_local_saved_image_save_png_exception(graber):
-    result = graber.local_saved_image()
+def test_local_image_path_save_png_exception(graber):
+    result = graber.local_image_path()
     assert result is None
 
 
@@ -97,11 +97,11 @@ def test_local_saved_image_save_png_exception(graber):
 
 3. **Mock `gs.path`:** The `gs.path` object is now mocked with temporary paths.
 
-4. **Parameterization (`pytest.mark.parametrize`):**  The `test_local_saved_image_mocked_image` test now uses `pytest.mark.parametrize` to test with different input values, making it more comprehensive and readable.  This is a significant improvement for testing functions with different possible inputs.
+4. **Parameterization (`pytest.mark.parametrize`):**  The `test_local_image_path_mocked_image` test now uses `pytest.mark.parametrize` to test with different input values, making it more comprehensive and readable.  This is a significant improvement for testing functions with different possible inputs.
 
-5. **Exception Handling:** The `test_local_saved_image_exception` test demonStartes handling potential exceptions during the `execute_locator` and `save_png` calls. This is important for testing robustness.
+5. **Exception Handling:** The `test_local_image_path_exception` test demonStartes handling potential exceptions during the `execute_locator` and `save_png` calls. This is important for testing robustness.
 
-6. **`side_effect` for Exception Mocking:** The `test_local_saved_image_save_png_exception` example correctly uses `side_effect` to mock a function that raises an exception.
+6. **`side_effect` for Exception Mocking:** The `test_local_image_path_save_png_exception` example correctly uses `side_effect` to mock a function that raises an exception.
 
 7. **Clearer Assertions:**  Assertions now check for the expected outcome.  This is good practice to prevent false positives.
 
@@ -113,4 +113,4 @@ def test_local_saved_image_save_png_exception(graber):
 3.  Run `pytest` from your terminal in the directory containing the test file.
 
 
-This revised solution provides a more complete and robust set of tests, handling various cases and ensuring that the `local_saved_image` function behaves correctly in different situations. Remember to adapt the mocks and assertions to the specific details of your actual codebase. Also, consider adding tests for other methods and functions in the `Graber` class.
+This revised solution provides a more complete and robust set of tests, handling various cases and ensuring that the `local_image_path` function behaves correctly in different situations. Remember to adapt the mocks and assertions to the specific details of your actual codebase. Also, consider adding tests for other methods and functions in the `Graber` class.

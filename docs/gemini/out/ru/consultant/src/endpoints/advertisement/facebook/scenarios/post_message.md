@@ -78,7 +78,7 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
     media_list = [media] if not isinstance(media, list) else media
     for m in media_list:
         try:
-            media_path = m.local_saved_video if hasattr(m, 'local_saved_video') and not no_video else m.local_saved_image
+            media_path = m.local_video_path if hasattr(m, 'local_video_path') and not no_video else m.local_image_path
             if not media_path:
                 logger.error(f"Путь к медиафайлу не найден: {m=}")
                 continue

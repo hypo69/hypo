@@ -90,8 +90,8 @@ PRODUCT_FIELDS = [
     'weight',
     'wholesale_price',
     'width',
-    'local_saved_image',
-    'local_saved_video'
+    'local_image_path',
+    'local_video_path'
 ]
 """Список полей продукта."""
 ```
@@ -192,7 +192,7 @@ PRODUCT_FIELDS = [
     'weight',
     'wholesale_price',
     'width',
-    'local_saved_image',
-    'local_saved_video'
+    'local_image_path',
+    'local_video_path'
 ]
 """Список полей продукта."""

@@ -50,8 +50,8 @@
     *   Если список не пустой, то для каждого продукта выводится:
         *   `product_id` (идентификатор продукта)
         *   `promotion_link` (аффилированная ссылка)
-        *   `local_saved_image` (локальный путь к сохраненному изображению)
-        *   `local_saved_video` (локальный путь к сохраненному видео, если есть)
+        *   `local_image_path` (локальный путь к сохраненному изображению)
+        *   `local_video_path` (локальный путь к сохраненному видео, если есть)
 
         ```python
         if products:
@@ -59,9 +59,9 @@
             for product in products:
                 print(f"Продукт ID: {product.product_id}")
                 print(f"Аффилированная ссылка: {product.promotion_link}")
-                print(f"Локальный путь к изображению: {product.local_saved_image}")
-                if product.local_saved_video:
-                    print(f"Локальный путь к видео: {product.local_saved_video}")
+                print(f"Локальный путь к изображению: {product.local_image_path}")
+                if product.local_video_path:
+                    print(f"Локальный путь к видео: {product.local_video_path}")
                 print()
         ```
 
@@ -148,8 +148,8 @@ flowchart TD
 *   `product` (object): Объект продукта внутри цикла, представляющий продукт с аффилированными ссылками и медиафайлами.
     *   `product_id`: ID продукта (строка).
     *   `promotion_link`: Аффилированная ссылка (строка).
-    *   `local_saved_image`: Локальный путь к изображению (строка).
-    *   `local_saved_video`: Локальный путь к видео (строка), может отсутствовать.
+    *   `local_image_path`: Локальный путь к изображению (строка).
+    *   `local_video_path`: Локальный путь к видео (строка), может отсутствовать.
 
 **Потенциальные ошибки и области для улучшения:**
 

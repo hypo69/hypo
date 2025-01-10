@@ -77,7 +77,7 @@ class Graber(Grbr):
             await self.description_short(kwards.get("description_short", ''))
             await self.name(kwards.get("name", ''))
             await self.specification(kwards.get("specification", ''))
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_image_path(kwards.get("local_image_path", ''))
         await fetch_all_data()
         return self.fields
 ```
@@ -87,7 +87,7 @@ class Graber(Grbr):
 1. **Initialization (`__init__`)**: The `Graber` class initializes itself with a `driver` instance and sets `supplier_prefix` to 'bangood'. It calls the constructor of the parent class (`Grbr`). Importantly, it sets `Context.locator_for_decorator` to `None`, which likely controls a decorator used for pop-up handling.
 
 2. **Data Gathering (`grab_page`)**: The `grab_page` function is asynchronous and fetches product data.
-   - **`fetch_all_data`**: This function, likely a helper, calls various methods (e.g., `self.description_short`, `self.name`, `self.specification`, `self.local_saved_image`) to gather data.
+   - **`fetch_all_data`**: This function, likely a helper, calls various methods (e.g., `self.description_short`, `self.name`, `self.specification`, `self.local_image_path`) to gather data.
    - **Data Retrieval**:  Each called method extracts specific fields from the webpage.  The `kwards` argument allows passing parameters for each of these methods.
    - **Return Value**: The function returns the gathered `ProductFields` data.
 
@@ -106,7 +106,7 @@ graph TD
         G --> H[description_short];
         G --> I[name];
         G --> J[specification];
-        G --> K[local_saved_image];
+        G --> K[local_image_path];
         G --> L[Return ProductFields];
     end
     B --> F;

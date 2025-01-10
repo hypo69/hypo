@@ -96,7 +96,7 @@ class Graber(Grbr):
         async def fetch_all_data(**kwards):
             await self.id_product(kwards.get("id_product", ''))
             # ... (many more await calls)
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_image_path(kwards.get("local_image_path", ''))
 
         await fetch_all_data()
         return self.fields
@@ -109,7 +109,7 @@ graph TD
     A[Init Graber] --> B{Grab Page};
     B --> C[Fetch All Data];
     C --> D[id_product];
-    C --> E[local_saved_image];
+    C --> E[local_image_path];
     C -- ... (other field fetching functions) --> D;
     D --> F[Return ProductFields];
 ```
@@ -119,7 +119,7 @@ graph TD
 * **Init Graber (A):**  Creates a `Graber` object with a `driver` instance. Sets `supplier_prefix`.
 * **Grab Page (B):** Asynchronous function to fetch product data.  Example input:  `driver` object, possible `kwards` (keyword arguments) like `id_product`.
 * **Fetch All Data (C):**  Function calling multiple `fetch` functions for specific product data, based on provided `kwards`. Example input: `kwards = {'id_product': '123'}`
-* **id_product (D), local_saved_image (E), ... (other functions):** These are individual functions to fetch each particular product field.  Input: `kwards` with values for their associated fields (e.g., `kwards.get('id_product')`). Example input: `await self.id_product('123')`
+* **id_product (D), local_image_path (E), ... (other functions):** These are individual functions to fetch each particular product field.  Input: `kwards` with values for their associated fields (e.g., `kwards.get('id_product')`). Example input: `await self.id_product('123')`
 * **Return ProductFields (F):**  The function returns a `ProductFields` object containing extracted data.
 
 
@@ -158,7 +158,7 @@ The mermaid diagram illuStartes the import relationships within the code.  The s
 
 * **Functions:**
     * `grab_page`:  Fetches product fields from the Walmart website, asynchronously. Takes a `driver` object and potentially keyword arguments. Returns a `ProductFields` object.
-    * `fetch_all_data`: This function collects the data from various sub-functions (e.g. `id_product`, `local_saved_image`).  It uses keyword arguments.
+    * `fetch_all_data`: This function collects the data from various sub-functions (e.g. `id_product`, `local_image_path`).  It uses keyword arguments.
 
 * **Variables:**
     * `MODE`: String variable likely representing the program's execution mode (e.g., 'dev', 'prod').

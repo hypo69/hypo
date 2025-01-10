@@ -124,7 +124,7 @@ graph TD
 
 * **`Driver`**: Экземпляр драйвера Selenium для взаимодействия с веб-страницей.
 * **`category`**: `SimpleNamespace` с атрибутами `title` и `description`. Например, `category = SimpleNamespace(title="Новый T-Shirt", description="Описание изделия")`.
-* **`products`**: Список объектов `SimpleNamespace` содержащих информацию о файлах media. Например, `products = [SimpleNamespace(local_saved_image="путь/к/изображению.jpg", product_title="Название продукта"), ... ]`
+* **`products`**: Список объектов `SimpleNamespace` содержащих информацию о файлах media. Например, `products = [SimpleNamespace(local_image_path="путь/к/изображению.jpg", product_title="Название продукта"), ... ]`
 
 Данные передаются между функциями, используя аргументы и возвращаемые значения. Функции `post_title`, `upload_media` и `promote_post` взаимодействуют, используя данные, содержащиеся в `Driver` и `SimpleNamespace`.
 
@@ -154,8 +154,8 @@ graph LR
         "Driver" -- execute_locator --> "WebElement"
         "Driver" -- scroll --> "WebElement"
         "SimpleNamespace" -- product_title --> "string"
-        "SimpleNamespace" -- local_saved_image --> "string"
-        "SimpleNamespace" -- local_saved_video --> "string"
+        "SimpleNamespace" -- local_image_path --> "string"
+        "SimpleNamespace" -- local_video_path --> "string"
     end
     subgraph "Асинхронность"
         "post_message_async.py" -- await upload_media --> update_images_captions

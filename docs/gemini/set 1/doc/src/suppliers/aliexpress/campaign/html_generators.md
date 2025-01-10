@@ -25,7 +25,7 @@
 
 **Параметры**:
 
-- `product` (SimpleNamespace): Объект SimpleNamespace, содержащий данные о продукте (например, `product_id`, `product_title`, `target_sale_price`, `local_saved_image`, `promotion_link` и др.).
+- `product` (SimpleNamespace): Объект SimpleNamespace, содержащий данные о продукте (например, `product_id`, `product_title`, `target_sale_price`, `local_image_path`, `promotion_link` и др.).
 - `category_path` (str | Path): Путь к каталогу, в котором будет сохранен HTML-файл.
 
 **Возвращает**:

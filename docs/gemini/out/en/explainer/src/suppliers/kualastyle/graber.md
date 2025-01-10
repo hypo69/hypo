@@ -106,7 +106,7 @@ class Graber(Grbr):
             # Uncomment the following lines to fetch specific data
             await self.id_product(kwards.get("id_product", ''))
             # ... (many more await calls)
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_image_path(kwards.get("local_image_path", ''))
 
         # Call the function to fetch all data
         await fetch_all_data()
@@ -121,7 +121,7 @@ class Graber(Grbr):
 2. **`grab_page`:**  This asynchronous function is responsible for fetching product data.
 
 
-3. **`fetch_all_data`:** This is an asynchronous helper function which calls various functions specific to data retrieval from the website, such as `id_product()`, `local_saved_image()`, etc.  These functions are likely to fetch specific data fields using the provided driver.
+3. **`fetch_all_data`:** This is an asynchronous helper function which calls various functions specific to data retrieval from the website, such as `id_product()`, `local_image_path()`, etc.  These functions are likely to fetch specific data fields using the provided driver.
 
 4. **Data Retrieval:** The `fetch_all_data` function sequentially calls numerous methods (e.g., `self.id_product`, `self.description_short`, ... ) of the Graber class. Each of these methods fetches a specific data field related to a product.
 
@@ -141,7 +141,7 @@ graph TD
     E --> F[self.id_product()];
     E --> G[self.description_short()];
     ...
-    E --> H[self.local_saved_image()];
+    E --> H[self.local_image_path()];
     F --> I[Product data];
     G --> I;
     H --> I;

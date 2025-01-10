@@ -53,7 +53,7 @@ def test_process_affiliate_products(mock_logger, mock_j_dumps, mock_save_video, 
     result = asyncio.run(affiliate_products.process_affiliate_products(prod_ids, category_root))
     assert len(result) == 1, "Incorrect number of products returned"
     mock_save_video.assert_called_once()
-    assert result[0].local_saved_video is not None
+    assert result[0].local_video_path is not None
 
 @pytest.fixture
 def category_root():

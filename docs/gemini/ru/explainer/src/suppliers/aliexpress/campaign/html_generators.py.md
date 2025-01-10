@@ -34,7 +34,7 @@
 **1. `ProductHTMLGenerator.set_product_html`:**
 
    - **Вход:** `product` (экземпляр `SimpleNamespace` с данными о продукте), `category_path` (строка или `Path`, путь к директории категории).
-     *   Пример: `product` с `product_id='123', product_title='Awesome T-Shirt', local_saved_image='images/t-shirt.jpg', target_sale_price='19.99', target_sale_price_currency='$', target_original_price='29.99', target_original_price_currency='$', second_level_category_name='Apparel', promotion_link='https://example.com/t-shirt'`,  `category_path = 'output/apparel'`
+     *   Пример: `product` с `product_id='123', product_title='Awesome T-Shirt', local_image_path='images/t-shirt.jpg', target_sale_price='19.99', target_sale_price_currency='$', target_original_price='29.99', target_original_price_currency='$', second_level_category_name='Apparel', promotion_link='https://example.com/t-shirt'`,  `category_path = 'output/apparel'`
    - **Шаг 1:** Извлекает имя категории из `category_path`.
      *   Пример: `category_name = 'apparel'`
    - **Шаг 2:** Формирует путь к HTML-файлу продукта:  `category_path / 'html' / f"{product.product_id}.html"`.
@@ -179,7 +179,7 @@ flowchart TD
 *   Все переменные, используемые в коде, имеют осмысленные имена, описывающие их назначение, например `product`, `category_path`, `html_path`, `html_content`.
 *   Типы переменных: строки, списки, объекты `Path`, объекты `SimpleNamespace`.
 *   В `ProductHTMLGenerator`:
-    *   `product` содержит данные о конкретном продукте (`product_id`, `product_title`, `local_saved_image` и др.)
+    *   `product` содержит данные о конкретном продукте (`product_id`, `product_title`, `local_image_path` и др.)
     *   `category_path` -  путь к директории категории.
     *   `html_path` - путь к конечному HTML файлу.
     *   `html_content` - сгенерированный HTML контент.

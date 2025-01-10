@@ -99,7 +99,7 @@
     async def main():
         driver = Driver(...)
         category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-        products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+        products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 
         if not await post_title(driver, category):
             logger.error("Не удалось отправить заголовок")
@@ -158,12 +158,12 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
     """
     try:
         for product in products:
-            if hasattr(product, 'local_saved_image') and product.local_saved_image:
+            if hasattr(product, 'local_image_path') and product.local_image_path:
                  # код исполняет загрузку изображения
-                await d.send_keys(d.locator.upload_media, product.local_saved_image)
-            if not no_video and hasattr(product, 'local_saved_video') and product.local_saved_video:
+                await d.send_keys(d.locator.upload_media, product.local_image_path)
+            if not no_video and hasattr(product, 'local_video_path') and product.local_video_path:
                 # код исполняет загрузку видео, если no_video=False
-                await d.send_keys(d.locator.upload_media, product.local_saved_video)
+                await d.send_keys(d.locator.upload_media, product.local_video_path)
         return True
     except Exception as e:
         # код исполняет логирование ошибки, если загрузка не удалась

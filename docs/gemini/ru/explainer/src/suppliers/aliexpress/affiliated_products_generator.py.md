@@ -51,8 +51,8 @@
     -   Итерируется по `_affiliated_products` и `_promotion_links` параллельно (используя `zip`):
         -   Добавляет название продукта в список `product_titles`
         -   Добавляет аффилированную ссылку в атрибут `promotion_link` продукта.
-        -   Создает путь для сохранения изображения, скачивает изображение и сохраняет путь к нему в атрибут `local_saved_image` продукта.
-        -   Если есть видео, создает путь для сохранения видео, скачивает видео и сохраняет путь к нему в атрибут `local_saved_video`.
+        -   Создает путь для сохранения изображения, скачивает изображение и сохраняет путь к нему в атрибут `local_image_path` продукта.
+        -   Если есть видео, создает путь для сохранения видео, скачивает видео и сохраняет путь к нему в атрибут `local_video_path`.
         -   Логирует название продукта.
         -   Сохраняет информацию о продукте в JSON файл в папке `/<category_root>/<language>_<currency>`.
         -   Добавляет продукт в `affiliated_products_list`.
@@ -200,7 +200,7 @@ flowchart TD
         category_root = Path("./output/electronics")
         products = await aff_products.process_affiliate_products(prod_ids, category_root)
         for product in products:
-            print(product.product_title, product.promotion_link, product.local_saved_image)
+            print(product.product_title, product.promotion_link, product.local_image_path)
         ```
 
 **Переменные:**

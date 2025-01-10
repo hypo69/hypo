@@ -180,7 +180,7 @@ class EmilDesign:
             # Обработка ответа в структурированный формат
             try:
                 res_ns: SimpleNamespace = j_loads_ns(response)
-                setattr(res_ns, 'local_saved_image', str(Path(images_dir / image_path)))
+                setattr(res_ns, 'local_image_path', str(Path(images_dir / image_path)))
                 data.append(res_ns)
                 j_dumps(data, output_file)
                 updated_images_list.append(image_path)
@@ -208,7 +208,7 @@ class EmilDesign:
             setattr(message, 'title', f"{m.parent}\\n{m.category}")
             setattr(message, 'description', m.description)
             message.products = SimpleNamespace()
-            setattr(message.products, 'local_saved_image', [m.local_saved_image])
+            setattr(message.products, 'local_image_path', [m.local_image_path])
            
             post_message(d, message, without_captions=True)
             ...
@@ -422,7 +422,7 @@ class EmilDesign:
             # Обработка ответа в структурированный формат
             try:
                 res_ns: SimpleNamespace = j_loads_ns(response)
-                setattr(res_ns, 'local_saved_image', str(Path(images_dir / image_path)))
+                setattr(res_ns, 'local_image_path', str(Path(images_dir / image_path)))
                 data.append(res_ns)
                 j_dumps(data, output_file)
                 updated_images_list.append(image_path)
@@ -450,7 +450,7 @@ class EmilDesign:
             setattr(message, 'title', f"{m.parent}\\n{m.category}")
             setattr(message, 'description', m.description)
             message.products = SimpleNamespace()
-            setattr(message.products, 'local_saved_image', [m.local_saved_image])
+            setattr(message.products, 'local_image_path', [m.local_image_path])
            
             post_message(d, message, without_captions=True)
             ...

@@ -145,7 +145,7 @@ async def main():
 
     # Загрузка категории и продуктов
     category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-    products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+    products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 
     # Отправка заголовка
     post_title(driver, category)

@@ -44,7 +44,7 @@ def graber(mock_driver):
 def test_grab_page_valid_input(graber, mock_driver):
     """Tests grab_page with valid input."""
     # Mock necessary functions within Graber
-    for func_name in ["id_product", "description_short", "name", "local_saved_image"]:
+    for func_name in ["id_product", "description_short", "name", "local_image_path"]:
         setattr(graber, func_name, lambda x: asyncio.Future().set_result(MockProductFields()))
     
     async def fetch_all_data(**kwargs):
@@ -64,7 +64,7 @@ def test_grab_page_with_no_data(graber, mock_driver):
     """Tests grab_page with no relevant data for the fields"""
     
     # Mock necessary functions within Graber; important to mock to avoid errors.
-    for func_name in ["id_product", "description_short", "name", "local_saved_image"]:
+    for func_name in ["id_product", "description_short", "name", "local_image_path"]:
         setattr(graber, func_name, lambda x: asyncio.Future().set_result({}))
 
 

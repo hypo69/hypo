@@ -32,6 +32,7 @@
     "exe",
     "pytest",
     "emil-design.com",
+    "ai_games",
     "openai-assistants-quickstart",
     "arsak-zhak-programmirovanie-igr-i-golovolomok",
     "getting_started_in_classroom_computing",
@@ -46,7 +47,14 @@
     "*.png",
     "*.jpg",
     "*.jpeg",
-    "*.svg"
+    "*.svg",
+    "*.json",
+    "*.mmd",
+    "*.yaml",
+    "*.yml",
+    "*.ini",
+    "*.cfg",
+    "*.git*"
   ],
 
   "exclude_file_patterns": [
@@ -65,12 +73,7 @@
     "*.txt",
     "*.md",
     "*.rst",
-    "*.mmd",
-    "*.yaml",
-    "*.yml",
-    "*.ini",
-    "*.cfg",
-    "*.json",
+
     "Makefile",
     "LICENSE*",
     "CHANGELOG*",
@@ -124,7 +127,7 @@
     "code_checker_md",
     "code_explainer_md",
     "doc_writer_md",
-   
+
     "how_to_writer_md"
   ],
   "exclude-roles": [
@@ -133,7 +136,7 @@
     "doc_writer_rst",
     "pytest"
   ],
-  "languages": [ "he", "ru", "en" ]
+  "languages": ["ru", "en" ]
 
 
 }

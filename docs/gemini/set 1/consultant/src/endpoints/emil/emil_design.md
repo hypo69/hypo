@@ -142,7 +142,7 @@ class EmilDesign:
             # Обработка ответа в структурированный формат
             try:
                 res_ns: SimpleNamespace = j_loads_ns(response)
-                setattr(res_ns, 'local_saved_image', str(Path(images_dir / image_path)))
+                setattr(res_ns, 'local_image_path', str(Path(images_dir / image_path)))
                 data.append(res_ns)
                 j_dumps(data, output_file)
                 updated_images_list.append(image_path)
@@ -262,7 +262,7 @@ class EmilDesign:
             if response:
                 try:
                     res_ns = j_loads_ns(response)
-                    res_ns.local_saved_image = str(images_dir / image_path)
+                    res_ns.local_image_path = str(images_dir / image_path)
                     data.append(res_ns)
                     j_dumps(data, output_file)
                     updated_images_list.append(image_path)
@@ -368,7 +368,7 @@ class EmilDesign:
             if response:
                 try:
                     res_ns = j_loads_ns(response)
-                    res_ns.local_saved_image = str(images_dir / image_path)
+                    res_ns.local_image_path = str(images_dir / image_path)
                     data.append(res_ns)
                     j_dumps(data, output_file)
                     updated_images_list.append(image_path)

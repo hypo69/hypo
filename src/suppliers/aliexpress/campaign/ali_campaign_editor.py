@@ -60,7 +60,7 @@ graph LR
 """
 
 
-
+import asyncio
 import re
 import shutil
 from pathlib import Path
@@ -250,7 +250,7 @@ class AliCampaignEditor(AliPromoCampaign):
 
 
 
-    def get_category_products(
+    async def get_category_products(
         self, category_name: str
     ) -> Optional[List[SimpleNamespace]]:
         """Чтение данных о товарах из JSON файлов для конкретной категории.
@@ -272,7 +272,7 @@ class AliCampaignEditor(AliPromoCampaign):
             / category_name
             / f"{self.language}_{self.currency}"
         )
-        json_filenames = get_filenames(category_path, extensions="json")
+        json_filenames = await get_filenames_from_directory (category_path, extensions="json")
         products = []
 
         if json_filenames:

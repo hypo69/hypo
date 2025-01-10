@@ -14,8 +14,8 @@ from hypotez.src.logger.logger import logger
 @pytest.fixture
 def mock_data():
     return [
-        {"parent": "Parent1", "category": "CategoryA", "description": "Description1", "local_saved_image": "image1.jpg"},
-        {"parent": "Parent2", "category": "CategoryB", "description": "Description2", "local_saved_image": "image2.png"},
+        {"parent": "Parent1", "category": "CategoryA", "description": "Description1", "local_image_path": "image1.jpg"},
+        {"parent": "Parent2", "category": "CategoryB", "description": "Description2", "local_image_path": "image2.png"},
     ]
 
 

@@ -81,9 +81,9 @@ def main():
         for product in products:
             logger.info(f"Продукт ID: {product.product_id}")
             logger.info(f"Аффилированная ссылка: {product.promotion_link}")
-            logger.info(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                logger.info(f"Локальный путь к видео: {product.local_saved_video}")
+            logger.info(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                logger.info(f"Локальный путь к видео: {product.local_video_path}")
             logger.info("")
     else:
         logger.warning("Не удалось получить аффилированные продукты.")
@@ -141,9 +141,9 @@ def main():
             for product in products:
                 logger.info(f"Продукт ID: {product.product_id}")
                 logger.info(f"Аффилированная ссылка: {product.promotion_link}")
-                logger.info(f"Сохранённое изображение: {product.local_saved_image}")
-                if product.local_saved_video:
-                    logger.info(f"Сохранённое видео: {product.local_saved_video}")
+                logger.info(f"Сохранённое изображение: {product.local_image_path}")
+                if product.local_video_path:
+                    logger.info(f"Сохранённое видео: {product.local_video_path}")
                 logger.info("")
         else:
             logger.warning("Не удалось получить аффилированные продукты.")
@@ -215,9 +215,9 @@ def main():
             for product in products:
                 logger.info(f"Продукт ID: {product.product_id}")
                 logger.info(f"Аффилированная ссылка: {product.promotion_link}")
-                logger.info(f"Сохранённое изображение: {product.local_saved_image}")
-                if product.local_saved_video:
-                    logger.info(f"Сохранённое видео: {product.local_saved_video}")
+                logger.info(f"Сохранённое изображение: {product.local_image_path}")
+                if product.local_video_path:
+                    logger.info(f"Сохранённое видео: {product.local_video_path}")
                 logger.info("")
         else:
             logger.warning("Не удалось получить аффилированные продукты.")

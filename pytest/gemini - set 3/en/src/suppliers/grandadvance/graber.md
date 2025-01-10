@@ -34,40 +34,40 @@ def product_fields():
     return ProductFields(id_product=123)
 
 # Test valid image saving
-async def test_local_saved_image_success(graber, product_fields, mock_driver):
+async def test_local_image_path_success(graber, product_fields, mock_driver):
     """Checks if image is saved correctly."""
     with patch('src.suppliers.grandadvance.graber.save_png') as mock_save_png:
         mock_save_png.return_value = 'saved_image_path'
-        await graber.local_saved_image(value=None)
+        await graber.local_image_path(value=None)
     
-    assert graber.fields.local_saved_image == 'saved_image_path'
+    assert graber.fields.local_image_path == 'saved_image_path'
     mock_save_png.assert_called_once()
 
 # Test handling of None image data
-async def test_local_saved_image_none_data(graber, product_fields, mock_driver):
+async def test_local_image_path_none_data(graber, product_fields, mock_driver):
     """Checks if function handles None image data correctly."""
     with patch('src.suppliers.grandadvance.graber.save_png') as mock_save_png:
         mock_save_png.return_value = None
-        await graber.local_saved_image(value=None)
+        await graber.local_image_path(value=None)
     
-    assert graber.fields.local_saved_image is None
+    assert graber.fields.local_image_path is None
     
 
 # Test image saving error
-async def test_local_saved_image_exception(graber, mock_driver):
+async def test_local_image_path_exception(graber, mock_driver):
     """Checks the exception handling during image saving."""
     with patch('src.suppliers.grandadvance.graber.save_png', side_effect=Exception("Image saving failed")):
-        result = await graber.local_saved_image(value=None)
+        result = await graber.local_image_path(value=None)
     
     assert result is None
-    assert 'src.suppliers.grandadvance.graber.local_saved_image' in logger.error.call_args[0][0]  #Check that error message is logged
+    assert 'src.suppliers.grandadvance.graber.local_image_path' in logger.error.call_args[0][0]  #Check that error message is logged
 
 
-#Test  when value is provided to local_saved_image
-async def test_local_saved_image_value_provided(graber, product_fields, mock_driver):
+#Test  when value is provided to local_image_path
+async def test_local_image_path_value_provided(graber, product_fields, mock_driver):
     """Checks the function behavior when the value is provided as an argument."""
-    await graber.local_saved_image(value='some_value')
-    assert graber.fields.local_saved_image == 'some_value'
+    await graber.local_image_path(value='some_value')
+    assert graber.fields.local_image_path == 'some_value'
 
 # Add tests for other methods (id_product, etc.)
 # ... (similar tests for other functions)
@@ -85,12 +85,12 @@ async def test_function_raises_exception(mock_driver):
 **Explanation and Improvements:**
 
 1. **Mocking:** The code now uses `unittest.mock.patch` to mock `save_png` and `execute_locator`, which is crucial for isolating the tests and avoiding external dependencies.
-2. **Exception Handling Tests:**  Added tests specifically checking the exception handling for `local_saved_image` to ensure errors are caught and appropriate messages logged.
-3. **Clearer Test Names:** Test names now more precisely describe the scenario being tested (e.g., `test_local_saved_image_success`).
+2. **Exception Handling Tests:**  Added tests specifically checking the exception handling for `local_image_path` to ensure errors are caught and appropriate messages logged.
+3. **Clearer Test Names:** Test names now more precisely describe the scenario being tested (e.g., `test_local_image_path_success`).
 4. **`pytest.mark.asyncio`:** The decorator `@pytest.mark.asyncio` is added to ensure that the test functions are executed using an asyncio event loop. This is critical for async functions.
 5. **Mock Driver:** A `MockDriver` fixture is created to mock the webdriver interactions, making tests more reliable.
 6. **Example Test for Exception:** Includes a test case for a function that might raise `ExecuteLocatorException` for comprehensive exception handling testing.
-7. **Fixture `product_fields`:** Added a fixture to provide a `ProductFields` object to the `test_local_saved_image_success` test. This makes it easier to set up the testing environment.
+7. **Fixture `product_fields`:** Added a fixture to provide a `ProductFields` object to the `test_local_image_path_success` test. This makes it easier to set up the testing environment.
 8. **Missing Tests:** Placeholder comments  `# ... (similar tests for other functions)`  are added as a reminder to add similar test cases for other functions (like `id_product`).
 
 **How to run the tests:**

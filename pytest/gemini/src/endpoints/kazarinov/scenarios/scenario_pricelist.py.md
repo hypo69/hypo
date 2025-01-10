@@ -61,7 +61,7 @@ def mock_product_fields():
     product_fields.description_short = {'language': [{'value': 'Short description'}]}
     product_fields.description = {'language': [{'value': 'Full description'}]}
     product_fields.specification = {'language': [{'value': 'Specification details'}]}
-    product_fields.local_saved_image = Path("test_image.png")
+    product_fields.local_image_path = Path("test_image.png")
     return product_fields
 
 @pytest.fixture
@@ -266,7 +266,7 @@ async def test_convert_product_fields_success(mexiron_builder, mock_product_fiel
     assert converted_data['description_short'] == 'Short description'
     assert converted_data['description'] == 'Full description'
     assert converted_data['specification'] == 'Specification details'
-    assert str(converted_data['local_saved_image']) == 'test_image.png'
+    assert str(converted_data['local_image_path']) == 'test_image.png'
 
 @pytest.mark.asyncio
 async def test_convert_product_fields_no_id(mexiron_builder, mock_product_fields):

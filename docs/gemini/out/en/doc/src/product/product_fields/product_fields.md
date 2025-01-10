@@ -388,12 +388,12 @@ This module defines the `ProductFields` class, which encapsulates data for produ
 
 
 
-#### `local_saved_image`
+#### `local_image_path`
 
 **Description**: Returns or sets the local path to a saved image.
 
 
-#### `local_saved_video`
+#### `local_video_path`
 
 **Description**: Returns or sets the local path to a saved video.
 

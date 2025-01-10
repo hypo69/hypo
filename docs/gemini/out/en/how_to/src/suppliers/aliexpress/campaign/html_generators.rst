@@ -51,7 +51,7 @@ Usage example
     product = SimpleNamespace(
         product_id=123,
         product_title="Example Product",
-        local_saved_image="images/example.jpg",  # Replace with the actual image path
+        local_image_path="images/example.jpg",  # Replace with the actual image path
         target_sale_price=10.99,
         target_sale_price_currency="USD",
         target_original_price=15.99,

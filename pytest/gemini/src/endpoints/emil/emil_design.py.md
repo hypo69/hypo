@@ -179,8 +179,8 @@ def test_describe_images_no_response_from_model(emil_design, mock_read_text_file
 def test_promote_to_facebook_success(emil_design, mock_j_loads_ns, mock_post_message):
     """Test promote_to_facebook with sample data."""
     mock_j_loads_ns.return_value = [
-        SimpleNamespace(parent="parent1", category="cat1", description="desc1", local_saved_image="image1.jpg"),
-        SimpleNamespace(parent="parent2", category="cat2", description="desc2", local_saved_image="image2.png")
+        SimpleNamespace(parent="parent1", category="cat1", description="desc1", local_image_path="image1.jpg"),
+        SimpleNamespace(parent="parent2", category="cat2", description="desc2", local_image_path="image2.png")
     ]
     emil_design.promote_to_facebook()
     
@@ -192,14 +192,14 @@ def test_promote_to_facebook_success(emil_design, mock_j_loads_ns, mock_post_mes
     message = first_call_args[1]
     assert message.title == "parent1\ncat1"
     assert message.description == "desc1"
-    assert message.products.local_saved_image == ["image1.jpg"]
+    assert message.products.local_image_path == ["image1.jpg"]
     
     # Check the arguments passed to post_message for the second call
     second_call_args, _ = mock_post_message.call_args_list[1]
     message = second_call_args[1]
     assert message.title == "parent2\ncat2"
     assert message.description == "desc2"
-    assert message.products.local_saved_image == ["image2.png"]
+    assert message.products.local_image_path == ["image2.png"]
 
 
 def test_upload_to_prestashop_success(emil_design):

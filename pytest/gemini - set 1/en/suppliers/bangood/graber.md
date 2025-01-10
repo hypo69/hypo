@@ -79,7 +79,7 @@ def test_grab_page_valid_input(graber, mock_driver):
     graber.description_short = Mock(return_value=asyncio.Future())
     graber.name = Mock(return_value=asyncio.Future())
     graber.specification = Mock(return_value=asyncio.Future())
-    graber.local_saved_image = Mock(return_value=asyncio.Future())
+    graber.local_image_path = Mock(return_value=asyncio.Future())
 
     future_fields = asyncio.Future()
     future_fields.set_result(ProductFields(name='Test Product'))

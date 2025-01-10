@@ -15,11 +15,11 @@ def mock_process_product(product_id, campaign_name, campaign_category, language,
       return None
 
 class ProductData:
-    def __init__(self, product_id, promotion_link, local_saved_image, local_saved_video):
+    def __init__(self, product_id, promotion_link, local_image_path, local_video_path):
         self.product_id = product_id
         self.promotion_link = promotion_link
-        self.local_saved_image = local_saved_image
-        self.local_saved_video = local_saved_video
+        self.local_image_path = local_image_path
+        self.local_video_path = local_video_path
 
 
 class TestAliAffiliatedProducts:

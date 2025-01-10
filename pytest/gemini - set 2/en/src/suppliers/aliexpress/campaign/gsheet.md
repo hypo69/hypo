@@ -20,7 +20,7 @@ def category_data():
 
 @pytest.fixture
 def product_data():
-    return [SimpleNamespace(product_id="123", product_title="Test Product", promotion_link="testlink", app_sale_price=10, original_price=20, sale_price=15, discount=0.25, product_main_image_url="image.jpg", local_saved_image="image.jpg", product_small_image_urls=["small_image1.jpg"], product_video_url="video.mp4", local_saved_video="video.mp4", first_level_category_id=1, first_level_category_name="Category1", second_level_category_id=2, second_level_category_name="Category2", target_sale_price=12, target_sale_price_currency="USD", target_app_sale_price_currency="USD", target_original_price_currency="USD", original_price_currency="USD", evaluate_rate=4.5, shop_url="shop.com", shop_id=123, tags=["tag1"])]
+    return [SimpleNamespace(product_id="123", product_title="Test Product", promotion_link="testlink", app_sale_price=10, original_price=20, sale_price=15, discount=0.25, product_main_image_url="image.jpg", local_image_path="image.jpg", product_small_image_urls=["small_image1.jpg"], product_video_url="video.mp4", local_video_path="video.mp4", first_level_category_id=1, first_level_category_name="Category1", second_level_category_id=2, second_level_category_name="Category2", target_sale_price=12, target_sale_price_currency="USD", target_app_sale_price_currency="USD", target_original_price_currency="USD", original_price_currency="USD", evaluate_rate=4.5, shop_url="shop.com", shop_id=123, tags=["tag1"])]
 
 
 @pytest.fixture

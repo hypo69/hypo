@@ -24,13 +24,13 @@
 
 - `driver (Driver)`: Объект веб-драйвера.
 
-#### `local_saved_image(self, value: Any = None)`
+#### `local_image_path(self, value: Any = None)`
 
 **Описание**: Загружает и сохраняет изображение товара локально.
 
 **Параметры**:
 
-- `value (Any, optional):` Дополнительное значение, которое может быть передано в словаре kwargs при вызове функции `grab_product_page`. Если `value` передан, он подставляется в поле `ProductFields.local_saved_image`. По умолчанию `None`.
+- `value (Any, optional):` Дополнительное значение, которое может быть передано в словаре kwargs при вызове функции `grab_product_page`. Если `value` передан, он подставляется в поле `ProductFields.local_image_path`. По умолчанию `None`.
 
 **Возвращает**:
 

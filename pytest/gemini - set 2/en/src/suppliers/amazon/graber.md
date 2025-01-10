@@ -31,14 +31,14 @@ def test_grab_page_valid_input(graber, driver):
     graber.description_short = Mock(return_value=asyncio.Future())
     graber.name = Mock(return_value=asyncio.Future())
     graber.specification = Mock(return_value=asyncio.Future())
-    graber.local_saved_image = Mock(return_value=asyncio.Future())
+    graber.local_image_path = Mock(return_value=asyncio.Future())
 
     fields = ProductFields()
     fields.id_product = 123
     fields.description_short = "Short Description"
     fields.name = "Product Name"
     fields.specification = {"key": "value"}
-    fields.local_saved_image = "image.jpg"
+    fields.local_image_path = "image.jpg"
 
     # Mock return value for asyncio.Future
     graber.d = driver
@@ -65,7 +65,7 @@ def test_grab_page_empty_input(graber, driver):
     graber.description_short = Mock(return_value=asyncio.Future())
     graber.name = Mock(return_value=asyncio.Future())
     graber.specification = Mock(return_value=asyncio.Future())
-    graber.local_saved_image = Mock(return_value=asyncio.Future())
+    graber.local_image_path = Mock(return_value=asyncio.Future())
 
     loop = asyncio.get_event_loop()
     future = loop.run_until_complete(graber.grab_page(driver))

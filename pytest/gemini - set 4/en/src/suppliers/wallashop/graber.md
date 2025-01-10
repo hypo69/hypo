@@ -39,7 +39,7 @@ def test_grab_page_success(graber, product_fields, mock_driver):
     """Tests the grab_page function with valid inputs and data fetching."""
     # Mock the result of the data fetching functions
     for method in [
-            'id_product', 'description_short', 'name', 'specification', 'local_saved_image'
+            'id_product', 'description_short', 'name', 'specification', 'local_image_path'
     ]:
         setattr(graber, method, lambda x: asyncio.Future())
 

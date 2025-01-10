@@ -36,7 +36,7 @@ def test_process_affiliate_products_valid_input(example_prod_urls, parser_data):
     assert isinstance(products, list)
     assert all(hasattr(product, 'product_id') for product in products)
     assert all(hasattr(product, 'promotion_link') for product in products)
-    assert all(hasattr(product, 'local_saved_image') for product in products)
+    assert all(hasattr(product, 'local_image_path') for product in products)
 
 
 def test_process_affiliate_products_empty_input(parser_data):
@@ -72,7 +72,7 @@ def test_process_affiliate_products_invalid_url(parser_data):
 
 2. **Fixtures for Data:** Introduced `example_prod_urls` and `parser_data` fixtures to encapsulate test data. This promotes test isolation and reduces code duplication.  The `parser_data` fixture is especially important for maintaining consistent settings across tests.
 
-3. **Clear Assertions:** Instead of just printing, use `assert` statements to verify the returned values.  Crucially, this checks the *type* of the returned `products` variable and if the expected attributes (`product_id`, `promotion_link`, `local_saved_image`) exist on the products.
+3. **Clear Assertions:** Instead of just printing, use `assert` statements to verify the returned values.  Crucially, this checks the *type* of the returned `products` variable and if the expected attributes (`product_id`, `promotion_link`, `local_image_path`) exist on the products.
 
 
 4. **Empty Input Test (`test_process_affiliate_products_empty_input`):** A test for an empty input list is added to check the robustness of the function for edge cases.

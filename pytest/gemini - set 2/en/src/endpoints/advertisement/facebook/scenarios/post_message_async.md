@@ -31,7 +31,7 @@ def category():
 def products():
     return [
         SimpleNamespace(
-            local_saved_image="path/to/image.jpg", product_title="Product 1"
+            local_image_path="path/to/image.jpg", product_title="Product 1"
         )
     ]
 
@@ -66,7 +66,7 @@ def test_upload_media_success(mock_driver, products):
 def test_upload_media_no_image(mock_driver, products):
   """Tests upload_media with missing image."""
   with patch.object(logger, "error") as mock_logger:
-      products[0].local_saved_image = None
+      products[0].local_image_path = None
       result = asyncio.run(post_message_async.upload_media(mock_driver, products))
       assert result is None
       mock_logger.assert_any_call("Ошибка загрузки изображения")

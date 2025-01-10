@@ -42,9 +42,9 @@ def main():
         for product in products:
             print(f"Продукт ID: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
+            print(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Локальный путь к видео: {product.local_video_path}")
             print()
     else:
         print("Не удалось получить аффилированные продукты.")
@@ -90,9 +90,9 @@ if __name__ == "__main__":
       for product in products:
           print(f"Продукт ID: {product.product_id}")
           print(f"Аффилированная ссылка: {product.promotion_link}")
-          print(f"Локальный путь к изображению: {product.local_saved_image}")
-          if product.local_saved_video:
-              print(f"Локальный путь к видео: {product.local_saved_video}")
+          print(f"Локальный путь к изображению: {product.local_image_path}")
+          if product.local_video_path:
+              print(f"Локальный путь к видео: {product.local_video_path}")
           print()
   else:
       print("Не удалось получить аффилированные продукты.")
@@ -145,9 +145,9 @@ def main():
             for product in products:
                 print(f"ID продукта: {product.product_id}")
                 print(f"Аффилированная ссылка: {product.promotion_link}")
-                print(f"Путь к изображению: {product.local_saved_image}")
-                if product.local_saved_video:
-                    print(f"Путь к видео: {product.local_saved_video}")
+                print(f"Путь к изображению: {product.local_image_path}")
+                if product.local_video_path:
+                    print(f"Путь к видео: {product.local_video_path}")
                 print()
         else:
             logger.error("Не удалось получить аффилированные продукты.")
@@ -204,9 +204,9 @@ def main():
             for product in products:
                 print(f"ID продукта: {product.product_id}")
                 print(f"Аффилированная ссылка: {product.promotion_link}")
-                print(f"Путь к изображению: {product.local_saved_image}")
-                if product.local_saved_video:
-                    print(f"Путь к видео: {product.local_saved_video}")
+                print(f"Путь к изображению: {product.local_image_path}")
+                if product.local_video_path:
+                    print(f"Путь к видео: {product.local_video_path}")
                 print()
         else:
             logger.error("Не удалось получить аффилированные продукты.")
@@ -272,9 +272,9 @@ def main():
             for product in products:
                 print(f"ID продукта: {product.product_id}")
                 print(f"Аффилированная ссылка: {product.promotion_link}")
-                print(f"Путь к изображению: {product.local_saved_image}")
-                if product.local_saved_video:
-                    print(f"Путь к видео: {product.local_saved_video}")
+                print(f"Путь к изображению: {product.local_image_path}")
+                if product.local_video_path:
+                    print(f"Путь к видео: {product.local_video_path}")
                 print()
         else:
             logger.error("Не удалось получить аффилированные продукты.")

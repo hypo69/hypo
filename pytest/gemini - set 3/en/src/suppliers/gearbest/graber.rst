@@ -44,7 +44,7 @@ class MockGrbr:  # Mock Grbr
         pass
     async def specification(self, specification):
         pass
-    async def local_saved_image(self, local_saved_image):
+    async def local_image_path(self, local_image_path):
         pass
     
     

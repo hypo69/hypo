@@ -102,7 +102,7 @@ class Graber(Grbr):
         # Logic for extracting data
         async def fetch_all_data(**kwards):
             # ... (rest of the function)
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_image_path(kwards.get("local_image_path", ''))
             # ... (other functions)
 
         await fetch_all_data()
@@ -110,7 +110,7 @@ class Graber(Grbr):
 
 
     @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
+    async def local_image_path(self, value: Any = None):
         """Fetch and save image locally."""
         # ... (rest of the function)
 ```
@@ -125,7 +125,7 @@ class Graber(Grbr):
 ```mermaid
 graph LR
     A[Graber.grab_page(driver)] --> B{Fetch All Data};
-    B --> C[local_saved_image];
+    B --> C[local_image_path];
     C --> D{get image url};
     D --> E[save_png];
     E --> F[update fields];
@@ -169,12 +169,12 @@ The code imports numerous modules, primarily from the `src` package.  This indic
 
 **Classes:**
 
-* `Graber(Grbr)`:  Inherits from a base `Graber` class (`Grbr`).  This is a typical inheritance pattern to share common methods and attributes while customizing specific behaviors for the `Morlevi` supplier. `__init__` initializes the `supplier_prefix` and sets up the web driver. The `grab_page` method is a core function responsible for gathering data, and `local_saved_image` is a specialized function for image handling.
+* `Graber(Grbr)`:  Inherits from a base `Graber` class (`Grbr`).  This is a typical inheritance pattern to share common methods and attributes while customizing specific behaviors for the `Morlevi` supplier. `__init__` initializes the `supplier_prefix` and sets up the web driver. The `grab_page` method is a core function responsible for gathering data, and `local_image_path` is a specialized function for image handling.
 
 **Functions:**
 
 * `grab_page`:  This method gathers data from the `morlevi.co.il` website.  It orcheStartes calls to several other methods (`id_product`, etc.) to extract various product attributes, which are potentially implemented in the base `Graber` class. Importantly, the `fetch_all_data` function is used to encapsulate the logic for fetching specific data, making the code more organized.
-* `local_saved_image`: This function specifically handles image saving to a temporary directory.  It retrieves the default image URL, saves the image as a PNG, and stores the saved image's path in the `ProductFields` object.
+* `local_image_path`: This function specifically handles image saving to a temporary directory.  It retrieves the default image URL, saves the image as a PNG, and stores the saved image's path in the `ProductFields` object.
 
 **Variables:**
 

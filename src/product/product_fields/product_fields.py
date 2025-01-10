@@ -240,10 +240,11 @@ class ProductFields:
 
     def __post_init__(self):
         """Инициализация класса после создания экземпляра. Загружаются данные полей, языков и их идентификаторов."""
-        self.product_fields_list = self._load_product_fields_list()
-        self.presta_fields = 
+        
         if not self._payload():
-             logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
+             logger.debug(f"Ошибка загрузки полей")
+             ...
+             return 
 
 
     def _payload(self) -> bool:
@@ -253,18 +254,27 @@ class ProductFields:
         Returns:
             bool: True, если загрузка прошла успешно, иначе False.
         """
-
         presta_fields_list:list = asyncio.run(read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True))
-        presta_fields:SimpleNamespace = SimpleNamespace(**{key: None for key in self.product_fields_list})
-        return presta_fields
+        if not presta_fields_list:
+            logger.error(f"Ошибка загрузки файла со апиакокм полей ")
+            ...
+            return False
 
+        self.presta_fields:SimpleNamespace = SimpleNamespace(**{key: None for key in self.product_fields_list})
+        
         data = j_loads(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
         if not data:
             logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
+            ...
             return False
-        for name, value in data.items():
-            setattr(self.presta_fields, name, value)  # Use setattr on presta_fields
-        return True
+        try:
+            for name, value in data.items():
+                setattr(self.presta_fields, name, value)  # Use setattr on presta_fields
+            return True
+        except Exception as ex:
+            logger.error(f"Exception ", ex)
+            ...
+            return False
 
     @property
     def associations(self) -> Optional[Dict]:
@@ -2328,29 +2338,29 @@ class ProductFields:
         self.presta_fields.link_to_video = value
 
     @property
-    def local_saved_image(self):
+    def local_image_path(self):
         """  <sub>*[property]*</sub>   __prod_name__
         Путь к картинке, сохраненной на диске
         """
-        return getattr(self.presta_fields, 'local_saved_image', '')
+        return getattr(self.presta_fields, 'local_image_path', '')
 
-    @local_saved_image.setter
-    def local_saved_image(self, value:str = None) -> bool:
-        """  <sub>*[setter]* local_saved_image</sub>   """
+    @local_image_path.setter
+    def local_image_path(self, value:str = None) -> bool:
+        """  <sub>*[setter]* local_image_path</sub>   """
         ...
-        self.presta_fields.local_saved_image = value
+        self.presta_fields.local_image_path = value
 
     @property
-    def local_saved_video(self):
+    def local_video_path(self):
         """  <sub>*[property]*</sub>   __prod_name__
             путь к видео , сохраннёному на диске"""
         return self.presta_fields.images_urls or ''
 
-    @local_saved_video.setter
-    def local_saved_video(self, value:str = None) -> bool:
-        """  <sub>*[setter]* local_saved_image</sub>   """
+    @local_video_path.setter
+    def local_video_path(self, value:str = None) -> bool:
+        """  <sub>*[setter]* local_image_path</sub>   """
         ...
-        self.presta_fields.local_saved_image = value
+        self.presta_fields.local_image_path = value
 
     @property
     def position_in_category(self) -> str:

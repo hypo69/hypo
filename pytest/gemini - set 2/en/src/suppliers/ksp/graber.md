@@ -37,7 +37,7 @@ def test_grab_page_valid_input(graber, driver_mock):
     graber.description_short.return_value = asyncio.Future()
     graber.name.return_value = asyncio.Future()
     graber.specification.return_value = asyncio.Future()
-    graber.local_saved_image.return_value = asyncio.Future()
+    graber.local_image_path.return_value = asyncio.Future()
     
     # Simulate the `fetch_all_data` function call, which is necessary
     # since `fetch_all_data` awaits for all functions within
@@ -54,7 +54,7 @@ def test_grab_page_valid_input(graber, driver_mock):
     graber.description_short.assert_called_once()
     graber.name.assert_called_once()
     graber.specification.assert_called_once()
-    graber.local_saved_image.assert_called_once()
+    graber.local_image_path.assert_called_once()
 
 def test_grab_page_no_input(graber, driver_mock):
     """Checks correct handling of missing input to grab_page."""

@@ -6,8 +6,8 @@ from hypotez.src.suppliers.aliexpress._examples.affiliated_products_generator im
 @pytest.fixture
 def example_products():
     return [
-        {'product_id': '123', 'promotion_link': 'affiliate_link_123', 'local_saved_image': 'image123.jpg'},
-        {'product_id': '456', 'promotion_link': 'affiliate_link_456', 'local_saved_image': 'image456.jpg', 'local_saved_video': 'video456.mp4'}
+        {'product_id': '123', 'promotion_link': 'affiliate_link_123', 'local_image_path': 'image123.jpg'},
+        {'product_id': '456', 'promotion_link': 'affiliate_link_456', 'local_image_path': 'image456.jpg', 'local_video_path': 'video456.mp4'}
     ]
 
 # Test cases for the AliAffiliatedProducts class

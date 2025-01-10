@@ -64,7 +64,7 @@ def test_grab_page_valid_input(graber, mock_driver):
 
     # Mocks necessary data fetch functions.
     for func in [
-            "id_product", "description_short", "name", "specification", "local_saved_image",
+            "id_product", "description_short", "name", "specification", "local_image_path",
     ]:
       setattr(graber,func,lambda self, value: asyncio.Future())
 

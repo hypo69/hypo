@@ -112,13 +112,13 @@ class Graber(Grbr):
 
 
     @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
+    async def local_image_path(self, value: Any = None):
         """
         Сохраняет изображение локально.
 
-        Функция получает изображение как скриншот, сохраняет его в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`.
+        Функция получает изображение как скриншот, сохраняет его в `tmp` и сохраняет путь к локальному файлу в поле `local_image_path` объекта `ProductFields`.
 
-        :param value: Значение можно передать через словарь kwargs, ключ `local_saved_image`.
+        :param value: Значение можно передать через словарь kwargs, ключ `local_image_path`.
         :type value: Any
         :raises Exception: Если возникает ошибка при сохранении изображения.
         :return: True в случае успешного сохранения, None в случае ошибки.
@@ -141,8 +141,8 @@ class Graber(Grbr):
                 # код исполняет сохранение изображения
                 img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
                 if img_tmp_path:
-                    # сохраняет путь к файлу в поле local_saved_image
-                    self.fields.local_saved_image = img_tmp_path
+                    # сохраняет путь к файлу в поле local_image_path
+                    self.fields.local_image_path = img_tmp_path
                     return True
                 else:
                     # логирует ошибку сохранения
@@ -150,5 +150,5 @@ class Graber(Grbr):
                     return
             except Exception as ex:
                 # логирует ошибку и возвращает None
-                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+                logger.error(f'Ошибка сохранения изображения в поле `local_image_path`', ex)
                 return

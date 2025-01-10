@@ -117,8 +117,8 @@ def test_process_affiliate_products_valid_urls(mock_get, parser, mock_ali_respon
     assert products[0].promotion_link == "https://s.click.aliexpress.com/e/_Ddtp42B"
     assert products[1].product_id == '123'
     assert products[1].promotion_link == "https://s.click.aliexpress.com/e/_Ddtp42B"
-    assert products[0].local_saved_image == "images/123.jpg"
-    assert products[0].local_saved_video == "videos/123.mp4"
+    assert products[0].local_image_path == "images/123.jpg"
+    assert products[0].local_video_path == "videos/123.mp4"
 
 
 @patch('requests.get')

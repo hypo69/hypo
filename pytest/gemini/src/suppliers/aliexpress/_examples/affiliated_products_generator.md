@@ -56,7 +56,7 @@ def test_product_attributes_exist(parser_fixture):
     if products:
         assert hasattr(products[0], 'product_id')
         assert hasattr(products[0], 'promotion_link')
-        assert hasattr(products[0], 'local_saved_image')
+        assert hasattr(products[0], 'local_image_path')
 
 
 # Example test covering a specific edge case

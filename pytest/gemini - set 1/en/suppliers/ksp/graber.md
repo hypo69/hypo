@@ -75,7 +75,7 @@ def test_grab_page_success(graber, mock_driver, product_fields, locator_simple_n
     graber.description_short = lambda x: asyncio.Future().set_result(Mock())
     graber.name = lambda x: asyncio.Future().set_result(Mock())
     graber.specification = lambda x: asyncio.Future().set_result(Mock())
-    graber.local_saved_image = lambda x: asyncio.Future().set_result(Mock())
+    graber.local_image_path = lambda x: asyncio.Future().set_result(Mock())
     
     
     
@@ -94,7 +94,7 @@ def test_grab_page_execute_locator_exception(graber, mock_driver,  locator_simpl
     graber.description_short = lambda x: asyncio.Future().set_result(Mock())
     graber.name = lambda x: asyncio.Future().set_result(Mock())
     graber.specification = lambda x: asyncio.Future().set_result(Mock())
-    graber.local_saved_image = lambda x: asyncio.Future().set_result(Mock())
+    graber.local_image_path = lambda x: asyncio.Future().set_result(Mock())
 
     
     mock_driver.execute_locator = Mock(side_effect=ExecuteLocatorException('Error'))

@@ -72,7 +72,7 @@ def test_grab_page_success(graber, mock_driver):
     asyncio.set_event_loop(loop)
     
     # Mock the async functions
-    for func_name in [f"id_product", "name", "description_short", "specification", "local_saved_image"]:
+    for func_name in [f"id_product", "name", "description_short", "specification", "local_image_path"]:
       setattr(graber, func_name, lambda x: asyncio.Future())
     
     future_grab_page = loop.run_until_complete(graber.grab_page(mock_driver))

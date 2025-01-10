@@ -63,7 +63,7 @@ def test_grab_page_valid_input(mock_graber, mock_driver):
     mock_graber.description_short = Mock(return_value=asyncio.Future())
     mock_graber.name = Mock(return_value=asyncio.Future())
     mock_graber.specification = Mock(return_value=asyncio.Future())
-    mock_graber.local_saved_image = Mock(return_value=asyncio.Future())
+    mock_graber.local_image_path = Mock(return_value=asyncio.Future())
 
     # Mock the actual fetching process
     mock_graber.fields = MockProductFields()
@@ -85,7 +85,7 @@ def test_grab_page_valid_input(mock_graber, mock_driver):
     mock_graber.description_short.assert_called_once()
     mock_graber.name.assert_called_once()
     mock_graber.specification.assert_called_once()
-    mock_graber.local_saved_image.assert_called_once()
+    mock_graber.local_image_path.assert_called_once()
 
 
 # Add more test cases for different scenarios of grab_page (e.g., specific functions failing).

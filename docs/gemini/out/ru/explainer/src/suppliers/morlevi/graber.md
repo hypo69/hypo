@@ -67,12 +67,12 @@ class Graber(Grbr):
 
 
     @close_pop_up()
-    async def local_saved_image(self, value: Any = None):
+    async def local_image_path(self, value: Any = None):
         """Fetch and save image locally.
-        Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`
+        Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_image_path` объекта `ProductFields`
         Args:
-        value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_image = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
+        value (Any): это значение можно передать в словаре kwargs через ключ {local_image_path = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.local_image_path`.
         .. note:
             путь к изображению ведет в директорию  `tmp`
         .. todo:
@@ -87,14 +87,14 @@ class Graber(Grbr):
                 raw = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
                 img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
                 if img_tmp_path:
-                    self.fields.local_saved_image = img_tmp_path
+                    self.fields.local_image_path = img_tmp_path
                     return True
                 else:
                     logger.debug(f"Ошибка сохранения изображения")
                     ...
                     return
             except Exception as ex:
-                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+                logger.error(f'Ошибка сохранения изображения в поле `local_image_path`', ex)
                 ...
                 return
 ```
@@ -103,7 +103,7 @@ class Graber(Grbr):
 
 **Шаг 1:** Инициализация класса `Graber`.  В `__init__`  класс получает экземпляр `Driver`.  Затем, он назначает `supplier_prefix` и вызывает `super().__init__`,  что предполагает инициализацию родительского класса `Grbr` и передачу  `supplier_prefix` и `driver`.  
 
-**Шаг 2:** Вызов функции `local_saved_image`. Функция обрабатывает запрос на сохранение изображения.
+**Шаг 2:** Вызов функции `local_image_path`. Функция обрабатывает запрос на сохранение изображения.
 
 **Шаг 3:** Проверка значения `value`. Если `value` не передан, выполняется блок `try...except`.
 
@@ -113,18 +113,18 @@ class Graber(Grbr):
 
 **Шаг 6:** Сохранение изображения.  Изображение сохраняется в директории `tmp` с именем, основанным на `self.fields.id_product`.
 
-**Шаг 7:** Запись пути к изображению. Путь к сохраненному изображению записывается в поле `self.fields.local_saved_image`.
+**Шаг 7:** Запись пути к изображению. Путь к сохраненному изображению записывается в поле `self.fields.local_image_path`.
 
 **Шаг 8:** Обработка ошибок. Блок `try...except` обрабатывает потенциальные ошибки во время выполнения.
 
-**Пример:** Если `id_product`  уже заполнен, то функция `self.id_product()` не вызывается.  Если изображение успешно сохранено, `img_tmp_path` не `None`, и путь к изображению записывается в `self.fields.local_saved_image`.
+**Пример:** Если `id_product`  уже заполнен, то функция `self.id_product()` не вызывается.  Если изображение успешно сохранено, `img_tmp_path` не `None`, и путь к изображению записывается в `self.fields.local_image_path`.
 
 # <mermaid>
 
 ```mermaid
 graph TD
     A[Graber.__init__(driver)] --> B{Инициализация};
-    B -- success --> C[Graber.local_saved_image(value)];
+    B -- success --> C[Graber.local_image_path(value)];
     C --> D{value == None?};
     D -- yes --> E[Получение id_product];
     E --> F[Получение изображения];
@@ -162,25 +162,25 @@ graph TD
 
 **Классы:**
 
-- `Graber`: Наследует от `Grbr`.  Этот класс отвечает за сбор данных с сайта Morlevi.  `supplier_prefix` определяет, к какому поставщику относится класс. `__init__` устанавливает `supplier_prefix` и инициализирует родительский класс `Grbr` с `driver`. Метод `local_saved_image` отвечает за сохранение изображения.
+- `Graber`: Наследует от `Grbr`.  Этот класс отвечает за сбор данных с сайта Morlevi.  `supplier_prefix` определяет, к какому поставщику относится класс. `__init__` устанавливает `supplier_prefix` и инициализирует родительский класс `Grbr` с `driver`. Метод `local_image_path` отвечает за сохранение изображения.
 
 **Функции:**
 
-- `local_saved_image`: Получает изображение как скриншот, сохраняет его локально в папку `tmp` и записывает путь к изображению в поле `local_saved_image` объекта `ProductFields`.
+- `local_image_path`: Получает изображение как скриншот, сохраняет его локально в папку `tmp` и записывает путь к изображению в поле `local_image_path` объекта `ProductFields`.
 - `close_pop_up` (комментированный):  Декоратор, который, если его разкоментировать, будет вызывать  `Context.driver.execute_locator` для закрытия всплывающих окон перед вызовом декорируемой функции.
 
 **Переменные:**
 
 - `MODE`: Строковая константа, вероятно, определяет режим работы (например, `dev` или `prod`).
 - `supplier_prefix`: Строковая переменная, определяющая имя поставщика.
-- `value`: Переменная, принимающая дополнительное значение для функции `local_saved_image`.
+- `value`: Переменная, принимающая дополнительное значение для функции `local_image_path`.
 - `raw`: Содержит байты изображения.
 - `img_tmp_path`: Путь к сохранённому изображению.
 
 **Возможные ошибки и улучшения:**
 
 1. **`id_product`:** Метод `id_product()` не определен в классе `Graber` и должен быть определен в родительском классе или в текущем классе для корректной работы функции.
-2. **Обработка ошибок:**  Обработка ошибок в блоке `try...except` в функции `local_saved_image` является хорошей практикой, но  следует добавить более конкретные обработчики для разных типов ошибок.
+2. **Обработка ошибок:**  Обработка ошибок в блоке `try...except` в функции `local_image_path` является хорошей практикой, но  следует добавить более конкретные обработчики для разных типов ошибок.
 3. **Передача аргументов:**  В коде есть комментарии о проблеме передачи значений из `grab_product_page(**kwargs)`. Нужно продумать механизм передачи и хранения значений, например, через `self.fields` или `Context`.
 
 

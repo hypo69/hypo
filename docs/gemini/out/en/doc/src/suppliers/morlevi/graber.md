@@ -29,7 +29,7 @@ This module defines the `Graber` class, which is responsible for collecting prod
         - `Exception`: Errors during data extraction.
 
 
-- `local_saved_image(self, value: Any = None)`
+- `local_image_path(self, value: Any = None)`
     **Description**: Fetches a product image, saves it locally, and stores the path in the `ProductFields` object.
     **Args**:
         - `value (Any, optional)`:  An optional value that can be used to override the image fetching process. Defaults to `None`. If provided, the value will be directly used for handling.
@@ -47,5 +47,5 @@ This module defines the `Graber` class, which is responsible for collecting prod
 - The code includes numerous commented-out lines, indicating a collection of methods that are not implemented but could be added based on their documentation.
 - The `fetch_all_data` function and related calls are placeholder functions and require implementation.
 - Error handling is partially implemented but needs to be further refined for better robustness.  The use of `logger` and exceptions suggests improved logging and error management compared to earlier versions.
-- The `local_saved_image` method demonStartes a more structured approach to fetching and saving images, including error handling using `try...except` blocks and more descriptive error messages.
+- The `local_image_path` method demonStartes a more structured approach to fetching and saving images, including error handling using `try...except` blocks and more descriptive error messages.
 - The `@close_pop_up` decorator (commented out) demonStartes a potential mechanism for closing pop-up windows prior to other data extraction procedures. It shows a more refined exception handling approach, using the `ExecuteLocatorException` to address the case where the locator fails to close a popup.

@@ -61,8 +61,8 @@ async def test_grab_page_valid_input(graber, mock_driver):
                 mock_name.set_result(fields)
                 with patch.object(graber, "specification", return_value=asyncio.Future()) as mock_specification:
                     mock_specification.set_result(fields)
-                    with patch.object(graber, "local_saved_image", return_value=asyncio.Future()) as mock_local_saved_image:
-                        mock_local_saved_image.set_result(fields)
+                    with patch.object(graber, "local_image_path", return_value=asyncio.Future()) as mock_local_image_path:
+                        mock_local_image_path.set_result(fields)
                         result = await graber.grab_page(mock_driver)
 
                         assert result == fields

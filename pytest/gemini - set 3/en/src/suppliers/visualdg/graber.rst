@@ -73,13 +73,13 @@ class Graber(Grbr):
           self.description_short = lambda x: mock_other_functions(x)
           self.name = lambda x: mock_other_functions(x)
           self.specification = lambda x: mock_other_functions(x)
-          self.local_saved_image = lambda x: mock_other_functions(x)
+          self.local_image_path = lambda x: mock_other_functions(x)
 
           await self.id_product(kwards.get("id_product", ''))
           await self.description_short(kwards.get("description_short", ''))
           await self.name(kwards.get("name", ''))
           await self.specification(kwards.get("specification", ''))
-          await self.local_saved_image(kwards.get("local_saved_image", ''))
+          await self.local_image_path(kwards.get("local_image_path", ''))
         await fetch_all_data()
         return self.fields
 
@@ -96,7 +96,7 @@ def test_grab_page_no_data(graber):
   assert result.description_short == None
   assert result.name == None
   assert result.specification == None
-  assert result.local_saved_image == None
+  assert result.local_image_path == None
 
 
 # Example of a test for handling exceptions (if applicable)

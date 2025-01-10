@@ -222,7 +222,7 @@ class PricelistBuilder:
             'description_short',
             'description',
             'specification',
-            'local_saved_image',
+            'local_image_path',
         )
         products_list = []
 
@@ -350,7 +350,7 @@ class PricelistBuilder:
             .replace("'", "\\'")
             .replace('"', '\\"')
             .replace(';', '<br>'),
-            'local_saved_image': str(f.local_saved_image),
+            'local_image_path': str(f.local_image_path),
         }
 
     async def save_product_data(self, product_data: dict) -> bool:

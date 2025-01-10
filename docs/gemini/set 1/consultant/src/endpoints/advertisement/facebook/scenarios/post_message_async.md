@@ -87,7 +87,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
 
     # Итерация по продуктам и загрузка медиафайлов.
     for product in products:
-        media_path = product.local_saved_video if hasattr(product, 'local_saved_video') and not no_video else product.local_saved_image
+        media_path = product.local_video_path if hasattr(product, 'local_video_path') and not no_video else product.local_image_path
         try:
             # Загрузка медиафайла.
             if not d.execute_locator(locator.foto_video_input, media_path):
@@ -197,7 +197,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
      # Step 2: Ensure products is a list.\n
 @@ -81,7 +80,7 @@
      for product in products:\n
-         media_path = product.local_saved_video if hasattr(product, \'local_saved_video\') and not no_video else product.local_saved_image\n
+         media_path = product.local_video_path if hasattr(product, \'local_video_path\') and not no_video else product.local_image_path\n
          try:\n-            # Upload the media file.\n+            # Загрузка медиафайла.\n
              if d.execute_locator(locator.foto_video_input, media_path):\n
                  d.wait(1.5)\n
@@ -289,7 +289,7 @@ async def upload_media(driver: Driver, products: List[SimpleNamespace], no_video
     products = products if isinstance(products, list) else [products]
     ret = True
     for product in products:
-        media_path = product.local_saved_video if hasattr(product, 'local_saved_video') and not no_video else product.local_saved_image
+        media_path = product.local_video_path if hasattr(product, 'local_video_path') and not no_video else product.local_image_path
         try:
             if not driver.execute_locator(locator.foto_video_input, media_path):
                 logger.error(f"Ошибка загрузки изображения {media_path=}")

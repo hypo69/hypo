@@ -35,8 +35,8 @@ def mock_category():
 def mock_products():
     return [
         SimpleNamespace(
-            local_saved_image="path/to/image1.jpg",
-            local_saved_video="path/to/video1.mp4",
+            local_image_path="path/to/image1.jpg",
+            local_video_path="path/to/video1.mp4",
             language="en",
             product_title="Product 1",
             original_price="100",
@@ -47,7 +47,7 @@ def mock_products():
             tags="#test #tag",
         ),
         SimpleNamespace(
-            local_saved_image="path/to/image2.jpg",
+            local_image_path="path/to/image2.jpg",
              language="ar",
             product_title="المنتج 2",
             original_price="150",

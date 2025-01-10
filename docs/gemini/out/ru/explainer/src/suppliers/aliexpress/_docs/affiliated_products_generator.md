@@ -103,8 +103,8 @@ def process_affiliate_products(self, prod_urls: List[str]) -> List[SimpleNamespa
            - парсить `product.promotion_link` для получения `aff_short_key`
            - если `aff_short_key` найден, перенастроить `product.promotion_link`
            - если `aff_short_key` не найден, удалить `product` из списка (`self.delete_product(product.product_id)`), логгировать ошибку и перейти к следующему продукту.
-       - сохранить изображение (`product.product_main_image_url`) в `campaign_path`, обновить `product.local_saved_image`.
-       - если есть видео (`product.product_video_url`), сохранить видео в `campaign_path`, обновить `product.local_saved_video`.
+       - сохранить изображение (`product.product_main_image_url`) в `campaign_path`, обновить `product.local_image_path`.
+       - если есть видео (`product.product_video_url`), сохранить видео в `campaign_path`, обновить `product.local_video_path`.
        - сохранить данные продукта (`product`) в JSON формате в `campaign_path` используя `j_dumps`. Выводить сообщение об успехе.
        - если сохранение в JSON не удалось, выводить предупреждение в лог и перейти к следующему продукту.
    - Вывести сообщение об общем количестве обработанных продуктов.

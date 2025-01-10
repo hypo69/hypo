@@ -48,7 +48,7 @@ async def test_grab_page_valid_input(graber, mock_driver, product_fields):
     # Assert that the function returns a ProductFields object
     result = await graber.grab_page(mock_driver)
     assert isinstance(result, ProductFields)
-    assert result.local_saved_image is not None
+    assert result.local_image_path is not None
 
 
 
@@ -58,37 +58,37 @@ async def test_grab_page_invalid_input(graber, mock_driver, product_fields):
 
     with pytest.raises(Exception) as excinfo:
         await graber.grab_page(mock_driver)
-    assert "Ошибка сохранения изображения в поле `local_saved_image`" in str(excinfo.value)
+    assert "Ошибка сохранения изображения в поле `local_image_path`" in str(excinfo.value)
 
 
 
-async def test_local_saved_image_valid_input(graber, mock_driver, product_fields):
+async def test_local_image_path_valid_input(graber, mock_driver, product_fields):
     # Mock the necessary parts for valid input
     mock_driver.execute_locator.return_value = asyncio.Future()
     mock_driver.execute_locator.return_value.result.return_value = [b'image data']
     graber.fields = product_fields
-    result = await graber.local_saved_image()
-    # Assert that the local_saved_image is set correctly
+    result = await graber.local_image_path()
+    # Assert that the local_image_path is set correctly
     assert result == True
 
-# Test cases for local_saved_image (edge cases)
-async def test_local_saved_image_no_image(graber, mock_driver, product_fields):
+# Test cases for local_image_path (edge cases)
+async def test_local_image_path_no_image(graber, mock_driver, product_fields):
     mock_driver.execute_locator.return_value = asyncio.Future()
     mock_driver.execute_locator.return_value.result.return_value = None
     graber.fields = product_fields
 
-    result = await graber.local_saved_image()
+    result = await graber.local_image_path()
     assert result is None
-    assert graber.fields.local_saved_image is None
+    assert graber.fields.local_image_path is None
 
 
-async def test_local_saved_image_save_error(graber, mock_driver, product_fields, monkeypatch):
+async def test_local_image_path_save_error(graber, mock_driver, product_fields, monkeypatch):
     # Mock save_png to raise an exception
     monkeypatch.setattr(graber, 'save_png', lambda x,y: None)
     mock_driver.execute_locator.return_value = asyncio.Future()
     mock_driver.execute_locator.return_value.result.return_value = [b'image data']
     graber.fields = product_fields
-    result = await graber.local_saved_image()
+    result = await graber.local_image_path()
     # Assert that the exception is caught and logged
     assert result is False
     # Add assertions to check the logging messages
@@ -106,9 +106,9 @@ async def test_local_saved_image_save_error(graber, mock_driver, product_fields,
 
 * **Mocking:** The code now heavily utilizes `unittest.mock.Mock` to mock the `Driver` object and `Context`. This is crucial for isolating the tests and avoiding relying on external dependencies.
 * **Error Handling:** The `test_grab_page_invalid_input` tests a scenario where `execute_locator` might raise an exception. It uses `pytest.raises` to assert that the exception is caught and handled appropriately.
-* **Edge Cases:** The `test_local_saved_image_no_image` and `test_local_saved_image_save_error` tests add critical edge cases for the `local_saved_image` function.  The test now checks for cases where image retrieval might fail.
-* **Clearer Assertions:**  The assertions are more specific, verifying the expected behavior in more detail (e.g., checking if `local_saved_image` is set).
-* **`monkeypatch`:** The `test_local_saved_image_save_error` uses `monkeypatch` to simulate a failing `save_png` function.  This is a very important addition, as otherwise the test would rely on an external library.
+* **Edge Cases:** The `test_local_image_path_no_image` and `test_local_image_path_save_error` tests add critical edge cases for the `local_image_path` function.  The test now checks for cases where image retrieval might fail.
+* **Clearer Assertions:**  The assertions are more specific, verifying the expected behavior in more detail (e.g., checking if `local_image_path` is set).
+* **`monkeypatch`:** The `test_local_image_path_save_error` uses `monkeypatch` to simulate a failing `save_png` function.  This is a very important addition, as otherwise the test would rely on an external library.
 * **Asynchronous Tests:**  The tests are marked as asynchronous using `pytestmark = pytest.mark.asyncio` which is needed for running the `async` functions.
 * **Fixture for `ProductFields`:** A fixture `product_fields` creates a `ProductFields` instance, ensuring it's available for all tests.
 * **Import Necessary Modules:**  Added explicit imports for `ProductFields` and other modules to avoid potential errors.

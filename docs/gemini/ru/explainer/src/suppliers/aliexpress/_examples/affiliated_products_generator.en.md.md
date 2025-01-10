@@ -50,9 +50,9 @@
         for product in products:
             print(f"Product ID: {product.product_id}")
             print(f"Affiliate Link: {product.promotion_link}")
-            print(f"Local Image Path: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Local Video Path: {product.local_saved_video}")
+            print(f"Local Image Path: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Local Video Path: {product.local_video_path}")
             print()
     else:
         print("No affiliate products found.")
@@ -139,7 +139,7 @@ flowchart TD
 -   `parser` (AliAffiliatedProducts): Экземпляр класса `AliAffiliatedProducts`.
 -   `prod_urls` (list): Список строк, представляющих URL-адреса или идентификаторы продуктов.
 -   `products` (list): Список объектов, представляющих обработанные продукты, полученный из `process_affiliate_products`.
--   `product` (object): Переменная, используемая в цикле для итерации по списку обработанных продуктов,  атрибуты: `product_id`, `promotion_link`, `local_saved_image`, `local_saved_video`.
+-   `product` (object): Переменная, используемая в цикле для итерации по списку обработанных продуктов,  атрибуты: `product_id`, `promotion_link`, `local_image_path`, `local_video_path`.
 
 ### Потенциальные ошибки и области для улучшения:
 

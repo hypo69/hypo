@@ -49,9 +49,9 @@ Execution steps
            # Print the key product details
            print(f"Product ID: {product.product_id}")
            print(f"Affiliate link: {product.promotion_link}")
-           print(f"Local image path: {product.local_saved_image}")
-           if product.local_saved_video:
-               print(f"Local video path: {product.local_saved_video}")
+           print(f"Local image path: {product.local_image_path}")
+           if product.local_video_path:
+               print(f"Local video path: {product.local_video_path}")
            print()
    else:
        print("Failed to process any affiliate products.")
@@ -80,7 +80,7 @@ Usage example
         products = parser.process_affiliate_products(prod_urls)
         if products:
             for product in products:
-                print(f"ID: {product.product_id}, Link: {product.promotion_link}, Image: {product.local_saved_image}")
+                print(f"ID: {product.product_id}, Link: {product.promotion_link}, Image: {product.local_image_path}")
         else:
             print("No products processed.")
 

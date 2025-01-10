@@ -11,8 +11,8 @@ def mock_ali_product():
     return AliProduct(
         product_id='123',
         promotion_link='https://example.com/affiliate/123',
-        local_saved_image='path/to/image.jpg',
-        local_saved_video='path/to/video.mp4'
+        local_image_path='path/to/image.jpg',
+        local_video_path='path/to/video.mp4'
     )
 
 
@@ -61,7 +61,7 @@ def test_process_affiliate_products_valid_input(
     for product in products:
         assert isinstance(product, AliProduct)
         assert product.promotion_link == "https://example.com/affiliate/link"
-        assert product.local_saved_image == "path/to/saved/media"
+        assert product.local_image_path == "path/to/saved/media"
         
     mock_fetch_product_data.assert_called()
     mock_save_media.assert_called()
@@ -115,7 +115,7 @@ def test_process_affiliate_products_mixed_input(
     for product in products:
         assert isinstance(product, AliProduct)
         assert product.promotion_link == "https://example.com/affiliate/link"
-        assert product.local_saved_image == "path/to/saved/media"
+        assert product.local_image_path == "path/to/saved/media"
     mock_fetch_product_data.assert_called()
     mock_save_media.assert_called()
     mock_create_affiliate_link.assert_called()

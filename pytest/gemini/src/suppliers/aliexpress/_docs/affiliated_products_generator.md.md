@@ -106,8 +106,8 @@ def test_process_affiliate_products_valid_input(mock_ali_api, mock_save_png, moc
     assert products is not None
     assert len(products) == 1
     assert products[0].product_id == '123'
-    assert products[0].local_saved_image == str(parser.campaign_path / 'images' / '123.png')
-    assert products[0].local_saved_video == str(parser.campaign_path / 'videos' / '123.mp4')
+    assert products[0].local_image_path == str(parser.campaign_path / 'images' / '123.png')
+    assert products[0].local_video_path == str(parser.campaign_path / 'videos' / '123.mp4')
     assert products[0].promotion_link == 'https://s.click.aliexpress.com/e/short_key'
 
     mock_ali_api.get_affiliate_links.assert_called_once()

@@ -790,7 +790,7 @@ class AliPromoCampaign:
 
             html_content += f"""
             <div class="product-card">
-            <img src="{product.local_saved_image}" alt="{html.escape(product.product_title)}" class="product-image">
+            <img src="{product.local_image_path}" alt="{html.escape(product.product_title)}" class="product-image">
             <div class="product-info">
             <h2 class="product-title">{html.escape(product.product_title)}</h2>
             <p class="product-price">{product.target_sale_price} {product.target_sale_price_currency}</p>

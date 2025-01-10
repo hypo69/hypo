@@ -53,7 +53,7 @@ def test_grab_page_valid_input(graber, driver_mock):
     graber.id_product = lambda x : asyncio.Future().set_result(123)  # Mock function
     graber.description_short = lambda x : asyncio.Future().set_result("Short description")
     graber.name = lambda x : asyncio.Future().set_result("Product name")
-    graber.local_saved_image = lambda x : asyncio.Future().set_result("image_url")
+    graber.local_image_path = lambda x : asyncio.Future().set_result("image_url")
 
 
     loop = asyncio.get_event_loop()
@@ -83,7 +83,7 @@ def test_grab_page_specific_data_failure(graber, driver_mock):
 
 * **Mocking:**  Crucially, the test now uses `unittest.mock.Mock` to mock `Driver` and `Context`. This is essential because the `graber.grab_page` function interacts with the WebDriver and potentially other external resources.  Mocking isolates the test and avoids relying on external dependencies.
 
-* **Mock Function Calls:** The test explicitly mocks the `id_product`, `description_short`, `name`, and `local_saved_image` methods, returning appropriate results.  This simulates the actual function calls and allows assertions on the returned values.
+* **Mock Function Calls:** The test explicitly mocks the `id_product`, `description_short`, `name`, and `local_image_path` methods, returning appropriate results.  This simulates the actual function calls and allows assertions on the returned values.
 
 * **Asynchronous Execution:** The tests now use `loop.run_until_complete` to properly execute the asynchronous `graber.grab_page` function within the test loop.
 

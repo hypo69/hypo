@@ -105,7 +105,7 @@ class Graber(Grbr):
             await self.id_product(kwards.get("id_product", ''))
             # ... (many more await calls) ...
             
-            await self.local_saved_image(kwards.get("local_saved_image", ''))
+            await self.local_image_path(kwards.get("local_image_path", ''))
             # ...
             
         # Call the function to fetch all data
@@ -122,7 +122,7 @@ class Graber(Grbr):
 2. **Data Acquisition (`grab_page`)**:
    - Stores the input `driver` in the `d` and `self.d` variables.
    - Calls the `fetch_all_data` function to fetch product data.
-   - `fetch_all_data` function calls a multitude of functions (e.g., `self.id_product`, `self.description_short`, `self.name`, `self.specification`, `self.local_saved_image`...). These functions are likely responsible for extracting specific fields from the web page using the provided `driver`.
+   - `fetch_all_data` function calls a multitude of functions (e.g., `self.id_product`, `self.description_short`, `self.name`, `self.specification`, `self.local_image_path`...). These functions are likely responsible for extracting specific fields from the web page using the provided `driver`.
    - Returns the collected data (`self.fields`) as a `ProductFields` object.
 
 Example:
@@ -141,7 +141,7 @@ graph LR
     D --> F[description_short()];
     D --> G[name()];
     D --> H[specification()];
-    D --> I[local_saved_image()];
+    D --> I[local_image_path()];
    
     E --> J[ProductFields];
     F --> J;

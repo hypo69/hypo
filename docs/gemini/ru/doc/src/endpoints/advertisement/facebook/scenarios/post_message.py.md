@@ -61,7 +61,7 @@ True
 
 ```python
 driver = Driver(...)
-products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 upload_media(driver, products)
 True
 ```
@@ -105,7 +105,7 @@ True
 ```python
 driver = Driver(...)
 category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 promote_post(driver, category, products)
 ```
 
@@ -130,6 +130,6 @@ promote_post(driver, category, products)
 ```python
 driver = Driver(...)
 message = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 post_message(driver, message, products)
 ```

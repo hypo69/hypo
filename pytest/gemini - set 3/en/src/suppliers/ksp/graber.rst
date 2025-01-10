@@ -30,7 +30,7 @@ def test_grab_page_valid_input(graber, driver_instance):
     graber.description_short = Mock(return_value=asyncio.Future())
     graber.name = Mock(return_value=asyncio.Future())
     graber.specification = Mock(return_value=asyncio.Future())
-    graber.local_saved_image = Mock(return_value=asyncio.Future())
+    graber.local_image_path = Mock(return_value=asyncio.Future())
 
     # Mock the driver.execute_locator for a successful result
     driver_instance.execute_locator.side_effect = lambda x, y: asyncio.Future()

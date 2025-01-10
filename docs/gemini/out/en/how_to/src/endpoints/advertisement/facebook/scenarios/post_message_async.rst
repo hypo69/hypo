@@ -48,8 +48,8 @@ Usage example
     # Replace with your actual values
     category = SimpleNamespace(title="Summer Sale", description="Amazing deals on summer clothes")
     products = [
-        SimpleNamespace(local_saved_image=str(Path(gs.path.images / 'image1.jpg')), product_title='Summer Dress', original_price=100, sale_price=80, discount=20, language='en'),
-        SimpleNamespace(local_saved_image=str(Path(gs.path.images / 'image2.jpg')), product_title='Beach Shorts', original_price=50, sale_price=40, discount=20, language='en'),
+        SimpleNamespace(local_image_path=str(Path(gs.path.images / 'image1.jpg')), product_title='Summer Dress', original_price=100, sale_price=80, discount=20, language='en'),
+        SimpleNamespace(local_image_path=str(Path(gs.path.images / 'image2.jpg')), product_title='Beach Shorts', original_price=50, sale_price=40, discount=20, language='en'),
     ]
 
     async def main():

@@ -331,7 +331,7 @@ async def test_generate_output(mock_save_text_file, mock_j_dumps):
              target_sale_price_currency= "USD",
             target_original_price = 120,
             target_original_price_currency = "USD",
-            local_saved_image = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
+            local_image_path = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
         ),
          SimpleNamespace(
             product_id="124",
@@ -347,7 +347,7 @@ async def test_generate_output(mock_save_text_file, mock_j_dumps):
             target_sale_price_currency= "USD",
             target_original_price = 220,
             target_original_price_currency = "USD",
-            local_saved_image = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/124.png"
+            local_image_path = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/124.png"
         )
     ]
     await campaign.generate_output(campaign_name="test_campaign", category_path=Path("/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics"), products_list=products_list)
@@ -370,7 +370,7 @@ async def test_generate_output_single_product(mock_save_text_file, mock_j_dumps)
              target_sale_price_currency= "USD",
             target_original_price = 120,
             target_original_price_currency = "USD",
-            local_saved_image = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
+            local_image_path = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
         )
     await campaign.generate_output(campaign_name="test_campaign", category_path=Path("/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics"), products_list=product)
 
@@ -393,7 +393,7 @@ async def test_generate_html(mock_save_text_file, mock_get_directory_names):
              target_sale_price_currency= "USD",
             target_original_price = 120,
             target_original_price_currency = "USD",
-            local_saved_image = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
+            local_image_path = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
         ),
          SimpleNamespace(
             product_id="124",
@@ -409,7 +409,7 @@ async def test_generate_html(mock_save_text_file, mock_get_directory_names):
              target_sale_price_currency= "USD",
             target_original_price = 220,
             target_original_price_currency = "USD",
-            local_saved_image = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/124.png"
+            local_image_path = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/124.png"
         )
     ]
   await campaign.generate_html(campaign_name="test_campaign", category_path=Path("/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics"), products_list=products_list)
@@ -432,7 +432,7 @@ async def test_generate_html_single_product(mock_save_text_file, mock_get_direct
             target_sale_price_currency= "USD",
             target_original_price = 120,
             target_original_price_currency = "USD",
-            local_saved_image = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
+            local_image_path = "/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics/123.png"
         )
     await campaign.generate_html(campaign_name="test_campaign", category_path=Path("/mocked/google_drive/aliexpress/campaigns/test_campaign/category/electronics"), products_list=product)
 

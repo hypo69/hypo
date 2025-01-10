@@ -59,10 +59,10 @@ async def test_grab_page_success(graber, mock_driver):
     graber.description_short = Mock(return_value=asyncio.Future())
     graber.name = Mock(return_value=asyncio.Future())
     graber.specification = Mock(return_value=asyncio.Future())
-    graber.local_saved_image = Mock(return_value=asyncio.Future())
+    graber.local_image_path = Mock(return_value=asyncio.Future())
     # ... mock other functions ...
     
-    for func in [graber.id_product,graber.description_short, graber.name, graber.specification, graber.local_saved_image]:
+    for func in [graber.id_product,graber.description_short, graber.name, graber.specification, graber.local_image_path]:
        func.set_result("test_data")
 
     result = await graber.grab_page(driver=mock_driver)

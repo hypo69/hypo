@@ -61,14 +61,14 @@ def test_grab_page_valid_input(graber, monkeypatch):
         pass
 
 
-    async def mock_local_saved_image():
+    async def mock_local_image_path():
         pass
 
 
     monkeypatch.setattr(graber, "description_short", mock_description_short)
     monkeypatch.setattr(graber, "name", mock_name)
     monkeypatch.setattr(graber, "specification", mock_specification)
-    monkeypatch.setattr(graber, "local_saved_image", mock_local_saved_image)
+    monkeypatch.setattr(graber, "local_image_path", mock_local_image_path)
 
 
     monkeypatch.setattr(graber, "fetch_all_data", mock_fetch_all_data)
@@ -79,7 +79,7 @@ def test_grab_page_valid_input(graber, monkeypatch):
     monkeypatch.setattr(graber, 'description_short', lambda x: future)
     monkeypatch.setattr(graber, 'name', lambda x: future)
     monkeypatch.setattr(graber, 'specification', lambda x: future)
-    monkeypatch.setattr(graber, 'local_saved_image', lambda x: future)
+    monkeypatch.setattr(graber, 'local_image_path', lambda x: future)
 
     # Execute the function and assert that it returns a ProductFields object
     result = asyncio.run(graber.grab_page(graber.driver))

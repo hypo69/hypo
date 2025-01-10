@@ -36,7 +36,7 @@ async def test_grab_page_valid_input(graber, mock_driver):
         'id_product',
         'name',
         'description_short', 
-        'local_saved_image',  # Example of a function to be tested
+        'local_image_path',  # Example of a function to be tested
     ]:
         setattr(graber, method, Mock(return_value=asyncio.sleep(0.01)))
 
@@ -58,7 +58,7 @@ async def test_grab_page_locator_exception(graber, mock_driver):
         'id_product',
         'name',
         'description_short',
-        'local_saved_image'  # Example of a function to be tested
+        'local_image_path'  # Example of a function to be tested
     ]:
         setattr(graber, method, Mock(return_value=asyncio.sleep(0.01)))
 
@@ -76,7 +76,7 @@ async def test_grab_page_empty_input(graber, mock_driver):
         'id_product',
         'name',
         'description_short', 
-        'local_saved_image',  # Example of a function to be tested
+        'local_image_path',  # Example of a function to be tested
     ]:
         setattr(graber, method, Mock(return_value=asyncio.sleep(0.01)))
 
@@ -96,7 +96,7 @@ async def test_grab_page_missing_function(graber, mock_driver):
         'id_product',
         'name',
         'description_short', 
-        'local_saved_image' ,
+        'local_image_path' ,
     ]:
         setattr(graber, method, Mock(return_value=asyncio.sleep(0.01)))
 

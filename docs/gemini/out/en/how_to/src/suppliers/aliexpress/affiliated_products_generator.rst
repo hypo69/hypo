@@ -50,7 +50,7 @@ Usage example
             for product in products:
                 print(f"Product Title: {product.product_title}")
                 print(f"Affiliate Link: {product.promotion_link}")
-                print(f"Image Path: {product.local_saved_image}")
+                print(f"Image Path: {product.local_image_path}")
                 print("---")
 
     if __name__ == "__main__":

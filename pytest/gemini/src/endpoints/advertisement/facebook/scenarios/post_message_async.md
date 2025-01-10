@@ -45,7 +45,7 @@ def category():
 
 @pytest.fixture
 def products():
-    return [SimpleNamespace(local_saved_image="image.jpg")]
+    return [SimpleNamespace(local_image_path="image.jpg")]
 
 
 # Tests for post_title function

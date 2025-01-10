@@ -39,7 +39,7 @@ def campaign_data():
 
 @pytest.fixture
 def product_data():
-    return SimpleNamespace(product_id='123', product_title='Product Title', title='Test Title', local_saved_image='image.jpg', product_video_url='video.mp4', original_price=10.00, app_sale_price=9.00)
+    return SimpleNamespace(product_id='123', product_title='Product Title', title='Test Title', local_image_path='image.jpg', product_video_url='video.mp4', original_price=10.00, app_sale_price=9.00)
 
 
 def test_clear_succeeds(gpt_gs):

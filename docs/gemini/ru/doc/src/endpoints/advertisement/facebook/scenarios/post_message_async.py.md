@@ -51,7 +51,7 @@ post_title(driver, category)
 **Пример**:
 ```python
 driver = Driver(...)
-products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 await upload_media(driver, products)
 # True
 ```
@@ -82,6 +82,6 @@ await upload_media(driver, products)
 ```python
 driver = Driver(...)
 category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+products = [SimpleNamespace(local_image_path='путь/к/изображению.jpg', ...)]
 await promote_post(driver, category, products)
 ```

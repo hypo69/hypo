@@ -53,7 +53,7 @@ def test_grab_page_valid_input(mock_driver, mock_context):
     graber.fields = fields
     # Mocks the async functions to return values
     for method_name in dir(graber):
-        if method_name.startswith('id_product') or method_name.startswith('description_short') or method_name.startswith('name') or method_name.startswith('specification') or method_name.startswith('local_saved_image'):
+        if method_name.startswith('id_product') or method_name.startswith('description_short') or method_name.startswith('name') or method_name.startswith('specification') or method_name.startswith('local_image_path'):
             setattr(graber, method_name, lambda x: asyncio.Future().set_result(None))
 
     loop = asyncio.get_event_loop()

@@ -89,8 +89,8 @@ def test_field_list_is_not_empty():
         "weight",
         "wholesale_price",
         "width",
-        "local_saved_image",
-        "local_saved_video"
+        "local_image_path",
+        "local_video_path"
     ]
     assert len(fields_list) > 0, "The list of product fields is empty."
 

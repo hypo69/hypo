@@ -163,7 +163,7 @@ class MexironBuilder:
                                  'description_short',
                                  'description',
                                  'specification',
-                                 'local_saved_image')
+                                 'local_image_path')
         products_list = []
         # цикл перебирает ссылки
         for url in urls:
@@ -313,7 +313,7 @@ class MexironBuilder:
             'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';', '<br>'),
             'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';', '<br>'),
             'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';', '<br>'),
-            'local_saved_image': str(f.local_saved_image),
+            'local_image_path': str(f.local_image_path),
         }
 
     async def save_product_data(self, product_data: dict):
@@ -612,7 +612,7 @@ class MexironBuilder:
                                  'description_short',
                                  'description',
                                  'specification',
-                                 'local_saved_image')
+                                 'local_image_path')
         products_list = []
         # цикл перебирает ссылки
         for url in urls:

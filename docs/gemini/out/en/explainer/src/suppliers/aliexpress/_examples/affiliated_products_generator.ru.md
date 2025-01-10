@@ -34,9 +34,9 @@ def main():
         for product in products:
             print(f"Продукт ID: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
+            print(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Локальный путь к видео: {product.local_video_path}")
             print()
     else:
         print("Не удалось получить аффилированные продукты.")
@@ -66,7 +66,7 @@ The algorithm demonStartes the usage of the `AliAffiliatedProducts` class to ret
 
 *   **Input:** `prod_urls` and the initialized `parser` object.
 *   **Output:** List of `Product` objects containing affiliate links and image/video paths. `products` list.
-*   **Example:** `products` will contain objects with `product_id`, `promotion_link`, `local_saved_image`, and potentially `local_saved_video` attributes populated by `AliAffiliatedProducts.process_affiliate_products` method.
+*   **Example:** `products` will contain objects with `product_id`, `promotion_link`, `local_image_path`, and potentially `local_video_path` attributes populated by `AliAffiliatedProducts.process_affiliate_products` method.
 
 
 **Step 4: Result Output**

@@ -21,7 +21,7 @@
     product_data = SimpleNamespace(
         product_id='123',
         product_title='Test Product',
-        local_saved_image='images/test.jpg',
+        local_image_path='images/test.jpg',
         target_sale_price='10.00',
         target_sale_price_currency='$',
         target_original_price='20.00',
@@ -86,7 +86,7 @@ class ProductHTMLGenerator:
     <div class="container">
         <h1 class="my-4">{html.escape(product.product_title)}</h1>
         <div class="card">
-            <img src="{Path(product.local_saved_image).as_posix()}" alt="{html.escape(product.product_title)}" class="card-img-top">
+            <img src="{Path(product.local_image_path).as_posix()}" alt="{html.escape(product.product_title)}" class="card-img-top">
             <div class="card-body">
                 <p class="card-text">Price: <span class="product-price">{product.target_sale_price} {product.target_sale_price_currency}</span></p>
                 <p class="card-text">Original Price: <span class="product-original-price">{product.target_original_price} {product.target_original_price_currency}</span></p>
@@ -145,7 +145,7 @@ class CategoryHTMLGenerator:
     """
         # Проходит по списку товаров и генерирует HTML для каждого товара
         for product in products_list:
-            image_url = Path(product.local_saved_image).as_posix()
+            image_url = Path(product.local_image_path).as_posix()
             html_content += f"""
                 <div class="col-md-4 mb-4">
                     <div class="card">
@@ -268,7 +268,7 @@ class CampaignHTMLGenerator:
     product_data = SimpleNamespace(
         product_id='123',
         product_title='Test Product',
-        local_saved_image='images/test.jpg',
+        local_image_path='images/test.jpg',
         target_sale_price='10.00',
         target_sale_price_currency='$',
         target_original_price='20.00',
@@ -333,7 +333,7 @@ class ProductHTMLGenerator:
     <div class="container">
         <h1 class="my-4">{html.escape(product.product_title)}</h1>
         <div class="card">
-            <img src="{Path(product.local_saved_image).as_posix()}" alt="{html.escape(product.product_title)}" class="card-img-top">
+            <img src="{Path(product.local_image_path).as_posix()}" alt="{html.escape(product.product_title)}" class="card-img-top">
             <div class="card-body">
                 <p class="card-text">Price: <span class="product-price">{product.target_sale_price} {product.target_sale_price_currency}</span></p>
                 <p class="card-text">Original Price: <span class="product-original-price">{product.target_original_price} {product.target_original_price_currency}</span></p>
@@ -392,7 +392,7 @@ class CategoryHTMLGenerator:
     """
         # Проходит по списку товаров и генерирует HTML для каждого товара
         for product in products_list:
-            image_url = Path(product.local_saved_image).as_posix()
+            image_url = Path(product.local_image_path).as_posix()
             html_content += f"""
                 <div class="col-md-4 mb-4">
                     <div class="card">

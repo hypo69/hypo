@@ -20,7 +20,7 @@
         *   Если граббер найден:
             *   Выводит сообщение в чат о начале обработки URL.
             *   Запускает граббер (`graber.grab_page`) для извлечения данных о товаре.
-                *   Пример: `f = await graber.grab_page('id_product', 'name', 'description_short', 'description', 'specification', 'local_saved_image')`
+                *   Пример: `f = await graber.grab_page('id_product', 'name', 'description_short', 'description', 'specification', 'local_image_path')`
             *   Конвертирует поля товара в словарь (`convert_product_fields`).
                 *   Пример: `product_data = await self.convert_product_fields(f)`
             *   Сохраняет данные товара (`save_product_data`).
@@ -31,7 +31,7 @@
 3.  **`convert_product_fields` (асинхронная функция):**
     *   Принимает объект `ProductFields`.
     *   Извлекает данные о товаре из `ProductFields`, форматирует их в словарь с ключами:
-        *   `product_title`, `product_id`, `description_short`, `description`, `specification`, `local_saved_image`.
+        *   `product_title`, `product_id`, `description_short`, `description`, `specification`, `local_image_path`.
         *   Пример:`{'product_title': 'Название товара', 'product_id': '123', 'description_short': 'Короткое описание', ... }`
     *   Возвращает словарь с данными товара.
     *   Возвращает пустой словарь `{}` если `f.id_product` не определен.

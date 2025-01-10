@@ -6,8 +6,8 @@ from unittest.mock import patch
 # Define a fixture for test data (replace with actual data if available)
 @pytest.fixture
 def example_products():
-    return [{"product_id": "123", "promotion_link": "link1", "local_saved_image": "image1"},
-            {"product_id": "456", "promotion_link": "link2", "local_saved_image": "image2"}]
+    return [{"product_id": "123", "promotion_link": "link1", "local_image_path": "image1"},
+            {"product_id": "456", "promotion_link": "link2", "local_image_path": "image2"}]
 
 
 # Tests for AliAffiliatedProducts
@@ -35,7 +35,7 @@ def test_process_affiliate_products_valid_input(example_products):
         assert isinstance(product, dict)
         assert product['product_id'] == prod_urls[i]
         assert "promotion_link" in product
-        assert "local_saved_image" in product
+        assert "local_image_path" in product
 
 
 def test_process_affiliate_products_empty_input():

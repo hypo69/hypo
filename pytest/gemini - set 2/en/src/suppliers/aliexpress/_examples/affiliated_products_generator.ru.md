@@ -77,7 +77,7 @@ def test_affiliate_products_attributes(parser_instance):
   for product in products:
     assert hasattr(product, "product_id")
     assert hasattr(product, "promotion_link")
-    assert hasattr(product, "local_saved_image")
+    assert hasattr(product, "local_image_path")
 
 
 # IMPORTANT:  These tests are placeholder.  

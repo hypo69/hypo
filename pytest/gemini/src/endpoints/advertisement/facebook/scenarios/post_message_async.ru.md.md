@@ -33,8 +33,8 @@ def example_category():
 def example_products():
     """Provides a list of sample product SimpleNamespace objects."""
     return [
-        SimpleNamespace(local_saved_image="path/to/image1.jpg", caption="Image 1 Caption"),
-        SimpleNamespace(local_saved_image="path/to/image2.jpg", caption="Image 2 Caption"),
+        SimpleNamespace(local_image_path="path/to/image1.jpg", caption="Image 1 Caption"),
+        SimpleNamespace(local_image_path="path/to/image2.jpg", caption="Image 2 Caption"),
     ]
 
 

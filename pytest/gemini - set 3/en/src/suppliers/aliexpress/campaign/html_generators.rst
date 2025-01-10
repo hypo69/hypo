@@ -20,7 +20,7 @@ def test_set_product_html(mock_save_text_file, tmp_path):
     product = SimpleNamespace(
         product_id="123",
         product_title="Test Product",
-        local_saved_image=str(tmp_path / "image.jpg"),
+        local_image_path=str(tmp_path / "image.jpg"),
         target_sale_price="10",
         target_sale_price_currency="USD",
         target_original_price="15",
@@ -74,7 +74,7 @@ def test_set_category_html(mock_save_text_file, tmp_path):
         SimpleNamespace(
             product_id="123",
             product_title="Test Product 1",
-            local_saved_image=str(tmp_path / "image1.jpg"),
+            local_image_path=str(tmp_path / "image1.jpg"),
             target_sale_price="10",
             target_sale_price_currency="USD",
             target_original_price="15",

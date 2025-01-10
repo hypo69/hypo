@@ -2100,16 +2100,16 @@ class Graber:
         return True
 
     @close_pop_up()
-    async def local_saved_image(self, value: Optional[str] = None):
+    async def local_image_path(self, value: Optional[str] = None):
         """Fetch and save an image locally.
 
         Функция получает `URL` картинки или байты изображения, сохраняет изображение в формате `PNG` в директории `tmp` 
-        и устанавливает путь к сохранённой картинке в поле `local_saved_image`. Если передано значение в параметре `value`,
+        и устанавливает путь к сохранённой картинке в поле `local_image_path`. Если передано значение в параметре `value`,
         оно записывается в поле без изменений.
 
         Args:
-            value (Optional[str], optional): URL изображения, который можно передать в классе через ключ `{local_saved_image = value}`.
-                Если `value` было передано, его значение подставляется в поле `ProductFields.local_saved_image`.
+            value (Optional[str], optional): URL изображения, который можно передать в классе через ключ `{local_image_path = value}`.
+                Если `value` было передано, его значение подставляется в поле `ProductFields.local_image_path`.
 
         .. note:
             Путь к изображению ведёт в директорию `tmp`.
@@ -2120,7 +2120,7 @@ class Graber:
 
         """
         if value:
-            self.fields.local_saved_image = value
+            self.fields.local_image_path = value
             return True
 
         try:
@@ -2140,35 +2140,35 @@ class Graber:
                 logger.debug("Неизвестный тип данных для изображения", None, False)
                 ...
                 return
-            self.fields.local_saved_image = img_tmp_path
+            self.fields.local_image_path = img_tmp_path
             return True
         except Exception as ex:
-            logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+            logger.error(f'Ошибка сохранения изображения в поле `local_image_path`', ex)
             ...
             return
 
     @close_pop_up()
-    async def local_saved_video(self, value:Optional[Any] = None):
+    async def local_video_path(self, value:Optional[Any] = None):
         """Fetch and save video locally.
         
         Args:
-        value (Any): это значение можно передать в словаре kwargs через ключ {local_saved_video = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_video`.
+        value (Any): это значение можно передать в словаре kwargs через ключ {local_video_path = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.local_video_path`.
         """
         try:
             # Получаем значение через execute_locator и сохраняем видео
-            value = value or  await self.driver.execute_locator(self.locator.local_saved_video) or ''
+            value = value or  await self.driver.execute_locator(self.locator.local_video_path) or ''
         except Exception as ex:
-            logger.error(f'Ошибка сохранения видео в поле `local_saved_video`', ex)
+            logger.error(f'Ошибка сохранения видео в поле `local_video_path`', ex)
             ...
             return
 
         # Проверка валидности `value`
         if not value:
-            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.local_saved_video}')
+            logger.debug(f'Невалидный результат {value=}\nлокатор {self.locator.local_video_path}')
             ...
             return
 
-        # Записываем результат в поле `local_saved_video` объекта `ProductFields`
-        self.fields.local_saved_video = value
+        # Записываем результат в поле `local_video_path` объекта `ProductFields`
+        self.fields.local_video_path = value
         return True

@@ -109,7 +109,7 @@ driver = Driver(...)
 
 # Load category and products
 category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-products = [SimpleNamespace(local_saved_image='path/to/image.jpg', ...)]
+products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
 
 # Send title
 post_title(driver, category)

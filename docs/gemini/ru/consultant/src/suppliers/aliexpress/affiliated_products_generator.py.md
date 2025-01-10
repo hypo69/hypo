@@ -188,14 +188,14 @@ class AliAffiliatedProducts(AliApi):
             image_path = Path(category_root) / IMAGES_DIR_NAME / f"{product.product_id}.png"
             await save_png_from_url(product.product_main_image_url, image_path)
             logger.info(f"Сохранено изображение для {product.product_id=}")
-            product.local_saved_image = str(image_path)
+            product.local_image_path = str(image_path)
 
             if product.product_video_url:
                 parsed_url: Path = urlparse(product.product_video_url)
                 suffix: str = Path(parsed_url.path).suffix
                 video_path: Path = Path(category_root) / VIDEOS_DIR_NAME / f'{product.product_id}{suffix}'
                 await save_video_from_url(product.product_video_url, video_path)
-                product.local_saved_video = str(video_path)
+                product.local_video_path = str(video_path)
                 logger.info(f"Сохранено видео для {product.product_id=}")
 
             logger.info(f"Обработан товар: {product.product_title}")

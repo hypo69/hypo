@@ -78,9 +78,9 @@
             for product in products:
                 logger.info(f"ID продукта: {product.product_id}")
                 logger.info(f"Партнерская ссылка: {product.promotion_link}")
-                logger.info(f"Локальный путь к изображению: {product.local_saved_image}")
-                if product.local_saved_video:
-                    logger.info(f"Локальный путь к видео: {product.local_saved_video}")
+                logger.info(f"Локальный путь к изображению: {product.local_image_path}")
+                if product.local_video_path:
+                    logger.info(f"Локальный путь к видео: {product.local_video_path}")
         else:
             logger.info("Партнерские продукты не найдены.")
 
@@ -126,9 +126,9 @@ def main():
         for product in products:
             logger.info(f"ID продукта: {product.product_id}") # Вывод ID продукта с помощью logger
             logger.info(f"Партнерская ссылка: {product.promotion_link}")  # Вывод партнерской ссылки с помощью logger
-            logger.info(f"Локальный путь к изображению: {product.local_saved_image}")  # Вывод пути к изображению с помощью logger
-            if product.local_saved_video:
-                logger.info(f"Локальный путь к видео: {product.local_saved_video}") # Вывод пути к видео с помощью logger
+            logger.info(f"Локальный путь к изображению: {product.local_image_path}")  # Вывод пути к изображению с помощью logger
+            if product.local_video_path:
+                logger.info(f"Локальный путь к видео: {product.local_video_path}") # Вывод пути к видео с помощью logger
             logger.info("")  # пустая строка для разделения вывода
     else:
          logger.info("Партнерские продукты не найдены.") # Вывод информационного сообщения с помощью logger

@@ -12,7 +12,7 @@
     *   Возвращает `True` при успехе, иначе `None`.
 2.  **`upload_media(d, products, no_video)`**:
     *   Принимает `Driver`, список `products` (SimpleNamespace с путями к медиа) и флаг `no_video`.
-    *   **Пример:** `products = [SimpleNamespace(local_saved_image="image1.jpg", local_saved_video="video1.mp4"), SimpleNamespace(local_saved_image="image2.jpg")]`
+    *   **Пример:** `products = [SimpleNamespace(local_image_path="image1.jpg", local_video_path="video1.mp4"), SimpleNamespace(local_image_path="image2.jpg")]`
     *   Открывает форму добавления медиа (`d.execute_locator(locator.open_add_foto_video_form)`).
     *   Перебирает `products`:
         *   Определяет путь к медиа: видео, если есть и `no_video` = `False`, иначе - изображение.
@@ -75,8 +75,8 @@ flowchart TD
         OpenMediaForm -- Success --> IterateProducts[Iterate through products]
 
         IterateProducts --> CheckMediaType[Check if product has video and no_video=False]
-    	CheckMediaType -- HasVideo --> GetVideoPath[media_path = product.local_saved_video]
-    	CheckMediaType -- NoVideo --> GetImagePath[media_path = product.local_saved_image]
+    	CheckMediaType -- HasVideo --> GetVideoPath[media_path = product.local_video_path]
+    	CheckMediaType -- NoVideo --> GetImagePath[media_path = product.local_image_path]
 
     	GetVideoPath --> UploadMedia[d.execute_locator(locator.foto_video_input, media_path)]
         GetImagePath --> UploadMedia
@@ -159,10 +159,10 @@ flowchart TD
         *  **Возвращаемое значение**: `True` если успешно, `None` если ошибка.
     *   **`upload_media(d, products, no_video=False)`**:
         *   `d`: Экземпляр класса `Driver`.
-        *   `products`: Список объектов `SimpleNamespace`, каждый из которых содержит путь к медиа (`local_saved_image` или `local_saved_video`).
+        *   `products`: Список объектов `SimpleNamespace`, каждый из которых содержит путь к медиа (`local_image_path` или `local_video_path`).
         *   `no_video`: Флаг, позволяющий игнорировать видео файлы при загрузке.
         *   **Назначение:** Загружает изображения и видео, обновляет подписи к ним.
-        *   **Пример:** `await upload_media(driver, [SimpleNamespace(local_saved_image="img1.jpg"), SimpleNamespace(local_saved_video="video1.mp4")], no_video=True)`.
+        *   **Пример:** `await upload_media(driver, [SimpleNamespace(local_image_path="img1.jpg"), SimpleNamespace(local_video_path="video1.mp4")], no_video=True)`.
         *   **Возвращаемое значение**: `True` если успешно, `None` если ошибка.
     *   **`update_images_captions(d, products, textarea_list)`**:
         *   `d`: Экземпляр класса `Driver`.
@@ -183,7 +183,7 @@ flowchart TD
         *   `products`: Список объектов `SimpleNamespace`, содержащих данные о медиа.
          *   `no_video`: Флаг, позволяющий игнорировать видео файлы при загрузке.
         *   **Назначение:**  Выполняет полный цикл публикации сообщения - добавление заголовка и описания, загрузка медиа, добавление подписей и публикация сообщения.
-        *   **Пример:** `await promote_post(driver, SimpleNamespace(title="Заголовок", description="Описание"), [SimpleNamespace(local_saved_image="img1.jpg")], no_video=True)`.
+        *   **Пример:** `await promote_post(driver, SimpleNamespace(title="Заголовок", description="Описание"), [SimpleNamespace(local_image_path="img1.jpg")], no_video=True)`.
         *   **Возвращаемое значение**: `True` если успешно, `None` если ошибка.
 4.  **Классы:**
     *   `Driver`: Класс, предоставляющий методы для управления браузером (прокрутка, клики, ввод текста и т.д.). Используется для взаимодействия с веб-страницей.

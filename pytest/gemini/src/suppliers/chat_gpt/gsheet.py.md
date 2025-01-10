@@ -235,8 +235,8 @@ def test_set_product_worksheet_valid_data(gpt_gs_instance, mock_worksheet):
     gpt_gs_instance.spreadsheet.copy_worksheet.return_value = mock_worksheet
     product_data = SimpleNamespace(
         product_id=123, app_sale_price=10.0, original_price=15.0, sale_price=12.0, discount=20.0,
-        product_main_image_url="url1", local_saved_image="local1", product_small_image_urls=["url2", "url3"],
-        product_video_url="video1", local_saved_video="local_video", first_level_category_id=1,
+        product_main_image_url="url1", local_image_path="local1", product_small_image_urls=["url2", "url3"],
+        product_video_url="video1", local_video_path="local_video", first_level_category_id=1,
         first_level_category_name="cat1", second_level_category_id=2, second_level_category_name="cat2",
         target_sale_price=11.0, target_sale_price_currency="USD", target_app_sale_price_currency="USD",
         target_original_price_currency="USD", original_price_currency="USD", product_title="test_product",
@@ -252,8 +252,8 @@ def test_set_product_worksheet_exception(gpt_gs_instance, mock_worksheet):
     gpt_gs_instance.spreadsheet.copy_worksheet.side_effect = Exception("Test exception")
     product_data = SimpleNamespace(
         product_id=123, app_sale_price=10.0, original_price=15.0, sale_price=12.0, discount=20.0,
-        product_main_image_url="url1", local_saved_image="local1", product_small_image_urls=["url2", "url3"],
-        product_video_url="video1", local_saved_video="local_video", first_level_category_id=1,
+        product_main_image_url="url1", local_image_path="local1", product_small_image_urls=["url2", "url3"],
+        product_video_url="video1", local_video_path="local_video", first_level_category_id=1,
         first_level_category_name="cat1", second_level_category_id=2, second_level_category_name="cat2",
         target_sale_price=11.0, target_sale_price_currency="USD", target_app_sale_price_currency="USD",
         target_original_price_currency="USD", original_price_currency="USD", product_title="test_product",
@@ -305,11 +305,11 @@ def test_set_products_worksheet_valid_data(gpt_gs_instance, mock_worksheet):
             test_category=SimpleNamespace(
                 products=[
                     SimpleNamespace(
-                    product_id=1, product_title='Product 1', title='Title 1', local_saved_image='image1', product_video_url='video1',
+                    product_id=1, product_title='Product 1', title='Title 1', local_image_path='image1', product_video_url='video1',
                     original_price=10.0, app_sale_price=8.0, target_sale_price=9.0
                 ),
                  SimpleNamespace(
-                    product_id=2, product_title='Product 2', title='Title 2', local_saved_image='image2', product_video_url='video2',
+                    product_id=2, product_title='Product 2', title='Title 2', local_image_path='image2', product_video_url='video2',
                     original_price=20.0, app_sale_price=16.0, target_sale_price=18.0
                 )
                 ]
@@ -351,7 +351,7 @@ def test_set_products_worksheet_exception(gpt_gs_instance):
             test_category=SimpleNamespace(
                 products=[
                     SimpleNamespace(
-                    product_id=1, product_title='Product 1', title='Title 1', local_saved_image='image1', product_video_url='video1',
+                    product_id=1, product_title='Product 1', title='Title 1', local_image_path='image1', product_video_url='video1',
                     original_price=10.0, app_sale_price=8.0, target_sale_price=9.0
                 )
                 ]

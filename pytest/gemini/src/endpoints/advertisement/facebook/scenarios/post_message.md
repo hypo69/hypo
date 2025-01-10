@@ -46,7 +46,7 @@ def driver_mock():
 @pytest.fixture
 def message_data():
     """Provides sample message data."""
-    return SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[SimpleNamespace(local_saved_image="path/to/image.jpg")])
+    return SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[SimpleNamespace(local_image_path="path/to/image.jpg")])
 
 
 @pytest.fixture

@@ -24,7 +24,7 @@ def sample_category_data():
         description="Test Category description",
         tags=["tag1", "tag2"],
         products_count=10,
-        products = [SimpleNamespace(product_id=123, product_title="Product 1", promotion_link="link1", app_sale_price=10, original_price=20, sale_price=15, discount=0.25, product_main_image_url="image1", local_saved_image="image1", product_small_image_urls=[], product_video_url="video1", local_saved_video="video1")],
+        products = [SimpleNamespace(product_id=123, product_title="Product 1", promotion_link="link1", app_sale_price=10, original_price=20, sale_price=15, discount=0.25, product_main_image_url="image1", local_image_path="image1", product_small_image_urls=[], product_video_url="video1", local_video_path="video1")],
     )
 
 @pytest.fixture

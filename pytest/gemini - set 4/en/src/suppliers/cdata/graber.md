@@ -41,8 +41,8 @@ class MockGraber(Grbr):
     async def description_short(self, description_short):
         self.fields.description_short = description_short
     
-    async def local_saved_image(self, image_url):
-        self.fields.local_saved_image = image_url
+    async def local_image_path(self, image_url):
+        self.fields.local_image_path = image_url
 
     async def grab_page(self, driver: Driver) -> ProductFields:
         return self.fields
@@ -81,10 +81,10 @@ def test_grab_page_no_input(graber, mock_driver):
     assert graber.fields.name is None
     assert graber.fields.description_short is None
 
-def test_local_saved_image_valid(graber, mock_driver):
+def test_local_image_path_valid(graber, mock_driver):
     image_url = "test_image.jpg"
-    asyncio.run(graber.local_saved_image(image_url))
-    assert graber.fields.local_saved_image == image_url
+    asyncio.run(graber.local_image_path(image_url))
+    assert graber.fields.local_image_path == image_url
 
 def test_name_valid_input(graber, mock_driver):
     name = "MyProduct"

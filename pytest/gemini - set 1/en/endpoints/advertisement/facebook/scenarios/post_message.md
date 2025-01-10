@@ -82,7 +82,7 @@ def test_upload_media_valid_input(mock_logger, mock_driver: MockDriver):
     """Tests upload_media with valid media."""
     mock_driver.locators[mock_driver.locators.get('open_add_foto_video_form',None)] = True
     mock_driver.locators[mock_driver.locators.get('foto_video_input',None)] = True
-    media = SimpleNamespace(local_saved_image="path/to/image.jpg")
+    media = SimpleNamespace(local_image_path="path/to/image.jpg")
     result = upload_media(mock_driver, media)
     assert result is True
     assert mock_driver.is_element_present == True
@@ -93,7 +93,7 @@ def test_upload_media_valid_input(mock_logger, mock_driver: MockDriver):
 @patch('hypotez.src.endpoints.advertisement.facebook.scenarios.post_message.logger')
 def test_post_message_valid_input(mock_logger, mock_driver: MockDriver):
     """Tests post_message with valid input."""
-    message = SimpleNamespace(title="Test Title", description="Test Description", products=[SimpleNamespace(local_saved_image="image.jpg")])
+    message = SimpleNamespace(title="Test Title", description="Test Description", products=[SimpleNamespace(local_image_path="image.jpg")])
     mock_driver.locators[mock_driver.locators.get('open_add_foto_video_form',None)] = True
     mock_driver.locators[mock_driver.locators.get('foto_video_input',None)] = True
 
