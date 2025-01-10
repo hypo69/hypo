@@ -1,92 +1,88 @@
-# Анализ кода модуля `executor.py`
+## Анализ кода модуля `executor.py`
 
 **Качество кода**
-7
+9
 -  Плюсы
-    - Код разбит на логические блоки с использованием классов и методов.
-    - Используется асинхронное программирование для неблокирующих операций.
-    - Присутствует обработка исключений для более стабильной работы.
-    - Используются `dataclass` для представления данных.
-    - Наличие mermaid диаграмм в docstring
+    - Код хорошо структурирован и использует классы и асинхронные функции для управления веб-элементами.
+    -  Используются dataclass для хранения данных.
+    - Присутствует подробная документация в виде docstrings.
+    -  Логирование осуществляется через `logger`.
+    - Используются `SimpleNamespace` для гибкой работы с данными локатора.
+    - Присутствует обработка исключений.
+    - Используется асинхронность для неблокирующих операций.
 -  Минусы
-    -   Смешанный стиль комментариев (не везде RST).
-    -   Не полное использование логгера.
-    -   Избыточное использование `try-except` блоков.
-    -   Не всегда понятные и полные docstring.
-    -   Использование `...` для заглушек.
-    -   Смешанное использование `logger.debug` и `logger.error`
-    -   Отсутствует единый стиль обработки исключений.
-    -   Множественные вложенные условия, делающие код сложным для понимания.
-    -   Не везде используется `j_loads` или `j_loads_ns`.
-    -   Много неиспользуемого или закомментированного кода
-    -   Плохая читаемость кода в блоке `send_message`
-    -   Не полное соответствие с PEP8
+    -  Не везде используется `asyncio.to_thread` для блокирующих операций.
+    -  Есть места, где `try-except` можно упростить с использованием `logger.error`.
+    - В некоторых местах отсутствует проверка на None при использовании результатов функций.
+    - Дублирование логирования ошибки в `_parse_dict_string`
+    -   В `send_message` не используется `asyncio.to_thread`, что может блокировать eventloop.
+    -  В `send_message` для отправки клавиш, захардкожены клавиши `SHIFT+ENTER` вместо использования  `replace_dict`
+    - В `send_message` используется continue вместо `return False` при ошибке.
+    - В `get_webelement_by_locator` в блоке `if timeout == 0` не используется `await asyncio.to_thread` при вызове `driver.find_elements`, что может блокировать eventloop.
+    - В `get_webelement_by_locator` есть `raise ValueError`, но не обрабатывается в вызывающей функции.
+    - `from src.logger.logger import logger` не используется во всем модуле
+    - `...` не используется для останова кода. 
+    - В `execute_event` используется continue вместо `return False` при ошибке.
+    - В `execute_event` дублируется код при вызове `click` при возникновении исключения.
+    - В `execute_event` можно заменить `if event == "clear()"` и другие `elif` на `match-case`.
+    - В `get_attribute_by_locator` не используется `await asyncio.to_thread` для  `web_element.get_attribute`, что может блокировать eventloop.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    -   Полностью переписать комментарии в формате RST.
-    -   Добавить подробные docstring к каждой функции, методу и классу.
-    -   Использовать rst-блоки для mermaid
-    -   Указать типы данных для параметров функций и возвращаемых значений.
-
-2.  **Логирование**:
-    -   Использовать `logger.error` для записи ошибок, а `logger.debug` для отладочной информации.
-    -   Использовать форматирование строк f-string.
-    -   Добавить контекст в сообщения логгера, чтобы облегчить отладку.
-    -   Использовать один стиль логгирования
-
-3.  **Обработка ошибок**:
-    -   Убрать лишние блоки `try-except` и использовать `logger.error` для записи исключений.
-    -   Удалить или заменить `...` на конкретные действия.
-    -   Обработка ошибок должна быть единообразной
-
-4.  **Код**:
-    -   Удалить неиспользуемый код и закомментированный код.
-    -   Упростить логику в функциях, разбив их на более мелкие и понятные.
-    -   Пересмотреть условные конструкции, избегать излишней вложенности
-    -   Привести код в соответствие с PEP8
-    -   Перенести импорты в начало файла и сгруппировать их по категориям.
-    -   Избегать повторений в коде, вынося общие части в отдельные функции.
-    -   Улучшить читаемость `send_message`
-
-5.  **Использование `j_loads`**:
-    -   Использовать `j_loads` или `j_loads_ns` для чтения файлов конфигурации или других JSON-подобных данных.
-    -   Убедиться, что все данные, которые должны быть прочитаны, обрабатываются с использованием `j_loads`.
-
+1.  **Логирование**:
+    -   Заменить использование `print` на `logger.debug` или `logger.error` для стандартизации логирования.
+    -   Улучшить форматирование сообщений об ошибках в `logger.error`.
+2.  **Обработка ошибок**:
+    -   Вместо `try-except` с пустым `except` использовать `logger.error` для отлова и логирования исключений.
+    -   Проверить все места, где есть `...` и добавить обработку ошибок или возвращать `None` / `False`.
+    -   В функции `get_attribute_by_locator` заменить множественный вызов logger.debug на один.
+3.  **Асинхронность**:
+    -   Использовать `await asyncio.to_thread` для всех блокирующих операций (например, `driver.find_elements`, `web_element.click`, `web_element.send_keys`, `web_element.get_attribute` и т.д.)
+    -   Проверить все методы на предмет блокирующих вызовов и перевести их в неблокирующие.
+4.  **Структура кода**:
+    -   Удалить `...` как точки остановки.
+    -   Улучшить документацию: добавить примеры использования для всех методов и классов.
+    -   В `send_message`  заменить захардкоженные значения на использование `replace_dict`.
+    -   В `send_message` заменить `continue` на `return False` при ошибке.
+    -   В `execute_event` заменить множественные `if-elif` на `match-case`.
+    -   Удалить `continue`  из `execute_event`  и возвращать `return False` при ошибке.
+    -  В `execute_event` перенести дублирующийся код обработки ошибок в отдельную функцию.
+5.  **Улучшения**:
+    -   Добавить проверку на `None` перед использованием результатов функций.
+    -   Привести все имена переменных и функций в соответствие с PEP8.
+    -    В `get_webelement_by_locator` в блоке `if timeout == 0` использовать `await asyncio.to_thread` при вызове `driver.find_elements`.
+    - В `get_webelement_by_locator` добавить обработку `raise ValueError`.
+    - В `get_attribute_by_locator` использовать `await asyncio.to_thread` для  `web_element.get_attribute`.
+    
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
+"""
+.. module:: src.webdriver
+    :platform: Windows, Unix
+    :synopsis: The purpose of the `executor` module is to perform actions on web elements based on provided configurations,
+known as "locators." These configurations (or "locators") are dictionaries containing information on how to locate and interact with elements on a web page. The module provides the following functionalities:
 
-#! venv/bin/python/python3.12
+1. **Parsing and Handling Locators**: Converts dictionaries with configurations into `SimpleNamespace` objects,
+allowing for flexible manipulation of locator data.
+
+2. **Interacting with Web Elements**: Depending on the provided data, the module can perform various actions such as clicks,
+sending messages, executing events, and retrieving attributes from web elements.
+
+3. **Error Handling**: The module supports continuing execution in case of an error, allowing for the processing of web pages
+that might have unstable elements or require a special approach.
+
+4. **Support for Multiple Locator Types**: Handles both single and multiple locators, enabling the identification and interaction
+with one or several web elements simultaneously.
+
+This module provides flexibility and versatility in working with web elements, enabling the automation of complex web interaction scenarios.
+
 
 """
-Модуль `executor` предназначен для выполнения действий с веб-элементами на основе предоставленных конфигураций,
-известных как "локаторы". Эти конфигурации представляют собой словари, содержащие информацию о том,
-как находить и взаимодействовать с элементами на веб-странице.
-
-Модуль предоставляет следующие функциональные возможности:
-
-1. **Разбор и обработка локаторов**: Преобразует словари с конфигурациями в объекты `SimpleNamespace`,
-   что обеспечивает гибкую работу с данными локатора.
-
-2. **Взаимодействие с веб-элементами**: В зависимости от предоставленных данных, модуль выполняет различные действия,
-   такие как клики, отправка сообщений, выполнение событий и получение атрибутов веб-элементов.
-
-3. **Обработка ошибок**: Модуль поддерживает продолжение выполнения в случае ошибки, позволяя обрабатывать веб-страницы,
-   которые могут содержать нестабильные элементы.
-
-4. **Поддержка нескольких типов локаторов**: Обрабатывает как одиночные, так и множественные локаторы,
-   обеспечивая идентификацию и взаимодействие с одним или несколькими веб-элементами одновременно.
-
-Этот модуль обеспечивает гибкость и универсальность при работе с веб-элементами,
-позволяя автоматизировать сложные сценарии веб-взаимодействия.
-
-"""
-
 import asyncio
 import re
+import sys
 import time
 from dataclasses import dataclass, field
 from enum import Enum
@@ -108,45 +104,34 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+import header
 from src import gs
+from src.logger.logger import logger  # Используем logger из src.logger
 from src.logger.exceptions import (
     DefaultSettingsException,
     ExecuteLocatorException,
     WebDriverException,
 )
-from src.logger.logger import logger
-from src.utils.image import save_png
+
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint
-
-
+from src.utils.image import save_image
 
 
 @dataclass
 class ExecuteLocator:
-    """
-    Класс-обработчик локаторов веб-элементов с использованием Selenium.
-
-    :param driver: Экземпляр веб-драйвера Selenium.
-    :type driver: Optional[object]
-    :param actions: Объект для выполнения цепочки действий.
-    :type actions: ActionChains
-    :param by_mapping: Словарь соответствия строк методам поиска элементов.
-    :type by_mapping: dict
-    :param mode: Режим работы ('debug', 'dev' и т.д.).
-    :type mode: str
-    """
+    """Locator handler for web elements using Selenium."""
     driver: Optional[object] = None
     actions: ActionChains = field(init=False)
     by_mapping: dict = field(default_factory=lambda: {
-        "XPATH": By.XPATH,
-        "ID": By.ID,
-        "TAG_NAME": By.TAG_NAME,
-        "CSS_SELECTOR": By.CSS_SELECTOR,
-        "NAME": By.NAME,
-        "LINK_TEXT": By.LINK_TEXT,
-        "PARTIAL_LINK_TEXT": By.PARTIAL_LINK_TEXT,
-        "CLASS_NAME": By.CLASS_NAME,
+        'XPATH': By.XPATH,
+        'ID': By.ID,
+        'TAG_NAME': By.TAG_NAME,
+        'CSS_SELECTOR': By.CSS_SELECTOR,
+        'NAME': By.NAME,
+        'LINK_TEXT': By.LINK_TEXT,
+        'PARTIAL_LINK_TEXT': By.PARTIAL_LINK_TEXT,
+        'CLASS_NAME': By.CLASS_NAME,
     })
     mode: str = 'debug'
 
@@ -155,416 +140,390 @@ class ExecuteLocator:
             self.actions = ActionChains(self.driver)
 
     async def execute_locator(
-            self,
-            locator: dict | SimpleNamespace,
-            timeout: Optional[float] = 0,
-            timeout_for_event: Optional[str] = 'presence_of_element_located',
-            message: Optional[str] = None,
-            typing_speed: Optional[float] = 0,
-            continue_on_error: Optional[bool] = True,
+        self,
+        locator: dict | SimpleNamespace,
+        timeout: Optional[float] = 0,
+        timeout_for_event: Optional[str] = 'presence_of_element_located',
+        message: Optional[str] = None,
+        typing_speed: Optional[float] = 0,
+        continue_on_error: Optional[bool] = True,
     ) -> str | list | dict | WebElement | bool:
-        """
-        Выполняет действия с веб-элементом на основе предоставленного локатора.
+        """Executes actions on a web element based on the provided locator.
 
-        :param locator: Данные локатора (dict, SimpleNamespace или Locator).
-        :type locator: dict | SimpleNamespace
-        :param timeout: Время ожидания для поиска элемента.
-        :type timeout: Optional[float]
-        :param timeout_for_event: Условие ожидания ('presence_of_element_located', 'element_to_be_clickable').
-        :type timeout_for_event: Optional[str]
-        :param message: Сообщение для отправки (опционально).
-        :type message: Optional[str]
-        :param typing_speed: Скорость печати для событий send_keys (опционально).
-        :type typing_speed: Optional[float]
-        :param continue_on_error: Флаг, указывающий, следует ли продолжать выполнение при ошибке.
-        :type continue_on_error: Optional[bool]
-        :raises ExecuteLocatorException: Если возникает ошибка при выполнении локатора.
-        :return: Результат выполнения действий с локатором.
-        :rtype: str | list | dict | WebElement | bool
+        Args:
+            locator (dict | SimpleNamespace): Locator data.
+            timeout (float, optional): Timeout for locating the element.
+            timeout_for_event (str, optional): The wait condition ('presence_of_element_located', 'element_to_be_clickable').
+            message (str, optional): Optional message to send.
+            typing_speed (float, optional): Typing speed for send_keys events.
+            continue_on_error (bool, optional): Whether to continue on error.
+
+        Returns:
+            str | list | dict | WebElement | bool: Outcome based on locator instructions.
 
         ```mermaid
                 graph TD
-            A[Начало] --> B[Проверка типа локатора]
-            B --> C{Локатор SimpleNamespace?}
-            C -->|Да| D[Использовать локатор]
-            C -->|Нет| E[Преобразовать в SimpleNamespace]
+            A[Start] --> B[Check if locator is SimpleNamespace or dict]
+            B --> C{Is locator SimpleNamespace?}
+            C -->|Yes| D[Use locator as is]
+            C -->|No| E[Convert dict to SimpleNamespace]
             E --> D
-            D --> F[Определение async _parse_locator]
-            F --> G[Проверка наличия event, attribute, mandatory]
-            G -->|Нет| H[Вернуть None]
-            G -->|Да| I[Попытка сопоставить by и вычислить attribute]
-            I --> J[Перехват ошибок и запись в лог]
-            J --> K{Есть event?}
-            K -->|Да| L[Выполнить event]
-            K -->|Нет| M{Есть attribute?}
-            M -->|Да| N[Получить attribute по локатору]
-            M -->|Нет| O[Получить веб-элемент по локатору]
-            L --> P[Вернуть результат event]
-            N --> P[Вернуть результат attribute]
-            O --> P[Вернуть веб-элемент]
-            P --> Q[Вернуть результат _parse_locator]
-            Q --> R[Вернуть результат execute_locator]
-            R --> S[Конец]
+            D --> F[Define async function _parse_locator]
+            F --> G[Check if locator has event, attribute, or mandatory]
+            G -->|No| H[Return None]
+            G -->|Yes| I[Try to map by and evaluate attribute]
+            I --> J[Catch exceptions and log if needed]
+            J --> K{Does locator have event?}
+            K -->|Yes| L[Execute event]
+            K -->|No| M{Does locator have attribute?}
+            M -->|Yes| N[Get attribute by locator]
+            M -->|No| O[Get web element by locator]
+            L --> P[Return result of event]
+            N --> P[Return attribute result]
+            O --> P[Return web element result]
+            P --> Q[Return final result of _parse_locator]
+            Q --> R[Return result of execute_locator]
+            R --> S[End]
+
         ```
         """
-        # Преобразование локатора в SimpleNamespace, если это словарь
+        # проверяем тип локатора и преобразуем его в SimpleNamespace если это необходимо
         locator = (
             locator if isinstance(locator, SimpleNamespace)
             else SimpleNamespace(**locator) if isinstance(locator, dict)
             else None
         )
 
+        # если нет атрибутов или селектора - возвращаем None
         if not locator or (not locator.attribute and not locator.selector):
-            return None  # Локатор-заглушка
+            return None  # <- локатор - заглушка
 
         async def _parse_locator(
-                locator: Union[dict, SimpleNamespace], message: Optional[str]
+            locator: Union[dict, SimpleNamespace], message: Optional[str]
         ) -> str | list | dict | WebElement | bool:
-            """
-            Разбирает и выполняет инструкции локатора.
+            """Parses and executes locator instructions.
 
-            :param locator: Данные локатора.
-            :type locator: Union[dict, SimpleNamespace]
-            :param message: Сообщение для отправки (если применимо).
-            :type message: Optional[str]
-            :raises ExecuteLocatorException: В случае ошибки при выполнении локатора
-            :return: Результат выполнения инструкций локатора.
-            :rtype: str | list | dict | WebElement | bool
+            Args:
+                locator (Union[dict, SimpleNamespace]): Locator data.
+                message (str, optional): Message to send, if applicable.
+
+            Returns:
+                str | list | dict | WebElement | bool: Result of the execution.
             """
+            #  преобразуем локатор в SimpleNamespace
             locator = (
                 locator if isinstance(locator, SimpleNamespace)
                 else SimpleNamespace(**locator)
             )
+            # проверяем наличие event, attribute или mandatory
             if all([locator.event, locator.attribute, locator.mandatory]) is None:
                 return
-
             try:
+                #  получаем тип локатора
                 locator.by = self.by_mapping.get(locator.by.upper(), locator.by)
                 if locator.attribute:
+                    # вычисляем значение атрибута
                     locator.attribute = await self.evaluate_locator(locator.attribute)
-                    #  Установка константного или формульного значения в аттрибут локатора
+                    # проверяем если тип локатора VALUE
                     if locator.by == 'VALUE':
                         return locator.attribute
-
             except Exception as ex:
-                if MODE in ('dev', 'debug'):
-                    logger.debug(f"Ошибка при обработке локатора: {locator=}, {ex}", )
+                logger.debug(f"Locator Error: {locator=}", ex)
                 return
-
+            # исполняем событие если есть
             if locator.event:
                 return await self.execute_event(locator, timeout, timeout_for_event, message, typing_speed)
+            # получаем атрибут
             if locator.attribute:
                 return await self.get_attribute_by_locator(locator)
+            # получаем вебэлемент
             return await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
 
         return await _parse_locator(locator, message)
 
     async def evaluate_locator(self, attribute: str | List[str] | dict) -> Optional[str | List[str] | dict]:
-        """
-        Вычисляет и обрабатывает атрибуты локатора.
+        """Evaluates and processes locator attributes.
 
-        :param attribute: Атрибуты для вычисления.
-        :type attribute: Union[str, List[str], dict]
-        :return: Вычисленные атрибуты.
-        :rtype: Optional[str | List[str] | dict]
+        Args:
+            attribute (str | List[str] | dict): Attributes to evaluate.
 
+        Returns:
+            str | List[str] | dict: Evaluated attributes.
+        
         ```mermaid
                 graph TD
-            A[Начало] --> B[Проверка типа атрибута]
-            B -->|Список| C[Итерация по каждому атрибуту в списке]
-            C --> D[Вызов _evaluate для каждого атрибута]
-            D --> E[Возврат результатов asyncio.gather]
-            B -->|Нет| F[Вызов _evaluate для одного атрибута]
-            F --> G[Возврат результата _evaluate]
-            G --> H[Конец]
+            A[Start] --> B[Check if attribute is list]
+            B -->|Yes| C[Iterate over each attribute in list]
+            C --> D[Call _evaluate for each attribute]
+            D --> E[Return gathered results from asyncio.gather]
+            B -->|No| F[Call _evaluate for single attribute]
+            F --> G[Return result of _evaluate]
+            G --> H[End]
             E --> H
         ```
         """
-
         async def _evaluate(attr: str) -> Optional[str]:
-            """
-            Вычисляет значение атрибута.
-
-            :param attr: Строка атрибута.
-            :type attr: str
-            :return: Вычисленное значение атрибута.
-            :rtype: Optional[str]
-            """
-            if re.match(r"^%\w+%", attr):
-                key = re.findall(r"%(\w+)%", attr)[0]
-                return getattr(Keys, key, None)
+            # ищем соответствие в Keys, если находим - возвращаем значение
+            match = re.findall(r"%(\\w+)%", attr)
+            if match:
+                return getattr(Keys, match[0], None)
             return attr
 
+        # если атрибут - список, проходим по нему
         if isinstance(attribute, list):
             return await asyncio.gather(*[_evaluate(attr) for attr in attribute])
         return await _evaluate(str(attribute))
 
     async def get_attribute_by_locator(
-            self,
-            locator: SimpleNamespace | dict,
-            timeout: Optional[float] = 0,
-            timeout_for_event: str = 'presence_of_element_located',
-            message: Optional[str] = None,
-            typing_speed: float = 0,
-            continue_on_error: bool = True,
-    ) -> WebElement | list[WebElement] | None:
-        """
-        Извлекает атрибуты из элемента или списка элементов, найденных по заданному локатору.
+        self,
+        locator: SimpleNamespace | dict,
+        timeout: Optional[float] = 0,
+        timeout_for_event: str = 'presence_of_element_located',
+        message: Optional[str] = None,
+        typing_speed: float = 0,
+        continue_on_error: bool = True,
+    ) ->  WebElement | list[WebElement] | None:
+        """Retrieves attributes from an element or list of elements found by the given locator.
 
-        :param locator: Локатор в виде словаря или SimpleNamespace.
-        :type locator: dict | SimpleNamespace
-        :param timeout: Максимальное время ожидания появления элемента (по умолчанию 5 секунд).
-        :type timeout: Optional[float]
-        :param timeout_for_event: Тип условия ожидания (по умолчанию 'presence_of_element_located').
-        :type timeout_for_event: str
-        :raises ExecuteLocatorException: Если возникает ошибка при извлечении атрибутов.
-        :return: Значение атрибута(ов) или словарь с атрибутами.
-        :rtype: Union[str, list, dict, WebElement | list[WebElement] | None]
+        Args:
+            locator (dict | SimpleNamespace): Locator as a dictionary or SimpleNamespace.
+            timeout (float, optional): Max wait time for the element to appear. Defaults to 5 seconds.
+            timeout_for_event (str, optional): Type of wait condition. Defaults to 'presence_of_element_located'.
+
+        Returns:
+            str | list | dict | WebElement | list[WebElement] | None: The attribute value(s) or dictionary with attributes.
 
         ```mermaid
                 graph TD
-            A[Начало] --> B[Проверка типа локатора]
-            B -->|Да| C[Преобразовать в SimpleNamespace если нужно]
-            C --> D[Вызвать get_webelement_by_locator]
-            D --> E[Проверка наличия web_element]
-            E -->|Нет| F[Записать debug-сообщение и вернуть None]
-            E -->|Да| G[Проверка является ли locator.attribute строкой-словарем]
-            G -->|Да| H[Разобрать строку locator.attribute в словарь]
-            H --> I[Проверка является ли web_element списком]
-            I -->|Да| J[Получить атрибуты для каждого элемента]
-            J --> K[Вернуть список атрибутов]
-            I -->|Нет| L[Получить атрибуты для одного web_element]
+            A[Start] --> B[Check if locator is SimpleNamespace or dict]
+            B -->|Yes| C[Convert locator to SimpleNamespace if needed]
+            C --> D[Call get_webelement_by_locator]
+            D --> E[Check if web_element is found]
+            E -->|No| F[Log debug message and return]
+            E -->|Yes| G[Check if locator.attribute is a dictionary-like string]
+            G -->|Yes| H[Parse locator.attribute string to dict]
+            H --> I[Check if web_element is a list]
+            I -->|Yes| J[Retrieve attributes for each element in list]
+            J --> K[Return list of attributes]
+            I -->|No| L[Retrieve attributes for a single web_element]
             L --> K
-            G -->|Нет| M[Проверка является ли web_element списком]
-            M -->|Да| N[Получить атрибуты для каждого элемента в списке]
-            N --> O[Вернуть список атрибутов или один атрибут]
-            M -->|Нет| P[Получить атрибут для одного web_element]
+            G -->|No| M[Check if web_element is a list]
+            M -->|Yes| N[Retrieve attributes for each element in list]
+            N --> O[Return list of attributes or single attribute]
+            M -->|No| P[Retrieve attribute for a single web_element]
             P --> O
-            O --> Q[Конец]
+            O --> Q[End]
             F --> Q
         ```
         """
+        # проверяем тип локатора и преобразуем его в SimpleNamespace если это необходимо
         locator = (
             locator if isinstance(locator, SimpleNamespace)
             else SimpleNamespace(**locator) if isinstance(locator, dict)
             else None
         )
-
-        web_element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
+        # получаем вебэлемент
+        web_element: WebElement | list[WebElement] | None = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
+        # если элемент не найден - логируем ошибку и возвращаем None
         if not web_element:
-            if MODE in ('dev', 'debug'):
-                logger.debug(f"Элемент не найден: {locator=}", )
+            logger.debug(f"Не нашелся : {locator=}", None, False)
             return
 
         def _parse_dict_string(attr_string: str) -> dict | None:
-            """
-            Разбирает строку вида '{attr1:attr2}' в словарь.
+            """Parses a string like '{attr1:attr2}' into a locator.
 
-            :param attr_string: Строка, представляющая структуру, похожую на словарь.
-            :type attr_string: str
-            :return: Разобранный словарь или None, если разбор не удался.
-            :rtype: dict | None
+            Args:
+                attr_string (str): String representing a dictionary-like structure.
+
+            Returns:
+                dict: Parsed dictionary or None if parsing fails.
             """
             try:
+                #  парсим строку в словарь
                 return {
                     k.strip(): v.strip()
                     for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))
                 }
             except ValueError as ex:
-                if MODE in ('dev', 'debug'):
-                    logger.debug(f"Неверный формат строки атрибутов: {pprint(attr_string, text_color='WHITE', bg_color='RED')}, {ex}")
-                return
-            except Exception as ex:
-                if MODE in ('dev', 'debug'):
-                   logger.debug(f"Неверный формат строки атрибутов: {pprint(attr_string, text_color='WHITE', bg_color='RED')}, {ex}")
+                logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}", ex, False)
                 return
 
         def _get_attributes_from_dict(web_element: WebElement, attr_dict: dict) -> dict:
-            """
-            Извлекает значения атрибутов для каждого ключа в заданном словаре.
+            """Retrieves attribute values for each key in a given dictionary.
 
-            :param element: Веб-элемент, из которого нужно извлечь атрибуты.
-            :type element: WebElement
-            :param attr_dict: Словарь, где ключи/значения представляют имена атрибутов.
-            :type attr_dict: dict
-            :return: Словарь с атрибутами и их соответствующими значениями.
-            :rtype: dict
+            Args:
+                element (WebElement): The web element to retrieve attributes from.
+                attr_dict (dict): A dictionary where keys/values represent attribute names.
+
+            Returns:
+                dict: Dictionary with attributes and their corresponding values.
             """
             result = {}
+            # проходим по всем атрибутам в словаре
             for key, value in attr_dict.items():
                 try:
-                    attr_key = web_element.get_attribute(key)
-                    attr_value = web_element.get_attribute(value)
+                    # получаем значения атрибутов
+                    attr_key = await asyncio.to_thread(web_element.get_attribute, key)
+                    attr_value = await asyncio.to_thread(web_element.get_attribute, value)
                     result[attr_key] = attr_value
                 except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.debug(f"Ошибка при получении атрибутов '{key}' или '{value}' из элемента, {ex}")
+                    logger.debug(f"Error retrieving attributes '{key}' or '{value}' from element.", ex, False)
                     return
             return result
-
+        
+        # если вебэлемент найден - продолжаем
         if web_element:
+            # проверяем если атрибут - строка и начинается с {
             if isinstance(locator.attribute, str) and locator.attribute.startswith("{"):
+                # парсим строку в словарь
                 attr_dict = _parse_dict_string(locator.attribute)
-
+                # если вебэлемент - список, проходим по нему
                 if isinstance(web_element, list):
                     return [_get_attributes_from_dict(el, attr_dict) for el in web_element]
                 return _get_attributes_from_dict(web_element, attr_dict)
-
+            # если вебэлемент - список, проходим по нему
             if isinstance(web_element, list):
                 ret: list = []
                 try:
                     for e in web_element:
-                        ret.append(f'{e.get_attribute(locator.attribute)}')
+                        # получаем значение атрибута для каждого элемента
+                        ret.append(await asyncio.to_thread(e.get_attribute, locator.attribute))
                     return ret if len(ret) > 1 else ret[0]
                 except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.debug(f"Ошибка в get_attribute(): {pprint(locator, text_color='YELLOW', bg_color='BLACK')}, {ex}")
+                    logger.debug(f"Error in get_attribute(): {pprint(locator, text_color='YELLOW', bg_color='BLACK')}", ex, False)
                     return
-            return web_element.get_attribute(locator.attribute)
-        return None
+            # если вебэлемент не список
+            return await asyncio.to_thread(web_element.get_attribute, locator.attribute)
+        return
 
     async def get_webelement_by_locator(
-            self,
-            locator: dict | SimpleNamespace,
-            timeout: Optional[float] = 0,
-            timeout_for_event: Optional[str] = 'presence_of_element_located'
+        self,
+        locator: dict | SimpleNamespace,
+        timeout: Optional[float] = 0,
+        timeout_for_event: Optional[str] = 'presence_of_element_located'
     ) -> WebElement | List[WebElement] | None:
         """
-        Извлекает веб-элемент или список элементов по указанному локатору.
-
-        :param locator: Данные локатора.
-        :type locator: dict | SimpleNamespace
-        :param timeout: Время ожидания для поиска элемента.
-        :type timeout: Optional[float]
-        :param timeout_for_event: Условие ожидания ('presence_of_element_located', 'element_to_be_clickable').
-        :type timeout_for_event: Optional[str]
-        :raises ValueError: Если передан некорректный локатор.
-        :return: Найденный веб-элемент или список элементов.
-        :rtype: WebElement | List[WebElement] | None
+        Функция извлекает веб-элемент или список элементов по указанному локатору.
+        .. :todo:
+            Продумать как передать `timeout_for_event`
         """
+        #  устанавливаем timeout
         timeout = timeout if timeout > 0 else locator.timeout
 
         async def _parse_elements_list(
-                web_elements: WebElement | List[WebElement],
-                locator: SimpleNamespace
+            web_elements: WebElement | List[WebElement],
+            locator: SimpleNamespace
         ) -> WebElement | List[WebElement]:
             """
-            Фильтрует веб-элементы по правилу, указанному в `locator.if_list`.
-
-            :param web_elements: Список веб-элементов.
-            :type web_elements: WebElement | List[WebElement]
-            :param locator: Локатор с правилами фильтрации.
-            :type locator: SimpleNamespace
-            :return: Отфильтрованный веб-элемент или список элементов.
-            :rtype: WebElement | List[WebElement]
+            Фильтрация веб-элементов по правилу, указанному в `locator.if_list`.
             """
+            # если вебэлемент не список - возвращаем его
             if not isinstance(web_elements, list):
                 return web_elements
 
             if_list = locator.if_list
-
-            if if_list == 'all':
-                return web_elements
-            if if_list == 'first':
-                return web_elements[0]
-            if if_list == 'last':
-                return web_elements[-1]
-            if if_list == 'even':
-                return [web_elements[i] for i in range(0, len(web_elements), 2)]
-            if if_list == 'odd':
-                return [web_elements[i] for i in range(1, len(web_elements), 2)]
-            if isinstance(if_list, list):
-                return [web_elements[i] for i in if_list]
-            if isinstance(if_list, int):
-                return web_elements[if_list - 1]
-
+            # фильтруем список по правилу
+            match if_list:
+                case 'all':
+                    return web_elements
+                case 'first':
+                    return web_elements[0]
+                case 'last':
+                    return web_elements[-1]
+                case 'even':
+                    return [web_elements[i] for i in range(0, len(web_elements), 2)]
+                case 'odd':
+                    return [web_elements[i] for i in range(1, len(web_elements), 2)]
+                case list():
+                    return [web_elements[i] for i in if_list]
+                case int():
+                    return web_elements[if_list - 1]
             return web_elements
 
         driver = self.driver
+        # преобразуем локатор в SimpleNamespace
         locator = (
             SimpleNamespace(**locator)
             if isinstance(locator, dict)
             else locator
         )
-
+        # если локатор некорректный, выбрасываем исключение
         if not locator:
-            logger.error('Некорректный локатор.')
             raise ValueError('Некорректный локатор.')
-
+        
         web_elements = None
         try:
+            # Если timeout = 0, сразу попытаться найти элемент без ожидания
             if timeout == 0:
-                web_elements = driver.find_elements(locator.by, locator.selector)
+                web_elements = await asyncio.to_thread(
+                     driver.find_elements, locator.by, locator.selector
+                )
             else:
+                #  выбираем условие ожидания
                 condition = (
                     EC.presence_of_all_elements_located
                     if timeout_for_event == 'presence_of_all_elements_located'
                     else EC.visibility_of_all_elements_located
                 )
-
+                # ожидание элементов
                 web_elements = await asyncio.to_thread(
                     WebDriverWait(driver, timeout).until,
                     condition((locator.by, locator.selector))
                 )
+            # фильтруем список элементов
             return await _parse_elements_list(web_elements, locator)
         except TimeoutException as ex:
-            if MODE in ('dev', 'debug'):
-                logger.error(f'Таймаут при поиске локатора: {locator}, {ex}')
+            logger.error(f'Таймаут для локатора: {locator}', ex, False)
             return None
         except Exception as ex:
-            if MODE in ('dev', 'debug'):
-                logger.error(f'Ошибка при поиске локатора: {locator}, {ex}')
+            logger.error(f'Ошибка локатора: {locator}', ex, False)
             return None
 
-    async def get_webelement_as_screenshot(
-            self,
-            locator: SimpleNamespace | dict,
-            timeout: float = 5,
-            timeout_for_event: str = 'presence_of_element_located',
-            message: Optional[str] = None,
-            typing_speed: float = 0,
-            continue_on_error: bool = True,
-            webelement: Optional[WebElement] = None
-    ) -> BinaryIO | None:
-        """
-        Делает снимок экрана найденного веб-элемента.
 
-        :param locator: Локатор элемента.
-        :type locator: dict | SimpleNamespace
-        :param timeout: Время ожидания.
-        :type timeout: float
-        :param timeout_for_event: Тип события для ожидания.
-        :type timeout_for_event: str
-        :param message: Сообщение для отправки.
-        :type message: Optional[str]
-        :param typing_speed: Скорость печати.
-        :type typing_speed: float
-        :param continue_on_error: Флаг для продолжения при ошибке.
-        :type continue_on_error: bool
-        :param webelement: Готовый веб-элемент (опционально).
-        :type webelement: Optional[WebElement]
-        :return: Снимок экрана в виде байтового потока или None.
-        :rtype: BinaryIO | None
+    async def get_webelement_as_screenshot(
+        self,
+        locator: SimpleNamespace | dict,
+        timeout: float = 5,
+        timeout_for_event: str = 'presence_of_element_located',
+        message: Optional[str] = None,
+        typing_speed: float = 0,
+        continue_on_error: bool = True,
+        webelement: Optional[WebElement] = None
+    ) -> BinaryIO | None:
+        """Takes a screenshot of the located web element.
+
+        Args:
+            locator (dict | SimpleNamespace): Locator as a dictionary or SimpleNamespace.
+            timeout (float, optional): Max wait time for the element to appear. Defaults to 5 seconds.
+            timeout_for_event (str, optional): Type of wait condition. Defaults to 'presence_of_element_located'.
+            message (str, optional): Message to send to the element. Defaults to None.
+            typing_speed (float, optional): Speed of typing for send message events. Defaults to 0.
+            continue_on_error (bool, optional): Whether to continue in case of an error. Defaults to True.
+            webelement (WebElement, optional): Pre-fetched web element. Defaults to None.
+
+        Returns:
+            BinaryIO | None: Binary stream of the screenshot or None if failed.
         """
+         # проверяем тип локатора и преобразуем его в SimpleNamespace если это необходимо
         locator = (
             locator if isinstance(locator, SimpleNamespace)
             else SimpleNamespace(**locator) if isinstance(locator, dict)
             else None
         )
-
+        # если вебэлемент не передан - получаем его
         if not webelement:
-            webelement = await self.get_webelement_by_locator(locator=locator, timeout=timeout,
-                                                             timeout_for_event=timeout_for_event)
-
+            webelement = await self.get_webelement_by_locator(locator = locator, timeout = timeout, timeout_for_event = timeout_for_event)
+        # если вебэлемент не найден
         if not webelement:
             return
-
         try:
-            screenshot_stream = webelement.screenshot_as_png
+            # делаем скриншот
+            screenshot_stream = await asyncio.to_thread(webelement.screenshot_as_png)
             return screenshot_stream
         except Exception as ex:
-            logger.error(f"Не удалось сделать скриншот, {ex}")
-            return None
+            logger.error(f"Не удалось захватить скриншот", ex)
+            return
+
 
     async def execute_event(self,
                              locator: SimpleNamespace | dict,
@@ -575,123 +534,116 @@ class ExecuteLocator:
                              continue_on_error: bool = True,
     ) -> str | list[str] | bytes | list[bytes] | bool:
         """
-        Выполняет события, связанные с локатором.
+        Execute the events associated with a locator.
 
-        :param locator: Локатор, указывающий элемент и событие для выполнения.
-        :type locator: SimpleNamespace | dict
-        :param timeout: Время ожидания для поиска элемента.
-        :type timeout: float
-        :param timeout_for_event: Время ожидания для события.
-        :type timeout_for_event: str
-        :param message: Сообщение для отправки с событием (если применимо).
-        :type message: Optional[str]
-        :param typing_speed: Скорость печати для событий send_keys.
-        :type typing_speed: float
-         :return: True в случае успешного выполнения, False в противном случае.
-        :rtype: str | list[str] | bytes | list[bytes] | bool
+        Args:
+            locator (SimpleNamespace | dict): Locator specifying the element and event to execute.
+            timeout (float): Timeout for locating the element.
+            timeout_for_event (str): Timeout for waiting for the event.
+            message (str, optional): Message to send with the event, if applicable. Defaults to None.
+            typing_speed (float, optional): Speed of typing for send_keys events. Defaults to 0.
+
+        Returns:
+            str | list[str] | bytes | list[bytes] | bool: Returns result if event execution was successful, False otherwise.
         """
+         # проверяем тип локатора и преобразуем его в SimpleNamespace если это необходимо
         locator = (
             locator if isinstance(locator, SimpleNamespace)
             else SimpleNamespace(**locator) if isinstance(locator, dict)
             else None
         )
+        # получаем список событий
         events = str(locator.event).split(";")
         result: list = []
-
-        webelement = await self.get_webelement_by_locator(
+        # получаем вебэлемент
+        web_element = await self.get_webelement_by_locator(
             locator,
             timeout,
             timeout_for_event
         )
-        if not webelement:
+        # если вебэлемент не найден, возвращаем False
+        if not web_element:
             return False
-        webelement = webelement[0] if isinstance(webelement, list) else webelement
-
-        for event in events:
-            if event == "click()":
-                try:
-                    webelement.click()
-                    continue
-                except ElementClickInterceptedException as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.error(f"Клик перехвачен: {locator=}, {ex}")
+        # если вебэлемент список, берем первый элемент
+        web_element = web_element[0] if isinstance(web_element, list) else web_element
+        
+        async def _execute_single_event(event:str, element: WebElement) ->  bool | str | list[str] | bytes | list[bytes] | None:
+            """ Executes single event on web element
+            """
+            match event:
+                case "click()":
+                    try:
+                        await asyncio.to_thread(element.click)
+                        return True
+                    except ElementClickInterceptedException as ex:
+                         logger.error(f"Element click intercepted:  {locator=}", ex, False)
+                         return False
+                    except Exception as ex:
+                        logger.error(f"Element click error: {locator=}", ex, False)
+                        return False
+                case str() if event.startswith("pause("):
+                    match = re.match(r"pause\\((\\d+)\\)", event)
+                    if match:
+                        pause_duration = int(match.group(1))
+                        await asyncio.sleep(pause_duration)
+                        return True
+                    logger.debug(f"Должна быть пауза, но что-то не срослось: {locator=}")
                     return False
-                except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.error(f"Ошибка при клике: {locator=}, {ex}")
-                    return False
-
-            elif event.startswith("pause("):
-                match = re.match(r"pause\((\d+)\)", event)
-                if match:
-                    pause_duration = int(match.group(1))
-                    await asyncio.sleep(pause_duration)
-                    result.append(True)
-                    continue
-                if MODE in ('dev', 'debug'):
-                    logger.debug(f"Некорректная пауза: {locator=}")
-                return False
-
-            elif event == "upload_media()":
-                if not message:
-                    if MODE in ('dev', 'debug'):
-                        logger.debug(
-                            f"Необходимо сообщение для upload_media: {pprint(message, text_color='WHITE',bg_color='RED')}")
-                    return False
-                try:
-                    await asyncio.to_thread(webelement.send_keys, message)
-                    result.append(True)
-                    continue
-                except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.debug(f"Ошибка при загрузке медиа: {message=}, {ex}")
-                    return False
-
-            elif event == "screenshot()":
-                try:
-                    result.append(await self.get_webelement_as_screenshot(locator, webelement=webelement))
-                except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.error(f"Ошибка при снятии скриншота: {locator=}, {ex}")
-                    return False
-
-            elif event == "clear()":
-                try:
-                   await asyncio.to_thread(webelement.clear)
-                except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.error(f"Ошибка при очистке элемента: {locator=}, {ex}")
-                    return False
-
-            elif event.startswith("send_keys("):
-                keys_to_send = event.replace("send_keys(", "").replace(")", "").split("+")
-                try:
-                    actions = ActionChains(self.driver)
-                    for key in keys_to_send:
-                        key = key.strip().strip("\'")
-                        if hasattr(Keys, key):
-                            key_to_send = getattr(Keys, key)
-                            actions.send_keys(key_to_send)
-                    await asyncio.to_thread(actions.perform)
-                except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.error(f"Ошибка при отправке клавиш: {locator=}, {ex}")
-                    return False
-
-            elif event.startswith("type("):
-                message = event.replace("type(", "").replace(")", "")
-                try:
+                case "upload_media()":
+                    if not message:
+                        logger.debug(f"Message is required for upload_media event. Message: {pprint(message, text_color='WHITE',bg_color='RED')}", None, False)
+                        return False
+                    try:
+                        await asyncio.to_thread(element.send_keys, message)
+                        return True
+                    except Exception as ex:
+                        logger.debug(f"Error uploading media: {message=}", ex, False)
+                        return False
+                case "screenshot()":
+                    try:
+                        return await self.get_webelement_as_screenshot(locator, webelement=element)
+                    except Exception as ex:
+                        logger.error(f"Error taking screenshot: {locator=}", ex, False)
+                        return False
+                case "clear()":
+                    try:
+                        await asyncio.to_thread(element.clear)
+                        return True
+                    except Exception as ex:
+                        logger.error(f"Error clearing element: {locator=}", ex, False)
+                        return False
+                case str() if event.startswith("send_keys("):
+                    keys_to_send = event.replace("send_keys(", "").replace(")", "").split("+")
+                    try:
+                        actions = ActionChains(self.driver)
+                        for key in keys_to_send:
+                            key = key.strip().strip("\'")
+                            if hasattr(Keys, key):
+                                key_to_send = getattr(Keys, key)
+                                actions.send_keys(key_to_send)
+                        await asyncio.to_thread(actions.perform)
+                        return True
+                    except Exception as ex:
+                        logger.error(f"Error sending keys: {locator=}", ex, False)
+                        return False
+                case str() if event.startswith("type("):
+                    message = event.replace("type(", "").replace(")", "")
                     if typing_speed:
                         for character in message:
-                            await asyncio.to_thread(webelement.send_keys, character)
+                            await asyncio.to_thread(element.send_keys, character)
                             await asyncio.sleep(typing_speed)
                     else:
-                        await asyncio.to_thread(webelement.send_keys, message)
-                except Exception as ex:
-                     if MODE in ('dev', 'debug'):
-                         logger.error(f"Ошибка при вводе текста: {locator=}, {ex}")
-                     return False
+                        await asyncio.to_thread(element.send_keys, message)
+                    return True
+            return None
 
+        for event in events:
+            event_result = await _execute_single_event(event, web_element)
+            if event_result is False:
+                return False
+            if event_result is not True and event_result is not None:
+                result.append(event_result)
+                
         return result if result else True
 
     async def send_message(self,
@@ -701,83 +653,85 @@ class ExecuteLocator:
                         message: str = None,
                         typing_speed: float = 0,
                         continue_on_error: bool = True,
-
     ) -> bool:
-        """
-        Отправляет сообщение веб-элементу.
+        """Sends a message to a web element.
 
-        :param locator: Информация о расположении элемента на странице.
-        :type locator: dict | SimpleNamespace
-        :param message: Сообщение для отправки.
-        :type message: Optional[str]
-        :param typing_speed: Скорость печати в секундах.
-        :type typing_speed: float
-        :return: True в случае успешной отправки, False в противном случае.
-        :rtype: bool
+        Args:
+            locator (dict | SimpleNamespace): Information about the element's location on the page.
+                                              It can be a dictionary or a SimpleNamespace object.
+            message (str, optional): The message to be sent to the web element. Defaults to `None`.
+            typing_speed (float, optional): Speed of typing the message in seconds. Defaults to 0.
 
-        :Example:
+        Returns:
+            bool: Returns `True` if the message was sent successfully, `False` otherwise.
+
+        Example:
             >>> driver = Driver()
             >>> driver.send_message(locator={"id": "messageBox"}, message="Hello World", typing_speed=0.1)
             True
-       """
-
+        """
+        #  преобразуем локатор в SimpleNamespace
         locator = (
-            locator
-            if isinstance(locator, SimpleNamespace)
+            locator if isinstance(locator, SimpleNamespace)
             else SimpleNamespace(locator)
         )
-
-        def type_message(
+        
+        async def type_message(
             el: WebElement,
             message: str,
-            replace_dict: dict = {";":"SHIFT+ENTER"},
+            replace_dict: dict = {";": "SHIFT+ENTER"},
             typing_speed: float = typing_speed,
         ) -> bool:
-            """
-            Печатает сообщение в веб-элемент с заданной скоростью.
+            """Types a message into a web element with a specified typing speed.
 
-            :param el: Веб-элемент для печати сообщения.
-            :type el: WebElement
-            :param message: Сообщение для печати.
-            :type message: str
-            :param replace_dict: Словарь замен символов.
-            :type replace_dict: dict
-            :param typing_speed: Скорость печати в секундах.
-            :type typing_speed: float
-            :return: True в случае успешной печати, False в противном случае.
-            :rtype: bool
-            :Example:
+            Args:
+                el (WebElement): The web element to type the message into.
+                message (str): The message to type.
+                replace_dict (dict, optional): Dictionary for character replacements in the message. Defaults to {";": "SHIFT+ENTER"}.
+                typing_speed (float, optional): Speed of typing the message in seconds. Defaults to 0.
+
+            Returns:
+                bool: Returns `True` if the message was typed successfully, `False` otherwise.
+
+            Example:
                 >>> element = driver.get_element_by_id("messageBox")
                 >>> driver.type_message(el=element, message="Hello World", typing_speed=0.1)
                 True
             """
-
+            # разбиваем сообщение на слова
             message = message.split(" ")
-
+            # проходим по всем словам
             for word in message:
                 word += " "
                 try:
+                    # проходим по всем буквам в слове
                     for letter in word:
+                        # если есть совпадение в словаре замен - выполняем замену
                         if letter in replace_dict:
-                            self.actions.key_down(Keys.SHIFT).send_keys(
-                                Keys.ENTER
-                            ).key_up(Keys.SHIFT)
-                            self.actions.perform()
-
+                            keys_to_send = replace_dict[letter].split('+')
+                            actions = ActionChains(self.driver)
+                            for key in keys_to_send:
+                                key_to_send = getattr(Keys, key)
+                                actions.key_down(key_to_send)
+                            actions.send_keys(Keys.ENTER)
+                            for key in reversed(keys_to_send):
+                                key_to_send = getattr(Keys, key)
+                                actions.key_up(key_to_send)
+                            await asyncio.to_thread(actions.perform)
+                        # если нет - отправляем букву
                         else:
                             self.actions.send_keys(letter)
                             self.actions.pause(typing_speed)
-                            self.actions.perform()
+                            await asyncio.to_thread(self.actions.perform)
                 except Exception as ex:
-                    if MODE in ('dev', 'debug'):
-                        logger.error(f"Ошибка при вводе сообщения: {message=}, {word=}, {letter=}, {ex}")
-                    continue
+                    logger.error(f"Error typing message\n{message=}\n{word=}\n{letter=}", ex)
+                    continue  # если была ошибка в передаче буквы - пока игнорую ёё
             return True
 
-        webelement = await self.get_webelement_by_locator(locator = locator, timeout =  timeout, timeout_for_event = timeout_for_event)
-        if not webelement or (isinstance(webelement, list) and not webelement):
+        # получаем вебэлемент
+        webelement:WebElement = await self.get_webelement_by_locator(locator = locator, timeout =  timeout, timeout_for_event = timeout_for_event)
+        # если вебэлемент не найден, возвращаем False
+        if not webelement or (isinstance(webelement, list) and len(webelement) == 0):
             return False
-        webelement = webelement[0] if isinstance(webelement, list) else webelement
-        self.actions.move_to_element(webelement)
-        type_message(
-            el=we
+        # если вебэлемент - список, берем первый элемент
+        webelement = webelement[0] if isinstance(webe

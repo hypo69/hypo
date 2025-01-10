@@ -47,7 +47,7 @@ from typing import List, Any, Dict
 from src import gs  # Corrected import
 from src.endpoints.prestashop import PrestaShop  # Explicit import
 from src.category import Category
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 

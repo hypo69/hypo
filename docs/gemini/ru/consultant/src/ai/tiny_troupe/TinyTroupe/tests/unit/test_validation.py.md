@@ -1,88 +1,118 @@
 # Анализ кода модуля `test_validation.py`
 
-**Качество кода**
-8
--  Плюсы
-    - Код хорошо структурирован и понятен.
-    - Используются фикстуры `pytest` для подготовки тестовой среды.
-    - Тесты покрывают различные сценарии валидации персонажей.
-    - Присутствует вывод результатов валидации и обоснования.
--  Минусы
-    - Отсутствуют docstring для модуля и функций.
-    - Не используется `j_loads` или `j_loads_ns` для загрузки данных, хотя в данном случае это не требуется, так как нет загрузки из файлов.
-    - Избыточное добавление путей в `sys.path`, так как все импорты внутри проекта.
-    - Некоторые переменные и методы имеют не информативные имена.
-    - Не используется логирование ошибок через `logger.error`.
+**Качество кода:** 7/10
+- **Плюсы:**
+    - Код разбит на логические блоки, что облегчает чтение и понимание.
+    - Используются `TinyPersonFactory` и `TinyPersonValidator`, что говорит о модульности и повторном использовании кода.
+    - Наличие ассертов для проверки корректности работы валидатора.
+    - Присутствуют комментарии, объясняющие предназначение различных блоков кода.
 
-**Рекомендации по улучшению**
-1. Добавить docstring для модуля и функций в формате RST.
-2. Убрать лишние добавления путей в `sys.path`.
-3. Использовать более информативные имена переменных.
-4. Добавить логирование ошибок через `logger.error`.
-5. Улучшить читаемость кода, разбив на более мелкие функции там где это уместно.
-6.  Вместо прямого вывода в консоль `print`,  использовать  возможности pytest для вывода  результатов (например, `pytest.fail` для проваленных тестов с детальным сообщением)
+- **Минусы:**
+    - Отсутствует импорт `logger`.
+    - Использование `print` для вывода информации вместо логирования.
+    - Дублирование кода при создании `TinyPersonFactory` для каждого персонажа.
+    - Не используется `j_loads` или `j_loads_ns` для загрузки данных из файлов (если требуется).
+    - Нет документации в формате RST для функций и модуля.
+    - Пути в `sys.path.append` могут быть относительными и требуют доработки.
 
-**Оптимизированный код**
+**Рекомендации по улучшению:**
+
+1.  Добавить импорт `logger` из `src.logger.logger`.
+2.  Заменить `print` на `logger.info` или `logger.debug` для логирования информации.
+3.  Унифицировать создание `TinyPersonFactory` для уменьшения дублирования кода.
+4.  Использовать `j_loads` или `j_loads_ns` для загрузки данных из файлов, если необходимо.
+5.  Добавить docstring в формате RST для модуля и функций.
+6.  Использовать более точные и понятные имена переменных.
+7.  Сделать пути в `sys.path.append` более надежными, желательно абсолютными.
+8.  Добавить проверку на корректность данных, полученных из `TinyPersonFactory`.
+9.  Вынести создание персонажей и их валидацию в отдельные функции.
+10. Добавить обработку исключений с использованием `logger.error`.
+
+**Оптимизированный код:**
+
 ```python
 """
 Модуль для тестирования валидации персонажей.
-================================================
+=========================================================================================
 
-Этот модуль содержит тесты для проверки функциональности валидации персонажей,
-используя класс :class:`TinyPersonValidator`.
-Тесты проверяют соответствие сгенерированных персонажей заданным ожиданиям.
+Этот модуль содержит тесты для проверки валидации персонажей, созданных с помощью
+класса `TinyPersonFactory` и валидированных с использованием `TinyPersonValidator`.
+Тесты включают проверку соответствия сгенерированных персонажей заданным ожиданиям.
+
+Пример использования
+--------------------
+
+Пример запуска тестов:
+
+.. code-block:: python
+
+    pytest test_validation.py
 """
 import pytest
-# import os # не используется
-# import sys # лишние импорты
-# sys.path.append('../../tinytroupe/')
-# sys.path.append('../../')
-# sys.path.append('../')
+import os
+import sys
+from pathlib import Path
 
+# Используем абсолютные пути
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+sys.path.append(str(PROJECT_ROOT / 'src'))
+sys.path.append(str(PROJECT_ROOT / 'src' / 'ai' / 'tiny_troupe'))
+
+from src.logger.logger import logger  # Импорт logger
 from tinytroupe.examples import create_oscar_the_architect
 from tinytroupe.control import Simulation
 import tinytroupe.control as control
 from tinytroupe.factory import TinyPersonFactory
 from tinytroupe.validation import TinyPersonValidator
-from src.logger.logger import logger # импорт логера
-from testing_utils import *
+
+from tests.unit.testing_utils import setup # Исправлен импорт
 
 
-def _validate_person(person_factory: TinyPersonFactory, expectations: str, test_name: str, expected_score: float):
+def validate_person_with_expectations(spec: str, expectations: str, test_name: str) -> None:
     """
-    Проводит валидацию персонажа и проверяет полученный результат.
+    Проверяет валидацию персонажа на соответствие ожиданиям.
 
-    :param person_factory: Фабрика для создания персонажа.
-    :param expectations: Строка с ожиданиями относительно персонажа.
-    :param test_name: Имя теста для логирования.
-    :param expected_score: Ожидаемый минимальный балл валидации.
+    Args:
+        spec (str): Спецификация персонажа.
+        expectations (str): Ожидания относительно персонажа.
+        test_name (str): Имя теста для логирования.
+
+    Raises:
+        AssertionError: Если оценка валидации ниже 0.5.
+
     """
-    person = person_factory.generate_person()
-    score, justification = TinyPersonValidator.validate_person(
-        person, expectations=expectations, include_agent_spec=False, max_content_length=None
-    )
+    try:
+        # Создает фабрику персонажей
+        factory = TinyPersonFactory(spec)
+        # Генерирует персонажа
+        person = factory.generate_person()
+        # Валидирует персонажа
+        score, justification = TinyPersonValidator.validate_person(
+            person, expectations=expectations, include_agent_spec=False, max_content_length=None
+        )
+        logger.info(f'{test_name} score: {score}')
+        logger.info(f'{test_name} justification: {justification}')
+        # Проверяет, что оценка валидации больше 0.5
+        assert score > 0.5, f'Validation score is too low: {score:.2f}'
+    except Exception as e:
+        logger.error(f'Error during {test_name} validation: {e}')
+        raise
 
-    print(f"{test_name} score: ", score)
-    print(f"{test_name} justification: ", justification)
-    if score < expected_score:
-        logger.error(f"Validation score is too low: {score:.2f} for {test_name}")
-        pytest.fail(f"Validation score is too low: {score:.2f} for {test_name}")
 
-    assert score > expected_score, f"Validation score is too low: {score:.2f} for {test_name}"
-
-
-def test_validate_person(setup):
+def test_validate_person(setup) -> None:
     """
-    Тестирует валидацию различных персонажей с различными ожиданиями.
+    Тестирует валидацию различных персонажей с заданными ожиданиями.
 
-    :param setup: Фикстура pytest.
+    Args:
+        setup: Фикстура для настройки тестового окружения.
     """
-    # Тест для банкира
+    ##########################
+    # Banker
+    ##########################
     banker_spec = """
     A vice-president of one of the largest brazillian banks. Has a degree in engineering and an MBA in finance. 
     Is facing a lot of pressure from the board of directors to fight off the competition from the fintechs.    
     """
-    banker_factory = TinyPersonFactory(banker_spec)
     banker_expectations = """
     He/she is:
     - Wealthy
@@ -102,14 +132,14 @@ def test_validate_person(setup):
     - Is a bit of a snob
     - Might pretend to be a hard-core woke, but in reality that's just a facade to climb the corporate ladder  
     """
-    _validate_person(banker_factory, banker_expectations, "Banker", 0.5)
+    validate_person_with_expectations(banker_spec, banker_expectations, 'Banker')
 
-
-    # Тест для монаха
+    ##########################
+    # Busy Knowledge Worker
+    ##########################
     monk_spec = """
     A poor buddhist monk living alone and isolated in a remote montain.
     """
-    monk_spec_factory = TinyPersonFactory(monk_spec)
     monk_expectations = """
     Some characteristics of this person:
     - Is very poor, and in fact do not seek money
@@ -118,18 +148,23 @@ def test_validate_person(setup):
     - Is very humble and does not seek attention
     - Honesty is a core value    
     """
-    _validate_person(monk_spec_factory, monk_expectations, "Monk", 0.5)
+    validate_person_with_expectations(monk_spec, monk_expectations, 'Monk')
 
-    # Тест на несовпадение ожиданий
-    monk = monk_spec_factory.generate_person()
-    wrong_expectations_score, wrong_expectations_justification = TinyPersonValidator.validate_person(
-        monk, expectations=banker_expectations, include_agent_spec=False, max_content_length=None
-    )
-    print("Wrong expectations score: ", wrong_expectations_score)
-    print("Wrong expectations justification: ", wrong_expectations_justification)
-    if wrong_expectations_score > 0.5:
-        logger.error(f"Validation score is too high: {wrong_expectations_score:.2f} for wrong expectations")
-        pytest.fail(f"Validation score is too high: {wrong_expectations_score:.2f} for wrong expectations")
-
-
-    assert wrong_expectations_score < 0.5, f"Validation score is too high: {wrong_expectations_score:.2f}"
+    # Проверка с неправильными ожиданиями
+    try:
+        # Создаем фабрику персонажей
+        monk_factory = TinyPersonFactory(monk_spec)
+        # Генерируем персонажа
+        monk = monk_factory.generate_person()
+        # Валидируем персонажа с неправильными ожиданиями
+        wrong_expectations_score, wrong_expectations_justification = TinyPersonValidator.validate_person(
+            monk, expectations=banker_expectations, include_agent_spec=False, max_content_length=None
+        )
+        # Проверяем, что оценка валидации меньше 0.5
+        assert wrong_expectations_score < 0.5, f'Validation score is too high: {wrong_expectations_score:.2f}'
+        logger.info(f'Wrong expectations score: {wrong_expectations_score}')
+        logger.info(f'Wrong expectations justification: {wrong_expectations_justification}')
+    except Exception as e:
+        logger.error(f'Error during wrong expectations validation: {e}')
+        raise
+```

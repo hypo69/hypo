@@ -1,47 +1,40 @@
 # Анализ кода модуля `__init__.py`
 
 **Качество кода**
-8
- -  Плюсы
-    -   Наличие docstring модуля
-    -   Объявлена константа MODE
- -  Минусы
-    -   Не все импорты, используемые в проекте, прописаны в файле, закомментированы не используемые импорты
-    -   Отсутствуют docstring для константы MODE
-    -   Нет описания модуля в docstring
+9
+- Плюсы
+    - Код содержит информацию о модуле и кодировке.
+    - Есть комментарии, указывающие на возможные импорты.
+- Минусы
+    - Отсутствует импорт модуля логирования.
+    - Отсутствует документация.
+    - Не используются импорты.
 
 **Рекомендации по улучшению**
-1.  Добавить импорты необходимых модулей.
-2.  Удалить неиспользуемые закомментированные импорты.
-3.  Добавить описание константы `MODE` в формате RST.
-4.  Дополнить docstring модуля описанием его назначения.
+
+1.  Добавить описание модуля в формате reStructuredText.
+2.  Импортировать модуль логирования `logger`.
+3.  Удалить неиспользуемые импорты или закомментировать их.
+4.  Добавить в документацию краткое описание модуля.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль инициализации webdriver
-===========================================================
-
-Модуль содержит инициализацию веб-драйверов для различных браузеров.
-
-Этот модуль предназначен для управления веб-драйверами, такими как Chrome, Firefox, Edge, BrowserStack, Playwright и CrawleePython.
-Используется для автоматизации тестирования веб-приложений.
+.. module:: src.webdriver
+   :platform: Windows, Unix
+   :synopsis: Пакет содержит модули для работы с различными веб-драйверами
 """
-from src.webdriver.driver import Driver
-from src.webdriver.chrome import Chrome
-from src.webdriver.firefox import Firefox
-from src.webdriver.edge import Edge
-from src.webdriver.bs import BS
-from src.webdriver.playwright import Playwrid
-from src.webdriver.crawlee_python import CrawleePython
 
+#  импортируем logger для логирования
+from src.logger.logger import logger
 
-#: Режим работы вебдрайвера. Может быть 'dev' или 'prod'
-
-
+# from .driver import Driver
+# from .chrome import Chrome
+# from .firefox import Firefox
+# from .edge import Edge
+# from .bs import BS
+# from .playwright import Playwrid
+# from .crawlee_python import CrawleePython
 ```

@@ -21,7 +21,7 @@ import header
 from src import gs
 from src.endpoints.prestashop import PrestaShop  # Explicit import
 from src.category import Category
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger import logger
 
 

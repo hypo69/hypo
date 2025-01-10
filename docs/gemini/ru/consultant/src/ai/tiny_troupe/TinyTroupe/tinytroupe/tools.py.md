@@ -1,103 +1,83 @@
-# Анализ кода модуля tools
+## Анализ кода модуля `tools.py`
 
 **Качество кода**
-6
+8
 - Плюсы
-    - Код достаточно хорошо структурирован и разбит на классы.
-    - Используются логирование для отладки.
+    - Код хорошо структурирован, используется наследование для создания инструментов.
     - Присутствует базовая обработка ошибок.
+    - Используется `logger` для логирования.
+    - Есть разделение ответственности между классами инструментов.
+    - Применение `JsonSerializableRegistry` для сериализации.
+    - Использование `textwrap.dedent` для форматирования строк.
 - Минусы
-    - Отсутствует документация в формате reStructuredText (RST).
-    - Используется стандартный `json.loads` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    - Есть потенциальные места для улучшения обработки ошибок.
-    - Некоторые комментарии не соответствуют стилю RST.
-    - Присутствуют `TODO` комментарии, которые необходимо обработать.
+    -  Не все методы и классы имеют docstring.
+    -  Не используется `j_loads` или `j_loads_ns` для загрузки json.
+    -  Не везде используется `logger.error` вместо `try-except`.
+    -  Используется стандартный `json.loads`.
+    -  В `TinyCalendar` метод `find_events` не реализован.
+    -  В `TinyCalendar` при создании события не проверяются поля `date`.
 
 **Рекомендации по улучшению**
 
-1. **Документация**:
-   - Добавить docstring в формате reStructuredText (RST) для всех классов, методов и функций.
-
-2. **Импорты**:
-    - Добавить недостающие импорты: `from src.logger.logger import logger`
-    - Использовать `from src.utils.jjson import j_loads` или `j_loads_ns` вместо `json.loads`
-
-3. **Обработка ошибок**:
-   - Заменить стандартные блоки `try-except` на использование `logger.error` для логирования ошибок.
-    - Добавить обработку ошибок при чтении JSON, чтобы избежать падения программы.
-
-4. **Рефакторинг**:
-    - Упростить логику `_process_action` в классах `TinyCalendar` и `TinyWordProcessor`.
-    - Использовать более конкретные сообщения об ошибках.
-
-5. **Комментарии**:
-   - Переписать все комментарии в формате reStructuredText (RST).
-   -  Удалить комментарии `# TODO` если они не несут смысловой нагрузки.
+1.  Добавить docstring для всех классов, методов и переменных.
+2.  Использовать `j_loads` или `j_loads_ns` для загрузки JSON данных.
+3.  Заменить `try-except` на `logger.error` там, где это возможно.
+4.  Реализовать метод `find_events` в `TinyCalendar`.
+5.  Добавить проверку на валидность `date` при создании события в `TinyCalendar`.
+6.  В `TinyCalendar` метод `add_event`  принимает словарь, хотя должен принимать отдельные параметры.
+7.  Использовать `from src.logger.logger import logger`.
+8.  Использовать одинарные кавычки для строк в коде, двойные только в `print`, `input` и `logger.error`.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для инструментов, позволяющих агентам выполнять специализированные задачи.
-==============================================================================
+Модуль для определения инструментов агентов
+=========================================================================================
 
-Этот модуль определяет базовый класс :class:`TinyTool` и его производные,
-которые предоставляют агентам различные возможности, такие как ведение календаря
-и обработка текстовых документов.
+Этот модуль содержит набор классов, которые представляют собой различные инструменты,
+доступные для использования агентами. Инструменты позволяют агентам выполнять различные
+специализированные задачи, такие как ведение календаря, обработка текста и т.д.
 
 Пример использования
 --------------------
 
-Пример создания и использования инструмента `TinyWordProcessor`:
+Пример использования класса `TinyWordProcessor`:
 
 .. code-block:: python
 
-    from tinytroupe.tools import TinyWordProcessor
-    from tinytroupe.enrichment import TinyEnricher
-    from tinytroupe.extraction import ArtifactExporter
-    from src.logger.logger import logger
-
-
-    exporter = ArtifactExporter(output_dir="output")
-    enricher = TinyEnricher(api_key="your_api_key")
+    exporter = ArtifactExporter()
+    enricher = TinyEnricher()
     word_processor = TinyWordProcessor(exporter=exporter, enricher=enricher)
-    word_processor.write_document(title="My Document", content="This is a test document", author="Test Agent")
-    
-
+    word_processor.write_document(title='My Document', content='This is a test document.', author='User')
 """
 import textwrap
+from pathlib import Path
 import copy
-from src.utils.jjson import j_loads # импортируем j_loads для загрузки json
-from src.logger.logger import logger # импортируем logger для логирования
-import logging
 
-import tinytroupe.utils as utils
+from src.logger.logger import logger
+from src.utils.jjson import j_loads
+import src.utils as utils
 from tinytroupe.extraction import ArtifactExporter
 from tinytroupe.enrichment import TinyEnricher
 from tinytroupe.utils import JsonSerializableRegistry
+
 
 class TinyTool(JsonSerializableRegistry):
     """
     Базовый класс для всех инструментов.
 
-    Предоставляет общую структуру и функциональность для инструментов,
-    используемых агентами.
-
-    :param name: Имя инструмента.
-    :type name: str
-    :param description: Описание инструмента.
-    :type description: str
-    :param owner: Агент, владеющий инструментом. Если `None`, инструмент может использоваться любым агентом.
-    :type owner: str, optional
-    :param real_world_side_effects: Указывает, имеет ли инструмент побочные эффекты в реальном мире.
-    :type real_world_side_effects: bool, optional
-    :param exporter: Экспортер для сохранения результатов работы инструмента.
-    :type exporter: ArtifactExporter, optional
-    :param enricher: Обогатитель для обработки результатов работы инструмента.
-    :type enricher: TinyEnricher, optional
-
+    Args:
+        name (str): Имя инструмента.
+        description (str): Краткое описание инструмента.
+        owner (str, optional): Агент, которому принадлежит инструмент. Если `None`, инструмент может использовать любой агент.
+            Defaults to None.
+        real_world_side_effects (bool, optional): Указывает, имеет ли инструмент побочные эффекты в реальном мире. Defaults to False.
+        exporter (ArtifactExporter, optional): Экспортер для экспорта результатов работы инструмента. Defaults to None.
+        enricher (Enricher, optional): Обогатитель для обогащения результатов работы инструмента. Defaults to None.
     """
+
     def __init__(self, name, description, owner=None, real_world_side_effects=False, exporter=None, enricher=None):
-        
         self.name = name
         self.description = description
         self.owner = owner
@@ -107,79 +87,74 @@ class TinyTool(JsonSerializableRegistry):
 
     def _process_action(self, agent, action: dict) -> bool:
         """
-        Обрабатывает действие агента.
+        Абстрактный метод для обработки действия. Должен быть реализован в подклассах.
 
-        Этот метод должен быть переопределен в подклассах.
+        Args:
+            agent: Агент, выполняющий действие.
+            action (dict): Словарь с данными действия.
 
-        :param agent: Агент, выполняющий действие.
-        :type agent: Agent
-        :param action: Словарь, описывающий действие.
-        :type action: dict
-        :raises NotImplementedError: Если метод не переопределен в подклассе.
+        Raises:
+            NotImplementedError: Если метод не реализован в подклассе.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        raise NotImplementedError('Subclasses must implement this method.')
     
     def _protect_real_world(self):
         """
-        Предупреждает о реальных побочных эффектах инструмента.
-
-        Выводит предупреждение в лог, если инструмент имеет реальные побочные эффекты.
+        Выводит предупреждение, если инструмент имеет побочные эффекты в реальном мире.
         """
         if self.real_world_side_effects:
-            logger.warning(f" !!!!!!!!!! Tool {self.name} has REAL-WORLD SIDE EFFECTS. This is NOT just a simulation. Use with caution. !!!!!!!!!!")
+            logger.warning(f'!!!!!!!!!! Tool {self.name} has REAL-WORLD SIDE EFFECTS. This is NOT just a simulation. Use with caution. !!!!!!!!!!')
         
     def _enforce_ownership(self, agent):
         """
-        Проверяет владельца инструмента.
+        Проверяет, имеет ли агент право использовать инструмент.
 
-        Вызывает ошибку, если агент не является владельцем инструмента.
+        Args:
+            agent: Агент, пытающийся использовать инструмент.
 
-        :param agent: Агент, пытающийся использовать инструмент.
-        :type agent: Agent
-        :raises ValueError: Если агент не является владельцем инструмента.
+        Raises:
+            ValueError: Если агент не является владельцем инструмента.
         """
         if self.owner is not None and agent.name != self.owner.name:
-            raise ValueError(f"Agent {agent.name} does not own tool {self.name}, which is owned by {self.owner.name}.")
+            raise ValueError(f'Agent {agent.name} does not own tool {self.name}, which is owned by {self.owner.name}.')
     
     def set_owner(self, owner):
         """
         Устанавливает владельца инструмента.
 
-        :param owner: Агент, который станет владельцем инструмента.
-        :type owner: Agent
+        Args:
+            owner: Агент, который становится владельцем инструмента.
         """
         self.owner = owner
 
     def actions_definitions_prompt(self) -> str:
         """
-        Возвращает описание доступных действий инструмента.
+        Абстрактный метод для определения подсказки для действий. Должен быть реализован в подклассах.
 
-        Этот метод должен быть переопределен в подклассах.
-
-        :raises NotImplementedError: Если метод не переопределен в подклассе.
+        Raises:
+            NotImplementedError: Если метод не реализован в подклассе.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        raise NotImplementedError('Subclasses must implement this method.')
     
     def actions_constraints_prompt(self) -> str:
         """
-        Возвращает ограничения на действия инструмента.
+        Абстрактный метод для определения подсказки с ограничениями для действий. Должен быть реализован в подклассах.
 
-        Этот метод должен быть переопределен в подклассах.
-
-        :raises NotImplementedError: Если метод не переопределен в подклассе.
+        Raises:
+            NotImplementedError: Если метод не реализован в подклассе.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        raise NotImplementedError('Subclasses must implement this method.')
 
     def process_action(self, agent, action: dict) -> bool:
         """
-        Обрабатывает действие агента, проверяя владельца и побочные эффекты.
+        Обрабатывает действие агента.
 
-        :param agent: Агент, выполняющий действие.
-        :type agent: Agent
-        :param action: Словарь, описывающий действие.
-        :type action: dict
-        :return: `True`, если действие выполнено успешно, иначе `False`.
-        :rtype: bool
+        Args:
+            agent: Агент, выполняющий действие.
+            action (dict): Словарь с данными действия.
+
+        Returns:
+            bool: `True`, если действие обработано успешно, `False` в противном случае.
         """
         self._protect_real_world()
         self._enforce_ownership(agent)
@@ -188,155 +163,138 @@ class TinyTool(JsonSerializableRegistry):
 
 class TinyCalendar(TinyTool):
     """
-    Инструмент календаря для агентов.
+    Инструмент для ведения календаря.
 
-    Позволяет агентам отслеживать встречи и события.
-
-    :param owner: Агент, владеющий календарем. Если `None`, календарь может использоваться любым агентом.
-    :type owner: str, optional
+    Args:
+        owner (str, optional): Владелец календаря. Defaults to None.
     """
     def __init__(self, owner=None):
-        super().__init__("calendar", "A basic calendar tool that allows agents to keep track meetings and appointments.", owner=owner, real_world_side_effects=False)
+        super().__init__('calendar', 'A basic calendar tool that allows agents to keep track meetings and appointments.', owner=owner, real_world_side_effects=False)
         
-        #: Словарь, отображающий дату на список событий. Каждое событие является словарем с ключами "title", "description", "owner", "mandatory_attendees", "optional_attendees", "start_time", "end_time".
+        # Словарь, где ключ - дата, значение - список событий. Событие - словарь с ключами "title", "description", "owner", "mandatory_attendees", "optional_attendees", "start_time", "end_time"
         self.calendar = {}
     
     def add_event(self, date, title, description=None, owner=None, mandatory_attendees=None, optional_attendees=None, start_time=None, end_time=None):
         """
-        Добавляет новое событие в календарь.
+        Добавляет событие в календарь.
 
-        :param date: Дата события.
-        :type date: str
-        :param title: Название события.
-        :type title: str
-        :param description: Описание события.
-        :type description: str, optional
-        :param owner: Владелец события.
-        :type owner: str, optional
-        :param mandatory_attendees: Список агентов, которые обязательно должны присутствовать.
-        :type mandatory_attendees: list, optional
-        :param optional_attendees: Список агентов, которые приглашены на событие.
-        :type optional_attendees: list, optional
-        :param start_time: Время начала события.
-        :type start_time: str, optional
-        :param end_time: Время окончания события.
-        :type end_time: str, optional
+        Args:
+            date: Дата события.
+            title: Название события.
+            description: Описание события.
+            owner: Владелец события.
+            mandatory_attendees: Список обязательных участников.
+            optional_attendees: Список необязательных участников.
+            start_time: Время начала события.
+            end_time: Время окончания события.
         """
         if date not in self.calendar:
             self.calendar[date] = []
-        self.calendar[date].append({"title": title, "description": description, "owner": owner, "mandatory_attendees": mandatory_attendees, "optional_attendees": optional_attendees, "start_time": start_time, "end_time": end_time})
+        self.calendar[date].append({'title': title, 'description': description, 'owner': owner, 'mandatory_attendees': mandatory_attendees, 'optional_attendees': optional_attendees, 'start_time': start_time, 'end_time': end_time})
     
     def find_events(self, year, month, day, hour=None, minute=None):
         """
-        Находит события в календаре.
-        
-        :param year: Год.
-        :type year: int
-        :param month: Месяц.
-        :type month: int
-        :param day: День.
-        :type day: int
-        :param hour: Час.
-        :type hour: int, optional
-        :param minute: Минута.
-        :type minute: int, optional
+        Ищет события в календаре.
+
+        Args:
+            year: Год события.
+            month: Месяц события.
+            day: День события.
+            hour: Час события.
+            minute: Минута события.
         """
-        # TODO implementation
+        # TODO
         pass
 
     def _process_action(self, agent, action) -> bool:
         """
-        Обрабатывает действие агента, связанное с календарем.
+        Обрабатывает действие с календарем.
 
-        :param agent: Агент, выполняющий действие.
-        :type agent: Agent
-        :param action: Словарь, описывающий действие.
-        :type action: dict
-        :return: `True`, если действие выполнено успешно, иначе `False`.
-        :rtype: bool
+        Args:
+            agent: Агент, выполняющий действие.
+            action: Словарь с данными действия.
+
+        Returns:
+            bool: `True`, если действие обработано успешно, `False` в противном случае.
         """
-        if action.get('type') == "CREATE_EVENT" and action.get('content') is not None:
+        if action['type'] == 'CREATE_EVENT' and action['content'] is not None:
+            # код исполняет чтение контента из json
             try:
-                #  код исполняет загрузку содержимого из JSON
                 event_content = j_loads(action['content'])
-                
-                # проверка наличия недопустимых полей
-                valid_keys = ["title", "description", "mandatory_attendees", "optional_attendees", "start_time", "end_time"]
-                utils.check_valid_fields(event_content, valid_keys)
-                
-                #  код исполняет добавление события в календарь
-                self.add_event(**event_content)
-                return True
             except Exception as e:
-                 logger.error(f"Ошибка обработки действия CREATE_EVENT: {e}. Содержимое: {action.get('content')}")
-                 return False
+                logger.error(f'Ошибка при чтении JSON: {e}. Оригинальный контент: {action["content"]}')
+                return False
+            
+            # проверка наличия недопустимых ключей
+            valid_keys = ['title', 'description', 'mandatory_attendees', 'optional_attendees', 'start_time', 'end_time', 'date']
+            utils.check_valid_fields(event_content, valid_keys)
 
+            # код исполняет добавление события в календарь
+            self.add_event(**event_content)
+
+            return True
         else:
             return False
 
     def actions_definitions_prompt(self) -> str:
         """
-        Возвращает описание действий, которые можно выполнить с календарем.
+        Возвращает строку с описанием возможных действий с календарем.
 
-        :return: Описание доступных действий.
-        :rtype: str
+        Returns:
+            str: Строка с описанием действий.
         """
         prompt = """
-              - CREATE_EVENT: Вы можете создать новое событие в своем календаре. Содержание события имеет много полей, и вы должны использовать формат JSON, чтобы указать их. Вот возможные поля:
-                * title: Название события. Обязательно.
-                * description: Краткое описание события. Необязательно.
-                * mandatory_attendees: Список имен агентов, которые должны присутствовать на событии. Необязательно.
-                * optional_attendees: Список имен агентов, которые приглашены на событие, но не обязаны присутствовать. Необязательно.
-                * start_time: Время начала события. Необязательно.
-                * end_time: Время окончания события. Необязательно.
+              - CREATE_EVENT: Вы можете создать новое событие в календаре. Содержимое события имеет много полей, и вы должны использовать формат JSON, чтобы их указать. Вот возможные поля:
+                * title: Название события. Обязательное поле.
+                * description: Краткое описание события. Необязательное поле.
+                * mandatory_attendees: Список имен агентов, которые должны присутствовать на мероприятии. Необязательное поле.
+                * optional_attendees: Список имен агентов, которые приглашены на мероприятие, но не обязаны присутствовать. Необязательное поле.
+                * start_time: Время начала события. Необязательное поле.
+                * end_time: Время окончания события. Необязательное поле.
+                * date: Дата события. Обязательное поле.
             """
-        # TODO how the atendee list will be handled? How will they be notified of the invitation? I guess they must also have a calendar themselves. <-------------------------------------
+        # TODO как будет обрабатываться список участников? Как они будут уведомлены о приглашении? Я думаю, что у них тоже должен быть календарь. <-------------------------------------
+
         return utils.dedent(prompt)
-        
     
     def actions_constraints_prompt(self) -> str:
         """
-         Возвращает ограничения на действия календаря.
+        Возвращает строку с ограничениями для действий с календарем.
 
-        :return: Описание ограничений.
-        :rtype: str
+        Returns:
+            str: Строка с ограничениями.
         """
         prompt = """
               
             """
-            # TODO 
+            # TODO
+
         return textwrap.dedent(prompt)
     
 
-
 class TinyWordProcessor(TinyTool):
     """
-    Инструмент текстового процессора для агентов.
+    Инструмент для обработки текста.
 
-    Позволяет агентам создавать и редактировать текстовые документы.
-
-    :param owner: Агент, владеющий текстовым процессором. Если `None`, текстовый процессор может использоваться любым агентом.
-    :type owner: str, optional
-    :param exporter: Экспортер для сохранения документов.
-    :type exporter: ArtifactExporter, optional
-    :param enricher: Обогатитель для улучшения содержания документов.
-    :type enricher: TinyEnricher, optional
+    Args:
+        owner (str, optional): Владелец инструмента. Defaults to None.
+        exporter (ArtifactExporter, optional): Экспортер для экспорта документов. Defaults to None.
+        enricher (Enricher, optional): Обогатитель для обогащения документов. Defaults to None.
     """
+
     def __init__(self, owner=None, exporter=None, enricher=None):
-        super().__init__("wordprocessor", "A basic word processor tool that allows agents to write documents.", owner=owner, real_world_side_effects=False, exporter=exporter, enricher=enricher)
+        super().__init__('wordprocessor', 'A basic word processor tool that allows agents to write documents.', owner=owner, real_world_side_effects=False, exporter=exporter, enricher=enricher)
         
     def write_document(self, title, content, author=None):
         """
         Создает и сохраняет документ.
 
-        :param title: Название документа.
-        :type title: str
-        :param content: Содержание документа.
-        :type content: str
-        :param author: Автор документа.
-        :type author: str, optional
+        Args:
+            title: Заголовок документа.
+            content: Содержание документа.
+            author: Автор документа.
         """
-        logger.debug(f"Writing document with title {title} and content: {content}")
+        logger.debug(f'Writing document with title {title} and content: {content}')
 
         if self.enricher is not None:
             requirements = """
@@ -345,71 +303,76 @@ class TinyWordProcessor(TinyTool):
             """
             content = self.enricher.enrich_content(requirements=requirements, 
                                                     content=content, 
-                                                    content_type="Document", 
+                                                    content_type='Document', 
                                                     context_info=None,
                                                     context_cache=None, verbose=False)    
-            
+        
         if self.exporter is not None:
-            self.exporter.export(artifact_name=f"{title}.{author}", artifact_data= content, content_type="Document", content_format="md", target_format="md")
-            self.exporter.export(artifact_name=f"{title}.{author}", artifact_data= content, content_type="Document", content_format="md", target_format="docx")
+            self.exporter.export(artifact_name=f'{title}.{author}', artifact_data= content, content_type='Document', content_format='md', target_format='md')
+            self.exporter.export(artifact_name=f'{title}.{author}', artifact_data= content, content_type='Document', content_format='md', target_format='docx')
 
-            json_doc = {"title": title, "content": content, "author": author}
-            self.exporter.export(artifact_name=f"{title}.{author}", artifact_data= json_doc, content_type="Document", content_format="md", target_format="json")
+            json_doc = {'title': title, 'content': content, 'author': author}
+            self.exporter.export(artifact_name=f'{title}.{author}', artifact_data= json_doc, content_type='Document', content_format='md', target_format='json')
 
     def _process_action(self, agent, action) -> bool:
         """
-        Обрабатывает действие агента, связанное с текстовым процессором.
+        Обрабатывает действие с текстовым процессором.
 
-        :param agent: Агент, выполняющий действие.
-        :type agent: Agent
-        :param action: Словарь, описывающий действие.
-        :type action: dict
-        :return: `True`, если действие выполнено успешно, иначе `False`.
-        :rtype: bool
+        Args:
+            agent: Агент, выполняющий действие.
+            action: Словарь с данными действия.
+
+        Returns:
+            bool: `True`, если действие обработано успешно, `False` в противном случае.
         """
-        if action.get('type') == "WRITE_DOCUMENT" and action.get('content') is not None:
-            try:
-                # код исполняет загрузку содержимого документа из JSON
+        try:
+            if action['type'] == 'WRITE_DOCUMENT' and action['content'] is not None:
+                # код исполняет чтение контента из json
                 if isinstance(action['content'], str):
-                    doc_spec = j_loads(action['content'])
+                    try:
+                        doc_spec = j_loads(action['content'])
+                    except Exception as e:
+                         logger.error(f'Ошибка при чтении JSON: {e}. Оригинальный контент: {action["content"]}')
+                         return False
                 else:
                     doc_spec = action['content']
                 
-                # проверка наличия недопустимых полей
-                valid_keys = ["title", "content", "author"]
+                # проверка наличия недопустимых ключей
+                valid_keys = ['title', 'content', 'author']
                 utils.check_valid_fields(doc_spec, valid_keys)
-                
-                #  код исполняет создание нового документа
+
+                # код исполняет создание нового документа
                 self.write_document(**doc_spec)
+
                 return True
-            except Exception as e:
-                logger.error(f"Ошибка обработки действия WRITE_DOCUMENT: {e}. Содержимое: {action.get('content')}")
+
+            else:
                 return False
-        else:
+        except Exception as e:
+            logger.error(f'Error processing action: {e}. Original content: {action.get("content")}')
             return False
 
     def actions_definitions_prompt(self) -> str:
         """
-         Возвращает описание действий, которые можно выполнить с текстовым процессором.
+        Возвращает строку с описанием возможных действий с текстовым процессором.
 
-        :return: Описание доступных действий.
-        :rtype: str
+        Returns:
+            str: Строка с описанием действий.
         """
         prompt = """
-            - WRITE_DOCUMENT: вы можете создать новый документ. Содержание документа имеет много полей, и вы должны использовать формат JSON, чтобы указать их. Вот возможные поля:
-                * title: Название документа. Обязательно.
-                * content: Фактическое содержание документа. Вы **должны** использовать Markdown для форматирования этого содержания. Обязательно.
-                * author: Автор документа. Вы должны указать свое имя. Необязательно.
+            - WRITE_DOCUMENT: вы можете создать новый документ. Содержимое документа имеет много полей, и вы должны использовать формат JSON, чтобы их указать. Вот возможные поля:
+                * title: Название документа. Обязательное поле.
+                * content: Фактическое содержание документа. Вы **должны** использовать Markdown для форматирования этого содержания. Обязательное поле.
+                * author: Автор документа. Вы должны указать свое имя. Необязательное поле.
             """
         return utils.dedent(prompt)
-        
     
     def actions_constraints_prompt(self) -> str:
         """
-        Возвращает ограничения на действия текстового процессора.
+        Возвращает строку с ограничениями для действий с текстовым процессором.
 
-        :return: Описание ограничений.
-        :rtype: str
+        Returns:
+            str: Строка с ограничениями.
         """
         prompt = """
             - Whenever you WRITE_DOCUMENT, you write all the content at once. Moreover, the content should be long and detailed, unless there's a good reason for it not to be.

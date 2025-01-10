@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 from typing import Any
 from src.suppliers.graber import Graber, Context, close_pop_up
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.utils.image import save_png

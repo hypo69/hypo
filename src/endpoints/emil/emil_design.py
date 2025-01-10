@@ -20,8 +20,8 @@ from types import SimpleNamespace
 import header
 
 # Сторонние библиотеки
-from src import gs, logger
-from src.endpoints.prestashop import PrestaShopAsync
+from src import gs
+
 
 # Веб-драйверы
 from src.webdriver.driver import Driver
@@ -34,7 +34,9 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
 
 # Обработка товаров
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
+from src.endpoints.prestashop.product_async import ProductAsync
+from src.endpoints.prestashop.product_fields import ProductFields
 
 # Работа с соцсетями
 from src.endpoints.advertisement.facebook.scenarios.post_message import (
@@ -198,17 +200,16 @@ class EmilDesign:
         
         lang_ns = j_loads_ns (self.base_path / 'shop_locales' / 'locales.json' )
 
-        default_lang = lang or lang_ns.he
+        lang_index = getattr(lang_ns , lang )
 
 
         # convert to ProductFields
-        f:ProductFields = ProductFields()
+        f:ProductFields = ProductFields(lang_index = lang_index or lang_ns.he)
         host = gs.credentials.presta.client.emil_design.api_domain
         api_key = gs.credentials.presta.client.emil_design.api_key
-        presta = PrestaShopAsync(api_domain = host, api_key = api_key, default_lang = default_lang )
 
         for product_ns in products_list:
-                                                                           
+
             # convert to prestashop fields
             f.name = product_ns.name
             f.id_category_default = product_ns.category
@@ -216,16 +217,16 @@ class EmilDesign:
             f.description = product_ns.description
             f.images_urls = product_ns.local_image_path
             
-            fields_dict:dict = j_dumps (f)            
-            product_id = await presta.create('products', fields_dict)
-            ...
+            p: ProductAsync = ProductAsync (api_domain = host, api_key = api_key)
+            product_id = await p.add_new_product(f)
+
 
         
         
 
 if __name__ == "__main__":
     emil = EmilDesign()
-    asyncio.run( emil.upload_to_prestashop() )
+    asyncio.run( emil.upload_to_prestashop(lang = 'he') )
 
     #asyncio.run( emil.describe_images(lang='he')  )
     # emil.promote_to_facebook()

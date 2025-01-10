@@ -22,7 +22,7 @@ The examples demonStarte how to run scenarios, handle scenario files, and intera
 from pathlib import Path
 from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
 from src.utils.jjson import j_loads_ns
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.endpoints.PrestaShop import PrestaShop
 
 # Assuming `Supplier` class is available and has necessary methods and attributes
@@ -122,7 +122,7 @@ graph LR
 - `from pathlib import Path`: Для работы с путями к файлам.
 - `from src.scenario.executor import ...`: Импортирует функции для выполнения сценариев (например, `run_scenario_files`).  Важная связь с модулем `scenario.executor`.
 - `from src.utils.jjson import j_loads_ns`:  Предполагает наличие функций для работы с JSON, вероятно, связанных с разбором сценариев.  Связь с `utils` модулем.
-- `from src.product.product_fields import ProductFields`: Определяет структуру данных для представления данных о продукте, связь с `product` модулем.
+- `from src.endpoints.prestashop.product_fields import ProductFields`: Определяет структуру данных для представления данных о продукте, связь с `product` модулем.
 - `from src.endpoints.PrestaShop import PrestaShop`:  Связь с модулем для работы с API PrestaShop.
 
 

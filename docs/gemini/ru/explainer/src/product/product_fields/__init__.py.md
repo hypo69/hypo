@@ -7,7 +7,7 @@
 2.  **Импорт `translate_presta_fields_dict`:** Импортирует функцию `translate_presta_fields_dict` из модуля `product_fields_translator.py`, расположенного в текущей директории. Эта функция, по всей видимости, предназначена для преобразования словаря полей в формат, совместимый с PrestaShop.
     *   **Пример:**  Функция может принимать словарь с полями товара в одном формате и возвращать словарь, адаптированный для API PrestaShop.
 3.  **Инициализация модуля:** Данный файл (`__init__.py`)  используется для инициализации пакета `product_fields`. Он позволяет обращаться к классам и функциям, как к атрибутам пакета.
-    *  **Пример:**  После импорта этого пакета,  можно будет использовать `from src.product.product_fields import ProductFields` и `from src.product.product_fields import translate_presta_fields_dict`.
+    *  **Пример:**  После импорта этого пакета,  можно будет использовать `from src.endpoints.prestashop.product_fields import ProductFields` и `from src.product.product_fields import translate_presta_fields_dict`.
 
 ### <mermaid>
 

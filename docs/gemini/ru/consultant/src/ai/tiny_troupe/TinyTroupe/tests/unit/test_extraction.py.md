@@ -1,85 +1,85 @@
-# Анализ кода модуля test_extraction.py
+# Анализ кода модуля `test_extraction.py`
 
-**Качество кода**
-9
+**Качество кода: 7/10**
 -  Плюсы
-    - Код хорошо структурирован и разбит на отдельные тесты.
-    - Используются фикстуры для подготовки тестовых данных.
-    - Присутствуют проверки наличия файлов и корректности данных после экспорта.
-    - Используется `pytest` для организации тестов.
+    - Код имеет модульную структуру, что облегчает понимание и поддержку.
+    - Присутствуют тесты для проверки основных функций `ArtifactExporter` и `Normalizer`.
+    - Используется `pytest` для организации и запуска тестов.
+    - Присутствуют логические проверки в тестах, которые обеспечивают надежность кода.
 -  Минусы
-    - Используется стандартный `json.load`, вместо `j_loads` из `src.utils.jjson`.
-    - Не хватает документации в формате RST.
-    - Используется стандартный логгер, вместо кастомного.
-    - Избыточное использование `sys.path.append`.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения JSON файлов.
+    - Отсутствуют docstring для модуля и функций.
+    - Используется стандартный `logging`, а не `logger` из `src.logger`.
+    - Присутствуют абсолютные импорты, которые могут вызвать проблемы при перемещении кода.
+    - Есть дублирование `sys.path.append`
+    - Использования `print()` для отладочной печати.
 
 **Рекомендации по улучшению**
-1.  Заменить `json.load` на `j_loads` из `src.utils.jjson`.
-2.  Добавить документацию в формате RST для модуля, функций и классов.
-3.  Использовать кастомный логгер из `src.logger.logger`.
-4.  Удалить избыточные `sys.path.append` и настроить `pytest.ini` для корректного импорта.
-5.  Добавить проверки в `test_normalizer`, что возвращаемые нормализованные концепты соответствуют значениям из `normalizer.normalized_elements`.
-6.  Использовать более точные проверки в `test_export_docx`, проверяя соответствие стилей и форматирования.
+1.  Добавить docstring для модуля и функций для улучшения читаемости и понимания кода.
+2.  Заменить импорт `logging` на `from src.logger.logger import logger` и использовать его для логирования.
+3.  Использовать `j_loads` из `src.utils.jjson` для чтения JSON файлов.
+4.  Изменить абсолютные пути импортов на относительные.
+5.  Удалить избыточные `sys.path.append`
+6.  Удалить `print` заменив на `logger.debug`
+7.  Добавить проверку существования директории перед созданием экспорта.
+8.  Использовать `Pathlib` для управления путями к файлам.
+9.  Использовать f-строки для форматирования строк.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для тестирования функциональности экспорта и нормализации артефактов.
-============================================================================
+Модуль для тестирования функций экспорта и нормализации артефактов.
+=====================================================================
 
-Этот модуль содержит тесты для проверки правильности работы классов
-:class:`ArtifactExporter` и :class:`Normalizer`, которые используются
-для экспорта данных в различные форматы (JSON, TXT, DOCX) и нормализации
-списков концептов.
+Этот модуль содержит тесты для проверки корректности работы классов
+:class:`ArtifactExporter` и :class:`Normalizer`, используемых
+для экспорта артефактов в различные форматы (JSON, текст, docx)
+и нормализации текстовых данных соответственно.
 
 Пример использования
 --------------------
 
-.. code-block:: python
+Пример запуска тестов:
+
+.. code-block:: bash
 
     pytest test_extraction.py
 """
 import pytest
 import os
-# from json import load #  заменен на j_loads из src.utils.jjson
 import random
+from pathlib import Path
+# from logging import getLogger
+from src.logger.logger import logger # Импортируем logger из sr.logger
+from src.utils.jjson import j_loads # Импортируем j_loads
+import sys
+# sys.path.append('../../tinytroupe/') # удаляем дублирование
+# sys.path.append('../../') # удаляем дублирование
+# sys.path.append('../') # удаляем дублирование
 
-# import logging #  заменен на logger из src.logger.logger
-# logger = logging.getLogger("tinytroupe") #  заменен на logger из src.logger.logger
-
-# import sys #  удалено, так как путь можно настроить через pytest.ini
-# sys.path.append('../../tinytroupe/') #  удалено, так как путь можно настроить через pytest.ini
-# sys.path.append('../../') #  удалено, так как путь можно настроить через pytest.ini
-# sys.path.append('../') #  удалено, так как путь можно настроить через pytest.ini
-
-from src.logger.logger import logger #  Используем кастомный логер
-from src.utils.jjson import j_loads #  Используем j_loads
-from testing_utils import *
-from tinytroupe.extraction import ArtifactExporter, Normalizer
-from tinytroupe import utils
-
+from tests.unit.testing_utils import *
+from src.ai.tiny_troupe.TinyTroupe.extraction import ArtifactExporter, Normalizer
 
 @pytest.fixture
 def exporter():
     """
-    Фикстура для создания экземпляра :class:`ArtifactExporter`.
+    Фикстура для создания экземпляра ArtifactExporter.
 
-    :return: Экземпляр :class:`ArtifactExporter` с базовой папкой для экспорта.
-    :rtype: ArtifactExporter
+    Returns:
+        ArtifactExporter: Экземпляр ArtifactExporter с базовой папкой для экспорта "./test_exports".
     """
-    return ArtifactExporter(base_output_folder='./test_exports')
+    return ArtifactExporter(base_output_folder="./test_exports")
 
 
 def test_export_json(exporter):
     """
-    Тест экспорта артефактов в JSON формат.
+    Тестирует экспорт артефакта в формате JSON.
 
-    Проверяет, что JSON файл успешно экспортируется и содержит
-    корректные данные.
-
-    :param exporter: Фикстура :class:`ArtifactExporter`.
+    Args:
+        exporter (ArtifactExporter): Экземпляр ArtifactExporter, предоставленный фикстурой.
     """
-    # Define the artifact data
+    # Определяем данные артефакта
     artifact_data = {
         'name': 'John Doe',
         'age': 30,
@@ -87,123 +87,115 @@ def test_export_json(exporter):
         'content': 'This is a sample JSON data.'
     }
     
-    # Export the artifact data as JSON
+    # Экспортируем данные артефакта в формате JSON
     exporter.export('test_artifact', artifact_data, content_type='record', target_format='json')
     
-    # check if the JSON file was exported correctly
-    assert os.path.exists('./test_exports/record/test_artifact.json'), 'The JSON file should have been exported.'
-
-    # does it contain the data?
-    with open('./test_exports/record/test_artifact.json', 'r') as f:
-        exported_data = j_loads(f)  # Используем j_loads
+    # Проверяем, был ли файл JSON экспортирован правильно
+    file_path = Path('./test_exports/record/test_artifact.json')
+    assert file_path.exists(), 'The JSON file should have been exported.'
+    
+    # Проверяем, содержит ли файл ожидаемые данные
+    with open(file_path, 'r') as f:
+        exported_data = j_loads(f) # Используем j_loads для чтения JSON
         assert exported_data == artifact_data, 'The exported JSON data should match the original data.'
 
 
 def test_export_text(exporter):
     """
-    Тест экспорта артефактов в TXT формат.
+     Тестирует экспорт артефакта в текстовом формате.
 
-    Проверяет, что текстовый файл успешно экспортируется и содержит
-    корректные данные.
-
-    :param exporter: Фикстура :class:`ArtifactExporter`.
+    Args:
+        exporter (ArtifactExporter): Экземпляр ArtifactExporter, предоставленный фикстурой.
     """
-    # Define the artifact data
+    # Определяем данные артефакта
     artifact_data = 'This is a sample text.'
     
-    # Export the artifact data as text
+    # Экспортируем данные артефакта в текстовом формате
     exporter.export('test_artifact', artifact_data, content_type='text', target_format='txt')
     
-    # check if the text file was exported correctly
-    assert os.path.exists('./test_exports/text/test_artifact.txt'), 'The text file should have been exported.'
-
-    # does it contain the data?
-    with open('./test_exports/text/test_artifact.txt', 'r') as f:
+    # Проверяем, был ли текстовый файл экспортирован правильно
+    file_path = Path('./test_exports/text/test_artifact.txt')
+    assert file_path.exists(), 'The text file should have been exported.'
+    
+    # Проверяем, содержит ли файл ожидаемые данные
+    with open(file_path, 'r') as f:
         exported_data = f.read()
         assert exported_data == artifact_data, 'The exported text data should match the original data.'
 
 
 def test_export_docx(exporter):
     """
-    Тест экспорта артефактов в DOCX формат.
+     Тестирует экспорт артефакта в формате docx с сохранением markdown.
 
-    Проверяет, что DOCX файл успешно экспортируется, не содержит
-    исходное форматирование Markdown, и содержит часть оригинального текста.
-
-    :param exporter: Фикстура :class:`ArtifactExporter`.
+    Args:
+        exporter (ArtifactExporter): Экземпляр ArtifactExporter, предоставленный фикстурой.
     """
-    # Define the artifact data. Include some fancy markdown formatting so we can test if it is preserved.
-    artifact_data ='''
+    # Определяем данные артефакта. Включаем форматирование markdown для проверки его сохранения.
+    artifact_data = """
     # This is a sample markdown text
     This is a **bold** text.
     This is an *italic* text.
     This is a [link](https://www.example.com).
-    '''
+    """
     
-    # Export the artifact data as a docx file
+    # Экспортируем данные артефакта в формате docx
     exporter.export('test_artifact', artifact_data, content_type='Document', content_format='markdown', target_format='docx')
     
-    # check if the docx file was exported correctly
-    assert os.path.exists('./test_exports/Document/test_artifact.docx'), 'The docx file should have been exported.'
-
-    # does it contain the data?
+    # Проверяем, был ли файл docx экспортирован правильно
+    file_path = Path('./test_exports/Document/test_artifact.docx')
+    assert file_path.exists(), 'The docx file should have been exported.'
+    
+    # Проверяем, содержит ли файл ожидаемые данные
     from docx import Document
-    doc = Document('./test_exports/Document/test_artifact.docx')
+    doc = Document(str(file_path))
     exported_data = ''
     for para in doc.paragraphs:
         exported_data += para.text
 
     assert 'This is a sample markdown text' in exported_data, 'The exported docx data should contain some of the original content.'
     assert '#' not in exported_data, 'The exported docx data should not contain Markdown.'
-    
+
 
 def test_normalizer():
     """
-    Тест нормализации списка концептов.
+    Тестирует функциональность нормализатора текста.
 
-    Проверяет, что нормализатор правильно нормализует концепты, сохраняет
-    соответствие между исходными и нормализованными концептами, а также
-    правильно управляет кэшем нормализованных элементов.
+    Проверяет, что нормализатор возвращает правильное количество нормализованных элементов
+    и корректно кэширует результаты нормализации.
     """
-    # Define the concepts to be normalized
-    concepts = ['Antique Book Collection', 'Medical Research', 'Electrical safety', 'Reading', 'Technology', 'Entrepreneurship', 'Multimedia Teaching Tools', 'Photography', 
+    # Определяем концепции для нормализации
+    concepts = ['Antique Book Collection', 'Medical Research', 'Electrical safety', 'Reading', 'Technology', 'Entrepreneurship', 'Multimedia Teaching Tools', 'Photography',
      'Smart home technology', 'Gardening', 'Travel', 'Outdoors', 'Hiking', 'Yoga', 'Finance', 'Health and wellness', 'Sustainable Living', 'Barista Skills', 'Oral health education',
      'Patient care', 'Professional Development', 'Project safety', 'Coffee', 'Literature', 'Continuous learning', 'Model trains', 'Education', 'Mental and Physical Balance', 'Kayaking',
-     'Social Justice', 'National Park Exploration', 'Outdoor activities', 'Dental technology', 'Teaching electrical skills', 'Volunteering', 'Cooking', 'Industry trends', 
+     'Social Justice', 'National Park Exploration', 'Outdoor activities', 'Dental technology', 'Teaching electrical skills', 'Volunteering', 'Cooking', 'Industry trends',
      'Energy-efficient systems', 'Mentoring', 'Empathetic communication', 'Medical Technology', 'Historical Research', 'Public Speaking', 'Museum Volunteering', 'Conflict Resolution']
     
     unique_concepts = list(set(concepts))
 
     normalizer = Normalizer(concepts, n=10, verbose=True)
-
-    assert len(normalizer.normalized_elements) == 10, 'The number of normalized elements should be equal to the specified value.'
-
-    # sample 5 random elements from concepts using standard python methods
     
+    assert len(normalizer.normalized_elements) == 10, 'The number of normalized elements should be equal to the specified value.'
+    
+    # Случайным образом выбираем элементы из concepts
     random_concepts_buckets = [random.sample(concepts, 15), random.sample(concepts, 15), random.sample(concepts, 15), random.sample(concepts, 15), random.sample(concepts, 15)]
-
-
+    
     assert len(normalizer.normalizing_map.keys()) == 0, 'The normalizing map should be empty at the beginning.'
     for bucket in random_concepts_buckets:
         init_cache_size = len(normalizer.normalizing_map.keys())
         
         normalized_concept = normalizer.normalize(bucket)
         assert normalized_concept is not None, 'The normalized concept should not be None.'
-        logger.debug(f'Normalized concept: {bucket} -> {normalized_concept}')
-        print(f'Normalized concept: {bucket} -> {normalized_concept}')
+        logger.debug(f'Normalized concept: {bucket} -> {normalized_concept}') # Используем logger.debug
+       
 
         next_cache_size = len(normalizer.normalizing_map.keys())
-
-        # check same length
+        
+        # Проверяем длину
         assert len(normalized_concept) == len(bucket), 'The normalized concept should have the same length as the input concept.'
         
-        # assert that all elements from normalized concepts are in normalizing map keys
+        # Проверяем, что все элементы из нормализованных концепций присутствуют в ключах карты нормализации
         for element in bucket:
             assert element in normalizer.normalizing_map.keys(), f'{element} should be in the normalizing map keys.'
         
-        # Проверяем, что возвращаемые нормализованные концепты соответствуют значениям из normalizer.normalized_elements
-        for normalized in normalized_concept:
-            assert normalized in normalizer.normalized_elements, f'Нормализованный концепт {normalized} должен быть в списке нормализованных элементов'
-
         assert next_cache_size > 0, 'The cache size should be greater than 0 after normalizing a new concept.'
         assert next_cache_size >= init_cache_size, 'The cache size should not decrease after normalizing a new concept.'

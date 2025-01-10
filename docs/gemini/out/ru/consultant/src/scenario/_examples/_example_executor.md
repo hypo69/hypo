@@ -61,7 +61,7 @@ import asyncio
 from pathlib import Path
 from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
 from src.utils.jjson import j_loads_ns
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.endpoints.PrestaShop import PrestaShop
 from src.logger import logger  # Импорт для логирования
 
@@ -225,7 +225,7 @@ def example_run_scenario():
  from pathlib import Path
  from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
  from src.utils.jjson import j_loads_ns
- from src.product.product_fields import ProductFields
+ from src.endpoints.prestashop.product_fields import ProductFields
 -from src.endpoints.PrestaShop import PrestaShop
 +from src.endpoints.PrestaShop import PrestaShop # Импорт класса для работы с PrestaShop
  from src.logger import logger  # Импорт для логирования
@@ -364,7 +364,7 @@ import asyncio
 from pathlib import Path
 from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
 from src.utils.jjson import j_loads_ns
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.endpoints.PrestaShop import PrestaShop
 from src.logger import logger
 

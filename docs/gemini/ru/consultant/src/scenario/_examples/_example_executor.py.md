@@ -63,7 +63,7 @@ from src.scenario.executor import (
     add_coupon,
 )
 from src.utils.jjson import j_loads_ns
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger.logger import logger  # Добавлен импорт logger
 
 # Mock класс для Supplier

@@ -3,109 +3,129 @@
 **Качество кода**
 7
 - Плюсы
-    - Предоставлено общее описание модуля `dialogflow` и его основных возможностей.
-    - Приведен пример использования модуля, который демонстрирует основные методы.
+    - Документация в формате RST для модуля.
+    - Есть примеры использования модуля.
+    - Описание основных возможностей модуля.
 - Минусы
-    - Отсутствует явное указание на использование `reStructuredText (RST)` для документации, хотя сам код уже отформатирован в RST.
-    - Не хватает более детального описания каждой функции/метода и параметров, которые были бы полезны для документации.
-    - Нет четкого определения структуры проекта и связей с другими частями, что усложняет понимание общей архитектуры.
-    - Некоторые части документации, такие как интеграции, требуют более подробного описания.
-    - Не хватает информации о том, как настраивать `Dialogflow`, как получать `project_id` и другие параметры.
-    - Пропущены некоторые аспекты, такие как обработка ошибок и логирование.
+    - Отсутствуют docstring в коде.
+    - Не все возможности модуля подробно описаны.
+    - Не хватает более подробных примеров использования.
 
 **Рекомендации по улучшению**
 
-1.  **Документация RST**:
-    *   Явно указать в начале файла, что используется reStructuredText.
-    *   Добавить более подробные описания для каждого метода `Dialogflow`, их параметров и возвращаемых значений.
-    *   Улучшить описание интеграций, добавив примеры или ссылки на соответствующие ресурсы.
-    *   Добавить разделы по установке, настройке и использованию `Dialogflow` API.
-    *   Привести более подробные примеры использования методов.
-    *   Уточнить описание процесса аутентификации и параметров, необходимых для работы с Dialogflow.
-2.  **Структура проекта**:
-    *   Добавить информацию о структуре проекта `src.ai.dialogflow` и его связях с другими модулями.
-3.  **Примеры кода**:
-    *   Расширить примеры использования методов, показав более сложные сценарии.
-    *   Добавить примеры обработки ошибок и логирования.
-4.  **Общая информация**:
-    *   Добавить информацию о том, как получить project_id, session_id и другие необходимые параметры для работы с Dialogflow.
+1.  Дополнить описание модуля в начале файла, включая назначение, основные классы и примеры использования.
+2.  Добавить документацию для каждого класса, метода и переменной в формате docstring, следуя стандартам оформления (для Sphinx).
+3.  Уточнить примеры использования, показывая основные сценарии работы с модулем.
+4.  Разделить описание на более логические секции, например: "Основные возможности", "Примеры использования" и т.д.
+5.  Использовать более наглядные примеры кода с пояснениями.
+6.  Включить описание настройки и зависимостей, если таковые есть.
+7.  Добавить ссылки на внешние ресурсы, такие как документация Dialogflow.
 
 **Оптимизированный код**
+
 ```markdown
 .. module:: src.ai.dialogflow
-    :synopsis: Модуль для интеграции с Google Dialogflow.
+   :synopsis: Модуль для интеграции с Dialogflow.
 
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`Dialogflow`, который используется для взаимодействия с API Google Dialogflow.
-Он позволяет осуществлять обнаружение намерений, распознавание сущностей, управление контекстом и интеграцию
-с различными платформами.
+Модуль для работы с Dialogflow API
+=========================================================================================
 
-.. note::
+Этот модуль предоставляет функциональность для взаимодействия с Google Dialogflow API, включая
+определение намерений, извлечение сущностей, управление контекстами и интеграцию с различными платформами.
 
-    Перед началом работы убедитесь, что у вас есть учетная запись Google Cloud и API Dialogflow включен для вашего проекта.
-    Вам также потребуется файл с ключами аутентификации (credentials file) в формате JSON.
+Модуль содержит класс :class:`Dialogflow`, который используется для взаимодействия с Dialogflow API.
 
-    Для получения дополнительной информации обратитесь к
-    `официальной документации Dialogflow <https://dialogflow.com/docs/getting-started/basics>`_.
+Примеры использования
+--------------------
 
-<TABLE >
-<TR>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/README.MD'>ai</A> /
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/dialogflow/about.md\'>About dialogflow model</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/dialogflow/readme.ru.md'>Русский</A>
-</TD>
-</TABLE>
-
-https://dialogflow.com/docs/getting-started/basics
-
-### **dialogflow**
-
-Модуль интеграции с Dialogflow.
-Предоставляет возможности для понимания естественного языка (NLU)
-и создания диалоговых AI-приложений. Он включает в себя следующие основные функции:
-
--   **Intent Detection:** Код определяет намерения пользователя на основе введенного текста.
--   **Entity Recognition:** Код извлекает ключевые данные из фраз пользователя.
--   **Contexts:** Код управляет диалогом, сохраняя информацию о текущем состоянии разговора.
--   **Integrations:** Код поддерживает интеграцию с различными платформами, такими как Google Assistant, Facebook Messenger, Slack, Telegram и другими.
--   **Webhook:** Код поддерживает интеграцию с Webhook для вызова внешних сервисов и API.
-
-Пример использования подмодуля **dialogflow**:
+Пример использования класса :class:`Dialogflow`:
 
 .. code-block:: python
 
     from src.ai.dialogflow import Dialogflow
 
-    project_id = "your-project-id"
-    session_id = "unique-session-id"
+    project_id = 'your-project-id'
+    session_id = 'unique-session-id'
 
     dialogflow_client = Dialogflow(project_id, session_id)
 
-    # Пример использования методов
-    intent_response = dialogflow_client.detect_intent("Hello")
-    print("Detected Intent:", intent_response)
+    # Пример определения намерения
+    intent_response = dialogflow_client.detect_intent('Привет')
+    print('Обнаруженное намерение:', intent_response)
 
+    # Пример получения списка намерений
     intents = dialogflow_client.list_intents()
-    print("List of Intents:", intents)
+    print('Список намерений:', intents)
 
+    # Пример создания нового намерения
     new_intent = dialogflow_client.create_intent(
-        display_name="NewIntent",
-        training_phrases_parts=["new phrase", "another phrase"],
-        message_texts=["This is a new intent"]
+        display_name='НовоеНамерение',
+        training_phrases_parts=['новая фраза', 'ещё одна фраза'],
+        message_texts=['Это новое намерение']
     )
-    print("Created Intent:", new_intent)
+    print('Созданное намерение:', new_intent)
 
-    # Удаление намерения (обязательно замените intent_id на действительный ID)
-    # dialogflow_client.delete_intent("your-intent-id")
+    # Пример удаления намерения (не забудьте заменить intent_id на реальный ID)
+    # dialogflow_client.delete_intent('your-intent-id')
 
+.. raw:: html
+
+    <TABLE >
+    <TR>
+    <TD>
+    <A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+    </TD>
+    <TD>
+    <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /
+    <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/README.MD'>ai</A> /
+    </TD>
+    <TD>
+    <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/dialogflow/about.md'>About dialogflow model</A>
+    </TD>
+    <TD>
+    <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/dialogflow/readme.ru.md'>Русский</A>
+    </TD>
+    </TABLE>
+
+`Dialogflow`
+=========================================================================================
+`Dialogflow` integration module.
+Provides capabilities for natural language understanding (NLU)
+and creating conversational AI applications. It includes the following main features:
+
+-   **Intent Detection:** Determines user intents based on the input text.
+-   **Entity Recognition:** Extracts key data from user phrases.
+-   **Contexts:** Manages the conversation by retaining information about the current state of the dialogue.
+-   **Integrations:** Supports integration with various platforms such as Google Assistant, Facebook Messenger, Slack, Telegram, and others.
+-   **Webhook:** Supports Webhook integrations for calling external services and APIs.
+
+Example usage of the **dialogflow** submodule:
+
+```python
+from src.ai.dialogflow import Dialogflow
+
+project_id = "your-project-id"
+session_id = "unique-session-id"
+
+dialogflow_client = Dialogflow(project_id, session_id)
+
+# Example usage of methods
+intent_response = dialogflow_client.detect_intent("Hello")
+print("Detected Intent:", intent_response)
+
+intents = dialogflow_client.list_intents()
+print("List of Intents:", intents)
+
+new_intent = dialogflow_client.create_intent(
+    display_name="NewIntent",
+    training_phrases_parts=["new phrase", "another phrase"],
+    message_texts=["This is a new intent"]
+)
+print("Created Intent:", new_intent)
+
+# Deleting an intent (make sure to replace intent_id with a real ID)
+# dialogflow_client.delete_intent("your-intent-id")
+```
 ```

@@ -12,7 +12,7 @@ from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.pricelist_generator import ReportGenerator
 from src.suppliers.morlevi.graber import Graber as MorleviGraber  # Replace with actual imports
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.utils.jjson import j_loads, j_dumps
 from hypotez.src.endpoints.kazarinov.scenarios.scenario_pricelist import MexironBuilder
 

@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import asyncio
 import datetime
 from src.suppliers.graber import Graber, Context, close_pop_up
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger.exceptions import ExecuteLocatorException
 from src import gs
 

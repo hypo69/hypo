@@ -6,7 +6,7 @@ from typing import Optional, List
 from unittest.mock import patch
 from dataclasses import dataclass
 from src import gs
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron

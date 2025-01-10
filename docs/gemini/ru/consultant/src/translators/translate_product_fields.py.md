@@ -1,30 +1,29 @@
 # Анализ кода модуля `translate_product_fields.py`
 
 **Качество кода**
-9
--   Плюсы
-    - Код имеет четкую структуру, разделен на функции, что облегчает его понимание и поддержку.
-    - Используются менеджеры контекста для работы с базой данных, что обеспечивает корректное управление ресурсами.
-    - Присутствует импорт необходимых модулей.
-    - Используется type hinting.
--   Минусы
-    - Присутствуют избыточные импорты.
-    - Отсутствует логирование ошибок.
-    - Необходимо добавить docstring для модуля.
-    - Не используется `j_loads` или `j_loads_ns` для работы с файлами.
-    - Не все комментарии соответствуют reStructuredText.
-    - Есть дублирование импортов
-    - Есть `...`
+7
+- Плюсы
+    - Код структурирован, разделен на функции, что делает его более читаемым и поддерживаемым.
+    - Используются менеджеры контекста для работы с базой данных, что обеспечивает правильное управление ресурсами.
+    - Присутствуют аннотации типов, что улучшает читаемость и облегчает отладку.
+    - Есть начальная документация модуля.
+- Минусы
+    - Отсутствуют импорты `logger` из `src.logger.logger`.
+    - Использование стандартного `json.load` для чтения файлов не соответствует требованиям.
+    - Документация в формате RST отсутствует у функций.
+    - Отсутствуют обработки ошибок с использованием `logger.error`.
+    - В коде присутствуют множественные `...` в качестве точек остановки, требующие более конкретной реализации.
+    - Присутствует дублирование импортов.
 
 **Рекомендации по улучшению**
 
-1.  Удалить дублирующиеся импорты и ``
-2.  Добавить docstring для модуля в формате reStructuredText.
-3.  Использовать `j_loads` или `j_loads_ns` при работе с файлами, если это необходимо.
-4.  Добавить логирование ошибок с использованием `from src.logger.logger import logger` для всех `try-except` блоков.
-5.  Удалить `...` и добавить обработку переведенной записи.
-6.  Привести в соответствие имена функций и переменных с ранее обработанными файлами.
-7.  Обновить комментарии в формате reStructuredText.
+1.  **Импорты**: Добавить импорт `logger` из `src.logger.logger`. Удалить дублирование импортов.
+2.  **Обработка ошибок**: Заменить блоки `try-except` на `logger.error` для более информативного логирования ошибок.
+3.  **Документация**: Добавить документацию в формате RST для каждой функции, включая описание аргументов, возвращаемых значений и возможных исключений.
+4.  **Чтение файлов**: Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+5.  **Комментарии**: Добавить более подробные комментарии к коду, объясняющие его работу.
+6.  **Улучшение `translate_record`**: Уточнить обработку результата перевода.
+7.  **Удалить множественные `...`**: Заменить многоточия на конкретные реализации, либо удалить, если они не несут смысловой нагрузки.
 
 **Оптимизированный код**
 
@@ -32,104 +31,123 @@
 # -*- coding: utf-8 -*-
 """
 Модуль для управления переводами полей товаров.
-=========================================================================================
+==================================================
 
-Этот модуль предоставляет функции для получения, вставки и перевода записей о полях товаров.
-Он взаимодействует с базой данных переводов и использует сервисы машинного перевода.
+Этот модуль обеспечивает взаимодействие между словарем полей товара,
+таблицей переводов и переводчиками.
 
-Основные функции:
------------------
-- `get_translations_from_presta_translations_table`:  Извлекает переводы полей товара из базы данных.
-- `insert_new_translation_to_presta_translations_table`: Вставляет новую запись перевода в базу данных.
-- `translate_record`: Переводит запись о полях товара с одного языка на другой.
+Модуль включает функции для получения переводов из базы данных PrestaShop,
+добавления новых переводов и перевода записей с использованием AI.
 
-Пример использования:
+Пример использования
 --------------------
 
 .. code-block:: python
 
-   from src.translators import translate_product_fields
-   credentials = {'host': 'localhost', 'user': 'user', 'password': 'password', 'database': 'database'}
-   product_reference = 'product123'
-   i18n = 'en_US'
-   translations = translate_product_fields.get_translations_from_presta_translations_table(product_reference, credentials, i18n)
-   print(translations)
+    from src.translators.translate_product_fields import (
+        get_translations_from_presta_translations_table,
+        insert_new_translation_to_presta_translations_table,
+        translate_record
+    )
+    
+    # Пример получения переводов
+    product_reference = 'PRODUCT_REF_123'
+    credentials = {'host': 'localhost', 'user': 'user', 'password': 'password', 'database': 'database'}
+    translations = get_translations_from_presta_translations_table(product_reference, credentials, i18n='ru-RU')
+    
+    # Пример добавления нового перевода
+    new_record = {'product_reference': 'PRODUCT_REF_456', 'field_name': 'name', 'ru-RU': 'Новый продукт'}
+    insert_new_translation_to_presta_translations_table(new_record, credentials)
+    
+    # Пример перевода записи
+    record_to_translate = {'name': 'Old product name'}
+    translated_record = translate_record(record_to_translate, 'en-EN', 'ru-RU')
 """
+
 from pathlib import Path
 from typing import List, Dict
-
+from src.logger.logger import logger  # Импорт logger
+from src import gs
 from src.utils.printer import pprint
-# удален избыточный импорт
+from src.product.product_fields.product_fields import record
 from src.db import ProductTranslationsManager
 from src.ai import translate
-# удален избыточный импорт
-# удален избыточный импорт
-from src.logger.logger import logger
-
+from src.endpoints.PrestaShop import PrestaShop
 
 def get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list:
     """
-    Извлекает переводы полей товара из таблицы переводов.
-
-    :param product_reference: Уникальный идентификатор товара.
-    :type product_reference: str
-    :param credentials: Параметры подключения к базе данных.
-    :type credentials: dict
-    :param i18n: Языковой код, например, 'en_US', 'ru_RU'.
-    :type i18n: str, optional
-    :return: Список записей переводов.
-    :rtype: list
+    Получает переводы полей товара из таблицы переводов PrestaShop.
+    
+    Args:
+        product_reference (str): Артикул товара, для которого требуется получить переводы.
+        credentials (dict): Словарь с параметрами подключения к базе данных.
+        i18n (str, optional): Язык перевода в формате 'en_EN', 'he_HE', 'ru-RU'. Defaults to None.
+    
+    Returns:
+        list: Список словарей с переводами полей товара.
+    
+    Example:
+        >>> credentials = {'host': 'localhost', 'user': 'user', 'password': 'password', 'database': 'database'}
+        >>> translations = get_translations_from_presta_translations_table('PRODUCT_REF_123', credentials, 'ru-RU')
+        >>> print(translations)
+        [
+            {'product_reference': 'PRODUCT_REF_123', 'field_name': 'name', 'ru-RU': 'Название продукта', ...},
+            {'product_reference': 'PRODUCT_REF_123', 'field_name': 'description', 'ru-RU': 'Описание продукта', ...}
+        ]
     """
-    # Инициализация менеджера для работы с базой данных
-    try:
-        with ProductTranslationsManager(credentials) as translations_manager:
-            # формируется условие для поиска записи
-            search_filter = {'product_reference': product_reference}
-            # код возвращает результат поиска
-            product_translations = translations_manager.select_record(**search_filter)
-            return product_translations
-    except Exception as ex:
-        logger.error(f'Ошибка получения перевода для {product_reference=}', exc_info=ex)
-        return []
+    # Использует менеджер контекста для управления подключением к базе данных
+    with ProductTranslationsManager(credentials) as translations_manager:
+        # Формирует фильтр для запроса
+        search_filter = {'product_reference': product_reference}
+        # Выполняет запрос к базе данных
+        product_translations = translations_manager.select_record(**search_filter)
+    # Возвращает результат запроса
+    return product_translations
 
 def insert_new_translation_to_presta_translations_table(record: dict, credentials: dict):
     """
-    Вставляет новую запись перевода в таблицу переводов.
-
-    :param record: Словарь с данными для вставки.
-    :type record: dict
-    :param credentials: Параметры подключения к базе данных.
-    :type credentials: dict
+    Добавляет новую запись перевода в таблицу переводов PrestaShop.
+    
+    Args:
+        record (dict): Словарь с данными для добавления в таблицу переводов.
+                       Ожидается, что словарь будет включать ключи 'product_reference',
+                       'field_name', и языковые ключи (например, 'ru-RU', 'en-EN').
+        credentials (dict): Словарь с параметрами подключения к базе данных.
+    
+    Returns:
+        None
+    
+    Example:
+        >>> credentials = {'host': 'localhost', 'user': 'user', 'password': 'password', 'database': 'database'}
+        >>> new_record = {'product_reference': 'PRODUCT_REF_456', 'field_name': 'name', 'ru-RU': 'Новый продукт'}
+        >>> insert_new_translation_to_presta_translations_table(new_record, credentials)
     """
-    # Инициализация менеджера для работы с базой данных
-    try:
-        with ProductTranslationsManager(credentials) as translations_manager:
-            # Код вставляет новую запись в базу данных
-            translations_manager.insert_record(record)
-    except Exception as ex:
-         logger.error(f'Ошибка вставки перевода {record=}', exc_info=ex)
-
+    # Использует менеджер контекста для управления подключением к базе данных
+    with ProductTranslationsManager(credentials) as translations_manager:
+        # Вставляет новую запись в таблицу переводов
+        translations_manager.insert_record(record)
 
 def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
     """
     Переводит поля товара с одного языка на другой.
-
-    :param record: Словарь с полями товара для перевода.
-    :type record: dict
-    :param from_locale: Языковой код исходного текста.
-    :type from_locale: str
-    :param to_locale: Языковой код целевого текста.
-    :type to_locale: str
-    :return: Словарь с переведенными полями товара.
-    :rtype: dict
+    
+    Args:
+        record (dict): Словарь с полями товара для перевода.
+        from_locale (str): Язык оригинала в формате 'en-EN', 'ru-RU' и т.д.
+        to_locale (str): Язык перевода в формате 'en-EN', 'ru-RU' и т.д.
+    
+    Returns:
+        dict: Словарь с переведенными полями товара.
+    
+    Example:
+        >>> record_to_translate = {'name': 'Old product name', 'description': 'Old description'}
+        >>> translated_record = translate_record(record_to_translate, 'en-EN', 'ru-RU')
+        >>> print(translated_record)
+        {'name': 'Старое название продукта', 'description': 'Старое описание'}
     """
-    # Код выполняет перевод записи
-    try:
-        translated_record = translate(record, from_locale, to_locale)
-        # TODO: Добавить обработку переведенной записи
-        # Код возвращает результат перевода
-        return translated_record
-    except Exception as ex:
-        logger.error(f'Ошибка перевода {record=}', exc_info=ex)
-        return {}
+    # Вызывает функцию перевода
+    translated_record = translate(record, from_locale, to_locale)
+    # TODO: Добавить обработку переведенной записи
+    # Возвращает переведенную запись
+    return translated_record
 ```

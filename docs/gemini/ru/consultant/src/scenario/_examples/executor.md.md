@@ -48,7 +48,7 @@ from pathlib import Path
 from typing import Any, List
 from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
 from src.utils.jjson import j_loads_ns
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger.logger import logger
 
 # TODO: Добавить описание класса MockSupplier в формате RST

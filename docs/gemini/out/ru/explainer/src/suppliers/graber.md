@@ -51,7 +51,7 @@ from functools import wraps
 import header
 from src import gs
 
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.category import Category
 # from src.webdriver.driver import Driver  # не требуется импортировать здесь
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
@@ -175,7 +175,7 @@ graph LR
 - `from functools import wraps`:  для декораторов.
 - `import header`: Импорт модуля `header`, который, скорее всего, содержит константы или другие настройки, но без дополнительной информации определить его роль невозможно.
 - `from src import gs`:  Импортирует переменную или класс `gs`, скорее всего, связанную с глобальными настройками проекта, `gs` неявно импортируется и содержит глобальные настройки из пакета `src`.
-- `from src.product.product_fields import ProductFields`: Импортирует класс `ProductFields` из модуля `src.product.product_fields`, который, вероятно, представляет структуру для хранения полей продукта.
+- `from src.endpoints.prestashop.product_fields import ProductFields`: Импортирует класс `ProductFields` из модуля `src.product.product_fields`, который, вероятно, представляет структуру для хранения полей продукта.
 - `from src.category import Category`: Импортирует класс `Category` из модуля `src.category`, который, вероятно, представляет структуру для хранения данных о категориях продуктов.
 - `from src.utils.jjson import j_loads, j_loads_ns, j_dumps`:  Из пакета `src.utils.jjson` импортируются функции для работы с JSON-данными, в том числе для загрузки локаторов из файлов JSON.
 - `from src.utils.image import save_png_from_url, save_png`: Импортирует функции для работы с изображениями, вероятно, для загрузки и сохранения изображений продукта.

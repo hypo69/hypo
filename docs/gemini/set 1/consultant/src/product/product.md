@@ -19,7 +19,7 @@ import header
 from src import gs
 from src.endpoints.prestashop import PrestaShop  # Explicit import
 from src.category import Category
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger.logger import logger
 
 class Product(ProductFields, PrestaShop):
@@ -78,7 +78,7 @@ import header
 from src import gs
 from src.endpoints.prestashop import PrestaShop
 from src.category import Category
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger.logger import logger
 from src.utils.jjson import j_loads  # Import j_loads
 
@@ -160,7 +160,7 @@ import header
 from src import gs
 from src.endpoints.prestashop import PrestaShop
 from src.category import Category
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger.logger import logger
 from src.utils.jjson import j_loads  # Import j_loads
 

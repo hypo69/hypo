@@ -3,7 +3,7 @@ import pytest
 import json
 from unittest.mock import patch, MagicMock
 from src.product.product import Product
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.endpoints.prestashop import PrestaShop
 
 # Mock classes for testing

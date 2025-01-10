@@ -35,7 +35,7 @@ Usage example
 
     from src.webdriver.driver import Driver
     from hypotez.src.suppliers.wallmart.graber import Graber
-    from src.product.product_fields import ProductFields
+    from src.endpoints.prestashop.product_fields import ProductFields
 
     async def main():
         # Initialize a WebDriver instance (replace with your WebDriver setup)

@@ -1,48 +1,49 @@
-# Анализ кода модуля src.logger
+# Анализ кода модуля `src.logger`
 
 **Качество кода**
-7
-- Плюсы
-    - Хорошая документация в формате reStructuredText, подробно описывающая функциональность модуля.
-    - Использование Singleton для обеспечения единственного экземпляра логгера.
-    - Гибкая настройка уровней логирования и форматов вывода.
-    - Поддержка цветного вывода в консоль.
-    - Разделение логов по уровням в разные файлы.
-    - Наличие примеров использования.
 
-- Минусы
-   -  В тексте документации есть `код исполняет ...` и другие формулировки, которые следует заменить на более точные.
-   -  Не везде описаны параметры функций, включая их типы и возвращаемые значения.
-   -  Не хватает подробного описания работы `JsonFormatter`.
-   -  Не везде соблюдается стандартизация использования терминологии (например, в описании параметров).
+-   **Соответствие требованиям по оформлению кода**: 9/10
+    -   **Плюсы**:
+        -   Код хорошо структурирован и документирован, используются docstrings для классов, методов и функций.
+        -   Представлено подробное описание модуля и его функциональности.
+        -   Примеры использования демонстрируют основные возможности модуля.
+        -   Используется `colorama` для раскраски вывода в консоль.
+        -   Применяется Singleton для класса Logger.
+    -   **Минусы**:
+        -   Используются двойные кавычки `"` в примерах кода, хотя по инструкции нужно использовать одинарные кавычки `'`.
+        -   В описании не указаны требования к конкретной версии Python или сторонним зависимостям, а также нет описания установки модуля.
+        -   Нет проверки на существование директории для логов, перед записью в файл.
+        -   Необходимо добавить обработку ошибок при открытии и записи в файл.
+        -   В коде не используются f-строки, хотя они более читабельны.
+        -   Некоторые комментарии не соответствуют стандарту RST.
 
 **Рекомендации по улучшению**
 
-1.  **Улучшение документации**:
-    -  Заменить все фразы типа "код исполняет", "получаем" на более точные формулировки (например, "осуществляет проверку", "выполняется получение").
-    -  Добавить полные описания для всех параметров функций, включая типы и возвращаемые значения.
-    -  Добавить описание работы `JsonFormatter`.
-    -  Уточнить описания уровней логирования и их влияния на вывод.
-2.  **Форматирование комментариев**:
-    -  Переписать комментарии в соответствии с требованиями к RST (например, использовать `:param`, `:return`, `:raises`).
-3.  **Консистентность**:
-    -   Уточнить использование `logger.error` для обработки ошибок и его консистентное применение.
-    -   Проверить терминологию на соответствие с другими файлами.
-4. **Примеры**:
-    -  Добавить пример использования `JsonFormatter`
+1.  **Стиль кода**:
+    -   Использовать одинарные кавычки (`'`) в коде Python, а двойные кавычки (`"`) только для вывода.
+    -   Применять f-строки для форматирования строк.
+2.  **Документация**:
+    -   Добавить информацию о зависимостях и минимальной версии Python.
+    -   Добавить пример установки модуля.
+    -   Переформатировать комментарии в соответствии с RST.
+    -   Описать обработку ошибок при записи в файлы.
+    -   Добавить проверку на существование директорий для логов перед созданием файлов.
+3.  **Логирование**:
+    -   Использовать `from src.logger.logger import logger` для импорта логгера.
+    -   Убрать лишние `try-except` блоки, обрабатывать ошибки через `logger.error`.
+4.  **Общая структура**:
+    -   Добавить описание модуля в начале файла.
+    -   Соблюдать стандарты оформления docstring в Python для Sphinx.
+5.  **Обработка данных**:
+    -   Использовать `j_loads` или `j_loads_ns` вместо `json.load` если это потребуется.
 
 **Оптимизированный код**
 
 ```markdown
-````rst
+```rst
 .. module:: src.logger
-
-   :platform: Unix, Windows
-   :synopsis: Модуль для логирования с поддержкой различных уровней, форматов и цветов.
-
-.. moduleauthor:: HypoTeam
-
 ```
+
 <TABLE >
 <TR>
 <TD>
@@ -58,17 +59,15 @@
 
 ### Документация для модуля `src.logger`
 
-Модуль `src.logger` предоставляет гибкую систему логирования, поддерживающую вывод в консоль, файлы и JSON. Он использует шаблон Singleton для гарантии единого экземпляра логгера в приложении. Логгер поддерживает различные уровни логирования (`INFO`, `ERROR`, `DEBUG` и т.д.) и включает цветной вывод для консольных логов. Можно настраивать форматы вывода и управление логированием в разные файлы.
+Модуль `src.logger` предоставляет гибкую систему логирования, поддерживающую вывод в консоль, файлы и JSON. Используется паттерн проектирования Singleton, чтобы гарантировать использование единственного экземпляра логгера во всем приложении. Логгер поддерживает различные уровни логирования (`INFO`, `ERROR`, `DEBUG`) и включает цветной вывод для консольных логов. Можно настраивать форматы вывода логов и управлять записью логов в разные файлы.
 
 ---
 
 ### Классы:
 
--   **SingletonMeta**: Метакласс, реализующий шаблон Singleton для логгера.
-
--   **JsonFormatter**: Пользовательский форматтер, выводящий логи в формате JSON.
-
--   **Logger**: Основной класс логгера, поддерживающий вывод в консоль, файлы и JSON.
+-   **SingletonMeta**: Метакласс, реализующий паттерн Singleton для логгера.
+-   **JsonFormatter**: Пользовательский форматер, выводящий логи в формате JSON.
+-   **Logger**: Основной класс логгера, поддерживающий логирование в консоль, файлы и JSON.
 
 ---
 
@@ -76,157 +75,113 @@
 
 #### `__init__`
 
-Инициализирует экземпляр `Logger` с плейсхолдерами для различных типов логгеров (консольного, файлового и JSON).
+Инициализирует экземпляр Logger с плейсхолдерами для разных типов логгеров (консольный, файловый и JSON).
 
 #### `_configure_logger(name: str, log_path: str, level: Optional[int] = logging.DEBUG, formatter: Optional[logging.Formatter] = None, mode: Optional[str] = 'a') -> logging.Logger`
 
-Настраивает и возвращает экземпляр логгера.
+Конфигурирует и возвращает экземпляр логгера.
 
-:param name: Имя логгера.
-:type name: str
-:param log_path: Путь к файлу журнала.
-:type log_path: str
-:param level: Уровень логирования (например, `logging.DEBUG`). По умолчанию `logging.DEBUG`.
-:type level: Optional[int]
-:param formatter: Пользовательский форматтер (опционально).
-:type formatter: Optional[logging.Formatter]
-:param mode: Режим открытия файла (например, `'a'` для добавления). По умолчанию `'a'`.
-:type mode: Optional[str]
-:return: Настроенный экземпляр `logging.Logger`.
-:rtype: logging.Logger
+**Параметры:**
+- `name`: Имя логгера.
+- `log_path`: Путь к файлу лога.
+- `level`: Уровень логирования, например, `logging.DEBUG`. По умолчанию `logging.DEBUG`.
+- `formatter`: Пользовательский форматер (опционально).
+- `mode`: Режим файла, например, `'a'` для добавления (по умолчанию).
+
+**Возвращает**: Настроенный экземпляр `logging.Logger`.
 
 #### `initialize_loggers(info_log_path: Optional[str] = '', debug_log_path: Optional[str] = '', errors_log_path: Optional[str] = '', json_log_path: Optional[str] = '')`
 
 Инициализирует логгеры для консоли и файлов (info, debug, error и JSON).
 
-:param info_log_path: Путь к файлу журнала info (опционально).
-:type info_log_path: Optional[str]
-:param debug_log_path: Путь к файлу журнала debug (опционально).
-:type debug_log_path: Optional[str]
-:param errors_log_path: Путь к файлу журнала error (опционально).
-:type errors_log_path: Optional[str]
-:param json_log_path: Путь к файлу журнала JSON (опционально).
-:type json_log_path: Optional[str]
+**Параметры:**
+- `info_log_path`: Путь к файлу информационных логов (опционально).
+- `debug_log_path`: Путь к файлу дебаг логов (опционально).
+- `errors_log_path`: Путь к файлу логов ошибок (опционально).
+- `json_log_path`: Путь к файлу JSON логов (опционально).
 
 #### `log(level, message, ex=None, exc_info=False, color=None)`
 
-Записывает сообщение с указанным уровнем (например, `INFO`, `DEBUG`, `ERROR`) с возможностью добавления исключения и цветового оформления.
+Записывает сообщение на указанном уровне (например, `INFO`, `DEBUG`, `ERROR`) с опциональным исключением и цветовым форматированием.
 
-:param level: Уровень логирования (например, `logging.INFO`, `logging.DEBUG`).
-:type level: int
-:param message: Сообщение для записи в журнал.
-:type message: str
-:param ex: Исключение для записи в журнал (опционально).
-:type ex: Optional[Exception]
-:param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-:type exc_info: bool
-:param color: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-:type color: Optional[tuple]
+**Параметры:**
+- `level`: Уровень логирования (например, `logging.INFO`, `logging.DEBUG`).
+- `message`: Сообщение лога.
+- `ex`: Опциональное исключение для логирования.
+- `exc_info`: Включать ли информацию об исключении (по умолчанию `False`).
+- `color`: Кортеж с цветом текста и фона для консольного вывода (опционально).
 
 #### `info(message, ex=None, exc_info=False, colors: Optional[tuple] = None)`
 
-Записывает сообщение уровня info.
+Записывает информационное сообщение.
 
-:param message: Сообщение для записи в журнал.
-:type message: str
-:param ex: Исключение для записи в журнал (опционально).
-:type ex: Optional[Exception]
-:param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-:type exc_info: bool
-:param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-:type colors: Optional[tuple]
+**Параметры:**
+- `message`: Сообщение для записи.
+- `ex`: Опциональное исключение для логирования.
+- `exc_info`: Включать ли информацию об исключении (по умолчанию `False`).
+- `colors`: Кортеж значений цветов для сообщения (опционально).
 
 #### `success(message, ex=None, exc_info=False, colors: Optional[tuple] = None)`
 
 Записывает сообщение об успехе.
 
-:param message: Сообщение для записи в журнал.
-:type message: str
-:param ex: Исключение для записи в журнал (опционально).
-:type ex: Optional[Exception]
-:param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-:type exc_info: bool
-:param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-:type colors: Optional[tuple]
+**Параметры**:
+- Аналогично `info`.
 
 #### `warning(message, ex=None, exc_info=False, colors: Optional[tuple] = None)`
 
-Записывает сообщение-предупреждение.
+Записывает предупреждающее сообщение.
 
-:param message: Сообщение для записи в журнал.
-:type message: str
-:param ex: Исключение для записи в журнал (опционально).
-:type ex: Optional[Exception]
-:param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-:type exc_info: bool
-:param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-:type colors: Optional[tuple]
+**Параметры**:
+- Аналогично `info`.
 
 #### `debug(message, ex=None, exc_info=True, colors: Optional[tuple] = None)`
 
-Записывает сообщение уровня debug.
+Записывает отладочное сообщение.
 
-:param message: Сообщение для записи в журнал.
-:type message: str
-:param ex: Исключение для записи в журнал (опционально).
-:type ex: Optional[Exception]
-:param exc_info: Флаг для включения информации об исключении (по умолчанию `True`).
-:type exc_info: bool
-:param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-:type colors: Optional[tuple]
+**Параметры**:
+- Аналогично `info`.
 
 #### `error(message, ex=None, exc_info=True, colors: Optional[tuple] = None)`
 
 Записывает сообщение об ошибке.
 
-:param message: Сообщение для записи в журнал.
-:type message: str
-:param ex: Исключение для записи в журнал (опционально).
-:type ex: Optional[Exception]
-:param exc_info: Флаг для включения информации об исключении (по умолчанию `True`).
-:type exc_info: bool
-:param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-:type colors: Optional[tuple]
+**Параметры**:
+- Аналогично `info`.
 
 #### `critical(message, ex=None, exc_info=True, colors: Optional[tuple] = None)`
 
 Записывает критическое сообщение.
 
-:param message: Сообщение для записи в журнал.
-:type message: str
-:param ex: Исключение для записи в журнал (опционально).
-:type ex: Optional[Exception]
-:param exc_info: Флаг для включения информации об исключении (по умолчанию `True`).
-:type exc_info: bool
-:param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-:type colors: Optional[tuple]
+**Параметры**:
+- Аналогично `info`.
 
 ---
 
-### Параметры для `Logger`
+### Параметры для Logger
 
-Класс `Logger` принимает несколько необязательных параметров для настройки поведения логирования.
+Класс `Logger` принимает несколько опциональных параметров для настройки поведения логирования.
 
--   **Level**: Управляет уровнем важности сообщений, которые регистрируются. Общие уровни включают:
-    -   `logging.DEBUG`: Детальная информация для диагностики.
+-   **Level**: Управляет уровнем серьезности логов. Основные уровни:
+    -   `logging.DEBUG`: Детальная информация, полезная для диагностики проблем.
     -   `logging.INFO`: Общая информация, например, об успешных операциях.
-    -   `logging.WARNING`: Предупреждения, не требующие немедленных действий.
+    -   `logging.WARNING`: Предупреждения, которые не требуют немедленных действий.
     -   `logging.ERROR`: Сообщения об ошибках.
     -   `logging.CRITICAL`: Критические ошибки, требующие немедленного внимания.
 
--   **Formatter**: Определяет формат сообщений журнала. По умолчанию сообщения имеют формат `'%(asctime)s - %(levelname)s - %(message)s'`. Можно задать пользовательский форматтер, например, JSON.
+-   **Formatter**: Определяет, как форматируются сообщения логов. По умолчанию сообщения форматируются как `'%(asctime)s - %(levelname)s - %(message)s'`. Можно предоставить пользовательский форматер для других форматов, например JSON.
 
--   **Color**: Цвета для сообщений в консоли. Цвета задаются кортежем из двух элементов:
-    -   **Цвет текста**: Цвет текста (например, `colorama.Fore.RED`).
-    -   **Цвет фона**: Цвет фона (например, `colorama.Back.WHITE`).
+-   **Color**: Цвета для сообщений логов в консоли. Цвета задаются кортежем из двух элементов:
+    -   **Цвет текста**: Задает цвет текста (например, `colorama.Fore.RED`).
+    -   **Цвет фона**: Задает цвет фона (например, `colorama.Back.WHITE`).
 
-Цвет можно настраивать для разных уровней логирования (например, зеленый для info, красный для errors).
+Цвета можно настроить для разных уровней логов (например, зеленый для info, красный для ошибок).
 
 ---
 
 ### Конфигурация файлового логирования (`config`)
 
-Для записи сообщений в файл, можно задать пути к файлам в конфигурации.
+Чтобы логировать сообщения в файл, укажите пути к файлам в конфигурации.
 
 ```python
 config = {
@@ -237,16 +192,15 @@ config = {
 }
 ```
 
-Пути к файлам из `config` используются для записи логов в соответствующие файлы для каждого уровня.
+Пути к файлам, указанные в `config`, используются для записи логов в соответствующие файлы для каждого уровня лога.
 
 ---
 
-### Примеры использования
+### Пример использования
 
-#### 1. Инициализация `Logger`:
+#### 1. Инициализация логгера:
 
 ```python
-from src.logger.logger import Logger #
 logger: Logger = Logger()
 config = {
     'info_log_path': 'logs/info.log',
@@ -257,13 +211,13 @@ config = {
 logger.initialize_loggers(**config)
 ```
 
-#### 2. Запись сообщений разных уровней:
+#### 2. Запись сообщений на разных уровнях:
 
 ```python
 logger.info('Это информационное сообщение')
 logger.success('Это сообщение об успехе')
-logger.warning('Это сообщение-предупреждение')
-logger.debug('Это сообщение debug')
+logger.warning('Это предупреждающее сообщение')
+logger.debug('Это отладочное сообщение')
 logger.error('Это сообщение об ошибке')
 logger.critical('Это критическое сообщение')
 ```
@@ -271,46 +225,22 @@ logger.critical('Это критическое сообщение')
 #### 3. Настройка цветов:
 
 ```python
-import colorama #
-logger.info('Это сообщение будет зеленым', colors=(colorama.Fore.GREEN, colorama.Back.BLACK)) #
-logger.error('Это сообщение будет с красным фоном', colors=(colorama.Fore.WHITE, colorama.Back.RED)) #
+logger.info('Это сообщение будет зеленым', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
+logger.error('Это сообщение будет с красным фоном', colors=(colorama.Fore.WHITE, colorama.Back.RED))
 ```
 
-#### 4. Пример использования JSON Formatter
-
-```python
-import logging
-from src.logger.logger import Logger, JsonFormatter  #
-logger: Logger = Logger()
-config = {
-    'info_log_path': 'logs/info.log',
-    'debug_log_path': 'logs/debug.log',
-    'errors_log_path': 'logs/errors.log',
-    'json_log_path': 'logs/log.json'
-}
-logger.initialize_loggers(**config)
-
-json_logger = logging.getLogger("json_logger") #
-json_handler = logging.FileHandler("logs/json_example.log") #
-json_formatter = JsonFormatter() #
-json_handler.setFormatter(json_formatter) #
-json_logger.addHandler(json_handler)  #
-json_logger.setLevel(logging.DEBUG) #
-
-
-json_logger.info("JSON log message", extra={"key": "value"})  #
-```
 ---
 
-Этот модуль предоставляет гибкую и комплексную систему логирования для Python приложений. Можно настроить вывод в консоль и файлы с различными форматами и цветами, управлять уровнями логирования и обрабатывать исключения. Конфигурация для файлового логирования хранится в словаре `config`, что позволяет легко настраивать поведение системы.
+Этот модуль предоставляет комплексную и гибкую систему логирования для Python приложений. Можно настраивать логирование в консоль и файлы с разными форматами и цветами, управлять уровнями логирования и обрабатывать исключения. Конфигурация для файлового логирования хранится в словаре `config`, что упрощает настройку.
+```
 ```python
 """
-Модуль для настройки и использования системы логирования.
+Модуль для логирования в консоль, файл и JSON.
 =========================================================================================
 
-Этот модуль предоставляет класс `Logger`, который реализует гибкую систему логирования,
-поддерживающую вывод в консоль, файлы и JSON. Используется шаблон Singleton для обеспечения
-единственного экземпляра логгера в приложении.
+Этот модуль содержит классы и функции для настройки и использования логгера.
+Поддерживается логирование в консоль с цветным выводом, запись в файлы и JSON формат.
+Используется паттерн Singleton для гарантии единственного экземпляра логгера.
 
 Пример использования
 --------------------
@@ -320,8 +250,10 @@ json_logger.info("JSON log message", extra={"key": "value"})  #
 .. code-block:: python
 
     from src.logger.logger import Logger
+    import logging
+    import colorama
 
-    logger = Logger()
+    logger: Logger = Logger()
     config = {
         'info_log_path': 'logs/info.log',
         'debug_log_path': 'logs/debug.log',
@@ -329,19 +261,31 @@ json_logger.info("JSON log message", extra={"key": "value"})  #
         'json_log_path': 'logs/log.json'
     }
     logger.initialize_loggers(**config)
-    logger.info('Сообщение информационного уровня')
-
+    logger.info('This is an info message')
+    logger.success('This is a success message')
+    logger.warning('This is a warning message')
+    logger.debug('This is a debug message')
+    logger.error('This is an error message')
+    logger.critical('This is a critical message')
+    logger.info('This message will be green', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
+    logger.error('This message will have a red background', colors=(colorama.Fore.WHITE, colorama.Back.RED))
 """
 import logging
-from typing import Optional, Tuple
-import colorama
 import json
+from typing import Optional, Tuple
+from colorama import init, Fore, Back
+from pathlib import Path
+#  импорт `logger` из `src.logger`
+from src.logger.logger import logger
+
+init(autoreset=True)
+
 
 class SingletonMeta(type):
     """
-    Метакласс, реализующий шаблон Singleton.
+    Метакласс, реализующий паттерн Singleton.
 
-    Гарантирует, что у класса будет только один экземпляр.
+    Этот метакласс гарантирует, что только один экземпляр класса будет создан.
     """
     _instances = {}
 
@@ -354,235 +298,197 @@ class SingletonMeta(type):
 
 class JsonFormatter(logging.Formatter):
     """
-    Форматтер для логирования в формате JSON.
+    Пользовательский форматер для вывода логов в формате JSON.
 
-    Преобразует записи лога в JSON-строку.
+    Этот класс преобразует записи лога в JSON формат.
     """
-    def format(self, record: logging.LogRecord) -> str:
-        """
-        Форматирует запись лога в JSON-строку.
-
-        :param record: Запись лога.
-        :type record: logging.LogRecord
-        :return: JSON-строка.
-        :rtype: str
-        """
+    def format(self, record):
         log_record = {
             'time': self.formatTime(record, self.datefmt),
             'level': record.levelname,
             'message': record.getMessage(),
-            'name': record.name,
-            'pathname': record.pathname,
-            'lineno': record.lineno,
-            'funcName': record.funcName
         }
-
         if record.exc_info:
-            log_record['exc_info'] = self.formatException(record.exc_info)
-
-        if hasattr(record, 'extra'):
-            log_record.update(record.extra)
-
-        return json.dumps(log_record)
+             log_record['exc_info'] = self.formatException(record.exc_info)
+        return json.dumps(log_record, ensure_ascii=False)
 
 
 class Logger(metaclass=SingletonMeta):
     """
-    Класс Logger для гибкой настройки системы логирования.
+    Основной класс логгера, поддерживающий логирование в консоль, файлы и JSON.
 
-    Поддерживает вывод в консоль, файлы и JSON.
+    Этот класс предоставляет методы для логирования сообщений разных уровней
+    (INFO, DEBUG, ERROR и т.д.) с поддержкой цветного вывода и записи в файлы.
     """
     def __init__(self):
         """
-        Инициализирует экземпляр Logger с плейсхолдерами для логгеров.
+        Инициализирует экземпляр Logger с плейсхолдерами для разных типов логгеров.
         """
         self._console_logger = None
-        self._info_logger = None
-        self._debug_logger = None
-        self._error_logger = None
+        self._file_loggers = {}
         self._json_logger = None
 
     def _configure_logger(self, name: str, log_path: str, level: Optional[int] = logging.DEBUG,
                           formatter: Optional[logging.Formatter] = None, mode: Optional[str] = 'a') -> logging.Logger:
         """
-        Настраивает и возвращает экземпляр логгера.
+        Конфигурирует и возвращает экземпляр логгера.
 
-        :param name: Имя логгера.
-        :type name: str
-        :param log_path: Путь к файлу журнала.
-        :type log_path: str
-        :param level: Уровень логирования (например, `logging.DEBUG`). По умолчанию `logging.DEBUG`.
-        :type level: Optional[int]
-        :param formatter: Пользовательский форматтер (опционально).
-        :type formatter: Optional[logging.Formatter]
-        :param mode: Режим открытия файла (например, `'a'` для добавления). По умолчанию `'a'`.
-        :type mode: Optional[str]
-        :return: Настроенный экземпляр `logging.Logger`.
-        :rtype: logging.Logger
+        Args:
+            name (str): Имя логгера.
+            log_path (str): Путь к файлу лога.
+            level (Optional[int], optional): Уровень логирования. Defaults to logging.DEBUG.
+            formatter (Optional[logging.Formatter], optional): Пользовательский форматер. Defaults to None.
+            mode (Optional[str], optional): Режим файла. Defaults to 'a'.
+
+        Returns:
+            logging.Logger: Конфигурированный экземпляр логгера.
         """
-        logger = logging.getLogger(name)
-        logger.setLevel(level)
-
-        if log_path:
-            file_handler = logging.FileHandler(log_path, mode=mode)
+        # код исполняет создание логгера с заданными параметрами
+        log_path = Path(log_path)
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        logger_instance = logging.getLogger(name)
+        logger_instance.setLevel(level)
+        if not logger_instance.hasHandlers():
+            file_handler = logging.FileHandler(log_path, mode=mode, encoding='utf-8')
             if formatter:
-                file_handler.setFormatter(formatter)
+                 file_handler.setFormatter(formatter)
             else:
-                formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s') #
-                file_handler.setFormatter(formatter) #
-            logger.addHandler(file_handler) #
-        return logger
+                 file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+            logger_instance.addHandler(file_handler)
+        return logger_instance
 
     def initialize_loggers(self, info_log_path: Optional[str] = '', debug_log_path: Optional[str] = '',
-                           errors_log_path: Optional[str] = '', json_log_path: Optional[str] = ''):
-        """
-        Инициализирует логгеры для консоли и файлов (info, debug, error и JSON).
+                            errors_log_path: Optional[str] = '', json_log_path: Optional[str] = ''):
+         """
+         Инициализирует логгеры для консоли и файлов (info, debug, error и JSON).
 
-        :param info_log_path: Путь к файлу журнала info (опционально).
-        :type info_log_path: Optional[str]
-        :param debug_log_path: Путь к файлу журнала debug (опционально).
-        :type debug_log_path: Optional[str]
-        :param errors_log_path: Путь к файлу журнала error (опционально).
-        :type errors_log_path: Optional[str]
-        :param json_log_path: Путь к файлу журнала JSON (опционально).
-        :type json_log_path: Optional[str]
-        """
-        self._console_logger = self._configure_logger(name='console', log_path='') #
-        self._info_logger = self._configure_logger(name='info', log_path=info_log_path, level=logging.INFO) #
-        self._debug_logger = self._configure_logger(name='debug', log_path=debug_log_path, level=logging.DEBUG) #
-        self._error_logger = self._configure_logger(name='error', log_path=errors_log_path, level=logging.ERROR) #
-        self._json_logger = self._configure_logger(name='json', log_path=json_log_path, level=logging.DEBUG, formatter=JsonFormatter()) #
+         Args:
+             info_log_path (Optional[str], optional): Путь к файлу информационных логов. Defaults to ''.
+             debug_log_path (Optional[str], optional): Путь к файлу дебаг логов. Defaults to ''.
+             errors_log_path (Optional[str], optional): Путь к файлу логов ошибок. Defaults to ''.
+             json_log_path (Optional[str], optional): Путь к файлу JSON логов. Defaults to ''.
+         """
+         # код исполняет настройку консольного логгера
+         self._console_logger = logging.getLogger('console')
+         self._console_logger.setLevel(logging.DEBUG)
+         if not self._console_logger.hasHandlers():
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+            self._console_logger.addHandler(console_handler)
 
+        # код исполняет настройку файловых логгеров
+         if info_log_path:
+             self._file_loggers['info'] = self._configure_logger('info_logger', info_log_path, level=logging.INFO)
+         if debug_log_path:
+             self._file_loggers['debug'] = self._configure_logger('debug_logger', debug_log_path, level=logging.DEBUG)
+         if errors_log_path:
+             self._file_loggers['error'] = self._configure_logger('error_logger', errors_log_path, level=logging.ERROR)
+         if json_log_path:
+            self._json_logger = self._configure_logger('json_logger', json_log_path, formatter=JsonFormatter())
 
-    def log(self, level: int, message: str, ex: Optional[Exception] = None, exc_info: bool = False,
-            color: Optional[Tuple[str, str]] = None):
+    def log(self, level, message, ex=None, exc_info=False, color: Optional[Tuple] = None):
         """
-        Записывает сообщение с указанным уровнем и форматированием.
+        Записывает сообщение на указанном уровне с опциональным исключением и цветовым форматированием.
 
-        :param level: Уровень логирования (например, `logging.INFO`, `logging.DEBUG`).
-        :type level: int
-        :param message: Сообщение для записи в журнал.
-        :type message: str
-        :param ex: Исключение для записи в журнал (опционально).
-        :type ex: Optional[Exception]
-        :param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-        :type exc_info: bool
-        :param color: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-        :type color: Optional[tuple]
+        Args:
+            level: Уровень логирования (например, logging.INFO, logging.DEBUG).
+            message: Сообщение лога.
+            ex: Опциональное исключение для логирования.
+            exc_info: Включать ли информацию об исключении (по умолчанию False).
+            color: Кортеж с цветом текста и фона для консольного вывода (опционально).
         """
+        # код исполняет форматирование сообщения
         log_message = message
         if color:
-            log_message = f'{color[0]}{color[1]}{message}{colorama.Style.RESET_ALL}'
-        if self._console_logger: #
-             self._console_logger.log(level, log_message, exc_info=exc_info) #
+            log_message = f'{color[0]}{color[1]}{message}{Fore.RESET}{Back.RESET}'
 
-        if level == logging.INFO and self._info_logger:  #
-            self._info_logger.log(level, message, exc_info=exc_info,  exc_info=exc_info) #
-        if level == logging.DEBUG and self._debug_logger:  #
-            self._debug_logger.log(level, message, exc_info=exc_info,  exc_info=exc_info) #
-        if level >= logging.ERROR and self._error_logger:  #
-            self._error_logger.log(level, message, exc_info=exc_info, exc_info=exc_info) #
-        if level >= logging.DEBUG and self._json_logger:
-              extra = {}
-              if ex:
-                extra = {'exception': str(ex)}
-              self._json_logger.log(level, message, exc_info=exc_info, extra=extra)  #
+        # код исполняет запись в консольный логгер
+        if self._console_logger:
+            self._console_logger.log(level, log_message, exc_info=exc_info)
 
-    def info(self, message: str, ex: Optional[Exception] = None, exc_info: bool = False,
-             colors: Optional[Tuple[str, str]] = None):
+        # код исполняет запись в файловый логгер
+        if level == logging.INFO and 'info' in self._file_loggers:
+            self._file_loggers['info'].log(level, message, exc_info=exc_info)
+        elif level == logging.DEBUG and 'debug' in self._file_loggers:
+            self._file_loggers['debug'].log(level, message, exc_info=exc_info)
+        elif level >= logging.ERROR and 'error' in self._file_loggers:
+            self._file_loggers['error'].log(level, message, exc_info=exc_info)
+
+        # код исполняет запись в JSON логгер
+        if self._json_logger:
+            self._json_logger.log(level, message, exc_info=exc_info)
+        if ex:
+           logger.error(f'{message=}', exc_info=True)
+
+    def info(self, message, ex=None, exc_info=False, colors: Optional[Tuple] = None):
         """
-        Записывает сообщение уровня info.
+        Записывает информационное сообщение.
 
-        :param message: Сообщение для записи в журнал.
-        :type message: str
-        :param ex: Исключение для записи в журнал (опционально).
-        :type ex: Optional[Exception]
-        :param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-        :type exc_info: bool
-        :param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-        :type colors: Optional[tuple]
+        Args:
+            message: Сообщение для записи.
+            ex: Опциональное исключение для логирования.
+            exc_info: Включать ли информацию об исключении (по умолчанию False).
+            colors: Кортеж значений цветов для сообщения (опционально).
         """
-        self.log(logging.INFO, message, ex, exc_info, colors) #
+        self.log(logging.INFO, message, ex=ex, exc_info=exc_info, color=colors)
 
-    def success(self, message: str, ex: Optional[Exception] = None, exc_info: bool = False,
-                colors: Optional[Tuple[str, str]] = None):
+    def success(self, message, ex=None, exc_info=False, colors: Optional[Tuple] = None):
         """
         Записывает сообщение об успехе.
 
-        :param message: Сообщение для записи в журнал.
-        :type message: str
-        :param ex: Исключение для записи в журнал (опционально).
-        :type ex: Optional[Exception]
-        :param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-        :type exc_info: bool
-        :param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-        :type colors: Optional[tuple]
+        Args:
+            message: Сообщение для записи.
+            ex: Опциональное исключение для логирования.
+            exc_info: Включать ли информацию об исключении (по умолчанию False).
+            colors: Кортеж значений цветов для сообщения (опционально).
         """
-        self.log(logging.INFO, message, ex, exc_info, (colorama.Fore.GREEN, colorama.Back.BLACK) if colors is None else colors ) #
+        self.log(logging.INFO, message, ex=ex, exc_info=exc_info, color=(Fore.GREEN, Back.BLACK) if not colors else colors)
 
-    def warning(self, message: str, ex: Optional[Exception] = None, exc_info: bool = False,
-                colors: Optional[Tuple[str, str]] = None):
+    def warning(self, message, ex=None, exc_info=False, colors: Optional[Tuple] = None):
         """
-         Записывает сообщение-предупреждение.
+        Записывает предупреждающее сообщение.
 
-        :param message: Сообщение для записи в журнал.
-        :type message: str
-        :param ex: Исключение для записи в журнал (опционально).
-        :type ex: Optional[Exception]
-        :param exc_info: Флаг для включения информации об исключении (по умолчанию `False`).
-        :type exc_info: bool
-        :param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-        :type colors: Optional[tuple]
+        Args:
+            message: Сообщение для записи.
+            ex: Опциональное исключение для логирования.
+            exc_info: Включать ли информацию об исключении (по умолчанию False).
+            colors: Кортеж значений цветов для сообщения (опционально).
         """
-        self.log(logging.WARNING, message, ex, exc_info, (colorama.Fore.YELLOW, colorama.Back.BLACK) if colors is None else colors) #
+        self.log(logging.WARNING, message, ex=ex, exc_info=exc_info, color=(Fore.YELLOW, Back.BLACK) if not colors else colors)
 
-
-    def debug(self, message: str, ex: Optional[Exception] = None, exc_info: bool = True,
-              colors: Optional[Tuple[str, str]] = None):
+    def debug(self, message, ex=None, exc_info=True, colors: Optional[Tuple] = None):
         """
-        Записывает сообщение уровня debug.
+        Записывает отладочное сообщение.
 
-        :param message: Сообщение для записи в журнал.
-        :type message: str
-        :param ex: Исключение для записи в журнал (опционально).
-        :type ex: Optional[Exception]
-        :param exc_info: Флаг для включения информации об исключении (по умолчанию `True`).
-        :type exc_info: bool
-        :param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-        :type colors: Optional[tuple]
+        Args:
+            message: Сообщение для записи.
+            ex: Опциональное исключение для логирования.
+            exc_info: Включать ли информацию об исключении (по умолчанию True).
+            colors: Кортеж значений цветов для сообщения (опционально).
         """
-        self.log(logging.DEBUG, message, ex, exc_info, colors) #
+        self.log(logging.DEBUG, message, ex=ex, exc_info=exc_info, color=(Fore.BLUE, Back.BLACK) if not colors else colors)
 
-    def error(self, message: str, ex: Optional[Exception] = None, exc_info: bool = True,
-              colors: Optional[Tuple[str, str]] = None):
+    def error(self, message, ex=None, exc_info=True, colors: Optional[Tuple] = None):
         """
         Записывает сообщение об ошибке.
 
-        :param message: Сообщение для записи в журнал.
-        :type message: str
-        :param ex: Исключение для записи в журнал (опционально).
-        :type ex: Optional[Exception]
-        :param exc_info: Флаг для включения информации об исключении (по умолчанию `True`).
-        :type exc_info: bool
-         :param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-        :type colors: Optional[tuple]
+        Args:
+            message: Сообщение для записи.
+            ex: Опциональное исключение для логирования.
+            exc_info: Включать ли информацию об исключении (по умолчанию True).
+            colors: Кортеж значений цветов для сообщения (опционально).
         """
-        self.log(logging.ERROR, message, ex, exc_info, (colorama.Fore.RED, colorama.Back.BLACK) if colors is None else colors) #
+        self.log(logging.ERROR, message, ex=ex, exc_info=exc_info, color=(Fore.RED, Back.BLACK) if not colors else colors)
 
-
-    def critical(self, message: str, ex: Optional[Exception] = None, exc_info: bool = True,
-                 colors: Optional[Tuple[str, str]] = None):
+    def critical(self, message, ex=None, exc_info=True, colors: Optional[Tuple] = None):
         """
         Записывает критическое сообщение.
 
-        :param message: Сообщение для записи в журнал.
-        :type message: str
-        :param ex: Исключение для записи в журнал (опционально).
-        :type ex: Optional[Exception]
-        :param exc_info: Флаг для включения информации об исключении (по умолчанию `True`).
-        :type exc_info: bool
-        :param colors: Кортеж с цветом текста и фона для вывода в консоль (опционально).
-        :type colors: Optional[tuple]
+         Args:
+            message: Сообщение для записи.
+            ex: Опциональное исключение для логирования.
+            exc_info: Включать ли информацию об исключении (по умолчанию True).
+            colors: Кортеж значений цветов для сообщения (опционально).
         """
-        self.log(logging.CRITICAL, message, ex, exc_info,  (colorama.Fore.RED, colorama.Back.WHITE) if colors is None else colors) #
+        self.log(logging.CRITICAL, message, ex=ex, exc_info=exc_info, color=(Fore.RED, Back.WHITE) if not colors else colors)
 ```

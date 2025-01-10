@@ -1,3 +1,4 @@
+from __future__ import annotations
 ## \file /src/category/category.py
 # -*- coding: utf-8 -*-\
 
@@ -27,7 +28,7 @@ import header
 from src import gs
 from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_dumps
-from src.endpoints.prestashop import PrestaShop, PrestaCategory
+from src.endpoints.prestashop import PrestaCategory
 
 
 class Category(PrestaCategory):

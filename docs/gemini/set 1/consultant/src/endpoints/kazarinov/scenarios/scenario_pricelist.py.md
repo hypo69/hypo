@@ -28,7 +28,7 @@ from dataclasses import field
 # from src import gs # TODO remove
 import header
 from src import gs
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.advertisement.facebook.scenarios import (
@@ -477,7 +477,7 @@ from dataclasses import field
 # from src import gs # TODO remove
 import header
 from src import gs
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.advertisement.facebook.scenarios import (

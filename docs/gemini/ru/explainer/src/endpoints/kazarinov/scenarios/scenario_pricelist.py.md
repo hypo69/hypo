@@ -162,7 +162,7 @@ flowchart TD
 *   `from dataclasses import field`:  Для создания полей в dataclass.
 *   `import header`: Пользовательский модуль для определения корня проекта (объяснение ниже).
 *   `from src import gs`: Импортирует глобальные настройки приложения (объяснение ниже).
-*   `from src.product.product_fields import ProductFields`:  Импортирует класс `ProductFields`, определяющий структуру данных о товаре.
+*   `from src.endpoints.prestashop.product_fields import ProductFields`:  Импортирует класс `ProductFields`, определяющий структуру данных о товаре.
 *   `from src.webdriver.driver import Driver`: Импортирует класс `Driver` для управления браузером через Selenium.
 *   `from src.ai.gemini import GoogleGenerativeAI`: Импортирует класс `GoogleGenerativeAI` для взаимодействия с AI моделью Gemini.
 *   `from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish`: Импортирует функции для взаимодействия с Facebook.

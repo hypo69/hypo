@@ -1,59 +1,46 @@
-# Анализ кода модуля `test_brainstorming_scenarios.py`
+# Анализ кода модуля `test_brainstorming_scenarios`
 
 **Качество кода**
-9
-- Плюсы
-    - Код хорошо структурирован и читабелен.
+8
+-  Плюсы
+    - Код хорошо структурирован и понятен.
     - Используется `pytest` для тестирования.
-    - Применяется  `logger` для логирования.
-    - Есть разделение на модули и классы.
-- Минусы
-    - Отсутствуют docstring для модуля, функций и классов.
-    - Стандартные блоки try-except используются вместо `logger.error`
-    - `sys.path.append` не очень хороший подход для импортов, лучше использовать `PYTHONPATH` или пакетную установку.
+    - Присутствуют импорты необходимых модулей и классов.
+    - Используются константы, что делает код более читаемым.
+    - Используется `ResultsExtractor` для извлечения результатов.
+ -  Минусы
+    -  Не хватает docstring для модуля и функций.
+    -  Импорт `logger` не соответствует стандартам.
+    -  Присутствует избыточное добавление путей в `sys.path`.
+    -  Не везде используются одинарные кавычки для строк.
+    -  Отсутствует обработка ошибок.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля, функций, классов.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-3.  Избегать избыточного использования стандартных блоков `try-except`.
-4.  Заменить `sys.path.append` на более надежный способ управления импортами.
-5.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load` для чтения файлов (если применимо).
-6.  Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
-7.  Улучшить форматирование сообщений `logger`
+1.  Добавить описание модуля.
+2.  Добавить docstring для функции `test_brainstorming_scenario`.
+3.  Удалить лишние импорты `sys` и не нужные пути в `sys.path`.
+4.  Использовать `from src.logger.logger import logger` для импорта логгера.
+5.  Удалить импорт `logging` так как используется `src.logger`.
+6.  Переписать все строки в одинарных кавычках.
+7.  Добавить проверку и логирование ошибок в коде.
+8.  Избегать прямого использования `print` для вывода, а использовать `logger.info`.
 
 **Оптимизированный код**
-
 ```python
 """
 Модуль для тестирования сценария мозгового штурма.
 =========================================================================================
-
-Этот модуль содержит тесты для проверки функциональности мозгового штурма, 
-с использованием агентов, среды и инструментов из библиотеки `tinytroupe`.
-
-Пример использования
---------------------
-
-Запуск теста:
-
-.. code-block:: python
-
-    pytest test_brainstorming_scenarios.py
-
+Этот модуль содержит тест :func:`test_brainstorming_scenario`, который эмулирует сценарий мозгового штурма в фокус-группе,
+затем извлекает результаты обсуждения, используя `ResultsExtractor`, и проверяет их на соответствие заданному условию.
 """
 import pytest
-# from src.logger.logger import logger  # TODO: Uncomment when logger is implemented
-import logging
-logger = logging.getLogger("tinytroupe")
 
-
+from src.logger.logger import logger
 import sys
-# TODO: Use PYTHONPATH or package installation instead
-sys.path.append('../../tinytroupe/')
+
 sys.path.append('../../')
 sys.path.append('../')
-
 
 import tinytroupe
 from tinytroupe.agent import TinyPerson
@@ -66,18 +53,26 @@ from tinytroupe.extraction import default_extractor as extractor
 import tinytroupe.control as control
 from tinytroupe.control import Simulation
 
-from testing_utils import *
+from tests.scenarios.testing_utils import *
 
 def test_brainstorming_scenario(setup, focus_group_world):
     """
-    Тестирует сценарий мозгового штурма для генерации идей.
+    Тестирует сценарий мозгового штурма в фокус-группе.
 
-    :param setup: Фикстура pytest для настройки окружения.
-    :param focus_group_world: Фикстура pytest, представляющая собой TinyWorld с участниками.
+    Args:
+        setup: Фикстура pytest для настройки окружения.
+        focus_group_world: Фикстура pytest, представляющая мир фокус-группы.
+
+    Returns:
+         None
+    
+    Raises:
+        AssertionError: Если результат мозгового штурма не соответствует ожидаемому.
     """
-    # Инициализация мира из фикстуры
+    # Инициализация мира фокус-группы.
     world = focus_group_world
-    # Отправка сообщения для начала мозгового штурма
+
+    # Отправка сообщения в мир для начала мозгового штурма.
     world.broadcast("""
              Folks, we need to brainstorm ideas for a new product. Your mission is to discuss potential AI feature ideas
              to add to Microsoft Word. In general, we want features that make you or your industry more productive,
@@ -86,25 +81,26 @@ def test_brainstorming_scenario(setup, focus_group_world):
              Please start the discussion now.
              """)
     
-    # Запуск мира на один шаг
+    # Запуск симуляции на один шаг.
     world.run(1)
 
-    # Получение агента "Lisa"
-    agent = TinyPerson.get_agent_by_name("Lisa")
-    
-    # Просьба агенту подытожить идеи
-    agent.listen_and_act("Can you please summarize the ideas that the group came up with?")
+    # Получение агента по имени "Lisa".
+    agent = TinyPerson.get_agent_by_name('Lisa')
 
-    # Инициализация ResultsExtractor
+    # Агент прослушивает и реагирует на запрос о суммировании идей.
+    agent.listen_and_act('Can you please summarize the ideas that the group came up with?')
+    
+    # Инициализация ResultsExtractor для извлечения результатов.
     extractor = ResultsExtractor()
-    
-    # Извлечение результатов
-    results = extractor.extract_results_from_agent(agent, 
-                            extraction_objective="Summarize the the ideas that the group came up with, explaining each idea as an item of a list. Describe in details the benefits and drawbacks of each.", 
-                            situation="A focus group to brainstorm ideas for a new product.")
-    # Вывод результатов
-    print("Brainstorm Results: ", results)
 
-    # Проверка, что результаты соответствуют ожидаемым
-    assert proposition_holds(f"The following contains some ideas for new product features or entirely new products: \'{results}\'"), f"Proposition is false according to the LLM."
+    # Извлечение результатов из агента с заданным критерием извлечения.
+    results = extractor.extract_results_from_agent(agent,
+                            extraction_objective='Summarize the the ideas that the group came up with, explaining each idea as an item of a list. Describe in details the benefits and drawbacks of each.',
+                            situation='A focus group to brainstorm ideas for a new product.')
+    
+    # Вывод результатов мозгового штурма через логгер.
+    logger.info(f'Brainstorm Results: {results}')
+
+    # Проверка соответствия результатов ожидаемому формату.
+    assert proposition_holds(f'The following contains some ideas for new product features or entirely new products: \'{results}\''), f'Proposition is false according to the LLM.'
 ```

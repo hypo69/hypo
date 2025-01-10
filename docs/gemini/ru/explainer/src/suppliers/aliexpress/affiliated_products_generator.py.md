@@ -156,7 +156,7 @@ flowchart TD
 *   `from src.suppliers.aliexpress import AliApi`: Импорт базового класса для работы с API AliExpress. Обеспечивает базовую функциональность для доступа к данным AliExpress.
 *   `from src.suppliers.aliexpress.campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerator, CampaignHTMLGenerator`: Импорт классов для генерации HTML-шаблонов (не используются в текущем коде, но могут использоваться в других частях проекта).
 *  `from src.suppliers.aliexpress.utils.ensure_https import ensure_https`: Импорт функции для приведения URL к протоколу https
-*   `from src.product.product_fields import ProductFields as f`:  Импорт enum с полями для работы с продуктами (не используется в этом коде).
+*   `from src.endpoints.prestashop.product_fields import ProductFields as f`:  Импорт enum с полями для работы с продуктами (не используется в этом коде).
 *   `from src.utils.image import save_png_from_url`: Импорт функции для скачивания и сохранения изображений в формате PNG.
 *   `from src.utils.video import save_video_from_url`: Импорт функции для скачивания и сохранения видео.
 *   `from src.utils.file import get_directory_names, get_filenames, read_text_file, save_text_file`: Импорт функций для работы с файлами.
@@ -221,7 +221,7 @@ flowchart TD
 *   **Обработка ошибок:** В коде есть некоторые места с логгированием ошибок, но нет полноценной обработки исключений (например, при скачивании изображений или видео). Стоит добавить блоки try-except для более надежной работы.
 *   **Дублирование кода:** Логика обработки изображений и видео похожа, можно вынести ее в отдельную функцию для избежания дублирования.
 *   **Оптимизация:** Параллельная обработка продуктов могла бы ускорить выполнение программы.
-*    **Не используется enum ProductFields**: в коде есть импорт `from src.product.product_fields import ProductFields as f`, но он не используется, его можно удалить.
+*    **Не используется enum ProductFields**: в коде есть импорт `from src.endpoints.prestashop.product_fields import ProductFields as f`, но он не используется, его можно удалить.
 
 **Взаимосвязь с другими частями проекта:**
 

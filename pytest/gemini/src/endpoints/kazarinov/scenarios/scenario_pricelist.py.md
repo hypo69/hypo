@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from types import SimpleNamespace
 import asyncio
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import MexironBuilder
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src import gs
 
 @pytest.fixture

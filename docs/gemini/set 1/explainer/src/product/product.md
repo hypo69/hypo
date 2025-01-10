@@ -20,7 +20,7 @@ import header
 from src import gs
 from src.endpoints.prestashop import PrestaShop  # Explicit import
 from src.category import Category
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.logger import logger
 
 
@@ -111,7 +111,7 @@ graph LR
 * `from src import gs`: Импортирует модуль `gs` из пакета `src`.  Без кода `gs.py`  трудно точно определить его функциональность. Предполагается, что `gs` отвечает за взаимодействие с источниками данных.
 * `from src.endpoints.prestashop import PrestaShop`: Импортирует класс `PrestaShop` из пакета `src.endpoints.prestashop`.  Это указывает на то, что `PrestaShop` предназначен для взаимодействия с API Престашоп.
 * `from src.category import Category`: Импортирует класс `Category` из пакета `src.category`.  Предполагается, что `Category` работает с категориями продуктов.
-* `from src.product.product_fields import ProductFields`: Импортирует класс `ProductFields` из пакета `src.product.product_fields`, скорее всего, содержащий поля продукта.
+* `from src.endpoints.prestashop.product_fields import ProductFields`: Импортирует класс `ProductFields` из пакета `src.product.product_fields`, скорее всего, содержащий поля продукта.
 * `from src.logger import logger`: Импортирует объект логгера для записи сообщений об ошибках и другой информации.
 
 **Классы**:

@@ -51,7 +51,7 @@ from src.category.category import Category  # импорт класса Category
 from src.product.product_fields.product_fields import ProductFields # импорт класса ProductFields
 from src.utils.jjson import j_loads, j_loads_ns # импорт j_loads
 from src.logger.logger import logger # импорт logger
-#from src.product.product_fields import ProductFields # импорт ProductFields # Дубликат, удалил
+#from src.endpoints.prestashop.product_fields import ProductFields # импорт ProductFields # Дубликат, удалил
 
 class Product(ProductFields, PrestaShop):
     """

@@ -9,7 +9,7 @@ from src import gs  # Replace with actual import if available
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
 from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.utils.file import read_text_file, save_text_file
 from src.utils.image import save_png_from_url  # Import necessary functions
 from src.logger import logger

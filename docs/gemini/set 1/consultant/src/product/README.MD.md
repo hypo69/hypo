@@ -92,7 +92,7 @@
    :Пример использования:
       .. code-block:: python
          # Пример использования модуля `product_fields`
-         from src.product.product_fields import ProductFields
+         from src.endpoints.prestashop.product_fields import ProductFields
 
          fields = ProductFields()
          fields.name = 'Test Product'

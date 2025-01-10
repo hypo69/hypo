@@ -6,7 +6,7 @@ from typing import List, Optional
 from unittest.mock import MagicMock
 from dataclasses import field
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import Mexiron
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
 from src.webdriver import Driver

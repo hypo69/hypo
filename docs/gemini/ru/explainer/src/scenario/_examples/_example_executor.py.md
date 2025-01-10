@@ -124,7 +124,7 @@ flowchart TD
 *   `from pathlib import Path`: Используется для работы с путями к файлам и директориям, что облегчает управление файлами сценариев.
 *   `from src.scenario.executor import ...`: Импортирует функции из модуля `src.scenario.executor`, которые выполняют основные операции со сценариями, такие как запуск файлов сценариев, отдельных сценариев, а также взаимодействие с PrestaShop API.
 *   `from src.utils.jjson import j_loads_ns`: Импортируется для загрузки JSON-данных, предположительно с применением namespace.
-*   `from src.product.product_fields import ProductFields`: Импортируется для создания экземпляров класса `ProductFields`, который содержит информацию о продукте для импорта в PrestaShop.
+*   `from src.endpoints.prestashop.product_fields import ProductFields`: Импортируется для создания экземпляров класса `ProductFields`, который содержит информацию о продукте для импорта в PrestaShop.
 *   `from src.endpoints.PrestaShop import PrestaShop`: Импортируется для взаимодействия с PrestaShop API.
 
 **Классы:**

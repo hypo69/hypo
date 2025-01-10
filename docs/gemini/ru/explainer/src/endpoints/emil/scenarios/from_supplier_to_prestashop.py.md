@@ -149,7 +149,7 @@ flowchart TD
 *   `from telegram.ext import CallbackContext`: Класс для работы с контекстом Telegram бота.
 *   `import header`: Модуль, определяющий корневую директорию проекта.
 *   `from src import gs`: Импортирует глобальные настройки из модуля `gs`.
-*   `from src.product.product_fields import ProductFields`: Импортирует класс для представления данных о товаре.
+*   `from src.endpoints.prestashop.product_fields import ProductFields`: Импортирует класс для представления данных о товаре.
 *   `from src.webdriver.driver import Driver`: Импортирует класс для управления браузером с помощью Selenium.
 *   `from src.ai.gemini import GoogleGenerativeAI`: Импортирует класс для работы с моделью ИИ Google Gemini.
 *    `from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish`: Импортирует функции для работы с Facebook API.

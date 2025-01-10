@@ -12,3 +12,8 @@
 
 
 from .code_assistant import CodeAssistant
+
+if __name__ == "main":
+	from .code_assistant import main
+	main()
+	

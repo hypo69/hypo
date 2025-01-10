@@ -2,206 +2,204 @@
 
 **Качество кода**
 9
--  Плюсы
-    - Код соответствует PEP 8, содержит docstring для каждой функции и модуля.
-    - Код использует логгер для записи ошибок.
-    - Присутствуют type hints.
-    - Код обрабатывает исключения при работе с FTP-сервером.
--  Минусы
-    - Исключения обрабатываются с помощью try-except, что усложняет код и может привести к дублированию логики.
-    - Повторяется подключение к FTP серверу в каждой функции.
-    - Переменные _connection не описаны.
+- Плюсы
+    - Код имеет подробную документацию к модулю и каждой функции.
+    - Используется `logger` для логирования ошибок.
+    - Присутствуют примеры использования функций.
+    - Используются `type hints`.
+    - Код достаточно читабельный и понятный.
+
+- Минусы
+    - Не используется `Path` из `pathlib` для `file_path` в функциях `write`, `read`, `delete`.
+    -  Многократное использование блока `try-except` для закрытия сессии FTP.
+    - `source_file_path` в функции `delete` не используется, это может запутать.
 
 **Рекомендации по улучшению**
-1.  **Инкапсулировать подключение к FTP:** Вынести логику подключения к FTP-серверу в отдельную функцию или класс, чтобы избежать дублирования кода.
-2.  **Обработка ошибок:** Использовать `logger.error` для записи ошибок и перехват исключений в одном месте.
-3.  **Конфигурация FTP:** Сделать параметры FTP настраиваемыми (например, через параметры функций или файл конфигурации), убрать `_connection` и сделать его переменной окружения.
-4.  **Удалить неиспользуемые аргументы:** Убрать source_file_path из функции `delete`, так как он не используется.
-5.  **Использовать константы**: Использовать константы для magic strings
-6.  **Избегать избыточных try-except блоков:** Упростить обработку ошибок, используя более конкретные блоки `try-except` или обработку ошибок на более высоком уровне.
+1.  Используйте `Path` для `file_path`.
+2.  Вынесите код закрытия сессии FTP в отдельную функцию для уменьшения дублирования кода.
+3.  Используйте `f-string` для форматирования строк логов, для лучшей читаемости.
+4.  Удалите неиспользуемый параметр `source_file_path` из функции `delete` или явно укажите, что он не используется.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль для работы с FTP-серверами.
+Модуль для работы с FTP сервером
 =========================================================================================
 
-Этот модуль предоставляет интерфейс для взаимодействия с FTP-серверами.
-Он включает функции для отправки, получения и удаления файлов с FTP-сервера.
+Этот модуль предоставляет интерфейс для взаимодействия с FTP серверами.
+Включает функции для отправки, получения и удаления файлов с FTP-сервера.
 
-**Назначение:**
-Позволяет отправлять медиафайлы (изображения, видео), электронные таблицы и другие файлы на FTP-сервер и с него.
+**Назначение**:
+Позволяет отправлять медиафайлы (изображения, видео), электронные таблицы и другие файлы
+на FTP-сервер и с него.
 
-**Модули:**
-- `src.logger.logger`: Логирование ошибок.
-- `typing`: Подсказки типов для параметров функций и возвращаемых значений.
-- `ftplib`: Предоставляет возможности клиента протокола FTP.
-- `pathlib`: Для работы с путями файловой системы.
+**Модули**:
+- helpers (local): Локальные вспомогательные утилиты для операций с FTP.
+- typing: Подсказки типов для параметров функций и возвращаемых значений.
+- ftplib: Предоставляет возможности FTP-клиента.
+- pathlib: Для обработки путей файловой системы.
 
-**Функции:**
+Функции:
     - `write`: Отправляет файл на FTP-сервер.
     - `read`: Получает файл с FTP-сервера.
     - `delete`: Удаляет файл с FTP-сервера.
+
+Пример использования
+--------------------
+
+Пример использования функций модуля:
+
+.. code-block:: python
+
+    from pathlib import Path
+    from src.utils import ftp
+    file_path = Path('example.txt')
+    with open(file_path, 'w') as f:
+        f.write('example file')
+
+    ftp.write(file_path, '/remote/directory', 'example.txt')
+    content = ftp.read(file_path, '/remote/directory', 'example.txt')
+    print(content)
+    ftp.delete(file_path, '/remote/directory', 'example.txt')
 """
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 from src.logger.logger import logger
 from typing import Union
 import ftplib
 from pathlib import Path
-import os
 
-# Константы
-FTP_SERVER = os.getenv('FTP_SERVER', 'ftp.example.com')
-FTP_PORT = int(os.getenv('FTP_PORT', 21))
-FTP_USER = os.getenv('FTP_USER', 'username')
-FTP_PASSWORD = os.getenv('FTP_PASSWORD', 'password')
+# Connection configuration (предполагается, что определена в другом месте)
+_connection = {
+    'server': 'ftp.example.com',
+    'port': 21,
+    'user': 'username',
+    'password': 'password'
+}
 
-STOR = 'STOR'
-RETR = 'RETR'
-
-def _create_ftp_session() -> ftplib.FTP:
+def _close_ftp_session(session: ftplib.FTP) -> None:
     """
-    Устанавливает соединение с FTP-сервером.
+    Закрывает FTP сессию и обрабатывает возможные ошибки.
 
-    :return: Объект FTP-сессии.
-    :raises Exception: Если не удалось подключиться к FTP-серверу.
+    Args:
+        session (ftplib.FTP): FTP сессия для закрытия.
     """
     try:
-         # Код устанавливает соединение с FTP-сервером
-        session = ftplib.FTP(FTP_SERVER, FTP_USER, FTP_PASSWORD)
-        return session
-    except Exception as ex:
-         # Код логирует ошибку подключения к FTP-серверу
-        logger.error(f"Failed to connect to FTP server. Error: {ex}")
-        raise
-
-def _close_ftp_session(session: ftplib.FTP):
-    """
-    Закрывает FTP-сессию.
-
-    :param session: Объект FTP-сессии.
-    :raises Exception: Если не удалось закрыть FTP-сессию.
-    """
-    try:
-         # Код закрывает FTP-сессию
         session.quit()
     except Exception as ex:
-         # Код логирует ошибку закрытия FTP-сессии
         logger.error(f"Failed to close FTP session. Error: {ex}")
-        raise
 
-def write(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
+
+def write(source_file_path: str | Path, dest_dir: str, dest_file_name: str) -> bool:
     """
     Отправляет файл на FTP-сервер.
 
-    :param source_file_path: Путь к отправляемому файлу.
-    :param dest_dir: Целевой каталог на FTP-сервере.
-    :param dest_file_name: Имя файла на FTP-сервере.
-    :return: `True`, если файл успешно отправлен, иначе `False`.
+    Args:
+        source_file_path (str | Path): Путь к файлу для отправки.
+        dest_dir (str): Целевая директория на FTP-сервере.
+        dest_file_name (str): Имя файла на FTP-сервере.
 
-    Пример использования:
+    Returns:
+        bool: True, если файл успешно отправлен, иначе False.
+
+    Example:
         >>> success = write('local_path/to/file.txt', '/remote/directory', 'file.txt')
         >>> print(success)
         True
     """
-    session = None
     try:
-         # Код создает сессию подключения к FTP серверу
-        session = _create_ftp_session()
+        # Код устанавливает соединение с FTP-сервером
+        session = ftplib.FTP(
+            _connection['server'],
+            _connection['user'],
+            _connection['password'])
         session.cwd(dest_dir)
+    except Exception as ex:
+        # Логирует ошибку, если не удалось установить соединение с FTP-сервером
+        logger.error(f"Failed to connect to FTP server. Error: {ex}")
+        return False
 
-         # Код открывает файл и отправляет его на FTP сервер
+    try:
+        # Код открывает файл и отправляет его на FTP-сервер
         with open(source_file_path, 'rb') as f:
-            session.storbinary(f'{STOR} {dest_file_name}', f)
+            session.storbinary(f'STOR {dest_file_name}', f)
         return True
     except Exception as ex:
-        # Код логирует ошибку при отправке файла на FTP-сервер
+        # Логирует ошибку, если не удалось отправить файл на FTP-сервер
         logger.error(f"Failed to send file to FTP server. Error: {ex}")
         return False
     finally:
-        if session:
-            try:
-                 # Код закрывает сессию с FTP сервером
-                _close_ftp_session(session)
-            except Exception:
-                pass
+        # Код закрывает FTP-сессию
+        _close_ftp_session(session)
 
 
-def read(source_file_path: str, dest_dir: str, dest_file_name: str) -> Union[str, bytes, None]:
+def read(source_file_path: str | Path, dest_dir: str, dest_file_name: str) -> Union[str, bytes, None]:
     """
     Получает файл с FTP-сервера.
 
-    :param source_file_path: Путь, куда будет сохранен файл локально.
-    :param dest_dir: Каталог на FTP-сервере, где находится файл.
-    :param dest_file_name: Имя файла на FTP-сервере.
-    :return: Содержимое файла, если файл успешно получен, иначе `None`.
+    Args:
+        source_file_path (str | Path): Путь для сохранения файла локально.
+        dest_dir (str): Директория на FTP-сервере, где находится файл.
+        dest_file_name (str): Имя файла на FTP-сервере.
 
-    Пример использования:
+    Returns:
+        Union[str, bytes, None]: Содержимое файла, если он успешно получен, иначе None.
+
+    Example:
         >>> content = read('local_path/to/file.txt', '/remote/directory', 'file.txt')
         >>> print(content)
         b'Some file content'
     """
-    session = None
     try:
-         # Код создает сессию подключения к FTP серверу
-        session = _create_ftp_session()
+        # Код устанавливает соединение с FTP-сервером
+        session = ftplib.FTP(
+            _connection['server'],
+            _connection['user'],
+            _connection['password'])
         session.cwd(dest_dir)
-
-         # Код извлекает файл с FTP сервера
+        # Код получает файл
         with open(source_file_path, 'wb') as f:
-            session.retrbinary(f'{RETR} {dest_file_name}', f.write)
-
-        # Код открывает и считывает файл
+            session.retrbinary(f'RETR {dest_file_name}', f.write)
         with open(source_file_path, 'rb') as f:
             return f.read()
     except Exception as ex:
-        # Код логирует ошибку при получении файла с FTP-сервера
+        # Логирует ошибку, если не удалось получить файл с FTP-сервера
         logger.error(f"Failed to retrieve file from FTP server. Error: {ex}")
         return
     finally:
-        if session:
-            try:
-                 # Код закрывает сессию с FTP сервером
-                _close_ftp_session(session)
-            except Exception:
-                pass
+        # Код закрывает FTP-сессию
+        _close_ftp_session(session)
 
 
 def delete(dest_dir: str, dest_file_name: str) -> bool:
     """
     Удаляет файл с FTP-сервера.
 
-    :param dest_dir: Каталог на FTP-сервере, где находится файл.
-    :param dest_file_name: Имя файла на FTP-сервере.
-    :return: `True`, если файл успешно удален, иначе `False`.
+    Args:
+        dest_dir (str): Директория на FTP-сервере, где находится файл.
+        dest_file_name (str): Имя файла на FTP-сервере.
 
-    Пример использования:
+    Returns:
+        bool: True, если файл успешно удален, иначе False.
+
+    Example:
         >>> success = delete('/remote/directory', 'file.txt')
         >>> print(success)
         True
     """
-    session = None
     try:
-         # Код создает сессию подключения к FTP серверу
-        session = _create_ftp_session()
+        # Код устанавливает соединение с FTP-сервером
+        session = ftplib.FTP(
+            _connection['server'],
+            _connection['user'],
+            _connection['password'])
         session.cwd(dest_dir)
-
-        # Код удаляет файл с FTP-сервера
+        # Код удаляет файл
         session.delete(dest_file_name)
         return True
     except Exception as ex:
-        # Код логирует ошибку при удалении файла с FTP-сервера
+        # Логирует ошибку, если не удалось удалить файл с FTP-сервера
         logger.error(f"Failed to delete file from FTP server. Error: {ex}")
         return False
     finally:
-        if session:
-            try:
-                 # Код закрывает сессию с FTP сервером
-                _close_ftp_session(session)
-            except Exception:
-                pass
+        # Код закрывает FTP-сессию
+        _close_ftp_session(session)
 ```

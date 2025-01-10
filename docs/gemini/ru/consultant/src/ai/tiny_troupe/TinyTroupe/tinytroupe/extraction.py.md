@@ -1,145 +1,148 @@
 # Анализ кода модуля `extraction.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован и разбит на классы, что облегчает его понимание и поддержку.
-    - Используется `logger` для логирования, что позволяет отслеживать ошибки и процесс работы программы.
-    - Присутствует кэширование результатов извлечения данных, что повышает производительность.
-    - Применяется шаблонизация через `chevron`, что упрощает формирование промптов.
-    - Есть механизм нормализации текста, полезный для унификации данных.
-- Минусы
-    -  Не все функции и методы документированы в формате RST.
-    -  Используется `json.dump` вместо `j_dumps` или `j_dumps_ns` (хотя в этом файле нет `j_dumps`, нужно использовать `json.dumps`)
-    -  Иногда используются стандартные конструкции `try-except` вместо обработки ошибок через `logger.error`.
-    -  В некоторых местах отсутствуют проверки на корректность входных данных.
-    -  Некоторые комментарии могут быть более подробными.
-    -  Смешаны стили форматирования (где-то есть пустые строки после определения функции, где-то нет)
+9
+-   Плюсы
+    -   Код хорошо структурирован и разбит на классы `ResultsExtractor`, `ResultsReducer`, `ArtifactExporter`, и `Normalizer`, каждый из которых выполняет свою определенную задачу.
+    -   Используется `logger` для отладочной информации.
+    -   Присутствует подробная документация для большинства функций и классов.
+    -   Код использует шаблоны Mustache для генерации запросов к языковой модели.
+    -   Используется кэширование результатов извлечения и нормализации для избежания повторных вычислений.
+-   Минусы
+    -   В некоторых местах используются конструкции `try-except` без конкретной обработки исключений.
+    -   Не везде используется f-строки для форматирования строк, где это было бы уместно.
+    -   В некоторых местах отсутствует проверка типов данных.
+    -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+    -   Импорт `logger` не из `src.logger.logger import logger`
 
 **Рекомендации по улучшению**
 
-1.  **Документация:**
-    -   Добавить docstrings в формате RST ко всем классам, методам и функциям, включая описание параметров, возвращаемых значений и возможных исключений.
-
-2.  **Использование `j_dumps`:**
-    -   Заменить `json.dump` на `json.dumps` (так как нет `j_dumps` в импортах), обеспечивая согласованность в обработке JSON.
-
-3.  **Обработка ошибок:**
-    -   Заменить стандартные блоки `try-except` на обработку ошибок с помощью `logger.error` для централизованного логирования.
-
-4.  **Проверки входных данных:**
-    -   Добавить проверки на корректность входных данных, чтобы предотвратить ошибки во время выполнения.
-
-5.  **Комментарии:**
-    -   Сделать комментарии более подробными, особенно в сложных участках кода, чтобы упростить понимание.
-    -   Использовать reStructuredText (RST) для всех комментариев.
-
-6.  **Стиль кода:**
-    -   Унифицировать стиль кода (например, добавить или удалить пустые строки после определений функций).
+1.  **Импорты**:
+    -   Добавить `from src.logger.logger import logger` для логирования.
+    -   Использовать `from src.utils.jjson import j_loads` или `j_loads_ns` для загрузки JSON файлов.
+2.  **Логирование**:
+    -   Заменить общие блоки `try-except` на `logger.error` с более конкретными сообщениями об ошибках.
+3.  **Форматирование строк**:
+    -   Использовать f-строки для более читаемого форматирования.
+4.  **Обработка JSON**:
+    -   В методе `save_as_json` использовать `json.dump` с `indent=4` для читаемого вывода.
+5.  **Улучшение документации**:
+    -   Добавить примеры использования классов и функций.
+    -   Уточнить документацию для `Normalizer`.
+6.  **Безопасность**:
+    -   Улучшить обработку ошибок при работе с файлами.
+7.  **Совместимость**:
+    -   Проверить совместимость с разными версиями Python и библиотек.
+8.  **Читаемость**:
+    -   Использовать более описательные имена переменных и функций.
+    -   Разбить длинные функции на более мелкие для улучшения читаемости.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для извлечения данных из симуляций TinyTroupe
-=========================================================================================
+Simulations produce a lot of data, and it is often useful to extract these data in a structured way. For instance, you might wish to:
+  - Extract the main points from an agent's interactions history, so that you can consult them later in a concise form.
+  - Generate synthetic data from a simulation, so that you can use it for training machine learning models or testing software.
+  - Simply turn some of the data into a more machine-readable format, such as JSON or CSV, so that you can analyze it more easily.
 
-Этот модуль предоставляет различные утилиты для извлечения данных из элементов TinyTroupe,
-таких как агенты и миры. Он также предоставляет механизм для сокращения извлеченных данных
-до более краткой формы и для экспорта артефактов из элементов TinyTroupe.
-
-Пример использования
---------------------
-
-Пример использования класса :class:`ResultsExtractor`:
-
-.. code-block:: python
-
-    extractor = ResultsExtractor()
-    agent_results = extractor.extract_results_from_agent(agent, "Some objective")
-    world_results = extractor.extract_results_from_world(world, "Some objective")
+This module provides various utilities to help you extract data from TinyTroupe elements, such as agents and worlds. It also provides a 
+mechanism to reduce the extracted data to a more concise form, and to export artifacts from TinyTroupe elements. Incidentaly, it showcases 
+one of the many ways in which agent simulations differ from AI assistants, as the latter are not designed to be introspected in this way.
 """
-
 import os
+#  импортируем  j_loads для загрузки json
+# from src.utils.jjson import j_loads 
 import json
 import chevron
-import logging
+# импортируем logger
+from src.logger.logger import logger
 import pandas as pd
 import pypandoc
 import markdown
-from typing import Union, List, Dict, Any
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger #  Импортируем logger
+from typing import Union, List
+# import logging # удаляем, так как импортируем из src.logger.logger
+# logger = logging.getLogger("tinytroupe") # удаляем, так как импортируем из src.logger.logger
 
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 from tinytroupe.factory import TinyPersonFactory
 from tinytroupe.utils import JsonSerializableRegistry
+
 from tinytroupe import openai_utils
 import tinytroupe.utils as utils
 
 class ResultsExtractor:
     """
-    Класс для извлечения результатов из объектов TinyTroupe.
+    A class for extracting results from TinyTroupe elements such as agents and worlds.
 
-    :ivar _extraction_prompt_template_path: Путь к шаблону запроса для извлечения.
-    :vartype _extraction_prompt_template_path: str
-    :ivar agent_extraction: Словарь для хранения результатов извлечения из агентов.
-    :vartype agent_extraction: dict
-    :ivar world_extraction: Словарь для хранения результатов извлечения из миров.
-    :vartype world_extraction: dict
+    This class provides methods to extract data from TinyPerson and TinyWorld instances,
+    using a prompt-based approach with a language model. It also caches the results
+    for further processing and analysis.
+
+    Attributes:
+        _extraction_prompt_template_path (str): The path to the Mustache template for extraction prompts.
+        agent_extraction (dict): A dictionary to cache extraction results for agents.
+        world_extraction (dict): A dictionary to cache extraction results for worlds.
+
+    Example:
+        >>> extractor = ResultsExtractor()
+        >>> agent = TinyPerson(name='Agent1')
+        >>> results = extractor.extract_results_from_agent(agent, extraction_objective='Main points of interaction')
+        >>> print(results)
+        {'main_points': '...'}
     """
     def __init__(self):
         """
-        Инициализирует ResultsExtractor.
+        Initializes the ResultsExtractor with the path to the prompt template and empty caches.
         """
         self._extraction_prompt_template_path = os.path.join(os.path.dirname(__file__), 'prompts/interaction_results_extractor.mustache')
-        # Кэшируем последние результаты извлечения для каждого типа, чтобы их можно было использовать для создания отчетов или других дополнительных выходных данных.
+
+        # we'll cache the last extraction results for each type of extraction, so that we can use them to
+        # generate reports or other additional outputs.
         self.agent_extraction = {}
         self.world_extraction = {}
 
-    def extract_results_from_agent(self,
-                        tinyperson: TinyPerson,
-                        extraction_objective: str = "The main points present in the agent's interactions history.",
-                        situation: str = "",
-                        fields: list = None,
-                        fields_hints: dict = None,
-                        verbose: bool = False) -> dict:
+    def extract_results_from_agent(self, 
+                        tinyperson:TinyPerson, 
+                        extraction_objective:str="The main points present in the agent's interactions history.", 
+                        situation:str = "", 
+                        fields:list=None,
+                        fields_hints:dict=None,
+                        verbose:bool=False):
         """
-        Извлекает результаты из экземпляра TinyPerson.
+        Extracts results from a TinyPerson instance.
 
-        :param tinyperson: Экземпляр TinyPerson, из которого извлекаются результаты.
-        :type tinyperson: TinyPerson
-        :param extraction_objective: Цель извлечения.
-        :type extraction_objective: str
-        :param situation: Ситуация, которую нужно учитывать.
-        :type situation: str
-        :param fields: Поля для извлечения. Если None, извлекатель сам решает, какие имена использовать.
-        :type fields: list, optional
-        :param fields_hints: Подсказки для полей.
-        :type fields_hints: dict, optional
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
-        :return: Результаты извлечения.
-        :rtype: dict
+        Args:
+            tinyperson (TinyPerson): The TinyPerson instance to extract results from.
+            extraction_objective (str): The extraction objective.
+            situation (str): The situation to consider.
+            fields (list, optional): The fields to extract. If None, the extractor will decide what names to use. 
+                Defaults to None.
+            fields_hints (dict, optional): Hints about the fields. Defaults to None.
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
+
+        Returns:
+            dict: The extracted results in JSON format, or None if extraction fails.
         """
         messages = []
 
         rendering_configs = {}
         if fields is not None:
             rendering_configs["fields"] = ", ".join(fields)
-
+        
         if fields_hints is not None:
             rendering_configs["fields_hints"] = list(fields_hints.items())
-
-        messages.append({"role": "system",
+        
+        messages.append({"role": "system", 
                          "content": chevron.render(
-                             open(self._extraction_prompt_template_path).read(),
+                             open(self._extraction_prompt_template_path).read(), 
                              rendering_configs)})
+
 
         interaction_history = tinyperson.pretty_current_interactions(max_content_length=None)
 
-        extraction_request_prompt = \
-f"""
+        extraction_request_prompt = f"""
 ## Extraction objective
 
 {extraction_objective}
@@ -150,7 +153,7 @@ You are considering a single agent, named {tinyperson.name}. Your objective thus
 
 ## Agent Interactions History
 
-You will consider an agent's history of interactions, which include stimuli it received as well as actions it
+You will consider an agent's history of interactions, which include stimuli it received as well as actions it 
 performed.
 
 {interaction_history}
@@ -158,7 +161,7 @@ performed.
         messages.append({"role": "user", "content": extraction_request_prompt})
 
         next_message = openai_utils.client().send_message(messages, temperature=0.0)
-
+        
         debug_msg = f"Extraction raw result message: {next_message}"
         logger.debug(debug_msg)
         if verbose:
@@ -168,56 +171,53 @@ performed.
             result = utils.extract_json(next_message["content"])
         else:
             result = None
-
-        # Кэшируем результат
+        
+        # cache the result
         self.agent_extraction[tinyperson.name] = result
 
         return result
+    
 
-    def extract_results_from_world(self,
-                                   tinyworld: TinyWorld,
-                                   extraction_objective: str = "The main points that can be derived from the agents conversations and actions.",
-                                   situation: str = "",
-                                   fields: list = None,
-                                   fields_hints: dict = None,
-                                   verbose: bool = False) -> dict:
+    def extract_results_from_world(self, 
+                                   tinyworld:TinyWorld, 
+                                   extraction_objective:str="The main points that can be derived from the agents conversations and actions.", 
+                                   situation:str="", 
+                                   fields:list=None,
+                                   fields_hints:dict=None,
+                                   verbose:bool=False):
         """
-        Извлекает результаты из экземпляра TinyWorld.
+        Extracts results from a TinyWorld instance.
 
-        :param tinyworld: Экземпляр TinyWorld, из которого извлекаются результаты.
-        :type tinyworld: TinyWorld
-        :param extraction_objective: Цель извлечения.
-        :type extraction_objective: str
-        :param situation: Ситуация, которую нужно учитывать.
-        :type situation: str
-        :param fields: Поля для извлечения. Если None, извлекатель сам решает, какие имена использовать.
-        :type fields: list, optional
-        :param fields_hints: Подсказки для полей.
-        :type fields_hints: dict, optional
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
-        :return: Результаты извлечения.
-        :rtype: dict
+        Args:
+            tinyworld (TinyWorld): The TinyWorld instance to extract results from.
+            extraction_objective (str): The extraction objective.
+            situation (str): The situation to consider.
+            fields (list, optional): The fields to extract. If None, the extractor will decide what names to use.
+                Defaults to None.
+            fields_hints (dict, optional): Hints about the fields. Defaults to None.
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
+
+        Returns:
+            dict: The extracted results in JSON format, or None if extraction fails.
         """
         messages = []
 
         rendering_configs = {}
         if fields is not None:
             rendering_configs["fields"] = ", ".join(fields)
-
+        
         if fields_hints is not None:
             rendering_configs["fields_hints"] = list(fields_hints.items())
-
-        messages.append({"role": "system",
+        
+        messages.append({"role": "system", 
                          "content": chevron.render(
-                             open(self._extraction_prompt_template_path).read(),
+                             open(self._extraction_prompt_template_path).read(), 
                              rendering_configs)})
 
-        # TODO: либо сначала суммировать, либо разбивать на несколько задач
+        # TODO: either summarize first or break up into multiple tasks
         interaction_history = tinyworld.pretty_current_interactions(max_content_length=None)
 
-        extraction_request_prompt = \
-f"""
+        extraction_request_prompt = f"""
 ## Extraction objective
 
 {extraction_objective}
@@ -228,7 +228,7 @@ You are considering various agents.
 
 ## Agents Interactions History
 
-You will consider the history of interactions from various agents that exist in an environment called {tinyworld.name}.
+You will consider the history of interactions from various agents that exist in an environment called {tinyworld.name}. 
 Each interaction history includes stimuli the corresponding agent received as well as actions it performed.
 
 {interaction_history}
@@ -236,7 +236,7 @@ Each interaction history includes stimuli the corresponding agent received as we
         messages.append({"role": "user", "content": extraction_request_prompt})
 
         next_message = openai_utils.client().send_message(messages, temperature=0.0)
-
+        
         debug_msg = f"Extraction raw result message: {next_message}"
         logger.debug(debug_msg)
         if verbose:
@@ -246,77 +246,82 @@ Each interaction history includes stimuli the corresponding agent received as we
             result = utils.extract_json(next_message["content"])
         else:
             result = None
-
-        # Кэшируем результат
+        
+        # cache the result
         self.world_extraction[tinyworld.name] = result
 
         return result
-
-    def save_as_json(self, filename: str, verbose: bool = False):
+    
+    def save_as_json(self, filename:str, verbose:bool=False):
         """
-        Сохраняет последние результаты извлечения в формате JSON.
+        Saves the last extraction results as JSON.
 
-        :param filename: Имя файла для сохранения JSON.
-        :type filename: str
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
+        Args:
+            filename (str): The filename to save the JSON to.
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
         """
         try:
             with open(filename, 'w') as f:
-                json.dump({"agent_extractions": self.agent_extraction,
+                json.dump({"agent_extractions": self.agent_extraction, 
                            "world_extraction": self.world_extraction}, f, indent=4)
+            
             if verbose:
                 print(f"Saved extraction results to {filename}")
         except Exception as e:
-            logger.error(f"Ошибка при сохранении в JSON файл {filename}: {e}", exc_info=True)
-
+            logger.error(f"Error saving extraction results to {filename}", exc_info=True)
 
 class ResultsReducer:
     """
-    Класс для сокращения результатов.
+    A class for reducing results from TinyTroupe agents based on predefined rules.
 
-    :ivar results: Словарь для хранения результатов.
-    :vartype results: dict
-    :ivar rules: Словарь для хранения правил сокращения.
-    :vartype rules: dict
+    This class allows defining reduction rules for different types of events (stimuli and actions)
+    and applies these rules to the episodic memory of agents. It can also convert reduced results
+    into a Pandas DataFrame.
+
+    Attributes:
+        results (dict): A dictionary to store results.
+        rules (dict): A dictionary to store reduction rules, where the key is a trigger and the value is a function.
     """
     def __init__(self):
         """
-        Инициализирует ResultsReducer.
+        Initializes the ResultsReducer with empty dictionaries for results and rules.
         """
         self.results = {}
         self.rules = {}
-
+    
     def add_reduction_rule(self, trigger: str, func: callable):
         """
-        Добавляет правило сокращения.
+        Adds a reduction rule for a specific trigger.
 
-        :param trigger: Триггер для правила.
-        :type trigger: str
-        :param func: Функция для применения правила.
-        :type func: callable
-        :raises Exception: Если правило для данного триггера уже существует.
+        Args:
+            trigger (str): The trigger for the rule (e.g., 'stimulus_type' or 'action_type').
+            func (callable): The function to apply when the trigger is matched.
+
+        Raises:
+            Exception: If a rule for the given trigger already exists.
         """
         if trigger in self.rules:
             raise Exception(f"Rule for {trigger} already exists.")
+        
         self.rules[trigger] = func
-
+    
     def reduce_agent(self, agent: TinyPerson) -> list:
         """
-        Сокращает данные агента.
+        Reduces the episodic memory of an agent based on the defined rules.
 
-        :param agent: Экземпляр TinyPerson, данные которого сокращаются.
-        :type agent: TinyPerson
-        :return: Сокращенные данные.
-        :rtype: list
+        Args:
+            agent (TinyPerson): The agent whose episodic memory should be reduced.
+
+        Returns:
+            list: A list of reduced results.
         """
         reduction = []
         for message in agent.episodic_memory.retrieve_all():
             if message['role'] == 'system':
-                continue # ничего не делаем для роли `system` пока что
+                continue # doing nothing for `system` role yet at least
 
             elif message['role'] == 'user':
-                # Роль пользователя связана только со стимулами
+                # User role is related to stimuli only
                 stimulus_type = message['content']['stimuli'][0]['type']
                 stimulus_content = message['content']['stimuli'][0]['content']
                 stimulus_source = message['content']['stimuli'][0]['source']
@@ -328,30 +333,30 @@ class ResultsReducer:
                         reduction.append(extracted)
 
             elif message['role'] == 'assistant':
-                # Роль ассистента связана только с действиями
-                if 'action' in message['content']:
+                # Assistant role is related to actions only
+                if 'action' in message['content']: 
                     action_type = message['content']['action']['type']
                     action_content = message['content']['action']['content']
                     action_target = message['content']['action']['target']
                     action_timestamp = message['simulation_timestamp']
-
+                    
                     if action_type in self.rules:
                         extracted = self.rules[action_type](focus_agent=agent, source_agent=agent, target_agent=TinyPerson.get_agent_by_name(action_target), kind='action', event=action_type, content=action_content, timestamp=action_timestamp)
                         if extracted is not None:
                             reduction.append(extracted)
-
+            
         return reduction
 
-    def reduce_agent_to_dataframe(self, agent: TinyPerson, column_names: list = None) -> pd.DataFrame:
+    def reduce_agent_to_dataframe(self, agent: TinyPerson, column_names: list=None) -> pd.DataFrame:
         """
-        Сокращает данные агента до DataFrame.
+        Reduces the episodic memory of an agent to a Pandas DataFrame.
 
-        :param agent: Экземпляр TinyPerson, данные которого сокращаются.
-        :type agent: TinyPerson
-        :param column_names: Имена столбцов DataFrame.
-        :type column_names: list, optional
-        :return: DataFrame с сокращенными данными.
-        :rtype: pd.DataFrame
+        Args:
+            agent (TinyPerson): The agent whose episodic memory should be reduced.
+            column_names (list, optional): Column names for the DataFrame. Defaults to None.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the reduced results.
         """
         reduction = self.reduce_agent(agent)
         return pd.DataFrame(reduction, columns=column_names)
@@ -359,55 +364,57 @@ class ResultsReducer:
 
 class ArtifactExporter(JsonSerializableRegistry):
     """
-    Экспортер артефактов из элементов TinyTroupe.
+    An artifact exporter is responsible for exporting artifacts from TinyTroupe elements, for example 
+    in order to create synthetic data files from simulations. 
 
-    :ivar base_output_folder: Базовая папка для вывода.
-    :vartype base_output_folder: str
+    This class provides methods to export data to various formats, including JSON, text, and DOCX.
+    It also handles the creation of necessary directories and sanitization of file names.
+
+    Attributes:
+        base_output_folder (str): The base output folder where artifacts will be saved.
     """
-    def __init__(self, base_output_folder: str) -> None:
+    def __init__(self, base_output_folder:str) -> None:
         """
-        Инициализирует ArtifactExporter.
+        Initializes the ArtifactExporter with a base output folder.
 
-        :param base_output_folder: Базовая папка для вывода.
-        :type base_output_folder: str
+        Args:
+            base_output_folder (str): The base folder to save exported artifacts.
         """
         self.base_output_folder = base_output_folder
 
-    def export(self, artifact_name: str, artifact_data: Union[dict, str], content_type: str, content_format: str = None, target_format: str = "txt", verbose: bool = False):
+    def export(self, artifact_name:str, artifact_data:Union[dict, str], content_type:str, content_format:str=None, target_format:str="txt", verbose:bool=False):
         """
-        Экспортирует данные артефакта в файл.
+        Exports the specified artifact data to a file.
 
-        :param artifact_name: Имя артефакта.
-        :type artifact_name: str
-        :param artifact_data: Данные для экспорта. Если dict, то сохраняется как JSON. Если str, то сохраняется как есть.
-        :type artifact_data: Union[dict, str]
-        :param content_type: Тип контента внутри артефакта.
-        :type content_type: str
-        :param content_format: Формат контента внутри артефакта (например, md, csv и т.д.).
-        :type content_format: str, optional
-        :param target_format: Формат экспорта артефакта (например, json, txt, docx и т.д.).
-        :type target_format: str, optional
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
-        :raises ValueError: Если данные артефакта не являются строкой или словарем.
-        :raises ValueError: Если указанный целевой формат не поддерживается.
+        Args:
+            artifact_name (str): The name of the artifact.
+            artifact_data (Union[dict, str]): The data to export. If a dict is given, it will be saved as JSON. 
+                If a string is given, it will be saved as is.
+            content_type (str): The type of the content within the artifact.
+            content_format (str, optional): The format of the content within the artifact (e.g., md, csv, etc). Defaults to None.
+            target_format (str): The format to export the artifact to (e.g., json, txt, docx, etc). Defaults to "txt".
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
         """
-        # Убираем лишние отступы, на всякий случай
+        
+        # dedent inputs, just in case
         if isinstance(artifact_data, str):
             artifact_data = utils.dedent(artifact_data)
         elif isinstance(artifact_data, dict):
             artifact_data['content'] = utils.dedent(artifact_data['content'])
         else:
             raise ValueError("The artifact data must be either a string or a dictionary.")
-
-        # Очищаем имя артефакта от недопустимых символов
+        
+        # clean the artifact name of invalid characters
         invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '\n', '\t', '\r', ';']
         for char in invalid_chars:
+            # check if the character is in the artifact name
             if char in artifact_name:
+                # replace the character with an underscore
                 artifact_name = artifact_name.replace(char, "-")
                 logger.warning(f"Replaced invalid character {char} with hyphen in artifact name '{artifact_name}'.")
-
+        
         artifact_file_path = self._compose_filepath(artifact_data, artifact_name, content_type, target_format, verbose)
+
 
         if target_format == "json":
             self._export_as_json(artifact_file_path, artifact_data, content_type, verbose)
@@ -418,183 +425,184 @@ class ArtifactExporter(JsonSerializableRegistry):
         else:
             raise ValueError(f"Unsupported target format: {target_format}.")
 
-    def _export_as_txt(self, artifact_file_path: str, artifact_data: Union[dict, str], content_type: str, verbose: bool = False):
-        """
-        Экспортирует данные артефакта в текстовый файл.
 
-        :param artifact_file_path: Путь к файлу для экспорта.
-        :type artifact_file_path: str
-        :param artifact_data: Данные для экспорта.
-        :type artifact_data: Union[dict, str]
-        :param content_type: Тип контента внутри артефакта.
-        :type content_type: str
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
+    def _export_as_txt(self, artifact_file_path:str, artifact_data:Union[dict, str], content_type:str, verbose:bool=False):
         """
+        Exports the specified artifact data to a text file.
+
+        Args:
+            artifact_file_path (str): The path to the output text file.
+            artifact_data (Union[dict, str]): The data to export.
+            content_type (str): The type of the content.
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
+        """
+
         try:
-           with open(artifact_file_path, 'w', encoding="utf-8") as f:
-               if isinstance(artifact_data, dict):
-                   content = artifact_data['content']
-               else:
-                   content = artifact_data
-               f.write(content)
+            with open(artifact_file_path, 'w', encoding="utf-8") as f:
+                if isinstance(artifact_data, dict):
+                    content = artifact_data['content']
+                else:
+                    content = artifact_data
+            
+                f.write(content)
         except Exception as e:
-            logger.error(f"Ошибка при экспорте в текстовый файл {artifact_file_path}: {e}", exc_info=True)
-
-    def _export_as_json(self, artifact_file_path: str, artifact_data: Union[dict, str], content_type: str, verbose: bool = False):
+             logger.error(f"Error exporting to TXT {artifact_file_path}", exc_info=True)
+    
+    def _export_as_json(self, artifact_file_path:str, artifact_data:Union[dict, str], content_type:str, verbose:bool=False):
         """
-        Экспортирует данные артефакта в JSON файл.
+        Exports the specified artifact data to a JSON file.
 
-        :param artifact_file_path: Путь к файлу для экспорта.
-        :type artifact_file_path: str
-        :param artifact_data: Данные для экспорта.
-        :type artifact_data: Union[dict, str]
-        :param content_type: Тип контента внутри артефакта.
-        :type content_type: str
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
-         :raises ValueError: Если данные артефакта не являются словарем.
+        Args:
+            artifact_file_path (str): The path to the output JSON file.
+            artifact_data (Union[dict, str]): The data to export. Must be a dict.
+            content_type (str): The type of the content.
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
+         Raises:
+            ValueError: if artifact_data is not a dict
         """
         try:
             with open(artifact_file_path, 'w', encoding="utf-8") as f:
                 if isinstance(artifact_data, dict):
-                    json.dump(artifact_data, f, indent=4)
+                    json.dump(artifact_data, f, indent=4)                
                 else:
-                   raise ValueError("The artifact data must be a dictionary to export to JSON.")
+                    raise ValueError("The artifact data must be a dictionary to export to JSON.")
         except Exception as e:
-            logger.error(f"Ошибка при экспорте в JSON файл {artifact_file_path}: {e}", exc_info=True)
-
-    def _export_as_docx(self, artifact_file_path: str, artifact_data: Union[dict, str], content_original_format: str, verbose: bool = False):
+             logger.error(f"Error exporting to JSON {artifact_file_path}", exc_info=True)
+    
+    def _export_as_docx(self, artifact_file_path:str, artifact_data:Union[dict, str], content_original_format:str, verbose:bool=False):
         """
-        Экспортирует данные артефакта в DOCX файл.
+        Exports the specified artifact data to a DOCX file.
 
-        :param artifact_file_path: Путь к файлу для экспорта.
-        :type artifact_file_path: str
-        :param artifact_data: Данные для экспорта.
-        :type artifact_data: Union[dict, str]
-        :param content_original_format: Исходный формат контента внутри артефакта.
-        :type content_original_format: str
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
-        :raises ValueError: Если исходный формат контента не поддерживается для экспорта в DOCX.
+         Args:
+            artifact_file_path (str): The path to the output DOCX file.
+            artifact_data (Union[dict, str]): The data to export.
+            content_original_format (str): The format of the original content (e.g., 'text', 'markdown').
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
+         Raises:
+            ValueError: if content_original_format is not  'text', 'txt', 'markdown', 'md'
         """
+
+        # original format must be 'text' or 'markdown'
         if content_original_format not in ['text', 'txt', 'markdown', 'md']:
             raise ValueError(f"The original format cannot be {content_original_format} to export to DOCX.")
         else:
-            # Нормализуем значение content_original_format
+            # normalize content value
             content_original_format = 'markdown' if content_original_format == 'md' else content_original_format
 
-        # Сначала получаем контент для экспорта. Если `artifact_date` - словарь, контент должен быть под ключом `content`.
-        # Если это строка, контент - это сама строка.
-        # Используем pypandoc
+        # first, get the content to export. If `artifact_date` is a dict, the contant should be under the key `content`.
+        # If it is a string, the content is the string itself.
+        # using pypandoc
         if isinstance(artifact_data, dict):
             content = artifact_data['content']
         else:
             content = artifact_data
+        
+        # first, convert to HTML. This is necessary because pypandoc does not support a GOOD direct conversion from markdown to DOCX.
+        html_content = markdown.markdown(content)
+
+        ## write this intermediary HTML to file
+        #html_file_path = artifact_file_path.replace(".docx", ".html")
+        #with open(html_file_path, 'w', encoding="utf-8") as f:
+        #    f.write(html_content)
+
+        # then, convert to DOCX
         try:
-            # Сначала преобразуем в HTML. Это необходимо, потому что pypandoc не поддерживает ХОРОШЕЕ прямое преобразование из markdown в DOCX.
-            html_content = markdown.markdown(content)
-
-            ## Записываем этот промежуточный HTML в файл
-            #html_file_path = artifact_file_path.replace(".docx", ".html")
-            #with open(html_file_path, 'w', encoding="utf-8") as f:
-            #    f.write(html_content)
-
-            # Затем преобразуем в DOCX
-            pypandoc.convert_text(html_content, 'docx', format='html', outputfile=artifact_file_path)
+          pypandoc.convert_text(html_content, 'docx', format='html', outputfile=artifact_file_path)
         except Exception as e:
-            logger.error(f"Ошибка при экспорте в DOCX файл {artifact_file_path}: {e}", exc_info=True)
-
+             logger.error(f"Error exporting to DOCX {artifact_file_path}", exc_info=True)
+    
     ###########################################################
     # IO
     ###########################################################
-
-    def _compose_filepath(self, artifact_data: Union[dict, str], artifact_name: str, content_type: str, target_format: str = None, verbose: bool = False) -> str:
+                  
+    def _compose_filepath(self, artifact_data:Union[dict, str], artifact_name:str, content_type:str, target_format:str=None, verbose:bool=False) -> str:
         """
-        Составляет путь к файлу для экспорта артефакта.
+        Composes the file path for the artifact to export.
 
-        :param artifact_data: Данные для экспорта.
-        :type artifact_data: Union[dict, str]
-        :param artifact_name: Имя артефакта.
-        :type artifact_name: str
-        :param content_type: Тип контента внутри артефакта.
-        :type content_type: str
-        :param target_format: Формат экспорта артефакта (например, json, txt, docx и т.д.).
-        :type target_format: str, optional
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
-        :return: Путь к файлу.
-        :rtype: str
-        """
-        # Определение расширения:
+        Args:
+            artifact_data (Union[dict, str]): The data to export.
+            artifact_name (str): The name of the artifact.
+            content_type (str): The type of the content within the artifact.
+            target_format (str, optional): The format to export the artifact to (e.g., json, txt, docx, etc). Defaults to None.
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
+
+        Returns:
+            str: The composed file path.
+        """        
+
+        # Extension definition: 
         #
-        # - Если указан формат содержимого, используем его как часть расширения.
-        # - Если artificat_data - это dict, добавляем .json к расширению. Обратите внимание, что если бы был указан формат содержимого, мы бы получили <content_format>.json.
-        # - Если artifact_data - это строка и формат содержимого не указан, добавляем .txt к расширению.
+        # - If the content format is specified, we use it as the part of the extension.
+        # - If artificat_data is a dict, we add .json to the extension. Note that if content format was specified, we'd get <content_format>.json.
+        # - If artifact_data is a string and no content format is specified, we add .txt to the extension.
         extension = None
         if target_format is not None:
             extension = f"{target_format}"
         elif isinstance(artifact_data, str) and target_format is None:
             extension = "txt"
-
-        # Определение типа контента
+        
+        # content type definition
         if content_type is None:
             subfolder = ""
         else:
             subfolder = content_type
 
-        # Сохраняем в указанное имя файла или путь, учитывая базовую выходную папку.
-        artifact_file_path = os.path.join(self.base_output_folder, subfolder, f"{artifact_name}.{extension}")
+        # save to the specified file name or path, considering the base output folder.
+        artifact_file_path = os.path.join(self.base_output_folder, subfolder, f"{artifact_name}.{extension}")    
 
-        # Создаем промежуточные каталоги, если необходимо
+        # create intermediate directories if necessary
         os.makedirs(os.path.dirname(artifact_file_path), exist_ok=True)
 
         return artifact_file_path
-
-
+        
+            
 class Normalizer:
     """
-    Механизм для нормализации фрагментов текста, концепций и других текстовых элементов.
+    A mechanism to normalize passages, concepts and other textual elements.
 
-    :ivar elements: Список элементов для нормализации.
-    :vartype elements: List[str]
-    :ivar n: Количество нормализованных элементов для вывода.
-    :vartype n: int
-    :ivar verbose: Выводить ли отладочные сообщения.
-    :vartype verbose: bool
-    :ivar normalized_elements: JSON-структура, где каждый выходной элемент является ключом к списку входных элементов, объединенных в него.
-    :vartype normalized_elements: dict
-    :ivar normalizing_map: Словарь, который сопоставляет каждый входной элемент с его нормализованным выводом.
-    :vartype normalizing_map: dict
+    This class uses a language model to normalize a list of elements and provides
+    a method to normalize new elements using a cached mapping.
+
+    Attributes:
+        elements (list): The list of elements to normalize.
+        n (int): The number of normalized elements to output.
+        verbose (bool, optional): Whether to print debug messages. Defaults to False.
+        normalized_elements (dict): A dictionary where each output element is a key to a list of input elements.
+        normalizing_map (dict): A dictionary that maps each input element to its normalized output.
+
+    Example:
+        >>> normalizer = Normalizer(elements=['apple', 'banana', 'orange'], n=2)
+        >>> normalized = normalizer.normalize('apple')
+        >>> print(normalized)
+        'fruit'
     """
-    def __init__(self, elements: List[str], n: int, verbose: bool = False):
-        """
-        Инициализирует Normalizer.
 
-        :param elements: Элементы для нормализации.
-        :type elements: list
-        :param n: Количество нормализованных элементов для вывода.
-        :type n: int
-        :param verbose: Выводить ли отладочные сообщения.
-        :type verbose: bool, optional
+    def __init__(self, elements:List[str], n:int, verbose:bool=False):
         """
-        # Убедимся, что элементы уникальны
+        Normalizes the specified elements.
+
+        Args:
+            elements (list): The elements to normalize.
+            n (int): The number of normalized elements to output.
+            verbose (bool, optional): Whether to print debug messages. Defaults to False.
+        """
+        # ensure elements are unique
         self.elements = list(set(elements))
-
-        self.n = n
-        self.verbose = verbose
-
-        # JSON-структура, где каждый выходной элемент является ключом к списку входных элементов, объединенных в него
+        
+        self.n = n  
+        self.verbose = verbose 
+        
+        # a JSON-based structure, where each output element is a key to a list of input elements that were merged into it
         self.normalized_elements = None
-        # Словарь, сопоставляющий каждый входной элемент с его нормализованным выводом. Это будет использоваться в качестве кэша позже.
-        self.normalizing_map = {}
+        # a dict that maps each input element to its normalized output. This will be used as cache later.
+        self.normalizing_map = {}      
 
         rendering_configs = {"n": n,
                              "elements": self.elements}
 
         messages = utils.compose_initial_LLM_messages_with_templates("normalizer.system.mustache", "normalizer.user.mustache", rendering_configs)
         next_message = openai_utils.client().send_message(messages, temperature=0.1)
-
+        
         debug_msg = f"Normalization result message: {next_message}"
         logger.debug(debug_msg)
         if self.verbose:
@@ -607,23 +615,29 @@ class Normalizer:
 
         self.normalized_elements = result
 
-    def normalize(self, element_or_elements: Union[str, List[str]]) -> Union[str, List[str]]:
+    
+    def normalize(self, element_or_elements:Union[str, List[str]]) -> Union[str, List[str]]:
         """
-        Нормализует указанный элемент или элементы.
+        Normalizes the specified element or elements.
 
-        Этот метод использует механизм кэширования для повышения производительности. Если элемент был нормализован ранее,
-        его нормализованная форма сохраняется в кэше (self.normalizing_map). Когда один и тот же элемент необходимо
-        нормализовать снова, метод сначала проверит кэш и использует сохраненную нормализованную форму, если она доступна,
-        вместо того, чтобы нормализовать элемент снова.
+        This method uses a caching mechanism to improve performance. If an element has been normalized before, 
+        its normalized form is stored in a cache (self.normalizing_map). When the same element needs to be 
+        normalized again, the method will first check the cache and use the stored normalized form if available, 
+        instead of normalizing the element again.
 
-        Порядок элементов на выходе будет таким же, как и на входе. Это обеспечивается путем обработки элементов в том порядке,
-        в котором они появляются на входе, и добавления нормализованных элементов в выходной список в том же порядке.
+        The order of elements in the output will be the same as in the input. This is ensured by processing 
+        the elements in the order they appear in the input and appending the normalized elements to the output 
+        list in the same order.
 
-        :param element_or_elements: Элемент или элементы для нормализации.
-        :type element_or_elements: Union[str, List[str]]
-        :return: Нормализованный элемент, если вход был строкой, или список нормализованных элементов, если вход был списком.
-        :rtype: Union[str, List[str]]
-        :raises ValueError: Если element_or_elements не является строкой или списком.
+        Args:
+            element_or_elements (Union[str, List[str]]): The element or elements to normalize.
+
+        Returns:
+            str: The normalized element if the input was a string.
+            list: The normalized elements if the input was a list, preserving the order of elements in the input.
+
+        Raises:
+            ValueError: if element_or_elements is not a string or a list
         """
         if isinstance(element_or_elements, str):
             denormalized_elements = [element_or_elements]
@@ -631,41 +645,42 @@ class Normalizer:
             denormalized_elements = element_or_elements
         else:
             raise ValueError("The element_or_elements must be either a string or a list.")
-
+        
         normalized_elements = []
         elements_to_normalize = []
         for element in denormalized_elements:
             if element not in self.normalizing_map:
                 elements_to_normalize.append(element)
-
+        
         if elements_to_normalize:
             rendering_configs = {"categories": self.normalized_elements,
                                     "elements": elements_to_normalize}
-
+            
             messages = utils.compose_initial_LLM_messages_with_templates("normalizer.applier.system.mustache", "normalizer.applier.user.mustache", rendering_configs)
             next_message = openai_utils.client().send_message(messages, temperature=0.1)
-
+            
             debug_msg = f"Normalization result message: {next_message}"
             logger.debug(debug_msg)
             if self.verbose:
                 print(debug_msg)
-
+    
             normalized_elements_from_llm = utils.extract_json(next_message["content"])
             assert isinstance(normalized_elements_from_llm, list), "The normalized element must be a list."
             assert len(normalized_elements_from_llm) == len(elements_to_normalize), "The number of normalized elements must be equal to the number of elements to normalize."
-
+    
             for i, element in enumerate(elements_to_normalize):
                 normalized_element = normalized_elements_from_llm[i]
                 self.normalizing_map[element] = normalized_element
-
+        
         for element in denormalized_elements:
             normalized_elements.append(self.normalizing_map[element])
-
+        
         return normalized_elements
+        
 
-################################################################################
-# Вспомогательные механизмы
+################################################################################	
+# Convenience mechanisms
 ################################################################################
 
-# Стандартный извлекатель
+# default extractor
 default_extractor = ResultsExtractor()

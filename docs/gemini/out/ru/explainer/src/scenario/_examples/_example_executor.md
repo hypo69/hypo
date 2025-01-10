@@ -63,7 +63,7 @@ import asyncio
 from pathlib import Path
 from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
 from src.utils.jjson import j_loads_ns
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.endpoints.PrestaShop import PrestaShop
 
 # Assuming `Supplier` class is available and has necessary methods and attributes
@@ -168,7 +168,7 @@ graph LR
 * `from pathlib import Path`: Для работы с путями файлов.
 * `from src.scenario.executor import ...`: Импортирует функции для выполнения сценариев.  Связь с `src.scenario.executor` - модуль `executor` содержит реализацию логики выполнения сценариев.
 * `from src.utils.jjson import j_loads_ns`: Импортирует функцию `j_loads_ns` для обработки JSON-данных. Связь с `src.utils.jjson` - модуль содержит утилиты для работы с JSON.
-* `from src.product.product_fields import ProductFields`: Импортирует класс `ProductFields` для представления данных о продуктах.  Связь с `src.product.product_fields` - модуль содержит класс для представления данных о продуктах.
+* `from src.endpoints.prestashop.product_fields import ProductFields`: Импортирует класс `ProductFields` для представления данных о продуктах.  Связь с `src.product.product_fields` - модуль содержит класс для представления данных о продуктах.
 * `from src.endpoints.PrestaShop import PrestaShop`: Импортирует класс `PrestaShop` для взаимодействия с API PrestaShop. Связь с `src.endpoints.PrestaShop` - модуль содержит класс для взаимодействия с API PrestaShop.
 
 **Классы:**

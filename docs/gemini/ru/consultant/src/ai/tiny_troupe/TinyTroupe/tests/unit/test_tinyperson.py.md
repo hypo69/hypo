@@ -1,252 +1,333 @@
-# Анализ кода модуля test_tinyperson.py
+# Анализ кода модуля `test_tinyperson`
 
 **Качество кода**
-7
+8
 -  Плюсы
-    -  Код содержит набор тестов, которые охватывают основные функциональные возможности класса `TinyPerson`.
-    -  Используются фикстуры `pytest` для настройки тестового окружения.
-    -  Тесты проверяют различные аспекты поведения агентов, такие как прослушивание, действия, определение параметров, социализация и т. д.
-    -  Присутствует логирование.
-    -  Тесты содержат проверки на корректность типов и содержимого действий.
+    - Код хорошо структурирован, каждый тест выполняет конкретную задачу.
+    - Используются `assert` для проверки условий, что облегчает отладку.
+    - Присутствуют комментарии, поясняющие логику тестов.
+    - Применяется параметризация тестов для запуска с разными агентами.
 -  Минусы
-    -  Импорты `sys.path` сделаны в обход корректного использования пакетов.
-    -  Используется стандартный `logging`, вместо `src.logger.logger`.
-    -  Отсутствует документация в формате reStructuredText (RST).
-    -  Некоторые блоки `assert` могут быть более информативными.
+    -  Импорты модуля `logger` и `j_loads` отсутствуют.
+    -  Необходимо добавить docstring к функциям.
+    -  Пути в `sys.path` могут быть упрощены.
+    -  Использование `logger` не унифицировано.
+    -  Проверка конфигурации агентов вынесена в отдельную функцию `agents_configs_are_equal` без документации.
 
 **Рекомендации по улучшению**
-
-1.  **Импорты**:
-    -   Исключить манипуляции с `sys.path`, использовать относительные импорты.
-    -   Импортировать `logger` из `src.logger.logger`.
-2.  **Документация**:
-    -   Добавить docstring в формате reStructuredText (RST) для модуля, классов и функций.
-3.  **Логирование**:
-    -   Использовать `logger` из `src.logger.logger` для логирования, в том числе и ошибок.
-4.  **Assertions**:
-    -   Сделать сообщения об ошибках в `assert` более информативными, указывая ожидаемое и фактическое значение.
-5.  **Рефакторинг**:
-    -   Вынести повторяющийся код в отдельную функцию, где это возможно (например, создание агентов).
+1.  Добавить импорты `logger` и `j_loads` из `src.logger` и `src.utils.jjson`.
+2.  Добавить docstring к каждой тестовой функции, а также к вспомогательной функции `agents_configs_are_equal`.
+3.  Упростить пути в `sys.path`.
+4.  Использовать `logger.info`, `logger.debug` и `logger.error` для унификации логирования.
+5.  Избегать явного использования `os.path.exists` - добавить обертку.
+6.  Добавить ассерты для проверки загруженного агента, исключая проверку памяти.
+7.  Улучшить читаемость ассертов, добавив больше контекста.
 
 **Оптимизированный код**
 ```python
 """
-Модуль содержит тесты для проверки функциональности класса TinyPerson.
-======================================================================
+Модуль для тестирования класса TinyPerson
+=========================================================================================
 
-Этот модуль использует pytest для тестирования различных аспектов поведения агентов,
-таких как прослушивание, действия, определение параметров, социализация и т. д.
+Этот модуль содержит набор тестов для проверки функциональности класса TinyPerson,
+включая действия, прослушивание, определение, социализацию и другие аспекты поведения агентов.
 
 Пример использования
 --------------------
 
+Примеры использования функций тестирования:
+
 .. code-block:: python
 
-    pytest test_tinyperson.py
+    pytest.main(['-v', 'test_tinyperson.py'])
 """
-import os
 import pytest
-# изменен импорт для использования logger
+import os
+from pathlib import Path
+import sys
+
+# Путь к директории проекта для импорта
+PROJECT_PATH = Path(__file__).resolve().parent.parent.parent.parent
+sys.path.insert(0, str(PROJECT_PATH))
+
 from src.logger.logger import logger
-# убран избыточный импорт
-# import sys
-# sys.path.insert(0, '../../tinytroupe/') # ensures that the package is imported from the parent directory, not the Python installation
-# sys.path.insert(0, '../../') # ensures that the package is imported from the parent directory, not the Python installation
-# sys.path.insert(0, '..') # ensures that the package is imported from the parent directory, not the Python installation
-#
-# sys.path.append('../../tinytroupe/')
-# sys.path.append('../../')
-# sys.path.append('..')
+from src.utils.jjson import j_loads  # Используем j_loads для загрузки json файлов
 
-# импортируем необходимые классы
+
 from tinytroupe.examples import create_oscar_the_architect, create_lisa_the_data_scientist
-from tinytroupe.tinyperson import TinyPerson # импортируем TinyPerson
-from testing_utils import *
+from tinytroupe.tinyperson import TinyPerson
 
 
-def create_agents():
+def get_relative_to_test_path(relative_path):
     """
-    Создает и возвращает список агентов для тестов.
+    Возвращает абсолютный путь относительно текущей директории с тестами.
 
-    :return: Список агентов, включающий `create_oscar_the_architect` и `create_lisa_the_data_scientist`.
-    :rtype: list
+    Args:
+        relative_path (str): Относительный путь к файлу.
+
+    Returns:
+        str: Абсолютный путь к файлу.
+
+    Example:
+        >>> get_relative_to_test_path("test_file.txt")
+        '/absolute/path/to/tests/test_file.txt'
     """
-    return [create_oscar_the_architect(), create_lisa_the_data_scientist()]
+    return str(Path(__file__).resolve().parent / relative_path)
+
+
+def contains_action_type(actions, action_type):
+    """
+    Проверяет, содержит ли список действий хотя бы одно действие с заданным типом.
+
+    Args:
+        actions (list): Список действий.
+        action_type (str): Тип действия для поиска.
+
+    Returns:
+        bool: True, если действие найдено, иначе False.
+    """
+    return any(action['type'] == action_type for action in actions)
+
+
+def contains_action_content(actions, content):
+    """
+    Проверяет, содержит ли список действий хотя бы одно действие с заданным содержимым.
+
+    Args:
+        actions (list): Список действий.
+        content (str): Содержание для поиска.
+
+    Returns:
+         bool: True, если действие найдено, иначе False.
+    """
+    return any(content in action['content'] for action in actions)
+
+
+def terminates_with_action_type(actions, action_type):
+    """
+    Проверяет, заканчивается ли список действий действием с заданным типом.
+
+    Args:
+        actions (list): Список действий.
+        action_type (str): Тип действия для проверки.
+
+    Returns:
+        bool: True, если последнее действие имеет заданный тип, иначе False.
+    """
+    return actions[-1]['type'] == action_type
+
+
+def agents_configs_are_equal(agent1, agent2, ignore_name=False, ignore_memory=True):
+    """
+    Сравнивает конфигурации двух агентов.
+
+    Args:
+        agent1 (TinyPerson): Первый агент.
+        agent2 (TinyPerson): Второй агент.
+        ignore_name (bool, optional): Игнорировать имя при сравнении. Defaults to False.
+        ignore_memory (bool, optional): Игнорировать память агента при сравнении. Defaults to True.
+
+    Returns:
+         bool: True, если конфигурации агентов равны, False в противном случае.
+    """
+    config1 = agent1._configuration
+    config2 = agent2._configuration
+
+    if ignore_name:
+        config1 = {k: v for k, v in config1.items() if k != 'name'}
+        config2 = {k: v for k, v in config2.items() if k != 'name'}
+
+    if not ignore_memory:
+        config1['episodic_memory'] = agent1.episodic_memory.retrieve_all()
+        config2['episodic_memory'] = agent2.episodic_memory.retrieve_all()
+
+
+    return config1 == config2
+
+
+
+@pytest.fixture
+def setup():
+    """
+    Фикстура для настройки тестовой среды.
+    """
+    logger.info("Setting up test environment.")
+    yield
+    logger.info("Tearing down test environment.")
 
 
 def test_act(setup):
     """
-    Тестирует действие агента на основе запроса.
+    Тестирует, что агент выполняет действия на основе запроса.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент возвращает хотя бы одно действие,
+    содержит действие типа TALK и завершается действием DONE.
     """
-    for agent in create_agents():
-        actions = agent.listen_and_act("Tell me a bit about your life.", return_actions=True)
-        logger.info(agent.pp_current_interactions()) # логируем текущие взаимодействия агента
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        actions = agent.listen_and_act('Tell me a bit about your life.', return_actions=True)
+        logger.info(agent.pp_current_interactions())
 
-        assert len(actions) >= 1, f"{agent.name} should have at least one action to perform (even if it is just DONE), but got {len(actions)}." # проверка, что агент выполнил как минимум одно действие
-        assert contains_action_type(actions, "TALK"), f"{agent.name} should have at least one TALK action to perform, but got {actions}." # проверка, что агент выполнил как минимум одно действие типа TALK
-        assert terminates_with_action_type(actions, "DONE"), f"{agent.name} should always terminate with a DONE action, but got {actions}." # проверка, что последнее действие имеет тип DONE
+        assert len(actions) >= 1, f"{agent.name} должен выполнить хотя бы одно действие (даже если это DONE)."
+        assert contains_action_type(actions, 'TALK'), f"{agent.name} должен выполнить хотя бы одно действие типа TALK, так как мы его об этом попросили."
+        assert terminates_with_action_type(actions, 'DONE'), f"{agent.name} должен всегда завершать действия типом DONE."
 
 
 def test_listen(setup):
     """
-    Тестирует, что агент слушает сообщение и обновляет свои текущие сообщения.
+    Тестирует, что агент прослушивает стимул и обновляет свои сообщения.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент добавляет сообщение в текущие сообщения,
+    что последнее сообщение имеет роль 'user',
+    тип стимула 'CONVERSATION' и правильное содержание.
     """
-    for agent in create_agents():
-        agent.listen("Hello, how are you?") # агент слушает сообщение
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        agent.listen('Hello, how are you?')
 
-        assert len(agent.current_messages) > 0, f"{agent.name} should have at least one message in its current messages, but got {len(agent.current_messages)}." # проверка, что у агента есть сообщения
-        last_message = agent.episodic_memory.retrieve_all()[-1] # получаем последнее сообщение
-        assert last_message['role'] == 'user', f"{agent.name} should have the last message as \'user\', but got {last_message['role']}." # проверка, что роль последнего сообщения - 'user'
-        assert last_message['content']['stimuli'][0]['type'] == 'CONVERSATION', f"{agent.name} should have the last message as a \'CONVERSATION\' stimulus, but got {last_message['content']['stimuli'][0]['type']}." # проверка, что тип стимула последнего сообщения - 'CONVERSATION'
-        assert last_message['content']['stimuli'][0]['content'] == 'Hello, how are you?', f"{agent.name} should have the last message with the correct content, but got {last_message['content']['stimuli'][0]['content']}." # проверка, что контент последнего сообщения правильный
+        assert len(agent.current_messages) > 0, f"{agent.name} должен иметь хотя бы одно сообщение в текущих сообщениях."
+        assert agent.episodic_memory.retrieve_all()[-1]['role'] == 'user', f"{agent.name} должен иметь последнее сообщение с ролью 'user'."
+        assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['type'] == 'CONVERSATION', f"{agent.name} должен иметь последнее сообщение со стимулом типа 'CONVERSATION'."
+        assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['content'] == 'Hello, how are you?', f"{agent.name} должен иметь последнее сообщение с правильным содержанием."
 
 
 def test_define(setup):
     """
-    Тестирует, что агент определяет значение в своей конфигурации и сбрасывает свой запрос.
+    Тестирует, что агент определяет значение в своей конфигурации и сбрасывает промпт.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент сохраняет новое значение в конфигурации,
+    что промпт изменился и содержит новое значение.
     """
-    for agent in create_agents():
-        # сохраняем исходный запрос
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
         original_prompt = agent.current_messages[0]['content']
 
-        # определяем новое значение
         agent.define('age', 25)
 
-        # проверяем, что конфигурация содержит новое значение
-        assert agent._configuration['age'] == 25, f"{agent.name} should have the age set to 25, but got {agent._configuration.get('age')}." # проверка значения возраста
-        
-        # проверяем, что запрос изменился
-        assert agent.current_messages[0]['content'] != original_prompt, f"{agent.name} should have a different prompt after defining a new value, but got the same prompt." # проверка изменения запроса
-
-        # проверяем, что запрос содержит новое значение
-        assert '25' in agent.current_messages[0]['content'], f"{agent.name} should have the age in the prompt, but it is missing." # проверка наличия возраста в запросе
+        assert agent._configuration['age'] == 25, f"{agent.name} должен иметь возраст 25."
+        assert agent.current_messages[0]['content'] != original_prompt, f"{agent.name} должен иметь другой промпт после определения нового значения."
+        assert '25' in agent.current_messages[0]['content'], f"{agent.name} должен иметь возраст в промпте."
 
 
 def test_define_several(setup):
     """
-    Тестирует, что определение нескольких значений в группе работает корректно.
+    Тестирует, что определение нескольких значений для группы работает ожидаемо.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент добавляет все значения в указанную группу конфигурации.
     """
-    for agent in create_agents():
-        agent.define_several(group="skills", records=["Python", "Machine learning", "GPT-3"]) # задаем несколько навыков
-        assert "Python" in agent._configuration["skills"], f"{agent.name} should have Python as a skill, but it is missing." # проверка наличия навыка Python
-        assert "Machine learning" in agent._configuration["skills"], f"{agent.name} should have Machine learning as a skill, but it is missing." # проверка наличия навыка Machine learning
-        assert "GPT-3" in agent._configuration["skills"], f"{agent.name} should have GPT-3 as a skill, but it is missing." # проверка наличия навыка GPT-3
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        agent.define_several(group='skills', records=['Python', 'Machine learning', 'GPT-3'])
+        assert 'Python' in agent._configuration['skills'], f"{agent.name} должен иметь Python в списке навыков."
+        assert 'Machine learning' in agent._configuration['skills'], f"{agent.name} должен иметь Machine learning в списке навыков."
+        assert 'GPT-3' in agent._configuration['skills'], f"{agent.name} должен иметь GPT-3 в списке навыков."
 
 
 def test_socialize(setup):
     """
-    Тестирует, что социализация с другим агентом работает корректно.
+    Тестирует, что социализация агента с другим агентом работает ожидаемо.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент упоминает имя другого агента в действии TALK.
     """
-    an_oscar = create_oscar_the_architect() # создаем агента Оскар
-    a_lisa = create_lisa_the_data_scientist() # создаем агента Лиза
-    for agent in [an_oscar, a_lisa]: # для каждого агента
-        other = a_lisa if agent.name == "Oscar" else an_oscar # определяем другого агента
-        agent.make_agent_accessible(other, relation_description="My friend") # делаем другого агента доступным
-        agent.listen(f"Hi {agent.name}, I am {other.name}.") # агент слушает сообщение
-        actions = agent.act(return_actions=True) # агент действует
-        assert len(actions) >= 1, f"{agent.name} should have at least one action to perform, but got {len(actions)}." # проверка, что агент выполнил действие
-        assert contains_action_type(actions, "TALK"), f"{agent.name} should have at least one TALK action to perform, since we started a conversation, but got {actions}." # проверка, что действие имеет тип TALK
-        assert contains_action_content(actions, other.name), f"{agent.name} should mention {other.name} in the TALK action, since they are friends, but got {actions}." # проверка, что в действии упоминается имя другого агента
+    an_oscar = create_oscar_the_architect()
+    a_lisa = create_lisa_the_data_scientist()
+    for agent in [an_oscar, a_lisa]:
+        other = a_lisa if agent.name == 'Oscar' else an_oscar
+        agent.make_agent_accessible(other, relation_description='My friend')
+        agent.listen(f'Hi {agent.name}, I am {other.name}.')
+        actions = agent.act(return_actions=True)
+        assert len(actions) >= 1, f"{agent.name} должен выполнить хотя бы одно действие."
+        assert contains_action_type(actions, 'TALK'), f"{agent.name} должен выполнить хотя бы одно действие TALK, так как мы начали разговор."
+        assert contains_action_content(actions, other.name), f"{agent.name} должен упомянуть {other.name} в действии TALK, так как они друзья."
 
 
 def test_see(setup):
     """
-    Тестирует, что восприятие визуального стимула работает корректно.
+    Тестирует, что агент реагирует на визуальный стимул.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент выполняет действие THINK,
+    когда видит что-то интересное.
     """
-    for agent in create_agents():
-        agent.see("A beautiful sunset over the ocean.") # агент видит стимул
-        actions = agent.act(return_actions=True) # агент действует
-        assert len(actions) >= 1, f"{agent.name} should have at least one action to perform, but got {len(actions)}." # проверка, что агент выполнил действие
-        assert contains_action_type(actions, "THINK"), f"{agent.name} should have at least one THINK action to perform, since they saw something interesting, but got {actions}." # проверка, что действие имеет тип THINK
-        assert contains_action_content(actions, "sunset"), f"{agent.name} should mention the sunset in the THINK action, since they saw it, but got {actions}." # проверка, что в действии упоминается закат
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        agent.see('A beautiful sunset over the ocean.')
+        actions = agent.act(return_actions=True)
+        assert len(actions) >= 1, f"{agent.name} должен выполнить хотя бы одно действие."
+        assert contains_action_type(actions, 'THINK'), f"{agent.name} должен выполнить хотя бы одно действие типа THINK, так как он увидел что-то интересное."
+        assert contains_action_content(actions, 'sunset'), f"{agent.name} должен упомянуть sunset в действии THINK, так как он это увидел."
 
 
 def test_think(setup):
     """
-    Тестирует, что размышление о чем-то работает корректно.
+    Тестирует, что агент выполняет действие на основе своей мысли.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент выполняет действие TALK,
+    после того как подумал о чем-то.
     """
-    for agent in create_agents():
-        agent.think("I will tell everyone right now how awesome life is!") # агент размышляет
-        actions = agent.act(return_actions=True) # агент действует
-        assert len(actions) >= 1, f"{agent.name} should have at least one action to perform, but got {len(actions)}." # проверка, что агент выполнил действие
-        assert contains_action_type(actions, "TALK"), f"{agent.name} should have at least one TALK action to perform, since they are eager to talk, but got {actions}." # проверка, что действие имеет тип TALK
-        assert contains_action_content(actions, "life"), f"{agent.name} should mention life in the TALK action, since they thought about it, but got {actions}." # проверка, что в действии упоминается жизнь
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        agent.think('I will tell everyone right now how awesome life is!')
+        actions = agent.act(return_actions=True)
+        assert len(actions) >= 1, f"{agent.name} должен выполнить хотя бы одно действие."
+        assert contains_action_type(actions, 'TALK'), f"{agent.name} должен выполнить хотя бы одно действие TALK, так как он хочет поговорить."
+        assert contains_action_content(actions, 'life'), f"{agent.name} должен упомянуть life в действии TALK, так как он об этом подумал."
 
 
 def test_internalize_goal(setup):
     """
-    Тестирует, что принятие цели работает корректно.
+    Тестирует, что агент интернализирует цель.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент выполняет действие SEARCH
+    после определения новой цели.
     """
-    for agent in create_agents():
-        agent.internalize_goal("I want to learn more about GPT-3.") # агент принимает цель
-        actions = agent.act(return_actions=True) # агент действует
-        assert len(actions) >= 1, f"{agent.name} should have at least one action to perform, but got {len(actions)}." # проверка, что агент выполнил действие
-        assert contains_action_type(actions, "SEARCH"), f"{agent.name} should have at least one SEARCH action to perform, since they have a learning goal, but got {actions}." # проверка, что действие имеет тип SEARCH
-        assert contains_action_content(actions, "GPT-3"), f"{agent.name} should mention GPT-3 in the SEARCH action, since they want to learn more about it, but got {actions}." # проверка, что в действии упоминается GPT-3
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        agent.internalize_goal('I want to learn more about GPT-3.')
+        actions = agent.act(return_actions=True)
+        assert len(actions) >= 1, f"{agent.name} должен выполнить хотя бы одно действие."
+        assert contains_action_type(actions, 'SEARCH'), f"{agent.name} должен выполнить хотя бы одно действие типа SEARCH, так как у него есть цель обучения."
+        assert contains_action_content(actions, 'GPT-3'), f"{agent.name} должен упомянуть GPT-3 в действии SEARCH, так как он хочет узнать об этом больше."
 
 
 def test_move_to(setup):
     """
-    Тестирует, что перемещение в новое местоположение работает корректно.
+    Тестирует, что агент перемещается в новое место.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент устанавливает новое местоположение
+    и контекст в своей конфигурации.
     """
-    for agent in create_agents():
-        agent.move_to("New York", context=["city", "busy", "diverse"]) # агент перемещается
-        assert agent._configuration["current_location"] == "New York", f"{agent.name} should have New York as the current location, but got {agent._configuration.get('current_location')}." # проверка, что текущее местоположение - New York
-        assert "city" in agent._configuration["current_context"], f"{agent.name} should have city as part of the current context, but got {agent._configuration.get('current_context')}." # проверка наличия "city" в текущем контексте
-        assert "busy" in agent._configuration["current_context"], f"{agent.name} should have busy as part of the current context, but got {agent._configuration.get('current_context')}." # проверка наличия "busy" в текущем контексте
-        assert "diverse" in agent._configuration["current_context"], f"{agent.name} should have diverse as part of the current context, but got {agent._configuration.get('current_context')}." # проверка наличия "diverse" в текущем контексте
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        agent.move_to('New York', context=['city', 'busy', 'diverse'])
+        assert agent._configuration['current_location'] == 'New York', f"{agent.name} должен иметь New York в качестве текущего местоположения."
+        assert 'city' in agent._configuration['current_context'], f"{agent.name} должен иметь city в текущем контексте."
+        assert 'busy' in agent._configuration['current_context'], f"{agent.name} должен иметь busy в текущем контексте."
+        assert 'diverse' in agent._configuration['current_context'], f"{agent.name} должен иметь diverse в текущем контексте."
 
 
 def test_change_context(setup):
     """
-    Тестирует, что изменение контекста работает корректно.
+    Тестирует, что агент меняет свой контекст.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент устанавливает новый контекст в своей конфигурации.
     """
-    for agent in create_agents():
-        agent.change_context(["home", "relaxed", "comfortable"]) # агент изменяет контекст
-        assert "home" in agent._configuration["current_context"], f"{agent.name} should have home as part of the current context, but got {agent._configuration.get('current_context')}." # проверка наличия "home" в текущем контексте
-        assert "relaxed" in agent._configuration["current_context"], f"{agent.name} should have relaxed as part of the current context, but got {agent._configuration.get('current_context')}." # проверка наличия "relaxed" в текущем контексте
-        assert "comfortable" in agent._configuration["current_context"], f"{agent.name} should have comfortable as part of the current context, but got {agent._configuration.get('current_context')}." # проверка наличия "comfortable" в текущем контексте
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        agent.change_context(['home', 'relaxed', 'comfortable'])
+        assert 'home' in agent._configuration['current_context'], f"{agent.name} должен иметь home в текущем контексте."
+        assert 'relaxed' in agent._configuration['current_context'], f"{agent.name} должен иметь relaxed в текущем контексте."
+        assert 'comfortable' in agent._configuration['current_context'], f"{agent.name} должен иметь comfortable в текущем контексте."
 
 
 def test_save_spec(setup):
     """
-    Тестирует сохранение и загрузку спецификации агента.
+    Тестирует, что агент сохраняет свою спецификацию в файл и может загрузить ее.
 
-    :param setup: Фикстура pytest для настройки тестового окружения.
+    Проверяется, что агент сохраняет файл спецификации,
+    и что загруженный агент имеет те же параметры.
     """
-    for agent in create_agents():
-        # сохраняем в файл
-        file_path = get_relative_to_test_path(f"test_exports/serialization/{agent.name}.tinyperson.json")
+    for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
+        file_path = get_relative_to_test_path(f'test_exports/serialization/{agent.name}.tinyperson.json')
         agent.save_spec(file_path, include_memory=True)
 
-        # проверяем, что файл существует
-        assert os.path.exists(file_path), f"{agent.name} should have saved the file, but it is missing." # проверка, что файл существует
+        # проверка существования файла
+        if not Path(file_path).exists():
+             logger.error(f"Файл {file_path} не был создан.")
+             assert False, f"{agent.name} не сохранил файл."
 
-        # загружаем файл, чтобы проверить, что агент такой же. Имя агента должно быть другим, так как TinyTroupe не допускает двух агентов с одним и тем же именем.
         loaded_name = f"{agent.name}_loaded"
         loaded_agent = TinyPerson.load_spec(file_path, new_agent_name=loaded_name)
-
-        # проверяем, что загруженный агент такой же, как и исходный
-        assert loaded_agent.name == loaded_name, f"{agent.name} should have the same name as the loaded agent, but got {loaded_agent.name}." # проверка имени загруженного агента
-        
-        assert agents_configs_are_equal(agent, loaded_agent, ignore_name=True), f"{agent.name} should have the same configuration as the loaded agent, except for the name, but got different configuration." # проверка конфигурации загруженного агента
+        assert loaded_agent.name == loaded_name, f"{agent.name} должен иметь то же имя, что и у загруженного агента."
+        assert agents_configs_are_equal(agent, loaded_agent, ignore_name=True, ignore_memory=True), f"{agent.name} должен иметь ту же конфигурацию, что и загруженный агент, за исключением имени и памяти."
+```

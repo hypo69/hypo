@@ -81,7 +81,7 @@ def save_text_file(
         ...
         return False
     
-def read_text_file(
+def read_text_file_generator(
     file_path: str | Path,
     as_list: bool = False,
     extensions: Optional[list[str]] = None,
@@ -197,6 +197,41 @@ def read_text_file(
         ...
         return None
 
+def read_text_file(
+    file_path: Union[str, Path],
+    as_list: bool = False,
+    extensions: Optional[list[str]] = None,
+    exc_info: bool = True,
+) -> str | list[str] | None:
+    """
+    Read the contents of a file.
+
+    Args:
+        file_path (str | Path): Path to the file or directory.
+        as_list (bool, optional): If True, returns content as list of lines. Defaults to False.
+        extensions (list[str], optional): List of file extensions to include if reading a directory. Defaults to None.
+        exc_info (bool, optional): If True, logs traceback on error. Defaults to True.
+
+    Returns:
+        str | list[str] | None: File content as a string or list of lines, or None if an error occurs.
+    """
+    try:
+        path = Path(file_path)
+        if path.is_file():
+            with path.open("r", encoding="utf-8") as f:
+                return f.readlines() if as_list else f.read()
+        elif path.is_dir():
+            files = [
+                p for p in path.rglob("*") if p.is_file() and (not extensions or p.suffix in extensions)
+            ]
+            contents = [read_text_file(p, as_list) for p in files]
+            return [item for sublist in contents if sublist for item in sublist] if as_list else "\n".join(filter(None, contents))
+        else:
+            logger.warning(f"Path '{file_path}' is invalid.")
+            return 
+    except Exception as ex:
+        logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
+        return 
 
 def yield_text_from_files(
     file_path: str | Path,

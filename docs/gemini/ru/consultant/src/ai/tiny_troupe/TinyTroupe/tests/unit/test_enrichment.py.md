@@ -1,63 +1,75 @@
 # Анализ кода модуля `test_enrichment.py`
 
-**Качество кода: 7/10**
+**Качество кода**
 
--   **Плюсы**
-    *   Код использует `textwrap.dedent` для форматирования многострочных строк, что улучшает читаемость.
-    *   Присутствует базовая структура модульного теста с использованием `pytest`.
-    *   Используется `logger` для логирования, что способствует отладке.
-    *   Есть проверки на не `None` результат и на минимальную длину обогащенного контента.
--   **Минусы**
-    *   Отсутствует docstring для модуля и функции.
-    *   Импорты sys.path могут быть избыточными и не соответствовать принятому стилю.
-    *   Не используется `j_loads` или `j_loads_ns` для чтения файлов (в данном случае это не применимо, но для согласованности стоит упомянуть).
-    *   Логирование в debug может быть избыточным, стоит использовать уровень `info` для более значимой информации.
-    *   Нет try-except блока для обработки исключений при обогащении контента.
-    *   Не все комментарии переписаны в формате `RST`.
+-   Соответствие требованиям по оформлению кода: 7/10
+    -   **Плюсы:**
+        -   Код разбит на логические блоки, что облегчает чтение и понимание.
+        -   Используются `textwrap.dedent` для форматирования многострочных строк.
+        -   Присутствуют логические проверки с помощью `assert`.
+        -   Используется `logger.debug` для вывода отладочной информации.
+    -   **Минусы:**
+        -   Отсутствует docstring для модуля.
+        -   Отсутствует docstring для функции `test_enrich_content`.
+        -   Используется прямой импорт `logging` вместо `from src.logger.logger import logger`.
+        -   Импорты `sys.path.append` для добавления путей выглядят избыточными и могут быть пересмотрены.
+        -   Не все строки в коде следуют стандарту PEP8 (например, пустые строки перед блоками кода).
 
 **Рекомендации по улучшению**
 
-1.  **Добавить docstring**: Добавить docstring для модуля и функции `test_enrich_content` в формате RST для улучшения документации.
-2.  **Убрать избыточные импорты sys.path**: Удалить избыточные добавления в `sys.path` для более чистого кода.
-3.  **Использовать `j_loads` (неприменимо)**: Учитывая, что в данном файле нет операций с чтением json, пункт по использованию `j_loads` не применим.
-4.  **Логирование**: Изменить уровень логирования с `debug` на `info` для вывода информации о результате обогащения.
-5.  **Обработка ошибок**: Добавить обработку ошибок при вызове `TinyEnricher().enrich_content` с помощью `try-except` и `logger.error`.
-6.  **Форматирование комментариев**: Переписать комментарии в формате RST для лучшей документации кода.
-7.  **Согласование имён**: Привести в соответствие имена импортов с ранее обработанными файлами.
+1.  **Добавить docstring для модуля**:
+    -   Описать назначение модуля и привести пример использования.
+2.  **Добавить docstring для функции `test_enrich_content`**:
+    -   Описать, что тестирует функция и какие параметры используются.
+3.  **Заменить импорт `logging` на `from src.logger.logger import logger`**:
+    -   Обеспечить использование единого механизма логирования в проекте.
+4.  **Упростить добавление путей в `sys.path`**:
+    -   Пересмотреть необходимость добавления нескольких путей, возможно, достаточно будет одного.
+5.  **Удалить лишние пустые строки**:
+    -   Сделать код более компактным и читаемым.
+6.  **Добавить комментарии в формате RST**:
+    -   Включить подробные комментарии в формате RST для функций и классов.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для тестирования функциональности обогащения контента.
+Модуль тестирования функциональности обогащения контента.
 ==========================================================
 
-Этот модуль содержит тест :func:`test_enrich_content`, который проверяет корректность
-работы класса :class:`TinyEnricher` при обогащении текстового контента.
+Этот модуль содержит тесты для проверки работы класса `TinyEnricher`,
+который отвечает за обогащение текстового контента.
+
+Пример использования
+--------------------
+
+Пример запуска тестов:
+
+.. code-block:: bash
+
+    pytest tests/unit/test_enrichment.py
+
 """
 import pytest
 import textwrap
 
-import logging
-from src.logger.logger import logger  #  Импортируем logger из src.logger
+from src.logger.logger import logger  #  Импорт logger из src.logger.logger
 import sys
 
-# sys.path.append('../../tinytroupe/') #  Избыточный импорт пути
-# sys.path.append('../../') #  Избыточный импорт пути
-# sys.path.append('../') #  Избыточный импорт пути
+sys.path.append('../../') # Упрощенный путь
+sys.path.append('../')
 
 
-from tests.unit.testing_utils import *  #  Импорт изменен для соответствия структуре проекта
-from src.ai.tiny_troupe.TinyTroupe.enrichment import TinyEnricher  #  Импорт изменен для соответствия структуре проекта
+from testing_utils import *
+from tinytroupe.enrichment import TinyEnricher
 
 
 def test_enrich_content():
     """
-    Тестирует функцию обогащения контента.
+    Тестирует функцию обогащения контента `enrich_content` класса `TinyEnricher`.
 
-    Проверяет, что функция обогащения контента возвращает результат, который
-    не является None и имеет длину, как минимум, в 3 раза превышающую длину
-    исходного контента.
+    Проверяет, что результат обогащения контента не равен `None` и что длина
+    обогащенного контента не менее чем в 3 раза превышает длину исходного контента.
     """
     content_to_enrich = textwrap.dedent(
         """
@@ -96,25 +108,22 @@ def test_enrich_content():
         """
     ).strip()
     
-    # Код вызывает метод enrich_content класса TinyEnricher для обогащения контента
-    try:
-        result = TinyEnricher().enrich_content(requirements=requirements,
-                                           content=content_to_enrich,
-                                           content_type="Document",
-                                           context_info="WonderCode was approached by Microsoft to for a partnership.",
-                                           context_cache=None, verbose=True)
-    except Exception as ex:
-        # Логируем ошибку, если возникает исключение в процессе обогащения
-        logger.error(f'Ошибка при обогащении контента', exc_info=ex)
-        assert False, "An error occurred during content enrichment."
-        return
+    # Создание экземпляра TinyEnricher и вызов метода enrich_content
+    result = TinyEnricher().enrich_content(
+        requirements=requirements,
+        content=content_to_enrich,
+        content_type='Document',
+        context_info='WonderCode was approached by Microsoft to for a partnership.',
+        context_cache=None,
+        verbose=True,
+    )
+    
+    # Проверка, что результат не None
+    assert result is not None, 'The result should not be None.'
 
-    # Проверяем, что результат не является None
-    assert result is not None, "The result should not be None."
-
-    #  Выводим информацию о результате обогащения, его длине и длине исходного контента
-    logger.info(f"Enrichment result: {result}\\n Length: {len(result)}\\n Original length: {len(content_to_enrich)}\\n")
-
-    #  Проверяем, что длина результата не менее чем в 3 раза превышает длину исходного контента
-    assert len(result) >= len(content_to_enrich) * 3, "The result should be at least 3 times larger than the original content."
+    # Логирование результата и его длины
+    logger.debug(f'Enrichment result: {result}\\n Length: {len(result)}\\n Original length: {len(content_to_enrich)}\\n')
+    
+    # Проверка, что длина результата в 3 раза больше исходной
+    assert len(result) >= len(content_to_enrich) * 3, 'The result should be at least 3 times larger than the original content.'
 ```

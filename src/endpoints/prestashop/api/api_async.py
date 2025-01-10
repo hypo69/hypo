@@ -113,7 +113,7 @@ class PrestaShopAsync:
     """
     client: ClientSession = None
     debug = True
-    language: Optional[int] = None
+    lang_index: Optional[int] = 1
     data_format = 'JSON'
     ps_version = ''
     API_DOMAIN:str = None
@@ -123,7 +123,6 @@ class PrestaShopAsync:
                 api_domain:str,
                 api_key:str,
                 data_format: str = 'JSON',
-                default_lang: int = 1,
                 debug: bool = True) -> None:
         """! Initialize the PrestaShopAsync class.
 
@@ -139,7 +138,6 @@ class PrestaShopAsync:
         self.API_DOMAIN = api_domain
         self.API_KEY = api_key
         self.debug = debug
-        self.language = default_lang
         self.data_format = data_format
 
         self.client = ClientSession(

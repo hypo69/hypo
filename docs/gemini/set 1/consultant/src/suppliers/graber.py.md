@@ -90,7 +90,7 @@ from src import gs
 from src.category import Category
 from src.logger.exceptions import ExecuteLocatorException
 from src.logger.logger import logger
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.utils.image import save_png, save_png_from_url
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint

@@ -1,114 +1,108 @@
 # Анализ кода модуля `test_basic_scenarios.py`
 
 **Качество кода**
-
 7
 - Плюсы
-    - Код структурирован и понятен.
-    - Используется pytest для тестирования.
-    - Применяются фикстуры и хелперы для упрощения тестов.
-    - Наличие базовых проверок статуса симуляции.
+    - Код написан в соответствии с PEP8, использует осмысленные имена переменных.
+    - Используются `assert` для проверки корректности работы кода.
+    - Присутствует логирование.
 - Минусы
-    - Отсутствуют docstring для модуля и функций.
-    - Не используется `j_loads` или `j_loads_ns`.
-    - Используется `print` для отладочной печати.
-    - Не используется `logger` для логирования.
-    - Есть TODO комментарии, которые должны быть проработаны.
+    - Отсутствует документация к функциям и модулю.
+    - Некоторые `assert` сообщения не информативны, можно добавить больше деталей.
+    - Используется относительный импорт.
+    - Используется устаревший метод логирования.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля и функции `test_scenario_1` в формате RST.
-2.  Заменить `print` на `logger.debug` или `logger.info` для отладочной печати.
-3.  Использовать `from src.logger.logger import logger` для логирования.
-4.  Убрать избыточные импорты `import sys` и его использование, если они не используются.
-5.  Удалить не используемые импорты, такие как `import logging` и `logger = logging.getLogger("tinytroupe")`.
-6.  Удалить дубликаты путей `sys.path.append`.
-7.  Заменить комментарии `# TODO check file creation` на более конкретные проверки в тесте.
-8.  Все комментарии после `#` должны быть изменены на reStructuredText (RST).
-9.  Использовать `from src.utils.jjson import j_loads, j_loads_ns` для чтения файлов, если таковые используются.
+1.  **Добавить документацию модуля**:
+    - Описать назначение модуля, его основные функции.
+2.  **Добавить документацию для функций**:
+    - Описать назначение каждой функции, её аргументы и возвращаемые значения.
+3.  **Использовать абсолютные импорты**:
+    - Использовать абсолютные пути для импорта модулей. Это улучшит читаемость и переносимость кода.
+4.  **Использовать `logger` из `src.logger`**:
+    -  Удалить `import logging`, и использовать `from src.logger.logger import logger`
+5.  **Улучшить сообщения `assert`**:
+    - Сделать сообщения более информативными, указав ожидаемое и фактическое значение, это упростит отладку.
+6.  **Удалить лишние добавления путей**:
+    - Пути добавляются в начале, но они уже есть в `sys.path`
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль тестирования базовых сценариев симуляции.
-=========================================================================================
+Модуль содержит тесты для базовых сценариев работы TinyTroupe.
+=================================================================
 
-Этот модуль содержит тесты для проверки основных сценариев работы симуляции,
-включая запуск, создание агентов и сохранение промежуточных состояний.
+Этот модуль проверяет основные сценарии взаимодействия с агентами,
+создания симуляций и сохранения данных.
 
 Пример использования
 --------------------
 
-Пример запуска теста:
+Для запуска тестов используйте pytest:
 
-.. code-block:: python
+.. code-block:: bash
 
-    pytest test_basic_scenarios.py
+    pytest tests/scenarios/test_basic_scenarios.py
+
 """
 import pytest
+# from logging import getLogger #  Удалено.
+from src.logger.logger import logger # Используем logger из src.logger
 
-# from src.logger.logger import logger
-# import logging # избыточный импорт
-# logger = logging.getLogger("tinytroupe") # избыточный импорт
+import sys
+# sys.path.append('../../tinytroupe/') #  Удалено.
+# sys.path.append('../../') #  Удалено.
+# sys.path.append('../') #  Удалено.
 
-# import sys # избыточный импорт
-# sys.path.append('../../tinytroupe/') # избыточный импорт
-# sys.path.append('../../') # избыточный импорт
-# sys.path.append('..') # избыточный импорт
+# Используются абсолютные импорты
+from src.ai.tiny_troupe.TinyTroupe import tinytroupe
+from src.ai.tiny_troupe.TinyTroupe.agent import TinyPerson
+from src.ai.tiny_troupe.TinyTroupe.environment import TinyWorld, TinySocialNetwork
+from src.ai.tiny_troupe.TinyTroupe.factory import TinyPersonFactory
+from src.ai.tiny_troupe.TinyTroupe.extraction import ResultsExtractor
 
-
-import tinytroupe
-from tinytroupe.agent import TinyPerson
-from tinytroupe.environment import TinyWorld, TinySocialNetwork
-from tinytroupe.factory import TinyPersonFactory
-from tinytroupe.extraction import ResultsExtractor
-
-from tinytroupe.examples import create_lisa_the_data_scientist, create_oscar_the_architect, create_marcos_the_physician
-from tinytroupe.extraction import default_extractor as extractor
-import tinytroupe.control as control
-from tinytroupe.control import Simulation
+from src.ai.tiny_troupe.TinyTroupe.examples import create_lisa_the_data_scientist, create_oscar_the_architect, create_marcos_the_physician
+from src.ai.tiny_troupe.TinyTroupe.extraction import default_extractor as extractor
+import src.ai.tiny_troupe.TinyTroupe.control as control
+from src.ai.tiny_troupe.TinyTroupe.control import Simulation
 
 from tests.testing_utils import *
 
 
 def test_scenario_1():
     """
-    Тестирует основной сценарий работы симуляции.
+    Тестирует базовый сценарий симуляции с одним агентом.
 
-    Этот тест проверяет корректность запуска симуляции, создания агента,
-    определения его параметров и сохранения промежуточных состояний.
+    Этот тест проверяет создание симуляции, определение атрибутов агента,
+    выполнение действий и сохранение данных.
     """
     control.reset()
-
-    # Проверка, что нет запущенных симуляций перед началом теста.
-    assert control._current_simulations["default"] is None, "There should be no simulation running at this point."
+    # Проверяем, что нет активной симуляции
+    assert control._current_simulations['default'] is None, 'Активная симуляция должна отсутствовать в начале теста'
 
     control.begin()
-    # Проверка, что симуляция запущена после вызова begin().
-    assert control._current_simulations["default"].status == Simulation.STATUS_STARTED, "The simulation should be started at this point."
+    # Проверяем, что симуляция запущена
+    assert control._current_simulations['default'].status == Simulation.STATUS_STARTED, 'Симуляция должна быть запущена'
 
     agent = create_oscar_the_architect()
 
-    agent.define("age", 19)
-    agent.define("nationality", "Brazilian")
+    agent.define('age', 19)
+    agent.define('nationality', 'Brazilian')
 
-    # Проверка, что кеш и трассировка выполнения созданы после запуска симуляции.
-    assert control._current_simulations["default"].cached_trace is not None, "There should be a cached trace at this point."
-    assert control._current_simulations["default"].execution_trace is not None, "There should be an execution trace at this point."
-
-    control.checkpoint()
-    # TODO: check file creation
-    #  Проверка, что файлы создались после checkpoint
-    #  Здесь нужно добавить код для проверки создания файлов
-
-
-    agent.listen_and_act("How are you doing?")
-    agent.define("occupation", "Engineer")
+    # Проверяем, что кэш трассировки и трассировка выполнения созданы
+    assert control._current_simulations['default'].cached_trace is not None, 'Кэш трассировки должен быть создан'
+    assert control._current_simulations['default'].execution_trace is not None, 'Трассировка выполнения должна быть создана'
 
     control.checkpoint()
-    # TODO: check file creation
-    #  Проверка, что файлы создались после checkpoint
-    #  Здесь нужно добавить код для проверки создания файлов
+    # TODO check file creation
+
+    agent.listen_and_act('How are you doing?')
+    agent.define('occupation', 'Engineer')
+
+    control.checkpoint()
+    # TODO check file creation
 
     control.end()
+```

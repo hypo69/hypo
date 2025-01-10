@@ -47,7 +47,7 @@ from functools import wraps
 import header
 from src import gs
 
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 from src.category import Category
 from src.webdriver import Driver
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps

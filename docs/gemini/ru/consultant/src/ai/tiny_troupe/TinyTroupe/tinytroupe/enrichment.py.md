@@ -1,135 +1,129 @@
 # Анализ кода модуля `enrichment.py`
 
 **Качество кода**
-9
--  Плюсы
-    - Код достаточно хорошо структурирован, использует классы и функции для организации логики.
-    - Применяется `logging` для отслеживания ошибок и процесса работы, что важно для отладки и мониторинга.
-    - Используются шаблоны `mustache` для генерации сообщений, что способствует гибкости и переиспользованию кода.
-    - Код применяет `JsonSerializableRegistry`, что позволяет регистрировать и сериализовать объекты в JSON.
-    - Присутствует использование `openai_utils` для работы с OpenAI API, что указывает на интеграцию с внешним сервисом.
--  Минусы
-    -  Отсутствуют docstring для модуля, класса и методов.
-    -  Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов, если это подразумевалось в коде (не нашел использования json.load)
-    -  Не все импорты приведены в соответствие с другими файлами (напр. `from tinytroupe import openai_utils` должен быть `from src.ai.tiny_troupe import openai_utils`)
-    -  Обработка ошибок не использует `logger.error` вместо `try-except`.
-    -  Не все комментарии оформлены в стиле RST.
-    - Не все импорты вынесены в начало файла.
+8
+- Плюсы
+    - Код хорошо структурирован и разбит на функции, что облегчает понимание и поддержку.
+    - Используется класс `TinyEnricher` для управления процессом обогащения, что обеспечивает модульность.
+    - Применяется `JsonSerializableRegistry` для сериализации и десериализации, что соответствует стандартам проекта.
+    - Логирование с уровнем `debug` позволяет отслеживать процесс обогащения.
+    -  Используются шаблоны mustache для формирования запросов к LLM, что упрощает управление текстом запросов.
+- Минусы
+    -  Импорт `logging` и настройка логгера выполнена нестандартно, нужно импортировать из `src.logger.logger`.
+    -  Отсутствует документация для класса и методов.
+    -  Используется стандартный `json.load` вместо `j_loads` или `j_loads_ns`.
+    -  Не все импорты используются, например `pandas`.
+    -  Нет обработки ошибок через `try-except` или через `logger.error`.
+    -  Не используется `from src.logger.logger import logger` для импорта логгера.
 
 **Рекомендации по улучшению**
 
-1.  **Документация:** Добавить docstring для модуля, класса `TinyEnricher` и его методов, используя reStructuredText (RST) формат.
-2.  **Импорты:** Привести импорты в соответствие с другими файлами, а именно `from tinytroupe import openai_utils` заменить на `from src.ai.tiny_troupe import openai_utils`.
-3.  **Обработка ошибок:** Заменить `try-except` на использование `logger.error` для логирования ошибок, где это возможно.
-4.  **Комментарии:** Переписать все комментарии в стиле RST, где это необходимо.
-5.  **Использовать `j_loads`:** Убедиться, что используются `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.load`, если это требование применимо (в коде нет вызовов `json.load`).
-6.  **Логирование:** Использовать `from src.logger.logger import logger` для логирования.
+1.  Импортировать `logger` из `src.logger.logger`.
+2.  Добавить документацию в формате RST для класса `TinyEnricher` и метода `enrich_content`.
+3.  Удалить неиспользуемые импорты.
+4.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`, если необходимо чтение JSON файлов.
+5.  Добавить обработку ошибок с использованием `logger.error` для ситуаций, когда `next_message` is `None`.
+6.  Добавить тип к переменным.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для обогащения контента с помощью языковой модели.
-=========================================================================================
+Модуль для обогащения контента с использованием LLM
+====================================================
 
-Этот модуль содержит класс :class:`TinyEnricher`, который используется для
-обогащения текстового контента на основе заданных требований, контекстной информации
-и кэша предыдущих результатов. Он применяет шаблоны mustache для создания
-сообщений, которые отправляются языковой модели.
+Этот модуль предоставляет класс `TinyEnricher`, который используется для обогащения текстового контента
+с помощью моделей обработки естественного языка. Он принимает требования и контент, формирует
+сообщения для LLM, и возвращает обогащенный контент.
 
 Пример использования
 --------------------
 
-Пример использования класса `TinyEnricher`:
-
 .. code-block:: python
 
-    enricher = TinyEnricher(use_past_results_in_context=True)
-    enriched_content = enricher.enrich_content(
-        requirements="Улучши этот текст",
-        content="Исходный текст",
-        content_type="текст",
-        context_info="Дополнительная информация",
-        context_cache=["Предыдущий результат"]
-    )
+    enricher = TinyEnricher()
+    requirements = "Извлечь все имеющиеся имена"
+    content = "В тексте упоминаются Иван, Петр и Мария."
+    enriched_content = enricher.enrich_content(requirements, content)
     print(enriched_content)
 """
 import os
-# import json # не используется, поэтому закомментировал
 import chevron
-# import logging # заменен на src.logger.logger
-import pandas as pd
-
+# from src.logger.logger import logger  # Импорт из правильного места
+import logging
+logger = logging.getLogger("tinytroupe")
+# import pandas as pd # не используется
+from typing import Any, List, Optional
+from pathlib import Path
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 from tinytroupe.factory import TinyPersonFactory
 from tinytroupe.utils import JsonSerializableRegistry
-from src.ai.tiny_troupe import openai_utils #  изменено  импорт
+from tinytroupe import openai_utils
 import tinytroupe.utils as utils
-from src.logger.logger import logger # импорт для логирования
 
 class TinyEnricher(JsonSerializableRegistry):
     """
-    Класс для обогащения контента с использованием языковой модели.
+    Класс для обогащения контента с использованием LLM.
 
-    :param use_past_results_in_context: Флаг, определяющий, использовать ли прошлые результаты в контексте.
-    :type use_past_results_in_context: bool, optional
+    :param use_past_results_in_context: Флаг, указывающий, использовать ли предыдущие результаты в контексте.
+    :type use_past_results_in_context: bool
+    :ivar context_cache: Кэш контекста для сохранения предыдущих результатов.
+    :vartype context_cache: list
     """
-    def __init__(self, use_past_results_in_context=False) -> None:
+    def __init__(self, use_past_results_in_context: bool = False) -> None:
         """
-        Инициализирует объект TinyEnricher.
+        Инициализирует экземпляр класса `TinyEnricher`.
 
-        :param use_past_results_in_context: Определяет, используются ли прошлые результаты в контексте.
-        :type use_past_results_in_context: bool, optional
+        :param use_past_results_in_context: Флаг, указывающий, использовать ли предыдущие результаты в контексте.
+        :type use_past_results_in_context: bool
         """
         self.use_past_results_in_context = use_past_results_in_context
-        #: Кэш контекста для хранения результатов.
-        self.context_cache = []
-    
-    def enrich_content(self, requirements: str, content:str, content_type:str =None, context_info:str ="", context_cache:list=None, verbose:bool=False):
+        self.context_cache: List[str] = [] # инициализация переменной context_cache
+
+
+    def enrich_content(self, requirements: str, content: str, content_type: Optional[str] = None, context_info: str = "", context_cache: Optional[List[str]] = None, verbose: bool = False) -> Optional[str]:
         """
-        Обогащает контент на основе заданных требований и контекста.
+        Обогащает контент, используя LLM.
 
         :param requirements: Требования к обогащению контента.
         :type requirements: str
-        :param content: Текст, который нужно обогатить.
+        :param content: Исходный контент для обогащения.
         :type content: str
-        :param content_type: Тип контента (например, "текст", "код").
-        :type content_type: str, optional
-        :param context_info: Дополнительная информация для контекста.
-        :type context_info: str, optional
-        :param context_cache: Кэш предыдущих результатов.
-        :type context_cache: list, optional
-        :param verbose: Флаг для вывода отладочной информации.
-        :type verbose: bool, optional
+        :param content_type: Тип контента.
+        :type content_type: Optional[str]
+        :param context_info: Дополнительная информация о контексте.
+        :type context_info: str
+        :param context_cache: Кэш контекста с предыдущими результатами.
+        :type context_cache: Optional[List[str]]
+        :param verbose: Флаг для включения режима подробного вывода.
+        :type verbose: bool
         :return: Обогащенный контент или None в случае ошибки.
-        :rtype: str or None
+        :rtype: Optional[str]
         """
-        # формируем словарь с конфигурациями для рендеринга
-        rendering_configs = {"requirements": requirements,
-                             "content": content,
-                             "content_type": content_type, 
-                             "context_info": context_info,
-                             "context_cache": context_cache}
-
-        # Компонуем сообщения для языковой модели с использованием шаблонов mustache
-        messages = utils.compose_initial_LLM_messages_with_templates("enricher.system.mustache", "enricher.user.mustache", rendering_configs)
-        # Отправляем сообщение в языковую модель и получаем ответ
+        rendering_configs = {
+            'requirements': requirements,
+            'content': content,
+            'content_type': content_type,
+            'context_info': context_info,
+            'context_cache': context_cache
+        }
+        #  формирование сообщений для LLM с использованием шаблонов mustache
+        messages = utils.compose_initial_LLM_messages_with_templates('enricher.system.mustache', 'enricher.user.mustache', rendering_configs)
+        # отправка сообщения в LLM
         next_message = openai_utils.client().send_message(messages, temperature=0.4)
-        
-        debug_msg = f"Enrichment result message: {next_message}"
-        # Логируем отладочное сообщение
+
+        debug_msg = f'Enrichment result message: {next_message}'
         logger.debug(debug_msg)
-        # Выводим отладочное сообщение, если verbose=True
         if verbose:
             print(debug_msg)
-
-        # извлекаем код из ответа, если он есть
+        # проверка если сообщение от LLM пришло
         if next_message is not None:
-            result = utils.extract_code_block(next_message["content"])
+            #  извлечение кодового блока из ответа
+            result = utils.extract_code_block(next_message['content'])
         else:
+            # обработка ошибки когда нет ответа от LLM
+            logger.error(f'No message received from LLM for requirements: {requirements}')
             result = None
-
-        # Возвращаем результат обогащения
         return result
 ```

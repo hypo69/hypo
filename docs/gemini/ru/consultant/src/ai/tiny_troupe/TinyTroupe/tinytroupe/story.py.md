@@ -1,47 +1,42 @@
-# Анализ кода модуля `story.py`
+## Анализ кода модуля `story`
 
 **Качество кода**
 9
--   Плюсы
-    -   Код хорошо структурирован и разбит на логические блоки.
-    -   Используются docstring для описания классов и методов.
-    -   Присутствует обработка исключений для проверки параметров.
-    -   Используются `f-strings` для форматирования строк.
-    -   Есть возможность настройки количества первых и последних взаимодействий, включаемых в историю.
-    -   Используется `utils.dedent` для удаления лишних отступов.
--   Минусы
-    -   Отсутствует импорт `from src.logger.logger import logger` и логирование ошибок.
-    -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
-    -   Не все комментарии приведены в формат RST.
-    -   В некоторых местах комментарии после `#` не полностью объясняют логику кода.
-    -   Используются стандартные блоки `try-except` вместо обработки ошибок с помощью `logger.error`.
-    -   `temperature=1.5` - высокое значение, лучше сделать его настраиваемым параметром.
-    -   Не все функции имеют описание в формате reStructuredText.
-**Рекомендации по улучшению**
-1.  Добавить импорт `from src.logger.logger import logger` для логирования ошибок.
-2.  Заменить стандартные `Exception` на более конкретные, при необходимости.
-3.  Использовать `logger.error` для обработки ошибок вместо общих `try-except`.
-4.  Все комментарии к функциям, методам и переменным должны быть переписаны в формате reStructuredText (RST).
-5.  В комментариях после `#` строки должны содержать подробное объяснение следующего за ними блока кода.
-6.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов, если это необходимо. В данном случае это не требуется, так как нет чтения файлов.
-7.  `temperature` сделать настраиваемым параметром.
+ -  Плюсы
+    - Код хорошо структурирован и разбит на логические блоки.
+    - Используются docstrings для описания классов и методов.
+    - Присутствует проверка на корректность входных параметров в конструкторе класса `TinyStory`.
+    - Имеется возможность включения/выключения информации об опущенных взаимодействиях.
+    - Применяется форматирование строк f-строками для улучшения читаемости.
+    - Используется `utils.dedent` для удаления лишних отступов.
+    - В целом, код соответствует стандартам PEP 8 и является читаемым.
+ -  Минусы
+    - Отсутствует импорт `logger` из `src.logger`.
+    - Не используются `j_loads` или `j_loads_ns` для загрузки данных (хотя в данном коде нет загрузки файлов).
+    - В docstring не хватает описания типов возвращаемых значений функций.
+    - Некоторые комментарии можно было бы сделать более конкретными, а так же добавить документацию в формате RST
 
-**Оптимизированный код**
+**Рекомендации по улучшению**
+
+1.  Добавить импорт `logger` из `src.logger.logger`.
+2.  Добавить `-> str` в аннотацию типов для функций `start_story`, `continue_story`, `_current_story`.
+3.  В docstring для функций `start_story` и `continue_story` указать тип возвращаемого значения `str`.
+4.  Добавить более подробные комментарии для некоторых блоков кода с использованием rst.
+5.  Обеспечить соответствие с ранее обработанными файлами в части именования.
+6.  В функции `_current_story` убрать лишнее добавление `self.current_story`. Добавить проверку на то, является ли `self.current_story` пустой строкой.
+
+**Оптимизиробанный код**
+
 ```python
 """
-Модуль для создания и управления историями в TinyTroupe.
-=========================================================================================
-
-Этот модуль предоставляет класс :class:`TinyStory`, который помогает создавать
-интересные истории на основе симуляций агентов или окружений.
-
-Класс позволяет начать, продолжить историю, добавляя в неё контекст
-и информацию о взаимодействиях.
+Every simulation tells a story. This module provides helper mechanisms to help with crafting appropriate stories in TinyTroupe.
+============================================================================================================================
+Этот модуль содержит класс :class:`TinyStory`, который используется для создания и управления историями в симуляциях TinyTroupe.
 
 Пример использования
 --------------------
 
-Пример создания и использования класса `TinyStory`:
+Пример создания и запуска истории:
 
 .. code-block:: python
 
@@ -49,10 +44,9 @@
     from tinytroupe.story import TinyStory
 
     world = TinyWorld()
-    story = TinyStory(environment=world, purpose="Создать интересную историю")
-    story.start_story(requirements="Начать историю о мире")
-    story.continue_story(requirements="Продолжить историю")
-
+    story = TinyStory(environment=world, purpose='To explore the world')
+    start_story = story.start_story(requirements='Начните интересную историю о мире.')
+    print(start_story)
 """
 
 from typing import List
@@ -60,49 +54,45 @@ from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 import tinytroupe.utils as utils
 from tinytroupe import openai_utils
-from src.logger.logger import logger # Добавлен импорт logger
+from src.logger.logger import logger  # Импорт logger
 
 
 class TinyStory:
     """
-    Класс для управления созданием и развитием истории на основе симуляций.
+    Класс для управления историями в TinyTroupe.
     
-    :param environment: Окружение, в котором происходит история.
-    :type environment: TinyWorld, optional
-    :param agent: Агент, участвующий в истории.
-    :type agent: TinyPerson, optional
-    :param purpose: Цель истории.
-    :type purpose: str, optional
-    :param context: Начальный контекст истории.
-    :type context: str, optional
-    :param first_n: Количество первых взаимодействий для включения в историю.
-    :type first_n: int, optional
-    :param last_n: Количество последних взаимодействий для включения в историю.
-    :type last_n: int, optional
-    :param include_omission_info: Включать ли информацию об опущенных взаимодействиях.
-    :type include_omission_info: bool, optional
+    Этот класс позволяет создавать, продолжать и управлять историями на основе взаимодействий агентов или окружения.
     """
+
     def __init__(self, environment: TinyWorld = None, agent: TinyPerson = None, purpose: str = "Be a realistic simulation.", context: str = "",
                  first_n: int = 10, last_n: int = 20, include_omission_info: bool = True) -> None:
         """
-        Инициализация истории.
+        Инициализирует историю. История может быть связана с окружением или агентом. Также имеет цель, которая
+        используется для управления генерацией истории. Истории учитывают, что они связаны с симуляциями, поэтому можно
+        указывать цели, связанные с симуляцией.
 
-        История может быть о среде или об агенте. У нее также есть цель, которая
-        используется для направления генерации истории. Истории знают, что они связаны с симуляциями,
-        поэтому можно указать цели, связанные с симуляцией.
-        
-        :raises Exception: Если не передан ни агент, ни окружение, или переданы оба.
+        :param environment: Окружение, в котором происходит история.
+        :type environment: TinyWorld, optional
+        :param agent: Агент в истории.
+        :type agent: TinyPerson, optional
+        :param purpose: Цель истории.
+        :type purpose: str, optional
+        :param context: Текущий контекст истории. Фактическая история будет добавлена к этому контексту.
+        :type context: str, optional
+        :param first_n: Количество первых взаимодействий, которые нужно включить в историю.
+        :type first_n: int, optional
+        :param last_n: Количество последних взаимодействий, которые нужно включить в историю.
+        :type last_n: int, optional
+        :param include_omission_info:  Включать ли информацию об опущенных взаимодействиях.
+        :type include_omission_info: bool, optional
+        :raises Exception: Если не передан ни агент, ни окружение, или переданы оба параметра.
         """
-        # проверка, что передан или агент, или окружение, но не оба
+        # проверка, что передан ровно один из параметров: environment или agent
         if environment and agent:
-            msg = "Either 'environment' or 'agent' should be provided, not both"
-            logger.error(msg) # Логирование ошибки
-            raise ValueError(msg) # Используется ValueError вместо общего Exception
+            raise Exception("Either \'environment\' or \'agent\' should be provided, not both")
         if not (environment or agent):
-            msg = "At least one of the parameters should be provided"
-            logger.error(msg) # Логирование ошибки
-            raise ValueError(msg) # Используется ValueError вместо общего Exception
-            
+            raise Exception("At least one of the parameters should be provided")
+
         self.environment = environment
         self.agent = agent
 
@@ -114,39 +104,39 @@ class TinyStory:
         self.last_n = last_n
         self.include_omission_info = include_omission_info
 
-    def start_story(self, requirements: str = "Start some interesting story about the agents.", number_of_words: int = 100, include_plot_twist: bool = False, temperature: float = 1.0) -> str:
+    def start_story(self, requirements: str = "Start some interesting story about the agents.", number_of_words: int = 100,
+                    include_plot_twist: bool = False) -> str:
         """
-        Начать новую историю.
+        Начинает новую историю.
 
         :param requirements: Требования к началу истории.
         :type requirements: str, optional
-        :param number_of_words: Количество слов в начале истории.
+        :param number_of_words:  Количество слов в начале истории.
         :type number_of_words: int, optional
-        :param include_plot_twist: Включить ли в историю неожиданный поворот.
+        :param include_plot_twist:  Включать ли поворот сюжета.
         :type include_plot_twist: bool, optional
-        :param temperature: Температура для генерации текста.
-        :type temperature: float, optional
         :return: Начало истории.
         :rtype: str
         """
         rendering_configs = {
-                             "purpose": self.purpose,
-                             "requirements": requirements,
-                             "current_simulation_trace": self._current_story(),
-                             "number_of_words": number_of_words,
-                             "include_plot_twist": include_plot_twist
-                            }
-
-        messages = utils.compose_initial_LLM_messages_with_templates("story.start.system.mustache", "story.start.user.mustache", rendering_configs)
-        
+            "purpose": self.purpose,
+            "requirements": requirements,
+            "current_simulation_trace": self._current_story(),
+            "number_of_words": number_of_words,
+            "include_plot_twist": include_plot_twist
+        }
+        #  Формирование сообщений для LLM с использованием шаблонов
+        messages = utils.compose_initial_LLM_messages_with_templates("story.start.system.mustache",
+                                                                     "story.start.user.mustache", rendering_configs)
+        #  Отправка сообщения в LLM и получение ответа
         try:
-            # Код отправляет сообщение и получает ответ от модели
-            next_message = openai_utils.client().send_message(messages, temperature=temperature)
-            start = next_message["content"]
-        except Exception as ex:
-             logger.error('Ошибка при отправке сообщения в LLM', exc_info=ex)
-             return ""
-        
+            next_message = openai_utils.client().send_message(messages, temperature=1.5)
+        except Exception as e:
+            logger.error(f"Ошибка при отправке сообщения в LLM: {e}")
+            return ""
+
+        start = next_message["content"]
+
         self.current_story += utils.dedent(
             f"""
 
@@ -156,40 +146,42 @@ class TinyStory:
 
             """
         )
+
         return start
 
-    def continue_story(self, requirements: str = "Continue the story in an interesting way.", number_of_words: int = 100, include_plot_twist: bool = False, temperature:float=1.0) -> str:
+    def continue_story(self, requirements: str = "Continue the story in an interesting way.", number_of_words: int = 100,
+                       include_plot_twist: bool = False) -> str:
         """
-        Предложить продолжение истории.
+        Предлагает продолжение истории.
 
         :param requirements: Требования к продолжению истории.
         :type requirements: str, optional
         :param number_of_words: Количество слов в продолжении истории.
         :type number_of_words: int, optional
-        :param include_plot_twist: Включить ли в историю неожиданный поворот.
+        :param include_plot_twist: Включать ли поворот сюжета.
         :type include_plot_twist: bool, optional
-        :param temperature: Температура для генерации текста.
-        :type temperature: float, optional
         :return: Продолжение истории.
         :rtype: str
         """
         rendering_configs = {
-                             "purpose": self.purpose,
-                             "requirements": requirements,
-                             "current_simulation_trace": self._current_story(),
-                             "number_of_words": number_of_words,
-                             "include_plot_twist": include_plot_twist
-                            }
-
-        messages = utils.compose_initial_LLM_messages_with_templates("story.continuation.system.mustache", "story.continuation.user.mustache", rendering_configs)
-        
+            "purpose": self.purpose,
+            "requirements": requirements,
+            "current_simulation_trace": self._current_story(),
+            "number_of_words": number_of_words,
+            "include_plot_twist": include_plot_twist
+        }
+        #  Формирование сообщений для LLM с использованием шаблонов
+        messages = utils.compose_initial_LLM_messages_with_templates("story.continuation.system.mustache",
+                                                                     "story.continuation.user.mustache",
+                                                                     rendering_configs)
+        #  Отправка сообщения в LLM и получение ответа
         try:
-            # Код отправляет сообщение и получает ответ от модели
-            next_message = openai_utils.client().send_message(messages, temperature=temperature)
-            continuation = next_message["content"]
-        except Exception as ex:
-            logger.error('Ошибка при отправке сообщения в LLM', exc_info=ex)
+            next_message = openai_utils.client().send_message(messages, temperature=1.5)
+        except Exception as e:
+            logger.error(f"Ошибка при отправке сообщения в LLM: {e}")
             return ""
+
+        continuation = next_message["content"]
 
         self.current_story += utils.dedent(
             f"""
@@ -205,30 +197,40 @@ class TinyStory:
 
     def _current_story(self) -> str:
         """
-        Получить текущую историю.
+        Возвращает текущую историю.
 
         :return: Текущая история.
         :rtype: str
         """
         interaction_history = ""
-        
-        # проверка, какой объект участвует в истории - агент или окружение
+        #  Проверка, что агент не None
         if self.agent is not None:
-             # код добавляет историю взаимодействий агента в строку
-            interaction_history += self.agent.pretty_current_interactions(first_n=self.first_n, last_n=self.last_n, include_omission_info=self.include_omission_info)
+            interaction_history += self.agent.pretty_current_interactions(first_n=self.first_n, last_n=self.last_n,
+                                                                          include_omission_info=self.include_omission_info)
+        #  Проверка, что environment не None
         elif self.environment is not None:
-             # код добавляет историю взаимодействий окружения в строку
-            interaction_history += self.environment.pretty_current_interactions(first_n=self.first_n, last_n=self.last_n, include_omission_info=self.include_omission_info)
-        
-        self.current_story += utils.dedent(
+            interaction_history += self.environment.pretty_current_interactions(first_n=self.first_n, last_n=self.last_n,
+                                                                              include_omission_info=self.include_omission_info)
+        #  Проверка, что current_story не пустая строка
+        if self.current_story:
+            self.current_story += utils.dedent(
+                f"""
+    
+                ## New simulation interactions to consider
+    
+                {interaction_history}
+    
+                """
+            )
+        else:
+            self.current_story += utils.dedent(
             f"""
-
+    
             ## New simulation interactions to consider
-
+    
             {interaction_history}
-
+    
             """
-        )
-            
+            )
+
         return self.current_story
-```

@@ -3,81 +3,70 @@
 **Качество кода**
 7
 - Плюсы
-    - Код выполняет свою основную задачу по преобразованию Excel в JSON и обратно.
-    - Используется `pandas` для работы с Excel, что является хорошей практикой.
-    - Присутствует логирование ошибок и информационных сообщений.
-    - Код достаточно хорошо документирован, присутствуют docstring.
+    - Код выполняет преобразование Excel в JSON и обратно, как и заявлено в описании модуля.
+    - Используется `pandas` для работы с Excel, что обеспечивает корректную обработку данных.
+    - Присутствует базовая обработка ошибок с логированием.
+    - Есть описание модуля и функций в формате docstring.
 - Минусы
-    - Не используется `j_loads` или `j_loads_ns` для работы с json.
-    - Присутствуют избыточные блоки try-except, можно использовать `logger.error`.
-    - Не все комментарии соответствуют формату RST.
-    - Нет обработки путей через Path, все через str.
-    - Не используются f-строки для логирования.
-    - Не используется `from src.logger.logger import logger` для логирования ошибок.
-    - Константа MODE не используется.
+    - Не используется `j_loads` для чтения json.
+    - Импорт `logger` не из `src.logger.logger`.
+    - Не используется `j_dumps` для записи json.
+    - Комментарии не всегда подробные.
+    - Отсутствует проверка типа `data` в `save_xls_file`.
+    - Использование `logging.basicConfig` внутри модуля, лучше это вынести в место где вызывается модуль.
 
 **Рекомендации по улучшению**
 
-1.  **Импорты**:
-    - Добавить импорт `from src.utils.jjson import j_loads, j_loads_ns` для работы с json.
-    - Заменить `import logging` на `from src.logger.logger import logger`.
-2.  **Обработка JSON**:
-    - Заменить `json.dump` на использование `j_dumps` из `src.utils.jjson`
-3.  **Логирование**:
-    - Использовать `logger.error` вместо `logging.error` и `logger.info` вместо `logging.info`.
-    - Использовать f-строки для форматирования сообщений логгера.
-4.  **Обработка ошибок**:
-    - Сократить количество `try-except` блоков, использовать `logger.error` для обработки ошибок, которые не требуют возврата `False`.
-5.  **Комментарии**:
-    - Привести все комментарии к формату RST.
-    - Добавить описание модуля в начале файла.
-6.  **Пути**:
-     - Использовать `Path` для работы с путями файлов.
+1.  Использовать `j_loads` и `j_dumps` из `src.utils.jjson` для чтения/записи JSON.
+2.  Импортировать `logger` из `src.logger.logger`.
+3.  Добавить более подробные комментарии к коду.
+4.  Удалить `logging.basicConfig`, так как это нужно делать один раз при запуске программы.
+5.  В `save_xls_file` добавить проверку типа для `data`.
+6.  Добавить больше примеров использования в docstring.
+7.  Переименовать `xls` в более понятное имя, например, `xls_file_path`.
+8.  Добавить обработку ошибок для `pd.ExcelWriter`, чтобы избежать неявного `try-except`
+9.  Добавить проверку существования директории, в которую сохраняется файл
+10. Добавить комментарии в формате RST ко всем функциям.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для работы с Excel файлами.
+Модуль для работы с файлами Excel (`xls`) и их преобразования в JSON и обратно.
 =========================================================================================
 
-Этот модуль предоставляет функции для конвертации Excel файлов в формат JSON, обработки нескольких листов
-и сохранения данных JSON обратно в файлы Excel.
+Этот модуль предоставляет функции для преобразования файлов Excel в формат JSON,
+обработки нескольких листов и сохранения данных JSON обратно в файлы Excel.
 
-Функции:
-    read_xls_as_dict(xls_file: str, json_file: str = None, sheet_name: Union[str, int] = None) -> Union[Dict, List[Dict], bool]:
-        Читает Excel файл и конвертирует его в JSON. Опционально, конвертирует указанный лист и сохраняет результат в JSON файл.
-        Обрабатывает ошибки.
+Пример использования
+--------------------
 
-    save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
-        Сохраняет данные JSON в Excel файл. Данные должны быть словарем, где ключи - имена листов,
-        а значения - списки словарей, представляющие строки. Обрабатывает ошибки.
+Пример использования функций:
 
-Примеры:
-    Чтение и опциональное сохранение в JSON:
-    data = read_xls_as_dict('input.xlsx', 'output.json', 'Sheet1')  # Читает лист с именем 'Sheet1'
+.. code-block:: python
+
+    from pathlib import Path
+    from src.utils.xls import read_xls_as_dict, save_xls_file
+
+    # Чтение и, при необходимости, сохранение в JSON
+    data = read_xls_as_dict('input.xlsx', 'output.json', 'Sheet1')  # Читает лист 'Sheet1'
     if data:
-        print(data)  # Вывод будет {'Sheet1': [{...}]}
+        print(data)  # Вывод: {'Sheet1': [{...}]}
 
-    Сохранение из JSON данных:
+    # Сохранение из JSON данных
     data_to_save = {'Sheet1': [{'column1': 'value1', 'column2': 'value2'}]}
     success = save_xls_file(data_to_save, 'output.xlsx')
     if success:
         print("Успешно сохранено в output.xlsx")
 """
 
-#! venv/bin/python/python3.12
-
 import pandas as pd
-# from json import dump
 from typing import List, Dict, Union
 from pathlib import Path
 from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_dumps  # импортируем функции j_loads и j_dumps для работы с json
+from src.utils.jjson import j_dumps, j_loads # импортируем j_dumps и j_loads
 
-# Константа MODE не используется
-# 
 
 def read_xls_as_dict(
     xls_file: str,
@@ -85,83 +74,111 @@ def read_xls_as_dict(
     sheet_name: Union[str, int] = None
 ) -> Union[Dict, List[Dict], bool]:
     """
-    Читает Excel файл и конвертирует его в JSON. Опционально, конвертирует указанный лист и сохраняет результат в JSON файл.
-    Обрабатывает ошибки.
-
-    :param xls_file: Путь к Excel файлу.
+    Читает файл Excel и преобразует его в JSON.
+    
+    Можно указать конкретный лист для преобразования и сохранить результат в JSON файл.
+    
+    :param xls_file: Путь к файлу Excel.
     :type xls_file: str
-    :param json_file: Путь к JSON файлу для сохранения результата.
+    :param json_file: Путь к файлу JSON для сохранения результата (необязательно).
     :type json_file: str, optional
-    :param sheet_name: Имя или индекс листа Excel для чтения.
-    :type sheet_name: str or int, optional
-    :return: Данные в формате JSON (словарь или список словарей) или False в случае ошибки.
-    :rtype: Union[Dict, List[Dict], bool]
+    :param sheet_name: Имя или индекс листа для чтения (необязательно).
+    :type sheet_name: str | int, optional
+    :raises FileNotFoundError: Если файл Excel не найден.
+    :raises Exception: Если произошла ошибка при обработке файла Excel.
+    :returns: Словарь с данными из Excel или список словарей, если указан конкретный лист. Возвращает False в случае ошибки.
+    :rtype: dict | list[dict] | bool
+    
+    Примеры:
+        >>> from pathlib import Path
+        >>> xls_file = Path('example.xlsx')
+        >>> data = read_xls_as_dict(xls_file)
+        >>> print(data)
+        {'Sheet1': [{'column1': 'value1', 'column2': 'value2'}]}
     """
     try:
-        xls_file_path = Path(xls_file) #  создаем объект Path из пути файла
-        if not xls_file_path.exists(): #  проверяем наличие файла
-            logger.error(f"Excel file not found: {xls_file}") # логируем ошибку если файла нет
-            return False # возвращаем False при отсутствии файла
+        xls_file_path = Path(xls_file)
+        # Проверка существования файла Excel
+        if not xls_file_path.exists():
+            logger.error(f'Файл Excel не найден: {xls_file}')
+            return False  # Возврат False при ошибке
 
-        xls = pd.ExcelFile(xls_file_path) # открываем excel файл
-        data_dict = {} # инициализируем пустой словарь для хранения данных
+        xls = pd.ExcelFile(xls_file) # Читаем файл Excel
 
-        if sheet_name is None: # проверяем, нужно ли читать все листы
-            for sheet in xls.sheet_names:  # перебираем все листы
+        if sheet_name is None: # если имя листа не указано
+            data_dict = {} # инициализируем пустой словарь
+            for sheet in xls.sheet_names: # итерируемся по листам
                 try:
-                    df = pd.read_excel(xls, sheet_name=sheet) # читаем лист в DataFrame
-                    data_dict[sheet] = df.to_dict(orient='records') # преобразуем DataFrame в словарь и сохраняем в data_dict
+                    df = pd.read_excel(xls, sheet_name=sheet)  # Читаем лист
+                    data_dict[sheet] = df.to_dict(orient='records')  # Преобразуем лист в словарь и добавляем в data_dict
                 except Exception as e:
-                    logger.error(f"Error processing sheet '{sheet}': {e}") # логируем ошибку при обработке листа
-                    return False # возвращаем False при ошибке чтения листа
-
-        else:  # если указан конкретный лист
+                    logger.error(f'Ошибка при обработке листа \'{sheet}\': {e}')
+                    return False # Возврат False при ошибке
+        else: # если имя листа указано
             try:
-                df = pd.read_excel(xls, sheet_name=sheet_name) # читаем указанный лист
-                data_dict = df.to_dict(orient='records') # преобразуем DataFrame в словарь
+                df = pd.read_excel(xls, sheet_name=sheet_name) # читаем конкретный лист
+                data_dict = df.to_dict(orient='records') # преобразуем лист в словарь
             except Exception as e:
-                 logger.error(f"Error processing sheet '{sheet_name}': {e}") # логируем ошибку при чтении указанного листа
-                 return False # возвращаем False при ошибке чтения листа
+                logger.error(f'Ошибка при обработке листа \'{sheet_name}\': {e}')
+                return False # Возврат False при ошибке
 
-        if json_file: # если нужно сохранить в json
+        if json_file: # если указан json_file
             try:
                 with open(json_file, 'w', encoding='utf-8') as f:
-                    j_dumps(data_dict, f, ensure_ascii=False, indent=4) # сохраняем json данные в файл
-                logger.info(f"JSON data saved to {json_file}") # логируем сообщение об успешном сохранении
+                   # Используем j_dumps для записи данных в JSON файл
+                    f.write(j_dumps(data_dict, indent=4))
+                logger.info(f'JSON данные сохранены в {json_file}')
             except Exception as e:
-               logger.error(f"Error saving JSON file: {e}") # логируем ошибку при сохранении в json
-               return False # возвращаем False при ошибке
+                logger.error(f'Ошибка при записи в JSON файл {json_file}: {e}')
+                return False # Возврат False при ошибке
 
-        return data_dict  # возвращаем словарь с данными
+        return data_dict # возвращаем словарь с данными из excel
 
-    except FileNotFoundError as e: # обрабатываем FileNotFoundError
-        logger.error(f"File not found: {e}") # логируем ошибку
-        return False  # возвращаем False при FileNotFoundError
-    except Exception as e: # обрабатываем другие ошибки
-        logger.error(f"An error occurred: {e}") # логируем ошибку
-        return False # возвращаем False при других ошибках
+    except FileNotFoundError as e:
+        logger.error(f'Файл не найден: {e}')
+        return False # Возврат False при ошибке
+    except Exception as e:
+        logger.error(f'Произошла ошибка: {e}')
+        return False # Возврат False при ошибке
 
 
 def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
-    """
-    Сохраняет JSON данные в Excel файл.
-
-    :param data: Данные для сохранения, словарь где ключи - названия листов, значения - списки словарей с данными.
+    """Сохраняет JSON данные в файл Excel.
+    
+    :param data: Словарь с данными для записи в Excel, где ключи - имена листов, значения - списки словарей с данными.
     :type data: Dict[str, List[Dict]]
-    :param file_path: Путь к файлу Excel для сохранения данных.
+    :param file_path: Путь к файлу Excel для сохранения.
     :type file_path: str
-    :return: True в случае успеха, False при ошибке.
+    :raises TypeError: Если data не является словарем.
+    :raises Exception: При возникновении ошибки во время сохранения файла.
+    :returns: True, если файл успешно сохранен, False в противном случае.
     :rtype: bool
+    
+    Example:
+        >>> from pathlib import Path
+        >>> file_path = Path('output.xlsx')
+        >>> data = {'Sheet1': [{'column1': 'value1', 'column2': 'value2'}]}
+        >>> result = save_xls_file(data, file_path)
+        >>> print(result)
+        True
     """
-    try:
-        with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer: # открываем excel файл для записи
-            for sheet_name, rows in data.items(): # перебираем все листы
-                df = pd.DataFrame(rows) # создаем DataFrame из данных листа
-                df.to_excel(writer, sheet_name=sheet_name, index=False) # записываем DataFrame в лист
-                logger.info(f"Sheet '{sheet_name}' saved to {file_path}")  # логируем сообщение об успешном сохранении листа
-        return True # возвращаем True при успешном сохранении
-    except Exception as e: # обрабатываем ошибки при записи excel
-        logger.error(f"Error saving Excel file: {e}") # логируем ошибку при записи
-        return False # возвращаем False при ошибке
+    if not isinstance(data, dict): # проверка что data словарь
+        logger.error(f'Ожидается словарь, получен: {type(data)}')
+        return False
 
+    try:
+        file_path_obj = Path(file_path)
+        # Проверяем существование директории и создаем если ее нет
+        if not file_path_obj.parent.exists():
+            file_path_obj.parent.mkdir(parents=True, exist_ok=True)
+
+        with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer: # Используем менеджер контекста для обработки ошибок
+            for sheet_name, rows in data.items():
+                df = pd.DataFrame(rows) # Создание DataFrame из списка словарей
+                df.to_excel(writer, sheet_name=sheet_name, index=False) # запись в excel
+                logger.info(f'Лист \'{sheet_name}\' сохранен в {file_path}')
+        return True # возврат True если все хорошо
+    except Exception as e:
+        logger.error(f'Ошибка при сохранении файла Excel: {e}')
+        return False # возврат False если ошибка
 ```

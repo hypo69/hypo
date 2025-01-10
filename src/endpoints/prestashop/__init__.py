@@ -10,11 +10,11 @@
 
 """
 
-
+from .product_fields import ProductFields
 from .api import PrestaShop, PrestaShopAsync
-from .product import PrestaProduct
+from .product_async import ProductAsync
 from .supplier import PrestaSupplier
-from .category import PrestaCategory
+from .category import PrestaCategory, PrestaCategoryAsync
 from .warehouse import PrestaWarehouse
 from .language import PrestaLanguage
 from .shop import PrestaShopShop

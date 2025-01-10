@@ -1,48 +1,42 @@
-# Анализ кода модуля `__init__.py`
+# Анализ кода модуля `src.endpoints`
 
 **Качество кода**
-10
--  Плюсы
-    - Код соответствует PEP8, присутствует корректная структура.
-    -  Имеется описание модуля в docstring, хотя оно требует доработки.
-    -  Определена переменная `MODE`.
--  Минусы
-    -  Импорты закомментированы, что не соответствует требованиям.
-    -   Отсутствует необходимый импорт `logger` и `j_loads/j_loads_ns`.
-    -  Комментарии в docstring не соответствуют reStructuredText.
+
+7
+-   Плюсы
+    -   Присутствует описание модуля в виде docstring.
+    -   Импорты необходимые для работы модуля отсутствуют, что соответствует задаче.
+-   Минусы
+    -   Отсутствуют необходимые импорты.
+    -   Не используется `logger` из `src.logger`.
+    -   Нет документации в формате RST.
+    -   Использованы двойные кавычки.
 
 **Рекомендации по улучшению**
-1.  Переписать docstring модуля в формате reStructuredText.
-2.  Раскомментировать импорты и добавить импорт `logger` из `src.logger.logger` и `j_loads/j_loads_ns` из `src.utils.jjson`.
-3.  Удалить лишние shebang строки.
+
+1.  Добавить импорты необходимых модулей.
+2.  Использовать `logger` из `src.logger`.
+3.  Добавить подробное описание модуля, класса и функций в формате RST.
+4.  Переписать код с использованием одинарных кавычек.
+5.  Удалить избыточные комментарии и комментарии на русском языке.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль инициализации endpoints
-=========================================================================================
+Модуль `src.endpoints`
+========================================================
 
-Этот модуль инициализирует все endpoints, необходимые для работы приложения.
-Включает в себя импорты для различных API, таких как PrestaShop и KazarinovTelegramBot.
-
-Пример использования
---------------------
-
-Этот модуль не предназначен для непосредственного вызова.
-Импортируется в других частях приложения для доступа к endpoint'ам.
-
-.. code-block:: python
-
-    from src.endpoints import PrestaShop, KazarinovTelegramBot
+Этот модуль содержит определения для различных конечных точек (endpoints)
+и их реализации. Он отвечает за взаимодействие с внешними API и сервисами,
+такими как PrestaShop и другие.
 
 """
-from src.logger.logger import logger # импортируем логер
-# from src.utils.jjson import j_loads, j_loads_ns # импортируем функции для работы с json
-from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester # импортируем PrestaShop endpoints
-from .kazarinov import KazarinovTelegramBot # импортируем KazarinovTelegramBot endpoint
+
+from src.logger.logger import logger  # Import logger from src.logger
+# from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester
+# from .kazarinov import KazarinovTelegramBot
 
 
-# Определяем режим работы приложения, может быть 'dev' или 'prod'
 ```

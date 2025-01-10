@@ -1,75 +1,74 @@
 # Анализ кода модуля test_advertisement_scenarios
 
 **Качество кода**
-8
+9
 -  Плюсы
-        - Код разбит на логические блоки, что облегчает понимание.
-        - Используются фикстуры pytest для настройки тестовой среды.
-        - Применяются `assert` для проверки корректности работы тестов.
-        - Присутствует логирование (хоть и не полное).
-        - Есть возможность кэширования результатов.
+    - Код хорошо структурирован и читаем, с чётким разделением на функции и сценарии тестирования.
+    - Используются осмысленные имена переменных и функций, что облегчает понимание кода.
+    - Присутствуют комментарии, объясняющие назначение блоков кода.
+    - В тестах используются `assert`, что позволяет проверять корректность работы кода.
+    -  Используется `ResultsExtractor` для извлечения данных из ответов агентов.
+    -  Присутствует логика для сохранения и загрузки состояния через checkpoint.
+
 -  Минусы
-    -  Не все импорты упорядочены.
-    -  Используется глобальный логгер, который следует заменить на импортированный.
-    -  Отсутствуют docstring для функций.
-    -  Некоторые комментарии не соответствуют стандарту reStructuredText (RST).
-    -  Используется устаревший способ добавления путей в sys.path.
-    -  Используется стандартный `print` вместо `logger.info`.
-    -  Не используется `j_loads` или `j_loads_ns` для загрузки JSON.
+    -  Отсутствует документация в формате RST для функций и методов, что затрудняет автоматическую генерацию документации.
+    - Не все импорты отсортированы и сгруппированы по стандартным библиотекам, сторонним и локальным.
+    - Используется `logging` вместо `from src.logger.logger import logger`.
+    -  Некоторые проверки `assert` можно сделать более информативными, добавив контекст в сообщения об ошибках.
+    -  В некоторых тестах отсутствуют явные проверки на тип данных.
+    -  Используется `sleep` для имитации задержки, что не идеально для тестирования.
 
 **Рекомендации по улучшению**
-1. **Импорты**:
-    - Упорядочить импорты по алфавиту, разделяя стандартные библиотеки и пользовательские.
-    -  Использовать `from src.logger.logger import logger` для логирования.
-2. **Комментарии и документация**:
-    - Добавить docstring к каждой функции в формате RST.
-    -  Переписать комментарии в формате RST, добавив подробности.
-    -  Заменить устаревшие комментарии на docstrings.
-3. **Логирование**:
-    - Заменить `print` на `logger.info` для вывода информации в консоль.
-4. **Обработка файлов**:
-    - Использовать `j_loads` или `j_loads_ns` для чтения файлов кэша.
-5. **Структура кода**:
-    - Улучшить читаемость кода, убрав дублирование.
-    -  Упростить `assert` с помощью вспомогательных функций.
-6. **Пути**:
-    - Избегать добавления путей к `sys.path`, использовать более гибкую систему путей.
-7. **Общая структура**:
-    - Добавить docstring для модуля.
+
+1.  **Документация:**
+    - Добавить docstrings в формате RST для всех функций и классов, чтобы обеспечить возможность автоматической генерации документации.
+2.  **Импорты:**
+    - Отсортировать импорты и сгруппировать их по стандартным библиотекам, сторонним библиотекам и локальным модулям.
+3.  **Логирование:**
+    - Заменить `logging` на `from src.logger.logger import logger` для стандартизации логирования.
+4.  **Assert:**
+    - Улучшить сообщения об ошибках в `assert`, добавляя контекст для более легкой отладки.
+5.  **Проверки типов:**
+    - Добавить проверки типов данных, где это необходимо, чтобы избежать ошибок, связанных с типами.
+6.  **Удалить sleep:**
+    - Убрать использование `time.sleep()` в тестах, так как это замедляет выполнение тестов и не является хорошей практикой. Вместо этого, использовать event-based testing или mocks для асинхронных операций.
+7.  **Сократить дублирование кода**
+    - Вынести общие части в отдельные функции, например, извлечение результатов.
+8.  **Улучшить читаемость**
+    - Разделить длинные строки с помощью конкатенации или f-строк.
 
 **Оптимизированный код**
 ```python
 """
-Модуль для тестирования сценариев, связанных с рекламой.
-=========================================================================
+Модуль тестирования сценариев с рекламой.
+=========================================================================================
 
-Этот модуль содержит тесты для проверки различных сценариев, связанных с оценкой
-и созданием рекламных объявлений, а также с профилированием потребителей.
+Этот модуль содержит тесты для проверки сценариев, связанных с анализом и созданием рекламных объявлений,
+а также профилированием потребителей.
 
 Пример использования
 --------------------
 
-Пример запуска тестов:
+Пример использования тестов:
 
 .. code-block:: python
 
     pytest test_advertisement_scenarios.py
 """
+
 import os
 import sys
+from pathlib import Path
 from time import sleep
 
 import pytest
 
-# sys.path.append('../../tinytroupe/') # Избегать прямого изменения sys.path
-# sys.path.append('../../') # Избегать прямого изменения sys.path
-# sys.path.append('../') # Избегать прямого изменения sys.path
-
-
-from src.logger.logger import logger
-from src.utils.jjson import j_loads
-
-from tinytroupe import control
+#  Пути добавлены для корректной работы импортов модулей
+sys.path.append(str(Path(__file__).parent.parent.parent.parent / 'tinytroupe'))
+sys.path.append(str(Path(__file__).parent.parent.parent.parent))
+sys.path.append(str(Path(__file__).parent.parent))
+from src.logger.logger import logger  #  Импортирован logger из src.logger.logger
+import tinytroupe
 from tinytroupe.agent import TinyPerson
 from tinytroupe.control import Simulation
 from tinytroupe.environment import TinySocialNetwork, TinyWorld
@@ -80,6 +79,7 @@ from tinytroupe.examples import (
 )
 from tinytroupe.extraction import ResultsExtractor, default_extractor as extractor
 from tinytroupe.factory import TinyPersonFactory
+
 from testing_utils import *
 
 
@@ -87,8 +87,11 @@ def test_ad_evaluation_scenario(setup):
     """
     Тестирует сценарий оценки рекламных объявлений.
 
-    :param setup: Фикстура pytest для настройки тестовой среды.
-    :return: None
+    Args:
+        setup: Фикстура pytest для настройки тестового окружения.
+
+    Проверяет, что агенты могут выбирать рекламное объявление и обосновывать свой выбор,
+    и что извлеченные данные содержат ожидаемые поля.
     """
     # user search query: "europe travel package"
 
@@ -163,7 +166,8 @@ def test_ad_evaluation_scenario(setup):
     Kensington Tours - Private Guides, Custom Itineraries, Hand Picked Hotels & 24/7 Support
     """
 
-    eval_request_msg = f"""
+    eval_request_msg = (
+        f"""
     Can you please evaluate these Bing ads for me? Which one convices you more to buy their particular offering? Select **ONLY** one. Please explain your reasoning, based on your background and personality.
 
     # AD 1
@@ -187,55 +191,58 @@ def test_ad_evaluation_scenario(setup):
     ```
 
     """
+    )
 
-    logger.info(eval_request_msg) # Используем logger.info вместо print
+    print(eval_request_msg)
 
-    situation = "You decided you want to visit Europe and you are planning your next vacations. You start by searching for good deals as well as good ideas."
+    situation = (
+        'You decided you want to visit Europe and you are planning your next vacations. You start by searching for good deals as well as good ideas.'
+    )
 
     extraction_objective = "Find the ad the agent chose. Extract the Ad number (just put a number here, no text, e.g., 2), title and justification for the choice."
 
     people = [create_oscar_the_architect(), create_lisa_the_data_scientist()]
 
     for person in people:
-        # Код изменяет контекст агента.
         person.change_context(situation)
-        # Код заставляет агента прослушать и отреагировать на сообщение.
         person.listen_and_act(eval_request_msg)
 
     extractor = ResultsExtractor()
     choices = []
 
     for person in people:
-        # Код извлекает результаты из агента.
         res = extractor.extract_results_from_agent(
             person,
             extraction_objective=extraction_objective,
             situation=situation,
-            fields=["ad_id", "ad_title", "justification"],
+            fields=['ad_id', 'ad_title', 'justification'],
         )
 
-        logger.info(f"Agent {person.name} choice: {res}") # Используем logger.info вместо print
+        print(f'Agent {person.name} choice: {res}')
 
-        assert res is not None, "There should be a result."
-        assert "ad_id" in res, "There should be an ad_id field."
-        assert str(res["ad_id"]) in ["1", "2", "3", "4"], "The ad_id should be one of the four options."
-        assert "ad_title" in res, "There should be an ad_title field."
-        assert "justification" in res, "There should be a justification field."
+        assert res is not None, 'There should be a result.'
+        assert 'ad_id' in res, 'There should be an ad_id field.'
+        assert str(res['ad_id']) in ['1', '2', '3', '4'], 'The ad_id should be one of the four options.'
+        assert 'ad_title' in res, 'There should be an ad_title field.'
+        assert 'justification' in res, 'There should be a justification field.'
 
         choices.append(res)
 
-    assert len(choices) == 2, "There should be two choices made."
+    assert len(choices) == 2, 'There should be two choices made.'
 
-    logger.info(f"Agents choices: {choices}") # Используем logger.info вместо print
+    print('Agents choices:', choices)
 
 
 def test_ad_creation_scenario(setup, focus_group_world):
     """
-    Тестирует сценарий создания рекламных объявлений.
+    Тестирует сценарий создания рекламного объявления в фокус-группе.
 
-    :param setup: Фикстура pytest для настройки тестовой среды.
-    :param focus_group_world: Фикстура pytest для создания мира фокус-группы.
-    :return: None
+    Args:
+        setup: Фикстура pytest для настройки тестового окружения.
+        focus_group_world: Фикстура pytest для создания мира фокус-группы.
+
+    Проверяет, что агенты в фокус-группе могут обсуждать и предлагать идеи для рекламного объявления,
+    и что извлеченные результаты соответствуют ожидаемой структуре.
     """
     situation = """
     This is a focus group dedicated to finding the best way to advertise an appartment for rent.
@@ -270,30 +277,31 @@ def test_ad_creation_scenario(setup, focus_group_world):
 
     focus_group = focus_group_world
 
-    # Код транслирует сообщения в фокус-группу.
     focus_group.broadcast(situation)
     focus_group.broadcast(apartment_description)
     focus_group.broadcast(task)
 
-    # Код запускает симуляцию фокус-группы.
     focus_group.run(2)
 
     res = extractor.extract_results_from_world(focus_group, verbose=True)
 
     assert proposition_holds(
         f"The following contains ideas for an apartment advertisement: '{res}'"
-    ), f"Proposition is false according to the LLM."
+    ), f'Proposition is false according to the LLM.'
 
 
 def test_consumer_profiling_scenario(setup):
     """
     Тестирует сценарий профилирования потребителей.
 
-    :param setup: Фикстура pytest для настройки тестовой среды.
-    :return: None
+    Args:
+        setup: Фикстура pytest для настройки тестового окружения.
+
+    Создает несколько агентов-потребителей, проводит с ними интервью и сохраняет результаты,
+    проверяя, что файл с результатами был создан.
     """
-    remove_file_if_exists("test_consumer_profiling_scenario.cache.json")
-    control.begin("test_consumer_profiling_scenario.cache.json")
+    remove_file_if_exists('test_consumer_profiling_scenario.cache.json')
+    control.begin('test_consumer_profiling_scenario.cache.json')
 
     general_context = """
     We are performing market research, and in that examining the whole of the American population. We care for the opinion of everyone, from the simplest professions to those of the highest ranks.
@@ -308,28 +316,21 @@ def test_consumer_profiling_scenario(setup):
 
     def interview_consumer_batch(n):
         """
-        Проводит интервью с группой потребителей.
+        Проводит серию интервью с потребителями.
 
-        :param n: Количество потребителей для интервью.
-        :return: None
+        Args:
+            n (int): Количество потребителей для интервьюирования.
         """
         for i in range(n):
-            logger.info(
-                f"################################### Interviewing consumer {i+1} of {n} ###################################"
-            ) # Используем logger.info вместо print
-            sleep(2)
-            # Код генерирует случайного потребителя.
-            consumer = consumer_factory.generate_person(
-                "A random person with highly detailed preferences."
-            )
-            logger.info(consumer.minibio()) # Используем logger.info вместо print
+            print(f'################################### Interviewing consumer {i+1} of {n} ###################################')
+            # sleep(2) #  Закомментирован time.sleep() для ускорения тестов
+            consumer = consumer_factory.generate_person('A random person with highly detailed preferences.')
+            print(consumer.minibio())
             # consumer.listen_and_act("Can you please present yourself, and tell us a bit about your background and preferences?")
-            # Код заставляет потребителя представиться и перечислить интересы.
             consumer.listen_and_act(
-                "We are performing some market research and need to know you more. Can you please present yourself and also list your top-10 interests?"
+                'We are performing some market research and need to know you more. Can you please present yourself and also list your top-10 interests?'
             )
             # consumer.listen_and_act("Can you plese explain more about why you care for these things?")
-            # Код запрашивает мнение потребителя о покупке гаспачо.
             consumer.listen_and_act(
                 """
                 Would you buy bottled gazpacho if you went to the supermarket today? Why yes, or why not? Please be honest, we are not here to judge you, but just to learn from you.
@@ -337,15 +338,14 @@ def test_consumer_profiling_scenario(setup):
                 and tell us whether you would buy bottled gazpacho or not. To make it easier, start your response with "Yes, " or "No, ".
                 """
             )
+
             consumers.append(consumer)
 
             control.checkpoint()
 
     interview_consumer_batch(15)
 
-    # Код проверяет, создан ли файл кэша.
-    assert os.path.exists(
-        "test_consumer_profiling_scenario.cache.json"
-    ), "The checkpoint file should have been created."
+    # check if the file was created
+    assert os.path.exists('test_consumer_profiling_scenario.cache.json'), 'The checkpoint file should have been created.'
 
     control.end()

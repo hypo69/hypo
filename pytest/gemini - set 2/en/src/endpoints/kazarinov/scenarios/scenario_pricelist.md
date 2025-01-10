@@ -10,7 +10,7 @@ from src.utils.file import read_text_file, save_text_file
 from src.logger import logger
 from src.webdriver import Driver
 from src.ai.gemini import GoogleGenerativeAI
-from src.product.product_fields import ProductFields
+from src.endpoints.prestashop.product_fields import ProductFields
 import json
 
 # Mock necessary classes and functions
