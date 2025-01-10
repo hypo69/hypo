@@ -1,45 +1,41 @@
 # Анализ кода модуля `src.scenario`
 
 **Качество кода**
-8
--  Плюсы
-    -   Хорошее описание модуля в начале файла, включая примеры использования и пояснения.
-    -   Использование `__init__.py` для обозначения директории как пакета.
-    -   Импорты необходимых функций из модуля `executor`.
--  Минусы
-    -   Отсутствуют комментарии RST для функций, которые здесь импортируются.
-    -   Не используется `from src.logger.logger import logger` для логирования.
-    -   В описании модуля есть `.. :codeblock:` и `.. :examples:`, которые должны быть `.. code-block::` и `.. rubric::`.
-    -   В примерах кода лучше использовать одинарные кавычки для строк.
-    -   В описании модуля есть `When the program is started via main(), the following sequence of execution occurs:` - это не является корректным описанием модуля.
-    -   В описании модуля есть `For detailed information on the scenario dictionary, read here: ...` - стоит добавить ссылку на документацию, если такая имеется.
+
+**Соответствие требованиям по оформлению кода: 8/10**
+   -  Плюсы
+        - Код хорошо структурирован и документирован.
+        - Присутствует описание модуля и примеры использования.
+        - Используется `run_scenario`, `run_scenarios`, `run_scenario_file`, `run_scenario_files`.
+
+   -  Минусы
+        - Отсутствуют импорты для `j_loads` и `j_loads_ns`.
+        - Не используются docstring для функций.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring в формате RST для функций `run_scenario`, `run_scenarios`, `run_scenario_file`, `run_scenario_files`, `insert_grabbed_data_to_prestashop`, импортированных из `executor`.
-2.  Использовать `from src.logger.logger import logger` для логирования внутри функций.
-3.  Исправить использование директив Sphinx,  заменив  `.. :codeblock:` и `.. :examples:` на `.. code-block::` и `.. rubric::`.
-4.  Использовать одинарные кавычки в примерах кода.
-5.  Убрать неверное описание работы модуля при запуске через `main()`. Это описание уместнее в модуле, который запускает программу.
-6.  Уточнить или удалить фразу `For detailed information on the scenario dictionary, read here: ...` и добавить конкретную ссылку.
+1.  Добавить импорты `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+2.  Добавить docstring к функциям `run_scenario`, `run_scenarios`, `run_scenario_file`, `run_scenario_files` и `insert_grabbed_data_to_prestashop`.
+3.  Использовать `from src.logger.logger import logger` для логирования.
+4.  Удалить `#! venv/bin/python/python3.12`, так как это не является частью кода и может помешать его выполнению в разных средах.
+5.  Добавить примеры в документацию к каждой функции
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
-
 """
-Модуль для управления сценариями поставщиков
+Модуль для выполнения сценариев сбора данных для поставщиков.
 =========================================================================================
 
-Этот модуль содержит функции для запуска сценариев, загруженных из файлов или переданных напрямую,
-а также для интеграции собранных данных в PrestaShop.
+Этот модуль содержит функции для выполнения сценариев, как из файлов, так и из словарей,
+а также для вставки полученных данных в PrestaShop.
 
-.. rubric:: Примеры использования
+Пример использования
+--------------------
 
-Пример использования с объектом поставщика:
+Пример использования функций `run_scenario_files` и `run_scenarios`:
 
 .. code-block:: python
 
@@ -56,7 +52,8 @@
     list_of_scenarios = [scenario1, ...]
     run_scenarios(s, list_of_scenarios)
 
-.. rubric:: Пример файла сценария:
+
+Пример сценария в файле JSON:
 
 .. code-block:: json
 
@@ -85,10 +82,29 @@
       }
     }
 
-Подробную информацию о структуре словаря сценария можно найти в [документации](ссылка_на_документацию_если_есть)
+Подробную информацию о структуре словаря сценария можно найти в документации ...
+
+При запуске программы через main() происходит следующая последовательность выполнения:
+
+.. code-block:: python
+
+    s = Supplier('aliexpress')
+
+    s.run()
+
+    s.run('file1')
+
+    scenario_files = ['file1', ...]
+    s.run(scenario_files)
+
+    scenario1 = {'key': 'value'}
+    s.run(scenario1)
+
+    list_of_scenarios = [scenario1, ...]
+    s.run(list_of_scenarios)
 """
 
-# Импорт необходимых функций из модуля executor
+# импортируем необходимые функции из executor.py
 from .executor import (
     run_scenario,
     run_scenarios,
@@ -96,4 +112,12 @@ from .executor import (
     run_scenario_files,
     insert_grabbed_data_to_prestashop,
 )
+# добавляем импорт j_loads и j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns
+# добавляем импорт logger
+from src.logger.logger import logger
+
+# TODO: добавить документацию для каждой функции, методов и переменных
+# TODO: добавить примеры использования для каждой функции,методов и переменных
+
 ```

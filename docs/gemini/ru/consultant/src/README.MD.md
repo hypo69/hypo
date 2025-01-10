@@ -1,148 +1,194 @@
-# Анализ кода модуля README.MD
+# Анализ кода модуля `README.MD`
 
-**Качество кода**
+**Качество кода: 7/10**
 
-8/10
-- **Плюсы**
-    - Документ предоставляет четкий обзор основных модулей проекта.
-    - Структура документа логичная и удобная для навигации.
-    - Включены ссылки на исходный код, документацию, тесты и примеры для каждого модуля.
-    - Есть глоссарий с пояснениями ключевых терминов проекта.
-- **Минусы**
-    - Отсутствует описание модуля в начале файла.
-    - Нет документации для переменных и нет примеров использования функций.
-    - Используется не совсем корректный RST для обозначения модуля, лучше использовать `.. automodule::` или `.. py:module::`
+- **Плюсы:**
+    -  Представлена четкая структура документа, описывающая основные модули проекта.
+    -  Используются ссылки на код, документацию, тесты и примеры, что облегчает навигацию по проекту.
+    -  Дано краткое описание назначения каждого модуля.
+    -  Предоставлен глоссарий основных терминов.
 
-**Рекомендации по улучшению**
+- **Минусы:**
+    -  Отсутствует подробная документация по каждому модулю, только общие описания.
+    -  Не хватает примеров использования каждого модуля.
+    -  Некоторые ссылки могут быть более конкретными (например, ссылка на конкретный файл в репозитории, а не только на папку).
+    -  Нет описания структуры проекта в целом.
 
-1.  Добавить описание модуля в начале файла.
-2.  Добавить в глоссарий описание `Model Prompt` и `Command Instruction`.
-3.  Использовать `.. py:module::` вместо `.. module::` для корректного отображения модуля.
-4.  Уточнить глоссарий, добавив описания для каждого термина и при необходимости примеры.
-5.  Привести структуру документации в соответствие со стандартами Python (Sphinx).
-6.  Использовать `TABLE`, `TR`, `TD` и `A HREF`  для построения таблиц и ссылок.
+**Рекомендации по улучшению:**
+1. Дополнить описания модулей более конкретной информацией, например, какие основные функции и классы содержит каждый модуль, какие задачи он решает.
+2.  Добавить примеры использования модулей в формате `.. code-block:: python` для более наглядного представления.
+3.  Уточнить ссылки, чтобы они вели непосредственно к нужным файлам (например, `https://github.com/hypo69/hypo/blob/master/src/assistant/assistant.py` вместо `https://github.com/hypo69/hypo/blob/master/src/assistant/readme.en.md`).
+4.  Предоставить описание структуры проекта в целом, возможно, с использованием диаграммы или текстового представления.
+5. Добавить оглавление для удобства навигации.
+6. Разделить глоссарий на разделы, например, `Webdriver`, `Supplier`, `Product`, `AI`, и добавить более подробное описание каждого термина.
 
-**Оптимизированный код**
+**Оптимизированный код:**
 
 ```markdown
-"""
-Обзор модулей проекта
-=========================================================================================
+# Анализ структуры проекта
 
-Этот документ предоставляет обзор основных модулей проекта, их назначения, а также ссылки на исходный код, документацию, тесты и примеры использования.
-Документ предназначен для быстрого ознакомления с архитектурой и компонентами проекта.
+Этот документ предоставляет обзор основных модулей проекта.
 
-Пример использования
---------------------
+## Оглавление
 
-Пример просмотра документации:
-
-.. code-block:: markdown
-
-   [Документация модуля assistant](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/assistant/readme.en.md)
-"""
-
-<TABLE >
-<TR>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
-</TD>
-
-
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>Русский</A>
-</TD>
-</TABLE>
-
-
-This document provides an overview of main progam modules
+- [assistant](#assistant)
+- [bot](#bot)
+- [scenario](#scenario)
+- [suppliers](#suppliers)
+- [templates](#templates)
+- [translators](#translators)
+- [utils](#utils)
+- [webdriver](#webdriver)
+- [Glossary](#glossary)
 
 ## assistant
-Модуль для взаимодействия с классом `CodeAssistant`, который помогает в обработке задач кода.
+Модуль для взаимодействия с классом `CodeAssistant`, который помогает с обработкой задач, связанных с кодом.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/assistant/readme.en.md) - Исходный код модуля `assistant`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/assistant/readme.en.md) - Документация для модуля `assistant`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/assistant) - Тесты для модуля `assistant`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/assistant) - Примеры использования модуля `assistant`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/assistant/assistant.py) - Исходный код модуля `assistant`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/assistant/readme.en.md) - Документация для модуля `assistant`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/assistant) - Тесты для модуля `assistant`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/assistant) - Примеры использования модуля `assistant`.
+
+   Пример использования:
+   ```python
+    # TODO Добавить пример использования модуля
+    from src.assistant.assistant import CodeAssistant
+
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    #  assistant.process_files()
+   ```
 
 ## bot
-Модуль для логики бота, включая обработку сообщений и управление командами бота.
+Модуль для логики бота, включая обработку сообщений и обработку команд бота.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/bot/readme.en.md) - Исходный код модуля `bot`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/bot/readme.en.md) - Документация для модуля `bot`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bot) - Тесты для модуля `bot`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/bot) - Примеры использования модуля `bot`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/bot/bot.py) - Исходный код модуля `bot`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/bot/readme.en.md) - Документация для модуля `bot`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bot) - Тесты для модуля `bot`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/bot) - Примеры использования модуля `bot`.
+   Пример использования:
+   ```python
+    # TODO Добавить пример использования модуля
+    # from src.bot.bot import Bot
 
+    # bot = Bot()
+    # bot.start()
+   ```
 ## scenario
 Модуль для работы со сценариями, включая генерацию и выполнение сценариев.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/scenario/readme.en.md) - Исходный код модуля `scenario`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/scenario/readme.en.md) - Документация для модуля `scenario`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario) - Тесты для модуля `scenario`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/scenario) - Примеры использования модуля `scenario`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/scenario/scenario.py) - Исходный код модуля `scenario`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/scenario/readme.en.md) - Документация для модуля `scenario`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario) - Тесты для модуля `scenario`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/scenario) - Примеры использования модуля `scenario`.
+   Пример использования:
+   ```python
+    # TODO Добавить пример использования модуля
+    # from src.scenario.scenario import Scenario
 
+    # scenario = Scenario()
+    # scenario.run()
+   ```
 ## suppliers
-Модуль для работы с поставщиками, включая управление их данными и взаимоотношениями.
+Модуль для работы с поставщиками, включая управление их данными и связями.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/suppliers/readme.en.md) - Исходный код модуля `suppliers`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/suppliers/readme.en.md) - Документация для модуля `suppliers`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers) - Тесты для модуля `suppliers`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/suppliers) - Примеры использования модуля `suppliers`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/suppliers/suppliers.py) - Исходный код модуля `suppliers`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/suppliers/readme.en.md) - Документация для модуля `suppliers`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers) - Тесты для модуля `suppliers`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/suppliers) - Примеры использования модуля `suppliers`.
+   Пример использования:
+   ```python
+    # TODO Добавить пример использования модуля
+    # from src.suppliers.suppliers import SupplierManager
+
+    # suppliers = SupplierManager()
+    # suppliers.add_supplier()
+   ```
 
 ## templates
 Модуль для работы с шаблонами, включая создание и управление шаблонами для различных целей.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/templates/readme.en.md) - Исходный код модуля `templates`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/templates/readme.en.md) - Документация для модуля `templates`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates) - Тесты для модуля `templates`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/templates) - Примеры использования модуля `templates`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/templates/templates.py) - Исходный код модуля `templates`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/templates/readme.en.md) - Документация для модуля `templates`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates) - Тесты для модуля `templates`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/templates) - Примеры использования модуля `templates`.
+   Пример использования:
+   ```python
+    # TODO Добавить пример использования модуля
+    # from src.templates.templates import TemplateManager
+
+    # templates = TemplateManager()
+    # templates.create_template()
+   ```
 
 ## translators
-Модуль для работы с переводчиками и перевода текста.
+Модуль для работы с переводчиками и переводом текста.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/translators/readme.en.md) - Исходный код модуля `translators`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/translators/readme.en.md) - Документация для модуля `translators`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators) - Тесты для модуля `translators`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/translators) - Примеры использования модуля `translators`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/translators/translators.py) - Исходный код модуля `translators`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/translators/readme.en.md) - Документация для модуля `translators`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators) - Тесты для модуля `translators`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/translators) - Примеры использования модуля `translators`.
+   Пример использования:
+    ```python
+    # TODO Добавить пример использования модуля
+    # from src.translators.translators import Translator
+
+    # translator = Translator()
+    # translator.translate()
+   ```
 
 ## utils
 Модуль для вспомогательных утилит, упрощающих общие задачи.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/utils/readme.en.md) - Исходный код модуля `utils`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/utils/readme.en.md) - Документация для модуля `utils`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils) - Тесты для модуля `utils`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/utils) - Примеры использования модуля `utils`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/utils/utils.py) - Исходный код модуля `utils`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/utils/readme.en.md) - Документация для модуля `utils`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils) - Тесты для модуля `utils`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/utils) - Примеры использования модуля `utils`.
+   Пример использования:
+   ```python
+    # TODO Добавить пример использования модуля
+    # from src.utils.utils import some_function
+
+    # result = some_function()
+   ```
 
 ## webdriver
 Модуль для работы с драйверами веб-браузера и управления веб-элементами.
 
-- [Module code](https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.en.md) - Исходный код модуля `webdriver`.
-- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/webdriver/readme.en.md) - Документация для модуля `webdriver`.
-- [Tests](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver) - Тесты для модуля `webdriver`.
-- [Examples](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver) - Примеры использования модуля `webdriver`.
+- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/webdriver/webdriver.py) - Исходный код модуля `webdriver`.
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/en/doc/src/webdriver/readme.en.md) - Документация для модуля `webdriver`.
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver) - Тесты для модуля `webdriver`.
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver) - Примеры использования модуля `webdriver`.
+   Пример использования:
+   ```python
+    # TODO Добавить пример использования модуля
+    # from src.webdriver.webdriver import Driver
+
+    # driver = Driver()
+    # driver.get_page()
+   ```
 ---
 
-Glossary
-========
+## Glossary
 
 ### 1. **webdriver**
-   - **`Driver`**: Объект, который управляет браузером (например, Chrome, Firefox) и выполняет действия, такие как навигация по веб-страницам, заполнение форм и т.д.
-   - **`Executor`**: Интерфейс или класс, который выполняет команды или скрипты в контексте веб-драйвера.
+   - **`Driver`**: Объект, управляющий браузером (например, Chrome, Firefox) и выполняющий действия, такие как навигация по веб-страницам, заполнение форм и т.д.
+   - **`Executor`**: Интерфейс или класс, выполняющий команды или скрипты в контексте веб-драйвера.
    - **`Chrome`, `Firefox`, ...**: Конкретные браузеры, которыми можно управлять с помощью веб-драйвера.
    - **`locator`**: Механизм для поиска элементов на веб-странице (например, по ID, CSS-селектору, XPath).
 
 ### 2. **`Supplier`**
-   - **list of suppliers (`Amazon`, `Aliexpress`, `Morlevi`, ...)**: Список компаний или платформ, предоставляющих товары или услуги.
-   - **`Graber`**: Инструмент или модуль, который автоматически собирает данные с веб-сайтов поставщиков (например, цены, наличие товара).
+   - **Список поставщиков (`Amazon`, `Aliexpress`, `Morlevi`, ...)**: Список компаний или платформ, предоставляющих товары или услуги.
+   - **`Graber`**: Инструмент или модуль, автоматически собирающий данные с веб-сайтов поставщиков (например, цены, наличие товара).
 
 ### 3. **`Product`**
-   - **`Product`**: Объект, представляющий товар или услугу, которая может быть доступна на различных платформах.
-   - **`ProductFields`**: Поля или атрибуты, описывающие характеристики продукта (например, имя, цена, описание, изображения).
+   - **`Product`**: Объект, представляющий товар или услугу, доступную на различных платформах.
+   - **`ProductFields`**: Поля или атрибуты, описывающие характеристики товара (например, название, цена, описание, изображения).
 
 ### 4. **`ai`**
-    - **`Model Prompt`**: Указывает, как модель должна обрабатывать входящую информацию и возвращать ответ. Устанавливается при инициализации модели.
-    - **`Command Instruction`**: Небольшая команда или инструкция, отправляемая с каждым запросом.
-Next
-=====
-[Project Initialization and Setup]((https://github.com/hypo69/hypo/blob/master/src/credentials.md)
+	- **`Model Prompt`**: Указывает, как модель должна обрабатывать входящую информацию и возвращать ответ. Устанавливается во время инициализации модели.
+	- **`Command Instruction`**: Небольшая команда или инструкция, отправляемая с каждым запросом.
+
+Следующее
+====
+[Инициализация и настройка проекта](https://github.com/hypo69/hypo/blob/master/src/credentials.md)
 ```

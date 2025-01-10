@@ -30,40 +30,42 @@ import header
 from src import gs
 from src.utils.printer import pprint
 from src.utils.jjson import j_loads, j_dumps
-from src.product import Product, ProductFields, translate_presta_fields_dict
-from src.endpoints.prestashop import PrestaShop
+from src.endpoints.prestashop.product_async import ProductAsync, ProductFields
 from src.db import ProductCampaignsManager
 from src.logger.logger import logger
 from src.logger.exceptions import ProductFieldException
 
+# Global journal for tracking scenario execution
 _journal: dict = {'scenario_files': ''}
 _journal['name'] = timestamp = gs.now
 
-
 def dump_journal(s, journal: dict) -> None:
-    """
+    """!
     Save the journal data to a JSON file.
 
-    :param s: Supplier instance.
-    :type s: object
-    :param journal: Dictionary containing the journal data.
-    :type journal: dict
+    Args:
+        s (object): Supplier instance.
+        journal (dict): Dictionary containing the journal data.
+
+    Returns:
+        None
     """
     _journal_file_path = Path(s.supplier_abs_path, '_journal', f"{journal['name']}.json")
     j_dumps(journal, _journal_file_path)
 
-
 def run_scenario_files(s, scenario_files_list: List[Path] | Path) -> bool:
-    """
+    """!
     Executes a list of scenario files.
 
-    :param s: Supplier instance.
-    :type s: object
-    :param scenario_files_list: List of file paths for scenario files, or a single file path.
-    :type scenario_files_list: List[Path] | Path
-    :raises TypeError: if scenario_files_list is not a list or a string.
-    :return: True if all scenarios were executed successfully, False otherwise.
-    :rtype: bool
+    Args:
+        s (object): Supplier instance.
+        scenario_files_list (List[Path] | Path): List of file paths for scenario files, or a single file path.
+
+    Returns:
+        bool: True if all scenarios were executed successfully, False otherwise.
+
+    Raises:
+        TypeError: If scenario_files_list is not a list or a Path object.
     """
     if isinstance(scenario_files_list, Path):
         scenario_files_list = [scenario_files_list]
@@ -86,17 +88,16 @@ def run_scenario_files(s, scenario_files_list: List[Path] | Path) -> bool:
             _journal['scenario_files'][scenario_file.name]['message'] = f'Error: {e}'
     return True
 
-
 def run_scenario_file(s, scenario_file: Path) -> bool:
-    """
+    """!
     Loads and executes scenarios from a file.
 
-    :param s: Supplier instance.
-    :type s: object
-    :param scenario_file: Path to the scenario file.
-    :type scenario_file: Path
-    :return: True if the scenario was executed successfully, False otherwise.
-    :rtype: bool
+    Args:
+        s (object): Supplier instance.
+        scenario_file (Path): Path to the scenario file.
+
+    Returns:
+        bool: True if the scenario was executed successfully, False otherwise.
     """
     try:
         scenarios_dict = j_loads(scenario_file)['scenarios']
@@ -111,26 +112,22 @@ def run_scenario_file(s, scenario_file: Path) -> bool:
         logger.critical(f'Error loading or processing scenario file {scenario_file}: {e}')
         return False
 
-
 def run_scenarios(s, scenarios: Optional[List[dict] | dict] = None, _journal=None) -> List | dict | bool:
-    """
-    Function to execute a list of scenarios (NOT FILES).
+    """!
+    Executes a list of scenarios (NOT FILES).
 
-    :param s: Supplier instance.
-    :type s: object
-    :param scenarios: Accepts a list of scenarios or a single scenario as a dictionary. The run_scenario(s, scenario) function is called to execute scenarios.
-    :type scenarios: Optional[List[dict] | dict]
-    :return: The result of executing the scenarios as a list or dictionary, depending on the input data type, or False in case of an error.
-    :rtype: List | dict | bool
+    Args:
+        s (object): Supplier instance.
+        scenarios (Optional[List[dict] | dict], optional): Accepts a list of scenarios or a single scenario as a dictionary. Defaults to None.
 
-    :todo: Check the option when no scenarios are specified from all sides. For example, when s.current_scenario is not specified and scenarios are not specified.
+    Returns:
+        List | dict | bool: The result of executing the scenarios, or False in case of an error.
+
+    Todo:
+        Check the option when no scenarios are specified from all sides. For example, when s.current_scenario is not specified and scenarios are not specified.
     """
     if not scenarios:
         scenarios = [s.current_scenario]
-        """
-        If no scenarios are specified, take them from s.current_scenario.
-        @todo Check this option from all sides. For example, when s.current_scenario is not specified and scenarios are not specified.
-        """
 
     scenarios = scenarios if isinstance(scenarios, list) else [scenarios]
     res = []
@@ -140,21 +137,20 @@ def run_scenarios(s, scenarios: Optional[List[dict] | dict] = None, _journal=Non
         dump_journal(s, _journal)
     return res
 
-
 def run_scenario(supplier, scenario: dict, scenario_name: str, _journal=None) -> List | dict | bool:
-    """
-    Function to execute the received scenario.
+    """!
+    Executes the received scenario.
 
-    :param supplier: Supplier instance.
-    :type supplier: object
-    :param scenario: Dictionary containing scenario details.
-    :type scenario: dict
-    :param scenario_name: Name of the scenario.
-    :type scenario_name: str
-    :return: The result of executing the scenario.
-    :rtype: List | dict | bool
+    Args:
+        supplier (object): Supplier instance.
+        scenario (dict): Dictionary containing scenario details.
+        scenario_name (str): Name of the scenario.
 
-    :todo: Check the need for the scenario_name parameter.
+    Returns:
+        List | dict | bool: The result of executing the scenario.
+
+    Todo:
+        Check the need for the scenario_name parameter.
     """
     s = supplier
     logger.info(f'Starting scenario: {scenario_name}')
@@ -192,23 +188,20 @@ def run_scenario(supplier, scenario: dict, scenario_name: str, _journal=None) ->
 
     return list_products_in_category
 
-
 async def insert_grabbed_data_to_prestashop(
     f: ProductFields, coupon_code: Optional[str] = None, start_date: Optional[str] = None, end_date: Optional[str] = None
 ) -> bool:
-    """
-    Insert the product into PrestaShop.
+    """!
+    Inserts the product into PrestaShop.
 
-    :param f: ProductFields instance containing the product information.
-    :type f: ProductFields
-    :param coupon_code: Optional coupon code.
-    :type coupon_code: Optional[str]
-    :param start_date: Optional start date for the promotion.
-    :type start_date: Optional[str]
-    :param end_date: Optional end date for the promotion.
-    :type end_date: Optional[str]
-    :return: True if the insertion was successful, False otherwise.
-    :rtype: bool
+    Args:
+        f (ProductFields): ProductFields instance containing the product information.
+        coupon_code (Optional[str], optional): Optional coupon code. Defaults to None.
+        start_date (Optional[str], optional): Optional start date for the promotion. Defaults to None.
+        end_date (Optional[str], optional): Optional end date for the promotion. Defaults to None.
+
+    Returns:
+        bool: True if the insertion was successful, False otherwise.
     """
     try:
         presta = PrestaShop()

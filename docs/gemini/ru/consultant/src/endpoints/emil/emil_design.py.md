@@ -1,51 +1,53 @@
-# Анализ кода модуля `emil_design.py`
+# Анализ кода модуля `emil_design`
 
 **Качество кода**
 8
 -  Плюсы
-    - Код хорошо структурирован, использует классы и функции для организации логики.
-    - Присутствует базовая обработка ошибок с использованием `try-except`, хотя есть возможность ее улучшения.
-    - Используется `logger` для вывода информации, что помогает отслеживать работу кода.
-    - Применяются `pathlib` для работы с путями, что обеспечивает кросс-платформенность.
-    - Используются `j_loads_ns` и `j_dumps` для работы с JSON, что является правильным согласно инструкции.
-    - Комментарии в коде присутствуют, хотя требуется их форматирование в соответствии с RST.
+    - Код хорошо структурирован и разбит на классы и функции, что облегчает его понимание и поддержку.
+    - Используются асинхронные операции, что улучшает производительность при работе с I/O.
+    - Применение `SimpleNamespace` для хранения данных упрощает доступ к атрибутам.
+    - Код содержит docstrings для функций, что помогает документировать код.
+    - Использование `Path` для работы с путями обеспечивает кроссплатформенную совместимость.
+    - Код использует кастомные утилиты для работы с файлами, json, и изображениями, что способствует переиспользованию кода.
+    - Присутствует базовая обработка ошибок через `try-except` блоки.
 -  Минусы
-    - Отсутствует reStructuredText (RST) форматирование docstring для классов, методов и переменных.
-    - Некоторые блоки кода содержат `...`, что указывает на незавершенность.
-    - Присутствуют избыточные комментарии (например, `# -*- coding: utf-8 -*-`, ``, `#! venv/bin/python/python3.12`), которые не несут смысловой нагрузки.
-    - Не все импорты используются, что нужно исправить.
-    - В коде отсутствует консистентность в именовании, например, `trainig_data` вместо `training_data`.
-    - Логирование ошибок нуждается в уточнении и добавлении контекста.
-    - Не везде проставлены `return` там, где это требуется.
+    -  Не все docstring соответствуют стандарту reStructuredText (RST).
+    -  Не всегда используется `logger.error` для обработки ошибок, предпочитая `...`.
+    -  Присутствует избыточное использование `try-except` блоков.
+    -  Используются как двойные так и одинарные кавычки в строках.
+    -  Некоторые комментарии не полные и требуют больше конкретики.
+    -  Не везде соблюдено именование переменных, иногда можно более явно.
 
 **Рекомендации по улучшению**
 
-1. **Документация:**
-   - Переписать все комментарии и docstring в формате reStructuredText (RST).
-   - Добавить описания к классам, методам и переменным.
-   - Использовать docstring для описания параметров и возвращаемых значений функций.
-2. **Импорты:**
-   - Проверить и удалить неиспользуемые импорты.
-   - Перенести импорты `logger` из `src` в `from src.logger.logger import logger`
-3. **Обработка ошибок:**
-   - Заменить `try-except` на использование `logger.error` для записи ошибок, где это возможно.
-4. **Код:**
-   - Убрать избыточные комментарии в начале файла.
-   - Избавиться от многоточий `...`, завершив логику функций.
-   - Привести имена переменных и функций к общему стилю (snake_case).
-   - Добавить `return` там, где это необходимо.
-5. **Логирование:**
-   - Добавить больше контекста в логирование (например, имя функции, параметры).
+1.  **Документация:**
+    *   Привести все docstring к формату reStructuredText (RST).
+    *   Добавить примеры использования функций, особенно для `save_text_file`.
+    *   Убедиться, что все параметры и возвращаемые значения функций документированы.
+2.  **Логирование:**
+    *   Заменить `...` на `logger.error` в обработке ошибок, где это необходимо.
+    *   Использовать `logger.debug` для отладочной информации, особенно для невалидных результатов.
+3.  **Обработка ошибок:**
+    *   Избегать избыточных `try-except` блоков, использовать `logger.error` для логирования ошибок.
+4.  **Стиль кода:**
+    *   Использовать одинарные кавычки (`'`) для строк в коде.
+    *   Придерживаться единого стиля именования переменных, функций и методов.
+    *   Более явно называть переменные, где это возможно.
+5.  **Производительность:**
+    *   Избегать блокировок `time.sleep(20)` во время обработки изображений. Рассмотреть асинхронные таймеры или другие способы ожидания.
+6.  **Улучшение комментариев:**
+    *  Более подробно комментировать каждый блок кода, объясняя его назначение.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для управления и обработки изображений, а также их продвижения в Facebook и PrestaShop.
-===================================================================================================
+Модуль для управления и обработки изображений, а также продвижения в Facebook и PrestaShop.
+=========================================================================================
 
 Этот модуль содержит класс :class:`EmilDesign`, который используется для обработки изображений,
-их описания с помощью моделей ИИ, а также для публикации в социальных сетях и интернет-магазинах.
+их описания с помощью моделей ИИ (Google Gemini и OpenAI), и дальнейшего продвижения
+на платформах Facebook и PrestaShop.
 
 Пример использования
 --------------------
@@ -54,186 +56,256 @@
 
 .. code-block:: python
 
-    emil_design = EmilDesign()
-    emil_design.describe_images()
-    emil_design.promote_to_facebook()
-    emil_design.upload_to_PrestaShop()
+    emil = EmilDesign()
+    asyncio.run(emil.describe_images(lang='he'))
 """
+from __future__ import annotations
+
+import asyncio
+import time
 from pathlib import Path
 from types import SimpleNamespace
-import time
+from typing import Optional
 
-# from src import gs, logger # исправлено
-from src.endpoints.PrestaShop.api.api import PrestaShop
-from src.webdriver.driver import Driver, Chrome
+# Сторонние библиотеки
+from src import gs
+from src.logger.logger import logger
+
+# Веб-драйверы
+from src.webdriver.driver import Driver
+from src.webdriver.chrome import Chrome
+from src.webdriver.firefox import Firefox
+# TODO: Add drivers e.g. Edge, crawlee_python, playwright
+
+# AI модели
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
-from src.product import Product
-from src.endpoints.advertisement.facebook.scenarios.post_message import post_message
-# from src.endpoints.advertisement.facebook.scenarios.post_message import post_title, upload_media # удалены неиспользуемые импорты
-from src.utils.file import read_text_file, save_text_file, get_filenames
-from src.utils.jjson import j_loads_ns, j_dumps
-from src.logger.logger import logger
-from src import gs
 
+# Обработка товаров
+from src.endpoints.prestashop.product_fields import ProductFields
+from src.endpoints.prestashop.product_async import ProductAsync
 
+# Работа с соцсетями
+from src.endpoints.advertisement.facebook.scenarios.post_message import (
+    post_message,
+)
+
+# Утилиты
+from src.utils.file_async import read_text_file, save_text_file, get_filenames_from_directory
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
+from src.utils.image import get_image_bytes, get_raw_image_data
 
 
 class EmilDesign:
     """
-    Класс для проектирования и продвижения изображений через различные платформы.
+    Класс для обработки изображений и их продвижения на различных платформах.
 
-    :ivar base_path: Базовый путь к данным модуля.
+    :cvar ENDPOINT: Имя эндпоинта для конфигурации.
+    :vartype ENDPOINT: str
+    :ivar gemini: Экземпляр модели Google Gemini.
+    :vartype gemini: GoogleGenerativeAI
+    :ivar openai: Экземпляр модели OpenAI.
+    :vartype openai: OpenAIModel
+    :ivar base_path: Базовый путь к файлам конфигурации.
     :vartype base_path: Path
+    :ivar config: Конфигурация эндпоинта.
+    :vartype config: SimpleNamespace
+    :ivar data_path: Путь к данным эндпоинта.
+    :vartype data_path: Path
     """
 
-    base_path: Path = (
-        gs.path.google_drive
-        / "emil"
-    )
+    # ---------------------------------
+    ENDPOINT: str = 'emil'
+    # ---------------------------------
 
+    gemini: 'GoogleGenerativeAI'
+    openai: 'OpenAIModel'
+
+    base_path: Path = gs.path.endpoints / ENDPOINT
+    config: SimpleNamespace = j_loads_ns(base_path / f'{ENDPOINT}.json')
+    
+    data_path: Path = getattr(gs.path, config.storage, 'external_storage') / ENDPOINT
+    
     def __init__(self):
-        """
-        Инициализирует класс EmilDesign.
-        """
+        """Инициализирует класс EmilDesign."""
         ...
 
-    def describe_images(self, from_url: bool = False):
+    async def describe_images(self, lang: str):
         """
         Описывает изображения на основе предоставленных инструкций и примеров.
 
-        :param from_url: Если True, использует URL для описания изображений. По умолчанию False.
-        :type from_url: bool, optional
+        Args:
+            lang (str): Язык, на котором нужно описать изображения.
         """
-        #  определение путей к файлам инструкций, примеров, директории изображений и выходного файла
-        system_instruction_path: Path = (
-            self.base_path
-            / 'instructions'
-            / 'hand_made_furniture_he.txt'
+        # 1. Инициализация модели ИИ с системными инструкциями.
+        system_instruction: str = (
+            Path(self.base_path / 'instructions' / f'hand_made_furniture_{lang}.md')
+            .read_text(encoding='UTF-8')
         )
 
-        examples_path: Path = (
-            self.base_path
-            / 'instructions'
-            / "examples_he.txt"
+        use_openai: bool = False
+        if use_openai:
+            self.openai = OpenAIModel(
+                system_instruction=system_instruction,
+                assistant_id='asst_uDr5aVY3qRByRwt5qFiMDk43',
+            )
+
+        use_gemini: bool = True
+        if use_gemini:
+            self.gemini = GoogleGenerativeAI(
+                api_key=gs.credentials.gemini.emil,
+                model_name='gemini-1.5-flash',
+                system_instruction=system_instruction,
+                generation_config={'response_mime_type': 'application/json'},
+            )
+
+        # 2. Определение путей для примеров, директории с изображениями и выходного файла.
+        furniture_categories: str = (
+            Path(self.base_path / 'categories' / 'main_categories_furniture.json')
+            .read_text(encoding='UTF-8')
+            .replace(r'\n', '')
+            .replace(r'\t', '')
         )
+        system_instruction += furniture_categories
 
-        images_dir: Path = (
-            self.base_path
-            / "images"
-        )
+        output_file: Path = self.data_path / f'described_images_{lang}.json'
 
-        output_file: Path = (
-            self.base_path
-            / "images_descritions_he.json"
-        )
+        described_images_path: Path = self.data_path / 'described_images.txt'
+        described_images: list = read_text_file(
+            described_images_path, as_list=True
+        ) or []
 
-        base_url: str = r'https://emil-design.com/img/images_emil/'
-        # считывание системной инструкции
-        system_instruction = read_text_file(system_instruction_path)
-        # считывание примеров
-        examples = read_text_file(examples_path)
-        # путь к файлу с обновленными изображениями
-        updated_images_path: Path = self.base_path / 'updated_images.txt'
-        #  запрос для модели ИИ
-        prompt: str = "איזה רהיטים מוצגים כאן?"
-        # Инициализация модели ИИ с системными инструкциями
-        model = OpenAIModel(system_instruction=system_instruction, assistant_id='asst_uDr5aVY3qRByRwt5qFiMDk43')
-        # Запрос к модели на категоризацию примеров
-        response = model.ask(examples, "this is example for build categories")
-        logger.info(response)
-        # Получение списка обновленных изображений
-        updated_images_list: list = read_text_file(updated_images_path, as_list=True) or []
-        # Получение списка всех изображений
-        images_path_list: list = get_filenames(images_dir)
-        data: list = []
+        # 3. Определение путей к изображениям.
+        images_dir: Path = self.data_path / 'images' / 'furniture_images'
+        images_files_list: list = get_filenames_from_directory(images_dir)
 
-        for image_path in images_path_list:
-            # Пропуск уже обработанных изображений
-            if image_path in updated_images_list:
-                continue
+        # 4. Вычитание описанных изображений из списка всех изображений.
+        images_to_process = [
+            img
+            for img in images_files_list
+            if str(images_dir / img) not in described_images
+        ]
 
-            try:
-                # Описание изображения либо по URL, либо из локального файла
-                if from_url:
-                    response = model.describe_image(str(base_url + image_path), prompt, system_instruction)  # url
-                else:
-                    response = model.describe_image(images_dir / image_path, prompt, system_instruction)  # local file
-            except Exception as ex:
-                logger.error(f'Ошибка при описании изображения {image_path}: {ex}')
-                continue
+        # 5. Определение выходного файла.
+        output_json: Path = Path(self.data_path / f'out_{gs.now}_{lang}.json')
+
+        data: list = []  # список всех обработанных данных
+        for img in images_to_process:
+            print(f'starting process file {img}\\nsleep for 20 sec')
+            time.sleep(20)
+            img_path: str = str(images_dir / img)  # Сохранение полного пути
+
+            # два разных типа байтового содержимого картинки.
+            # Если модель ругается на один, то можно выбрать другой
+
+            # - Использование Pillow для преобразования в JPEG
+            img_bytes: bytes = get_image_bytes(images_dir / img)
+
+            # - получение raw binary data
+            raw_img_data: bytes = get_raw_image_data(images_dir / img)
+
+            response: str = await self.gemini.describe_image(
+                image=raw_img_data, mime_type='image/jpeg', prompt=system_instruction
+            )
 
             if not response:
-                logger.warning(f'Нет ответа для изображения {image_path}')
+                logger.error(f'Не удалось получить описание для изображения {img}')
                 continue
 
-            try:
-                # Преобразование ответа в структурированный формат
-                res_ns: SimpleNamespace = j_loads_ns(response)
-                setattr(res_ns, 'local_image_path', str(Path(images_dir / image_path)))
-                data.append(res_ns)
-                j_dumps(data, output_file)
-                updated_images_list.append(image_path)
-                save_text_file(updated_images_list, updated_images_path)
-                logger.info(f'Описание для {image_path} успешно добавлено.')
-                # time.sleep(20) # закоментирован код
-            except Exception as ex:
-                logger.error(f'Ошибка при обработке ответа для {image_path}: {ex}')
-                continue
-            ... # точка остановки
+            # Преобразование ответа в структурированный формат.
+            res_ns: SimpleNamespace | list[SimpleNamespace] = j_loads_ns(response)
+            res_ns: SimpleNamespace = (
+                res_ns[0] if isinstance(res_ns, list) else res_ns
+            )
 
-    def promote_to_facebook(self):
+            setattr(res_ns, 'local_image_path', str(Path(images_dir / img)))
+
+            # добавление структурированных данных в список
+            data.append(res_ns)
+            j_dumps(data, output_json)
+
+            # добавление пути обработанного изображения в список и сохранение в файл
+            described_images.append(img_path)
+            await save_text_file(described_images_path, described_images)
+
+    async def promote_to_facebook(self):
         """
         Продвигает изображения и их описания в Facebook.
 
-        Эта функция выполняет вход в Facebook и публикует сообщения, основанные на описаниях изображений.
+        Эта функция выполняет вход в Facebook и публикует сообщения на основе описаний изображений.
         """
-        # Инициализация драйвера веб-браузера
-        d = Driver(Chrome)
-        # открытие страницы facebook
+        d: Driver = Driver(Chrome)
         d.get_url(r'https://www.facebook.com/groups/1080630957030546')
-        # Получение данных об изображениях
-        messages: SimpleNamespace | list = j_loads_ns(self.base_path / "images_descritions_he.json")
-
-        if not messages:
-           logger.warning('Нет данных для публикации в Facebook.')
-           return
+        messages: SimpleNamespace | list = j_loads_ns(
+            self.base_path / 'images_descritions_he.json'
+        )
 
         for m in messages:
-            try:
-                # Создание объекта SimpleNamespace для сообщения
-                message: SimpleNamespace = SimpleNamespace()
-                setattr(message, 'title', f"{m.parent}\\n{m.category}")
-                setattr(message, 'description', m.description)
-                message.products = SimpleNamespace()
-                setattr(message.products, 'local_image_path', [m.local_image_path])
+            message: SimpleNamespace = SimpleNamespace()
+            setattr(message, 'title', f'{m.parent}\\n{m.category}')
+            setattr(message, 'description', m.description)
+            message.products = SimpleNamespace()
+            setattr(message.products, 'local_image_path', [m.local_image_path])
 
-                # Публикация сообщения в Facebook
-                post_message(d, message, without_captions=True)
-                logger.info(f'Сообщение успешно опубликовано для изображения {m.local_image_path}')
-                #  time.sleep(20) # закоментирован код
-            except Exception as ex:
-                logger.error(f'Ошибка при публикации сообщения для {m.local_image_path}: {ex}')
-                continue
-            ...  # точка остановки
+            post_message(d, message, without_captions=True)
+            ...
+
+    async def upload_to_prestashop(
+        self,
+        products_list: Optional[SimpleNamespace | list[SimpleNamespace]] = None,
+        lang: Optional[str] = None,
+    ) -> bool:
+        """
+        Загружает информацию о товаре в PrestaShop.
+
+        Args:
+            products_list (Optional[SimpleNamespace | list[SimpleNamespace]], optional): Список товаров для загрузки.
+                Если не указан, загружается из файла `out_{timestamp}_{lang}.json`. Defaults to None.
+            lang (Optional[str], optional): Язык для загрузки. Defaults to None.
+
+        Returns:
+            bool: Возвращает True, если загрузка прошла успешно.
+        """
+        products_list: SimpleNamespace | list[
+            SimpleNamespace
+        ] = products_list if products_list else j_loads_ns(
+            self.data_path / 'out_250108230345305_he.json'
+        )
+        
+        if not products_list:
+            logger.error('Не удалось загрузить список продуктов для PrestaShop')
+            return False
+            
+        lang_ns:SimpleNamespace = j_loads_ns(
+            self.base_path / 'shop_locales' / 'locales.json'
+        )
+
+        lang_index: str = getattr(lang_ns, lang)
+
+        # Преобразование к ProductFields
+        f: ProductFields = ProductFields(lang_index=lang_index or lang_ns.he)
+        host: str = gs.credentials.presta.client.emil_design.api_domain
+        api_key: str = gs.credentials.presta.client.emil_design.api_key
+
+        for product_ns in products_list:
+            # преобразование к полям PrestaShop
+            f.name = product_ns.name
+            f.id_category_default = product_ns.category
+            f.id_supplier = (
+                11366  # https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
+            )
+            f.description = product_ns.description
+            f.images_urls = product_ns.local_image_path
+
+            p: ProductAsync = ProductAsync(api_domain=host, api_key=api_key)
+            product_id: int = await p.add_new_product(f)
+
         return True
 
-    def upload_to_PrestaShop(self):
-        """
-        Загружает информацию о продукте в PrestaShop.
+if __name__ == '__main__':
+    emil: EmilDesign = EmilDesign()
+    asyncio.run(emil.upload_to_prestashop(lang='he'))
 
-        Эта функция инициализирует продукт и экземпляр PrestaShop для загрузки данных.
-        """
-        # Инициализация экземпляра Product
-        p = Product()
-        # Инициализация экземпляра PrestaShop
-        presta = PrestaShop()
-        return True
-        ... # точка остановки
-
-
-if __name__ == "__main__":
-    e = EmilDesign()
-    # e.describe_images()
-    # e.promote_to_facebook()
+    # asyncio.run( emil.describe_images(lang='he') )
+    # emil.promote_to_facebook()
 ```

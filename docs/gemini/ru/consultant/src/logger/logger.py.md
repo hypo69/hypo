@@ -1,46 +1,44 @@
-# Анализ кода модуля `logger.py`
+# Анализ кода модуля `logger`
 
 **Качество кода**
-7
+9
 -  Плюсы
-    -  Реализован паттерн Singleton для класса Logger, что гарантирует единственный экземпляр логгера.
-    -  Используется библиотека `colorama` для раскрашивания вывода в консоль.
-    -  Логирование осуществляется в разные файлы (info, debug, errors) и в json формат.
-    -  Реализован кастомный JSON форматтер.
-    -  Имеется подробная информация об исключении в методе `_ex_full_info`.
- -  Минусы
-    -  Не все импорты расположены в начале файла, импорт `header` и `__root__` должен быть выше.
-    -  Используется `json.loads` для загрузки конфига, нужно использовать `j_loads` или `j_loads_ns`.
-    -   Дублирование кода при настройке логгеров, можно вынести в отдельную функцию.
-    -  Закомментированный код, связанный с записью логов в файл, необходимо удалить или исправить.
-    -   Не реализована запись в файлы с использованием `self.logger_file_json.log`.
-    -   Нет документации в формате RST.
-    -   В некоторых местах отсутствуют комментарии.
+    -   Реализован паттерн Singleton для класса Logger, что гарантирует единственный экземпляр логгера в приложении.
+    -   Используются кастомные форматировщики для JSON и обычного текстового вывода логов.
+    -   Логирование вынесено в отдельные файлы для разных уровней (INFO, DEBUG, ERROR), что облегчает их анализ.
+    -   Используется библиотека `colorama` для цветного вывода в консоль.
+    -   Добавлены методы для упрощенной записи сообщений разных уровней (`info`, `debug`, `error`, и т.д.).
+    -   Исключение в методе `_ex_full_info` формируется с полной информацией о месте возникновения ошибки.
+    -   Используется  `SimpleNamespace` для хранения настроек из файла конфигурации
+    -   Наличие подробной документации
+-  Минусы
+    -   Используется `json.loads` для чтения конфигурационного файла, вместо `j_loads` из `src.utils.jjson`.
+    -   Некоторые части кода закомментированы.
+    -   Не во всех функциях есть подробная документация в формате RST.
+    -   Дублирование кода при настройке обработчиков для разных файлов логов
+    -   Не используется импорт `from src.logger.logger import logger`
 
 **Рекомендации по улучшению**
 
-1.  **Импорты:** Переместить импорты `header` и `__root__` в начало файла.
-2.  **Использование `j_loads`:** Заменить `json.loads` на `j_loads_ns` из `src.utils.jjson` для чтения файла конфигурации.
-3.  **Рефакторинг:** Вынести создание и настройку файловых логгеров в отдельную функцию для избежания дублирования кода.
-4.  **Исправление закомментированного кода:**  Необходимо удалить закомментированный код или переработать его.
-5.  **Логирование в JSON:** Исправить логирование в JSON файл с использованием `self.logger_file_json.log`.
-6.  **Документация:** Добавить документацию в формате RST для модуля, класса и методов.
-7.  **Комментарии:** Добавить комментарии к блокам кода, где они отсутствуют.
-8.  **Использование `logger.error`:** Заменить общие `try-except` на `logger.error` для более явной обработки ошибок.
+1.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.loads`.
+2.  Удалить или раскомментировать и переработать  закомментированный код с выводом в консоль.
+3.  Добавить документацию в формате RST для всех функций, методов и класса.
+4.  Использовать `from src.logger.logger import logger` для импорта логгера.
+5.  Упростить код инициализации обработчиков логов, выделив повторяющийся код в отдельную функцию.
+6.  Удалить излишние комментарии.
+7.   Переработать использование `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль логгера
+Модуль для логирования событий приложения.
 =========================================================================================
 
-Этот модуль содержит класс :class:`Logger`, который реализует паттерн Singleton и
-предоставляет функциональность для логирования сообщений в консоль, файлы и JSON формат.
+Этот модуль содержит класс :class:`Logger`, который реализует паттерн Singleton и обеспечивает
+логирование в консоль, файлы и в JSON-формате. Поддерживается настройка уровней логирования,
+цвета для вывода в консоль и запись полной информации об исключениях.
 
 Пример использования
 --------------------
@@ -51,14 +49,9 @@
 
     from src.logger.logger import logger
 
-    logger.info('Это информационное сообщение')
-    logger.debug('Это отладочное сообщение', exc_info=True)
-    try:
-        raise ValueError('Пример ошибки')
-    except ValueError as e:
-        logger.error('Произошла ошибка', ex=e)
+    logger.info('Сообщение', exc_info=True)
+    logger.error('Ошибка', ex=Exception('test'), exc_info=True)
 """
-
 import logging
 import colorama
 import datetime
@@ -68,12 +61,8 @@ from pathlib import Path
 from typing import Optional, Tuple
 from types import SimpleNamespace
 
-#  Импорт header
-import header
+from src.utils.jjson import j_loads
 from header import __root__
-
-#  Импорт j_loads_ns
-from src.utils.jjson import j_loads_ns
 
 TEXT_COLORS = {
     'black': colorama.Fore.BLACK,
@@ -93,7 +82,6 @@ TEXT_COLORS = {
     'light_cyan': colorama.Fore.LIGHTCYAN_EX,
 }
 
-# Словарь для цветов фона
 BG_COLORS = {
     'black': colorama.Back.BLACK,
     'red': colorama.Back.RED,
@@ -112,14 +100,19 @@ BG_COLORS = {
     'light_cyan': colorama.Back.LIGHTCYAN_EX,
 }
 
-
 class SingletonMeta(type):
-    """Metaclass for Singleton pattern implementation."""
-
+    """
+    Метакласс для реализации паттерна Singleton.
+    """
     _instances = {}
     _lock = threading.Lock()
 
     def __call__(cls, *args, **kwargs):
+        """
+        Возвращает единственный экземпляр класса.
+
+        Если экземпляр не существует, то он создается.
+        """
         if cls not in cls._instances:
             with cls._lock:
                 if cls not in cls._instances:
@@ -127,12 +120,21 @@ class SingletonMeta(type):
                     cls._instances[cls] = instance
         return cls._instances[cls]
 
-
 class JsonFormatter(logging.Formatter):
-    """Custom formatter for logging in JSON format."""
+    """
+    Кастомный форматтер для логирования в JSON-формате.
+    """
 
     def format(self, record):
-        """Format the log record as JSON."""
+        """
+        Форматирует запись лога в JSON.
+
+        Args:
+            record (LogRecord): Запись лога.
+
+        Returns:
+            str: JSON-представление записи лога.
+        """
         log_entry = {
             'asctime': self.formatTime(record, self.datefmt),
             'levelname': record.levelname,
@@ -141,13 +143,19 @@ class JsonFormatter(logging.Formatter):
             if record.exc_info
             else None,
         }
-        _json = j_loads_ns(log_entry)
+        _json = j_loads(log_entry)
         return _json
 
-
 class Logger(metaclass=SingletonMeta):
-    """Logger class implementing Singleton pattern with console, file, and JSON logging."""
+    """
+    Класс логгера, реализующий паттерн Singleton с логированием в консоль, файл и JSON.
 
+    Args:
+        info_log_path (Optional[str]): Путь к файлу для INFO логов.
+        debug_log_path (Optional[str]): Путь к файлу для DEBUG логов.
+        errors_log_path (Optional[str]): Путь к файлу для ERROR логов.
+        json_log_path (Optional[str]): Путь к файлу для JSON логов.
+    """
     log_files_path: Path
     info_log_path: Path
     debug_log_path: Path
@@ -162,91 +170,82 @@ class Logger(metaclass=SingletonMeta):
         json_log_path: Optional[str] = None,
     ):
         """
-        Инициализирует экземпляр логгера.
-
-        Args:
-            info_log_path (Optional[str]): Путь к файлу для информационных логов.
-            debug_log_path (Optional[str]): Путь к файлу для отладочных логов.
-            errors_log_path (Optional[str]): Путь к файлу для логов ошибок.
-            json_log_path (Optional[str]): Путь к файлу для JSON логов.
+        Инициализация экземпляра Logger.
         """
-        #  Загрузка конфигурации из файла
         config = SimpleNamespace(
-            **j_loads_ns(Path(__root__ / 'src' / 'config.json').read_text(encoding='UTF-8'))
+            **j_loads(Path(__root__ / 'src' / 'config.json').read_text(encoding='UTF-8'))
         )
-        #  Формирование временной метки для имени директории
         timestamp = datetime.datetime.now().strftime('%d%m%y%H%M')
-        #  Формирование базового пути к директории с логами
         base_path: Path = Path(config.path['log'])
-        #  Формирование полного пути к директории с логами
         self.log_files_path: Path = base_path / timestamp
 
-        #  Формирование путей к файлам логов
         self.info_log_path = self.log_files_path / (info_log_path or 'info.log')
         self.debug_log_path = self.log_files_path / (debug_log_path or 'debug.log')
         self.errors_log_path = self.log_files_path / (errors_log_path or 'errors.log')
         self.json_log_path = base_path / (json_log_path or f'{timestamp}.json')
 
-        #  Создание директории, если она не существует
         self.log_files_path.mkdir(parents=True, exist_ok=True)
 
-        #  Создание файлов логов, если они не существуют
         self.info_log_path.touch(exist_ok=True)
         self.debug_log_path.touch(exist_ok=True)
         self.errors_log_path.touch(exist_ok=True)
         self.json_log_path.touch(exist_ok=True)
 
-        #  Настройка консольного логгера
         self.logger_console = logging.getLogger(name='logger_console')
         self.logger_console.setLevel(logging.DEBUG)
 
-        # Настройка файловых логгеров
         self._setup_file_logger(
-            'logger_file_info', self.info_log_path, logging.INFO, '%(levelname)s: %(message)s'
+            'logger_file_info',
+            self.info_log_path,
+            logging.INFO,
+            logging.Formatter('%(levelname)s: %(message)s'),
         )
         self._setup_file_logger(
-            'logger_file_debug', self.debug_log_path, logging.DEBUG, '%(levelname)s: %(message)s'
+            'logger_file_debug',
+            self.debug_log_path,
+            logging.DEBUG,
+            logging.Formatter('%(levelname)s: %(message)s'),
         )
         self._setup_file_logger(
-            'logger_file_errors', self.errors_log_path, logging.ERROR, '%(levelname)s: %(message)s'
-        )
-        self._setup_file_logger(
-            'logger_json', self.json_log_path, logging.DEBUG, formatter=JsonFormatter()
+            'logger_file_errors',
+            self.errors_log_path,
+            logging.ERROR,
+            logging.Formatter('%(levelname)s: %(message)s'),
         )
 
-    def _setup_file_logger(self, name: str, file_path: Path, level: int, format: str = None, formatter=None):
+        self.logger_file_json = logging.getLogger(name='logger_json')
+        self.logger_file_json.setLevel(logging.DEBUG)
+        json_handler = logging.FileHandler(self.json_log_path)
+        json_handler.setFormatter(JsonFormatter())
+        self.logger_file_json.addHandler(json_handler)
+
+        for handler in self.logger_file_json.handlers:
+            if isinstance(handler, logging.StreamHandler):
+                self.logger_file_json.removeHandler(handler)
+
+    def _setup_file_logger(self, name: str, file_path: Path, level: int, formatter: logging.Formatter):
         """
         Настраивает файловый логгер.
-
-        Args:
+         Args:
             name (str): Имя логгера.
             file_path (Path): Путь к файлу лога.
             level (int): Уровень логирования.
-            format (str, optional): Формат сообщения.
-            formatter (logging.Formatter, optional): Кастомный форматтер.
+            formatter (logging.Formatter): Форматтер для лога.
         """
         logger = logging.getLogger(name=name)
         logger.setLevel(level)
         file_handler = logging.FileHandler(file_path)
-        if format:
-            file_handler.setFormatter(logging.Formatter(format))
-        if formatter:
-            file_handler.setFormatter(formatter)
+        file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
-
-        #  Удаление обработчиков, которые выводят в консоль
-        for handler in logger.handlers:
-            if isinstance(handler, logging.StreamHandler):
-                logger.removeHandler(handler)
 
     def _format_message(self, message, ex=None, color: Optional[Tuple[str, str]] = None):
         """
-        Форматирует сообщение с учетом цвета и информации об исключении.
+        Форматирует сообщение с цветом и информацией об исключении.
 
         Args:
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            color (Tuple[str, str], optional): Кортеж с цветом текста и фона.
+            ex (Optional[Exception]): Исключение.
+            color (Optional[Tuple[str, str]]): Кортеж с цветом текста и фона.
 
         Returns:
             str: Форматированное сообщение.
@@ -266,7 +265,7 @@ class Logger(metaclass=SingletonMeta):
             ex (Exception): Исключение.
 
         Returns:
-            str: Полная информация об исключении.
+           str: Строка с информацией об исключении.
         """
         frame_info = inspect.stack()[3]
         file_name = frame_info.filename
@@ -277,14 +276,14 @@ class Logger(metaclass=SingletonMeta):
 
     def log(self, level, message, ex=None, exc_info=False, color: Optional[Tuple[str, str]] = None):
         """
-        Логирует сообщение с заданным уровнем и цветом.
+        Логирует сообщение на указанном уровне.
 
         Args:
             level (int): Уровень логирования.
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            exc_info (bool, optional): Флаг для отображения информации об исключении.
-            color (Tuple[str, str], optional): Кортеж с цветом текста и фона.
+            ex (Optional[Exception]): Исключение.
+            exc_info (bool): Флаг, указывающий, нужно ли выводить информацию об исключении.
+            color (Optional[Tuple[str, str]]): Кортеж с цветом текста и фона.
         """
         formatted_message = self._format_message(message, ex, color)
         if exc_info:
@@ -293,28 +292,16 @@ class Logger(metaclass=SingletonMeta):
         if self.logger_console:
             self.logger_console.log(level, formatted_message, exc_info=exc_info)
 
-        #  Логирование в json
-        if hasattr(self, 'logger_file_json'):
-            self.logger_file_json.log(level, message, exc_info=exc_info)
-        # if level == logging.INFO and hasattr(self, 'logger_file_info'):
-        #     self.logger_file_info.log(level, formatted_message)
-
-        # if level == logging.DEBUG and hasattr(self, 'logger_file_debug'):
-        #     self.logger_file_debug.log(level, formatted_message)
-
-        # if level in [logging.ERROR, logging.CRITICAL] and hasattr(self, 'logger_file_errors'):
-        #     self.logger_file_errors.log(level, formatted_message)
 
     def info(self, message, ex=None, exc_info=False, text_color: str = 'green', bg_color: str = ''):
         """
         Логирует информационное сообщение.
-
-        Args:
+         Args:
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            exc_info (bool, optional): Флаг для отображения информации об исключении.
-            text_color (str, optional): Цвет текста.
-            bg_color (str, optional): Цвет фона.
+            ex (Optional[Exception]): Исключение.
+            exc_info (bool): Флаг, указывающий, нужно ли выводить информацию об исключении.
+            text_color (str): Цвет текста.
+            bg_color (str): Цвет фона.
         """
         color = (text_color, bg_color)
         self.log(logging.INFO, message, ex, exc_info, color)
@@ -322,27 +309,25 @@ class Logger(metaclass=SingletonMeta):
     def success(self, message, ex=None, exc_info=False, text_color: str = 'yellow', bg_color: str = ''):
         """
         Логирует сообщение об успехе.
-
          Args:
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            exc_info (bool, optional): Флаг для отображения информации об исключении.
-            text_color (str, optional): Цвет текста.
-            bg_color (str, optional): Цвет фона.
+            ex (Optional[Exception]): Исключение.
+            exc_info (bool): Флаг, указывающий, нужно ли выводить информацию об исключении.
+            text_color (str): Цвет текста.
+            bg_color (str): Цвет фона.
         """
         color = (text_color, bg_color)
         self.log(logging.INFO, message, ex, exc_info, color)
 
     def warning(self, message, ex=None, exc_info=False, text_color: str = 'black', bg_color: str = 'yellow'):
         """
-        Логирует предупреждающее сообщение.
-
-        Args:
+        Логирует сообщение предупреждения.
+         Args:
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            exc_info (bool, optional): Флаг для отображения информации об исключении.
-            text_color (str, optional): Цвет текста.
-            bg_color (str, optional): Цвет фона.
+            ex (Optional[Exception]): Исключение.
+            exc_info (bool): Флаг, указывающий, нужно ли выводить информацию об исключении.
+            text_color (str): Цвет текста.
+            bg_color (str): Цвет фона.
         """
         color = (text_color, bg_color)
         self.log(logging.WARNING, message, ex, exc_info, color)
@@ -350,13 +335,12 @@ class Logger(metaclass=SingletonMeta):
     def debug(self, message, ex=None, exc_info=True, text_color: str = 'cyan', bg_color: str = ''):
         """
         Логирует отладочное сообщение.
-
-        Args:
+         Args:
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            exc_info (bool, optional): Флаг для отображения информации об исключении.
-            text_color (str, optional): Цвет текста.
-            bg_color (str, optional): Цвет фона.
+            ex (Optional[Exception]): Исключение.
+            exc_info (bool): Флаг, указывающий, нужно ли выводить информацию об исключении.
+            text_color (str): Цвет текста.
+            bg_color (str): Цвет фона.
         """
         color = (text_color, bg_color)
         self.log(logging.DEBUG, message, ex, exc_info, color)
@@ -364,13 +348,12 @@ class Logger(metaclass=SingletonMeta):
     def error(self, message, ex=None, exc_info=True, text_color: str = 'red', bg_color: str = ''):
         """
         Логирует сообщение об ошибке.
-
-        Args:
+         Args:
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            exc_info (bool, optional): Флаг для отображения информации об исключении.
-            text_color (str, optional): Цвет текста.
-            bg_color (str, optional): Цвет фона.
+            ex (Optional[Exception]): Исключение.
+            exc_info (bool): Флаг, указывающий, нужно ли выводить информацию об исключении.
+            text_color (str): Цвет текста.
+            bg_color (str): Цвет фона.
         """
         color = (text_color, bg_color)
         self.log(logging.ERROR, message, ex, exc_info, color)
@@ -378,18 +361,15 @@ class Logger(metaclass=SingletonMeta):
     def critical(self, message, ex=None, exc_info=True, text_color: str = 'red', bg_color: str = 'white'):
         """
         Логирует критическое сообщение.
-
-        Args:
+         Args:
             message (str): Сообщение для логирования.
-            ex (Exception, optional): Исключение, которое нужно добавить в сообщение.
-            exc_info (bool, optional): Флаг для отображения информации об исключении.
-            text_color (str, optional): Цвет текста.
-            bg_color (str, optional): Цвет фона.
+            ex (Optional[Exception]): Исключение.
+            exc_info (bool): Флаг, указывающий, нужно ли выводить информацию об исключении.
+            text_color (str): Цвет текста.
+            bg_color (str): Цвет фона.
         """
         color = (text_color, bg_color)
         self.log(logging.CRITICAL, message, ex, exc_info, color)
 
-
-# Инициализация логгера
 from src.logger.logger import logger
 ```

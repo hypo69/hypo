@@ -79,10 +79,14 @@ class CodeAssistant:
 
     def _initialize_models(self, **kwargs):
         """Инициализация моделей на основе заданных параметров."""
+
+        system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')
+
         if "gemini" in self.models_list:
             self.gemini_model = GoogleGenerativeAI(
                 model_name=self.config.gemini_model_name,
                 api_key=gs.credentials.gemini.onela,
+                system_instruction = system_instruction,
                 **kwargs,
             )
         if "openai" in self.models_list:

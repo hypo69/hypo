@@ -1,92 +1,101 @@
 # Анализ кода модуля `gemini_chat.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код структурирован и разбит на классы и функции, что облегчает понимание и поддержку.
-    - Используются логирование и вывод отладочной информации.
-    - Есть docstring для класса и основных методов.
-    - Применяется кастомная библиотека `src`.
+   -  Соответствие требованиям: 7/10
+   -  Плюсы:
+        - Код структурирован в класс `KazarinovAI`, что обеспечивает модульность.
+        - Используются функции `recursively_read_text_files`, `j_dumps`, `pprint`, `logger` из `src`.
+        - Присутствует обработка больших объемов данных через разбиение на чанки при обучении.
+        - Есть функция для диалога с пользователем.
+        - Добавлены docstring для классов и методов.
 
-- Минусы
-    - Не все docstring соответствуют стандарту RST.
-    - Некоторые комментарии не соответствуют формату reStructuredText.
-    - Есть избыточные и незадействованные переменные.
-    - Не везде используется логирование ошибок.
-    - Не все импорты используются, требуется их проверка.
-    - Не используются константы для значений по умолчанию, что усложняет понимание и поддержку кода.
-    - Не все методы класса документированы в формате reStructuredText.
+   -  Минусы:
+        - Не все комментарии соответствуют стандарту RST.
+        - Не везде используется `logger.error` для обработки исключений.
+        - Есть избыточное использование `try-except`, которое можно заменить на `logger.error`.
+        - Не все переменные и функции имеют описательные имена.
+        -  Использование `time.sleep(5)` может быть заменено на асинхронную задержку или убрано в будующем.
+        - В коде есть `...` как точки остановки, которые нужно убрать в релизной версии.
+        -  Не стандартизированы выводы в консоль `print` и `logger.info`.
+        -  Код в `chat` не должен быть частью модуля а выполнятся в отдельном скрипте.
 
 **Рекомендации по улучшению**
 
-1.  **Формат документации**: Привести все docstring и комментарии к формату reStructuredText (RST).
-2.  **Импорты**: Проверить и добавить недостающие импорты, удалить неиспользуемые.
-3.  **Логирование**: Добавить логирование ошибок в блоках `try-except`, где это требуется.
-4.  **Константы**: Определить константы для значений по умолчанию, таких как `response_mime_type`.
-5.  **Комментарии**: Уточнить комментарии, где это необходимо.
-6.  **Переменные**: Удалить неиспользуемые переменные и привести имена переменных в соответствие со стандартами.
-7.  **Обработка данных**: Использовать `j_loads` и `j_dumps` из `src.utils.jjson` вместо стандартных `json.load` и `json.dumps`.
-8.  **Общая структура**: Добавить документацию для каждого метода и класса.
+1.  **Документация**:
+    -   Добавьте docstring для модуля в начале файла.
+    -   Дополните docstring для всех функций и методов, включая описание параметров и возвращаемых значений.
+    -   Используйте RST формат для docstring.
+    -   Уберите `.. module::` и `.. platform::` это устаревшее оформление.
+    -   Вместо  `# <- Q` используйте ` # Q:`
+    -   Вместо `# <- A` используйте  ` # A:`
+2.  **Логирование**:
+    -   Замените `print` на `logger.info` для более стандартизированного вывода в консоль.
+    -   Используйте `logger.error` для записи ошибок вместо `try-except` и `print` исключений.
+3.  **Структура кода**:
+    -   Вынесите инициализацию `KazarinovAI` в `if __name__ == "__main__":`.
+    -   Удалите избыточный код `dialog_data` и `header` в методе `train()`.
+    -   Упростите логику в методе `train()`.
+    -  Удалить магические числа, такие как `5`.
+4.  **Комментарии**:
+    -   Улучшите комментарии, чтобы они более точно описывали логику кода.
+    -   Уберите комментарии, которые не несут смысловой нагрузки.
+5.  **Именование**:
+    -   Переименуйте переменные `q`  и `a` на `question` и `answer`.
+6. **Обработка ошибок**:
+    -   Используйте `logger.error` для обработки ошибок в функции `ask`.
+7.  **Код**:
+    -   Разделение логики на более мелкие функции для улучшения читаемости.
+    -   Удалите `...`
+    -   Удалите `chat` функцию из модуля.
+    -   Изменить тип возвращаемого значения функции `ask` на `str`
+    -   Удалить `no_log`, `with_pretrain` у `ask` они не используются в вызываемом коде.
+8. **Общее**:
+    -   Не используйте задержки `time.sleep()` в основном коде.
+    -   Добавить проверку на пустой список при чтении файлов.
+    -   Использовать `j_loads_ns` вместо `json.load`.
 
 **Оптимизированный код**
-
 ```python
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для работы с Google Gemini API для проекта Kazarinov
-===========================================================
+Модуль для работы с моделью Gemini для проекта Kazarinov.
+=========================================================================================
 
-Этот модуль содержит класс :class:`KazarinovAI`, который используется для обучения моделей и генерации диалогов
-с использованием Google Gemini API.
-
-Основные возможности:
-    - Загрузка системных инструкций и обучающих данных.
-    - Разделение обучающих данных на части для обработки.
-    - Генерация ответов на основе входных вопросов.
-    - Поддержка диалогового режима.
+Этот модуль содержит класс :class:`KazarinovAI`, который используется для работы с моделью
+Google Gemini для обучения и ведения диалогов.
 
 Пример использования
 --------------------
 
+Пример использования класса `KazarinovAI`:
+
 .. code-block:: python
 
-    from src.endpoints.kazarinov.gemini_chat import KazarinovAI
-
-    system_instruction = "You are a helpful assistant."
-    kazarinov_ai = KazarinovAI(system_instruction=system_instruction)
-    kazarinov_ai.train()
-    response = kazarinov_ai.ask("What is your name?")
-    print(response)
+    k = KazarinovAI(system_instruction="You are a helpful assistant")
+    k.train()
+    k.dialog()
 """
 import time
 import random
-from typing import Optional, Any
+from typing import Optional, List, Any
 from pathlib import Path
 
 from src import gs
-from src.ai.openai import OpenAIModel  # TODO: check if used
 from src.ai.gemini import GoogleGenerativeAI
-from src.utils.file import recursively_read_text_files, read_text_file # TODO: check if used get_filenames and recursively_get_filepath
-from src.utils.jjson import j_dumps
-from src.utils.printer import pprint, input_colored, GREEN
+from src.utils.file import recursively_read_text_files
+from src.utils.printer import pprint
 from src.logger.logger import logger
 
 
 class KazarinovAI:
     """
-    Управляет обучением модели и генерацией диалогов для проекта Kazarinov
-    с использованием GoogleGenerativeAI.
+    Класс для управления обучением и диалогами с использованием модели Google Gemini.
 
-    :param system_instruction: Инструкция для модели, определяющая её системную роль.
-    :type system_instruction: str, optional
-    :param generation_config: Конфигурация для генерации контента.
-    :type generation_config: dict | list[dict], optional
+    Args:
+        system_instruction (str, optional): Инструкция для модели. Defaults to None.
+        generation_config (dict, optional): Конфигурация для генерации контента.
+            Defaults to {"response_mime_type": "text/plain"}.
     """
 
-    _RESPONSE_MIME_TYPE = "text/plain"  # Константа для типа ответа
     api_key = gs.credentials.gemini.kazarinov
     base_path = gs.path.google_drive / 'kazarinov'
     system_instruction_list: list = recursively_read_text_files(base_path, ['*.txt', '*.md'])
@@ -94,216 +103,137 @@ class KazarinovAI:
     gemini_1: GoogleGenerativeAI
     gemini_2: GoogleGenerativeAI
     timestamp = gs.now
+    SLEEP_TIME = 5 # Задержка перед следующим запросом
 
     def __init__(self,
-                 system_instruction: str = None,
-                 generation_config: dict | list[dict] = None):
+                 system_instruction: Optional[str] = None,
+                 generation_config: dict = {"response_mime_type": "text/plain"}):
         """
-        Инициализирует модель Kazarinov.
+        Инициализирует модель KazarinovAI с двумя экземплярами GoogleGenerativeAI.
 
-        :param system_instruction: Инструкция для модели, определяющая её системную роль.
-        :type system_instruction: str, optional
-        :param generation_config: Конфигурация для генерации контента.
-        :type generation_config: dict | list[dict], optional
+        Args:
+            system_instruction (str, optional): Инструкция для модели. Defaults to None.
+            generation_config (dict, optional): Конфигурация для генерации контента.
+                Defaults to {"response_mime_type": "text/plain"}.
         """
-        if generation_config is None:
-            generation_config = {"response_mime_type": self._RESPONSE_MIME_TYPE}
+        self.gemini_1 = GoogleGenerativeAI(
+            api_key=self.api_key,
+            system_instruction=system_instruction,
+            generation_config=generation_config,
+            history_file=self.history_file
+        )
+        self.gemini_2 = GoogleGenerativeAI(
+            api_key=self.api_key,
+            system_instruction=system_instruction,
+            generation_config=generation_config,
+            history_file=self.history_file
+        )
 
-        # Инициализация первого экземпляра модели Google Generative AI (gemini_1)
-        # Используется переданный API ключ, системные инструкции и файл истории.
-        try:
-            self.gemini_1 = GoogleGenerativeAI(
-                api_key=self.api_key,
-                system_instruction=system_instruction,
-                generation_config=generation_config,
-                history_file=f'{gs.now}.txt'
-            )
-        except Exception as e:
-            logger.error(f'Ошибка при инициализации gemini_1: {e}')
-            raise
+    def _split_into_chunks(self, text_list: List[str], chunk_size: int) -> List[str]:
+         """
+         Разбивает список строк на чанки заданного размера.
 
-        # Инициализация второго экземпляра модели (gemini_2)
-        # Идентична gemini_1, но с отдельным файлом истории.
-        try:
-            self.gemini_2 = GoogleGenerativeAI(
-                api_key=self.api_key,
-                system_instruction=system_instruction,
-                generation_config=generation_config,
-                history_file=f'{gs.now}.txt'
-            )
-        except Exception as e:
-            logger.error(f'Ошибка при инициализации gemini_2: {e}')
-            raise
+         Args:
+             text_list (list): Список строк для разбиения.
+             chunk_size (int): Максимальный размер чанка.
+         Returns:
+            list[str]: Список чанков.
+         """
+         all_chunks = []
+         current_chunk = ""
+         for line in text_list:
+            while len(current_chunk) + len(line) > chunk_size:
+               space_left = chunk_size - len(current_chunk)
+               current_chunk += line[:space_left]
+               all_chunks.append(current_chunk)
+               line = line[space_left:]
+               current_chunk = ""
+            current_chunk += line
+         if current_chunk:
+            all_chunks.append(current_chunk)
+         return all_chunks
 
     def train(self):
         """
-        Обучает модель, используя предоставленный список обучающих файлов,
-        отправляя данные частями заданного размера.
+        Обучает модель, отправляя данные по частям.
         """
         chunk_size = 500000
-        all_chunks = []
-        train_data_list: list = recursively_read_text_files(gs.path.data / 'kazarinov' / 'prompts' / 'train_data',
-                                                            ['*.*'], as_list=True)
-        current_chunk = ""
+        train_data_list: list = recursively_read_text_files(
+            gs.path.data / 'kazarinov' / 'prompts' / 'train_data',
+            ['*.*'],
+            as_list=True
+        )
+        if not train_data_list:
+            logger.error("Список обучающих данных пуст.")
+            return
 
-        for line in train_data_list:
-            # Если текущий чанк плюс новая строка превышают chunk_size, разделяем
-            while len(current_chunk) + len(line) > chunk_size:
-                # Определяем, сколько строки можно добавить к текущему чанку
-                space_left = chunk_size - len(current_chunk)
-                current_chunk += line[:space_left]
-                all_chunks.append(current_chunk)
-
-                # Начинаем новый чанк с остатка строки
-                line = line[space_left:]
-                current_chunk = ""
-
-            # Если осталась какая-либо часть строки, добавляем её
-            current_chunk += line
-
-        # Если осталась часть последнего чанка, добавляем его
-        if current_chunk:
-            all_chunks.append(current_chunk)
-
-        # Отправляем данные по частям
+        all_chunks = self._split_into_chunks(train_data_list, chunk_size)
         for idx, chunk in enumerate(all_chunks):
-            # logger.info(f"Sending chunk {idx + 1} of {len(all_chunks)}")
-            pprint(f"{chunk=}\\n{len(chunk)}", text_color='light_blue')
-
-            # Отправляем каждый чанк модели
-            try:
-                response = self.gemini_1.ask(q=chunk)
-                pprint(response, text_color='yellow')
-                time.sleep(5)
-            except Exception as e:
-                logger.error(f'Ошибка при отправке чанка {idx + 1}: {e}')
-                continue  # Продолжить обработку других чанков
-
-            # # Сохраняем данные диалога в JSON
-            # dialog_data = {
-            #     "chunk_index": idx + 1,
-            #     "prompt_chunk": chunk,
-            #     "response": response
-            # }
-            # j_dumps(Path(base_path / 'train' / f'{self.timestamp}_chunk{idx + 1}.json'), dialog_data)
-
+            pprint(f"{chunk=}\n{len(chunk)}", text_color='light_blue')
+            response = self.gemini_1.ask(q = chunk)
+            pprint(response, text_color='yellow')
+            time.sleep(self.SLEEP_TIME)
 
     def question_answer(self):
-        """
-        Обрабатывает процесс вопросов-ответов, используя предоставленные обучающие файлы.
-        """
-        questions = recursively_read_text_files(self.base_path / 'prompts' / 'train_data' / 'q', as_list=True)
-
-        for q in questions:
-            try:
-               response = self.gemini_1.ask(q)
-               pprint(response)
-            except Exception as e:
-                logger.error(f'Ошибка в процессе question_answer: {e}')
-                continue  # Продолжить выполнение со следующим вопросом
+         """
+         Отвечает на вопросы, используя предоставленные обучающие файлы.
+         """
+         questions = recursively_read_text_files(
+             self.base_path / 'prompts' / 'train_data' / 'q',
+             as_list=True
+         )
+         if not questions:
+             logger.error("Список вопросов пуст.")
+             return
+         for question in questions:
+             pprint(self.gemini_1.ask(question))
 
     def dialog(self):
         """
-        Запускает диалог на основе предварительно заданных вопросов, перемешивая вопросы из разных языков.
+        Запускает диалог, перемешивая вопросы из разных языков.
         """
-        questions = recursively_read_text_files(self.base_path / 'prompts' / 'train_data' / 'q', patterns=['*.*'],
-                                                as_list=True)
-
+        questions = recursively_read_text_files(
+            self.base_path / 'prompts' / 'train_data' / 'q',
+            patterns=['*.*'],
+            as_list=True
+        )
+        if not questions:
+            logger.error("Список вопросов пуст.")
+            return
         random.shuffle(questions)
-
-        for q in questions:
-            pprint(f'Q:> {q}', text_color='yellow')  # <- Q
+        for question in questions:
+            pprint(f'Q:> {question}', text_color='yellow') # Q:
             pprint(' ', text_color='green')
-            try:
-                a = self.gemini_1.ask(q)
-                pprint(f'A:> {a}', text_color='cyan')  # <- A
-                pprint('------------------------------------', text_color='green')
-                time.sleep(5)
-            except Exception as e:
-                logger.error(f'Ошибка в процессе dialog: {e}')
-                continue # Продолжить диалог со следующим вопросом
-            ...
+            answer = self.gemini_1.ask(question)
+            pprint(f'A:> {answer}', text_color='cyan') # A:
+            pprint('------------------------------------', text_color='green')
+            time.sleep(self.SLEEP_TIME)
 
-    def ask(self, q: str, no_log: bool = False, with_pretrain: bool = True) -> Any:
+    def ask(self, question: str) -> str:
         """
-        Отправляет запрос в модель и возвращает ответ.
+        Отправляет вопрос модели и возвращает ответ.
 
-        :param q: Запрос для отправки.
-        :type q: str
-        :param no_log: Флаг, определяющий, нужно ли логировать запрос.
-        :type no_log: bool, optional
-        :param with_pretrain: Флаг, определяющий, нужно ли использовать предварительное обучение.
-        :type with_pretrain: bool, optional
-        :return: Ответ от модели.
-        :rtype: Any
+        Args:
+            question (str): Вопрос для модели.
+
+        Returns:
+            str: Ответ модели.
         """
         try:
-            response = self.gemini_1.ask(f"role: ** assistant asst_w5cM3yqOX1pDJARO2hzNMVZrq ** \\n Question: {q}",
-                                         no_log=no_log, with_pretrain=False)
-            return response
+            return self.gemini_1.ask(f"role: ** assistant asst_w5cM3yqOX1pDJARO2hzNMVZrq ** \\n Question: {question}")
         except Exception as e:
-            logger.error(f'Ошибка в методе ask: {e}')
-            return None
-
-
-def chat():
-    """
-    Инициирует сеанс чата с AI-ассистентом Kazarinov.
-
-    Эта функция считывает системные инструкции из текстовых файлов и обрабатывает ввод пользователя
-    до тех пор, пока пользователь не решит выйти из чата. Она использует класс Kazarinov для обработки
-    запросов пользователя и предоставления ответов.
-
-    :raises Exception: Если возникает проблема при чтении файлов системных инструкций.
-    """
-
-    # k = KazarinovAI(system_instruction=system_instruction_list[random.randint(0, len(system_instruction_list) - 1)],
-    #               generation_config={'response_mime_type': 'text/plain'})
-
-    questions_list: list = recursively_read_text_files(gs.path.google_drive / 'kazarinov' / 'prompts' / 'q',
-                                                        ['*.*'])
-
-    print(f"""
-    Чтобы завершить чат, напишите `--q`
-    Чтобы загрузить вопрос из базы вопросов напишите `--next`""")
-
-    system_instruction = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' / 'system_instruction.txt')
-
-    k = KazarinovAI(system_instruction=system_instruction)
-
-    logger.info(k.ask("Привет, представься"))
-
-    while True:
-
-        # Получаем ввод пользователя
-        q = input_colored(">>>> ", GREEN)
-        if q.lower() == 'exit':
-            print("Чат завершен.")
-            break
-
-        if q.lower() == '--next' or q.lower() == '--нехт':
-            q_list: list = questions_list[random.randint(0, len(questions_list) - 1)].split('\n')
-            q = q_list[random.randint(0, len(q_list) - 1)]
-            print(f"{q=}")
-            try:
-                response = k.ask(f"{q}", no_log=True, with_pretrain=False)
-                logger.info(response)
-            except Exception as e:
-                logger.error(f'Ошибка в чате при обработке --next: {e}')
-            continue
-
-        # Отправляем вопрос пользователя AI и получаем ответ
-        try:
-            response = k.ask(q, no_log=False, with_pretrain=False)
-            logger.info(response)
-        except Exception as e:
-            logger.error(f'Ошибка в чате при отправке запроса: {e}')
-
+            logger.error(f"Ошибка при выполнении запроса: {e}", exc_info=True)
+            return ""
 
 if __name__ == "__main__":
-    system_instruction = read_text_file(gs.path.google_drive / 'kazarinov' / 'prompts' / 'system_instruction.txt')
-    k = KazarinovAI(system_instruction=system_instruction)
-    k.train()
-    # k.dialog()
-
-```
+    system_instruction = recursively_read_text_files(
+    gs.path.google_drive / 'kazarinov' / 'prompts',
+    ['system_instruction.txt'],
+    as_list = True
+    )
+    if system_instruction:
+        k = KazarinovAI(system_instruction = system_instruction[0])
+        k.train()
+        #k.dialog()
+    else:
+        logger.error("Не удалось загрузить системные инструкции.")

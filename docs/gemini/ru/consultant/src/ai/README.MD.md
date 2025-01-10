@@ -3,140 +3,127 @@
 **Качество кода: 8/10**
 
 - **Плюсы:**
-    -  Документация модуля представлена в формате reStructuredText (RST), что соответствует стандартам Python.
-    -  Присутствуют ссылки на подмодули, что облегчает навигацию по коду.
-    -  Структура модуля описана четко и понятно, что позволяет быстро понять его назначение и возможности.
-    -  Включает информацию о лицензии и возможности внесения вклада, что важно для открытого исходного кода.
+    - Хорошо структурированное описание модуля и его подмодулей.
+    - Наличие ссылок на конкретные подмодули упрощает навигацию по проекту.
+    - Присутствует описание назначения каждого подмодуля.
+    - Указана лицензия проекта.
+
 - **Минусы:**
-    -   Отсутствует описание модуля в формате docstring.
-    -   Описание подмодулей не содержит примеров использования.
-    -   Необходимо добавить информацию о переменных и функциях, если они есть в модуле.
+    - Документ написан в формате `markdown`, а не `rst` как требуется в инструкции.
+    - Отсутствует описание как работать с модулем и его подмодулями, нет примеров использования.
+    - Нет описания для каких задач используется каждый из модулей.
+    - Не хватает описания структуры и взаимосвязей между модулями, что затрудняет общее понимание архитектуры проекта.
 
-**Рекомендации по улучшению:**
+**Рекомендации по улучшению**
+1. Переписать файл в формате `rst`.
+2. Добавить примеры использования модуля и его подмодулей.
+3. Уточнить, для решения каких задач предназначен каждый модуль.
+4. Описать структуру модуля, взаимосвязи между подмодулями.
+5. Добавить описание API для каждого модуля.
+6. Добавить информацию об установке и зависимостях.
 
-1.  Добавить docstring в начале файла для более полного описания модуля и его назначения.
-2.  Добавить более подробное описание каждого подмодуля, включая примеры использования и особенности.
-3.  Обеспечить соответствие стиля документации стандарту Sphinx.
-4.  Добавить подробную информацию о переменных и функциях, если они есть в модуле.
-5.  Улучшить навигацию по подмодулям, добавив ссылки на конкретные файлы или папки.
+**Оптимизированный код**
 
-**Оптимизированный код:**
-
-```markdown
 ```rst
 .. module:: src.ai
 
-   Модуль для управления различными AI моделями.
-   =========================================================================================
+=========================================================================================
+Модуль для управления моделями ИИ
+=========================================================================================
 
-   Этот модуль содержит подмодули, обеспечивающие интеграцию с различными AI-сервисами и моделями,
-   такими как Anthropic, Google Dialogflow, Gemini, Helicone, LLaMA, OpenAI, Tiny Troupe и RevAI.
-   Он также включает подмодуль для управления промтами.
+Модуль `ai` предназначен для управления различными моделями искусственного интеллекта,
+облегчая взаимодействие с внешними API и обрабатывая различные конфигурации для
+анализа данных и обработки языка. Он включает в себя следующие подмодули:
 
-   Структура модуля:
-   -----------------
+..  toctree::
+    :maxdepth: 1
 
-   Модуль организован в виде набора подмодулей, каждый из которых отвечает за интеграцию с конкретной AI-моделью или сервисом.
-   Каждый подмодуль предоставляет необходимые функции и классы для взаимодействия с соответствующей моделью.
+    anthropic/README
+    dialogflow/README
+    gemini/README
+    helicone/README
+    llama/README
+    myai/README
+    openai/README
+    tiny_troupe/README
+    revai/README
 
-   Пример использования:
-   ---------------------
-
-   Пример использования подмодуля `openai` для генерации текста:
-
-   .. code-block:: python
-
-       from src.ai.openai import OpenAIClient
-
-       client = OpenAIClient(api_key='YOUR_API_KEY')
-       response = client.generate_text(prompt='Напиши короткий рассказ о космосе')
-       print(response)
-
-   Подмодули
-   ---------
-
-   .. toctree::
-      :maxdepth: 1
-
-      anthropic/README
-      dialogflow/README
-      gemini/README
-      helicone/README
-      llama/README
-      myai/README
-      openai/README
-      tiny_troupe/README
-      revai/README
-
-   .. note::
-
-      Подмодуль `prompts` содержит систему и командные промты в формате `markdown`.
-
-```
-<TABLE >
-<TR>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A>
-</TD>
-
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/readme.ru.md'>Русский</A>
-</TD>
-</TABLE>
-
-### **ai Module**: AI Model Management
-
-The **ai** module is responsible for managing various AI models, facilitating interaction with external APIs, and handling different configurations for data analysis and language processing. It includes the following submodules:
+Описание подмодулей
+--------------------
 
 1. **anthropic**
-   Provides integration with Anthropic AI models, enabling tasks related to advanced language understanding and response generation.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/anthropic/README.MD)
+   Интеграция с моделями Anthropic AI, предоставляет возможности для расширенного
+   понимания языка и генерации ответов.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/anthropic/README.MD>`_
 
 2. **dialogflow**
-   Integrates with Google Dialogflow, supporting natural language understanding (NLU) and conversational AI functions for creating interactive applications.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/dialogflow/README.MD)
+   Интеграция с Google Dialogflow, поддерживает функции понимания естественного языка
+   (NLU) и диалогового ИИ для создания интерактивных приложений.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/dialogflow/README.MD>`_
 
 3. **gemini**
-   Manages connections with Gemini AI models, providing support for applications that require unique Gemini AI capabilities.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/gemini/README.MD)
+   Управляет подключениями к моделям Gemini AI, предоставляя поддержку для приложений,
+   требующих уникальных возможностей Gemini AI.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/gemini/README.MD>`_
 
 4. **helicone**
-   Connects to Helicone models, providing access to specialized functions for customizing AI-based solutions.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/helicone/README.MD)
+   Подключение к моделям Helicone, предоставляя доступ к специализированным функциям
+   для настройки решений на основе ИИ.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/helicone/README.MD>`_
 
 5. **llama**
-   Interface for LLaMA (Large Language Model Meta AI), designed for tasks related to understanding and generating natural language in various applications.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/llama/README.MD)
+   Интерфейс для LLaMA (Large Language Model Meta AI), предназначен для задач, связанных
+   с пониманием и генерацией естественного языка в различных приложениях.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/llama/README.MD>`_
 
 6. **myai**
-   Custom AI submodule, developed for specialized model configurations and implementations, providing unique AI functions specific to the project.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/myai/README.MD)
+   Пользовательский подмодуль ИИ, разработанный для специализированных конфигураций
+   моделей и реализаций, предоставляя уникальные функции ИИ, специфичные для проекта.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/myai/README.MD>`_
 
 7. **openai**
-   Integrates with OpenAI API, providing access to their suite of models (e.g., GPT) for tasks such as text generation, classification, translation, and more.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/openai/README.MD)
+   Интеграция с API OpenAI, предоставляя доступ к их набору моделей (например, GPT) для
+   таких задач, как генерация текста, классификация, перевод и многое другое.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/openai/README.MD>`_
 
 8. **tiny_troupe**
-   Provides integration with Microsoft's AI models, offering solutions for natural language processing and data analysis tasks using small, performance-optimized models.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/tiny_troupe/README.MD)
+    Интеграция с моделями ИИ Microsoft, предлагая решения для обработки естественного
+    языка и задач анализа данных с использованием небольших, оптимизированных моделей.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/tiny_troupe/README.MD>`_
 
 9. **revai**
-   Integrates with rev.com's model, specializing in working with audio files such as recordings of meetings, conferences, calls, and other audio materials.
-   [Go to module](https://github.com/hypo69/hypo/blob/master/src/ai/revai/README.MD)
-
-<HR>
+   Интеграция с моделью rev.com, специализирующейся на работе с аудиофайлами, такими
+   как записи встреч, конференций, звонков и других аудиоматериалов.
+   `Перейти к модулю <https://github.com/hypo69/hypo/blob/master/src/ai/revai/README.MD>`_
 
 10. **prompts**
-   System and command prompts in `markdown` format, for AI models.
+    Системные и командные промты в формате `markdown`, для моделей ИИ.
 
-### Contribution
+Примеры использования
+----------------------
 
-Contributions are welcome! Feel free to submit a pull request or open an issue if you encounter any problems or have suggestions for improvement.
+Для использования моделей ИИ, необходимо импортировать соответствующий подмодуль и 
+инициализировать класс нужной модели.
 
-### License
+.. code-block:: python
 
-This project is licensed under the MIT License. See the [LICENSE](../../LICENSE) file for details.
+    from src.ai.openai import OpenAI
+    
+    # Пример использования OpenAI
+    openai_model = OpenAI(api_key="your_api_key")
+    response = openai_model.generate_text(prompt="Hello, world!")
+    print(response)
+
+Вклад в разработку
+--------------------
+
+Приветствуются любые вклады! Не стесняйтесь отправлять запросы на pull или открывать
+проблемы, если вы столкнулись с какими-либо проблемами или у вас есть предложения по
+улучшению.
+
+Лицензия
+--------
+
+Этот проект лицензирован в соответствии с лицензией MIT. Подробности смотрите в файле
+`LICENSE <../../LICENSE>`.
 ```

@@ -1,67 +1,71 @@
-# Анализ кода модуля `credentials.py`
+## Анализ кода модуля `credentials.py`
 
 **Качество кода**
-
-- Соответствие требованиям: 7/10
--  Плюсы:
-    -  Код хорошо структурирован и разбит на функции, что улучшает читаемость и поддерживает принцип единственной ответственности.
-    -  Используется `dataclass` для `ProgramSettings`, что уменьшает объем шаблонного кода.
-    -  Применяется декоратор `@singleton` для обеспечения единственного экземпляра `ProgramSettings`.
-    -  Используется `SimpleNamespace` для хранения настроек и учетных данных, что упрощает доступ к атрибутам.
-    -  Присутствует базовая обработка ошибок с использованием `try-except` блоков.
-    -  Есть проверки на наличие маркеров корневой директории проекта.
- -  Минусы:
-    -  Множественное использование `print()` для вывода сообщений об ошибках, лучше заменить на логирование.
-    -  Дублирование кода в методах `_load_*_credentials` (общая структура `try-except`).
-    -  В методе `_open_kp` пароль считывается из файла в открытом виде, что является уязвимостью.
-    -  Отсутствует подробная документация в формате RST для всех функций и методов.
-    -  Используется стандартный `json.load` вместо `j_loads` или `j_loads_ns` при чтении конфигурационного файла.
-    -  Не все импорты соответствуют стандартам, например, `from datetime import datetime` дублирует `import datetime`.
-    -  Используется `sys.exit()` напрямую, без логирования фатальной ошибки.
-    -  Используются двойные кавычки в строках, где должны быть одинарные (особенно в `SimpleNamespace`).
-    -  Не все комментарии достаточно подробные.
-    -  Использование `...` в коде, не всегда является хорошей практикой.
+9
+-   Плюсы
+    -   Код хорошо структурирован с использованием классов и функций.
+    -   Применяется паттерн Singleton для `ProgramSettings`.
+    -   Используются `dataclass` для хранения настроек, что делает код более читаемым и лаконичным.
+    -   Применение `SimpleNamespace` для гибкого хранения конфигураций.
+    -   Используется `Path` для работы с путями.
+    -   Присутствует обработка ошибок через `try-except`, хотя и можно улучшить.
+    -   Код содержит документацию к функциям, хотя и не полная, необходимо использовать rst.
+-   Минусы
+    -   Не везде используется `logger.error` для обработки ошибок, вместо этого `print` и `...`.
+    -   Использование `print` для вывода сообщений об ошибках не соответствует стандартам логирования.
+    -   Отсутствуют rst docstring для модуля и классов.
+    -   Использование `sys.exit()` для завершения программы при ошибках.
+    -   Не все методы `_load_*_credentials` возвращают `True` или `False`.
+    -   В некоторых местах, таких как `_open_kp`, используются print и `...` в блоках `except`, вместо логирования ошибок.
+    -   Дублирование кода при загрузке различных типов учетных данных.
+    -   Отсутствует общий обработчик ошибок для всех методов `_load_*_credentials`.
+    -  Использование `sys.path.insert(0, ...)` может вызвать проблемы с порядком импорта модулей.
 
 **Рекомендации по улучшению**
 
-1.  **Логирование:** Заменить все `print()` на `logger.error()`, `logger.info()` и `logger.debug()`, чтобы обеспечить централизованное логирование.
-2.  **Обработка паролей:** Убрать чтение пароля из файла в открытом виде и использовать `getpass.getpass` для ввода пароля из консоли, если он не был передан.
-3.  **Рефакторинг методов `_load_*_credentials`:** Вынести общую логику загрузки данных из `KeePass` в отдельную функцию, чтобы избежать дублирования кода.
-4.  **Документация:** Добавить документацию в формате RST для всех функций, методов и класса `ProgramSettings`, включая подробное описание аргументов и возвращаемых значений.
-5.  **Использование `j_loads_ns`:** Использовать `j_loads_ns` для загрузки файла конфигурации `config.json`.
-6.  **Импорты:** Убрать дублирующие импорты и привести все импорты к единому стилю.
-7.  **Обработка ошибок:** Использовать `logger.critical()` вместо `sys.exit()` для критических ошибок, а `logger.error()` для обычных ошибок, также убрать `...` в блоках обработки ошибок.
-8.  **Форматирование строк:** Использовать одинарные кавычки для строковых литералов в коде.
-9.  **Расширить комментарии:** Добавить более подробные комментарии для пояснения логики работы кода.
-10. **Использовать f-строки:** Для форматирования строк использовать f-строки, а не конкатенацию.
-11. **`SimpleNamespace`:** Привести `SimpleNamespace` к единому стилю с использованием одинарных кавычек.
+1.  **Документирование**:
+    - Добавить rst docstring к модулю, классу и методам.
+    - Документировать все переменные, включая те, которые создаются внутри методов.
+    - Использовать rst для примеров.
+2.  **Логирование**:
+    -   Использовать `logger.error` вместо `print` для вывода ошибок.
+    -   Использовать `logger.critical` для критических ошибок, которые приводят к завершению программы.
+    -   Добавить подробное логирование при открытии базы данных KeePass.
+    -   Реализовать общую логику обработки ошибок в методах `_load_*_credentials`.
+3.  **Обработка ошибок**:
+    -   Избегать `...` в блоках `except`. Вместо этого, регистрировать ошибки с помощью `logger.error` и возвращать `False` из методов, если загрузка не удалась.
+    -  Удалить `sys.exit()` из функций и дать возможность вызывающему коду обрабатывать ситуацию.
+4.  **Структура**:
+    -   Рефакторинг методов `_load_*_credentials`, чтобы избежать дублирования кода.
+    -   Реализовать общий метод для загрузки данных из KeePass, который будет вызываться из других методов.
+    -   Оптимизировать добавление бинарных путей в `sys.path`, чтобы избежать конфликтов.
+    -   Пересмотреть логику добавления путей к бинарникам, так как их добавление в начало `sys.path` может вызвать конфликты.
+5.  **Безопасность**:
+    -  Рассмотреть варианты хранения пароля KeePass, чтобы избежать его хранения в открытом виде в файле `password.txt`.
+6.  **Стиль**:
+    - Использовать одинарные кавычки для строк в Python коде, двойные только в операциях вывода.
 
 **Оптимизированный код**
 
 ```python
 """
-.. module:: src
-    :platform: Windows, Unix
-    :synopsis: Global Project Settings: paths, passwords, logins, and API settings
+Модуль для управления настройками проекта
+=========================================================================================
 
-Модуль для управления глобальными настройками проекта, включая пути, пароли, логины и API-ключи.
-=================================================================================================
-
-Этот модуль содержит класс :class:`ProgramSettings`, который является синглтоном и используется
-для хранения и управления глобальными настройками проекта. Включает в себя настройку путей к
-директориям, загрузку учетных данных из KeePass, и общие настройки приложения.
+Этот модуль содержит класс :class:`ProgramSettings`, который используется для хранения и управления
+глобальными настройками проекта, включая пути, пароли и API-ключи.
 
 Пример использования
 --------------------
 
-Пример инициализации и доступа к настройкам:
+Пример инициализации настроек:
 
 .. code-block:: python
 
     from src.credentials import ProgramSettings
+
     settings = ProgramSettings()
-    print(settings.path.log)
-    print(settings.credentials.aliexpress.api_key)
+    print(settings.path.root)
 """
 import datetime
 import getpass
@@ -94,14 +98,16 @@ from src.utils.printer import pprint
 
 def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
     """
-    Находит корневую директорию проекта, начиная с директории текущего файла,
-    поиск ведется вверх до первой директории, содержащей любой из файлов-маркеров.
+    Определяет корневой каталог проекта.
+
+    Ищет корневой каталог проекта, начиная с текущего каталога,
+    двигаясь вверх по дереву каталогов, пока не найдет каталог, содержащий один из указанных файлов-маркеров.
 
     Args:
-        marker_files (tuple): Имена файлов или директорий, которые идентифицируют корень проекта.
+        marker_files (tuple): Кортеж с именами файлов или каталогов, которые идентифицируют корневой каталог проекта.
 
     Returns:
-        Path: Путь к корневой директории, если найдена, иначе - директория, где находится скрипт.
+        Path: Путь к корневому каталогу проекта, или путь к каталогу, где находится скрипт, если корневой каталог не найден.
     """
     __root__: Path
     current_path: Path = Path(__file__).resolve().parent
@@ -118,8 +124,14 @@ def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
 def singleton(cls):
     """
     Декоратор для реализации Singleton.
-    
+
     Этот декоратор гарантирует, что класс будет иметь только один экземпляр.
+
+    Args:
+        cls (class): Класс, для которого реализуется паттерн Singleton.
+
+    Returns:
+        function: Функция, возвращающая единственный экземпляр класса.
     """
     instances = {}
 
@@ -138,8 +150,14 @@ class ProgramSettings:
     `ProgramSettings` - класс настроек программы.
 
     Синглтон, хранящий основные параметры и настройки проекта.
-    Этот класс управляет глобальными настройками приложения, включая пути к директориям,
-    учетные данные и общие параметры.
+
+    Attributes:
+        host_name (str): Имя хоста.
+        base_dir (Path): Корневой каталог проекта.
+        config (SimpleNamespace): Настройки из файла конфигурации.
+        credentials (SimpleNamespace): Учетные данные для различных сервисов.
+        MODE (str): Режим работы приложения ('dev', 'prod', и т.д.).
+        path (SimpleNamespace): Пути к различным каталогам проекта.
     """
     host_name: str = field(default_factory=lambda: socket.gethostname())
     base_dir: Path = field(default_factory=lambda: set_project_root())
@@ -177,7 +195,7 @@ class ProgramSettings:
         ),
         gemini=SimpleNamespace(api_key=None),
         rev_com=SimpleNamespace(client_api=None,
-                               user_api=None),
+                                 user_api=None),
         shutter_stock=SimpleNamespace(token=None),
         discord=SimpleNamespace(
             application_id=None,
@@ -210,20 +228,24 @@ class ProgramSettings:
         """
         Выполняет инициализацию после создания экземпляра класса.
 
-        Загружает конфигурацию из `config.json`, устанавливает пути к директориям
-        и настраивает параметры проекта.
-        """
-        # Загрузка конфигурации из файла `config.json` с помощью `j_loads_ns`
-        self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
-        if not self.config:
-            logger.error('Ошибка при загрузке настроек')
-            sys.exit()
+        Загружает настройки из файла конфигурации, устанавливает пути и проверяет наличие новой версии.
 
-        # Установка формата времени и имени проекта
+        Raises:
+            SystemExit: Если не удается загрузить файл конфигурации.
+        """
+        try:
+            self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
+        except Exception as ex:
+            logger.error('Ошибка при загрузке настроек', exc_info=True)
+            sys.exit(1)
+
+        if not self.config:
+             logger.error('Файл конфигурации не найден')
+             sys.exit(1)
+
         self.config.timestamp_format = getattr(self.config, 'timestamp_format', '%y_%m_%d_%H_%M_%S_%f')
         self.config.project_name = self.base_dir.name
 
-        # Установка путей к директориям проекта
         self.path = SimpleNamespace(
             root=Path(self.base_dir),
             bin=Path(self.base_dir / 'bin'),  # <- тут бинарники (chrome, firefox, ffmpeg, ...)
@@ -231,66 +253,68 @@ class ProgramSettings:
             endpoints=Path(self.base_dir) / 'src' / 'endpoints',  # <- тут все клиенты
             secrets=Path(self.base_dir / 'secrets'),  # <- это папка с паролями и базой данных ! Ей нельзя попадать в гит!!!
             toolbox=Path(self.base_dir / 'toolbox'),  # <- служебные утилиты
+
             log=Path(getattr(self.config.path, 'log', self.base_dir / 'log')),
             tmp=Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
             data=Path(getattr(self.config.path, 'data', self.base_dir / 'data')),  # <- дата от endpoints (hypo69, kazarinov, prestashop, etc ...)
-            google_drive=Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')),  # <- GOOGLE DRIVE ЧЕРЕЗ ЛОКАЛЬНЫЙ ДИСК (NOT API)
-            external_storage=Path(getattr(self.config.path, 'external_storage', self.base_dir / 'external_storage')),  # <- Внешний диск
+            google_drive=Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')),
+            # <- GOOGLE DRIVE ЧЕРЕЗ ЛОКАЛЬНЫЙ ДИСК (NOT API)
+            external_storage=Path(getattr(self.config.path, 'external_storage',
+                                         self.base_dir / 'external_storage')),  # <- Внешний диск
         )
 
-        # Проверка наличия новой версии на GitHub
         if check_latest_release(self.config.git_user, self.config.git):
-            logger.info('Новая версия на GitHub')  # Логика что делать когда есть новая версия hypo69 на github
+            logger.info('Обновление не требуется')
+            # Логика что делать когда есть новая версия hypo69 на github
 
         self.MODE = self.config.mode
 
-        # Пути к бинарным файлам
+        # Paths to bin directories
         gtk_bin_dir = self.path.bin / 'gtk' / 'gtk-nsis-pack' / 'bin'
         ffmpeg_bin_dir = self.base_dir / 'bin' / 'ffmpeg' / 'bin'
         graphviz_bin_dir = self.base_dir / 'bin' / 'graphviz' / 'bin'
         wkhtmltopdf_bin_dir = self.base_dir / 'bin' / 'wkhtmltopdf' / 'files' / 'bin'
-
-        # Добавление путей к бинарникам в системный путь
-        for bin_path in [self.base_dir, gtk_bin_dir, ffmpeg_bin_dir, graphviz_bin_dir, wkhtmltopdf_bin_dir]:
-            if bin_path not in sys.path:
-                sys.path.insert(0, str(bin_path))  # <- определяю пути к бунарникам в системных путях
-
-        # Установка переменной окружения для WeasyPrint
+        
+        bin_paths = [self.base_dir, gtk_bin_dir, ffmpeg_bin_dir, graphviz_bin_dir, wkhtmltopdf_bin_dir]
+        for bin_path in bin_paths:
+           if str(bin_path) not in sys.path:
+                sys.path.append(str(bin_path)) # <- определяю пути к бинарникам в системных путях
+        
         os.environ['WEASYPRINT_DLL_DIRECTORIES'] = str(gtk_bin_dir)
 
-        # Подавление предупреждений GTK
-        warnings.filterwarnings("ignore", category=UserWarning)
+        # Suppress GTK log output to the console
+        warnings.filterwarnings('ignore', category=UserWarning)
         self._load_credentials()
 
     def _load_credentials(self) -> None:
         """
-        Загружает учетные данные из KeePass.
+         Загружает учетные данные из KeePass.
 
-        Этот метод открывает базу данных KeePass и загружает учетные данные для
-        различных сервисов, таких как Aliexpress, OpenAI, Gemini, Discord, Telegram и т.д.
+         Открывает базу данных KeePass и загружает учетные данные для различных сервисов.
+         В случае неудачи при загрузке учетных данных, выводится сообщение об ошибке в консоль.
         """
         kp = self._open_kp(3)
         if not kp:
-            logger.error('Не удалось открыть базу данных KeePass')
-            sys.exit(1)
+             logger.critical('Не удалось открыть базу данных KeePass, выход из программы')
+             sys.exit(1)
 
         if not self._load_aliexpress_credentials(kp):
-            logger.error('Не удалось загрузить учетные данные Aliexpress')
+             logger.error('Не удалось загрузить учетные данные Aliexpress')
 
         if not self._load_openai_credentials(kp):
-            logger.error('Не удалось загрузить учетные данные OpenAI')
+             logger.error('Не удалось загрузить учетные данные OpenAI')
 
         if not self._load_gemini_credentials(kp):
-            logger.error('Не удалось загрузить учетные данные GoogleAI')
+             logger.error('Не удалось загрузить учетные данные GoogleAI')
 
         if not self._load_discord_credentials(kp):
-            logger.error('Не удалось загрузить учетные данные Discord')
+             logger.error('Не удалось загрузить учетные данные Discord')
 
         if not self._load_telegram_credentials(kp):
             logger.error('Не удалось загрузить учетные данные Telegram')
 
         if not self._load_prestashop_credentials(kp):
-            logger.error('Не удалось загрузить учетные данные PrestaShop')
+            logger.error('Не удалось загрузить учетные данные prestashop')
 
         if not self._load_smtp_credentials(kp):
             logger.error('Не удалось загрузить учетные данные SMTP')
@@ -302,144 +326,162 @@ class ProgramSettings:
             logger.error('Не удалось загрузить учетные данные Translations')
 
         if not self._load_gapi_credentials(kp):
-            logger.error('Не удалось загрузить учетные данные GAPI')
+             logger.error('Не удалось загрузить учетные данные GAPI')
 
     def _open_kp(self, retry: int = 3) -> Optional[PyKeePass]:
         """
         Открывает базу данных KeePass.
 
+        Пытается открыть базу данных KeePass с заданным количеством попыток.
+
         Args:
             retry (int): Количество попыток открытия базы данных.
 
         Returns:
-             Optional[PyKeePass]: Объект PyKeePass, если открытие прошло успешно, иначе None.
+            Optional[PyKeePass]: Объект PyKeePass в случае успешного открытия, иначе None.
         """
         while retry > 0:
             try:
-                # Получаем пароль для KeePass
-                password_file = Path(self.path.secrets / 'password.txt')
-                if password_file.exists() and password_file.stat().st_size > 0 :
-                    # Чтение пароля из файла, если он существует
-                    password = password_file.read_text(encoding="utf-8").strip()
-                else:
-                    # Запрос пароля через консоль, если файл не существует или пуст
-                    password = getpass.getpass('Enter KeePass master password: ').lower()
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~ ФАЙЛ ПАРОЛЯ В ОТКРЫТОМ ВИДЕ ~~~~~~~~~~~~~~~~~~~~~~~\
+                password: str = (Path(self.path.secrets / 'password.txt').read_text(encoding='utf-8')
+                                 or None)
+                """password: содержит строку пароля в открытом виде. Можно удалить или сам файл или вытереть его содржимое """
 
-                kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), password=password)
+                kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'),
+                              password=password or getpass.getpass(print('Enter KeePass master password: ').lower()))
+
                 return kp
             except Exception as ex:
-                logger.error(f"Не удалось открыть базу данных KeePass, {retry - 1} попыток осталось. Ошибка: {ex}")
-                retry -= 1
-                if retry < 1:
-                    logger.critical('Не удалось открыть базу данных KeePass после нескольких попыток', exc_info=True)
-                    sys.exit()
+                 logger.error(f'Не удалось открыть базу данных KeePass. Осталось попыток: {retry - 1}', exc_info=True)
+                 retry -= 1
+                 if retry < 1:
+                     logger.critical('Не удалось открыть базу данных KeePass после нескольких попыток', exc_info=True)
+                     return None
         return None
 
-
-    def _load_credentials_from_group(self, kp: PyKeePass, path: List[str], attribute_name: str, nested_attribute:str = None) -> bool:
+    def _load_credentials_from_entry(self, kp: PyKeePass, path: List[str], service_name: str,
+                                     fields: List[str]) -> bool:
         """
-        Загружает учетные данные из группы KeePass.
+          Загружает учетные данные из KeePass по указанному пути.
 
-        Args:
-            kp (PyKeePass): Объект PyKeePass.
+         Args:
+            kp (PyKeePass): Экземпляр базы данных KeePass.
             path (List[str]): Путь к группе в KeePass.
-            attribute_name (str): Имя атрибута для сохранения данных.
-            nested_attribute (str): Вложенный атрибут, если есть.
+            service_name (str): Имя сервиса, для которого загружаются учетные данные.
+            fields (List[str]): Список полей для загрузки.
 
-        Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
-        """
+         Returns:
+            bool: True если загрузка прошла успешно, False в противном случае.
+         """
         try:
-            entries = kp.find_groups(path=path).entries
-            for entry in entries:
-                if nested_attribute:
-                    target_attribute = getattr(getattr(self.credentials, attribute_name), nested_attribute)
-                    setattr(target_attribute, entry.title, entry.custom_properties.get('api_key', None))
-                else:
-                    target_attribute = getattr(self.credentials, attribute_name)
-                    setattr(target_attribute, entry.title, entry.custom_properties.get('api_key', None))
+            entry = kp.find_groups(path=path).entries[0]
+            if not entry:
+                logger.error(f'Не найдены учетные данные для {service_name} в KeePass')
+                return False
+
+            for field_name in fields:
+                value = entry.custom_properties.get(field_name, None)
+                setattr(getattr(self.credentials, service_name), field_name, value)
+
+            if 'password' in fields:
+                setattr(getattr(self.credentials, service_name), 'password', entry.password)
+
             return True
+
         except Exception as ex:
-             logger.error(f"Не удалось извлечь данные из KeePass, путь: {path}. Ошибка: {ex}")
-             return False
+            logger.error(f'Не удалось извлечь учетные данные для {service_name} из KeePass', exc_info=True)
+            return False
 
 
     def _load_aliexpress_credentials(self, kp: PyKeePass) -> bool:
-        """
-        Загружает учетные данные Aliexpress API из KeePass.
+         """ Загружает учетные данные Aliexpress API из KeePass.
 
-        Args:
-            kp (PyKeePass): Объект PyKeePass.
-
-        Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
-        """
-        try:
-            entry = kp.find_groups(path=['suppliers', 'aliexpress', 'api']).entries[0]
-            self.credentials.aliexpress.api_key = entry.custom_properties.get('api_key', None)
-            self.credentials.aliexpress.secret = entry.custom_properties.get('secret', None)
-            self.credentials.aliexpress.tracking_id = entry.custom_properties.get('tracking_id', None)
-            self.credentials.aliexpress.email = entry.custom_properties.get('email', None)
-            self.credentials.aliexpress.password = entry.password
-            return True
-        except Exception as ex:
-            logger.error(f"Не удалось извлечь API-ключ Aliexpress из KeePass: {ex}")
-            return False
+         Args:
+             kp (PyKeePass): Экземпляр базы данных KeePass.
+         Returns:
+             bool: True если загрузка прошла успешно, False в противном случае.
+         """
+         return self._load_credentials_from_entry(
+             kp,
+             ['suppliers', 'aliexpress', 'api'],
+             'aliexpress',
+             ['api_key', 'secret', 'tracking_id', 'email', 'password']
+         )
 
     def _load_openai_credentials(self, kp: PyKeePass) -> bool:
         """
         Загружает учетные данные OpenAI из KeePass.
 
         Args:
-            kp (PyKeePass): Объект PyKeePass.
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
         Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
+             bool: True если загрузка прошла успешно, False в противном случае.
         """
         try:
             openai_api_keys = kp.find_groups(path=['openai']).entries
             assistants = kp.find_groups(path=['openai', 'assistants']).entries
+            if not openai_api_keys or not assistants:
+                logger.error('Не найдены учетные данные OpenAI в KeePass')
+                return False
 
             for entry in openai_api_keys:
-                setattr(self.credentials.openai, entry.title, entry.custom_properties.get('api_key', None))
-                setattr(self.credentials.openai, entry.title, entry.custom_properties.get('project_api', None))
+                 setattr(self.credentials.openai, entry.title, entry.custom_properties.get('api_key', None))
+                 setattr(self.credentials.openai, entry.title, entry.custom_properties.get('project_api', None))
             for assistant in assistants:
-                setattr(self.credentials.openai.assistant_id, assistant.title, assistant.custom_properties.get('assistant_id', None))
+                 setattr(self.credentials.openai.assistant_id, assistant.title,
+                          assistant.custom_properties.get('assistant_id', None))
             return True
+
         except Exception as ex:
-            logger.error(f"Не удалось извлечь учетные данные OpenAI из KeePass: {ex}")
+            logger.error('Не удалось извлечь учетные данные OpenAI из KeePass', exc_info=True)
             return False
 
     def _load_gemini_credentials(self, kp: PyKeePass) -> bool:
         """
-         Загружает учетные данные GoogleAI из KeePass.
+        Загружает учетные данные GoogleAI из KeePass.
 
-         Args:
-             kp (PyKeePass): Объект PyKeePass.
+        Args:
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
-         Returns:
-             bool: True, если загрузка прошла успешно, иначе False.
-         """
-        return self._load_credentials_from_group(kp, ['gemini'], 'gemini')
+        Returns:
+             bool: True если загрузка прошла успешно, False в противном случае.
+        """
+        try:
+            entries = kp.find_groups(path=['gemini']).entries
+            if not entries:
+                logger.error('Не найдены учетные данные GoogleAI в KeePass')
+                return False
 
+            for entry in entries:
+                 setattr(self.credentials.gemini, entry.title, entry.custom_properties.get('api_key', None))
+            return True
+
+        except Exception as ex:
+             logger.error('Не удалось извлечь учетные данные GoogleAI из KeePass', exc_info=True)
+             return False
 
     def _load_telegram_credentials(self, kp: PyKeePass) -> bool:
         """
-         Загружает учетные данные Telegram из KeePass.
+        Загружает учетные данные Telegram из KeePass.
 
-         Args:
-             kp (PyKeePass): Объект PyKeePass.
+        Args:
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
-         Returns:
-             bool: True, если загрузка прошла успешно, иначе False.
-         """
+        Returns:
+             bool: True если загрузка прошла успешно, False в противном случае.
+        """
         try:
             entries = kp.find_groups(path=['telegram']).entries
+            if not entries:
+                logger.error('Не найдены учетные данные Telegram в KeePass')
+                return False
+
             for entry in entries:
                 setattr(self.credentials.telegram, entry.title, entry.custom_properties.get('token', None))
             return True
         except Exception as ex:
-            logger.error(f"Не удалось извлечь учетные данные Telegram из KeePass: {ex}")
+            logger.error('Не удалось извлечь учетные данные Telegram из KeePass', exc_info=True)
             return False
 
     def _load_discord_credentials(self, kp: PyKeePass) -> bool:
@@ -447,80 +489,82 @@ class ProgramSettings:
         Загружает учетные данные Discord из KeePass.
 
         Args:
-            kp (PyKeePass): Объект PyKeePass.
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
         Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
+             bool: True если загрузка прошла успешно, False в противном случае.
         """
-        try:
-            entry = kp.find_groups(path=['discord']).entries[0]
-            self.credentials.discord.application_id = entry.custom_properties.get('application_id', None)
-            self.credentials.discord.public_key = entry.custom_properties.get('public_key', None)
-            self.credentials.discord.bot_token = entry.custom_properties.get('bot_token', None)
-            return True
-        except Exception as ex:
-             logger.error(f"Не удалось извлечь учетные данные Discord из KeePass: {ex}")
-             return False
+        return self._load_credentials_from_entry(
+           kp,
+            ['discord'],
+            'discord',
+            ['application_id', 'public_key', 'bot_token']
+        )
 
     def _load_prestashop_credentials(self, kp: PyKeePass) -> bool:
         """
         Загружает учетные данные PrestaShop из KeePass.
 
         Args:
-            kp (PyKeePass): Объект PyKeePass.
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
         Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
+             bool: True если загрузка прошла успешно, False в противном случае.
         """
         try:
             for entry in kp.find_groups(path=['prestashop', 'clients']).entries:
-                client_ns = SimpleNamespace()
-                setattr(self.credentials.presta.client, entry.title, client_ns)
-                current_client = getattr(self.credentials.presta.client, entry.title)
+                try:
+                    # Создаем новый SimpleNamespace для клиента
+                    client_ns = SimpleNamespace()
 
-                setattr(current_client, 'api_key', entry.custom_properties.get('api_key', None))
-                setattr(current_client, 'api_domain', entry.custom_properties.get('api_domain', None))
-                setattr(current_client, 'db_server', entry.custom_properties.get('db_server', None))
-                setattr(current_client, 'db_user', entry.custom_properties.get('db_user', None))
-                setattr(current_client, 'db_password', entry.custom_properties.get('db_password', None))
+                    # Устанавливаем атрибут в self.credentials.presta.client с именем entry.title
+                    setattr(self.credentials.presta.client, entry.title, client_ns)
+
+                    # Получаем ссылку на созданный объект через entry.title
+                    current_client = getattr(self.credentials.presta.client, entry.title)
+
+                    setattr(current_client, 'api_key', entry.custom_properties.get('api_key', None))
+                    setattr(current_client, 'api_domain', entry.custom_properties.get('api_domain', None))
+                    setattr(current_client, 'db_server', entry.custom_properties.get('db_server', None))
+                    setattr(current_client, 'db_user', entry.custom_properties.get('db_user', None))
+                    setattr(current_client, 'db_password', entry.custom_properties.get('db_password', None))
+
+                except Exception as ex:
+                    logger.error(f'Не удалось извлечь учетные данные prestashop из KeePass', exc_info=True)
+                    return False
 
             return True
-        except Exception as ex:
-            logger.error(f"Не удалось извлечь учетные данные PrestaShop из KeePass: {ex}")
-            return False
 
+        except Exception as ex:
+            logger.error(f'Не удалось извлечь учетные данные prestashop из KeePass', exc_info=True)
+            return False
 
     def _load_presta_translations_credentials(self, kp: PyKeePass) -> bool:
         """
-        Загружает учетные данные Translations из KeePass.
+        Загружает учетные данные для переводов PrestaShop из KeePass.
 
         Args:
-            kp (PyKeePass): Объект PyKeePass.
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
         Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
+             bool: True если загрузка прошла успешно, False в противном случае.
         """
-        try:
-            entry = kp.find_groups(path=['prestashop', 'translation']).entries[0]
-            self.credentials.presta.translations.server = entry.custom_properties.get('server', None)
-            self.credentials.presta.translations.port = entry.custom_properties.get('port', None)
-            self.credentials.presta.translations.database = entry.custom_properties.get('database', None)
-            self.credentials.presta.translations.user = entry.custom_properties.get('user', None)
-            self.credentials.presta.translations.password = entry.custom_properties.get('password', None)
-            return True
-        except Exception as ex:
-           logger.error(f"Не удалось извлечь учетные данные Translations из KeePass: {ex}")
-           return False
+        return self._load_credentials_from_entry(
+           kp,
+           ['prestashop', 'translation'],
+           'presta.translations',
+           ['server', 'port', 'database', 'user', 'password']
+        )
 
     def _load_smtp_credentials(self, kp: PyKeePass) -> bool:
         """
         Загружает учетные данные SMTP из KeePass.
 
         Args:
-            kp (PyKeePass): Объект PyKeePass.
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
         Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
+             bool: True если загрузка прошла успешно, False в противном случае.
         """
         try:
             for entry in kp.find_groups(path=['smtp']).entries:
@@ -532,18 +576,18 @@ class ProgramSettings:
                 ))
             return True
         except Exception as ex:
-           logger.error(f"Не удалось извлечь учетные данные SMTP из KeePass: {ex}")
-           return False
+            logger.error('Не удалось извлечь учетные данные SMTP из KeePass', exc_info=True)
+            return False
 
     def _load_facebook_credentials(self, kp: PyKeePass) -> bool:
         """
         Загружает учетные данные Facebook из KeePass.
 
-        Args:
-            kp (PyKeePass): Объект PyKeePass.
+         Args:
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
-        Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
+         Returns:
+            bool: True если загрузка прошла успешно, False в противном случае.
         """
         try:
             for entry in kp.find_groups(path=['facebook']).entries:
@@ -554,25 +598,25 @@ class ProgramSettings:
                 ))
             return True
         except Exception as ex:
-            logger.error(f"Не удалось извлечь учетные данные Facebook из KeePass: {ex}")
+            logger.error('Не удалось извлечь учетные данные Facebook из KeePass', exc_info=True)
             return False
 
     def _load_gapi_credentials(self, kp: PyKeePass) -> bool:
         """
         Загружает учетные данные Google API из KeePass.
 
-        Args:
-            kp (PyKeePass): Объект PyKeePass.
+         Args:
+            kp (PyKeePass): Экземпляр базы данных KeePass.
 
         Returns:
-            bool: True, если загрузка прошла успешно, иначе False.
+            bool: True если загрузка прошла успешно, False в противном случае.
         """
         try:
             entry = kp.find_groups(path=['google', 'gapi']).entries[0]
             self.credentials.gapi['api_key'] = entry.custom_properties.get('api_key', None)
             return True
         except Exception as ex:
-            logger.error(f"Не удалось извлечь учетные данные GAPI из KeePass: {ex}")
+            logger.error('Не удалось извлечь учетные данные GAPI из KeePass', exc_info=True)
             return False
 
     @property
@@ -580,17 +624,18 @@ class ProgramSettings:
         """
         Возвращает текущую метку времени в формате год-месяц-день-часы-минуты-секунды-милисекунды.
 
-        Этот метод возвращает строку, представляющую текущую метку времени, в формате
-        `год_месяц_день_часы_минуты_секунды_миллисекунды`.
+        Этот метод возвращает строку, представляющую текущую метку времени, в формате `год_месяц_день_часы_минуты_секунды_миллисекунды`.
+
+        Args:
+            dformat (str, optional): Формат для метки времени. По умолчанию `\'%y_%m_%d_%H_%M_%S_%f\'`.
 
         Returns:
             str: Текущая метка времени в строковом формате.
         """
         timestamp = datetime.datetime.now().strftime(self.config.timestamp_format)
         # Вернём только первые 3 цифры миллисекунд, т.к. %f возвращает микросекунды (6 цифр)
-        return f"{timestamp[:-3]}"
+        return f'{timestamp[:-3]}'
 
 
 # Global instance of ProgamSettings
 gs: ProgramSettings = ProgramSettings()
-```

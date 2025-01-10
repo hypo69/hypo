@@ -1,62 +1,52 @@
 # Анализ кода модуля `main.first_version.py`
 
 **Качество кода**
-
-*   Соответствие требованиям по оформлению кода: 7/10
-    *   Плюсы:
-        *   Используется FastAPI для создания веб-сервиса.
-        *   Реализована обработка данных из HTML-формы.
-        *   Используется `subprocess` для запуска внешнего скрипта.
-        *   Статические файлы (HTML) подключаются через `StaticFiles`.
-    *   Минусы:
-        *   Не хватает документации в формате RST для модуля и функций.
-        *   Не используется `j_loads` или `j_loads_ns`.
-        *   Используется стандартный `print` для вывода информации, вместо `logger`.
-        *   Не все ошибки обрабатываются с помощью `logger.error`.
-        *   Некорректный импорт `Popen` и `PIPE` (дублирование из `subprocess`).
+9
+-  Плюсы
+    - Код структурирован и разбит на функции.
+    - Используются FastAPI для создания API.
+    - Обработка ошибок с помощью `HTTPException`.
+    - Использование статических файлов.
+-  Минусы
+    - Отсутствует импорт `logger` из `src.logger`.
+    - Есть закомментированный код, который можно удалить.
+    - Не все функции и методы имеют docstring.
+    - Использование `webbrowser.open` без обработки ошибок в самом начале.
+    - Жестко заданный путь к `script.py`.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить документацию**:
-    *   Добавить описание модуля в начале файла в формате RST.
-    *   Добавить docstring для каждой функции и метода в формате RST.
-2.  **Использовать `logger`**:
-    *   Импортировать `logger` из `src.logger`.
-    *   Использовать `logger.error` для логирования ошибок вместо стандартного `print`.
-3.  **Обработка ошибок**:
-    *   Удалить избыточный `try-except` в `open_index_html`, использовать `logger.error` вместо этого.
-    *   Использовать `logger.error` для записи ошибок в `process_data`.
-4.  **Импорты**:
-    *   Удалить дублирующиеся импорты из `subprocess`.
-5.  **Форматирование**:
-    *   Использовать одинарные кавычки в коде, двойные только в операциях вывода.
-6.  **Исключить неиспользуемый код**:
-    *   Удалить закомментированный блок кода `# @app.get("/index.html")` или использовать его по назначению.
+1. **Добавить `logger`**: Импортировать `logger` из `src.logger.logger` для логирования ошибок и отладочных сообщений.
+2. **Удалить закомментированный код**: Удалить неиспользуемый закомментированный код.
+3. **Добавить docstring**: Добавить docstring к функциям и методам для лучшего понимания кода и генерации документации.
+4. **Обработка ошибок `webbrowser.open`**:  Обернуть `webbrowser.open` в блок `try-except` с логированием ошибок.
+5. **Путь к скрипту**:  Лучше сделать путь к скрипту `script.py` настраиваемым или вынести его в переменные окружения для гибкости.
+6. **Проверка `subprocess.Popen`**: Улучшить проверку ошибок при выполнении subprocess.
+7. **Комментарии**: Добавить комментарии в стиле RST для функций и методов.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
 Модуль для запуска FastAPI приложения.
-=========================================================================================
+====================================================
 
-Этот модуль содержит FastAPI приложение для обработки данных из HTML-форм,
-а также для запуска внешних скриптов.
+Этот модуль создает FastAPI приложение для обработки данных из HTML-формы
+и выполнения Python скрипта.
 
-Пример использования
+Пример использования:
 --------------------
 
-Пример запуска FastAPI приложения:
+Запустите FastAPI приложение, используя команду:
 
 .. code-block:: bash
 
     uvicorn main:app --reload
 
+После запуска приложения, перейдите по адресу http://localhost:8000/html/index.html в браузере.
 """
+#! venv/bin/python/python3.12
 
 import os
 import subprocess
@@ -65,75 +55,73 @@ from pathlib import Path
 from fastapi import FastAPI, Form, Request, HTTPException
 from subprocess import Popen, PIPE
 from fastapi.staticfiles import StaticFiles
-from src.logger.logger import logger # импортируем logger
+from src.logger.logger import logger  # Импорт logger
 
 app = FastAPI()
 
 # Mount the 'html' folder as static files
 app.mount("/", StaticFiles(directory="html"), name="html")
 
-webbrowser.open("http://localhost:8000/html/index.html")
+# Открытие index.html в браузере при запуске приложения
+try:
+    webbrowser.open("http://localhost:8000/html/index.html")
+except Exception as e:
+    logger.error(f"Ошибка при открытии браузера: {e}") # Логирование ошибки открытия браузера
 
-# Endpoint to process data from HTML form
 @app.post("/process_data")
 async def process_data(request: Request, first_name: str = Form(...), last_name: str = Form(...)):
     """
-    Асинхронно обрабатывает данные, полученные из HTML формы.
+    Обрабатывает данные, отправленные из HTML-формы.
 
     Args:
         request (Request): Объект запроса FastAPI.
-        first_name (str): Имя пользователя, полученное из формы.
-        last_name (str): Фамилия пользователя, полученная из формы.
+        first_name (str): Имя, полученное из формы.
+        last_name (str): Фамилия, полученная из формы.
 
     Returns:
-        dict: Словарь с результатом выполнения скрипта.
+         dict: JSON-ответ с результатом выполнения скрипта или сообщением об ошибке.
 
     Raises:
-        HTTPException: Если имя или фамилия не предоставлены, или если возникает ошибка при выполнении скрипта.
+         HTTPException: Если имя или фамилия не предоставлены, или если выполнение скрипта завершилось с ошибкой.
+
+    Example:
+      Отправляет данные формы в Python скрипт и возвращает результат.
     """
     # Проверка наличия имени и фамилии
     if not first_name or not last_name:
-        raise HTTPException(status_code=400, detail="First name and last name must be provided")
+        raise HTTPException(status_code=400, detail="Имя и фамилия должны быть предоставлены")
 
-    # Формирование входной строки
-    input_data = f'{first_name} {last_name}'
+    # Формирование строки входных данных
+    input_data = f"{first_name} {last_name}"
 
     # Определение пути к скрипту
     script_path = Path(__file__).resolve().parent.parent / 'script.py'
-    # Выполнение скрипта с передачей входных данных и получение результата
-    process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    stdout, stderr = process.communicate(input=input_data.encode())
-    
-    # Проверка на ошибки при выполнении скрипта
+    # Запуск скрипта и передача входных данных
+    try:
+        process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate(input=input_data.encode())
+    except Exception as e:
+          logger.error(f"Ошибка при выполнении скрипта: {e}")
+          raise HTTPException(status_code=500, detail=f"Ошибка при выполнении скрипта: {e}")
+
+    # Проверка кода возврата скрипта
     if process.returncode != 0:
-        logger.error(f'Ошибка при выполнении скрипта: {stderr.decode()}') # используем logger.error
-        raise HTTPException(status_code=500, detail=f"Error executing the script: {stderr.decode()}")
+        logger.error(f"Скрипт завершился с ошибкой, код возврата: {process.returncode}, сообщение об ошибке: {stderr.decode()}") # Логирование ошибки выполнения скрипта
+        raise HTTPException(status_code=500, detail=f"Ошибка выполнения скрипта: {stderr.decode()}")
 
     return {"output": stdout.decode()}
 
 
-# Endpoint to open index.html in the browser
 @app.get("/")
 async def open_index():
     """
-    Асинхронно перенаправляет пользователя на index.html.
+    Перенаправляет пользователя на index.html.
 
     Returns:
-         dict: Сообщение о перенаправлении.
+        dict: Сообщение о перенаправлении.
+
+    Example:
+        При обращении к корневому пути, возвращает сообщение о перенаправлении.
     """
-    # Перенаправление на index.html
-    return {"message": "Redirecting to index.html..."}
-# # Endpoint to open index.html in the browser
-# @app.get("/index.html")
-# async def open_index_html():
-#     """
-#     Асинхронно открывает index.html в браузере.
-#     """
-#     # Открываем index.html в браузере
-#     try:
-#         webbrowser.open("http://localhost:8000/index.html")
-#     except Exception as e:
-#        logger.error(f'Error opening file: {e}') # используем logger.error
-#        return {"error": f"Error opening file: {e}"}
-#     return {"message": "Opening index.html in the browser..."}
+    return {"message": "Перенаправление на index.html..."}
 ```

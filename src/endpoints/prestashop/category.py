@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import asyncio
 from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_dumps
-from src.endpoints.prestashop import PrestaShop, PrestaShopAsync
+from src.endpoints.prestashop.api import PrestaShop, PrestaShopAsync
 
 
 class PrestaCategory(PrestaShop):

@@ -1,4 +1,4 @@
-
+from __future__ import annotations
 # -*- coding: utf-8 -*-
 """
 .. module:: src.product.product 
@@ -13,17 +13,18 @@ from typing import List, Dict, Any, Optional
 
 import header
 from src import gs
-from src.endpoints.prestashop import PrestaShopAsync, PrestaCategoryAsync
+from src.endpoints.prestashop.api import PrestaShopAsync 
+from src.endpoints.prestashop.category import PrestaCategoryAsync
 
 from src.endpoints.prestashop.product_fields import ProductFields
 from src.utils.convertors.any import any2dict
 from src.utils.printer import pprint as print
-from src.logger.logger import logger
+from src.logger import logger
 
 
 
 
-class ProductAsync(PrestaShopAsync, PrestaCategoryAsync):
+class ProductAsync(PrestaShopAsync):
     """Manipulations with the product.
     Initially, I instruct the grabber to fetch data from the product page,
     and then work with the PrestaShop API.
@@ -38,7 +39,7 @@ class ProductAsync(PrestaShopAsync, PrestaCategoryAsync):
             **kwargs: Arbitrary keyword arguments.
         """
         PrestaShopAsync.__init__(self, *args, **kwargs)
-        PrestaCategoryAsync.__init__(self, *args, **kwargs)
+        self.presta_category_async = PrestaCategoryAsync(*args, **kwargs)
 
 
 
@@ -53,7 +54,7 @@ class ProductAsync(PrestaShopAsync, PrestaCategoryAsync):
             ProductFields | None: Returns the `ProductFields` object with `id_product` set, if the product was added successfully, `None` otherwise.
         """
 
-        f.additional_categories = self.get_parent_categories_list(f.id_category_default)
+        f.additional_categories = self.presta_category_async.get_parent_categories_list(f.id_category_default)
         f_dict: dict = any2dict(f)
         
         new_f:ProductFields = await self.create('products', f_dict)
@@ -62,18 +63,18 @@ class ProductAsync(PrestaShopAsync, PrestaCategoryAsync):
             logger.error(f"Товар не был добавлен в базу данных Presyashop")
             ...
             return
-        self.create_binary(f'images/products/{new_f.id}' f.local_image_path ,)
+
+        if await self.create_binary(f'images/products/{new_f.id_product}', f.local_image_path, new_f.id_product):
+            return True
+
+        else:
+            logger.error(f"Не подналось изображение")
+            ...
+            return
+        ...
 
 
-    # Example of async method, if necessary
-    async def fetch_data_async(self) -> None:
-         """
-         Simulates fetching data asynchronously.
-         """
-         await asyncio.sleep(1) # Simulate async IO
-         logger.info(f"Async data fetching completed")
-
-
+    
 async def main():
     # Example usage
     product = Product()

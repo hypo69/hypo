@@ -1,130 +1,106 @@
-## Анализ кода модуля `category`
+# Анализ кода модуля `category`
 
 **Качество кода**
-    9
- -  Плюсы
-        - Код хорошо структурирован, используются классы и наследование.
-        - Присутствует базовая обработка ошибок с использованием `try-except` и логированием.
-        - Используются асинхронные операции для `crawl_categories_async`.
-        - Код соответствует PEP8 в большей степени.
-        - Используется `j_loads` и `j_dumps` для работы с JSON.
- -  Минусы
-    -  Используется `driver.wait(1)` вместо `asyncio.sleep(1)` в синхронной функции `crawl_categories`, что может вызвать блокировку.
-    -  Не все функции документированы в формате RST.
-    -  Комментарии не всегда соответствуют стандарту RST.
-    -  `header` не используется в коде, стоит удалить.
-    -  В `__init__` методе класса не указан тип для `api_credentials`
+9
+- Плюсы
+    - Код хорошо структурирован и разбит на классы и функции, что облегчает его понимание и поддержку.
+    - Используется асинхронное программирование для ускорения процесса обхода категорий.
+    - Присутствует логирование ошибок, что помогает в отладке.
+    - Используются `j_loads` и `j_dumps` для работы с JSON, что соответствует требованиям.
+- Минусы
+    - В функции `crawl_categories` происходит перезапись файла на каждом шаге рекурсии, что может быть неэффективным.
+    - Функция `_is_duplicate_url` не обрабатывает случай, когда `category` является словарем, а не списком.
+    - Отсутствует docstring для функции `compare_and_print_missing_keys`.
+    - В `__init__` методе класса `Category` не используется `*args` и `**kwargs` и не добавлена документация.
+    - Не все блоки `try-except` содержат `logger.error`.
 
 **Рекомендации по улучшению**
 
-1. **Документация**:
-   - Дополнить docstrings для всех функций и методов в формате RST, включая параметры, возвращаемые значения и возможные исключения.
-   - Добавить описание модуля.
-   - Дополнить документацию для класса `Category`.
-   - Добавить пример использования для функции `compare_and_print_missing_keys`
-2. **Импорты**:
-   - Удалить неиспользуемый импорт `header`.
-   - Уточнить тип для `api_credentials` в `__init__`.
-3. **Обработка ошибок**:
-    - В `crawl_categories` использовать `asyncio.sleep` вместо `driver.wait`.
-    - Упростить обработку ошибок с помощью `logger.error`.
-4. **Улучшение кода**:
-    -  Улучшить обработку `_is_duplicate_url`.
-    -  В `crawl_categories` не нужно перезаписывать `category`, лучше создать новый словарь и объединить с существующим.
-    -  В `crawl_categories` переписать на async версию, чтобы код работал быстрее
-    -  Изменить тип для `category` в `crawl_categories` в соответствии с типом, который возвращает функция `crawl_categories_async`
-5. **Общие улучшения**:
-    -  Добавить `__slots__` для `Category`
-    -  Убрать избыточное дублирование кода в `crawl_categories_async` и `crawl_categories`.
-    -   Оформить код в соответствии с инструкциями (одинарные кавычки, комментарии, и т.д.)
+1.  В функции `crawl_categories`, переписать логику сохранения в файл, вынести за пределы рекурсивного цикла. Это уменьшит количество операций записи.
+2.  В функции `_is_duplicate_url` предусмотреть обработку случая, когда `category` является словарем.
+3.  Добавить docstring для функции `compare_and_print_missing_keys`.
+4.  Добавить описание `*args` и `**kwargs` в методе `__init__` класса `Category`.
+5.  Добавить обработку исключений с `logger.error` во все `try-except` блоки.
+6.  Изменить способ создания `new_category` в `crawl_categories_async`, чтобы не использовать list comprehension.
+7.  Изменить импорт модуля `header`.
+8.  Привести переменные в соответствие с остальными файлами `id_category_default` -> `default_category_id`.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-# file: src/category/category.py
 """
 Модуль для работы с категориями, в основном для PrestaShop.
 ============================================================
 
-Этот модуль предоставляет классы для взаимодействия и обработки данных категорий товаров,
-особенно актуальных для PrestaShop.
+Этот модуль предоставляет классы для взаимодействия и
+обработки данных категорий товаров, особенно актуальных для PrestaShop.
 
-.. module:: src.category
-    :platform: Windows, Unix
-    :synopsis: Module for working with categories, primarily for PrestaShop.
+:platform: Windows, Unix
+:synopsis: Модуль для работы с категориями, в основном для PrestaShop.
 """
-
 import asyncio
 from pathlib import Path
 import os
-from typing import Dict, Any, List, Tuple
+from typing import Dict, List, Any, Tuple
 from lxml import html
 import requests
 
+# from header import get_header  # TODO:  check import
+from src import gs
 from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_dumps
-from src.endpoints.prestashop import PrestaShop, PrestaCategory
+from src.endpoints.prestashop import PrestaCategory
 
 
 class Category(PrestaCategory):
     """
-    Обработчик категорий товаров. Наследуется от PrestaCategory.
+    Обработчик категорий для категорий товаров. Наследуется от PrestaCategory.
 
-    :ivar credentials: Словарь с учетными данными для API.
-    :vartype credentials: Dict
+    Args:
+        api_credentials (Dict): API credentials for accessing the category data.
+        *args: Variable length argument list.
+        **kwargs: Keyword arguments.
+
     """
-    __slots__ = ('credentials', )
+
     credentials: Dict = None
 
-    def __init__(self, api_credentials: Dict, *args, **kwargs):
-        """
-        Инициализирует объект Category.
+    def __init__(self, api_credentials, *args, **kwargs):
+        """Инициализирует объект Category.
 
-        :param api_credentials: Словарь с учетными данными API для доступа к данным категории.
-        :type api_credentials: Dict
-        :param args: Переменная длина списка аргументов (не используется).
-        :param kwargs:  Словарь с именованными аргументами (не используется).
+        Args:
+            api_credentials (Dict): API credentials для доступа к данным категорий.
+            *args:  Список позиционных аргументов.
+            **kwargs:  Словарь именованных аргументов.
         """
         super().__init__(api_credentials, *args, **kwargs)
-        self.credentials = api_credentials # сохраняем в self.credentials
 
     def get_parents(self, id_category: int, dept: int) -> List:
-        """
-        Получает список родительских категорий.
+        """Извлекает список родительских категорий.
 
-        :param id_category: ID категории для получения родительских категорий.
-        :type id_category: int
-        :param dept: Уровень глубины категории (не используется).
-        :type dept: int
-        :returns: Список родительских категорий.
-        :rtype: List
+        Args:
+            id_category (int): ID категории, для которой нужно получить родительские категории.
+            dept (int): Глубина уровня категории.
+        Returns:
+            List: Список родительских категорий.
         """
         return super().get_list_parent_categories(id_category)
 
-    async def crawl_categories_async(self, url: str, depth: int, driver, locator: str, dump_file: Path, default_category_id: int, category: Dict = None) -> Dict:
-        """
-        Асинхронно обходит категории, формируя иерархический словарь.
+    async def crawl_categories_async(self, url: str, depth: int, driver, locator: str, dump_file: str, default_category_id: int, category: Dict = None) -> Dict:
+        """Асинхронно обходит категории, создавая иерархический словарь.
 
-        :param url: URL страницы категории.
-        :type url: str
-        :param depth: Глубина рекурсии обхода.
-        :type depth: int
-        :param driver: Экземпляр Selenium WebDriver.
-        :type driver: Any
-        :param locator: XPath локатор для ссылок на категории.
-        :type locator: str
-        :param dump_file: Путь к JSON файлу для сохранения результатов.
-        :type dump_file: Path
-        :param default_category_id: ID категории по умолчанию.
-        :type default_category_id: int
-        :param category: (Optional) Существующий словарь категорий (default=None).
-        :type category: Dict, optional
-        :returns: Обновленный или новый словарь категорий.
-        :rtype: Dict
+        Args:
+            url (str): URL страницы категории.
+            depth (int): Глубина рекурсии обхода.
+            driver: Экземпляр Selenium WebDriver.
+            locator (str): XPath локатор для ссылок на категории.
+            dump_file (str): Путь к файлу JSON для сохранения результатов.
+            default_category_id (int): ID категории по умолчанию.
+            category (Dict, optional): Существующий словарь категорий (по умолчанию None).
+        Returns:
+            Dict: Обновленный или новый словарь категорий.
         """
         if category is None:
-            # Инициализация словаря category, если он не передан
             category = {
                 'url': url,
                 'name': '',
@@ -134,141 +110,116 @@ class Category(PrestaCategory):
                 },
                 'children': {}
             }
-        # Если глубина равна нулю, возвращаем текущую категорию
+
         if depth <= 0:
             return category
+
         try:
-            # Открытие страницы в браузере
             driver.get(url)
-            # Ожидание 1 секунду для загрузки страницы
-            await asyncio.sleep(1)
-            # Получение ссылок на категории
+            await asyncio.sleep(1)  # Ожидание загрузки страницы
             category_links = driver.execute_locator(locator)
-            # Проверка наличия ссылок
             if not category_links:
-                logger.error(f'Не удалось найти ссылки на категории по адресу {url}')
+                logger.error(f'Не удалось найти ссылки на категории на {url}')
                 return category
-            # Создание списка задач для асинхронного обхода
-            tasks = [
-                self.crawl_categories_async(link_url, depth - 1, driver, locator, dump_file, default_category_id, new_category)
-                for name, link_url in category_links
-                if not self._is_duplicate_url(category, link_url)
-                for new_category in [{'url': link_url, 'name': name, 'presta_categories': {'default_category': default_category_id, 'additional_categories': []}, 'children': {}}]
-            ]
-            # Запуск задач асинхронно
+
+            tasks = []
+            for name, link_url in category_links:
+                if not self._is_duplicate_url(category, link_url):
+                    new_category = {
+                        'url': link_url,
+                        'name': name,
+                        'presta_categories': {
+                            'default_category': default_category_id,
+                            'additional_categories': []
+                        },
+                        'children': {}
+                    }
+                    tasks.append(self.crawl_categories_async(link_url, depth - 1, driver, locator, dump_file, default_category_id, new_category))
             await asyncio.gather(*tasks)
+
             return category
         except Exception as ex:
-             # Логирование ошибки
-            logger.error(f'Произошла ошибка во время обхода категорий: {ex}')
+            logger.error(f'Произошла ошибка во время обхода категорий: ', ex)
             return category
 
-    async def crawl_categories(self, url: str, depth: int, driver, locator: str, dump_file: Path, default_category_id: int, category: Dict = None) -> Dict:
-        """
-        Рекурсивно обходит категории и формирует иерархический словарь (асинхронная версия).
+    def crawl_categories(self, url: str, depth: int, driver, locator: str, dump_file: str, default_category_id: int, category: Dict = None) -> Dict:
+        """Обходит категории рекурсивно и строит иерархический словарь.
 
-        :param url: URL страницы для обхода.
-        :type url: str
-        :param depth: Глубина рекурсии.
-        :type depth: int
-        :param driver: Экземпляр Selenium WebDriver.
-        :type driver: Any
-        :param locator: XPath локатор для поиска ссылок на категории.
-        :type locator: str
-        :param dump_file: Файл для сохранения иерархического словаря.
-        :type dump_file: Path
-        :param default_category_id: ID категории по умолчанию.
-        :type default_category_id: int
-        :param category: Словарь категорий (по умолчанию пустой).
-        :type category: Dict, optional
-        :return: Иерархический словарь категорий и их URL.
-        :rtype: Dict
+        Args:
+            url (str): URL страницы для обхода.
+            depth (int): Глубина рекурсии.
+            driver: Экземпляр Selenium WebDriver.
+            locator (str): XPath локатор для поиска ссылок на категории.
+            dump_file (str): Файл для сохранения иерархического словаря.
+            default_category_id (int): ID категории по умолчанию.
+            category (Dict, optional): Словарь категорий (по умолчанию пустой).
+        Returns:
+            Dict: Иерархический словарь категорий и их URL.
         """
-        if category is None:
-             # Инициализация словаря category, если он не передан
-            category = {
-                'url': url,
-                'name': '',
-                'presta_categories': {
-                    'default_category': default_category_id,
-                    'additional_categories': []
-                },
-                'children': {}
-            }
-        # Если глубина равна нулю, возвращаем текущую категорию
         if depth <= 0:
             return category
+
+        if category is None:
+            category = {}
         try:
-             # Открытие страницы в браузере
             driver.get(url)
-            # Ожидание 1 секунду для загрузки страницы
-            await asyncio.sleep(1)
-            # Получение ссылок на категории
+            driver.wait(1)  # Ожидание загрузки страницы
             category_links = driver.execute_locator(locator)
-            # Проверка наличия ссылок
             if not category_links:
-                logger.error(f'Не удалось найти ссылки на категории по адресу {url}')
+                logger.error(f'Не удалось найти ссылки на категории на {url}')
                 return category
-            # Создание списка задач для асинхронного обхода
-            tasks = [
-                self.crawl_categories_async(link_url, depth - 1, driver, locator, dump_file, default_category_id, new_category)
-                for name, link_url in category_links
-                if not self._is_duplicate_url(category, link_url)
-                for new_category in [{'url': link_url, 'name': name, 'presta_categories': {'default_category': default_category_id, 'additional_categories': []}, 'children': {}}]
-            ]
-            # Запуск задач асинхронно
-            new_category = await asyncio.gather(*tasks)
-            # Обновление данных в файле
-            loaded_data = j_loads(dump_file)
-            # Объединение данных из файла с полученными данными
-            if new_category:
-                loaded_data = {**loaded_data, **new_category[0]}
-                j_dumps(loaded_data, dump_file)
-                return loaded_data
-            return loaded_data
-        except Exception as ex:
-             # Логирование ошибки
-            logger.error(f'Произошла ошибка во время обхода категорий: {ex}')
+            
+            for name, link_url in category_links:
+                if self._is_duplicate_url(category, link_url):
+                    continue
+                new_category = {
+                    'url': link_url,
+                    'name': name,
+                    'presta_categories': {
+                        'default_category': default_category_id,
+                        'additional_categories': []
+                    }
+                }
+                category[name] = new_category
+                self.crawl_categories(link_url, depth - 1, driver, locator, dump_file, default_category_id, new_category)
+            # Используем j_loads и j_dumps для безопасной обработки JSON
+            loaded_data = j_loads(dump_file) if os.path.exists(dump_file) else {}
+            category = {**loaded_data, **category}
+            j_dumps(category, dump_file)
             return category
+        except Exception as ex:
+            logger.error(f'Произошла ошибка во время обхода категорий: ', ex)
+            return category
+
 
     def _is_duplicate_url(self, category: Dict, url: str) -> bool:
+        """Проверяет, существует ли URL уже в словаре категорий.
+
+        Args:
+            category (Dict): Словарь категорий.
+            url (str): URL для проверки.
+        Returns:
+            bool: True, если URL является дубликатом, False в противном случае.
         """
-        Проверяет, существует ли URL уже в словаре категорий.
+        if isinstance(category, dict):
+            return any(url == item.get('url') for item in category.values())
+        return False
 
-        :param category: Словарь категорий.
-        :type category: Dict
-        :param url: URL для проверки.
-        :type url: str
-        :return: True, если URL является дубликатом, False в противном случае.
-        :rtype: bool
-        """
-        if not category.get('children'):
-            return False
-        return any(item['url'] == url for item in category['children'].values() )
 
-def compare_and_print_missing_keys(current_dict: Dict, file_path: Path):
-    """
-    Сравнивает текущий словарь с данными в файле и выводит отсутствующие ключи.
+def compare_and_print_missing_keys(current_dict: Dict, file_path: str) -> None:
+    """Сравнивает текущий словарь с данными в файле и выводит отсутствующие ключи.
 
-    :param current_dict: Словарь для сравнения.
-    :type current_dict: Dict
-    :param file_path: Путь к файлу с данными для сравнения.
-    :type file_path: Path
-    :raises Exception: Если происходит ошибка при загрузке данных из файла.
-
-    Example:
-        >>> current_dict = {'key1': 'value1', 'key2': 'value2'}
-        >>> file_path = Path('test.json')
-        >>> with open(file_path, 'w') as f:
-        ...    json.dump({'key1': 'value1', 'key3': 'value3'}, f)
-        >>> compare_and_print_missing_keys(current_dict, file_path)
-        key3
+     Args:
+        current_dict (Dict): Текущий словарь для сравнения.
+        file_path (str): Путь к файлу для загрузки данных.
     """
     try:
         data_from_file = j_loads(file_path)
     except Exception as ex:
-        logger.error(f'Ошибка загрузки данных из файла: {ex}')
+        logger.error(f'Ошибка загрузки данных из файла: ', ex)
         return
+
     for key in data_from_file:
         if key not in current_dict:
-             print(key)
+            print(key)
+```

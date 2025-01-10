@@ -1,54 +1,66 @@
 # Анализ кода модуля `src.scenario`
 
 **Качество кода**
-8
--  Плюсы
-    -  Хорошая структура и организация кода.
-    -  Наличие подробного описания основных функций и компонентов модуля.
-    -  Использование `mermaid` для визуализации процесса работы модуля.
-    -  Примеры сценариев и объяснение работы модуля.
--  Минусы
-    -  Отсутствуют импорты в начале файла, что затрудняет понимание зависимостей.
-    -  Не указан формат документации для функций (не в стиле RST).
-    -  Не хватает обработки ошибок.
-    -  Не указаны типы переменных.
-    -  Отсутствуют docstring для функций.
-    -  В тексте много "код выполняет", "код делает" вместо конкретных действий.
-    -  Не используются `j_loads` и `j_loads_ns`.
-    -  Не используется `logger` из `src.logger.logger`.
+7
+- Плюсы
+    - Код хорошо структурирован и разбит на логические блоки.
+    - Присутствует подробное описание модуля и его основных компонентов.
+    - Используется `mermaid` для визуализации процесса выполнения.
+    - Есть пример сценария в формате JSON.
+- Минусы
+    - Отсутствует описание работы внутри функций.
+    - Нет импортов необходимых модулей.
+    - Используются общие исключения, вместо более специфичных.
+    - Не используется `logger` для логирования ошибок.
+    - Не используется `j_loads` для загрузки `json`.
+    - Отсутствуют `docstring` для функций и переменных.
+    - Не соблюдены рекомендации по использованию кавычек в python.
 
 **Рекомендации по улучшению**
-
-1.  **Добавить импорты**: В начале файла следует добавить все необходимые импорты, такие как `json`, `requests`, `Path` и `logger`.
-2.  **Использовать `j_loads`**: Заменить стандартный `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-3.  **Использовать `logger`**: Заменить все `print` на `logger.info`, `logger.error` и `logger.debug` из `src.logger.logger`.
-4.  **Добавить docstring**: Добавить docstring в стиле RST для всех функций, методов и классов.
-5.  **Обработка ошибок**: Заменить общие `try-except` на более конкретную обработку с использованием `logger.error`.
-6.  **Уточнить описание**: Избегать общих фраз типа "код выполняет", "код делает", и использовать более конкретные формулировки, например, "проверяет", "отправляет".
-7.  **Типизация переменных**: Добавить аннотацию типов к переменным.
+1.  Добавить импорты необходимых модулей: `json`, `requests`, `asyncio`, `pathlib`, `typing`.
+2.  Заменить `json.load` на `j_loads` из `src.utils.jjson`.
+3.  Использовать `logger` из `src.logger` для логирования ошибок.
+4.  Добавить `docstring` к функциям и переменным.
+5.  Уточнить исключения, используя специфичные типы ошибок, а не `Exception`.
+6.  Добавить обработку ошибок с помощью `try-except` и `logger.error`.
+7.  Использовать одинарные кавычки `'` в коде Python, двойные кавычки `"` только для вывода.
+8.  Добавить комментарии с объяснением кода.
+9.  Внедрить проверку типов для аргументов функций.
+10. Добавить обработку ошибок при записи журнала.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для автоматизации взаимодействия с поставщиками на основе сценариев.
-===========================================================================
+Модуль `src.scenario`
+=========================================================================================
 
-Этот модуль предназначен для загрузки сценариев из JSON-файлов, извлечения
-данных о продуктах с веб-сайтов поставщиков и сохранения их в базе данных.
-Модуль также ведет журнал выполнения для отслеживания процесса и выявления ошибок.
+Модуль `src.scenario` предназначен для автоматизации взаимодействия с поставщиками,
+используя сценарии, описанные в JSON-файлах. Он адаптирует процесс извлечения и
+обработки данных о продуктах с веб-сайтов поставщиков и синхронизирует эту информацию
+с базой данных (например, PrestaShop). Модуль включает чтение сценариев,
+взаимодействие с веб-сайтами, обработку данных, запись журнала выполнения и
+организацию всего процесса.
 
 Пример использования
 --------------------
 
+Пример использования функций модуля:
+
 .. code-block:: python
 
-   from pathlib import Path
-   from src.scenario import main
-   
-   async def run_scenario():
-        await main(scenario_files_list=[Path('example_scenario.json')])
+    from src.scenario import run_scenario_files
+    from src.utils.jjson import j_loads
+    from pathlib import Path
+    import asyncio
 
+    async def main():
+        settings = {'db_host': 'localhost', 'db_user': 'user', 'db_pass': 'password', 'db_name': 'database'}
+        scenario_files = [Path('scenario1.json'), Path('scenario2.json')]
+        await run_scenario_files(settings, scenario_files)
+
+    if __name__ == '__main__':
+         asyncio.run(main())
 """
 import asyncio
 import json
@@ -56,162 +68,172 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 import requests
+from src.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
 
-from src.logger.logger import logger
-from src.utils.jjson import j_loads
 
-
-async def run_scenario_files(s: Any, scenario_files_list: List[Path]) -> None:
+async def run_scenario_files(s: Dict[str, Any], scenario_files_list: List[Path]) -> None:
     """
-    Выполняет сценарии из списка файлов.
+    Асинхронно запускает обработку списка файлов сценариев.
 
     Args:
-        s (Any): Объект настроек.
+        s (Dict[str, Any]): Словарь с настройками.
         scenario_files_list (List[Path]): Список путей к файлам сценариев.
 
     Raises:
         FileNotFoundError: Если файл сценария не найден.
         json.JSONDecodeError: Если файл сценария содержит невалидный JSON.
-    """
-    if not isinstance(scenario_files_list, list):
-        logger.error("Неверный формат списка файлов")
-        return
+        Exception: При любых других проблемах при работе со сценариями.
 
+    Example:
+        >>> from pathlib import Path
+        >>> settings = {'db_host': 'localhost', 'db_user': 'user', 'db_pass': 'password', 'db_name': 'database'}
+        >>> scenario_files = [Path('scenario1.json'), Path('scenario2.json')]
+        >>> asyncio.run(run_scenario_files(settings, scenario_files))
+    """
+    # Проходит по списку файлов сценариев.
     for scenario_file in scenario_files_list:
-        if not isinstance(scenario_file, Path):
-             logger.error(f"Неверный формат файла {scenario_file=}")
-             continue
-        await run_scenario_file(s, scenario_file)
+        try:
+            # Запускает обработку каждого файла сценария.
+            await run_scenario_file(s, scenario_file)
+        except FileNotFoundError as e:
+            logger.error(f'Файл сценария не найден: {scenario_file}', exc_info=e)
+            ... # Точка остановки
+        except json.JSONDecodeError as e:
+            logger.error(f'Ошибка декодирования JSON в файле: {scenario_file}', exc_info=e)
+            ...# Точка остановки
+        except Exception as e:
+            logger.error(f'Непредвиденная ошибка при обработке файла: {scenario_file}', exc_info=e)
+            ...# Точка остановки
 
 
-async def run_scenario_file(s: Any, scenario_file: Path) -> None:
+async def run_scenario_file(s: Dict[str, Any], scenario_file: Path) -> None:
     """
-    Загружает и выполняет сценарии из указанного файла.
+    Асинхронно загружает и обрабатывает сценарии из файла.
 
     Args:
-        s (Any): Объект настроек.
+        s (Dict[str, Any]): Словарь с настройками.
         scenario_file (Path): Путь к файлу сценария.
 
     Raises:
         FileNotFoundError: Если файл сценария не найден.
         json.JSONDecodeError: Если файл сценария содержит невалидный JSON.
         Exception: При любых других проблемах при работе со сценариями.
+
+    Example:
+        >>> from pathlib import Path
+        >>> settings = {'db_host': 'localhost', 'db_user': 'user', 'db_pass': 'password', 'db_name': 'database'}
+        >>> scenario_file = Path('scenario1.json')
+        >>> asyncio.run(run_scenario_file(settings, scenario_file))
+
     """
     try:
-        with open(scenario_file, 'r', encoding='utf-8') as f:  # Открывает файл для чтения
-            data = j_loads(f) # Загружает данные из файла
-        if not data or 'scenarios' not in data:  # Проверяет, что данные загружены и содержат сценарии
-            logger.error(f"Нет сценариев для обработки в файле {scenario_file=}")
-            return
-        for scenario_name, scenario in data['scenarios'].items():  # Итерирует по сценариям
-            await run_scenario(s, scenario) # Выполняет сценарий
-    except FileNotFoundError as e: # Ловит ошибку при отсутствии файла
-        logger.error(f"Файл сценария не найден: {scenario_file}", exc_info=True)
-    except json.JSONDecodeError as e: # Ловит ошибку при неверном формате json
-        logger.error(f"Ошибка декодирования JSON в файле: {scenario_file}", exc_info=True)
-    except Exception as e: # Ловит прочие ошибки
-        logger.error(f"Проблема при работе с файлом {scenario_file=}", exc_info=True)
+        # Код загружает содержимое JSON файла
+        scenario_data = await j_loads(scenario_file)
+        # Код проходит по всем сценариям в файле
+        for scenario_name, scenario in scenario_data.get('scenarios', {}).items():
+            # Код выполняет каждый сценарий
+            await run_scenario(s, scenario)
+    except FileNotFoundError as e:
+        logger.error(f'Файл сценария не найден: {scenario_file}', exc_info=e)
+        ...# Точка остановки
+    except json.JSONDecodeError as e:
+        logger.error(f'Ошибка декодирования JSON в файле: {scenario_file}', exc_info=e)
+        ... # Точка остановки
+    except Exception as e:
+        logger.error(f'Непредвиденная ошибка при обработке файла: {scenario_file}', exc_info=e)
+        ...# Точка остановки
 
-
-async def run_scenario(s: Any, scenario: Dict[str, Any]) -> None:
+async def run_scenario(s: Dict[str, Any], scenario: Dict[str, Any]) -> None:
     """
-    Обрабатывает отдельный сценарий, извлекает данные о продуктах и сохраняет их.
+    Асинхронно выполняет сценарий: переходит по URL, извлекает данные о продуктах и сохраняет их.
 
     Args:
-        s (Any): Объект настроек.
-        scenario (Dict[str, Any]): Словарь, содержащий данные сценария.
+        s (Dict[str, Any]): Словарь с настройками.
+        scenario (Dict[str, Any]): Словарь, содержащий сценарий (например, с URL, категориями).
 
     Raises:
-         requests.exceptions.RequestException: Если есть проблемы с запросом к веб-сайту.
-         Exception: При любых других проблемах в процессе обработки сценария.
+        requests.exceptions.RequestException: Если есть проблемы с запросом к веб-сайту.
+        Exception: При любых других проблемах в процессе обработки сценария.
+
+    Example:
+        >>> settings = {'db_host': 'localhost', 'db_user': 'user', 'db_pass': 'password', 'db_name': 'database'}
+        >>> scenario = {
+        ...     'url': 'https://example.com/category/mineral-creams/',
+        ...     'name': 'минеральные+кремы',
+        ...     'presta_categories': {'default_category': 12345, 'additional_categories': [12346, 12347]}
+        ... }
+        >>> asyncio.run(run_scenario(settings, scenario))
     """
+    journal = []
     try:
-        url = scenario.get('url') # Получает URL из сценария
-        if not url: # Проверяет наличие URL
-            logger.error(f'URL не найден {scenario=}')
+        # Код получает URL из сценария.
+        url = scenario.get('url')
+        if not url:
+            logger.error(f'URL не найден в сценарии: {scenario}')
             return
+        # Код переходит по URL
+        response = requests.get(url)
+        response.raise_for_status() # Код проверяет статус ответа
+        # TODO: Здесь нужно добавить код для извлечения данных о продуктах из HTML
+        # TODO: Добавить создание объекта продукта и сохранение его в базу данных.
+        # Код добавляет информацию в журнал.
+        journal.append({'scenario': scenario.get('name'), 'status': 'success', 'url': url})
+    except requests.exceptions.RequestException as e:
+        logger.error(f'Ошибка при запросе к URL: {url}', exc_info=e)
+        journal.append({'scenario': scenario.get('name'), 'status': 'error', 'url': url, 'error': str(e)})
+    except Exception as e:
+        logger.error(f'Непредвиденная ошибка при обработке сценария: {scenario}', exc_info=e)
+        journal.append({'scenario': scenario.get('name'), 'status': 'error', 'url': url, 'error': str(e)})
+    finally:
+        # Код сохраняет журнал
+        await dump_journal(s, journal)
 
-        logger.info(f'Запрос URL {url=}')
-        response = requests.get(url) # Отправляет запрос на URL
-        response.raise_for_status() # Проверяет статус запроса
-
-        products = []  # TODO: код получает список продуктов, сейчас заглушка
-        for product in products: # Итерирует по продуктам (сейчас не используется)
-            logger.info(f'Обработка продукта {product=}')
-            #TODO: Здесь будет код для получения и обработки данных о продуктах
-
-        logger.info(f'Завершение сценария {scenario=}')
-    except requests.exceptions.RequestException as e:  # Ловит ошибки при запросе
-        logger.error(f'Ошибка запроса к сайту {url=}', exc_info=True)
-    except Exception as e:  # Ловит прочие ошибки
-       logger.error(f'Ошибка при выполнении сценария {scenario=}', exc_info=True)
 
 
-async def dump_journal(s: Any, journal: List[Dict]) -> None:
+async def dump_journal(s: Dict[str, Any], journal: List[Dict[str, Any]]) -> None:
     """
-    Сохраняет журнал выполнения сценариев в файл.
+    Асинхронно сохраняет журнал выполнения сценариев в файл.
 
     Args:
-        s (Any): Объект настроек.
-        journal (List[Dict]): Список записей журнала выполнения.
+        s (Dict[str, Any]): Словарь с настройками.
+        journal (List[Dict[str, Any]]): Список записей журнала выполнения.
 
     Raises:
-         Exception: При проблемах с записью в файл.
+        Exception: При проблемах с записью в файл.
+
+    Example:
+        >>> settings = {'db_host': 'localhost', 'db_user': 'user', 'db_pass': 'password', 'db_name': 'database'}
+        >>> journal = [{'scenario': 'test', 'status': 'success'}]
+        >>> asyncio.run(dump_journal(settings, journal))
     """
     try:
-        # TODO: реализация сохранения журнала в файл
-        # код сохраняет журнал
-        logger.info(f'Сохранение журнала {journal=}')
-        ...
-    except Exception as e: # Ловит прочие ошибки
-        logger.error(f'Ошибка сохранения журнала', exc_info=True)
+       # Код формирует имя файла журнала
+        journal_file = Path('journal.json')
+        # Код сохраняет журнал в JSON файл.
+        async with aiofiles.open(journal_file, mode='w') as f:
+             await f.write(json.dumps(journal, indent=4))
+    except Exception as e:
+        # Код логирует ошибку, если не удалось записать журнал
+        logger.error(f'Ошибка при записи журнала в файл: {journal_file}', exc_info=e)
+        ...# Точка остановки
 
-async def main(scenario_files_list: List[Path] = None) -> None:
+
+async def main():
     """
-    Основная функция запуска модуля.
-
-    Args:
-         scenario_files_list (List[Path]): Список путей к файлам сценариев.
-
-    Raises:
-        Exception: При любых критических ошибках во время выполнения.
+    Основная функция для запуска модуля.
     """
-    try:
-        s = {} # TODO: Инициализация объекта настроек
-        if not scenario_files_list:
-            logger.error('Не передан список файлов для обработки')
-            return
-        await run_scenario_files(s, scenario_files_list) # Выполнение сценариев
-        logger.info('Работа завершена')
-        ...
-    except Exception as e: # Ловит прочие ошибки
-        logger.error('Критическая ошибка', exc_info=True)
+    # Пример настроек
+    settings = {'db_host': 'localhost', 'db_user': 'user', 'db_pass': 'password', 'db_name': 'database'}
+    # Пример списка файлов сценариев
+    scenario_files = [Path('scenario1.json'), Path('scenario2.json')]
+    # Код запускает выполнение сценариев
+    await run_scenario_files(settings, scenario_files)
+    ...# Точка остановки
+
 
 if __name__ == '__main__':
-    async def run_main():
-        # Пример использования:
-        test_file = Path('test_scenario.json')
-        # Создадим файл для примера
-        with open(test_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "scenarios": {
-                    "example_scenario": {
-                        "url": "https://example.com",
-                         "name": "test_scenario",
-                        "presta_categories": {
-                             "default_category": 123,
-                             "additional_categories": [124, 125]
-                         }
-                    }
-                }
-            },f)
-
-
-        await main(scenario_files_list=[test_file])
-        # удалим тестовый файл
-        test_file.unlink()
-
-
-    asyncio.run(run_main())
+    # Код запускает асинхронный main
+    asyncio.run(main())
 
 ```
