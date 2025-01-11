@@ -31,10 +31,9 @@ class TelegramBot:
 
     def __init__(self,
                  token: str,
-                 port: int,
+                 port:int,
                  webhook_url: Optional[str] = None,
-                 bot_handler: Optional[BotHandler] = None,
-                 fast_api: FastApi = None):
+                 bot_handler: Optional[BotHandler] = None):
         """Initialize the Telegram bot."""
         self.config = j_loads_ns(gs.path.endpoints / 'bots' / 'telegram' / 'telegram.json')
 
@@ -44,9 +43,8 @@ class TelegramBot:
         self._register_handlers()
         
         #Pass the fast_api instance instead of creating it here.
-        self.fast_api = fast_api
-        asyncio.create_task(self.fast_api.run(port=port))
-
+        self.fast_api = FastApi(title="Telegram Bot API",)
+        asyncio.create_task(self.fast_api.run(port = self.config.port))
 
 
     def _register_handlers(self):
@@ -69,7 +67,9 @@ class TelegramBot:
         await self.bot_handler.handle_message(update, context)
 
 
-
+# FastAPI App Creation
+app = FastApi(title="Telegram Bot API")
+bot_instance: Optional[TelegramBot] = None
 
 
 async def telegram_webhook(request: Request):
@@ -90,11 +90,11 @@ async def telegram_webhook(request: Request):
         return Response(status_code=500, content=f'Error processing webhook: {e}')
 
 
-async def initialize_bot(token: str, port: int):
+async def initialize_bot(token: str):
     """Initialize the bot instance."""
     global bot_instance
     if not bot_instance:
-        bot_instance = TelegramBot(token, port=port, fast_api=app)  # Passing app to the constructor
+        bot_instance = TelegramBot(token)  # Passing app to the constructor
         try:
             await bot_instance.application.bot.set_webhook(
                 url=bot_instance.webhook_url
@@ -106,13 +106,12 @@ async def initialize_bot(token: str, port: int):
         if not bot_instance.webhook_url:
             asyncio.create_task(bot_instance.application.start_polling()) #Start polling if webhook is not set
 
-app = FastApi(title="Telegram Bot API")
+
 @app.on_event("startup")
 async def startup_event():
     """Startup event handler."""
     token = os.getenv('TELEGRAM_BOT_TOKEN')
-    port = int(os.getenv('PORT', 8000))
-    await initialize_bot(token, port)
+    await initialize_bot(token)
 
 
 @app.on_event("shutdown")
@@ -126,12 +125,12 @@ async def shutdown_event():
             logger.error(f'Error deleting webhook: {ex}')
 
 
+# Handle Webhook
+app.add_route("/telegram_webhook", telegram_webhook, methods=["POST"])
+
+
+app.register_router()
+
 
 if __name__ == "__main__":
-    # FastAPI App Creation
-    
-    bot_instance: Optional[TelegramBot] = None
-    # Handle Webhook
-    app.add_route("/telegram_webhook", telegram_webhook, methods=["POST"])
-    app.register_router()
     app.run()

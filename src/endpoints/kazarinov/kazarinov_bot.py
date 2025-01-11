@@ -20,7 +20,6 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 import header
-import header
 from src import gs
 from src.endpoints.bots.telegram.bot_web_hooks import TelegramBot
 from src.endpoints.kazarinov.bot_handlers import BotHandler
@@ -28,7 +27,6 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.utils.url import is_url
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
-import os
 from src.fast_api.fast_api import FastApiServer as FastApi
 
 
@@ -42,7 +40,7 @@ class KazarinovTelegramBot(TelegramBot):
     )
     """Эта модель используется для диалога с пользователем. Для обработки сценариев используется модель, определяемая в классе `BotHandler`"""
 
-    def __init__(self, mode: Optional[str] = None,  webdriver_name: Optional[str] = 'firefox', fast_api = None):
+    def __init__(self, mode: Optional[str] = None):
         """
         Initialize the KazarinovTelegramBot instance.
 
@@ -65,10 +63,8 @@ class KazarinovTelegramBot(TelegramBot):
         # Call parent initializers
         super().__init__(token=token, 
                          port = self.config.telegram.port,
-                         bot_handler=bot_handler,
-                         fast_api=fast_api)
-
-
+                         bot_handler=bot_handler)
+        
 
 
 async def main():

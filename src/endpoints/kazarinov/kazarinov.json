@@ -28,7 +28,5 @@
     "host": "170.0.0.1",
     "port": 1420
   },
-  "storage": "external_storage",
-  "avaiable_storages": [ "data", "google_drive", "external_storage" ],
-
+  "storage": "external_storage"
 }

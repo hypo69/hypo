@@ -2,8 +2,10 @@ from fastapi import FastAPI, APIRouter
 import uvicorn
 from typing import List, Callable, Dict, Any
 import functools
-import threading
 import asyncio
+import header
+from src.utils.jjson import j_dumps
+
 
 class Singleton(type):
     """Metaclass for implementing the singleton pattern."""
@@ -25,11 +27,12 @@ class FastApiServer(FastAPI, metaclass=Singleton):
         self.server_tasks = {}  # Словарь для хранения задач (port: task)
         self.servers = {}  # Словарь для хранения серверов (port: server)
 
+
     def add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
         """Добавляет маршрут к FastAPI приложению."""
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
+        async def wrapper(*args, **kwargs):
+            return await func(*args, **kwargs)
         self.router.add_api_route(path, wrapper, methods=methods, **kwargs)
 
 
@@ -44,18 +47,20 @@ class FastApiServer(FastAPI, metaclass=Singleton):
         self.servers[port] = server
         await server.serve()
 
-    def start(self, port: int):
+    async def start(self, port: int):
         """Запускает FastAPI сервер на указанном порту."""
         if port in self.server_tasks and not self.server_tasks[port].done():
             print(f"Server already running on port {port}")
             return
         task = asyncio.create_task(self._start_server(port))
         self.server_tasks[port] = task
+        j_dumps(self.server_tasks, 'servers.json')
 
 
     async def stop(self, port: int):
         if port in self.servers and self.servers[port].started:
             await self.servers[port].stop()
+            j_dumps(self.server_tasks, 'servers.json')
 
     async def stop_all(self):
         for port in list(self.servers.keys()):
@@ -67,10 +72,10 @@ class FastApiServer(FastAPI, metaclass=Singleton):
 
 
 
-def test_function():
+async def test_function():
    return "It is working!!!"
 
-def test_post(data: Dict[str, str]):
+async def test_post(data: Dict[str, str]):
    return {"result": "post ok", "data": data}
 
 
@@ -82,13 +87,13 @@ async def main():
 
     # Запускаем на порту 8080
     print('start api on port 8080')
-    api.start(port=8080)
+    await api.start(port=8080)
 
     # some work
     await asyncio.sleep(2)
     # Добавляем порт 8081 на лету
     print('start api on port 8081')
-    api.start(port=8081)
+    await api.start(port=8081)
 
     await asyncio.sleep(2)
     # stop port 8080
