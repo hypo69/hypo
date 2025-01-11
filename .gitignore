@@ -202,7 +202,7 @@ desktop.ini
 password.txt
 
 #Sphins
-docs/sphinx/
+#docs/sphinx/
 
 #prestashop
 src/endpoints/websites/emil-design.com/public_html/img/

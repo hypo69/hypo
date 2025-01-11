@@ -30,7 +30,11 @@ from dataclasses import field
 import header
 from src import gs
 from src.endpoints.prestashop.product_fields import ProductFields
-from src.webdriver.driver import Driver
+
+#from src.webdriver.driver import Driver
+from src.webdriver.playwright import Playwrid
+
+
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.advertisement.facebook.scenarios import (
     post_message_title, upload_post_media, message_publish
@@ -61,7 +65,7 @@ class MexironBuilder:
         products_list (List[dict]): Список обработанных данных о продуктах.
     """
 
-    driver: Driver
+    driver: Playwrid = Playwrid()
     export_path: Path
     mexiron_name: str
     price: float
@@ -74,7 +78,7 @@ class MexironBuilder:
     update: Update 
     context: CallbackContext
 
-    def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
+    def __init__(self, mexiron_name: Optional[str] = None):
         """
         Initializes Mexiron class with required components.
 
@@ -89,7 +93,6 @@ class MexironBuilder:
             return  # or raise an exception, depending on your error handling strategy
 
         self.timestamp = gs.now
-        self.driver = driver
         self.mexiron_name = mexiron_name or self.timestamp
 
         try:

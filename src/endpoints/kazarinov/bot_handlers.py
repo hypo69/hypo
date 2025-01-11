@@ -1,4 +1,4 @@
-## \file /src/endpoints/kazarinov/bot_handlers_parser.py
+## \file /src/endpoints/kazarinov/bot_handlers.py
 # -*- coding: utf-8 -*-
 
 #! venv/bin/python/python3.12
@@ -60,16 +60,8 @@ class BotHandler:
         Args:
             webdriver_name (Optional[str]): Название веб-драйвера для запуска.
         """
-        firefox = Firefox(options=["--kiosk", "--headless"])
 
-       
-        self.mexiron = MexironBuilder(
-            Driver(
-                Firefox if webdriver_name.lower() == 'firefox'
-                else Chrome if webdriver_name.lower() == 'chrome'
-                else Edge
-            )
-        )
+        self.mexiron = MexironBuilder()
 
     async def handle_url(self, update: Update, context: CallbackContext) -> Any:
         """

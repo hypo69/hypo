@@ -3,7 +3,7 @@
 #! venv/bin/python/python3.12
 
 import asyncio
-from typing import Optional, List, Dict, Any, Union
+from typing import Optional, List, Dict, Any
 from pathlib import Path
 from playwright.async_api import async_playwright, Page, Locator
 from types import SimpleNamespace
@@ -15,14 +15,14 @@ from src.logger.exceptions import WebDriverException
 import re
 
 
-
-class ExecuteLocator:
+class PlaywrightExecutor:
     """
     Executes commands based on executor-style locator commands using Playwright.
     """
     def __init__(self, browser_type: str = 'chromium', **kwargs):
         """
         Initializes the Playwright executor.
+
         :param browser_type: Type of browser to launch (e.g., 'chromium', 'firefox', 'webkit').
         :type browser_type: str
         """
@@ -56,19 +56,20 @@ class ExecuteLocator:
         except Exception as ex:
             logger.error(f'Playwright failed to close browser: {ex}')
 
-    async def execute_locator(self, locator: dict | SimpleNamespace, message: Optional[str] = None, typing_speed: float = 0) -> Union[str, List, dict, bytes, bool]:
+    async def execute_locator(self, locator: dict | SimpleNamespace, message: Optional[str] = None, typing_speed: float = 0) -> str | List[str] | dict | bytes | bool:
         """
         Executes actions based on locator and event.
 
         :param locator: Locator data (dict or SimpleNamespace).
-        :type locator: Union[dict, SimpleNamespace]
+        :type locator: dict | SimpleNamespace
         :param message: Optional message for events.
         :type message: Optional[str]
         :param typing_speed: Optional typing speed for events.
         :type typing_speed: float
         :returns: Result of operation
-        :rtype: Union[str, List, dict, bytes, bool]
-         ```mermaid
+        :rtype: str | List[str] | dict | bytes | bool
+         
+        ```mermaid
                 graph TD
             A[Start] --> B[Check if locator is SimpleNamespace or dict]
             B --> C{Is locator SimpleNamespace?}
@@ -92,7 +93,7 @@ class ExecuteLocator:
             Q --> R[Return result of execute_locator]
             R --> S[End]
 
-    ```
+        ```
         """
         locator = (
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
@@ -102,16 +103,16 @@ class ExecuteLocator:
             return None # <- локатор - заглушка
 
         async def _parse_locator(
-            locator: Union[dict, SimpleNamespace], message: Optional[str]
-        ) -> Union[str, List, dict, bytes, bool]:
-            """ Parses and executes locator instructions.
+            locator: dict | SimpleNamespace, message: Optional[str]
+        ) -> str | List[str] | dict | bytes | bool:
+            """Parses and executes locator instructions.
 
-            Args:
-                loc (Union[dict, SimpleNamespace]): Locator data.
-                message (Optional[str]): Message to send, if applicable.
-
-            Returns:
-                Union[str, list, dict, bytes, bool]: Result of the execution.
+            :param locator: Locator data.
+            :type locator: dict | SimpleNamespace
+            :param message: Message to send, if applicable.
+            :type message: Optional[str]
+            :returns: Result of the execution.
+            :rtype: str | List[str] | dict | bytes | bool
             """
             locator = (
                 locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator)
@@ -141,13 +142,11 @@ class ExecuteLocator:
     async def evaluate_locator(self, attribute: str | List[str] | dict) -> Optional[str | List[str] | dict]:
         """Evaluates and processes locator attributes.
 
-        Args:
-            attribute (Union[str, List[str], dict]): Attributes to evaluate.
-
-        Returns:
-            Union[str, List[str], dict]: Evaluated attributes.
-
-        ```mermaid
+        :param attribute: Attributes to evaluate.
+        :type attribute: str | List[str] | dict
+        :returns: Evaluated attributes.
+        :rtype: Optional[str | List[str] | dict]
+          ```mermaid
                 graph TD
             A[Start] --> B[Check if attribute is list]
             B -->|Yes| C[Iterate over each attribute in list]
@@ -170,10 +169,11 @@ class ExecuteLocator:
     async def get_attribute_by_locator(self, locator: dict | SimpleNamespace) -> Optional[str | List[str] | dict]:
         """
         Gets the specified attribute from the web element.
+
         :param locator: Locator data (dict or SimpleNamespace).
-        :type locator: Union[dict, SimpleNamespace]
+        :type locator: dict | SimpleNamespace
         :returns: Attribute or None.
-        :rtype: Optional[Union[str, List[str], dict]]
+        :rtype: Optional[str | List[str] | dict]
         """
         locator = (
             locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
@@ -182,76 +182,76 @@ class ExecuteLocator:
 
         if not element:
             logger.debug(f"Element not found: {locator=}")
-            return
+            return None
 
         def _parse_dict_string(attr_string: str) -> dict | None:
-            """ Parses a string like '{attr1:attr2}' into a locator.
+            """Parses a string like '{attr1:attr2}' into a dictionary.
 
-            Args:
-                attr_string (str): String representing a dictionary-like structure.
-
-            Returns:
-                dict: Parsed dictionary or None if parsing fails.
+            :param attr_string: String representing a dictionary-like structure.
+            :type attr_string: str
+            :returns: Parsed dictionary or None if parsing fails.
+            :rtype: dict | None
             """
             try:
-                return {
-                    k.strip(): v.strip()
-                    for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))
-                }
+                return {k.strip(): v.strip() for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))}
             except ValueError as ex:
                 logger.debug(f"Invalid attribute string format: {attr_string}\n{ex}")
-                return
+                return None
 
-        def _get_attributes_from_dict(element: Locator, attr_dict: dict) -> dict:
-            """ Retrieves attribute values for each key in a given dictionary.
+        async def _get_attribute(el: Locator, attr: str) -> Optional[str]:
+            """Retrieves a single attribute from a Locator.
 
-            Args:
-                element (Locator): The web element to retrieve attributes from.
-                attr_dict (dict): A dictionary where keys/values represent attribute names.
+            :param el: The web element to retrieve attributes from.
+            :type el: Locator
+            :param attr: The name of attribute
+            :type attr: str
+            :returns: Attribute or None
+            :rtype: Optional[str]
+            """
+            try:
+                return await el.get_attribute(attr)
+            except Exception as ex:
+                logger.debug(f"Error getting attribute '{attr}' from element: {ex}")
+                return None
 
-            Returns:
-                dict: Dictionary with attributes and their corresponding values.
+        async def _get_attributes_from_dict(element: Locator, attr_dict: dict) -> dict:
+            """Retrieves multiple attributes based on a dictionary.
+
+            :param element: The web element to retrieve attributes from.
+            :type element: Locator
+            :param attr_dict: A dictionary where keys/values represent attribute names.
+            :type attr_dict: dict
+            :returns: Dictionary with attributes and their corresponding values.
+            :rtype: dict
             """
             result = {}
             for key, value in attr_dict.items():
-                try:
-                    attr_key = await element.get_attribute(key)
-                    attr_value = await element.get_attribute(value)
-                    result[attr_key] = attr_value
-                except Exception as ex:
-                     logger.debug(f"Error retrieving attributes '{key}' or '{value}' from element: {ex}")
-                     return
+                result[key] = await _get_attribute(element, key)
+                result[value] = await _get_attribute(element, value)
+
             return result
 
-
         if isinstance(locator.attribute, str) and locator.attribute.startswith("{"):
-             attr_dict = _parse_dict_string(locator.attribute)
-             if isinstance(element, list):
-                return [_get_attributes_from_dict(el, attr_dict) for el in element]
-             return _get_attributes_from_dict(element, attr_dict)
+            attr_dict = _parse_dict_string(locator.attribute)
+            if attr_dict:
+                if isinstance(element, list):
+                     return await asyncio.gather(*[_get_attributes_from_dict(el, attr_dict) for el in element])
+                return await _get_attributes_from_dict(element, attr_dict)
+
 
         if isinstance(element, list):
-            ret: list = []
-            try:
-                for e in element:
-                    ret.append(f'{await e.get_attribute(locator.attribute)}')
-                return ret if len(ret) > 1 else ret[0]
-            except Exception as ex:
-                logger.debug(f"Error in get_attribute(): {locator=}", ex)
-                return
-        try:
-            return await element.get_attribute(locator.attribute)
-        except Exception as ex:
-            logger.debug(f"Error in get_attribute(): {locator=}", ex)
-            return None
+            return await asyncio.gather(*[_get_attribute(el, locator.attribute) for el in element])
+
+        return await _get_attribute(element, locator.attribute)
 
     async def get_webelement_by_locator(self, locator: dict | SimpleNamespace) -> Optional[Locator | List[Locator]]:
         """
         Gets a web element using the locator.
+
         :param locator: Locator data (dict or SimpleNamespace).
-        :type locator: Union[dict, SimpleNamespace]
+        :type locator: dict | SimpleNamespace
         :returns: Playwright Locator
-        :rtype: Optional[Union[Locator, List[Locator]]]
+        :rtype: Optional[Locator | List[Locator]]
         """
         locator = (
            SimpleNamespace(**locator)
@@ -293,8 +293,11 @@ class ExecuteLocator:
     async def get_webelement_as_screenshot(self, locator: dict | SimpleNamespace, webelement: Optional[Locator] = None) -> Optional[bytes]:
         """
         Takes a screenshot of the located web element.
+
         :param locator: Locator data (dict or SimpleNamespace).
-         :type locator: Union[dict, SimpleNamespace]
+        :type locator: dict | SimpleNamespace
+        :param webelement: The web element Locator.
+        :type webelement: Optional[Locator]
         :returns: Screenshot in bytes or None.
         :rtype: Optional[bytes]
         """
@@ -316,18 +319,18 @@ class ExecuteLocator:
             logger.error(f"Не удалось захватить скриншот\n", ex)
             return
 
-    async def execute_event(self, locator: dict | SimpleNamespace, message: Optional[str] = None, typing_speed: float = 0) ->  Union[str, List[str], bytes, List[bytes], bool]:
+    async def execute_event(self, locator: dict | SimpleNamespace, message: Optional[str] = None, typing_speed: float = 0) -> str | List[str] | bytes | List[bytes] | bool:
         """
         Executes the event associated with the locator.
 
         :param locator: Locator data (dict or SimpleNamespace).
-        :type locator: Union[dict, SimpleNamespace]
+        :type locator: dict | SimpleNamespace
         :param message: Optional message for events.
         :type message: Optional[str]
         :param typing_speed: Optional typing speed for events.
         :type typing_speed: float
         :returns: Execution status.
-        :rtype: bool
+        :rtype: str | List[str] | bytes | List[bytes] | bool
         """
         locator = (
              locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator,dict) else None
@@ -407,46 +410,40 @@ class ExecuteLocator:
         return result if result else True
 
     async def send_message(self, locator: dict | SimpleNamespace, message: str = None, typing_speed: float = 0) -> bool:
-          """Sends a message to a web element.
+        """Sends a message to a web element.
 
-        Args:
-            locator (dict | SimpleNamespace): Information about the element's location on the page.
-                                              It can be a dictionary or a SimpleNamespace object.
-            message (Optional[str], optional): The message to be sent to the web element. Defaults to `None`.
-            typing_speed (float, optional): Speed of typing the message in seconds. Defaults to 0.
-
-        Returns:
-            bool: Returns `True` if the message was sent successfully, `False` otherwise.
-
-        Example:
-            >>> driver = Driver()
-            >>> driver.send_message(locator={"id": "messageBox"}, message="Hello World", typing_speed=0.1)
-            True
-       
-
+        :param locator: Information about the element's location on the page.
+        :type locator: dict | SimpleNamespace
+        :param message: The message to be sent to the web element.
+        :type message: Optional[str]
+        :param typing_speed: Speed of typing the message in seconds.
+        :type typing_speed: float
+        :returns: Returns `True` if the message was sent successfully, `False` otherwise.
+        :rtype: bool
         """
-          locator = (
+        locator = (
             locator
             if isinstance(locator, SimpleNamespace)
             else SimpleNamespace(locator)
         )
-          element = await self.get_webelement_by_locator(locator)
-          if not element or (isinstance(element, list) and len(element) == 0):
+        element = await self.get_webelement_by_locator(locator)
+        if not element or (isinstance(element, list) and len(element) == 0):
             return 
-          element = element[0] if isinstance(element, list) else element
+        element = element[0] if isinstance(element, list) else element
 
-          if typing_speed:
-             for character in message:
+        if typing_speed:
+            for character in message:
                 await element.type(character)
                 await asyncio.sleep(typing_speed)
-          else:
-             await element.type(message)
+        else:
+            await element.type(message)
 
-          return True
+        return True
 
     async def goto(self, url: str) -> None:
         """
         Navigates to a specified URL.
+
         :param url: URL to navigate to.
         :type url: str
         """

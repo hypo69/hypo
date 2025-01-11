@@ -1,0 +1,370 @@
+# Анализ кода модуля `cdata_categories_laptops_dell.json`
+
+**Качество кода**
+9/10
+-  Плюсы
+    - Код представляет собой JSON-файл, который содержит структуру данных для различных моделей ноутбуков DELL.
+    - Структура файла достаточно понятна и логична, что облегчает его чтение и дальнейшую обработку.
+    - Данные хорошо организованы, что позволяет легко находить нужную информацию.
+    - Используются ключи для обозначения характеристик, что облегчает обработку данных программно.
+-  Минусы
+    - Отсутствует описание модуля.
+    -  Не все URL выглядят корректно, некоторые содержат только символы `-`.
+
+**Рекомендации по улучшению**
+1.  **Добавить описание модуля:** В начало файла следует добавить комментарий в формате reStructuredText (RST) с описанием назначения этого JSON-файла, чтобы облегчить понимание его структуры и содержания.
+2.  **Проверить URL:** Необходимо проверить корректность всех URL. Некоторые из них содержат только символы `-`, что делает их нерабочими.
+3.  **Организовать структуру:**  Если требуется, можно пересмотреть структуру, если есть возможность ее улучшить для удобства чтения или обработки.
+4.  **Добавить комментарии:**  Добавить комментарии к наиболее важным частям структуры данных.
+
+**Оптимизированный код**
+```json
+{
+  "scenarios": {
+    "DELL 11.6 I3": {
+      "brand": "DELL",
+      "url": "------------DELL 11.6 I3 -------------r  ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,8,54,4,356,989"
+    },
+    "DELL 11.6 I5": {
+      "brand": "DELL",
+      "url": "-----------DELL 11.6 I5-------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,8,5"
+    },
+    "DELL 11.6 I7": {
+      "brand": "DELL",
+      "url": "--------------DELL 11.6 I7-----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,8,6"
+    },
+    "DELL 11.6 I9": {
+      "brand": "DELL",
+      "url": "-------------DELL 11.6 I9---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,8,7"
+    },
+    "DELL 11.6 AMD": {
+      "brand": "DELL",
+      "url": "-------------DELL 11.6 AMD---------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,8,223,357"
+    },
+    "DELL 11.6 Celeron": {
+      "brand": "DELL",
+      "url": "-------------DELL 11.6 Celeron----------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,233,354"
+    },
+    "DELL 11.6 Pentium": {
+      "brand": "DELL",
+      "url": "-----------------DELL 11.6 Pentium------------ ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,8,232,355"
+    },
+    "DELL 13.3 I3": {
+      "brand": "DELL",
+      "url": "-------------------DELL 13.4 - 13.3 I3-----------r ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,9,4,398"
+    },
+    "DELL 13.3 I5 Inspiron 7000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235!#-!6251!-#!227m!#-!4634!-#!225!#-!6318!##!4877",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,9,5,399,649,54"
+    },
+    "DELL 13.3 I5 XPS13": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4848!-#!227!#-!4634!-#!225!#-!6318!##!4877",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,9,5,399,649,54"
+    },
+    "DELL 13.3 I7 Inspiron 7000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!6251!-#!227!#-!4635!-#!225!#-!4877",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,9,6,400,637,49"
+    },
+    "DELL 13.3 I7 Latitude 7000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4915!-#!227!#-!4635!-#!225!#-!4877",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,9,6,400,638,49"
+    },
+    "DELL 13.3 I7 XPS": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4848!-#!227!#-!4635!-#!225!#-!6318!##!4877",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,9,6,400,637,49"
+    },
+    "DELL 13.3 I9": {
+      "brand": "DELL",
+      "url": "------------DELL 13.4 - 13.3 I9----------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,9,7,401"
+    },
+    "DELL 13.3 AMD": {
+      "brand": "DELL",
+      "url": "----------------DELL 13.4 - 13.3 AMD------------------ ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,9,223,402"
+    },
+    "DELL 13.3 Celeron": {
+      "brand": "DELL",
+      "url": "-----------------DELL 13.4 - 13.3 Celeron---------------- ",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,9,233,403"
+    },
+    "DELL 13.3 Pentium": {
+      "brand": "DELL",
+      "url": "-----------------DELL 13.4 - 13.3 Pentium ------------ ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,9,232,404"
+    },
+    "DELL 14 I3": {
+      "brand": "DELL",
+      "url": "--------------------------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,10,4,405"
+    },
+    "DELL 14 I5 Inspiron 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4847!-#!227!#-!4634!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,5,406,639,54"
+    },
+    "DELL 14 I5 Latitude 3000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4850!-#!227!#-!4634!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,5,406,640,49,54"
+    },
+    "DELL 14 I5 Latitude 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4850!-#!227!#-!4634!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,5,406,641,49,54"
+    },
+    "DELL 14 I5 Latitude 7000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4915!-#!227!#-!4634!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,5,406,642,49,54"
+    },
+    "DELL 14 I7 Inspiron 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4847!-#!227!#-!4635!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,6,407,49,54,639"
+    },
+    "DELL 14 I7 Latitude 3000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4850!-#!227!#-!4635!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,6,407,49,54,640"
+    },
+    "DELL 14 I7 Latitude 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!6183!-#!227!#-!4635!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,6,407,49,54,641"
+    },
+    "DELL 14 I7 Latitude 7000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4915!-#!227!#-!4635!-#!225!#-!4662",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,6,407,49,54,642"
+    },
+    "DELL 14 I9": {
+      "brand": "DELL",
+      "url": "----------------DELL 14 I9 ---------------------------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,10,7,408"
+    },
+    "DELL 14 AMD": {
+      "brand": "DELL",
+      "url": "------------------- DELL 14 AMD ----------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,10,223,409"
+    },
+     "DELL 14 Celeron": {
+      "brand": "DELL",
+      "url": "------------------- DELL 14 AMD ----------------------------",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,10,233,410"
+    },
+    "DELL 14 Pentium": {
+      "brand": "DELL",
+      "url": "-------------------DELL 14 Pentium ---------- ",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,10,232,411"
+    },
+    "DELL 15 I3": {
+      "brand": "DELL",
+      "url": "------------------------------------------------------------------------------------------------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "3,23,11,4,412"
+    },
+    "DELL 15 I5.6 Inspiron 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4847!-#!227!#-!4634!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,5,413,644,54"
+    },
+    "DELL 15 I5 Vostro 3000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4849!-#!227!#-!4634!-#!225!#-!6458!##!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,5,413,645,54,49"
+    },
+    "DELL 15 I5 Vostro 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4916!-#!227!#-!4634!-#!225!#-!6458!##!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,5,413,646,54,49"
+    },
+    "DELL 15 I5 Latitude 3000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4850!-#!227!#-!4634!-#!225!#-!6458!##!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,5,413,647,54,49"
+    },
+     "DELL 15 I5 Latitude 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235!#-!6183!-#!227m!#-!4634!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,5,413,648,54,49"
+    },
+     "DELL 15.0 I7 Latitude 9000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!6457!-#!227!#-!4635!-#!225!#-!6458",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,6,414,643,54,49"
+    },
+    "DELL 15.6 I7 Inspiron 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4847!-#!227!#-!4635!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,6,414,644,54"
+    },
+    "DELL 15.6 I7 Inspiron G5500": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!6453!-#!227!#-!4635!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,6,414,651,54,50"
+    },
+    "DELL 15 I7 Vostro 3000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4849!-#!227!#-!4635!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,6,414,645,49"
+    },
+     "DELL 15 I7 Vostro 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4916!-#!227!#-!4635!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,6,414,646,49"
+    },
+     "DELL 15 I7 Latitude 3000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!4850!-#!227!#-!4635!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,6,414,647,49"
+    },
+    "DELL 15 I7 Latitude 5000": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7%9D-%D7%A0%D7%99%D7%99%D7%93%D7%99%D7%9D-dell#/specFilters=235m!#-!6183!-#!227!#-!4635!-#!225!#-!4663",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "3,23,11,6,414,648,49"
+    },
+      "DELL 15 I7 XPS": {
+      "brand": "DELL",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%97%D7%A9%D7%95%D7%91-%D7%9E%D7%97%D7%A9%D7%91%D7%99%D7

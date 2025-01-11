@@ -72,7 +72,9 @@ class KazarinovTelegramBot(TelegramWebHooksBot, BotHandler):
         )
         
         # Call parent initializers
-        TelegramWebHooksBot.__init__(self, self.token)
+        TelegramWebHooksBot.__init__(self, 
+                                     token = self.token, 
+                                     port = self.config.telegram.port)
         #self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_log))
         BotHandler.__init__(self, getattr(self.config , 'webdriver_name' ,'firefox') )
 
