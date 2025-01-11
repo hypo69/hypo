@@ -1,118 +1,174 @@
-## Анализ кода модуля `scenario.py`
+# Анализ кода модуля `src.suppliers.bangood.scenario`
 
 **Качество кода**
-9
- -  Плюсы
-    - Код хорошо структурирован и разделен на функции, что облегчает его понимание и поддержку.
-    - Используются логирование для отслеживания ошибок и важных событий.
-    - Присутствуют docstring, которые в общих чертах описывают функционал.
- -  Минусы
-    - Отсутствуют необходимые импорты, такие как `Any`, `List`.
-    - docstring не соответствуют стандарту reStructuredText.
-    - Не хватает подробных комментариев для отдельных блоков кода.
-    - Есть потенциальные проблемы с обработкой ошибок.
+7/10
+- Плюсы
+    - Код содержит docstring для модуля и функции.
+    - Используется `logger` для логирования ошибок и информации.
+    - Присутствуют комментарии, объясняющие назначение блоков кода.
+    - Есть проверка на наличие локаторов и ссылок на товары.
+- Минусы
+    - Не все функции имеют docstring, требуется добавление документации в формате RST.
+    - Используется неконсистентный стиль кавычек (местами используются двойные, хотя должны быть одинарные).
+    - Отсутствуют явные импорты, а так же импортирование `j_loads` и `j_loads_ns`
+    - Необходимо добавить обработку исключений в блоках кода, где это требуется.
+    - Отсутствует проверка типа возвращаемого значения для функции `get_list_products_in_category`, используется `list[str, str, None]` вместо `list[str]`
+    - Отсутствуют примеры использования функций в docstring.
+    - Присутствуют `...` как заглушки, которые необходимо убрать.
+    - Отсутсвует обработка исключений при исполнении  `d.execute_locator`.
+    - Используется неявное приведение типов: `[list_products_in_category] if isinstance(list_products_in_category, str)`
 
 **Рекомендации по улучшению**
 
-1.  Добавить недостающие импорты (`from typing import Any, List`).
-2.  Переписать docstring в соответствии со стандартом reStructuredText.
-3.  Добавить более подробные комментарии к каждому блоку кода.
-4.  Избегать избыточного использования `try-except` блоков, заменить их на логирование ошибок через `logger.error`.
-5.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
-6.  Сделать проверку на изменение категорий на страницах продавца.
+1.  **Документация**:
+    - Добавить полное RST-форматирование docstring для всех функций, включая параметры, возвращаемые значения, исключения и примеры использования.
+    - Уточнить документацию модуля.
+2.  **Импорты**:
+    - Добавить необходимые импорты, включая `from src.utils.jjson import j_loads, j_loads_ns`.
+    - `from src.logger.logger import logger`
+3.  **Стиль кода**:
+    - Использовать одинарные кавычки для строк в Python коде, кроме случаев вывода на экран и логов.
+4.  **Обработка ошибок**:
+    - Заменить стандартные `try-except` на логирование ошибок через `logger.error`.
+    - Добавить обработку ошибок при вызове `d.execute_locator`
+5.  **Типизация**:
+    - Уточнить тип возвращаемого значения в `get_list_products_in_category`, убрав `None`
+6.  **Удаление заглушек**:
+    - Убрать `...` из кода.
+    - Реализовать функционал "листалки" в `get_list_products_in_category`, если это необходимо.
+7. **Улучшение кода**
+    - Упростить и сделать более явным приведение к списку, сейчас это выглядит не очевидно
+8.  **Комментарии**:
+    - Использовать более конкретные формулировки в комментариях (например, вместо "собирал ссылки на товары" использовать "код извлекает ссылки на товары").
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
-
 """
-Модуль для сбора товаров со страниц категорий поставщика bangood.co.il.
-======================================================================
+Модуль для сбора данных о товарах с сайта banggood.co.il.
+=========================================================================================
+    
+Этот модуль содержит функции для извлечения списка категорий и товаров с сайта banggood.co.il,
+используя веб-драйвер. 
 
-Этот модуль содержит функции для сбора списка категорий и товаров с сайта bangood.co.il.
+Функции:
+    - get_list_categories_from_site: Извлекает список категорий с сайта.
+    - get_list_products_in_category: Извлекает список товаров из заданной категории.
+    
+.. module:: src.suppliers.bangood.scenario
+   :platform: Windows, Unix
+   :synopsis: Модуль для сбора данных о товарах с сайта banggood.co.il.
 
-Основные функции:
-- :func:`get_list_categories_from_site`: Собирает список категорий со страниц продавца.
-- :func:`get_list_products_in_category`: Собирает список товаров со страницы категории.
-
-.. note::
-    Необходимо добавить проверку на изменение категорий на страницах продавца.
-
-Пример использования
---------------------
-
+Пример использования:
+    
 .. code-block:: python
-
-    from src.suppliers.bangood.scenario import get_list_products_in_category
+    
+    from src.suppliers.bangood.scenario import get_list_categories_from_site, get_list_products_in_category
     from src.suppliers.bangood.supplier import Supplier
+    
     supplier = Supplier()
-    products = get_list_products_in_category(supplier)
-
+    categories = get_list_categories_from_site(supplier)
+    if categories:
+        for category in categories:
+            products = get_list_products_in_category(supplier, category)
+            if products:
+                for product in products:
+                    print(product)
 """
-from typing import Union, Any, List
+
+from typing import List, Union
 from pathlib import Path
 
 from src import gs
 from src.logger.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
 
 
+def get_list_products_in_category(s) -> List[str]:
+    """Извлекает список URL-адресов товаров со страницы категории.
 
+    Args:
+        s: Объект поставщика (Supplier), содержащий драйвер и локаторы.
 
-def get_list_products_in_category(s) -> Union[List[str], None]:
-    """
-    Извлекает список URL-адресов товаров со страницы категории.
+    Returns:
+        Список URL-адресов товаров (list of str) или пустой список, если товары не найдены.
 
-    :param s: Объект Supplier, содержащий информацию о поставщике.
-    :type s: src.suppliers.base.Supplier
-    :return: Список URL-адресов товаров или None в случае ошибки.
-    :rtype: Union[List[str], None]
+    Raises:
+         Exception: Если произошла ошибка во время выполнения.
 
-    :raises Exception: Если не удается получить локаторы.
-
-    .. todo::
-        Реализовать пролистывание страниц категорий.
-
+    Example:
+        >>> from src.suppliers.bangood.supplier import Supplier
+        >>> supplier = Supplier()
+        >>> products = get_list_products_in_category(supplier)
+        >>> if products:
+        >>>     for product in products:
+        >>>         print(product)
     """
     d = s.driver
-    # Получение локаторов для текущей категории
     l: dict = s.locators['category']
 
-    # Закрытие баннера, если он есть
-    d.execute_locator(s.locators['product']['close_banner'])
+    try:
+        # Код исполняет закрытие баннера, если он есть.
+        d.execute_locator(s.locators['product']['close_banner'])
+    except Exception as ex:
+        logger.error(f'Ошибка при закрытии баннера: {ex}')
 
     if not l:
-        # Логирование ошибки, если локаторы не найдены
-        logger.error(f"Локаторы не найдены: {l}")
-        return
+        # Проверка на наличие локаторов.
+        logger.error(f'Локаторы не найдены: {l}')
+        return []
+    
+    try:
+        # Код исполняет прокрутку страницы вниз
+        d.scroll()
+    except Exception as ex:
+        logger.error(f'Ошибка при прокрутке страницы: {ex}')
+        return []
 
-    # Выполнение прокрутки страницы для загрузки всех элементов
-    d.scroll()
 
-    # Попытка получить список ссылок на товары
-    list_products_in_category = d.execute_locator(l['product_links'])
-    # Логирование предупреждения, если ссылки не найдены
+    # TODO: Нет листалки
+    try:
+        # Код извлекает ссылки на товары.
+        list_products_in_category = d.execute_locator(l['product_links'])
+    except Exception as ex:
+         logger.error(f'Ошибка при извлечении ссылок на товары: {ex}')
+         return []
+
+
     if not list_products_in_category:
-        logger.warning('Не найдено ссылок на товары.')
-        return
-    # Преобразование в список если это строка
-    list_products_in_category = [list_products_in_category] if isinstance(list_products_in_category, str) else list_products_in_category
-    # Логирование количества найденных товаров
-    logger.info(f"Найдено {len(list_products_in_category)} товаров.")
+        # Проверка, что список не пустой
+        logger.warning('Нет ссылок на товары.')
+        return []
 
+    # Преобразовывает в список, если результат - строка
+    if isinstance(list_products_in_category, str):
+        list_products_in_category = [list_products_in_category]
+
+    logger.info(f'Найдено {len(list_products_in_category)} товаров')
     return list_products_in_category
 
 
 def get_list_categories_from_site(s):
-    """
-    Извлекает список категорий с сайта поставщика.
+    """Извлекает список URL-адресов категорий с сайта.
     
-    :param s: Объект поставщика.
-    :type s: src.suppliers.base.Supplier
-    :return: None
-    :rtype: None
-    
+    Args:
+        s: Объект поставщика (Supplier), содержащий драйвер и локаторы.
+
+    Returns:
+        Список URL-адресов категорий (list of str) или None, если категории не найдены.
+
+    Raises:
+        Exception: Если произошла ошибка во время выполнения.
+
+    Example:
+        >>> from src.suppliers.bangood.supplier import Supplier
+        >>> supplier = Supplier()
+        >>> categories = get_list_categories_from_site(supplier)
+        >>> if categories:
+        >>>     for category in categories:
+        >>>        print(category)
     """
     ...
+```

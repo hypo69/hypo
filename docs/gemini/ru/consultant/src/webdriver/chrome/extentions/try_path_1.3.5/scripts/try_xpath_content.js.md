@@ -1,89 +1,105 @@
-# Анализ кода модуля `try_xpath_content.js`
+# Анализ кода модуля try_xpath_content.js
 
-**Качество кода**
-7
-- Плюсы
-    - Код разбит на функции, что делает его более читаемым и поддерживаемым.
-    - Используются константы для строк и атрибутов, что уменьшает вероятность ошибок.
-    - Присутствует обработка ошибок, хотя и не всегда в оптимальном стиле.
-    - Есть механизм предотвращения многократного выполнения скрипта `tx.isContentLoaded`.
-- Минусы
-    - Много кода в глобальной области видимости.
-    - Используются устаревшие конструкции типа `Object.create(null)`.
-    - Не все ошибки обрабатываются с использованием `logger.error`.
-    - Комментарии не соответствуют формату reStructuredText (RST).
-    - Некоторые функции не имеют docstring.
-    - Имена переменных и функций не всегда соответствуют общепринятым стандартам (например, `desi` вместо `designation`).
-    - Обработка сообщений от расширения и фреймов не всегда логична и понятна.
-    - Код использует `browser.runtime.sendMessage` для отправки сообщений, что является специфичным для расширений браузера и не может быть использовано в других контекстах без адаптации.
-    - Присутствует устаревший метод `Object.create(null)` вместо использования простых литералов `{}`,
-    - В коде много мест, где можно было бы использовать более идиоматичные способы для написания кода на JavaScript
-    - Не всегда понятно какие данные и в каком формате передаются и как происходит взаимодействие между компонентами расширения.
-    - Использование `window.addEventListener("message", ...)` для обмена сообщениями между фреймами и основным окном усложняет понимание логики и может привести к проблемам с масштабированием.
-    - Не хватает документации для функций и переменных.
+**Качество кода:**
 
-**Рекомендации по улучшению**
+-   **Соответствие требованиям по оформлению кода**: 7/10
+    -   **Плюсы:**
+        - Код достаточно хорошо структурирован и разбит на функции.
+        - Используются константы для магических значений.
+        - Присутствует обработка сообщений от расширения.
+    -   **Минусы:**
+        -  Отсутствует описание модуля в начале файла.
+        -  Отсутствует документация для функций.
+        -  Используются стандартные конструкции `try-catch`, но не везде где это необходимо.
+        -  В некоторых местах используется `Object.create(null)` вместо обычных литералов объектов `{}`.
+        -  Не везде применяется `logger.error` для обработки ошибок.
+        -  Используется `var` вместо `let` и `const`.
+        -  Некоторые переменные объявлены в начале файла, но используются только в отдельных функциях.
+        -  Некоторые функции слишком длинные и выполняют несколько задач.
+        -  Смешивание `var` и `const` может привести к путанице.
+        -  Много мест где есть `return;` без пояснений.
 
-1.  **Импорты и зависимости:**
-    *   Добавить импорт `logger` из `src.logger.logger` для логирования ошибок.
-    *   Убедиться, что все необходимые функции из `tryxpath` и `tryxpath.functions` импортируются правильно.
+**Рекомендации по улучшению:**
 
-2.  **Формат документации:**
-    *   Переписать все комментарии в формате RST, включая описание модуля, функций и переменных.
-    *   Добавить docstring к каждой функции.
+1.  **Добавить описание модуля:**
+    -   В начало файла нужно добавить описание модуля, его назначения и основные принципы работы.
 
-3.  **Обработка ошибок:**
-    *   Заменить стандартные блоки `try-except` на использование `logger.error` для логирования ошибок.
-    *   Обеспечить обработку всех возможных исключений.
+2.  **Документировать функции:**
+    -   Добавить docstring для каждой функции, описывая ее назначение, параметры, возвращаемое значение и возможные ошибки.
 
-4.  **Имена переменных и функций:**
-    *   Привести имена переменных и функций к единому стилю (например, camelCase).
-    *   Использовать более описательные имена.
+3.  **Использовать `logger.error` для обработки ошибок:**
+    -   Заменить стандартные `try-catch` на обработку ошибок с помощью `logger.error`.
+    -   Для каждого `try-catch` необходимо оставлять комментарий, что именно этот блок делает.
 
-5.  **Структура кода:**
-    *   Разделить код на более мелкие функции для повышения читаемости и повторного использования.
-    *   Инкапсулировать некоторые переменные и функции в объекты или замыкания, чтобы уменьшить глобальную область видимости.
+4.  **Перейти на `let` и `const`:**
+    -   Использовать `let` вместо `var` для переменных, которые могут изменяться, и `const` для констант.
 
-6. **Безопасность:**
-    * Внимательно проверить места, где происходит обращение к `window.frames` и `window.parent`, чтобы избежать потенциальных ошибок безопасности.
+5.  **Разделить длинные функции на более мелкие:**
+    -   Разбить большие функции на более мелкие, чтобы каждая из них выполняла одну конкретную задачу.
+    -   Это улучшит читаемость и упростит тестирование кода.
 
-7. **Улучшение стиля:**
-  * Использовать литералы объектов `{}`, вместо устаревшего `Object.create(null)`
-  * Использовать `const` везде, где это возможно, вместо `var`
+6.  **Упростить создание объектов:**
+    -   Использовать `{}` вместо `Object.create(null)` для создания простых объектов, где прототип не нужен.
 
-**Оптимизированный код**
+7.  **Использовать более информативные имена переменных:**
+    -   Имена переменных должны быть более описательными и отражать их назначение.
 
-```javascript
-/*
- Модуль для работы с XPath в контексте расширения браузера.
- =========================================================================================
+8.  **Удалить неиспользуемые переменные:**
+    -   Удалить или переместить переменные, которые объявлены в начале файла, но используются только в отдельных функциях, ближе к месту использования.
 
- Этот модуль содержит функции для выполнения XPath запросов, управления стилями и взаимодействия с фреймами.
+9.  **Унифицировать стиль кода:**
+    -   Привести весь код к единому стилю, чтобы он был более читаемым и понятным.
 
- Пример использования
- --------------------
+10. **Удалить избыточные комментарии и `return;`:**
+     -  Удалить комментарии, которые не несут полезной информации.
+     -  Добавить более понятные комментарии к операторам `return;`.
 
- .. code-block:: javascript
+**Оптимизированный код:**
 
-   // Выполнение XPath запроса
-   genericListener.listeners.execute(message, sender);
+```python
+"""
+Модуль для обработки XPath запросов и отображения результатов в браузере.
+=========================================================================================
 
-   // Фокусировка на элементе
-   genericListener.listeners.focusItem(message);
+Этот модуль содержит функции для обработки XPath запросов,
+выполнения их в контексте текущей веб-страницы или iframe,
+и отображения результатов в виде стилизованных элементов.
+Модуль также обрабатывает сообщения от расширения браузера,
+устанавливает фокус на найденные элементы и управляет стилями.
 
-   // Обновление стилей
-   genericListener.listeners.setStyle();
- */
-import { logger } from '../../logger/logger.js';
+Основные функции:
+  - execute: Выполняет XPath запрос и отправляет результаты в расширение.
+  - focusItem: Устанавливает фокус на найденный элемент.
+  - focusContextItem: Устанавливает фокус на контекстный элемент.
+  - focusFrame: Устанавливает фокус на указанный iframe.
+  - setStyle: Применяет стили к элементам на странице.
+  - resetStyle: Сбрасывает стили.
+
+Пример использования:
+--------------------
+
+.. code-block:: javascript
+
+    // Отправка сообщения для выполнения XPath запроса
+    browser.runtime.sendMessage({
+        "event": "execute",
+        "main": {
+            "method": "evaluate",
+            "expression": "//div",
+            "resultType": "7"
+        }
+    });
+"""
+from src.logger.logger import logger
 
 (function (window, undefined) {
     "use strict";
 
-    // alias
+    # alias
     const tx = tryxpath;
     const fu = tryxpath.functions;
 
-    // prevent multiple execution
+    # предотвращение многократного выполнения
     if (tx.isContentLoaded) {
         return;
     }
@@ -92,8 +108,7 @@ import { logger } from '../../logger/logger.js';
     const dummyItem = "";
     const dummyItems = [];
     const invalidExecutionId = NaN;
-    const styleElementHeader
-          = "/* This style element was inserted by browser add-on, Try xpath."
+    const styleElementHeader = "/* This style element was inserted by browser add-on, Try xpath."
           + " If you want to remove this element, please click the reset"
           + " style button in the popup. */\\n";
 
@@ -118,14 +133,13 @@ import { logger } from '../../logger/logger.js';
     const insertedStyleElements = new Map();
     const expiredCssSet = Object.create(null);
     let originalAttributes = new Map();
-    
 
     /**
-     * Сохраняет и устанавливает атрибут для элемента.
+     * Сохраняет и устанавливает атрибут элемента.
      *
-     * :param attr: Имя атрибута.
-     * :param value: Значение атрибута.
-     * :param item: Элемент, для которого нужно установить атрибут.
+     * @param {string} attr - Имя атрибута.
+     * @param {string} value - Значение атрибута.
+     * @param {Element} item - Целевой элемент.
      */
     function setAttr(attr, value, item) {
         fu.saveAttrForItem(item, attr, originalAttributes);
@@ -133,21 +147,21 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Сохраняет и устанавливает атрибут индекса для списка элементов.
+     * Сохраняет и устанавливает индексы для набора элементов.
      *
-     * :param attr: Имя атрибута.
-     * :param items: Список элементов.
+     * @param {string} attr - Имя атрибута.
+     * @param {Array<Element>} items - Массив элементов.
      */
     function setIndex(attr, items) {
         fu.saveAttrForItems(items, attr, originalAttributes);
         fu.setIndexToItems(attr, items);
     }
 
-     /**
+    /**
      * Проверяет, является ли элемент фокусируемым.
      *
-     * :param item: Элемент для проверки.
-     * :return: True, если элемент фокусируемый, иначе False.
+     * @param {Element} item - Проверяемый элемент.
+     * @returns {boolean} - Возвращает true, если элемент может быть в фокусе, иначе false.
      */
     function isFocusable(item) {
         if (!item) {
@@ -160,15 +174,13 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Фокусирует элемент и устанавливает соответствующие атрибуты.
+     * Устанавливает фокус на элемент, сохраняя предыдущий фокус.
      *
-     * :param item: Элемент для фокусировки.
+     * @param {Element} item - Целевой элемент для установки фокуса.
      */
     function focusItem(item) {
         fu.removeAttrFromItem(attributes.focused, focusedItem);
-        fu.removeAttrFromItems(attributes.focusedAncestor,
-                               focusedAncestorItems);
-        
+        fu.removeAttrFromItems(attributes.focusedAncestor, focusedAncestorItems);
 
         if (!isFocusable(item)) {
             return;
@@ -189,9 +201,9 @@ import { logger } from '../../logger/logger.js';
         focusedItem.focus();
         focusedItem.scrollIntoView();
     }
-    
+
     /**
-     * Устанавливает основные атрибуты для контекстного элемента и списка элементов.
+     * Устанавливает основные атрибуты для контекстного и текущих элементов.
      */
     function setMainAttrs() {
         if (contextItem !== null) {
@@ -209,7 +221,7 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Сбрасывает предыдущие значения и устанавливает начальные значения переменных.
+     * Сбрасывает переменные и счетчики для нового запроса.
      */
     function resetPrev() {
         restoreAttrs();
@@ -224,10 +236,10 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Создает строку с типом результата XPath.
+     * Создает строку из типа результата XPath.
      *
-     * :param resultType: Тип результата.
-     * :return: Строка с типом результата.
+     * @param {number} resultType - Тип результата XPath.
+     * @returns {string} - Строковое представление типа результата.
      */
     function makeTypeStr(resultType) {
         if ((typeof(resultType) === "number")
@@ -238,7 +250,7 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Обновляет стили CSS, если есть изменения.
+     * Обновляет стили CSS, отправляя сообщение в расширение.
      */
     function updateCss() {
         if ((currentCss === null) || (Object.keys(expiredCssSet).length > 0)){
@@ -249,60 +261,61 @@ import { logger } from '../../logger/logger.js';
         }
     }
 
-    /**
-     * Получает фреймы на основе спецификации.
+     /**
+     * Получает массив фреймов по их спецификации.
      *
-     * :param spec: Спецификация фреймов в виде JSON.
-     * :return: Массив фреймов.
-     * :raises Error: Если спецификация неверна.
+     * @param {string} spec - Строка спецификации фреймов.
+     * @returns {Array<Window>} - Массив окон фреймов.
+     * @throws {Error} Если спецификация неверна.
      */
     function getFrames(spec) {
         try {
-             const inds = JSON.parse(spec);
-             if (fu.isNumberArray(inds) && (inds.length > 0)) {
-                 return fu.getFrameAncestry(inds).reverse();
-             } else {
-                throw new Error("Invalid specification. [" + spec + "]");
+            const inds = JSON.parse(spec);
+
+            if (fu.isNumberArray(inds) && (inds.length > 0)) {
+                return fu.getFrameAncestry(inds).reverse();
+            } else {
+                throw new Error(`Invalid specification. [${spec}]`);
             }
-        } catch (e){
+        } catch (e) {
             logger.error('Ошибка при парсинге спецификации фреймов', e)
-            return [];
+            throw e
         }
-       
     }
 
-    /**
-     * Разбирает обозначение фрейма из JSON.
+     /**
+     * Парсит строку спецификации фрейма в массив индексов.
      *
-     * :param frameDesi: Обозначение фрейма в виде JSON.
-     * :return: Массив индексов фреймов.
-     * :raises Error: Если обозначение неверно.
+     * @param {string} frameDesi - Строка спецификации фрейма.
+     * @returns {Array<number>} - Массив индексов фреймов.
+     * @throws {Error} Если спецификация неверна.
      */
     function parseFrameDesignation(frameDesi) {
-        try {
-             const inds = JSON.parse(frameDesi);
-             if (fu.isNumberArray(inds) && (inds.length > 0)) {
-                return inds;
-             } else {
-                 throw new Error("Invalid specification. [" + frameDesi + "]");
-             }
-        }  catch (e){
-            logger.error('Ошибка при парсинге обозначения фрейма', e)
-            return [];
+      try{
+          const inds = JSON.parse(frameDesi);
+
+          if (fu.isNumberArray(inds) && (inds.length > 0)) {
+              return inds;
+          } else {
+            throw new Error(`Invalid specification. [${frameDesi}]`);
+          }
+        } catch (e) {
+          logger.error('Ошибка при парсинге дескриптора фрейма', e)
+          throw e
         }
     }
 
     /**
-     * Отслеживает пустые окна на основе их обозначения.
+     * Проверяет наличие фреймов в "пустых" окнах.
      *
-     * :param desi: Массив индексов фреймов.
-     * :param win: Начальное окно.
-     * :return: Объект с результатами отслеживания.
+     * @param {Array<number>} desi - Массив индексов фреймов.
+     * @param {Window} win - Начальное окно для поиска.
+     * @returns {object} - Объект с результатами поиска.
      */
-     function traceBlankWindows(desi, win) {
+    function traceBlankWindows(desi, win) {
         win = win || window;
-        const result = {};
-    
+        const result = Object.create(null);
+
         result.windows = [];
         for (let i = 0; i < desi.length; i++) {
             let frameInd = desi[i];
@@ -319,15 +332,15 @@ import { logger } from '../../logger/logger.js';
             }
             result.windows.push(win);
         }
-    
+
         result.success = true;
         return result;
     }
 
     /**
-     * Обрабатывает изменения CSS.
+     * Обрабатывает изменение CSS, обновляя текущий стиль и список устаревших стилей.
      *
-     * :param newCss: Новый CSS.
+     * @param {string} newCss - Новый CSS.
      */
     function handleCssChange(newCss) {
         if (currentCss === null) {
@@ -344,18 +357,18 @@ import { logger } from '../../logger/logger.js';
                 currentCss = null;
             }
         }
-        // If newCss and currentCss are the same string do nothing.
+         # Если newCss и currentCss являются одинаковой строкой, ничего не делаем.
     }
-    
-    /**
-     * Находит элемент фрейма по сообщению.
+
+     /**
+     * Находит фрейм по сообщению.
      *
-     * :param event: Событие сообщения.
-     * :param win: Окно.
-     * :return: Элемент фрейма.
+     * @param {object} event - Объект события сообщения.
+     * @param {Window} win - Окно для поиска фрейма.
+     * @returns {Element|null} - Найденный элемент фрейма или null.
      */
     function findFrameByMessage(event, win) {
-        let ind = event.data.frameIndex;
+        const ind = event.data.frameIndex;
         let subWin;
         if (ind >= 0) {
             subWin = win.frames[ind];
@@ -366,12 +379,12 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Устанавливает слушатель сообщений для фокусировки на фрейме.
+     * Устанавливает слушатель сообщений для фокуса фрейма.
      *
-     * :param win: Окно.
-     * :param isBlankWindow: Флаг, указывающий, является ли окно пустым.
+     * @param {Window} win - Целевое окно.
+     * @param {boolean} isBlankWindow - Флаг, указывающий, является ли окно "пустым".
      */
-     function setFocusFrameListener(win, isBlankWindow) {
+    function setFocusFrameListener(win, isBlankWindow) {
         let localUpdateCss;
         if (isBlankWindow) {
             localUpdateCss = updateStyleElement.bind(null, win.document);
@@ -380,21 +393,20 @@ import { logger } from '../../logger/logger.js';
         }
 
         win.addEventListener("message", (event) => {
-             if (event.data
-                 && event.data.message === "tryxpath-focus-frame"
-                 && Number.isInteger(event.data.index)
-                 && Number.isInteger(event.data.frameIndex)) {
+            if (event.data
+                && event.data.message === "tryxpath-focus-frame"
+                && Number.isInteger(event.data.index)
+                && Number.isInteger(event.data.frameIndex)) {
 
-                let frame = findFrameByMessage(event, win);
+                const frame = findFrameByMessage(event, win);
                 if (!frame) {
                     return;
                 }
 
-                let index = event.data.index;
+                const index = event.data.index;
                 localUpdateCss();
                 setAttr(attributes.frame, index, frame);
-                setIndex(attributes.frameAncestor,
-                         fu.getAncestorElements(frame));
+                setIndex(attributes.frameAncestor, fu.getAncestorElements(frame));
                 if (win === win.top) {
                     frame.blur();
                     frame.focus();
@@ -408,16 +420,16 @@ import { logger } from '../../logger/logger.js';
                 }
             }
         });
-     }
+    }
 
     /**
-     * Инициализирует пустое окно.
+     * Инициализирует "пустое" окно, устанавливая необходимые свойства и слушатели.
      *
-     * :param win: Окно.
+     * @param {Window} win - Целевое окно.
      */
     function initBlankWindow(win) {
         if (!win.tryxpath) {
-            win.tryxpath = {};
+            win.tryxpath = Object.create(null);
         }
 
         if (win.tryxpath.isInitialized) {
@@ -429,19 +441,19 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Находит родительский элемент для стиля.
+     * Находит родительский элемент для вставки стилей.
      *
-     * :param doc: Документ.
-     * :return: Родительский элемент.
+     * @param {Document} doc - Документ, в котором нужно найти родителя.
+     * @returns {HTMLElement|null} - Родительский элемент или null.
      */
     function findStyleParent(doc) {
         return (doc.head || doc.body || null);
     }
 
     /**
-     * Обновляет элемент стиля.
+     * Обновляет стили CSS в элементе <style> в указанном документе.
      *
-     * :param doc: Документ.
+     * @param {Document} doc - Документ, в котором нужно обновить стили.
      */
     function updateStyleElement(doc) {
         let css = currentCss || "";
@@ -453,9 +465,9 @@ import { logger } from '../../logger/logger.js';
             return;
         }
 
-        let parent = findStyleParent(doc);
+        const parent = findStyleParent(doc);
         if (parent) {
-            let newStyle = doc.createElement("style");
+            const newStyle = doc.createElement("style");
             newStyle.textContent = css;
             newStyle.setAttribute("type", "text/css");
             parent.appendChild(newStyle);
@@ -464,7 +476,7 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Обновляет все элементы стиля.
+     * Обновляет все элементы <style> на странице.
      */
     function updateAllStyleElements() {
         let css = currentCss || "";
@@ -475,18 +487,18 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Удаляет элемент стиля.
+     * Удаляет элемент <style> из документа.
      *
-     * :param doc: Документ.
+     * @param {Document} doc - Документ, из которого нужно удалить элемент.
      */
     function removeStyleElement(doc) {
-        let elem = insertedStyleElements.get(doc);
-        
+        const elem = insertedStyleElements.get(doc);
+
         if (!elem) {
             return;
         }
 
-        let parent = elem.parentNode;
+        const parent = elem.parentNode;
         if (parent) {
             parent.removeChild(elem);
         }
@@ -494,10 +506,10 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Удаляет все элементы стиля.
+     * Удаляет все элементы <style> на странице.
      */
     function removeAllStyleElements() {
-         for (let [doc, elem] of insertedStyleElements) {
+        for (let [doc, elem] of insertedStyleElements) {
             let parent = elem.parentNode;
             if (parent) {
                 parent.removeChild(elem);
@@ -507,13 +519,13 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Создает объект сообщения о результате.
+     * Создает шаблон сообщения результата.
      *
-     * :return: Объект сообщения о результате.
+     * @returns {object} - Шаблон сообщения результата.
      */
     function createResultMessage() {
         return {
-            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "showResultsInPopup",
+           "timeout":0,"timeout_for_event":"presence_of_element_located","event": "showResultsInPopup",
             "executionId": invalidExecutionId,
             "href": "",
             "title": "",
@@ -529,25 +541,26 @@ import { logger } from '../../logger/logger.js';
     }
 
     /**
-     * Слушатель сообщений для обработки событий.
+     * Общий обработчик сообщений от расширения.
      *
-     * :param message: Сообщение.
-     * :param sender: Отправитель сообщения.
-     * :param sendResponse: Функция для отправки ответа.
+     * @param {object} message - Объект сообщения.
+     * @param {object} sender - Объект отправителя.
+     * @param {function} sendResponse - Функция для отправки ответа.
+     * @returns {*} - Результат работы слушателя.
      */
-     function genericListener(message, sender, sendResponse) {
-        let listener = genericListener.listeners[message.event];
+    function genericListener(message, sender, sendResponse) {
+        const listener = genericListener.listeners[message.event];
         if (listener) {
             return listener(message, sender, sendResponse);
         }
     }
-    genericListener.listeners = {};
+    genericListener.listeners = Object.create(null);
     browser.runtime.onMessage.addListener(genericListener);
 
     /**
-     * Устанавливает информацию о контенте.
+     * Слушатель для установки информации о содержимом.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Объект сообщения.
      */
     genericListener.listeners.setContentInfo = function (message) {
         if (!message) {
@@ -559,18 +572,17 @@ import { logger } from '../../logger/logger.js';
         }
     };
 
-    /**
-     * Выполняет XPath запрос.
+     /**
+     * Слушатель для выполнения XPath запроса.
      *
-     * :param message: Сообщение.
-     * :param sender: Отправитель сообщения.
+     * @param {object} message - Объект сообщения с данными для выполнения запроса.
+     * @param {object} sender - Объект отправителя сообщения.
      */
     genericListener.listeners.execute = function(message, sender) {
         resetPrev();
-
         updateCss();
 
-        const sendMsg = {};
+        const sendMsg = Object.create(null);
         const main = message.main;
         sendMsg.event = "showResultsInPopup";
         sendMsg.executionId = executionCount;
@@ -579,7 +591,7 @@ import { logger } from '../../logger/logger.js';
         sendMsg.frameDesignation = "";
 
         const mainType = fu.getxpathResultNum(main.resultType);
-        sendMsg.main = {};
+        sendMsg.main = Object.create(null);
         sendMsg.main.method = main.method;
         sendMsg.main.expression = main.expression;
         sendMsg.main.specifiedResultType = makeTypeStr(mainType);
@@ -592,29 +604,29 @@ import { logger } from '../../logger/logger.js';
 
         if ("frameDesignation" in message) {
             sendMsg.frameDesignation = message.frameDesignation;
+
             try {
-                 const desi = parseFrameDesignation(message.frameDesignation);
+                const desi = parseFrameDesignation(message.frameDesignation);
                 const res = traceBlankWindows(desi, window);
                 if (!res.success) {
                    if (res.failedWindow === null) {
-                       throw new Error(
-                            "The specified frame does not exist.");
+                      throw new Error("The specified frame does not exist.");
                     } else {
-                        res.failedWindow.postMessage({
-                            "message": "tryxpath-request-message-to-popup",
-                            "messageId": 1
-                        }, "*");
-                        return;
-                    }
+                      res.failedWindow.postMessage({
+                         "message": "tryxpath-request-message-to-popup",
+                         "messageId": 1
+                      }, "*");
+                      return;
+                   }
                 }
                 contextItem = res.windows.pop().document;
             } catch (e) {
-                sendMsg.message = "An error occurred when getting a frame. "
-                    + e.message;
+                sendMsg.message = `An error occurred when getting a frame. ${e.message}`;
                 browser.runtime.sendMessage(sendMsg);
                 prevMsg = sendMsg;
                 return;
             }
+
             inBlankWindow = true;
             currentDocument = contextItem;
         }
@@ -626,27 +638,26 @@ import { logger } from '../../logger/logger.js';
         if (message.context) {
             const cont = message.context;
             const contType = fu.getxpathResultNum(cont.resultType);
-            sendMsg.context = {};
+            sendMsg.context = Object.create(null);
             sendMsg.context.method = cont.method;
             sendMsg.context.expression = cont.expression;
             sendMsg.context.specifiedResultType = makeTypeStr(contType);
             sendMsg.context.resolver = cont.resolver || "";
             sendMsg.context.itemDetail = null;
 
-             let contRes;
+            let contRes;
             try {
-                 contRes = fu.execExpr(cont.expression, cont.method, {
-                     "context": contextItem,
-                     "resultType": contType,
-                     "resolver": cont.resolver
-                });
-             } catch (e) {
-                 sendMsg.message = "An error occurred when getting a context. "
-                     + e.message;
-                 browser.runtime.sendMessage(sendMsg);
-                 prevMsg = sendMsg;
-                 return;
-             }
+              contRes = fu.execExpr(cont.expression, cont.method, {
+                  "context": contextItem,
+                  "resultType": contType,
+                  "resolver": cont.resolver
+              });
+            } catch (e) {
+              sendMsg.message = `An error occurred when getting a context. ${e.message}`;
+              browser.runtime.sendMessage(sendMsg);
+              prevMsg = sendMsg;
+              return;
+            }
 
             if (contRes.items.length === 0) {
                 sendMsg.message = "A context is not found.";
@@ -655,6 +666,7 @@ import { logger } from '../../logger/logger.js';
                 return;
             }
             contextItem = contRes.items[0];
+
             sendMsg.context.resultType = makeTypeStr(contRes.resultType);
             sendMsg.context.itemDetail = fu.getItemDetail(contextItem);
         }
@@ -667,13 +679,13 @@ import { logger } from '../../logger/logger.js';
                 "resolver": main.resolver
             });
         } catch (e) {
-            sendMsg.message = "An error occurred when getting nodes. "
-                + e.message;
-            browser.runtime.sendMessage(sendMsg);
-            prevMsg = sendMsg;
-            return;
+          sendMsg.message = `An error occurred when getting nodes. ${e.message}`;
+          browser.runtime.sendMessage(sendMsg);
+          prevMsg = sendMsg;
+          return;
         }
         currentItems = mainRes.items;
+
         sendMsg.message = "Success.";
         sendMsg.main.resultType = makeTypeStr(mainRes.resultType);
         sendMsg.main.itemDetails = fu.getItemDetails(currentItems);
@@ -684,12 +696,12 @@ import { logger } from '../../logger/logger.js';
         if (inBlankWindow) {
             updateStyleElement(currentDocument);
         }
-    };
+    }
 
     /**
-     * Фокусирует элемент из результата запроса.
+     * Слушатель для установки фокуса на элемент.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Объект сообщения с данными элемента.
      */
     genericListener.listeners.focusItem = function(message) {
         if (message.executionId === executionCount) {
@@ -700,10 +712,10 @@ import { logger } from '../../logger/logger.js';
         }
     };
 
-     /**
-     * Фокусирует контекстный элемент.
+    /**
+     * Слушатель для установки фокуса на контекстный элемент.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Объект сообщения с данными контекстного элемента.
      */
     genericListener.listeners.focusContextItem = function(message) {
         if (message.executionId === executionCount) {
@@ -715,50 +727,49 @@ import { logger } from '../../logger/logger.js';
     };
 
     /**
-     * Фокусирует фрейм.
+     * Слушатель для установки фокуса на фрейм.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Объект сообщения с данными фрейма.
      */
     genericListener.listeners.focusFrame = function(message) {
-        let win = window;
+      let win = window;
+
         if ("frameDesignation" in message) {
-           try {
+            try {
                 const desi = parseFrameDesignation(message.frameDesignation);
-                 const res = traceBlankWindows(desi, window);
-                 if (!res.success) {
-                    let msg;
-                     if (res.failedWindow === null) {
-                       throw new Error(
-                            "The specified frame does not exist.");
+                const res = traceBlankWindows(desi, window);
+                if (!res.success) {
+                  let msg
+                   if (res.failedWindow === null) {
+                        throw new Error("The specified frame does not exist.");
                     } else {
-                        res.failedWindow.postMessage({
-                            "message": "tryxpath-request-message-to-popup",
-                           "messageId": 1
-                         }, "*");
-                         return;
-                     }
+                      res.failedWindow.postMessage({
+                          "message": "tryxpath-request-message-to-popup",
+                          "messageId": 1
+                      }, "*");
+                        return;
+                    }
                 }
                 win = res.windows.pop();
-             } catch (e) {
-                 let sendMsg = createResultMessage();
-                sendMsg.message = "An error occurred when focusing a frame. "
-                    + e.message;
+            } catch (e) {
+                const sendMsg = createResultMessage();
+                sendMsg.message = `An error occurred when focusing a frame. ${e.message}`;
                 browser.runtime.sendMessage(sendMsg);
                 return;
-           }
+            }
         }
 
-         if (win !== win.top) {
-             win.parent.postMessage({
+        if (win !== win.top) {
+            win.parent.postMessage({
                 "message": "tryxpath-focus-frame",
-                 "index": 0,
-                 "frameIndex": fu.findFrameIndex(win, win.parent)
+                "index": 0,
+                "frameIndex": fu.findFrameIndex(win, win.parent)
             }, "*");
         }
     };
 
     /**
-     * Запрашивает отображение результатов в попапе.
+     * Слушатель для запроса показа результатов в popup.
      */
     genericListener.listeners.requestShowResultsInPopup = function () {
         if (prevMsg) {
@@ -768,17 +779,17 @@ import { logger } from '../../logger/logger.js';
     };
 
     /**
-     * Запрашивает отображение всех результатов.
+     * Слушатель для запроса показа всех результатов.
      */
     genericListener.listeners.requestShowAllResults = function () {
-       if (prevMsg) {
+        if (prevMsg) {
             prevMsg.event = "showAllResults";
             browser.runtime.sendMessage(prevMsg);
         }
-    };
+    }
 
     /**
-     * Сбрасывает стиль.
+     * Слушатель для сброса стилей.
      */
     genericListener.listeners.resetStyle = function () {
         restoreAttrs();
@@ -786,10 +797,10 @@ import { logger } from '../../logger/logger.js';
     };
 
     /**
-     * Устанавливает стиль.
+     * Слушатель для установки стилей.
      */
     genericListener.listeners.setStyle = function () {
-         restoreAttrs();
+        restoreAttrs();
         updateCss();
         if (inBlankWindow) {
             updateStyleElement(currentDocument);
@@ -797,40 +808,47 @@ import { logger } from '../../logger/logger.js';
         setMainAttrs();
     };
 
-     /**
-     * Завершает вставку CSS.
+    /**
+     * Слушатель для завершения вставки CSS.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Объект сообщения с CSS.
      */
     genericListener.listeners.finishInsertCss = function (message) {
-        let css = message.css;
+        const css = message.css;
         currentCss = css;
         delete expiredCssSet[css];
+
         updateAllStyleElements();
     };
 
     /**
-     * Завершает удаление CSS.
+     * Слушатель для завершения удаления CSS.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Объект сообщения с CSS.
      */
     genericListener.listeners.finishRemoveCss = function (message) {
-         let css = message.css;
+        const css = message.css;
         if (css === currentCss) {
-           currentCss = null;
+            currentCss = null;
         }
-       delete expiredCssSet[css];
+        delete expiredCssSet[css];
     };
-    
+
+    /**
+     * Слушатель для изменений в хранилище браузера.
+     */
     browser.storage.onChanged.addListener(changes => {
         if (changes.attributes && ("newValue" in changes.attributes)) {
-           attributes = changes.attributes.newValue;
+            attributes = changes.attributes.newValue;
         }
-         if (changes.css && ("newValue" in changes.css)) {
+        if (changes.css && ("newValue" in changes.css)) {
             handleCssChange(changes.css.newValue);
         }
     });
 
+    /**
+     * Слушатель для сообщений от фреймов.
+     */
     window.addEventListener("message", event => {
         if (event.data
             && (event.data.message === "tryxpath-request-message-to-popup")) {
@@ -857,6 +875,7 @@ import { logger } from '../../logger/logger.js';
 
     prevMsg = createResultMessage();
     setFocusFrameListener(window, false);
+
     browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestSetContentInfo" });
+
 })(window);
-```

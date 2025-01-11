@@ -36,7 +36,11 @@ class Edge(WebDriver):
     """
     driver_name: str = 'edge'
 
-    def __init__(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs) -> None:
+    def __init__(self,  profile_name: Optional[str] = None,
+                 user_agent: Optional[str] = None,
+                 options: Optional[List[str]] = None,
+                 window_mode: Optional[str] = None,
+                 *args, **kwargs) -> None:
         """
         Initializes the Edge WebDriver with the specified user agent and options.
 
@@ -44,6 +48,8 @@ class Edge(WebDriver):
         :type user_agent: Optional[str]
         :param options: A list of Edge options to be passed during initialization.
         :type options: Optional[List[str]]
+        :param window_mode: Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.)
+        :type window_mode: Optional[str]
         """
         self.user_agent = user_agent or UserAgent().random
         settings = j_loads_ns(Path(gs.path.src, 'webdriver', 'edge', 'edge.json'))
@@ -51,6 +57,19 @@ class Edge(WebDriver):
         # Initialize Edge options
         options_obj = EdgeOptions()
         options_obj.add_argument(f'user-agent={self.user_agent}')
+        
+        #  Установка режима окна из конфига
+        if hasattr(settings, 'window_mode') and settings.window_mode:
+            window_mode = window_mode or settings.window_mode
+        #  Установка режима окна из параметров
+        if window_mode:
+            if window_mode == 'kiosk':
+                options_obj.add_argument("--kiosk")
+            elif window_mode == 'windowless':
+               options_obj.add_argument("--headless")
+            elif window_mode == 'full_window':
+                 options_obj.add_argument("--start-maximized")
+
 
         # Add custom options passed during initialization
         if options:
@@ -66,7 +85,15 @@ class Edge(WebDriver):
         if hasattr(settings, 'headers') and settings.headers:
             for key, value in vars(settings.headers).items():
                 options_obj.add_argument(f'--{key}={value}')
+        
+         # Настройка директории профиля
+        profile_directory = settings.profiles.os if settings.profiles.default == 'os' else str(Path(gs.path.src, settings.profiles.internal))
 
+        if profile_name:
+             profile_directory = str(Path(profile_directory).parent / profile_name)
+        if '%LOCALAPPDATA%' in profile_directory:
+              profile_directory = Path(profile_directory.replace('%LOCALAPPDATA%', os.environ.get('LOCALAPPDATA')))
+        options_obj.add_argument(f"--user-data-dir={profile_directory}")
         try:
             logger.info('Starting Edge WebDriver')
             edgedriver_path = settings.executable_path.default  # Ensure this is correctly defined in your JSON file
@@ -113,5 +140,5 @@ class Edge(WebDriver):
 
 
 if __name__ == "__main__":
-    driver = Edge(options=["--headless", "--disable-gpu"])
+    driver = Edge(window_mode='full_window')
     driver.get("https://www.example.com")

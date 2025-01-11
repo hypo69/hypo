@@ -14,7 +14,7 @@ Description of functionality and rules for code generation, analysis, and improv
 
 #### **2. Comments**:
 - Use `#` for internal comments.
-- Documentation in Sphinx format must be used for all functions, methods, and classes.
+- Documentation for all functions, methods, and classes must follow the **Sphinx** format, based on **reStructuredText (reST)**.
 - Comments and documentation should be clear, concise, and precise.
 
 #### **3. Code Formatting**:
@@ -53,17 +53,14 @@ Description of functionality and rules for code generation, analysis, and improv
         """
         Reads the contents of a file (or files from a directory) using a generator for memory efficiency.
 
-        Args:
-            file_path (str | Path): Path to the file or directory.
-            as_list (bool, optional): If `True`, returns a generator of strings.
-            extensions (list[str], optional): List of file extensions to include when reading a directory.
-            chunk_size (int, optional): The size of chunks to read the file in bytes.
+        :param file_path: Path to the file or directory.
+        :param as_list: If `True`, returns a generator of strings.
+        :param extensions: List of file extensions to include when reading a directory.
+        :param chunk_size: The size of chunks to read the file in bytes.
 
-        Returns:
-            Generator[str, None, None] | str | None: A string generator, a concatenated string, or `None` in case of error.
+        :returns: A string generator, a concatenated string, or `None` in case of error.
 
-        Raises:
-            Exception: If an error occurs while reading the file.
+        :raises Exception: If an error occurs while reading the file.
 
         Example:
             >>> from pathlib import Path
@@ -110,9 +107,8 @@ Each response should include the following sections:
 
 - **Improved Optimized Full Code**:
 
-```markdown
+
 <Improved version of the code with added comments and formatting.>
-```
 
 - **Changes**:
 <A detailed list of all modifications, including explanations and justifications.>

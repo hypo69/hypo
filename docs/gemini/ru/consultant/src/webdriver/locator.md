@@ -1,230 +1,249 @@
 # Анализ кода модуля `locator.md`
 
 **Качество кода**
-7
+9
 - Плюсы
-    - Представлено подробное описание структуры и назначения локаторов.
-    - Приведены примеры использования различных типов локаторов (`XPATH`, `VALUE`).
-    - Описано взаимодействие локаторов с `executor`.
-    - Рассмотрены различные ключи локаторов, такие как `attribute`, `by`, `selector`, `event`, `mandatory` и другие.
- - Минусы
-    - Документ представляет собой описание, а не код, поэтому нет возможности применить большинство инструкций.
-    - Отсутствует структурированный формат, например, в виде таблицы или YAML.
-    - Нет примеров кода на Python для работы с этими локаторами, только JSON.
-    - Не хватает документации в формате RST.
-    - Описание взаимодействия с executor не достаточно конкретно (например, отсутствуют детали реализации в Python).
+    -  Хорошее объяснение назначения локаторов и их взаимодействия с `executor`.
+    -  Подробное описание ключей и их значений для каждого примера локатора.
+    -  Четкое описание взаимодействия `executor` с каждым типом локатора.
+- Минусы
+    -  Отсутствует описание модуля в начале файла.
+    -  Некоторые примеры JSON можно было бы представить в виде Python-словарей.
+    -  Нет примеров использования в коде
 
 **Рекомендации по улучшению**
 
-1.  **Структурировать документ**: Преобразовать описание в более структурированный формат, например, в таблицу или использовать YAML для описания локаторов. Это облегчит чтение и понимание.
-2.  **Добавить примеры кода Python**: Добавить примеры кода на Python, демонстрирующие, как использовать эти локаторы с `executor` (например, как передавать локаторы в функцию `execute_locator`).
-3.  **Улучшить документацию RST**: Привести примеры документации в формате RST для каждой части.
-4.  **Конкретизировать описание взаимодействия**: Детальнее описать взаимодействие с `executor`, включая конкретные шаги и функции, используемые в Python.
-5.  **Оформление JSON**: Документировать JSON примеры как код с подсветкой синтаксиса.
-6.  **Добавить описание возможных ошибок и обработку исключений**. Указать возможные ошибки при работе с локаторами и как их обрабатывать.
+1.  **Добавить описание модуля**: В начало документа добавить описание назначения данного модуля.
+2.  **Формат примеров**: Представить JSON примеры в виде словарей Python для большей наглядности и соответствия Python коду.
+3.  **Примеры использования**: Добавить примеры того, как эти локаторы могут быть использованы в коде.
+4.  **Добавить документацию**: Добавить документацию в формате RST для каждой функции и класса, который использует эти локаторы.
 
 **Оптимизированный код**
 
 ```markdown
-# Анализ локаторов и их взаимодействие с `executor`
+# Описание модуля "Локаторы веб-элементов и их взаимодействие с executor"
+=========================================================================================
 
-Локаторы представляют собой конфигурационные объекты, описывающие, как находить веб-элементы и взаимодействовать с ними на странице. Они передаются в класс `ExecuteLocator` для выполнения различных действий, таких как клики, отправка сообщений, извлечение атрибутов и т.д. Ниже приведены примеры локаторов и их ключей, а также их взаимодействие с `executor`.
+Этот модуль содержит описание структуры и назначения локаторов, а также объяснение их взаимодействия с классом `executor` для автоматизации действий с веб-элементами.
 
-## Примеры локаторов
+Локаторы представляют собой конфигурационные объекты, описывающие, как находить и взаимодействовать с веб-элементами на странице.
+Они передаются в класс `ExecuteLocator` для выполнения различных действий, таких как клики, ввод текста, извлечение атрибутов и т.д.
 
-### 1. `close_banner`
+Примеры использования
+--------------------
 
-```json
-{
-  "close_banner": {
-    "attribute": null,
-    "by": "XPATH",
-    "selector": "//button[@id = 'closeXButton']",
-    "if_list": "first",
-    "use_mouse": false,
-    "mandatory": false,
-    "timeout": 0,
-    "timeout_for_event": "presence_of_element_located",
-    "event": "click()",
-    "locator_description": "Закрывает всплывающее окно, если оно не появляется - это нормально (`mandatory`: `false`)"
-  }
+Пример использования локатора:
+
+.. code-block:: python
+
+    locator = {
+        'close_banner': {
+            'attribute': None,
+            'by': 'XPATH',
+            'selector': "//button[@id = 'closeXButton']",
+            'if_list': 'first',
+            'use_mouse': False,
+            'mandatory': False,
+            'timeout': 0,
+            'timeout_for_event': 'presence_of_element_located',
+            'event': 'click()',
+            'locator_description': 'Close the pop-up window, if it does not appear - it\'s okay (`mandatory`: `False`)'
+        }
+    }
+
+## Explanation of Locators and Their Interaction with `executor`
+
+Locators are configuration objects that describe how to find and interact with web elements on a page. They are passed to the `ExecuteLocator` class to perform various actions such as clicks, sending messages, extracting attributes, etc. Let's break down the examples of locators and their keys, as well as their interaction with `executor`.
+
+### Examples of Locators
+
+#### 1. `close_banner`
+
+```python
+# Пример локатора для закрытия баннера.
+"close_banner": {
+  "attribute": null,
+  "by": "XPATH",
+  "selector": "//button[@id = 'closeXButton']",
+  "if_list": "first",
+  "use_mouse": false,
+  "mandatory": false,
+  "timeout": 0,
+  "timeout_for_event": "presence_of_element_located",
+  "event": "click()",
+  "locator_description": "Close the pop-up window, if it does not appear - it's okay (`mandatory`: `false`)"
 }
 ```
 
-**Назначение локатора**: Закрывает баннер (всплывающее окно), если он появляется на странице.
+**Purpose of the Locator**: Close the banner (pop-up window) if it appears on the page.
 
-**Ключи**:
-- `attribute`: Не используется в данном случае.
-- `by`: Тип локатора (`XPATH`).
-- `selector`: Выражение для поиска элемента (`//button[@id = 'closeXButton']`).
-- `if_list`: Если найдено несколько элементов, использовать первый (`first`).
-- `use_mouse`: Не использовать мышь (`false`).
-- `mandatory`: Необязательное действие (`false`).
-- `timeout`: Время ожидания для поиска элемента (`0`).
-- `timeout_for_event`: Условие ожидания (`presence_of_element_located`).
-- `event`: Событие для выполнения (`click()`).
-- `locator_description`: Описание локатора.
+**Keys**:
+- `attribute`: Not used in this case.
+- `by`: Locator type (`XPATH`).
+- `selector`: Expression to find the element (`//button[@id = 'closeXButton']`).
+- `if_list`: If multiple elements are found, use the first one (`first`).
+- `use_mouse`: Do not use the mouse (`false`).
+- `mandatory`: Optional action (`false`).
+- `timeout`: Timeout for finding the element (`0`).
+- `timeout_for_event`: Wait condition (`presence_of_element_located`).
+- `event`: Event to execute (`click()`).
+- `locator_description`: Description of the locator.
 
-**Взаимодействие с `executor`**:
-- `executor` найдет элемент по XPATH и выполнит клик по нему.
-- Если элемент не будет найден, `executor` продолжит выполнение, так как действие не является обязательным (`mandatory: false`).
+**Interaction with `executor`**:
+- `executor` will find the element by XPATH and perform a click on it.
+- If the element is not found, `executor` will continue execution since the action is not mandatory (`mandatory: false`).
 
-### 2. `id_manufacturer`
+#### 2. `id_manufacturer`
 
-```json
-{
-  "id_manufacturer": {
-    "attribute": 11290,
-    "by": "VALUE",
-    "selector": null,
-    "if_list": "first",
-    "use_mouse": false,
-    "mandatory": true,
-    "timeout": 0,
-    "timeout_for_event": "presence_of_element_located",
-    "event": null,
-    "locator_description": "id_manufacturer"
-  }
+```python
+# Пример локатора для получения id производителя.
+"id_manufacturer": {
+  "attribute": 11290,
+  "by": "VALUE",
+  "selector": null,
+  "if_list": "first",
+  "use_mouse": false,
+  "mandatory": true,
+  "timeout": 0,
+  "timeout_for_event": "presence_of_element_located",
+  "event": null,
+  "locator_description": "id_manufacturer"
 }
 ```
 
-**Назначение локатора**: Возвращает значение, установленное в `attribute`.
+**Purpose of the Locator**: Return the value set in `attribute`.
 
-**Ключи**:
-- `attribute`: Значение атрибута (`11290`).
-- `by`: Тип локатора (`VALUE`).
-- `selector`: Не используется в данном случае.
-- `if_list`: Если найдено несколько элементов, использовать первый (`first`).
-- `use_mouse`: Не использовать мышь (`false`).
-- `mandatory`: Обязательное действие (`true`).
-- `timeout`: Время ожидания для поиска элемента (`0`).
-- `timeout_for_event`: Условие ожидания (`presence_of_element_located`).
-- `event`: Нет события (`null`).
-- `locator_description`: Описание локатора.
+**Keys**:
+- `attribute`: Attribute value (`11290`).
+- `by`: Locator type (`VALUE`).
+- `selector`: Not used in this case.
+- `if_list`: If multiple elements are found, use the first one (`first`).
+- `use_mouse`: Do not use the mouse (`false`).
+- `mandatory`: Mandatory action (`true`).
+- `timeout`: Timeout for finding the element (`0`).
+- `timeout_for_event`: Wait condition (`presence_of_element_located`).
+- `event`: No event (`null`).
+- `locator_description`: Description of the locator.
 
-**Взаимодействие с `executor`**:
-- `executor` вернет значение, установленное в `attribute` (`11290`).
-- Поскольку `by` установлен в `VALUE`, `executor` не будет искать элемент на странице.
+**Interaction with `executor`**:
+- `executor` will return the value set in `attribute` (`11290`).
+- Since `by` is set to `VALUE`, `executor` will not search for the element on the page.
 
-### 3. `additional_images_urls`
+#### 3. `additional_images_urls`
 
-```json
-{
-  "additional_images_urls": {
-    "attribute": "src",
-    "by": "XPATH",
-    "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
-    "if_list": "first",
-    "use_mouse": false,
-    "mandatory": false,
-    "timeout": 0,
-    "timeout_for_event": "presence_of_element_located",
-    "event": null
-  }
+```python
+# Пример локатора для получения URL дополнительных изображений.
+"additional_images_urls": {
+  "attribute": "src",
+  "by": "XPATH",
+  "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
+  "if_list": "first",
+  "use_mouse": false,
+  "mandatory": false,
+  "timeout": 0,
+  "timeout_for_event": "presence_of_element_located",
+  "event": null
 }
 ```
 
-**Назначение локатора**: Извлекает URL-адреса дополнительных изображений.
+**Purpose of the Locator**: Extract URLs of additional images.
 
-**Ключи**:
-- `attribute`: Атрибут для извлечения (`src`).
-- `by`: Тип локатора (`XPATH`).
-- `selector`: Выражение для поиска элементов (`//ol[contains(@class, 'flex-control-thumbs')]//img`).
-- `if_list`: Если найдено несколько элементов, использовать первый (`first`).
-- `use_mouse`: Не использовать мышь (`false`).
-- `mandatory`: Необязательное действие (`false`).
-- `timeout`: Время ожидания для поиска элемента (`0`).
-- `timeout_for_event`: Условие ожидания (`presence_of_element_located`).
-- `event`: Нет события (`null`).
+**Keys**:
+- `attribute`: Attribute to extract (`src`).
+- `by`: Locator type (`XPATH`).
+- `selector`: Expression to find elements (`//ol[contains(@class, 'flex-control-thumbs')]//img`).
+- `if_list`: If multiple elements are found, use the first one (`first`).
+- `use_mouse`: Do not use the mouse (`false`).
+- `mandatory`: Optional action (`false`).
+- `timeout`: Timeout for finding the element (`0`).
+- `timeout_for_event`: Wait condition (`presence_of_element_located`).
+- `event`: No event (`null`).
 
-**Взаимодействие с `executor`**:
-- `executor` найдет элементы по XPATH и извлечет значение атрибута `src` для каждого элемента.
-- Если элементы не будут найдены, `executor` продолжит выполнение, так как действие не является обязательным (`mandatory: false`).
+**Interaction with `executor`**:
+- `executor` will find elements by XPATH and extract the `src` attribute value for each element.
+- If elements are not found, `executor` will continue execution since the action is not mandatory (`mandatory: false`).
 
-### 4. `default_image_url`
+#### 4. `default_image_url`
 
-```json
-{
-  "default_image_url": {
-    "attribute": null,
-    "by": "XPATH",
-    "selector": "//a[@id = 'mainpic']//img",
-    "if_list": "first",
-     "use_mouse": false,
-    "timeout": 0,
-    "timeout_for_event": "presence_of_element_located",
-    "event": "screenshot()",
-    "mandatory": true,
-    "locator_description": "Внимание! В Morlevi изображение получается через скриншот и возвращается как png (`bytes`)"
-  }
+```python
+# Пример локатора для получения скриншота основного изображения.
+"default_image_url": {
+  "attribute": null,
+  "by": "XPATH",
+  "selector": "//a[@id = 'mainpic']//img",
+  "if_list": "first",
+  "use_mouse": false,
+  "timeout": 0,
+  "timeout_for_event": "presence_of_element_located",
+  "event": "screenshot()",
+  "mandatory": true,
+  "locator_description": "Attention! In Morlevi, the image is obtained via screenshot and returned as png (`bytes`)"
 }
 ```
 
-**Назначение локатора**: Делает скриншот изображения по умолчанию.
+**Purpose of the Locator**: Take a screenshot of the default image.
 
-**Ключи**:
-- `attribute`: Не используется в данном случае.
-- `by`: Тип локатора (`XPATH`).
-- `selector`: Выражение для поиска элемента (`//a[@id = 'mainpic']//img`).
-- `if_list`: Если найдено несколько элементов, использовать первый (`first`).
--  `use_mouse`: Не использовать мышь (`false`).
-- `timeout`: Время ожидания для поиска элемента (`0`).
-- `timeout_for_event`: Условие ожидания (`presence_of_element_located`).
-- `event`: Событие для выполнения (`screenshot()`).
-- `mandatory`: Обязательное действие (`true`).
-- `locator_description`: Описание локатора.
+**Keys**:
+- `attribute`: Not used in this case.
+- `by`: Locator type (`XPATH`).
+- `selector`: Expression to find the element (`//a[@id = 'mainpic']//img`).
+- `if_list`: If multiple elements are found, use the first one (`first`).
+- `use_mouse`: Do not use the mouse (`false`).
+- `timeout`: Timeout for finding the element (`0`).
+- `timeout_for_event`: Wait condition (`presence_of_element_located`).
+- `event`: Event to execute (`screenshot()`).
+- `mandatory`: Mandatory action (`true`).
+- `locator_description`: Description of the locator.
 
-**Взаимодействие с `executor`**:
-- `executor` найдет элемент по XPATH и сделает скриншот этого элемента.
-- Если элемент не будет найден, `executor` вызовет ошибку, так как действие является обязательным (`mandatory: true`).
+**Interaction with `executor`**:
+- `executor` will find the element by XPATH and take a screenshot of the element.
+- If the element is not found, `executor` will raise an error since the action is mandatory (`mandatory: true`).
 
-### 5. `id_supplier`
+#### 5. `id_supplier`
 
-```json
-{
-  "id_supplier": {
-    "attribute": "innerText",
-    "by": "XPATH",
-    "selector": "//span[@class = 'ltr sku-copy']",
-    "if_list": "first",
-    "use_mouse": false,
-    "mandatory": true,
-    "timeout": 0,
-    "timeout_for_event": "presence_of_element_located",
-    "event": null,
-     "locator_description": "SKU morlevi"
-  }
+```python
+# Пример локатора для получения SKU поставщика.
+"id_supplier": {
+  "attribute": "innerText",
+  "by": "XPATH",
+  "selector": "//span[@class = 'ltr sku-copy']",
+  "if_list": "first",
+  "use_mouse": false,
+  "mandatory": true,
+  "timeout": 0,
+  "timeout_for_event": "presence_of_element_located",
+  "event": null,
+  "locator_description": "SKU morlevi"
 }
 ```
 
-**Назначение локатора**: Извлекает текст внутри элемента, содержащего SKU.
+**Purpose of the Locator**: Extract the text inside the element containing the SKU.
 
-**Ключи**:
-- `attribute`: Атрибут для извлечения (`innerText`).
-- `by`: Тип локатора (`XPATH`).
-- `selector`: Выражение для поиска элемента (`//span[@class = 'ltr sku-copy']`).
-- `if_list`: Если найдено несколько элементов, использовать первый (`first`).
-- `use_mouse`: Не использовать мышь (`false`).
-- `mandatory`: Обязательное действие (`true`).
-- `timeout`: Время ожидания для поиска элемента (`0`).
-- `timeout_for_event`: Условие ожидания (`presence_of_element_located`).
-- `event`: Нет события (`null`).
-- `locator_description`: Описание локатора.
+**Keys**:
+- `attribute`: Attribute to extract (`innerText`).
+- `by`: Locator type (`XPATH`).
+- `selector`: Expression to find the element (`//span[@class = 'ltr sku-copy']`).
+- `if_list`: If multiple elements are found, use the first one (`first`).
+- `use_mouse`: Do not use the mouse (`false`).
+- `mandatory`: Mandatory action (`true`).
+- `timeout`: Timeout for finding the element (`0`).
+- `timeout_for_event`: Wait condition (`presence_of_element_located`).
+- `event`: No event (`null`).
+- `locator_description`: Description of the locator.
 
-**Взаимодействие с `executor`**:
-- `executor` найдет элемент по XPATH и извлечет текст внутри элемента (`innerText`).
-- Если элемент не будет найден, `executor` вызовет ошибку, так как действие является обязательным (`mandatory: true`).
+**Interaction with `executor`**:
+- `executor` will find the element by XPATH and extract the text inside the element (`innerText`).
+- If the element is not found, `executor` will raise an error since the action is mandatory (`mandatory: true`).
 
-## Взаимодействие с `executor`
+### Interaction with `executor`
 
-`executor` использует локаторы для выполнения различных действий на веб-странице. Основные шаги взаимодействия:
+`executor` uses locators to perform various actions on the web page. The main steps of interaction are:
 
-1.  **Разбор локатора**: Преобразует локатор в объект `SimpleNamespace`, если это необходимо.
-2.  **Поиск элемента**: Использует тип локатора (`by`) и селектор (`selector`) для поиска элемента на странице.
-3.  **Выполнение события**: Если указан ключ `event`, выполняет соответствующее действие (например, клик, скриншот).
-4.  **Извлечение атрибута**: Если указан ключ `attribute`, извлекает значение атрибута из найденного элемента.
-5.  **Обработка ошибок**: Если элемент не найден и действие не является обязательным (`mandatory: false`), продолжает выполнение. Если действие является обязательным, вызывает ошибку.
+1. **Parsing the Locator**: Converts the locator to a `SimpleNamespace` object if necessary.
+2. **Finding the Element**: Uses the locator type (`by`) and selector (`selector`) to find the element on the page.
+3. **Executing the Event**: If the `event` key is specified, performs the corresponding action (e.g., click, screenshot).
+4. **Extracting the Attribute**: If the `attribute` key is specified, extracts the attribute value from the found element.
+5. **Error Handling**: If the element is not found and the action is not mandatory (`mandatory: false`), continues execution. If the action is mandatory, raises an error.
 
-Таким образом, локаторы предоставляют гибкий и мощный инструмент для автоматизации взаимодействия с веб-элементами, а `executor` обеспечивает их выполнение с учетом всех параметров и условий.
-
+Thus, locators provide a flexible and powerful tool for automating interaction with web elements, and `executor` ensures their execution considering all parameters and conditions.
 ```

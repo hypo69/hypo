@@ -1,153 +1,157 @@
 ## ИНСТРУКЦИЯ:
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+    которые импортируются при создании диаграммы.
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
     ```
 
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
+3.  **<объяснение>**: Предоставьте подробные объяснения:
+    *   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    *   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    *   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    *   **Переменные**: Их типы и использование.
+    *   Выделите потенциальные ошибки или области для улучшения.
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
 
 Это обеспечивает всесторонний и структурированный анализ кода.
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
+```markdown
+## Анализ кода `src/endpoints/prestashop/language.py`
 
-## <алгоритм>
-```mermaid
-graph TD
-    A[Начало] --> B{Инициализация PrestaLanguage};
-    B --> C{Проверка credentials};
-    C -- credentials is not None --> D{Получение api_domain и api_key из credentials};
-    C -- credentials is None --> E{Проверка api_domain и api_key};
-    D --> E;
-    E -- not api_domain or not api_key --> F{Выброс ValueError};
-    E -- api_domain and api_key are valid --> G{Вызов __init__ родительского класса PrestaShop};
-    G --> H[Конец];
-    F --> H;
-```
+### 1. <алгоритм>
 
-**Примеры:**
+**Блок-схема:**
 
-1.  **Инициализация:**
-    *   `prestalanguage = PrestaLanguage(api_domain="example.com", api_key="test_key")` - Прямая передача `api_domain` и `api_key`.
-    *   `credentials = {'api_domain': 'example.com', 'api_key': 'test_key'}`
-        `prestalanguage = PrestaLanguage(credentials=credentials)` - Передача через словарь.
-    *   `credentials = SimpleNamespace(api_domain="example.com", api_key="test_key")`
-        `prestalanguage = PrestaLanguage(credentials=credentials)` - Передача через `SimpleNamespace`.
-2.  **Проверка `credentials`:**
-    *   Если `credentials` не `None`, `api_domain` и `api_key` извлекаются из него.
-    *   Если `credentials` `None`, берутся `api_domain` и `api_key` из аргументов.
-3.  **Проверка `api_domain` и `api_key`:**
-    *   Если хотя бы один из них не задан, выбрасывается `ValueError`.
-4.  **Вызов `__init__` родительского класса:**
-    *   Если все проверки пройдены, вызывается `__init__` класса `PrestaShop`, от которого наследуется `PrestaLanguage`.
+1.  **Инициализация (`__init__`)**:
+    *   На входе получает `credentials` (словарь или `SimpleNamespace`), `api_domain`, `api_key`, `*args` и `**kwards`.
+    *   Проверяет, переданы ли `credentials`. Если да, пытается извлечь `api_domain` и `api_key` из `credentials`, если они не заданы напрямую.
+    *   Проверяет наличие `api_domain` и `api_key`. Если хотя бы один из них отсутствует, выбрасывает исключение `ValueError`.
+        *   **Пример**: `PrestaLanguage(credentials={'api_domain': 'test.com', 'api_key': '123'}, api_domain='override.com')`. В этом случае `api_domain` будет `override.com`.
+        *   **Пример**: `PrestaLanguage(api_domain='test.com')` вызовет `ValueError`, так как не задан `api_key`.
+    *   Вызывает конструктор родительского класса `PrestaShop` с переданными `api_domain`, `api_key`, `*args` и `**kwards`.
+        *   **Пример**: `PrestaLanguage(api_domain='test.com', api_key='123', timeout=60)` передаст `timeout` в конструктор родителя.
 
-## <mermaid>
+2.  **Методы для работы с языками (пока не реализованы, но описаны в docstring):**
+    *   `add_language_PrestaShop(language_name, language_iso_code)`: добавляет новый язык.
+    *   `delete_language_PrestaShop(language_id)`: удаляет язык по `id`.
+    *   `update_language_PrestaShop(language_id, new_language_name)`: обновляет название языка по `id`.
+    *   `get_language_details_PrestaShop(language_id)`: получает информацию о языке по `id`.
+
+**Поток данных:**
+`PrestaLanguage` -> `__init__` -> проверка аргументов -> вызов `super().__init__` (конструктор `PrestaShop`) -> методы (не реализованы) для работы с языками.
+
+### 2. <mermaid>
+
 ```mermaid
 flowchart TD
-    Start --> PrestaLanguageInit[<code>PrestaLanguage.__init__</code><br>Initialize PrestaLanguage Instance];
-    PrestaLanguageInit --> CheckCredentials[Check if <code>credentials</code> are provided];
-    CheckCredentials -- Yes --> ExtractCredentials[Extract <code>api_domain</code> and <code>api_key</code> from <code>credentials</code>];
-    CheckCredentials -- No --> CheckApiKeys[Check if <code>api_domain</code> and <code>api_key</code> are provided];
-    ExtractCredentials --> CheckApiKeys;
-    CheckApiKeys -- No --> RaiseError[Raise ValueError];
-    CheckApiKeys -- Yes --> ParentInit[Call <code>PrestaShop.__init__</code>];
-    ParentInit --> End[End];
+    Start[Start] --> Init[<code>PrestaLanguage.__init__</code><br>Initialize with credentials, api_domain, api_key]
+    Init --> CheckCredentials{Check if credentials are provided?}
+    CheckCredentials -- Yes --> ExtractCredentials[Extract api_domain and api_key from credentials]
+    CheckCredentials -- No --> SkipExtract
+    ExtractCredentials --> CheckApiParams{Check if api_domain and api_key are valid?}
+    SkipExtract --> CheckApiParams
+    CheckApiParams -- No --> Error[Raise ValueError]
+    CheckApiParams -- Yes --> SuperInit[Call <code>PrestaShop.__init__</code>]
+    SuperInit --> End[End]
 
-    RaiseError --> End;
 
     style Start fill:#f9f,stroke:#333,stroke-width:2px
-    style End fill:#ccf,stroke:#333,stroke-width:2px
+    style End fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
 ```mermaid
 flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
 ```
-**Зависимости (импорты):**
 
-*   `from types import SimpleNamespace`: Используется для создания простых объектов с атрибутами, что позволяет передавать параметры конфигурации.
-*   `from .api import PrestaShop`: Импортирует класс `PrestaShop` из модуля `api` в текущем пакете (предположительно, `src.endpoints.prestashop`). `PrestaLanguage` наследуется от этого класса, что указывает на связь и иерархию классов.
-*   `from src import gs`: Импортирует глобальные настройки `gs` из пакета `src`, что говорит об использовании общих конфигураций проекта.
-*   `from src.utils.printer import pprint`: Импортирует функцию `pprint` для форматированного вывода данных, что может быть полезно для отладки.
-*    `from .api import PrestaShop` - еще один импорт PrestaShop из того же модуля.
-*    `import header` -  Импортирует модуль header, который, как правило, содержит логику определения корневого каталога проекта и загрузки глобальных параметров.
-*   `from src.logger.logger import logger`: Импортирует `logger` для логирования событий.
-*   `from src.logger.exceptions import PrestaShopException`: Импортирует `PrestaShopException` для обработки ошибок, связанных с PrestaShop.
-*   `from typing import Optional`: Используется для аннотаций типов, указывая на возможность отсутствия значений (None).
+**Анализ зависимостей:**
 
-## <объяснение>
+*   **`types`**: Импортируется `SimpleNamespace` для создания объектов с атрибутами, которые можно использовать для передачи параметров.
+*   **`.api`**: Импортируется `PrestaShop` - базовый класс для работы с API PrestaShop.  `PrestaLanguage` наследует от него.
+*   **`src`**: Импортируется `gs` - глобальные настройки проекта. Используется для доступа к общим настройкам.
+*   **`src.utils.printer`**: Импортируется `pprint` - используется для красивого вывода информации.
+*   **`header`**: Используется для определения корневой директории проекта и загрузки глобальных настроек.
+*   **`src.logger.logger`**: Импортируется `logger` - используется для логирования событий.
+*   **`src.logger.exceptions`**: Импортируется `PrestaShopException` - класс исключений для PrestaShop.
+*   **`typing`**: Импортируется `Optional` для указания, что аргументы могут быть None.
+
+### 3. <объяснение>
 
 **Импорты:**
 
-*   `types.SimpleNamespace`: Позволяет создавать объекты с произвольными атрибутами, упрощая передачу параметров конфигурации.
-*   `src.endpoints.prestashop.api.PrestaShop`: Базовый класс для работы с API PrestaShop, от которого наследуется `PrestaLanguage`. Содержит общую логику для взаимодействия с API.
-*   `src.gs`: Модуль глобальных настроек, используемый для хранения общих параметров проекта (например, URL API, ключи).
-*   `src.utils.printer.pprint`: Функция для "красивой" печати данных, которая может использоваться для отладки и форматированного вывода.
-*   `header`: Модуль для определения корня проекта и загрузки глобальных настроек, используется для настройки среды выполнения приложения.
-*   `src.logger.logger`: Модуль для логирования, позволяющий записывать важную информацию о работе программы.
-*   `src.logger.exceptions.PrestaShopException`: Пользовательское исключение, специфичное для работы с PrestaShop, которое позволяет более конкретно обрабатывать ошибки.
-*  `typing.Optional`: Тип, указывающий, что переменная может иметь значение либо определенного типа, либо `None`.
+*   `from types import SimpleNamespace`: `SimpleNamespace` используется для создания объектов, атрибуты которых можно устанавливать динамически. В данном случае, используется для представления набора параметров (`api_domain`, `api_key`), которые могут быть переданы в `__init__`. Это удобнее, чем использовать словарь.
+*   `from .api import PrestaShop`: Импортирует базовый класс `PrestaShop` из модуля `api`, расположенного в том же пакете (`src.endpoints.prestashop`). `PrestaLanguage` является его наследником, что обеспечивает доступ к методам для работы с API PrestaShop.
+*   `from src import gs`: Импортирует глобальные настройки приложения из пакета `src`. Это позволяет классу `PrestaLanguage` использовать настройки приложения, такие как, возможно, базовый URL API.
+*   `from src.utils.printer import pprint`: Импортирует функцию `pprint` для красивого вывода данных на экран. Используется для отладки.
+*   `from .api import PrestaShop`: Повторный импорт `PrestaShop` -  вероятно, это опечатка и импорт можно удалить.
+*    `import header`: Импортирует модуль `header` для определения корневой директории проекта.
+*    `from src.logger.logger import logger`: Импортирует объект `logger` для логирования информации о работе программы. Это помогает отслеживать ошибки и события.
+*   `from src.logger.exceptions import PrestaShopException`: Импортирует класс исключений `PrestaShopException` из модуля `exceptions` для обработки ошибок.
+*  `from typing import Optional`: Импортирует `Optional` для явного указания, что некоторые параметры могут быть `None`.
 
 **Классы:**
 
-*   `PrestaLanguage(PrestaShop)`:
-    *   **Роль:**  Класс для управления языками магазина PrestaShop. Он наследует функциональность работы с API PrestaShop от класса `PrestaShop`.
-    *   **Атрибуты:** Нет явных атрибутов, но `api_domain` и `api_key` инициализируются через конструктор и используются в родительском классе.
+*   `class PrestaLanguage(PrestaShop)`: Класс для работы с языками магазина PrestaShop. Наследуется от `PrestaShop`, что дает доступ к методам для API PrestaShop.
+    *   **Атрибуты:** Не имеет собственных атрибутов, но наследует атрибуты от `PrestaShop`.
     *   **Методы:**
-        *   `__init__(self, credentials=None, api_domain=None, api_key=None, *args, **kwards)`:
-            *   **Аргументы:**
-                *   `credentials`: Словарь или `SimpleNamespace`, содержащий `api_domain` и `api_key`.
-                *   `api_domain`: Домен API PrestaShop.
-                *   `api_key`: Ключ API PrestaShop.
-                *   `*args`, `**kwards`: Дополнительные аргументы для родительского класса `PrestaShop`.
-            *   **Возвращаемое значение:** Нет.
-            *   **Назначение:** Инициализирует объект `PrestaLanguage`, устанавливая домен и ключ API.
-            *   **Пример:** `prestalanguage = PrestaLanguage(api_domain="example.com", api_key="test_key")`
-    *   **Взаимодействие:**  Наследует от `PrestaShop`, использует его `__init__` для установки параметров API. Взаимодействует с API PrestaShop для работы с языками (хотя этот функционал не приведен в представленном фрагменте кода).
+        *   `__init__(self, credentials=None, api_domain=None, api_key=None, *args, **kwards)`: Конструктор класса. Принимает параметры для аутентификации в API PrestaShop (`api_domain`, `api_key`), а также параметры для родительского класса `PrestaShop`(`*args`, `**kwards`).
+        *   `add_language_PrestaShop(language_name, language_iso_code)`: (пока не реализован) Метод для добавления языка.
+        *   `delete_language_PrestaShop(language_id)`: (пока не реализован) Метод для удаления языка.
+        *   `update_language_PrestaShop(language_id, new_language_name)`: (пока не реализован) Метод для обновления имени языка.
+        *   `get_language_details_PrestaShop(language_id)`: (пока не реализован) Метод для получения деталей языка.
 
 **Функции:**
 
-*   `__init__`: Метод инициализации класса `PrestaLanguage`, который обрабатывает передачу учетных данных API и вызывает конструктор родительского класса `PrestaShop`.
+*   `__init__`:
+    *   **Аргументы:**
+        *   `credentials (Optional[dict | SimpleNamespace])`: Словарь или `SimpleNamespace` с параметрами `api_domain` и `api_key`.
+        *   `api_domain (Optional[str])`: Домен API.
+        *   `api_key (Optional[str])`: Ключ API.
+        *   `*args`: Неименованные аргументы.
+        *   `**kwards`: Именованные аргументы.
+    *   **Возвращаемое значение**: Нет.
+    *   **Назначение**: Инициализирует объект `PrestaLanguage`, проверяет наличие параметров `api_domain` и `api_key`, извлекает их из `credentials`, если это необходимо, и вызывает конструктор родительского класса `PrestaShop`.
+    *   **Пример:** `PrestaLanguage(api_domain="example.com", api_key="testkey")` или `PrestaLanguage(credentials={'api_domain': "example.com", 'api_key': "testkey"})`
+*   Методы `add_language_PrestaShop`, `delete_language_PrestaShop`, `update_language_PrestaShop`, и `get_language_details_PrestaShop` пока не реализованы, но их назначение описано в docstring класса.
 
 **Переменные:**
 
-*   `MODE`: Глобальная переменная, устанавливающая режим работы (в данном случае, 'dev'), которая влияет на поведение приложения (но ее использование не показано в этом коде).
-*   `credentials`: Локальная переменная в `__init__`, которая может быть словарем или объектом `SimpleNamespace`, содержащим `api_domain` и `api_key`.
-*   `api_domain`: Локальная переменная в `__init__`, содержащая домен API PrestaShop.
-*   `api_key`: Локальная переменная в `__init__`, содержащая ключ API PrestaShop.
+*   `credentials` : Словарь или `SimpleNamespace`, содержащий учетные данные API.
+*   `api_domain`: Домен API PrestaShop.
+*   `api_key`: Ключ API PrestaShop.
 
 **Потенциальные ошибки и улучшения:**
 
-*   Отсутствует обработка ошибок API PrestaShop, которые могут возникнуть при взаимодействии с API через методы класса `PrestaShop`.
-*   Нет явных методов для добавления, удаления, обновления и получения информации о языках, что подразумевает, что они находятся в родительском классе `PrestaShop`.
-*   Можно добавить проверки на типы данных `api_domain` и `api_key`.
-*   Код использует `credentials.get(..., api_domain)` в случае, когда api_domain передан явно как аргумент. Возможно, это стоит пересмотреть.
+*   **Повторный импорт:**  Есть повторный импорт `from .api import PrestaShop`, его нужно удалить.
+*   **Не реализованы методы:** Методы для работы с языками не реализованы. Необходимо добавить их реализацию для полноценной функциональности класса.
+*  **Обработка ошибок:** Текущая реализация обрабатывает только ошибку отсутствия `api_domain` и `api_key`. Следует рассмотреть добавление более подробной обработки ошибок API и network ошибок.
+*  **Валидация:** Стоит добавить валидацию для параметров `api_domain` и `api_key`, чтобы убедиться, что они соответствуют ожидаемому формату.
+*   **Логирование:** Необходимо добавить логирование для отслеживания действий класса и потенциальных ошибок.
+*   **Документация**: Было бы полезно добавить документацию для методов `add_language_PrestaShop`, `delete_language_PrestaShop`, `update_language_PrestaShop`, и `get_language_details_PrestaShop` как только они будут реализованы.
+*   **Передача аргументов в родительский класс:** Убедиться что все необходимые аргументы из `*args` и `**kwards` корректно передаются в родительский класс `PrestaShop`.
 
-**Цепочка взаимосвязей:**
+**Взаимосвязи с другими частями проекта:**
 
-1.  `header.py`: Определяет корень проекта и импортирует глобальные настройки.
-2.  `src.gs`: Глобальные настройки, содержащие конфигурацию проекта, включая URL API и ключи.
-3.  `src.endpoints.prestashop.api.PrestaShop`: Базовый класс для работы с API PrestaShop.
-4.  `src.endpoints.prestashop.language.PrestaLanguage`:  Класс для работы с языками PrestaShop, наследуется от `PrestaShop`.
-5.  `src.utils.printer.pprint`: Используется для форматированного вывода (для отладки).
-6. `src.logger.*`: Используется для логирования и обработки ошибок.
+*   Класс `PrestaLanguage` зависит от класса `PrestaShop`, который, в свою очередь, отвечает за взаимодействие с API PrestaShop.
+*   Использует `gs` для получения глобальных настроек, таких как URL API.
+*   Использует `printer` для вывода отладочной информации.
+*   Использует `header` для определения корневой папки проекта.
+*   Использует `logger` для логирования действий и ошибок.
+*   Использует `PrestaShopException` для обработки исключений.
+*   Этот класс, вероятно, используется другими частями проекта, которые требуют управления языками PrestaShop.
+```

@@ -2,37 +2,31 @@
 
 **Качество кода**
 7
-- Плюсы
-    - Код хорошо структурирован и разделен на логические блоки.
-    - Используются комментарии для пояснения работы кода.
-    - Присутствует базовая обработка исключений.
-    - Использованы docstring для описания классов и методов.
-- Минусы
-    - Не все docstring соответствуют стандарту RST.
-    -  Используется `header` импорт, который не является стандартным и его назначение не ясно.
-    -  Импорт `gs` не используется в коде и является избыточным.
-    - Отсутствует явное указание типа возвращаемого значения в docstring некоторых методов.
-    -  Избыточное использование `try-except` с последующим возвратом `''` или `False`.
-    - В docstring не везде указаны примеры использования.
-    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+-   Плюсы
+    *   Код соответствует PEP 8.
+    *   Присутствует описание модуля.
+    *   Присутствует документация для класса и методов.
+    *   Используется `logger` для логирования ошибок.
+    *   Используется конкатенация строк в сообщениях `logger.error`.
+-   Минусы
+    *   Отсутствует docstring для модуля
+    *   В некоторых местах используется конкатенация строк в logger.error, что может быть менее производительно, чем f-строки.
+    *   Некоторые методы возвращают пустую строку (`''`) в случае ошибки, что может затруднить отладку.
+    *   Импорт `header` не используется, но он присутствует.
+    *   Импорт `gs` не используется, но он присутствует.
+    *   В `unhide_DOM_element` возвращает `True` или `False`, но при этом не используется.
+    *   В `unhide_DOM_element`  используется `scrollIntoView(true)` , но это может помешать работе, если требуется оставить элемент в текущей позиции.
+    *   В `unhide_DOM_element`  стили задаются через JavaScript, но можно использовать css.
 
 **Рекомендации по улучшению**
 
-1.  **Удалить неиспользуемый импорт:**
-    - Удалить `import gs` так как он не используется.
-
-2.  **Уточнить docstring:**
-    - Добавить примеры использования в docstring.
-    -  Указать типы возвращаемых значений в docstring для всех методов.
-    -  Привести docstring к стандарту RST.
-3. **Улучшить обработку ошибок:**
-    - Заменить `try-except` на вызовы `logger.error` без возврата пустых значений.
-4. **Удалить импорт header:**
-    - Необходимо выяснить назначение импорта header и удалить, если он не требуется.
-5. **Использовать единый стиль кавычек:**
-     - Заменить двойные кавычки на одинарные в коде, кроме операций вывода.
-6. **Добавить описание модуля.**
-7. **Добавить тип возвращаемого значения в docstring.**
+1.  Добавить docstring для модуля.
+2.  Удалить неиспользуемые импорты `header` и `gs`.
+3.  Использовать f-строки для форматирования сообщений `logger.error`.
+4.  Изменить возвращаемое значение в методе `unhide_DOM_element`.
+5.  Рассмотреть возможность выбрасывания исключения вместо возврата пустой строки в методах `ready_state`, `get_referrer`, `get_page_lang`.
+6.  Удалить `scrollIntoView(true)` в методе `unhide_DOM_element`.
+7.  Заменить присвоение стилей через JS на CSS.
 
 **Оптимизированный код**
 
@@ -41,10 +35,11 @@
 Модуль для работы с JavaScript в Selenium WebDriver
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`JavaScript`, который используется для выполнения JavaScript
-кода в контексте браузера, управляемого Selenium WebDriver.
-Модуль включает функции для манипуляции видимостью элементов, получения данных о странице и
-управления фокусом окна.
+Этот модуль предоставляет класс :class:`JavaScript`, который используется для
+взаимодействия с веб-страницей через выполнение JavaScript-кода.
+
+Модуль включает в себя функции для управления видимостью DOM-элементов,
+получения информации о состоянии страницы и управления фокусом окна браузера.
 
 Пример использования
 --------------------
@@ -57,42 +52,43 @@
     from src.webdriver.js import JavaScript
 
     driver = webdriver.Chrome()
-    js_executor = JavaScript(driver)
-    element = driver.find_element_by_id('element_id')
-    js_executor.unhide_DOM_element(element)
+    js_utils = JavaScript(driver)
+    element = driver.find_element_by_id('myElement')
+    js_utils.unhide_DOM_element(element)
+
 """
 # -*- coding: utf-8 -*-
+
 #! venv/bin/python/python3.12
 
 from src.logger.logger import logger
-# удален не используемый импорт import header
+# удален неиспользуемый импорт header
+# удален неиспользуемый импорт gs
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 
 class JavaScript:
-    """
-    Предоставляет JavaScript утилиты для взаимодействия с веб-страницей.
-    """
+    """Provides JavaScript utility functions for interacting with a web page."""
 
     def __init__(self, driver: WebDriver):
-        """
-        Инициализирует помощника JavaScript с экземпляром Selenium WebDriver.
+        """Initializes the JavaScript helper with a Selenium WebDriver instance.
 
-        :param driver: Экземпляр Selenium WebDriver для выполнения JavaScript.
-        :type driver: WebDriver
+        Args:
+            driver (WebDriver): Selenium WebDriver instance to execute JavaScript.
         """
         self.driver = driver
 
-    def unhide_DOM_element(self, element: WebElement) -> bool:
-        """
-        Делает невидимый DOM элемент видимым, изменяя его свойства стиля.
+    def unhide_DOM_element(self, element: WebElement) -> None:
+        """Makes an invisible DOM element visible by modifying its style properties.
 
-        :param element: Объект WebElement, который нужно сделать видимым.
-        :type element: WebElement
-        :return: True, если скрипт выполнен успешно, False в противном случае.
-        :rtype: bool
+        Args:
+            element (WebElement): The WebElement object to make visible.
+
+        Raises:
+            Exception: If an error occurs while executing JavaScript.
         """
+        # Код исполняет установку видимости элемента путем изменения CSS-свойств
         script = """
         arguments[0].style.opacity = 1;
         arguments[0].style.transform = 'translate(0px, 0px) scale(1)';
@@ -100,74 +96,79 @@ class JavaScript:
         arguments[0].style.WebkitTransform = 'translate(0px, 0px) scale(1)';
         arguments[0].style.msTransform = 'translate(0px, 0px) scale(1)';
         arguments[0].style.OTransform = 'translate(0px, 0px) scale(1)';
-        arguments[0].scrollIntoView(true);
-        return true;
         """
         try:
-            # код исполняет скрипт для изменения видимости элемента
             self.driver.execute_script(script, element)
-            return True
+            # удалено return True т.к. не используется
         except Exception as ex:
-            # логирует ошибку, если не удалось выполнить скрипт
-            logger.error('Ошибка в unhide_DOM_element: %s', ex)
-            return False
+            logger.error(f'Error in unhide_DOM_element: {ex}')
+            # удалено return False т.к. не используется
+            raise
 
     @property
     def ready_state(self) -> str:
-        """
-        Возвращает статус загрузки документа.
+        """Retrieves the document loading status.
 
-        :return: `loading`, если документ еще загружается, `complete`, если загрузка завершена.
-        :rtype: str
+        Returns:
+            str: 'loading' if the document is still loading, 'complete' if loading is finished.
+
+        Raises:
+            Exception: If an error occurs while executing JavaScript.
         """
         try:
-            # код исполняет скрипт для получения статуса загрузки документа
+            # Код исполняет получение состояния загрузки документа
             return self.driver.execute_script('return document.readyState;')
         except Exception as ex:
-            # логирует ошибку, если не удалось получить статус
-            logger.error('Ошибка получения document.readyState: %s', ex)
-            return ''
+            logger.error(f'Error retrieving document.readyState: {ex}')
+            # изменено возвращение пустой строки на выбрасывание исключения
+            raise
 
     def window_focus(self) -> None:
-        """
-        Устанавливает фокус на окно браузера с помощью JavaScript.
+        """Sets focus to the browser window using JavaScript.
 
-        Пытается вывести окно браузера на передний план.
+        Attempts to bring the browser window to the foreground.
+
+        Raises:
+            Exception: If an error occurs while executing JavaScript.
         """
         try:
-            # код исполняет скрипт для установки фокуса на окно браузера
+            # Код исполняет установку фокуса на окно браузера
             self.driver.execute_script('window.focus();')
         except Exception as ex:
-            # логирует ошибку, если не удалось установить фокус
-            logger.error('Ошибка при выполнении window.focus(): %s', ex)
+            logger.error(f'Error executing window.focus(): {ex}')
+            raise
 
     def get_referrer(self) -> str:
-        """
-        Возвращает URL-адрес перехода текущего документа.
+        """Retrieves the referrer URL of the current document.
 
-        :return: URL-адрес перехода или пустая строка, если он недоступен.
-        :rtype: str
+        Returns:
+            str: The referrer URL, or an empty string if unavailable.
+
+         Raises:
+            Exception: If an error occurs while executing JavaScript.
         """
         try:
-            # код исполняет скрипт для получения URL-адреса перехода
+            # Код исполняет получение реферера текущего документа
             return self.driver.execute_script('return document.referrer;') or ''
         except Exception as ex:
-            # логирует ошибку, если не удалось получить URL
-            logger.error('Ошибка получения document.referrer: %s', ex)
-            return ''
+            logger.error(f'Error retrieving document.referrer: {ex}')
+            # изменено возвращение пустой строки на выбрасывание исключения
+            raise
 
     def get_page_lang(self) -> str:
-        """
-        Возвращает язык текущей страницы.
+        """Retrieves the language of the current page.
 
-        :return: Код языка страницы или пустая строка, если он недоступен.
-        :rtype: str
+        Returns:
+            str: The language code of the page, or an empty string if unavailable.
+
+        Raises:
+            Exception: If an error occurs while executing JavaScript.
         """
         try:
-             # код исполняет скрипт для получения языка страницы
+            # Код исполняет получение языка текущей страницы
             return self.driver.execute_script('return document.documentElement.lang;') or ''
         except Exception as ex:
-            # логирует ошибку, если не удалось получить язык
-            logger.error('Ошибка получения document.documentElement.lang: %s', ex)
-            return ''
+            logger.error(f'Error retrieving document.documentElement.lang: {ex}')
+            # изменено возвращение пустой строки на выбрасывание исключения
+            raise
 ```

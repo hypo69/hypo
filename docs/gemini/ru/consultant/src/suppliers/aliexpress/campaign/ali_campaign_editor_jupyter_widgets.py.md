@@ -1,41 +1,46 @@
-# Анализ кода модуля `ali_campaign_editor_jupyter_widgets`
+# Анализ кода модуля ali_campaign_editor_jupyter_widgets
 
 **Качество кода**
 8
--  Плюсы
-    - Код хорошо структурирован и разбит на логические блоки, что облегчает его понимание и поддержку.
-    - Использование `ipywidgets` для создания интерактивных элементов делает интерфейс удобным для пользователя.
-    - Присутствует подробная документация в формате docstring для классов и методов.
-    - Обработка ошибок с использованием `logger.error` помогает в отслеживании проблем.
-    - Код соответствует PEP 8.
--  Минусы
-    - Не все функции имеют reStructuredText документацию.
-    - Избыточное использование `try-except` в некоторых местах можно заменить на более точную обработку ошибок.
-    - Отсутствуют проверки на ввод некорректных данных.
-    -  Не везде используется `logger.debug` для логирования.
+- Плюсы
+    - Код хорошо структурирован и разбит на классы и методы, что облегчает его понимание и поддержку.
+    - Используются виджеты ipywidgets для создания интерактивного интерфейса в Jupyter Notebook.
+    - Присутствует документация для классов и методов в формате docstring.
+    - Используется `logger` для логирования ошибок и предупреждений.
+- Минусы
+    - Есть закомментированный код, который следует удалить.
+    - Не все строки кода соответствуют PEP8.
+    - Обработка ошибок не всегда оптимальна (например, `try-except` блоки могут быть заменены на `logger.error`).
+    - Не хватает документации для атрибутов класса.
+    - В некоторых местах есть избыточность кода, например, повторное присвоение значений.
 
 **Рекомендации по улучшению**
-1.  **Документация**: Добавить reStructuredText документацию для всех функций и переменных, включая параметры и возвращаемые значения.
-2.  **Обработка ошибок**: Улучшить обработку ошибок, используя `logger.error` и добавляя `logger.debug` для отслеживания состояний, а также избегать избыточного использования `try-except`.
-3.  **Импорты**: Проверить и добавить отсутствующие импорты, а также отсортировать их в соответствии с PEP 8.
-4.  **Валидация**: Добавить валидацию пользовательского ввода, чтобы избежать ошибок при работе с виджетами.
-5.  **Логирование**: Увеличить уровень логирования, добавив `logger.debug` для отслеживания процесса инициализации и других ключевых моментов.
-6.  **Рефакторинг**: Улучшить читаемость кода за счет переименования переменных и разбивки длинных функций на более мелкие.
+
+1.  **Удалить закомментированный код**: Убрать неиспользуемый код, такой как `get_directory_names`.
+2.  **Улучшить обработку ошибок**: Использовать `logger.error` вместо общих `try-except` блоков, где это возможно.
+3.  **Добавить документацию**: Добавить документацию для атрибутов класса.
+4.  **Избегать избыточности**:  Убрать лишние присваивания значений переменным.
+5.  **Привести в соответствие с PEP8**: Проверить и исправить код в соответствии с рекомендациями PEP8.
+6.  **Унифицировать использование кавычек**: Использовать одинарные кавычки для строк в коде, двойные - только для вывода.
+7.  **Добавить описание модуля**: Добавить полное описание модуля в начале файла.
+8.  **Проверить импорты**: Убедиться, что все необходимые импорты присутствуют.
+9.  **Переименовать переменные**: Привести имена переменных в соответствие со стандартом (snake_case)
+10. **Использовать f-строки**: Использовать f-строки для форматирования строк, где это необходимо.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для создания виджетов Jupyter для редактора кампаний AliExpress.
+Модуль для создания и управления виджетами редактора кампаний AliExpress в Jupyter Notebook.
 =========================================================================================
 
-Этот модуль содержит класс :class:`JupyterCampaignEditorWidgets`,
-который предоставляет виджеты для управления кампаниями AliExpress в Jupyter Notebook.
-Виджеты позволяют выбирать кампании, категории, языки и выполнять действия,
-такие как инициализация редактора, сохранение кампаний и отображение продуктов.
+Этот модуль предоставляет класс `JupyterCampaignEditorWidgets`, который включает в себя виджеты
+для управления кампаниями AliExpress, выбора кампаний, категорий и языков, а также выполнения
+таких действий, как инициализация редакторов, сохранение кампаний и отображение товаров.
+
+Класс использует виджеты ipywidgets для создания интерактивного интерфейса в Jupyter Notebook.
+Он также включает в себя логирование ошибок и предупреждений с помощью модуля `src.logger.logger`.
 
 Пример использования
 --------------------
@@ -44,13 +49,9 @@
 
 .. code-block:: python
 
-    editor_widgets: JupyterCampaignEditorWidgets = JupyterCampaignEditorWidgets()
+    editor_widgets = JupyterCampaignEditorWidgets()
     editor_widgets.display_widgets()
 """
-from __future__ import annotations
-
-
-
 from types import SimpleNamespace
 from pathlib import Path
 import webbrowser
@@ -65,35 +66,28 @@ from src.utils.printer import get_directory_names
 from src.logger.logger import logger
 
 
+
 class JupyterCampaignEditorWidgets:
     """
     Виджеты для редактора кампаний AliExpress.
 
-    Предоставляет интерфейс для взаимодействия и управления кампаниями AliExpress,
+    Этот класс предоставляет виджеты для взаимодействия и управления кампаниями AliExpress,
     включая выбор кампаний, категорий и языков, а также выполнение таких действий,
-    как инициализация редакторов, сохранение кампаний и отображение продуктов.
+    как инициализация редакторов, сохранение кампаний и отображение товаров.
 
-    :ivar language: Выбранный язык.
-    :vartype language: str
-    :ivar currency: Выбранная валюта.
-    :vartype currency: str
-    :ivar campaign_name: Название выбранной кампании.
-    :vartype campaign_name: str
-    :ivar category_name: Название выбранной категории.
-    :vartype category_name: str
-    :ivar category: Объект SimpleNamespace с данными категории.
-    :vartype category: SimpleNamespace
-    :ivar campaign_editor: Экземпляр класса AliCampaignEditor.
-    :vartype campaign_editor: AliCampaignEditor
-    :ivar products: Список продуктов в выбранной категории.
-    :vartype products: list[SimpleNamespace]
+    :ivar str language: Выбранный язык кампании.
+    :ivar str currency: Выбранная валюта кампании.
+    :ivar str campaign_name: Выбранное имя кампании.
+    :ivar str category_name: Выбранное имя категории.
+    :ivar SimpleNamespace category: Выбранная категория.
+    :ivar AliCampaignEditor campaign_editor: Редактор кампаний AliExpress.
+    :ivar list[SimpleNamespace] products: Список продуктов в выбранной категории.
+    :ivar Path campaigns_directory: Путь к директории с кампаниями.
 
-    :Example:
-    
-    >>> editor_widgets: JupyterCampaignEditorWidgets = JupyterCampaignEditorWidgets()
-    >>> editor_widgets.display_widgets()
+    Пример:
+        >>> editor_widgets = JupyterCampaignEditorWidgets()
+        >>> editor_widgets.display_widgets()
     """
-
     language: str = None
     currency: str = None
     campaign_name: str = None
@@ -106,246 +100,231 @@ class JupyterCampaignEditorWidgets:
         """
         Инициализирует виджеты и настраивает редактор кампаний.
 
-        Настраивает виджеты для выбора кампаний, категорий и языков, а также
-        устанавливает значения по умолчанию и обратные вызовы для виджетов.
+        Настраивает виджеты для выбора кампаний, категорий и языков. Также настраивает
+        значения по умолчанию и обратные вызовы для виджетов.
         """
-        self.campaigns_directory: Path = Path(
-            gs.path.google_drive, "aliexpress", "campaigns"
+        # определение пути к каталогу с кампаниями
+        self.campaigns_directory:Path = Path(
+            gs.path.google_drive, 'aliexpress', 'campaigns'
         )
-
-        if not self.campaigns_directory.exists():
-             # Проверка наличия директории, в случае отсутствия - выбрасывается исключение FileNotFoundError
-            raise FileNotFoundError(
-                f"Directory does not exist: {self.campaigns_directory}"
-            )
         
-        # Создание виджетов
+        if not self.campaigns_directory.exists():
+             # проверка существования директории
+            raise FileNotFoundError(
+                f'Directory does not exist: {self.campaigns_directory}'
+            )
+        # Создание выпадающего списка для выбора имени кампании
         self.campaign_name_dropdown = widgets.Dropdown(
             options=get_directory_names(self.campaigns_directory),
-            description="Campaign Name:",
+            description='Campaign Name:',
         )
+        # Создание выпадающего списка для выбора категории
         self.category_name_dropdown = widgets.Dropdown(
-            options=[], description="Category:"
+            options=[], description='Category:'
         )
+        # Создание выпадающего списка для выбора языка и валюты
         self.language_dropdown = widgets.Dropdown(
-            options=[f"{key} {value}" for locale in locales for key, value in locale.items()],
-            description="Language/Currency:",
+             options=[f'{key} {value}' for locale in locales for key, value in locale.items()],
+            description='Language/Currency:',
         )
+        # Создание кнопки для инициализации редактора кампаний
         self.initialize_button = widgets.Button(
-            description="Initialize Campaign Editor",
+            description='Initialize Campaign Editor',
             disabled=False,
         )
+        # Создание кнопки для сохранения кампании
         self.save_button = widgets.Button(
-            description="Save Campaign",
+            description='Save Campaign',
             disabled=False,
         )
+        # Создание кнопки для отображения товаров
         self.show_products_button = widgets.Button(
-            description="Show Products",
+            description='Show Products',
             disabled=False,
         )
+        # Создание кнопки для открытия гугл таблицы
         self.open_spreadsheet_button = widgets.Button(
-            description="Open Google Spreadsheet",
+            description='Open Google Spreadsheet',
             disabled=False,
         )
-
         # Настройка обратных вызовов
         self.setup_callbacks()
-
-        # Инициализация с значениями по умолчанию
+        # Инициализация редактора кампаний со значениями по умолчанию
         self.initialize_campaign_editor(None)
-    
+
     def initialize_campaign_editor(self, _):
         """
         Инициализирует редактор кампаний.
 
-        Устанавливает редактор кампаний на основе выбранной кампании и категории.
+        Args:
+            _ (Any): Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
 
-        :param _: Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
-        :type _: Any
+        Настраивает редактор кампаний на основе выбранной кампании и категории.
         """
-        # Получение выбранных значений из виджетов
+        # получение значений из выпадающих списков
         self.campaign_name = self.campaign_name_dropdown.value or None
         self.category_name = self.category_name_dropdown.value or None
-        
-        # Разделение значения языка и валюты
-        if self.language_dropdown.value:
-            self.language, self.currency = self.language_dropdown.value.split()
-        else:
-            logger.warning("Language/currency not selected.")
-            return
+        # разделение значения языка и валюты
+        self.language, self.currency = self.language_dropdown.value.split()
         
         if self.campaign_name:
-            # Обновление выпадающего списка категорий
+            # обновление списка категорий
             self.update_category_dropdown(self.campaign_name)
-            # Инициализация редактора кампаний
+            # создание экземпляра редактора кампаний
             self.campaign_editor = AliCampaignEditor(
-                campaign_name = self.campaign_name, 
-                language = self.language, 
-                currency = self.currency
-                )
-            
+                campaign_name=self.campaign_name,
+                language=self.language,
+                currency=self.currency
+            )
             if self.category_name:
-                # Получение данных о категории и продуктах
+                # получение категории и списка товаров
                 self.category = self.campaign_editor.get_category(self.category_name)
                 self.products = self.campaign_editor.get_category_products(self.category_name)
-            
-            logger.debug(f"Campaign editor initialized for campaign: {self.campaign_name}, category: {self.category_name}, language: {self.language}, currency: {self.currency}")
         else:
+             # логирование предупреждения, если имя кампании не выбрано
             logger.warning(
-                "Please select a campaign name before initializing the editor."
+                'Please select a campaign name before initializing the editor.'
             )
 
     def update_category_dropdown(self, campaign_name: str):
         """
         Обновляет выпадающий список категорий на основе выбранной кампании.
 
-        :param campaign_name: Название кампании.
-        :type campaign_name: str
+        Args:
+            campaign_name (str): Имя кампании.
         """
-        # Формирование пути к директории с категориями
-        campaign_path = self.campaigns_directory / campaign_name / "category"
-        # Получение списка категорий
+        # определение пути к директории категорий
+        campaign_path = self.campaigns_directory / campaign_name / 'category'
+         # получение имен категорий
         campaign_categories = get_directory_names(campaign_path)
-        # Обновление выпадающего списка категорий
+        # обновление списка опций выпадающего списка
         self.category_name_dropdown.options = campaign_categories
-        logger.debug(f"Updated category dropdown with options: {campaign_categories}")
 
     def on_campaign_name_change(self, change: dict[str, str]):
         """
-        Обрабатывает изменения в выпадающем списке названий кампаний.
+        Обрабатывает изменения в выпадающем списке имени кампании.
 
-        :param change: Словарь с изменениями, содержащий новое значение.
-        :type change: dict[str, str]
+        Args:
+            change (dict[str, str]): Словарь изменений, содержащий новое значение.
         """
-        # Получение нового названия кампании
-        self.campaign_name = change["new"]
-        # Обновление выпадающего списка категорий
+        # обновление имени кампании
+        self.campaign_name = change['new']
+        # обновление списка категорий
         self.update_category_dropdown(self.campaign_name)
-        # Переинициализация редактора кампаний
+         # повторная инициализация редактора
         self.initialize_campaign_editor(None)
-        logger.debug(f"Campaign name changed to: {self.campaign_name}")
 
     def on_category_change(self, change: dict[str, str]):
         """
         Обрабатывает изменения в выпадающем списке категорий.
 
-        :param change: Словарь с изменениями, содержащий новое значение.
-        :type change: dict[str, str]
+        Args:
+            change (dict[str, str]): Словарь изменений, содержащий новое значение.
         """
-        # Получение нового названия категории
-        self.category_name = change["new"]
-        # Переинициализация редактора кампаний
+        # обновление имени категории
+        self.category_name = change['new']
+        # повторная инициализация редактора
         self.initialize_campaign_editor(None)
-        logger.debug(f"Category changed to: {self.category_name}")
-        
+
     def on_language_change(self, change: dict[str, str]):
         """
-        Обрабатывает изменения в выпадающем списке языков.
+        Обрабатывает изменения в выпадающем списке языка.
 
-        :param change: Словарь с изменениями, содержащий новое значение.
-        :type change: dict[str, str]
+        Args:
+            change (dict[str, str]): Словарь изменений, содержащий новое значение.
         """
-        # Разделение значения языка и валюты
-        self.language, self.currency = change["new"].split()
-        # Переинициализация редактора кампаний
+         # разделение значения языка и валюты
+        self.language, self.currency = change['new'].split()
+        # повторная инициализация редактора
         self.initialize_campaign_editor(None)
-        logger.debug(f"Language changed to: {self.language}, currency: {self.currency}")
 
     def save_campaign(self, _):
         """
-        Сохраняет кампанию и её категории.
+        Сохраняет кампанию и ее категории.
 
-         :param _: Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
-        :type _: Any
+        Args:
+            _ (Any): Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
         """
-        # Получение выбранных значений из виджетов
+        # получение значений из выпадающих списков
         self.campaign_name = self.campaign_name_dropdown.value
         self.category_name = self.category_name_dropdown.value
+        # разделение значения языка и валюты
         self.language, self.currency = self.language_dropdown.value.split()
-
         if self.campaign_name and self.language:
-             # Инициализация редактора кампаний
+            # создание экземпляра редактора кампаний
             self.campaign_editor = AliCampaignEditor(
                 campaign_name=self.campaign_name,
                 category_name=self.category_name if self.category_name else None,
                 language=self.language,
-                currency=self.currency
             )
             try:
-                # Сохранение категорий
+                 # сохранение категорий из гугл таблицы
                 self.campaign_editor.save_categories_from_worksheet()
             except Exception as ex:
-                # Логирование ошибки
-                logger.error("Error saving campaign.", ex, True)
+                # логирование ошибки
+                logger.error('Error saving campaign.', ex, exc_info=True)
         else:
-            # Логирование предупреждения, если не выбраны кампания или язык/валюта
-            logger.warning (
-                "Please select campaign name and language/currency before saving the campaign."
+             # логирование предупреждения, если имя кампании или язык не выбраны
+            logger.warning(
+                'Please select campaign name and language/currency before saving the campaign.'
             )
-        logger.debug(f"Campaign saved for campaign: {self.campaign_name}, category: {self.category_name}, language: {self.language}, currency: {self.currency}")
 
     def show_products(self, _):
         """
-        Отображает продукты в выбранной категории.
+        Отображает товары в выбранной категории.
 
-         :param _: Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
-        :type _: Any
+        Args:
+            _ (Any): Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
         """
-         # Получение выбранных значений из виджетов
+        # получение значений из выпадающих списков
         campaign_name = self.campaign_name_dropdown.value
         category_name = self.category_name_dropdown.value
-        
         try:
-            # Инициализация редактора кампаний
+            # создание экземпляра редактора кампаний
             self.campaign_editor = AliCampaignEditor(
                 campaign_name=campaign_name,
                 language=self.language,
                 currency=self.currency,
             )
-             # Установка листа с продуктами
+            # установка товаров в гугл таблицу
             self.campaign_editor.set_products_worksheet(category_name)
         except Exception as ex:
-             # Логирование ошибки
-            logger.error("Error displaying products.", ex, True)
-        logger.debug(f"Displayed products for campaign: {campaign_name}, category: {category_name}, language: {self.language}, currency: {self.currency}")
+            # логирование ошибки
+            logger.error('Error displaying products.', ex, exc_info=True)
 
     def open_spreadsheet(self, _):
         """
         Открывает Google Spreadsheet в браузере.
 
-         :param _: Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
-        :type _: Any
+        Args:
+            _ (Any): Неиспользуемый аргумент, необходимый для обратного вызова кнопки.
         """
         if self.campaign_editor:
-             # Формирование URL для Google Spreadsheet
-            spreadsheet_url = f"https://docs.google.com/spreadsheets/d/{self.campaign_editor.spreadsheet_id}/edit"
-            # Открытие URL в браузере
+            # открытие гугл таблицы в браузере
+            spreadsheet_url = f'https://docs.google.com/spreadsheets/d/{self.campaign_editor.spreadsheet_id}/edit'
             webbrowser.open(spreadsheet_url)
-            logger.debug(f"Opened spreadsheet: {spreadsheet_url}")
         else:
-            print("Please initialize the campaign editor first.")
-            logger.warning("Campaign editor not initialized.")
+             # вывод сообщения, если редактор не инициализирован
+            print('Please initialize the campaign editor first.')
 
     def setup_callbacks(self):
         """Настраивает обратные вызовы для виджетов."""
-        # Настройка обработчиков изменений для выпадающих списков
-        self.campaign_name_dropdown.observe(self.on_campaign_name_change, names="value")
-        self.category_name_dropdown.observe(self.on_category_change, names="value")
-        self.language_dropdown.observe(self.on_language_change, names="value")
-         # Настройка обработчиков кликов для кнопок
+        # установка обратных вызовов для виджетов
+        self.campaign_name_dropdown.observe(self.on_campaign_name_change, names='value')
+        self.category_name_dropdown.observe(self.on_category_change, names='value')
+        self.language_dropdown.observe(self.on_language_change, names='value')
         self.initialize_button.on_click(self.initialize_campaign_editor)
         self.save_button.on_click(self.save_campaign)
         self.show_products_button.on_click(self.show_products)
         self.open_spreadsheet_button.on_click(self.open_spreadsheet)
-        logger.debug("Callbacks set up for widgets.")
 
     def display_widgets(self):
         """
         Отображает виджеты для взаимодействия в Jupyter Notebook.
 
-        Автоматически инициализирует редактор кампаний с первой выбранной кампанией.
+        Инициализирует редактор кампаний автоматически при выборе первой кампании.
         """
-        # Отображение виджетов
+        # отображение виджетов в jupyter notebook
         display(
             self.campaign_name_dropdown,
             self.category_name_dropdown,
@@ -355,7 +334,5 @@ class JupyterCampaignEditorWidgets:
             self.show_products_button,
             self.open_spreadsheet_button,
         )
-        # Инициализация редактора кампаний с первой выбранной кампанией
+        # инициализация редактора кампаний с первой выбранной кампанией
         self.initialize_campaign_editor(None)
-        logger.debug("Widgets displayed.")
-```

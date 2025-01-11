@@ -1,52 +1,58 @@
-# Анализ кода модуля `post_ad.py`
+# Анализ кода модуля `post_ad`
 
 **Качество кода**
-
-6
-- Плюсы
-    - Код использует `SimpleNamespace` для передачи данных, что упрощает работу с параметрами.
-    - Используется логгер для записи ошибок.
-    - Присутствует базовая обработка ошибок.
-    -  Есть описание модуля и функций в формате docstring.
-- Минусы
-    - Не все импорты используются.
-    - Некоторые комментарии отсутствуют или недостаточно подробны.
-    - Используется глобальная переменная `fails`, что может усложнить отладку.
-    - Логика обработки ошибок может быть улучшена.
-    - Формат docstring не полностью соответствует стандарту reStructuredText (RST).
-    -  Отсутствуют комментарии в коде, объясняющие логику работы.
-    -  Используется `print` вместо `logger.debug/info`.
-    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` для загрузки файла `post_message.json`.
+7
+-  Плюсы
+    - Код содержит docstring для модуля и функции.
+    - Используется `SimpleNamespace` для хранения данных.
+    - Логирование ошибок с помощью `logger.error`.
+    - Повторные попытки выполнения с ограничением по количеству ошибок.
+    - Применяется `j_loads_ns` для загрузки данных.
+-  Минусы
+    -  Используется глобальная переменная `fails`.
+    -  Не всегда используется `logger` для логирования (например, используется `print`).
+    -  Не используется обработка исключений с помощью try-except, а просто `return`.
+    -  `...` используется как заглушка в коде.
+    -  Не все комментарии соответствуют стандарту RST.
 
 **Рекомендации по улучшению**
 
-1.  Удалить неиспользуемые импорты.
-2.  Использовать `j_loads_ns` для загрузки `post_message.json`.
-3.  Переписать комментарии и docstring в формате RST, как указано в инструкции.
-4.  Убрать глобальную переменную `fails` и заменить ее на возвращаемое значение.
-5.  Избегать `print` и использовать `logger.debug/info` для отладочной информации.
-6.  Добавить обработку ошибок с использованием `logger.error`.
-7.  Добавить комментарии в коде, описывающие логику работы.
-8.  Добавить более подробные описания функций в docstring.
-9.  Использовать константы для магических чисел (например, 15).
-10. Заменить множественные `return` на более читаемый код.
+1.  **Глобальная переменная `fails`**:
+    -   Избегать использования глобальных переменных. Передать счетчик ошибок в функцию или использовать класс.
+
+2.  **Логирование**:
+    -   Использовать `logger.debug` для отладочных сообщений и `logger.error` для ошибок.
+    -   Заменить `print` на `logger.debug` для вывода отладочной информации.
+    
+3.  **Обработка ошибок**:
+    -   Использовать `try-except` блоки для обработки ошибок.
+    -   Логировать исключения с помощью `logger.error(f'Сообщение об ошибке', exc_info=True)`.
+
+4.  **`...`**:
+    -   Заменить `...` на более конкретную обработку или логику.
+
+5.  **Комментарии**:
+    -   Пересмотреть и улучшить docstring для соответствия RST.
+
+6.  **Импорты**:
+    -   Удалить неиспользуемые импорты.
+    -   Импортировать `logger` как `from src.logger.logger import logger`.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
 Модуль для публикации рекламных сообщений в группах Facebook.
-=============================================================
+=========================================================================================
 
-Этот модуль содержит функцию :func:`post_ad`, которая автоматизирует процесс публикации
-рекламных сообщений в группах Facebook, включая добавление текста и медиафайлов.
+Этот модуль содержит функцию :func:`post_ad`, которая используется для публикации рекламного сообщения
+в группах Facebook, включая отправку заголовка, загрузку медиафайлов и публикацию сообщения.
 
 Пример использования
 --------------------
+
+Пример использования функции `post_ad`:
 
 .. code-block:: python
 
@@ -54,21 +60,24 @@
     from types import SimpleNamespace
 
     driver = Driver(...)
-    message = SimpleNamespace(description="Текст сообщения", image_path="path/to/image.jpg")
+    message = SimpleNamespace(
+        description='Текст рекламного сообщения',
+        image_path='/path/to/image.jpg'
+    )
     result = post_ad(driver, message)
-    if result:
-        print("Реклама успешно опубликована")
-    else:
-        print("Не удалось опубликовать рекламу")
+    print(result)
 """
+
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Dict, List
+from urllib.parse import urlencode
 
 from src import gs
 from src.webdriver.driver import Driver
 from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
-from src.utils.jjson import j_loads_ns
+from src.utils.jjson import j_loads_ns, pprint
 from src.logger.logger import logger
 
 
@@ -77,51 +86,58 @@ locator: SimpleNamespace = j_loads_ns(
     Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
 )
 
-MAX_FAILS: int = 15  # Максимальное количество неудачных попыток
 
-def post_ad(d: Driver, message: SimpleNamespace) -> bool:
-    """
-    Публикует рекламное сообщение, включая заголовок, медиа и само сообщение.
+def post_ad(d: Driver, message: SimpleNamespace, max_fails: int = 15) -> bool:
+    """Отправляет рекламное сообщение в Facebook.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param message: Объект SimpleNamespace, содержащий текст и путь к изображению (если есть).
-                  Обязательные поля: `description` (текст сообщения), `image_path` (путь к медиафайлу).
-    :type message: SimpleNamespace
-    :return: True в случае успешной публикации, False в противном случае.
-    :rtype: bool
+    Args:
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        message (SimpleNamespace): Сообщение, содержащее описание и путь к изображению.
+            Обязательные поля: `description` - текст сообщения.
+            Необязательные поля: `image_path` - путь к изображению.
+        max_fails (int, optional): Максимальное количество неудачных попыток. По умолчанию 15.
 
-    :raises Exception: В случае ошибок при публикации сообщения.
+    Returns:
+        bool: `True`, если сообщение было успешно опубликовано, иначе `False`.
 
-    :Example:
+    Raises:
+        Exception: Если возникает ошибка при отправке сообщения.
+    
+    Example:
+        >>> from src.webdriver.driver import Driver
+        >>> from types import SimpleNamespace
         >>> driver = Driver(...)
-        >>> message = SimpleNamespace(description="Рекламный текст", image_path="image.jpg")
-        >>> post_ad(driver, message)
+        >>> message = SimpleNamespace(
+        ...     description='Текст рекламного сообщения',
+        ...     image_path='/path/to/image.jpg'
+        ... )
+        >>> result = post_ad(driver, message)
+        >>> print(result)
         True
     """
-    fails: int = 0
-    while fails < MAX_FAILS:
-        # Отправка заголовка сообщения
+    fails = 0
+    while fails < max_fails:
+        # Код отправляет заголовок сообщения
         if not post_message_title(d, f"{message.description}"):
-            logger.error("Не удалось отправить заголовок сообщения.", exc_info=True)
-            fails += 1
-            logger.debug(f"Количество неудачных попыток: {fails}")
-            time.sleep(1)
-            continue  # Переход к следующей итерации цикла
+             logger.error("Ошибка при отправке заголовка сообщения", exc_info=True)
+             fails += 1
+             logger.debug(f"{fails=}")
+             time.sleep(1)
+             continue # Код переходит к следующей итерации цикла если отправка заголовка неудачна.
 
         time.sleep(1)
-        # Загрузка медиа, если есть путь к изображению
+        # Код проверяет наличие изображения и загружает его
         if hasattr(message, 'image_path') and message.image_path:
             if not upload_post_media(d, media=message.image_path, without_captions=True):
-                logger.error(f"Не удалось загрузить медиа файл: {message.image_path}", exc_info=True)
+                logger.error("Ошибка при загрузке медиа", exc_info=True)
                 return False
-        # Публикация сообщения
+        
+        # Код выполняет публикацию сообщения.
         if not message_publish(d):
-            logger.error("Не удалось опубликовать сообщение.", exc_info=True)
+            logger.error("Ошибка при публикации сообщения", exc_info=True)
             return False
-
+        
         return True
-    # Если количество неудачных попыток превышено.
-    logger.error(f"Превышено максимальное количество неудачных попыток ({MAX_FAILS}).")
+    logger.error(f"Превышено максимальное количество попыток ({max_fails}) при отправке сообщения.")
     return False
 ```

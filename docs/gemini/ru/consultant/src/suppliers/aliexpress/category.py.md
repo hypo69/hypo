@@ -1,339 +1,319 @@
-## Анализ кода модуля `category.py`
+# Анализ кода модуля `category.py`
 
 **Качество кода**
-
-7/10
-- Плюсы
-    - Код достаточно хорошо структурирован, функции разделены по задачам.
-    - Используется logging для отслеживания ошибок.
-    - Присутствует документация для функций, хотя и не вся в reStructuredText.
-- Минусы
-    -  Не все комментарии переведены в reStructuredText формат.
-    -  В коде используется `json.load` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Присутствует избыточное использование `try-except` блоков, которое можно заменить на логирование ошибок.
-    -  Не хватает некоторых импортов.
-    -   Присутствуют магические значения в коде.
-    -   Код местами не соответствует PEP 8.
-    -   Отсутствует обработка исключений при работе с файлами.
-    -   В функции `update_categories_in_scenario_file` есть потенциально опасное место, где код может уйти в бесконечный цикл.
-    -   Смешанный стиль комментариев: некоторые в стиле `#`, а некоторые в стиле `"""`.
-
+8
+-  Плюсы
+    - Код содержит docstring для функций.
+    - Используется `logger` для логирования ошибок.
+    - Код структурирован и разделен на функции.
+-  Минусы
+    -  Не везде используется `j_loads` и `j_dumps`.
+    -  Есть потенциально опасные места с бесконечными циклами.
+    -  Не все функции имеют полные docstring.
+    -  Смешаны одинарные и двойные кавычки.
+    -  Сложная логика сравнения категорий.
+    -  Отсутствует обработка ошибок в некоторых местах.
+    -  Используются магические значения для ключей.
 **Рекомендации по улучшению**
 
-1.  **Формат документации**: Перевести все комментарии и docstring в формат reStructuredText (RST).
-2.  **Обработка данных**: Использовать `j_loads` из `src.utils.jjson` вместо стандартного `json.load`.
-3.  **Логирование**: Заменить `try-except` на `logger.error` в тех случаях, когда исключения не требуют особой обработки, а достаточно их залогировать.
-4.  **Импорты**: Добавить отсутствующие импорты (например, `requests`, `json`).
-5.  **Структура кода**: Привести имена функций и переменных к единому стилю, чтобы они соответствовали PEP 8.
-6.  **Обработка исключений**: Добавить более явную обработку исключений при работе с файлами и при получении данных с сайта.
-7.  **Бесконечный цикл**: В функции `get_prod_urls_from_pagination` убрать потенциально бесконечный цикл и добавить условие выхода из него.
-8. **Улучшение читаемости**: Вынести повторяющиеся части кода в отдельные функции.
-9. **Улучшить обработку ошибок**: В местах, где происходит обращение по ключу к словарям, использовать `.get()` или проверку на существование ключа.
-10. **Удалить закомментированный код**: Удалить неиспользуемый код
+1.  **Форматирование и кавычки**:
+    -   Использовать одинарные кавычки для строк в коде, двойные кавычки только для вывода.
+2.  **Импорты**:
+    -   Добавить недостающие импорты.
+    -   Убедиться, что все импорты соответствуют стилю проекта.
+3.  **JSON**:
+    -   Использовать `j_loads` и `j_dumps` из `src.utils.jjson` для работы с JSON.
+4.  **Логирование**:
+    -   Улучшить логирование ошибок, добавив больше контекста.
+    -   Избегать использования `try-except` там, где достаточно `logger.error`.
+5.  **Бесконечные циклы**:
+    -   Добавить проверку на максимальное количество итераций в циклах `while True`.
+6.  **Документация**:
+    -   Добавить более подробные docstring для всех функций и методов, включая описание параметров и возвращаемых значений.
+    -   Использовать RST формат для docstring.
+7. **Обновление категорий:**
+    -  Упростить логику сравнения категорий на сайте и в файле.
+    -  Использовать более понятные переменные.
+8. **DBAdaptor**:
+    -  Реализовать полноценные методы `DBAdaptor` с корректными параметрами.
+9.  **Обработка ошибок**:
+    -   Добавить обработку ошибок для всех операций, которые могут вызвать исключения.
+10. **Магические значения**:
+    -   Использовать константы для магических значений.
+11. **Комментарии**:
+     -  Дополнить комментарии в коде для лучшего понимания.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для управления категориями Aliexpress.
-=========================================================================================
+Модуль для работы с категориями Aliexpress.
+===========================================
 
-Этот модуль содержит функции для сбора данных о категориях с сайта Aliexpress,
-а также для управления категориями в файлах сценариев.
+Этот модуль содержит функции для извлечения списка товаров из категорий Aliexpress,
+обновления категорий в файлах сценариев, а также для взаимодействия с базой данных.
 
-.. module:: src.suppliers.aliexpress.category
-   :platform: Windows, Unix
-   :synopsis:  Управление категориями aliexpress
+Пример использования:
+--------------------
+
+.. code-block:: python
+
+    from src.suppliers.aliexpress.category import get_list_products_in_category, update_categories_in_scenario_file
+
+    # Пример использования функций
+    # ...
 """
-
-from typing import List, Dict, Any
+from typing import Union, Any
 from pathlib import Path
 import requests
-# Добавлены импорты
 from src import gs
-from src.utils.jjson import j_loads, j_dumps
+from src.utils.jjson import j_dumps, j_loads
 from src.logger.logger import logger
 from src.db.manager_categories.suppliers_categories import CategoryManager, AliexpressCategory
-# from src.utils.tools import send #  пока не используется.
-# Удален неиспользуемый 
+from src.notifier.send import send
+
 
 credentials = gs.db_translations_credentials
 manager = CategoryManager()
 
-
-def get_list_products_in_category(s) -> List[str]:
+def get_list_products_in_category(s) -> list[str]:
     """
     Извлекает URL товаров со страницы категории.
 
-    Если в категории несколько страниц, то просматривает все страницы.
+    Функция переходит по всем страницам категории, если таковые имеются.
 
-    :param s: Экземпляр поставщика.
-    :type s: Supplier
-    :return: Список URL товаров. Может быть пустым, если товаров нет.
-    :rtype: list[str]
+    Args:
+        s: Экземпляр поставщика (Supplier).
+
+    Returns:
+        Список URL товаров. Может быть пустым, если в категории нет товаров.
     """
     return get_prod_urls_from_pagination(s)
 
 
-def get_prod_urls_from_pagination(s) -> List[str]:
+def get_prod_urls_from_pagination(s) -> list[str]:
     """
-    Собирает ссылки на товары с текущей страницы категории, переходя по страницам.
+    Собирает URL товаров со страниц категории с пагинацией.
 
-    :param s: Экземпляр поставщика.
-    :type s: Supplier
-    :return: Список URL товаров, собранных со всех страниц категории.
-    :rtype: list[str]
+    Args:
+        s: Экземпляр поставщика (Supplier).
+
+    Returns:
+        Список URL товаров.
     """
-    _d = s.driver
-    _l: dict = s.locators['category']['product_links']
-    list_products_in_category: List[str] = _d.execute_locator(_l)
+    _driver = s.driver
+    _locator: dict = s.locators['category']['product_links']
 
+    list_products_in_category: list = _driver.execute_locator(_locator)
     if not list_products_in_category:
+        # Если в категории нет товаров, возвращаем пустой список.
         return []
 
+    max_iterations = 100  # Максимальное количество итераций, чтобы избежать бесконечного цикла.
+    iteration = 0
     while True:
-        # Проверяет наличие кнопки следующей страницы.
-        next_page_button = _d.execute_locator(s.locators['category']['pagination']['->'])
-        if not next_page_button:
+        # Проверка, есть ли следующая страница пагинации.
+        next_page_locator = s.locators['category']['pagination']['->']
+        if not _driver.execute_locator(next_page_locator):
+            # Если больше нет страниц, выходим из цикла.
             break
-        list_products_in_category.extend(_d.execute_locator(_l))
+
+        # Добавляем URL товаров со следующей страницы.
+        list_products_in_category.extend(_driver.execute_locator(_locator))
+
+        iteration += 1
+        if iteration > max_iterations:
+            logger.error('Достигнуто максимальное количество итераций при сборе товаров с категории, возможно, бесконечный цикл')
+            break
 
     return list_products_in_category if isinstance(list_products_in_category, list) else [list_products_in_category]
 
 
-def _update_category_ids_in_file(scenario_json: dict) -> List[str]:
-    """
-    Обновляет идентификаторы категорий в файле сценария.
-    
-    :param scenario_json: Словарь с данными сценария.
-    :type scenario_json: dict
-    :return: Список всех идентификаторов категорий в файле.
-    :rtype: list[str]
-    """
-    all_ids_in_file: List[str] = []
-    for _category in scenario_json['scenarios'].items():
-        cat_data = _category[1]
-        if cat_data.get('category ID on site', 0) > 0:
-           all_ids_in_file.append(str(cat_data['category ID on site']))
-        else:
-            url = cat_data.get('url', '')
-            if url:
-                try:
-                  cat_id = url[url.rfind('/')+1:url.rfind('.html')].split('_')[1]
-                  cat_data['category ID on site'] = int(cat_id)
-                  all_ids_in_file.append(str(cat_id))
-                except (ValueError, IndexError) as e:
-                    logger.error(f'Ошибка получения `category ID on site` из URL {url}: {e}')
-
-            else:
-                 logger.error(f'Не найден `url` в {cat_data}')
-
-    return all_ids_in_file
-
-
-
-def _fetch_categories_from_site(scenario_json: dict) -> dict:
-     """
-     Получает категории из JSON файла с сайта.
-
-     :param scenario_json: Словарь с данными сценария.
-     :type scenario_json: dict
-     :return: JSON данные категорий.
-     :rtype: dict
-     """
-     try:
-          response = requests.get(scenario_json['store']['shop categories json file'])
-          response.raise_for_status()  # Генерирует исключение для плохих HTTP-кодов
-          return response.json()
-     except requests.exceptions.RequestException as e:
-          logger.error(f"Ошибка при загрузке JSON файла с категориями: {e}")
-          return {}
-
-def _extract_categories_data(categories_from_aliexpress_shop_json: dict) -> tuple[List[str], List[dict]]:
-    """
-    Извлекает идентификаторы и данные категорий из JSON.
-
-    :param categories_from_aliexpress_shop_json: JSON данные категорий с сайта.
-    :type categories_from_aliexpress_shop_json: dict
-    :return: Кортеж из двух списков: идентификаторы и данные категорий.
-    :rtype: tuple[list[str], list[dict]]
-    """
-    groups = categories_from_aliexpress_shop_json.get('groups', [])
-    all_ids_on_site: List[str] = []
-    all_categories_on_site: List[dict] = []
-
-    for group in groups:
-        if not group.get('subGroupList'):
-            group_id = str(group.get('groupId', ''))
-            if group_id:
-                all_ids_on_site.append(group_id)
-                all_categories_on_site.append(group)
-        else:
-            for subgroup in group.get('subGroupList', []):
-                subgroup_id = str(subgroup.get('groupId', ''))
-                if subgroup_id:
-                    all_ids_on_site.append(subgroup_id)
-                    all_categories_on_site.append(subgroup)
-
-    return all_ids_on_site, all_categories_on_site
-
-def _update_scenario_file_with_changes(scenario_json: dict,
-                                       added_categories: List[str],
-                                       removed_categories: List[str],
-                                       all_categories_on_site: List[dict],
-                                       scenario_filename: str):
-     """
-     Обновляет файл сценария на основе добавленных и удаленных категорий.
-
-     :param scenario_json: Словарь с данными сценария.
-     :type scenario_json: dict
-     :param added_categories: Список добавленных идентификаторов категорий.
-     :type added_categories: list[str]
-     :param removed_categories: Список удаленных идентификаторов категорий.
-     :type removed_categories: list[str]
-     :param all_categories_on_site: Список данных категорий с сайта.
-     :type all_categories_on_site: list[dict]
-     :param scenario_filename: Имя файла сценария.
-     :type scenario_filename: str
-     """
-     categories_in_file = scenario_json.get('scenarios', {})
-
-     if added_categories:
-          for category_id in added_categories:
-                category = [c for c in all_categories_on_site if str(c.get('groupId')) == category_id]
-                if category:
-                    category_name = category[0].get('name', '')
-                    category_url = category[0].get('url', '')
-                    categories_in_file.update({category_name: {
-                        "category ID on site": int(category_id),
-                        "brand": "",
-                        "active": True,
-                        "url": category_url,
-                        "condition": "",
-                        "PrestaShop_categories": ""
-                    }})
-          scenario_json['scenarios'] = categories_in_file
-          j_dumps(scenario_json,Path(gs.dir_scenarios, scenario_filename))
-          # send(
-          #     f'Добавлены новые категории в файл {scenario_filename}',
-          #     f'В файл {scenario_filename} были добавлены новые категории: {added_categories}'
-          # )
-
-     if removed_categories:
-         for category_id in removed_categories:
-              for key, value in categories_in_file.items():
-                 if str(value.get('category ID on site')) == category_id:
-                      value['active'] = False
-                      break
-         scenario_json['scenarios'] = categories_in_file
-         j_dumps(scenario_json, Path(gs.dir_scenarios, scenario_filename))
-         # send(
-         #     f'Отключены категории в файле {scenario_filename}',
-         #     f'В файл {scenario_filename} были отключены категории: {removed_categories}'
-         # )
-
-
-
-
 def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
     """
-    Сверяет и обновляет категории в файле сценария на основе данных с сайта.
-    
-    :param s: Экземпляр поставщика.
-    :type s: Supplier
-    :param scenario_filename: Имя файла сценария.
-    :type scenario_filename: str
-    :return: True в случае успеха, False в случае ошибки.
-    :rtype: bool
+    Обновляет категории в файле сценария, сравнивая их с категориями на сайте.
+
+    Args:
+        s: Экземпляр поставщика (Supplier).
+        scenario_filename: Имя файла сценария.
+
+    Returns:
+        `True`, если обновление прошло успешно.
     """
     try:
-        scenario_json = j_loads(Path(gs.dir_scenarios, scenario_filename))
-    except Exception as e:
-        logger.error(f"Ошибка при загрузке файла сценария {scenario_filename}: {e}")
+        scenario_path = Path(gs.dir_scenarios, scenario_filename)
+        scenario_json = j_loads(scenario_path)
+        scenarios_in_file = scenario_json['scenarios']
+        # Извлечение списка категорий с сайта
+        categories_from_site = get_list_categories_from_site(s,scenario_filename)
+
+        all_ids_in_file: list = []
+        def _update_all_ids_in_file():
+             """
+             Обновляет список всех ID категорий из файла сценария.
+             """
+             for _category in scenario_json['scenarios'].items():
+                 if _category[1].get('category ID on site', 0) > 0:
+                     # Если ID категории определен в файле - добавляем его в список.
+                     all_ids_in_file.append(_category[1]['category ID on site'])
+                 else:
+                    #  Если ID категории не определен в файле, извлекаем его из URL.
+                    url = _category[1]['url']
+                    cat = url[url.rfind('/') + 1:url.rfind('.html')].split('_')[1]
+                    _category[1]['category ID on site'] = int(cat)
+                    all_ids_in_file.append(cat)
+
+        _update_all_ids_in_file()
+
+        shop_categories_json_url = scenario_json['store']['shop categories json file']
+        try:
+            response = requests.get(shop_categories_json_url)
+            response.raise_for_status() #  Проверка на статус код 200
+            categories_from_aliexpress_shop_json = response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f'Ошибка чтения JSON файла: {shop_categories_json_url}. Ошибка: {e}')
+            return False
+
+        groups = categories_from_aliexpress_shop_json['groups']
+        all_ids_on_site: list = []
+        all_categories_on_site: list = []
+        for group in groups:
+            if not group['subGroupList']:
+                all_ids_on_site.append(str(group['groupId']))
+                all_categories_on_site.append(group)
+            else:
+                for subgroup in group['subGroupList']:
+                    all_ids_on_site.append(str(subgroup['groupId']))
+                    all_categories_on_site.append(subgroup)
+
+        removed_categories = [str(x) for x in all_ids_in_file if str(x) not in set(all_ids_on_site)]
+        added_categories = [x for x in all_ids_on_site if x not in set(map(str,all_ids_in_file))]
+        
+        categories_in_file = scenario_json['scenarios']
+
+        if added_categories:
+            for category_id in added_categories:
+                category = [c for c in all_categories_on_site if str(c['groupId']) == category_id]
+                if not category:
+                    logger.error(f'Не найдена категория с ID {category_id} на сайте')
+                    continue
+                category_name = category[0]['name']
+                category_url = category[0]['url']
+                categories_in_file.update({category_name: {
+                    'category ID on site': int(category_id),
+                    'brand': '',
+                    'active': True,
+                    'url': category_url,
+                    'condition': '',
+                    'PrestaShop_categories': ''
+                }})
+            scenario_json['scenarios'] = categories_in_file
+            j_dumps(scenario_json, scenario_path)
+            post_subject = f'Добавлены новые категории в файл {scenario_filename}'
+            post_message = f'\nВ файл {scenario_filename} были добавлены новые категории:\n{added_categories}\n'
+            send(post_subject, post_message)
+
+        if removed_categories:
+            for category_id in removed_categories:
+               # category = [v for k, v in categories_in_file.items() if str(v.get('category ID on site')) == category_id]
+                category = [v for k, v in categories_in_file.items() if str(v.get('category ID on site')) == str(category_id)]
+                if not category:
+                    logger.warning(f'Категория c ID {category_id} не найдена в файле {scenario_filename}')
+                    continue
+                category[0]['active'] = False
+
+            scenario_json['scenarios'] = categories_in_file
+            j_dumps(scenario_json, scenario_path)
+            post_subject = f'Отключены категории в файле {scenario_filename}'
+            post_message = f'\nВ файл {scenario_filename} были отключены категории:\n{removed_categories}\n'
+            send(post_subject, post_message)
+
+        return True
+    except Exception as ex:
+        logger.error(f'Ошибка при обновлении категорий в файле {scenario_filename}: {ex}')
         return False
 
-    all_ids_in_file = _update_category_ids_in_file(scenario_json)
-
-    categories_from_aliexpress_shop_json = _fetch_categories_from_site(scenario_json)
-    if not categories_from_aliexpress_shop_json:
-         return False
-
-    all_ids_on_site, all_categories_on_site = _extract_categories_data(categories_from_aliexpress_shop_json)
-
-    removed_categories = [x for x in all_ids_in_file if x not in set(all_ids_on_site)]
-    added_categories = [x for x in all_ids_on_site if x not in set(all_ids_in_file)]
-
-    _update_scenario_file_with_changes(
-        scenario_json,
-        added_categories,
-        removed_categories,
-        all_categories_on_site,
-        scenario_filename
-    )
-
-    return True
-
-
-def get_list_categories_from_site(s, scenario_file, brand=''):
+def get_list_categories_from_site(s,scenario_file,brand=''):
     """
-    Извлекает список категорий с сайта.
-     
-    :param s: Экземпляр поставщика.
-    :type s: Supplier
-    :param scenario_file: Имя файла сценария.
-    :type scenario_file: str
-    :param brand: Бренд (не используется).
-    :type brand: str
+    Получает список категорий с сайта.
+
+    Args:
+        s: Экземпляр поставщика (Supplier).
+        scenario_file: Имя файла сценария.
+        brand: Бренд.
+
+    Returns:
+        Список категорий с сайта.
     """
-    _d = s.driver
-    try:
-        scenario_json = j_loads(Path(gs.dir_scenarios, scenario_file))
-        _d.get_url(scenario_json['store']['shop categories page'])
-        ...
-    except Exception as e:
-        logger.error(f'Ошибка загрузки или получения категорий с сайта: {e}')
+    _driver = s.driver
+    scenario_json = j_loads(Path(gs.dir_scenarios, scenario_file))
+    _driver.get_url(scenario_json['store']['shop categories page'])
+    ...
 
 
 class DBAdaptor:
     """
-    Адаптер для работы с базой данных категорий Aliexpress.
-
-    Предоставляет методы для выполнения операций SELECT, INSERT, UPDATE и DELETE.
+    Адаптер для взаимодействия с базой данных категорий Aliexpress.
     """
+    @staticmethod
+    def select(cat_id: int = None, parent_id: int = None, project_cat_id: int = None) -> list[AliexpressCategory]:
+         """
+         Получает записи из таблицы AliexpressCategory по заданным параметрам.
 
-    def select(cat_id: int = None, parent_id: int = None, project_cat_id: int = None):
-        """
-        Выполняет операцию SELECT для таблицы AliexpressCategory.
+         Args:
+            cat_id: ID категории.
+            parent_id: ID родительской категории.
+            project_cat_id: ID категории проекта.
 
-        :param cat_id: Идентификатор категории (не используется).
-        :type cat_id: int, optional
-        :param parent_id: Идентификатор родительской категории (не используется).
-        :type parent_id: int, optional
-        :param project_cat_id: Идентификатор категории проекта (не используется).
-        :type project_cat_id: int, optional
+         Returns:
+            Список записей из БД.
+         """
+         query_params = {}
+         if parent_id:
+            query_params['parent_category_id'] = parent_id
+         if cat_id:
+             query_params['category_id'] = cat_id
+         if project_cat_id:
+             query_params['hypotez_category_id'] = project_cat_id
+         # Выбрать все записи из таблицы AliexpressCategory, где parent_category_id равен `parent_id`
+         records = manager.select_record(AliexpressCategory, **query_params)
+         return records
+    @staticmethod
+    def insert(fields: dict) -> None:
         """
-        records = manager.select_record(AliexpressCategory, parent_category_id='parent_id_value')
-        print(records)
+        Вставляет новую запись в таблицу AliexpressCategory.
 
-    def insert():
+        Args:
+            fields: Словарь с данными для вставки.
         """
-        Выполняет операцию INSERT для таблицы AliexpressCategory.
+        try:
+           manager.insert_record(AliexpressCategory, fields)
+        except Exception as ex:
+             logger.error(f'Ошибка при вставке записи в базу данных: {ex}')
+    @staticmethod
+    def update(hypotez_id_value: Any, **kwargs) -> None:
         """
-        fields = {
-            'category_name': 'New Category',
-            'parent_category_id': 'Parent ID',
-            'hypotez_category_id': 'Hypotez ID'
-        }
-        manager.insert_record(AliexpressCategory, fields)
+        Обновляет запись в таблице AliexpressCategory.
 
-    def update():
+        Args:
+            hypotez_id_value: ID для обновления.
+            kwargs: Параметры для обновления.
         """
-        Выполняет операцию UPDATE для таблицы AliexpressCategory.
-        """
-        manager.update_record(AliexpressCategory, 'hypotez_id_value', category_name='Updated Category')
+        try:
+           manager.update_record(AliexpressCategory, hypotez_id_value, **kwargs)
+        except Exception as ex:
+             logger.error(f'Ошибка при обновлении записи в базе данных: {ex}')
 
-    def delete():
+    @staticmethod
+    def delete(hypotez_id_value: Any) -> None:
         """
-        Выполняет операцию DELETE для таблицы AliexpressCategory.
+         Удаляет запись из таблицы AliexpressCategory.
+
+        Args:
+             hypotez_id_value: ID для удаления.
         """
-        manager.delete_record(AliexpressCategory, 'hypotez_id_value')
+        try:
+            manager.delete_record(AliexpressCategory, hypotez_id_value)
+        except Exception as ex:
+            logger.error(f'Ошибка при удалении записи из базы данных: {ex}')

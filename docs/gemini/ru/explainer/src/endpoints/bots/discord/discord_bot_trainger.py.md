@@ -1,400 +1,322 @@
-## ИНСТРУКЦИЯ:
+## АЛГОРИТМ:
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
+1. **Инициализация**:
+   - Импортируются необходимые библиотеки: `discord`, `discord.ext.commands`, `pathlib`, `tempfile`, `asyncio`, `header`, `src.gs`, `src.ai.openai.model.training.Model`, `src.utils.jjson`, `src.logger.logger`, `speech_recognition`, `requests`, `pydub`, `gtts`.
+   - Устанавливается путь к `ffmpeg`.
+   - Создается объект бота `bot` с префиксом `!`.
+   - Создается объект модели `model`.
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
-    ```
+2. **Событие `on_ready`**:
+   - Вызывается при успешном подключении бота к Discord.
+   - Записывает в лог сообщение о готовности бота.
 
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
+3. **Команда `hi`**:
+   - Отправляет приветственное сообщение "HI!" в текстовый канал.
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+4.  **Команда `join`**:
+    -   Присоединяет бота к голосовому каналу пользователя, вызвавшего команду.
+    -   Отправляет сообщение о подключении.
+    -   Если пользователь не в голосовом канале, отправляет сообщение об ошибке.
+    - Пример:
+        1.  Пользователь пишет в чате `!join`
+        2.  Проверяется, находится ли пользователь в голосовом канале
+        3.  Если да, бот подключается к каналу и отправляет подтверждающее сообщение
+        4.  Иначе отправляет сообщение что пользователь не в голосовом канале
 
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
-```markdown
-## <алгоритм>
+5.  **Команда `leave`**:
+    -   Отключает бота от голосового канала.
+    -   Отправляет сообщение об отключении.
+    -   Если бот не в голосовом канале, отправляет сообщение об ошибке.
+    - Пример:
+        1.  Пользователь пишет в чате `!leave`
+        2.  Проверяется, подключен ли бот к голосовому каналу
+        3.  Если да, бот отключается и отправляет подтверждающее сообщение
+        4.  Иначе отправляет сообщение что бот не в голосовом канале
 
-```mermaid
-graph LR
-    A[Начало работы бота] --> B{Бот готов?};
-    B -- Да --> C[Событие on_ready];
-    C --> D[Логирование: Бот готов];
-    B -- Нет --> B;
-    A --> E{Получено сообщение?};
-    E -- Да --> F{Сообщение от бота?};
-    F -- Да --> E;
-    F -- Нет --> G{Начинается с префикса?};
-    G -- Да --> H[Обработка команды];
-    H --> E;
-    G -- Нет --> I{Есть вложения?};
-    I -- Да --> J{Вложение - аудио?};
-    J -- Да --> K[Распознавание речи];
-    K --> L[Отправка сообщения в модель];
-    I -- Нет --> L;
-    L --> M{Пользователь в голосовом канале?};
-    M -- Да --> N[Синтез речи и воспроизведение];
-    M -- Нет --> O[Отправка ответа в текстовый канал];
-    N --> E;
-    O --> E;
-    
-    subgraph Команды бота
-        H --> H1[hi: Приветствие];
-        H --> H2[join: Присоединиться к голосовому каналу];
-        H --> H3[leave: Покинуть голосовой канал];
-        H --> H4[train: Тренировка модели];
-         H --> H5[test: Тестирование модели];
-         H --> H6[archive: Архивирование файлов];
-        H --> H7[select_dataset: Выбор датасета];
-        H --> H8[instruction: Инструкция];
-        H --> H9[correct: Исправление сообщения];
-        H --> H10[feedback: Обратная связь];
-        H --> H11[getfile: Получение файла];
-    end
-    
-    subgraph Модель
-        L --> L1[Model.send_message];
-        H4 --> L2[Model.train];
-        H5 --> L3[Model.predict];
-        H6 --> L4[Model.archive_files];
-         H7 --> L5[Model.select_dataset_and_archive];
-        
-    end
-    
-    subgraph Обработка команд
-      H1 --> send1[Ответ "HI!"];
-      H2 --> send2[Ответ "Joined {channel}"];
-      H3 --> send3[Ответ "Disconnected from the voice channel."];
-       H4 --> send4[Ответ "Model training started. Job ID: {job_id}"];
-       H5 --> send5[Ответ "Test complete. Predictions: {predictions}"];
-       H6 --> send6[Ответ "Files in {directory} have been archived."];
-       H7 --> send7[Ответ "Dataset selected and archived. Dataset: {dataset}"];
-       H8 --> send8[Ответ Инструкция из файла];
-       H9 --> send9[Ответ "Correction received: {correction}"];
-        H10 --> send10[Ответ "Thank you for your feedback."];
-        H11 --> send11[Ответ "Here is the file you requested:" or "File not found: {file_path}"];
-      end
-```
+6. **Команда `train`**:
+   - Принимает `data` (путь к файлу или текст), `data_dir` (путь к директории), `positive` (флаг) и `attachment` (файл).
+   - Если есть `attachment`, сохраняет его во временный файл.
+   - Запускает обучение модели, используя метод `model.train()`.
+   - Отправляет сообщение с `job_id` или сообщение об ошибке.
 
-**Примеры для каждого логического блока:**
+7.  **Команда `test`**:
+    -   Принимает `test_data` в формате JSON.
+    -   Преобразует JSON в данные.
+    -   Запускает тестирование модели, используя метод `model.predict()`.
+    -   Отправляет результат тестирования.
+    -   Обрабатывает ошибки JSON и отправляет сообщение об ошибке.
+    - Пример:
+        1.  Пользователь пишет в чате `!test {"input": "test_text"}`
+        2.  Парсится JSON
+        3.  Вызывается метод `model.predict`
+        4.  Бот отправляет полученные результаты
+        5.  Если JSON некорректен, отправляет сообщение об ошибке
 
-*   **A: Начало работы бота:** Бот запускается, инициализируются все необходимые компоненты.
-*   **B: Бот готов?:** Проверка, готов ли бот к работе после запуска.
-*   **C: Событие on_ready:** Вызывается, когда бот успешно подключен к Discord.
-    *   *Пример:* Логируется сообщение "Logged in as {bot.user}".
-*   **D: Логирование: Бот готов:** Запись в лог о готовности бота.
-*   **E: Получено сообщение?:** Проверка наличия нового сообщения в Discord.
-*   **F: Сообщение от бота?:** Проверка, является ли автор сообщения ботом.
-    *   *Пример:* Если сообщение отправлено самим ботом, оно игнорируется.
-*   **G: Начинается с префикса?:** Проверка, начинается ли сообщение с префикса бота (`!`).
-    *   *Пример:* Сообщение "!hi" будет распознано как команда.
-*   **H: Обработка команды:** Вызов соответствующей функции для обработки команды.
-    *   *Пример:* Если сообщение "!train data.txt", вызывается функция `train`.
-*   **I: Есть вложения?:** Проверка наличия вложений в сообщении.
-*  **J: Вложение - аудио?:** Проверка, является ли вложение аудиофайлом.
-    *   *Пример:* Если вложение - файл формата .mp3 или .ogg, то распознаем речь.
-*   **K: Распознавание речи:** Вызов функции распознавания речи для извлечения текста из аудио.
-    *   *Пример:* Из аудиофайла извлекается текст "Привет, как дела?".
-*   **L: Отправка сообщения в модель:** Передача текста сообщения или распознанного текста в модель.
-    *   *Пример:* Текст "Привет, как дела?" отправляется в модель для обработки.
-*   **M: Пользователь в голосовом канале?:** Проверка, находится ли отправитель сообщения в голосовом канале.
-*   **N: Синтез речи и воспроизведение:** Вызов функции для преобразования текста в речь и её воспроизведения в голосовом канале.
-    *   *Пример:* Ответ "У меня все хорошо" озвучивается в голосовом канале.
-*   **O: Отправка ответа в текстовый канал:** Отправка текстового ответа в чат.
-    *  *Пример:* Ответ "У меня все хорошо" отправляется в текстовый канал.
+8.  **Команда `archive`**:
+    -   Принимает `directory` (путь к директории).
+    -   Архивирует файлы в указанной директории с помощью `model.archive_files()`.
+    -   Отправляет сообщение об успешном архивировании или ошибке.
+    - Пример:
+        1.  Пользователь пишет в чате `!archive /path/to/dir`
+        2.  Вызывается метод `model.archive_files`
+        3.  Бот отправляет сообщение об успешном архивировании или об ошибке
 
-**Подробности о командах:**
+9.  **Команда `select_dataset`**:
+    -   Принимает `path_to_dir_positive` (путь к директории) и `positive` (флаг).
+    -   Выбирает и архивирует датасет с помощью `model.select_dataset_and_archive()`.
+    -   Отправляет сообщение об успешном выборе или ошибке.
+    - Пример:
+        1.  Пользователь пишет в чате `!select_dataset /path/to/dataset`
+        2.  Вызывается метод `model.select_dataset_and_archive`
+        3.  Бот отправляет сообщение об успешном выборе или об ошибке
 
-*   **H1: hi:** Отправляет приветственное сообщение.
-*   **H2: join:** Подключает бота к голосовому каналу пользователя.
-*   **H3: leave:** Отключает бота от голосового канала.
-*   **H4: train:** Запускает обучение модели с предоставленными данными.
-*   **H5: test:** Тестирует модель с предоставленными данными.
-*   **H6: archive:** Архивирует файлы в указанной директории.
-*   **H7: select_dataset:** Выбирает датасет для обучения и архивирует его.
-*   **H8: instruction:** Отправляет инструкцию из внешнего файла.
-*   **H9: correct:** Принимает исправления к предыдущим сообщениям.
-*   **H10: feedback:** Принимает обратную связь от пользователей.
-*    **H11: getfile:** Отправляет файл по указанному пути.
+10. **Команда `instruction`**:
+    - Читает инструкции из файла `_docs/bot_instruction.md`.
+    - Отправляет инструкции в текстовый канал.
+    - Обрабатывает ошибки, если файл не найден.
+    - Пример:
+        1. Пользователь пишет в чате `!instruction`
+        2. Бот читает содержимое файла `_docs/bot_instruction.md`
+        3. Отправляет содержимое файла пользователю
+        4. Если файл не найден, отправляет сообщение об ошибке
 
-**Подробности о модели:**
+11. **Команда `correct`**:
+    - Принимает `message_id` (идентификатор сообщения) и `correction` (исправление).
+    - Получает сообщение по `message_id`.
+    - Сохраняет исправление с помощью функции `store_correction`.
+    - Отправляет сообщение об успешном получении исправления или ошибке.
+    - Пример:
+        1. Пользователь пишет в чате `!correct 123456789 My correction`
+        2. Бот пытается найти сообщение с id `123456789`
+        3. Сохраняет исправление в файл и отправляет подтверждение
+        4. Если сообщение не найдено отправляет сообщение об ошибке
 
-*   **L1: Model.send_message:** Обрабатывает входящий текст и возвращает ответ от модели.
-*   **L2: Model.train:** Запускает процесс обучения модели.
-*   **L3: Model.predict:** Получает предсказание от модели на основе входных данных.
-*    **L4: Model.archive_files:** Архивирует указанные файлы
-*    **L5: Model.select_dataset_and_archive:** Выбирает датасет и архивирует.
+12. **Функция `store_correction`**:
+    - Сохраняет оригинальный текст и исправление в файл `corrections_log.txt`.
 
-**Подробности об отправке ответов:**
-    
-*   **send1: Ответ "HI!":** Отправляет приветствие в чат.
-*   **send2: Ответ "Joined {channel}":** Уведомление о присоединении к каналу.
-*   **send3: Ответ "Disconnected from the voice channel.":** Уведомление об отключении от канала.
-*   **send4: Ответ "Model training started. Job ID: {job_id}":** Уведомление о начале тренировки модели.
-*   **send5: Ответ "Test complete. Predictions: {predictions}":** Уведомление о завершении тестирования модели.
-*    **send6: Ответ "Files in {directory} have been archived.":** Уведомление об архивировании файлов.
-*   **send7: Ответ "Dataset selected and archived. Dataset: {dataset}":** Уведомление о выборе датасета.
-*   **send8: Ответ Инструкция из файла:** Отправка инструкции.
-*   **send9: Ответ "Correction received: {correction}":** Уведомление о получении исправления.
-*   **send10: Ответ "Thank you for your feedback.":** Уведомление о получении фидбека.
-*    **send11: Ответ "Here is the file you requested:" or "File not found: {file_path}":** Отправка файла по запросу или уведомление о неудаче.
+13. **Команда `feedback`**:
+    - Принимает `feedback_text` (текст обратной связи).
+    - Сохраняет обратную связь с помощью `store_correction`.
+    - Отправляет сообщение благодарности за обратную связь.
+    - Пример:
+        1. Пользователь пишет в чате `!feedback some feedback`
+        2. Бот сохраняет обратную связь и отправляет сообщение благодарности
 
-## <mermaid>
+14. **Команда `getfile`**:
+    - Принимает `file_path` (путь к файлу).
+    - Отправляет файл в текстовый канал.
+    - Обрабатывает ошибку, если файл не найден.
+    - Пример:
+        1. Пользователь пишет в чате `!getfile /path/to/file.txt`
+        2. Бот проверяет, существует ли файл
+        3. Если файл существует, отправляет его пользователю
+        4. Иначе отправляет сообщение об ошибке
+
+15.  **Функция `text_to_speech_and_play`**:
+    -   Преобразует текст в речь и воспроизводит её в голосовом канале.
+    -   Сохраняет аудиофайл во временном каталоге.
+    -   Подключается к голосовому каналу, если бот ещё не подключен.
+    -   Воспроизводит аудио.
+    -   Отключается от голосового канала.
+    - Пример:
+        1. Вызывается с текстом и каналом пользователя
+        2. Преобразует текст в речь
+        3. Если бот не подключен к каналу, подключается
+        4. Воспроизводит аудио
+        5. Отключается от канала
+
+16. **Событие `on_message`**:
+    - Обрабатывает входящие сообщения.
+    - Игнорирует сообщения от самого бота.
+    - Если сообщение начинается с префикса `!`, обрабатывает команду.
+    - Если есть вложения, то если вложение - это аудиофайл, то распознает речь с помощью функции `recognizer` и отправляет распознанный текст в модель.
+    - Если вложений нет, то отправляет сообщение в модель.
+    - Если пользователь находится в голосовом канале, то отправляет ответ с помощью `text_to_speech_and_play`.
+    - Иначе отправляет ответ в текстовый канал.
+17. **Запуск бота**:
+    - Запускает бота, используя токен из `gs.credentials.discord.bot_token`.
+
+## MERMAID:
 
 ```mermaid
 flowchart TD
-    Start[Start] --> A[discord_bot_trainger.py];
+    Start[Start] --> Init[Инициализация]
+    Init --> BotReadyEvent[on_ready()]
+    BotReadyEvent --> LogReady[Логирование]
+    LogReady --> CommandHi[hi(ctx)]
+    CommandHi --> SendHi[ctx.send('HI!')]
     
-    subgraph discord_bot_trainger.py
-    A --> B[discord]
-    A --> C[commands]
-    A --> D[pathlib]
-    A --> E[tempfile]
-    A --> F[asyncio]
-    A --> G[header]
-    A --> H[gs]
-    A --> I[Model]
-    A --> J[j_loads_ns]
-    A --> K[j_dumps]
-    A --> L[logger]
-    A --> M[speech_recognition]
-    A --> N[requests]
-    A --> O[AudioSegment]
-    A --> P[gTTS]
-    A --> Q[chatterbox]
-    end
+    Init --> CommandJoin[join(ctx)]
+    CommandJoin --> CheckVoiceChannel[Проверка голосовго канала]
+    CheckVoiceChannel -- Пользователь в канале --> ConnectToVoiceChannel[channel.connect()]
+    ConnectToVoiceChannel --> SendJoinedMessage[ctx.send(f'Joined {channel}')]
+    CheckVoiceChannel -- Пользователь не в канале --> SendNoVoiceMessage[ctx.send('You are not in a voice channel.')]
     
-    B --> B1[discord.Client]
-    B --> B2[discord.Intents]
-    B --> B3[discord.File]
-    B --> B4[discord.FFmpegPCMAudio]
-    C --> C1[commands.Bot]
+    Init --> CommandLeave[leave(ctx)]
+    CommandLeave --> CheckVoiceClient[Проверка голосового клиента]
+    CheckVoiceClient -- Бот в канале --> DisconnectFromVoiceChannel[ctx.voice_client.disconnect()]
+    DisconnectFromVoiceChannel --> SendDisconnectedMessage[ctx.send('Disconnected from the voice channel.')]
+    CheckVoiceClient -- Бот не в канале --> SendNotConnectedMessage[ctx.send('I am not in a voice channel.')]
    
-    D --> D1[Path]
-    E --> E1[tempfile.gettempdir]
-    F
-    G --> G1[header.py]
-    H --> H1[gs.credentials.discord.bot_token]
-    I --> I1[src.ai.openai.model.training.Model]
-    J --> J1[src.utils.jjson.j_loads_ns]
-    K --> K1[src.utils.jjson.j_dumps]
-    L --> L1[src.logger.logger.logger]
-    M --> M1[speech_recognition.Recognizer]
-    M --> M2[speech_recognition.AudioFile]
-    M --> M3[speech_recognition.UnknownValueError]
-     M --> M4[speech_recognition.RequestError]
-    N
-    O --> O1[pydub.AudioSegment]
-    P --> P1[gtts.gTTS]
-    Q --> Q1[chatterbox.store_correction]
+    Init --> CommandTrain[train(ctx, data, data_dir, positive, attachment)]
+    CommandTrain --> CheckAttachment[Проверка вложения]
+    CheckAttachment -- Есть вложение --> SaveAttachment[attachment.save(file_path)]
+    SaveAttachment --> SetData[data = file_path]
+    CheckAttachment -- Нет вложения --> ProcessTraining[model.train(data, data_dir, positive)]
+    ProcessTraining --> CheckJobId[Проверка job_id]
+    CheckJobId -- job_id есть --> SendTrainingStarted[ctx.send(f'Model training started. Job ID: {job_id}')]
+    SendTrainingStarted --> SaveJobId[model.save_job_id(job_id, "Training task started")]
+     CheckJobId -- job_id нет --> SendTrainingFailed[ctx.send('Failed to start training.')]
+   
+    Init --> CommandTest[test(ctx, test_data)]
+    CommandTest --> LoadTestData[j_loads(test_data)]
+    LoadTestData --> GetPredictions[model.predict(test_data)]
+    GetPredictions --> CheckPredictions[Проверка предсказаний]
+    CheckPredictions -- Есть предсказания --> SendPredictions[ctx.send(f'Test complete. Predictions: {predictions}')]
+    SendPredictions --> HandleErrors[model.handle_errors(predictions, test_data)]
+    CheckPredictions -- Нет предсказаний --> SendFailedPredictions[ctx.send('Failed to get predictions.')]
+     CommandTest --> ErrorHandling[Обработка ошибок JSON]
+    ErrorHandling --> SendInvalidFormat[ctx.send('Invalid test data format. Please provide a valid JSON string.')]
     
+    Init --> CommandArchive[archive(ctx, directory)]
+    CommandArchive --> ArchiveFiles[model.archive_files(directory)]
+    ArchiveFiles --> SendArchivedMessage[ctx.send(f'Files in {directory} have been archived.')]
+    CommandArchive --> ErrorHandlingArchive[Обработка ошибок архивации]
+    ErrorHandlingArchive --> SendErrorArchive[ctx.send(f'An error occurred while archiving files: {ex}')]
     
-    
-    subgraph header.py
-        G1 --> HeaderStart[Determine Project Root]
-        HeaderStart --> ImportGS[Import Global Settings: <br><code>from src import gs</code>]
-        ImportGS --> EndHeader[End]
-    end
-    
+    Init --> CommandSelectDataset[select_dataset(ctx, path_to_dir_positive, positive)]
+     CommandSelectDataset --> SelectDatasetAndArchive[model.select_dataset_and_archive(path_to_dir_positive, positive)]
+    SelectDatasetAndArchive --> CheckDataset[Проверка датасета]
+    CheckDataset -- Dataset --> SendDatasetSelectedMessage[ctx.send(f'Dataset selected and archived. Dataset: {dataset}')]
+    CheckDataset -- No Dataset --> SendDatasetFailedMessage[ctx.send('Failed to select dataset.')]
 
+    Init --> CommandInstruction[instruction(ctx)]
+    CommandInstruction --> CheckInstructionFile[Проверка наличия файла]
+    CheckInstructionFile -- Файл существует --> ReadInstructions[file.read()]
+    ReadInstructions --> SendInstructions[ctx.send(instructions)]
+    CheckInstructionFile -- Файл не существует --> SendInstructionNotFound[ctx.send('Instructions file not found.')]
+     CommandInstruction --> ErrorHandlingInstruction[Обработка ошибок чтения инструкции]
+    ErrorHandlingInstruction --> SendErrorInstruction[ctx.send(f'An error occurred while reading the instructions: {ex}')]
     
+   Init --> CommandCorrect[correct(ctx, message_id, correction)]
+   CommandCorrect --> FetchMessage[ctx.fetch_message(message_id)]
+    FetchMessage --> CheckMessage[Проверка сообщения]
+    CheckMessage -- Сообщение найдено --> LogCorrection[logger.info(f"Correction for message ID {message_id}: {correction}")]
+    LogCorrection --> StoreCorrection[store_correction(message.content, correction)]
+    StoreCorrection --> SendCorrectionMessage[ctx.send(f"Correction received: {correction}")]
+    CheckMessage -- Сообщение не найдено --> SendMessageNotFound[ctx.send("Message not found.")]
+    CommandCorrect --> ErrorHandlingCorrect[Обработка ошибок коррекции]
+    ErrorHandlingCorrect --> SendErrorCorrect[ctx.send(f'An error occurred: {ex}')]
+
+    Init --> CommandFeedback[feedback(ctx, feedback_text)]
+    CommandFeedback --> StoreFeedback[store_correction("Feedback", feedback_text)]
+     StoreFeedback --> SendFeedbackMessage[ctx.send('Thank you for your feedback. We will use it to improve the model.')]
+
+    Init --> CommandGetFile[getfile(ctx, file_path)]
+    CommandGetFile --> CheckFile[Проверка наличия файла]
+    CheckFile -- Файл существует --> SendFile[ctx.send("Here is the file you requested:", file=discord.File(file_to_attach))]
+     CheckFile -- Файл не существует --> SendFileNotFound[ctx.send(f'File not found: {file_path}')]
+ 
+    Init --> OnMessageEvent[on_message(message)]
+    OnMessageEvent --> CheckAuthor[Проверка автора сообщения]
+    CheckAuthor -- Автор бот --> StopProcessing[return]
+    CheckAuthor -- Автор не бот --> CheckPrefix[Проверка префикса сообщения]
+    CheckPrefix -- Сообщение с префиксом --> ProcessCommand[bot.process_commands(message)]
+    CheckPrefix -- Сообщение без префикса --> CheckAttachments[Проверка наличия вложений]
+    CheckAttachments -- Есть вложения --> CheckAudioAttachment[Проверка аудио вложений]
+    CheckAudioAttachment -- Есть аудио вложения --> RecognizeSpeech[recognizer(message.attachments[0].url)]
+    RecognizeSpeech --> SendToModelWithAttachment[model.send_message(recognized_text)]
+    CheckAudioAttachment -- Нет аудио вложений --> SendToModel[model.send_message(message.content)]
+    CheckAttachments -- Нет вложений --> SendToModel[model.send_message(message.content)]
+    SendToModelWithAttachment --> CheckUserInVoiceChannel[Проверка пользователя в голосовом канале]
+    SendToModel --> CheckUserInVoiceChannel
+    CheckUserInVoiceChannel -- Пользователь в канале --> TextToSpeechAndPlay[text_to_speech_and_play(response, message.author.voice.channel)]
+    CheckUserInVoiceChannel -- Пользователь не в канале --> SendResponse[message.channel.send(response)]
+  
+    Init --> StartBot[bot.run(gs.credentials.discord.bot_token)]
 ```
-**Анализ зависимостей:**
 
-*   **`discord`**: Основная библиотека для работы с Discord API.
-    *   `discord.Client`: Базовый класс для создания Discord-бота.
-    *   `discord.Intents`: Определяет, какие события бот будет получать.
-    *   `discord.File`: Используется для отправки файлов через Discord.
-    *   `discord.FFmpegPCMAudio`: Используется для воспроизведения аудио в голосовом канале.
-*   **`discord.ext.commands`**: Расширение библиотеки `discord` для создания командных ботов.
-    *   `commands.Bot`: Основной класс для создания командного бота.
-*   **`pathlib`**: Библиотека для работы с путями файлов.
-    *   `Path`: Класс для представления пути к файлу или директории.
-*   **`tempfile`**: Библиотека для создания временных файлов и директорий.
-    *   `tempfile.gettempdir`: Функция для получения пути к временной директории.
-*   **`asyncio`**: Библиотека для асинхронного программирования.
-*   **`header`**: Кастомный модуль для определения корня проекта.
-     *  `header.py`: Содержит логику определения корня проекта.
-*   **`src.gs`**: Глобальные настройки проекта, включая токен бота.
-    *   `gs.credentials.discord.bot_token`: Токен Discord-бота.
-*   **`src.ai.openai.model.training.Model`**: Модель для обучения и предсказания.
-*   **`src.utils.jjson`**: Кастомный модуль для работы с JSON.
-    *   `src.utils.jjson.j_loads_ns`: Функция для загрузки данных из JSON.
-    *   `src.utils.jjson.j_dumps`: Функция для сериализации данных в JSON.
-*   **`src.logger.logger`**: Кастомный модуль для логирования.
-    *   `src.logger.logger.logger`: Объект для записи логов.
-*    **`speech_recognition`**: Библиотека для распознавания речи.
-     *  `speech_recognition.Recognizer`: Класс для распознавания речи.
-     *  `speech_recognition.AudioFile`: Класс для работы с аудио файлами.
-     *  `speech_recognition.UnknownValueError`: Исключение, выбрасываемое при неудачном распознавании речи.
-     *  `speech_recognition.RequestError`: Исключение, выбрасываемое при ошибке запроса к сервису распознавания.
-*   **`requests`**: Библиотека для выполнения HTTP-запросов.
-*   **`pydub`**: Библиотека для работы с аудио.
-    *   `pydub.AudioSegment`: Класс для загрузки и обработки аудиофайлов.
-*   **`gtts`**: Библиотека для преобразования текста в речь.
-    *   `gtts.gTTS`: Класс для создания объектов gTTS.
-*   **`src.endpoints.bots.discord.chatterbox`**: Кастомный модуль.
-     *   `chatterbox.store_correction`: Функция для сохранения исправлений.
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
 
-**Зависимости `header.py`:**
-* **`header.py`**: Определяет корень проекта для корректной работы с относительными путями.
-    *   Содержит логику для определения корневой директории проекта.
-    *   Импортирует `gs` для доступа к глобальным настройкам.
-
-## <объяснение>
+## ОБЪЯСНЕНИЕ:
 
 **Импорты:**
 
-*   `discord`: Библиотека для работы с Discord API. Позволяет боту подключаться к Discord-серверам, читать сообщения, отправлять ответы и управлять голосовыми каналами.
-*   `discord.ext.commands`: Расширение библиотеки `discord`, которое упрощает создание ботов с командным интерфейсом.
-*   `pathlib`:  Модуль для работы с путями файлов, обеспечивающий кроссплатформенную совместимость.
-*   `tempfile`:  Модуль для создания временных файлов и директорий. Используется для сохранения аудиофайлов при распознавании речи.
-*   `asyncio`: Библиотека для асинхронного программирования, позволяющая выполнять задачи параллельно.
-*   `header`: Кастомный модуль для определения корня проекта. Обеспечивает корректную работу с относительными путями.
-*   `src.gs`: Глобальные настройки проекта, включая токен бота и пути к файлам.
-*   `src.ai.openai.model.training.Model`: Класс модели для обучения и предсказания.
-*   `src.utils.jjson`: Модуль для работы с JSON, позволяющий сохранять и загружать данные в формате JSON.
-*   `src.logger.logger`: Модуль для логирования, предназначен для записи событий, ошибок и другой полезной информации о работе бота.
-*   `speech_recognition`: Библиотека для распознавания речи.
-*   `requests`: Библиотека для отправки HTTP-запросов, используется для скачивания аудиофайлов.
-*   `pydub`: Библиотека для работы с аудиофайлами, позволяющая конвертировать форматы.
-*   `gtts`: Библиотека для преобразования текста в речь.
-*   `src.endpoints.bots.discord.chatterbox`: Кастомный модуль, содержащий функцию `store_correction` для сохранения исправлений.
-
-**Классы:**
-
-*   `commands.Bot`: Представляет бота Discord. Управляет обработкой сообщений и команд.
-    *   `command_prefix`: Префикс, используемый для вызова команд бота (по умолчанию `!`).
-    *   `intents`: Разрешения, необходимые боту для работы.
-*  `Model`: Класс, отвечающий за обучение и работу модели машинного обучения.
-    *   `train(data, data_dir, positive)`: Метод для обучения модели на основе входных данных.
-    *   `predict(test_data)`: Метод для получения предсказаний от модели.
-    *   `archive_files(directory)`: Метод для архивации файлов в заданной директории.
-    *    `select_dataset_and_archive(path_to_dir_positive, positive)`: Метод для выбора датасета и архивации.
-    *   `send_message(text)`: Метод для отправки сообщения в модель и получения ответа.
-    *    `save_job_id(job_id, message)`: Метод для сохранения ID задачи.
-    *    `handle_errors(predictions, test_data)`: Метод для обработки ошибок.
-*   `discord.FFmpegPCMAudio`: Используется для воспроизведения аудио в голосовом канале.
-
-**Функции:**
-
-*   `on_ready()`: Асинхронная функция, вызывается при успешном подключении бота к Discord.
-    *   Не принимает аргументов.
-    *   Логирует сообщение о готовности бота.
-*   `hi(ctx)`: Асинхронная функция, команда для приветствия.
-    *   `ctx`: Контекст команды, содержит информацию о канале и пользователе.
-    *   Отправляет приветственное сообщение "HI!" в чат.
-    *   Возвращает `True` при успешном выполнении.
-*   `join(ctx)`: Асинхронная функция, команда для подключения бота к голосовому каналу.
-    *   `ctx`: Контекст команды.
-    *   Подключает бота к голосовому каналу пользователя и отправляет уведомление об этом.
-*   `leave(ctx)`: Асинхронная функция, команда для отключения бота от голосового канала.
-    *   `ctx`: Контекст команды.
-    *   Отключает бота от голосового канала и отправляет уведомление.
-*   `train(ctx, data, data_dir, positive, attachment)`: Асинхронная функция, команда для обучения модели.
-    *   `ctx`: Контекст команды.
-    *   `data`: Путь к файлу с данными для обучения.
-    *   `data_dir`: Путь к директории с данными для обучения.
-    *   `positive`: Флаг, указывающий, является ли датасет положительным.
-    *    `attachment`: Прикрепленный файл.
-    *   Запускает обучение модели и отправляет уведомление.
-*   `test(ctx, test_data)`: Асинхронная функция, команда для тестирования модели.
-    *   `ctx`: Контекст команды.
-    *   `test_data`: Данные для тестирования в формате JSON.
-    *   Получает предсказания от модели и отправляет результат.
-*   `archive(ctx, directory)`: Асинхронная функция, команда для архивации файлов.
-    *    `ctx`: Контекст команды.
-    *   `directory`: Путь к директории, которую нужно заархивировать.
-    *   Архивирует файлы в указанной директории.
-*   `select_dataset(ctx, path_to_dir_positive, positive)`: Асинхронная функция, команда для выбора датасета.
-    *    `ctx`: Контекст команды.
-    *   `path_to_dir_positive`: Путь к директории с положительными данными.
-    *   `positive`: Флаг, указывающий, является ли датасет положительным.
-    *   Выбирает датасет и архивирует его.
-*   `instruction(ctx)`: Асинхронная функция, команда для вывода инструкций.
-    *   `ctx`: Контекст команды.
-    *   Читает инструкции из файла и отправляет их в чат.
-*   `correct(ctx, message_id, correction)`: Асинхронная функция, команда для исправления предыдущих ответов.
-    *   `ctx`: Контекст команды.
-    *   `message_id`: ID сообщения, которое нужно исправить.
-    *   `correction`: Текст исправления.
-    *   Сохраняет исправления.
-*   `store_correction(original_text, correction)`: Функция для сохранения исправлений.
-    *    `original_text`: Оригинальный текст.
-    *    `correction`: Исправленный текст.
-    *   Сохраняет исправления в файл.
-*   `feedback(ctx, feedback_text)`: Асинхронная функция, команда для отправки обратной связи.
-    *   `ctx`: Контекст команды.
-    *   `feedback_text`: Текст обратной связи.
-    *   Сохраняет обратную связь.
-*   `getfile(ctx, file_path)`: Асинхронная функция, команда для получения файла.
-    *   `ctx`: Контекст команды.
-    *   `file_path`: Путь к файлу.
-    *   Отправляет файл в чат.
-*   `text_to_speech_and_play(text, channel)`: Асинхронная функция для преобразования текста в речь и воспроизведения в голосовом канале.
-    *   `text`: Текст для преобразования.
-    *   `channel`: Голосовой канал для воспроизведения.
-    *   Преобразует текст в речь и воспроизводит его в голосовом канале.
-*  `on_message(message)`: Асинхронная функция, вызывается при получении нового сообщения.
-    *  `message`: Объект сообщения.
-    *   Обрабатывает сообщения, распознает голосовые сообщения, отправляет ответы в текстовый или голосовой канал.
-*   `recognizer(audio_url, language)`: Функция для распознавания речи.
-    *   `audio_url`: Ссылка на аудиофайл.
-    *   `language`: Язык распознавания.
-    *   Распознает речь из аудиофайла и возвращает текст.
+*   **`discord`**: Основная библиотека для работы с Discord API, позволяющая боту взаимодействовать с серверами и каналами.
+*   **`discord.ext.commands`**: Расширение библиотеки `discord`, предоставляющее удобный способ создания и обработки команд бота.
+*   **`pathlib.Path`**: Библиотека для работы с путями к файлам и директориям в кроссплатформенном стиле.
+*   **`tempfile`**:  Модуль для создания временных файлов и директорий.
+*   **`asyncio`**: Библиотека для работы с асинхронным кодом, используется для выполнения неблокирующих операций.
+*   **`header`**: Модуль для определения корневой директории проекта (как показано в mermaid диаграмме).
+*   **`src.gs`**:  Глобальные настройки проекта, такие как пути к файлам, учетные данные, и другие параметры. Используется для получения токена бота.
+*   **`src.ai.openai.model.training.Model`**: Класс, отвечающий за обучение и работу с моделью искусственного интеллекта.
+*   **`src.utils.jjson`**: Модуль для работы с JSON, используется для загрузки и выгрузки данных.
+*   **`src.logger.logger`**: Модуль для логирования событий и ошибок.
+*   **`speech_recognition`**: Библиотека для распознавания речи.
+*   **`requests`**: Библиотека для отправки HTTP запросов.
+*   **`pydub`**: Библиотека для работы с аудиофайлами.
+*   **`gtts`**: Библиотека для преобразования текста в речь.
+*   **`.chatterbox`**:  Модуль `chatterbox`, находящийся в той же директории, используется для дополнительной обработки сообщений.
 
 **Переменные:**
 
-*   `MODE`: Режим работы (по умолчанию `dev`).
-*   `path_to_ffmpeg`: Путь к исполняемому файлу ffmpeg.
-*   `PREFIX`: Префикс для вызова команд бота (по умолчанию `!`).
-*   `intents`: Объекты `discord.Intents`, определяющие, какие события бот будет получать.
-*   `bot`: Объект бота типа `commands.Bot`.
-*   `model`: Экземпляр класса `Model` для работы с моделью машинного обучения.
-*   `instructions_path`: Путь к файлу с инструкциями.
-*   `correction_file`: Путь к файлу, куда сохраняются исправления.
-*   `audio_file_path`: Путь ко временному аудиофайлу.
-*   `wav_file_path`: Путь к конвертированному аудиофайлу.
-*    `tts`: Объект gTTS, используется для синтеза речи.
-*    `response`: Ответ от модели.
-*   `job_id`: ID задачи обучения.
-*   `dataset`: Данные датасета.
-*    `predictions`: Результаты предсказаний модели.
-*   `logger`: Объект logger для логирования.
+*   `path_to_ffmpeg`: Путь к исполняемому файлу ffmpeg, необходимому для работы с аудио.
+*   `PREFIX`: Префикс для команд бота (по умолчанию `!`).
+*   `intents`: Набор намерений, определяющих, к каким событиям должен быть подписан бот.
+*   `bot`: Объект бота, созданный с помощью `commands.Bot`.
+*   `model`: Объект модели, созданный с помощью класса `Model`.
+
+**Классы:**
+
+*   **`discord.Client` (неявно, через `commands.Bot`)**: Базовый класс для создания Discord-бота, управляет подключением к Discord API, обработкой событий и взаимодействием с сервером.
+*   **`commands.Bot`**: Подкласс `discord.Client`, предоставляющий функциональность для создания и обработки команд.
+*   **`src.ai.openai.model.training.Model`**: Класс для работы с моделью ИИ, отвечает за обучение, тестирование и предсказания.
+
+**Функции:**
+
+*   **`on_ready()`**: Событие, вызываемое при подключении бота к Discord. Выводит сообщение о готовности бота в лог.
+*   **`hi(ctx)`**: Команда для приветствия. Отправляет сообщение "HI!".
+*   **`join(ctx)`**: Команда для подключения бота к голосовому каналу.
+*   **`leave(ctx)`**: Команда для отключения бота от голосового канала.
+*   **`train(ctx, data, data_dir, positive, attachment)`**: Команда для обучения модели. Принимает данные для обучения, путь к директории и флаг `positive` (положительные или отрицательные данные), а также вложение(файл).
+*   **`test(ctx, test_data)`**: Команда для тестирования модели. Принимает тестовые данные в формате JSON.
+*  **`archive(ctx, directory)`**:  Команда для архивации файлов в указанной директории.
+*  **`select_dataset(ctx, path_to_dir_positive, positive)`**:  Команда для выбора и архивации датасета.
+*   **`instruction(ctx)`**: Команда для вывода инструкции из файла.
+*   **`correct(ctx, message_id, correction)`**: Команда для исправления предыдущего ответа.
+*   **`store_correction(original_text, correction)`**: Функция для сохранения исправлений.
+*   **`feedback(ctx, feedback_text)`**: Команда для получения обратной связи от пользователя.
+*   **`getfile(ctx, file_path)`**: Команда для получения файла.
+*   **`text_to_speech_and_play(text, channel)`**: Функция для преобразования текста в речь и воспроизведения ее в голосовом канале.
+*    **`on_message(message)`**: Обработчик сообщений. Распознает речь, отправляет текст в модель, и воспроизводит ответ в голосовом канале (если пользователь находится в голосовом канале) или отправляет ответ в текстовый канал.
+
+**Цепочка взаимосвязей:**
+
+1.  **`header.py` -> `src.gs`**: `header.py` определяет корневую директорию проекта, что позволяет получить доступ к глобальным настройкам через `src.gs`.
+
+2.  **`discord` -> `commands.Bot`**: `commands.Bot` наследуется от `discord.Client` и использует его функциональность для взаимодействия с Discord API.
+3.  **`commands.Bot` -> `Model`**:  `commands.Bot` использует `Model` для обучения, тестирования и получения предсказаний.
+4.  **`commands.Bot` -> `src.utils.jjson`**: `commands.Bot` использует  `src.utils.jjson` для обработки JSON данных.
+5.   **`commands.Bot` -> `src.logger.logger`**: `commands.Bot` использует  `src.logger.logger` для логирования событий.
+6.  **`commands.Bot` -> `text_to_speech_and_play`**: `commands.Bot` использует `text_to_speech_and_play` для воспроизведения ответов в голосовом канале.
+7. **`commands.Bot` -> `store_correction`**: `commands.Bot` использует `store_correction` для сохранения исправлений.
+8. **`speech_recognition` -> `on_message`**: `speech_recognition` используется в `on_message` для распознавания речи из аудио вложений.
+9. **`requests` -> `recognizer`**: `requests` используется в `recognizer` для загрузки аудио файлов.
+10. **`pydub` -> `recognizer`**: `pydub` используется в `recognizer` для конвертации аудио форматов.
+11. **`gtts` -> `text_to_speech_and_play`**: `gtts` используется в `text_to_speech_and_play` для преобразования текста в речь.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   **Обработка ошибок:**  В коде присутствует базовая обработка ошибок, но её можно улучшить, добавив более подробные сообщения об ошибках и журналирование исключений.
-*   **Распознавание речи:** Функцию `recognizer` можно улучшить, добавив возможность выбора разных движков распознавания речи, поддержку разных форматов аудио, а также возможность обрабатывать аудиофайлы локально без скачивания.
-*    **`text_to_speech_and_play`:** Функция может вызывать ошибки при длительной генерации речи, стоит добавить проверку и обработку этого.
-*   **`on_message`:**  Можно расширить функциональность обработки сообщений, добавив обработку различных типов вложений, а также предусмотреть обработку сообщений в разных каналах.
-*   **Асинхронность:**  В некоторых функциях можно использовать `async with` для более эффективного управления файловыми операциями.
-*    **Сообщения об ошибках:** Сообщения об ошибках можно сделать более информативными для пользователя.
-*    **Хранение данных:** Использовать базу данных для хранения исправлений и других данных для более удобного доступа.
-
-**Взаимосвязь с другими частями проекта:**
-
-*   Бот взаимодействует с `src.ai.openai.model.training.Model` для обучения, тестирования и предсказаний.
-*   Использует `src.utils.jjson` для работы с JSON-данными.
-*   Использует `src.logger.logger` для логирования событий.
-*   Использует `src.gs` для получения глобальных настроек, таких как токен бота.
-*   Использует `chatterbox.store_correction` для сохранения исправлений.
-*    `header.py`  обеспечивает корректную работу с путями в проекте.
-
-Этот код представляет собой Discord-бота, который может подключаться к голосовым каналам, отвечать на команды, обучать модель машинного обучения, распознавать речь, воспроизводить текст в речь и выполнять другие полезные функции.
+*   **Обработка ошибок**:  В некоторых функциях обработка ошибок может быть улучшена (например, более детальное логирование).
+*  **Безопасность**: При работе с файлами и путями необходимо обеспечить безопасность, чтобы избежать уязвимостей.
+*   **Асинхронность**: Можно улучшить асинхронность в некоторых местах, чтобы бот был более отзывчивым (например, параллельная обработка нескольких голосовых команд).
+*   **`recognizer`**: Функция `recognizer` закомментирована, стоит убедиться что она работает и правильно обрабатывает ошибки распознавания речи.
+*   **`text_to_speech_and_play`**: Функция `text_to_speech_and_play` не обрабатывает ошибки подключения к голосовому каналу.
+*   **Масштабируемость**: Логика обработки сообщений может быть пересмотрена, если бот будет обрабатывать большое количество сообщений.
+*   **Хранение данных**: Исправления и обратная связь хранятся в текстовых файлах, для более надежного хранения можно использовать БД.
+* **`model`**: Непонятно как именно работает `Model` и какие есть ограничения, необходимо более детальное изучение кода `src/ai/openai/model/training.py`

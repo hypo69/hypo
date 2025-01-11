@@ -1,235 +1,306 @@
 ## ИНСТРУКЦИЯ:
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
 
-1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
-2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
-    которые импортируются при создании диаграммы.
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
-
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,  
+    которые импортируются при создании диаграммы.  
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,  
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
+    
     **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
-
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
     ```
 
-3.  **<объяснение>**: Предоставьте подробные объяснения:
-    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
-    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
-    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
-    -   **Переменные**: Их типы и использование.
-    -   Выделите потенциальные ошибки или области для улучшения.
+3.  **<объяснение>**: Предоставьте подробные объяснения:  
+    - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
+    - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
+    - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
+    - **Переменные**: Их типы и использование.  
+    - Выделите потенциальные ошибки или области для улучшения.  
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
 
 Это обеспечивает всесторонний и структурированный анализ кода.
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
-
+```md
 ## <алгоритм>
 
-1.  **Инициализация `Firefox`:**
-    *   При создании экземпляра класса `Firefox` происходит:
-        *   Загрузка настроек из `firefox.json`.
-        *   Определение путей к `geckodriver` и бинарнику Firefox.
-        *   Создание экземпляров `Service` и `Options`.
-        *   Применение опций из файла настроек и переданных аргументов.
-        *   Установка пользовательского агента.
-        *   Настройка прокси, если `proxy_enabled` в настройках.
-        *   Настройка директории профиля.
-    *   Создается экземпляр `FirefoxProfile` с указанной директорией.
-    *   Вызывается конструктор родительского класса `WebDriver` для запуска Firefox.
-    *   Вызывается метод `_payload()` для загрузки дополнительных функций.
-    *   Обработка исключений `WebDriverException` и других `Exception` с записью логов.
+**Блок-схема работы класса `Firefox`:**
 
-    *Пример:*
+1.  **Инициализация `__init__`:**
+    *   Загружаются настройки из `firefox.json` (`settings = j_loads_ns(...)`).
+        *   Пример `firefox.json`:
+            ```json
+            {
+              "executable_path": {
+                "geckodriver": "bin/geckodriver",
+                "firefox_binary": "bin/firefox/firefox"
+              },
+               "options": ["--disable-gpu", "--no-sandbox"],
+               "window_mode": "kiosk",
+                "headers": {
+                    "accept": "*/*",
+                    "accept-encoding": "gzip, deflate, br",
+                    "connection": "keep-alive"
+                  },
+              "profile_directory": {
+                "default": "os",
+                "internal": "profiles"
+              },
+                "proxy_enabled": true
+            }
+            ```
+    *   Определяются пути к geckodriver и Firefox (`geckodriver_path`, `firefox_binary_path`).
+    *   Создается экземпляр `Service` для geckodriver.
+        *   Пример: `service = Service(geckodriver_path)`.
+    *   Создается экземпляр `Options` для настройки Firefox.
+        *   Пример: `options_obj = Options()`.
+    *   Опции из файла `firefox.json` добавляются к `options_obj` с помощью `add_argument`.
+    *   Устанавливается режим окна (`window_mode`) (киоск или без окна) из конфига или параметров.
+    *   Добавляются опции переданные при инициализации (`options`).
+    *   Добавляются заголовки из файла настроек
+    *   Устанавливается пользовательский агент (если не задан, используется случайный).
+    *   Если включен прокси, вызывается метод `set_proxy` для настройки.
+    *   Определяется директория профиля Firefox (`profile_directory`).
+    *   Создается экземпляр `FirefoxProfile`.
+        *   Пример: `profile = FirefoxProfile(profile_directory=profile_directory)`.
+    *   Создается экземпляр `WebDriver` с использованием `service`, `options_obj` и `profile`.
+        *   Пример: `super().__init__(service=service, options=options_obj)`.
+    *   Вызывается метод `_payload` для инициализации дополнительных функций.
 
-        ```python
-        browser = Firefox(
-            profile_name="custom_profile",
-            geckodriver_version="v0.29.0",
-            firefox_version="78.0",
-            proxy_file_path="path/to/proxies.txt"
-            options=["--headless"]
-        )
-        ```
-2.  **`set_proxy(options)`:**
-    *   Получение словаря прокси через `get_proxies_dict`.
-    *   Объединение всех прокси (socks4, socks5) в один список.
-    *   Поиск рабочего прокси путем случайного перебора списка и проверки с помощью `check_proxy`.
-    *   Если рабочий прокси найден:
-        *   Установка настроек прокси в `options` в зависимости от протокола (http, socks4, socks5).
-        *   Логирование настроенного прокси.
-    *   Если рабочий прокси не найден, выдается предупреждение в лог.
+2.  **Настройка прокси `set_proxy`:**
+    *   Получается словарь прокси из `get_proxies_dict`.
+    *   Создается список всех прокси (socks4 и socks5).
+    *   Случайно выбираются прокси, пока не будет найден рабочий с помощью `check_proxy`.
+    *   Если рабочий прокси найден, настраиваются параметры прокси в `options` в зависимости от протокола (http, socks4, socks5).
+        *   Пример для http:
+            ```python
+             options.set_preference('network.proxy.type', 1)
+             options.set_preference('network.proxy.http', proxy['host'])
+             options.set_preference('network.proxy.http_port', int(proxy['port']))
+             options.set_preference('network.proxy.ssl', proxy['host'])
+             options.set_preference('network.proxy.ssl_port', int(proxy['port']))
+            ```
+        *   Выводится сообщение в лог.
+    *   Если нет рабочего прокси, выводится предупреждение в лог.
 
-    *Пример:*
+3.  **Загрузка инструментов `_payload`:**
+    *   Создается экземпляр класса `JavaScript`.
+    *   Методы `JavaScript` устанавливаются как атрибуты экземпляра `Firefox`.
+    *   Создается экземпляр класса `ExecuteLocator`.
+    *   Методы `ExecuteLocator` устанавливаются как атрибуты экземпляра `Firefox`.
 
-    ```python
-    # proxies_dict = {"socks4": [{"host": "127.0.0.1", "port": 9050, "protocol": "socks4"}]};
-    # рабочий прокси: {"host": "127.0.0.1", "port": 9050, "protocol": "socks4"}
-    # options.set_preference('network.proxy.type', 1)
-    # options.set_preference('network.proxy.socks', "127.0.0.1")
-    # options.set_preference('network.proxy.socks_port', 9050)
-    ```
-3.  **`_payload()`:**
-    *   Создается экземпляр `JavaScript` для выполнения JS-скриптов.
-    *   Присваивание методов из экземпляра `JavaScript` к текущему экземпляру `Firefox`: `get_page_lang`, `ready_state`, `get_referrer`, `unhide_DOM_element`, `window_focus`.
-    *   Создание экземпляра `ExecuteLocator` для выполнения локаторов.
-    *   Присваивание методов из экземпляра `ExecuteLocator` к текущему экземпляру `Firefox`: `execute_locator`, `get_webelement_as_screenshot`, `get_webelement_by_locator`, `get_attribute_by_locator`, `send_message`.
+4.  **Пример использования (в `if __name__ == "__main__":`)**
+    *   Создается экземпляр класса `Firefox`.
+    *   Открывается веб-страница "https://google.com"
 
-    *Пример:*
+**Поток данных:**
 
-    ```python
-    # self.get_page_lang = instance_js.get_page_lang
-    # self.execute_locator = instance_execute_locator.execute_locator
-    ```
+*   `firefox.json` -> `j_loads_ns` -> `settings` (объект настроек)
+*   `settings` -> `geckodriver_path`, `firefox_binary_path`, `options`, `window_mode`, `headers`, `profile_directory`, `proxy_enabled`
+*   `geckodriver_path` -> `Service`
+*   `options` -> `Options`
+*   `user_agent` -> `Options`
+*   `profile_directory` -> `FirefoxProfile`
+*   `Options`, `Service`, `FirefoxProfile` -> `WebDriver`
+*   `get_proxies_dict` -> `proxies_dict` -> `set_proxy`
+*   `self` -> `JavaScript`
+*    `self` -> `ExecuteLocator`
+*   `WebDriver` -> `Firefox`
 
 ## <mermaid>
+
 ```mermaid
 flowchart TD
-    Start(Начало) --> LoadSettings[Загрузка настроек из firefox.json]
-    LoadSettings --> GetPaths[Определение путей к geckodriver и firefox]
-    GetPaths --> CreateService[Создание Service(geckodriver_path)]
-    CreateService --> CreateOptions[Создание Options()]
-    CreateOptions --> ApplySettingsOptions[Применение опций из settings.options]
-     ApplySettingsOptions --> ApplyOptions[Применение переданных options]
-     ApplyOptions --> ApplyHeaders[Применение заголовков из settings.headers]
-    ApplyHeaders --> SetUserAgent[Установка UserAgent]
-    SetUserAgent --> CheckProxyEnabled{proxy_enabled?}
-    CheckProxyEnabled -- Yes --> SetProxy[Вызов set_proxy(options)]
-    SetProxy --> SetProfileDir[Определение директории профиля]
-    CheckProxyEnabled -- No --> SetProfileDir
-     SetProfileDir --> CreateFirefoxProfile[Создание FirefoxProfile(profile_directory)]
-    CreateFirefoxProfile --> StartWebDriver[super().__init__(service, options)]
-    StartWebDriver --> ExecutePayload[Вызов _payload()]
-     ExecutePayload --> End(Конец)
-    StartWebDriver --> ExceptionHandler{Ошибка WebDriver?}
-    ExceptionHandler -- Yes --> LogCriticalError[Логирование ошибки]
-     LogCriticalError --> End
-     ExceptionHandler -- No --> ExecutePayload
-
-
-    subgraph set_proxy
-        SetProxyStart[Начало set_proxy] --> GetProxiesDict[Получение словаря прокси]
-        GetProxiesDict --> CombineProxies[Объединение прокси]
-        CombineProxies --> FindWorkingProxy[Поиск рабочего прокси]
-         FindWorkingProxy --> ProxyFound{Рабочий прокси найден?}
-        ProxyFound -- Yes --> SetProxySettings[Установка настроек прокси в options]
-         SetProxySettings --> LogProxySettings[Логирование настроек прокси]
-        LogProxySettings --> SetProxyEnd[Конец set_proxy]
-        ProxyFound -- No --> LogNoProxy[Логирование: нет доступных прокси]
-        LogNoProxy --> SetProxyEnd
+    subgraph header.py
+        Start_header[Start] --> Header[<code>header.py</code><br> Determine Project Root]
+        Header --> Import_gs[Import Global Settings: <br><code>from src import gs</code>]
+    end
+    
+    Start[Start] --> LoadSettings[Load settings from <code>firefox.json</code> <br> using <code>j_loads_ns</code>]
+    LoadSettings --> SetPaths[Set geckodriver and Firefox binary paths]
+    SetPaths --> CreateService[Create <code>Service</code> with geckodriver path]
+    CreateService --> CreateOptions[Create <code>Options</code>]
+     CreateOptions --> AddOptionsFromJson[Add options from JSON settings to <code>Options</code>]
+     AddOptionsFromJson --> SetWindowMode[Set window mode (kiosk or headless) based on settings and/or parameters]
+    SetWindowMode --> AddUserOptions[Add user defined options to <code>Options</code>]
+      AddUserOptions --> AddHeadersFromJson[Add headers from JSON settings to <code>Options</code>]
+    AddHeadersFromJson --> SetUserAgent[Set User Agent]
+    SetUserAgent --> ProxyCheck[Check if proxy is enabled in settings]
+     ProxyCheck -- Yes --> SetProxy[Call <code>set_proxy()</code> to configure proxy settings]
+    ProxyCheck -- No --> SetProfileDir[Set Firefox profile directory]
+    SetProxy --> SetProfileDir
+    SetProfileDir --> CreateProfile[Create <code>FirefoxProfile</code> with profile directory]
+    CreateProfile --> InitWebDriver[Create <code>WebDriver</code> with <code>Service</code>, <code>Options</code> and <code>FirefoxProfile</code>]
+    InitWebDriver --> Payload[Call <code>_payload()</code> to load additional functionality]
+    Payload --> End[End]
+    
+    subgraph set_proxy()
+        StartProxy[Start <code>set_proxy</code>] --> GetProxies[Get proxies from <code>get_proxies_dict()</code>]
+        GetProxies --> SelectProxy[Select a working proxy using <code>check_proxy()</code>]
+         SelectProxy -- Working proxy found --> ConfigureProxy[Configure proxy settings in <code>Options</code> based on proxy protocol]
+        SelectProxy -- No working proxy found --> LogNoProxy[Log warning no working proxy]
+        ConfigureProxy --> EndProxy[End <code>set_proxy</code>]
+         LogNoProxy --> EndProxy
+    end
+    
+    subgraph _payload()
+        StartPayload[Start <code>_payload()</code>] --> CreateJavaScript[Create <code>JavaScript</code> instance]
+        CreateJavaScript --> AddJavaScriptMethods[Add methods from <code>JavaScript</code> instance to class]
+        AddJavaScriptMethods --> CreateExecuteLocator[Create <code>ExecuteLocator</code> instance]
+         CreateExecuteLocator --> AddExecuteLocatorMethods[Add methods from <code>ExecuteLocator</code> instance to class]
+        AddExecuteLocatorMethods --> EndPayload[End <code>_payload()</code>]
     end
 
-    subgraph _payload
-        PayloadStart[Начало _payload] --> CreateJavaScript[Создание экземпляра JavaScript]
-        CreateJavaScript --> AssignJavaScriptMethods[Присвоение методов JavaScript]
-        AssignJavaScriptMethods --> CreateExecuteLocator[Создание экземпляра ExecuteLocator]
-        CreateExecuteLocator --> AssignExecuteLocatorMethods[Присвоение методов ExecuteLocator]
-        AssignExecuteLocatorMethods --> PayloadEnd[Конец _payload]
-    end
-
+    
+  
+  
+   linkStyle 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 stroke:#333,stroke-width:2px
+    linkStyle 25,26,27,28,29,30 stroke:#333,stroke-width:2px
+      linkStyle 31,32,33,34,35 stroke:#333,stroke-width:2px
 ```
-```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-```
+**Анализ зависимостей `mermaid`:**
+
+*   `header.py`:
+    *   `Start_header`, `Header`, `Import_gs`: Представляют процесс определения корневой директории проекта и импорта глобальных настроек.
+*   `firefox.py`:
+    *   `Start`: Начало процесса создания экземпляра `Firefox`.
+    *   `LoadSettings`: Загрузка настроек из `firefox.json` с использованием `j_loads_ns`.
+    *   `SetPaths`: Установка путей к geckodriver и бинарному файлу Firefox.
+    *   `CreateService`: Создание экземпляра `selenium.webdriver.firefox.service.Service`.
+    *   `CreateOptions`: Создание экземпляра `selenium.webdriver.firefox.options.Options`.
+    *    `AddOptionsFromJson`: Добавление опций из настроек JSON в `Options`.
+    *    `SetWindowMode`: Установка режима окна (киоск или headless)
+    *   `AddUserOptions`: Добавление пользовательских опций в `Options`.
+    *    `AddHeadersFromJson`: Добавление заголовков из файла настроек
+    *   `SetUserAgent`: Установка пользовательского агента.
+    *   `ProxyCheck`: Проверка, включен ли прокси в настройках.
+    *   `SetProxy`: Вызов функции `set_proxy()`.
+    *    `SetProfileDir`: Установка директории профиля Firefox.
+    *   `CreateProfile`: Создание экземпляра `selenium.webdriver.firefox.firefox_profile.FirefoxProfile`.
+    *   `InitWebDriver`: Инициализация `selenium.webdriver.Firefox` (родительского класса).
+    *   `Payload`: Вызов метода `_payload`.
+    *   `End`: Конец процесса инициализации.
+*   `set_proxy()`:
+    *   `StartProxy`: Начало выполнения метода `set_proxy`.
+    *   `GetProxies`: Получение списка прокси из `get_proxies_dict()`.
+    *   `SelectProxy`: Выбор рабочего прокси с помощью `check_proxy()`.
+    *   `ConfigureProxy`: Настройка параметров прокси в `Options`.
+    *   `LogNoProxy`: Логгирование предупреждения, если нет доступных прокси.
+    *    `EndProxy`: Конец выполнения метода `set_proxy`.
+*   `_payload()`:
+    *   `StartPayload`: Начало выполнения метода `_payload`.
+    *    `CreateJavaScript`: Создание экземпляра класса `JavaScript`.
+    *   `AddJavaScriptMethods`: Добавление методов из `JavaScript` в класс.
+    *    `CreateExecuteLocator`: Создание экземпляра класса `ExecuteLocator`.
+    *  `AddExecuteLocatorMethods`: Добавление методов из `ExecuteLocator` в класс.
+    *   `EndPayload`: Конец выполнения метода `_payload`.
+
 ## <объяснение>
 
 **Импорты:**
 
-*   **`os`**:  Используется для работы с операционной системой, например, для получения переменных окружения.
-*   **`random`**: Используется для случайного выбора прокси из списка.
-*   **`pathlib.Path`**: Используется для работы с путями к файлам и каталогам. Позволяет более гибко работать с путями, чем стандартные строковые манипуляции.
-*   **`typing.Optional, List`**: Используется для аннотации типов, указывая, что переменные могут быть `None` или иметь конкретный тип.
-*   **`selenium.webdriver.Firefox as WebDriver`**: Импортирует класс `Firefox` из `selenium` и переименовывает его в `WebDriver` для избежания конфликтов имен. Это базовый класс для управления браузером Firefox.
-*   **`selenium.webdriver.firefox.options.Options`**: Используется для настройки параметров запуска Firefox.
-*   **`selenium.webdriver.firefox.service.Service`**:  Используется для управления процессом `geckodriver`.
-*   **`selenium.webdriver.firefox.firefox_profile.FirefoxProfile`**: Используется для настройки профиля Firefox.
-*   **`selenium.common.exceptions.WebDriverException`**: Используется для перехвата исключений, возникающих при работе WebDriver.
-*   **`src.gs`**: Импортирует глобальные настройки проекта.  Обеспечивает доступ к общим путям и другим настройкам, используемых во всем проекте.
-*   **`src.webdriver.executor.ExecuteLocator`**: Импортирует класс для выполнения поиска элементов на веб-странице.
-*   **`src.webdriver.js.JavaScript`**: Импортирует класс для выполнения JavaScript на веб-странице.
-*   **`src.webdriver.proxy.download_proxies_list, get_proxies_dict, check_proxy`**: Импортирует функции для работы с прокси, такие как скачивание списка, получение словаря и проверка прокси.
-*    **`src.utils.jjson.j_loads_ns`**: Импортирует функцию для загрузки JSON настроек.
-*   **`src.logger.logger.logger`**: Импортирует логгер для записи сообщений о состоянии выполнения программы.
-*   **`fake_useragent.UserAgent`**: Используется для генерации случайных User-Agent, имитирующих различных пользователей.
-*   **`header`**: Импортирует модуль `header.py`, который, вероятно, определяет корень проекта и загружает глобальные настройки.
+*   `os`: Модуль для работы с операционной системой, используется для получения переменных окружения.
+*   `random`: Модуль для генерации случайных чисел, используется для случайного выбора прокси.
+*   `pathlib.Path`: Модуль для работы с путями к файлам и директориям.
+*   `typing.Optional`, `typing.List`: Модули для аннотации типов.
+*   `selenium.webdriver.Firefox`: Базовый класс `WebDriver` для Firefox.
+*   `selenium.webdriver.firefox.options.Options`: Класс для установки опций Firefox.
+*   `selenium.webdriver.firefox.service.Service`: Класс для управления процессом geckodriver.
+*    `selenium.webdriver.firefox.firefox_profile.FirefoxProfile`: Класс для управления профилем Firefox.
+*   `selenium.common.exceptions.WebDriverException`: Исключение, которое может возникнуть во время работы с WebDriver.
+*   `src.gs`: Глобальные настройки проекта.
+*   `src.webdriver.executor.ExecuteLocator`: Класс для выполнения действий с локаторами.
+*   `src.webdriver.js.JavaScript`: Класс для выполнения JavaScript кода.
+*   `src.webdriver.proxy.download_proxies_list`, `src.webdriver.proxy.get_proxies_dict`, `src.webdriver.proxy.check_proxy`: Функции для работы с прокси.
+*   `src.utils.jjson.j_loads_ns`: Функция для загрузки JSON настроек с пространством имен.
+*   `src.logger.logger.logger`: Логгер для вывода сообщений.
+*  `fake_useragent.UserAgent`:  Модуль для генерации случайных user agent.
+*  `header`: Модуль для определения корневой директории проекта.
 
-**Классы:**
+**Класс `Firefox`:**
 
-*   **`Firefox(WebDriver)`**:
-    *   **Роль:** Расширяет функциональность базового класса `webdriver.Firefox`.  Предоставляет возможность настройки профиля, прокси, пользовательского агента и других опций.
-    *   **Атрибуты:**
-        *   `driver_name: str = 'firefox'` - Имя драйвера.
-    *   **Методы:**
-        *   `__init__(...)`: Конструктор класса, инициализирует драйвер Firefox с заданными параметрами.
-        *   `set_proxy(options: Options)`: Настраивает прокси для драйвера, выбирая рабочий прокси из списка.
-        *   `_payload()`: Загружает исполнителей для локаторов и JavaScript сценариев.
+*   **Роль:** Расширение функциональности стандартного `selenium.webdriver.Firefox`.
+*   **Атрибуты:**
+    *   `driver_name`: Имя драйвера - "firefox".
+*   **Методы:**
+    *   `__init__(...)`: Конструктор класса, выполняет инициализацию WebDriver, настройку профиля, прокси и других параметров.
+    *   `set_proxy(options)`: Настраивает прокси в Firefox.
+    *   `_payload()`: Выполняет загрузку исполнителей для локаторов и JavaScript.
+*   **Взаимодействие:**
+    *   Использует `src.gs` для доступа к глобальным настройкам.
+    *   Использует `src.utils.jjson.j_loads_ns` для загрузки настроек из JSON файла.
+    *   Использует `src.webdriver.proxy` для работы с прокси.
+    *   Создает экземпляры `ExecuteLocator` и `JavaScript` для расширения функциональности.
+    *   Наследует функциональность от `selenium.webdriver.Firefox`.
 
 **Функции:**
 
-*   `__init__`:
-    *   **Аргументы:**
-        *   `profile_name: Optional[str]`: Имя профиля Firefox.
-        *   `geckodriver_version: Optional[str]`: Версия geckodriver.
-        *   `firefox_version: Optional[str]`: Версия Firefox.
-        *  `user_agent: Optional[str]`: Пользовательский агент.
-        *   `proxy_file_path: Optional[str]`: Путь к файлу с прокси.
-        *   `options: Optional[List[str]]`: Список опций для Firefox.
-        *   `*args, **kwargs`: Дополнительные аргументы для родительского класса.
-    *   **Возвращаемое значение:** `None`.
-    *   **Назначение:** Инициализирует драйвер Firefox, настраивает профиль, прокси и другие параметры.
+*   `__init__(...)`:
+    *   **Аргументы:** `profile_name`, `geckodriver_version`, `firefox_version`, `user_agent`, `proxy_file_path`, `options`, `window_mode`.
+    *   **Возвращает:** `None`.
+    *   **Назначение:** Инициализирует драйвер Firefox с заданными настройками, настраивает профиль, прокси и другие параметры.
+    *   **Примеры:**
+        ```python
+        browser = Firefox(profile_name="custom", window_mode="kiosk", options=["--disable-gpu"])
+        browser = Firefox(proxy_file_path="proxies.txt")
+        ```
 *   `set_proxy(options)`:
-    *   **Аргументы:**
-        *   `options: Options`: Экземпляр `Options`, в который добавляются настройки прокси.
-    *   **Возвращаемое значение:** `None`.
-    *   **Назначение:** Настраивает прокси для драйвера, выбирая рабочий прокси из списка.
-*    `_payload`:
-     *   **Аргументы:** Нет.
-     *   **Возвращаемое значение:** `None`.
-     *   **Назначение:** Загружает исполнителей для локаторов и JavaScript сценариев.
+    *   **Аргументы:** `options` (`selenium.webdriver.firefox.options.Options`).
+    *   **Возвращает:** `None`.
+    *   **Назначение:** Настраивает параметры прокси в `Options` на основе выбранного рабочего прокси.
+    *   **Примеры:**
+        ```python
+        options_obj = Options()
+        self.set_proxy(options_obj)
+        ```
+*   `_payload()`:
+    *   **Аргументы:** Нет.
+    *   **Возвращает:** `None`.
+    *   **Назначение:** Создает экземпляры `JavaScript` и `ExecuteLocator` и устанавливает их методы как атрибуты экземпляра `Firefox`.
+    *   **Примеры:**
+        ```python
+        self._payload()
+        ```
 
 **Переменные:**
 
-*   `service`: Экземпляр `Service` для управления `geckodriver`.
-*   `profile`: Экземпляр `FirefoxProfile` для настройки профиля.
-*   `options_obj`: Экземпляр `Options` для настройки параметров запуска Firefox.
-*    `settings`:  Загруженные настройки из `firefox.json`.
-*   `geckodriver_path`: Путь к исполняемому файлу `geckodriver`.
-*   `firefox_binary_path`: Путь к бинарному файлу Firefox.
-*    `user_agent`:  Пользовательский агент.
-*   `profile_directory`: Путь к каталогу профиля Firefox.
-*   `proxies_dict`: Словарь прокси, полученный из `get_proxies_dict`.
-*   `all_proxies`: Список всех прокси (socks4 и socks5).
-*   `working_proxy`: Рабочий прокси, найденный из списка.
+*   `settings`: Объект с настройками, загруженный из `firefox.json`.
+*   `geckodriver_path`: Путь к исполняемому файлу geckodriver.
+*   `firefox_binary_path`: Путь к исполняемому файлу Firefox.
+*   `service`: Экземпляр `selenium.webdriver.firefox.service.Service`.
+*   `options_obj`: Экземпляр `selenium.webdriver.firefox.options.Options`.
+*    `profile_directory`: Директория профиля Firefox.
+*   `profile`: Экземпляр `selenium.webdriver.firefox.firefox_profile.FirefoxProfile`.
+*   `proxies_dict`: Словарь прокси, возвращенный `get_proxies_dict()`.
+*   `all_proxies`: Список всех прокси.
+*   `working_proxy`: Рабочий прокси.
+*    `user_agent`: Пользовательский агент.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   **Обработка ошибок при загрузке настроек:** Отсутствует обработка ошибок при загрузке файла `firefox.json`.
-*   **Проверка версий драйвера и Firefox:** Не проверяется соответствие версий `geckodriver` и Firefox, что может привести к ошибкам.
-*   **Обработка ошибок при работе с прокси:** Не обрабатываются исключения при работе с прокси, например, если прокси недоступен.
-*   **Отсутствие явного закрытия драйвера:** В примере использования не вызывается метод `quit()` или `close()` для закрытия драйвера, что может привести к утечке ресурсов.
-*   **Использование `vars()` для доступа к атрибутам:**  Использование `vars()` может быть не безопасным, стоит проверить, какой тип данных и какие атрибуты ожидаются. Лучше использовать явный доступ.
-*   **Неявное преобразование типа:** В `options.set_preference('network.proxy.http_port', int(proxy['port']))`  происходит неявное преобразование типа `int()` без проверки на допустимые значения, что может вызвать исключение.
-*   **Неопределенный `proxy_file_path`:** В коде не используется параметр `proxy_file_path`, хотя он присутствует в описании класса, а прокси настраиваются из `get_proxies_dict`.
-*   **Сложная логика выбора прокси:** Логика выбора прокси предполагает случайный перебор, что может быть не оптимально. Можно рассмотреть варианты с кэшированием рабочих прокси или использованием более эффективных алгоритмов.
-*   **Не хватает проверок на допустимые значения:** Не хватает проверок на корректность передаваемых параметров, что может привести к ошибкам во время выполнения.
+*   **Обработка ошибок:** Обработка исключений при запуске WebDriver производится, но можно добавить более детальную информацию и логирование.
+*   **Конфигурация прокси:** Если `get_proxies_dict` возвращает пустой словарь или не найден рабочий прокси, выводится только предупреждение. Можно добавить дополнительные стратегии обработки этой ситуации (например, повторная попытка).
+*   **Зависимости:** Зависимости от файлов `firefox.json` и `proxies.txt` (которые неявно используются в `get_proxies_dict`) делают код менее гибким.
+*   **Управление профилем:** В коде не используется `geckodriver_version` и `firefox_version` хотя они являются параметрами конструктора, можно добавить логику для их использования.
+*   **Использование параметров:** Устанавливается режим окна, но не все возможные варианты режимов, имеет смысл добавить поддержку всех вариантов.
 
-**Цепочка взаимосвязей с другими частями проекта:**
+**Взаимосвязи с другими частями проекта:**
 
-1.  **`src.gs`**: Получает глобальные настройки проекта, включая пути к исполняемым файлам и другим ресурсам.
-2.  **`src.webdriver.executor.ExecuteLocator`**: Используется для выполнения поиска элементов на веб-странице, предоставляя функционал для взаимодействия с веб-элементами.
-3.  **`src.webdriver.js.JavaScript`**: Используется для выполнения JavaScript-сценариев на веб-странице, предоставляя дополнительные возможности для взаимодействия с веб-страницей.
-4.  **`src.webdriver.proxy`**: Используется для работы с прокси, включая загрузку списка прокси, получение словаря и проверку их работоспособности.
-5.  **`src.utils.jjson`**: Используется для загрузки настроек из JSON-файла.
-6.  **`src.logger.logger`**:  Используется для логирования событий и ошибок во время работы драйвера.
-7.  **`header`**: Определяет корень проекта, от куда берутся все пути.
-8. **`fake_useragent`**: Используется для генерации случайных user-agent.
+*   Использует `src.gs` для доступа к глобальным настройкам проекта.
+*   Использует `src.webdriver.executor.ExecuteLocator` для выполнения действий с локаторами.
+*   Использует `src.webdriver.js.JavaScript` для выполнения JavaScript кода.
+*   Использует `src.webdriver.proxy` для работы с прокси.
+*   Использует `src.utils.jjson` для загрузки конфигурации из JSON файлов.
+*   Использует `src.logger` для логирования.
+*   Зависит от наличия `header.py` для определения корневой директории проекта.
 
-Этот класс `Firefox` является центральным элементом для управления браузером Firefox и интегрирован с другими модулями для обеспечения расширенной функциональности.
+В целом, код представляет собой расширение стандартного `WebDriver` для Firefox, обеспечивая гибкость в настройке браузера через параметры и файлы конфигурации, с поддержкой прокси и пользовательского профиля.
+```

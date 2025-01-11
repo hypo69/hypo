@@ -1,33 +1,38 @@
-# Анализ кода модуля `locales.py`
+## Анализ кода модуля `locales.py`
 
 **Качество кода**
-7
--  Плюсы
-    - Код соответствует PEP8, использует аннотацию типов.
-    - Присутствует docstring для модуля и функции.
-    - Использование `j_loads_ns` вместо стандартного `json.load`.
--  Минусы
-    - Отсутствует обработка ошибок, что может привести к проблемам при загрузке данных.
-    - Отсутствуют логи.
-    - Комментарии в коде не соответствуют формату RST.
-    - Имя переменной `locales` переопределяется и это может вызвать путаницу.
-    - Нет проверок на тип данных, возвращаемых из `j_loads_ns`.
+- **Соответствие требованиям по оформлению кода:** 9/10
+    -   **Плюсы:**
+        -   Код соответствует PEP 8, используется snake_case для именования переменных и функций.
+        -   Присутствует docstring для модуля и функции, описывающий назначение и примеры использования.
+        -   Используется `j_loads_ns` для загрузки JSON.
+        -   Комментарии сохранены.
+    -   **Минусы:**
+        -   Не используется `logger` для логирования ошибок.
+        -   В docstring модуля нет примера использования класса и не соблюдены стандарты оформления docstring в Python (для Sphinx).
+        -   В docstring функции не описаны возможные возвращаемые значения и исключения.
+        -   Не везде добавлены комментарии для блоков кода.
 
 **Рекомендации по улучшению**
-1. Добавить логирование ошибок с помощью `from src.logger.logger import logger`.
-2. Изменить формат комментариев на RST.
-3. Переименовать переменную `locales`, чтобы избежать конфликта имен.
-4. Добавить обработку ошибок с использованием try-except.
-5. Добавить проверку типа данных, возвращаемых из `j_loads_ns`.
+
+1.  **Импорт `logger`**: Добавить импорт `logger` из `src.logger.logger`.
+2.  **Логирование ошибок**: Использовать `logger.error` для логирования ошибок вместо `print` и `raise`.
+3.  **Документация модуля**: Обновить docstring модуля в соответствии со стандартами RST и примерами из инструкции.
+4.  **Документация функций**: Обновить docstring функции `get_locales` в соответствии со стандартами RST.
+5.  **Комментарии**: Добавить комментарии к блокам кода.
+6.  **Обработка ошибок:** Улучшить обработку ошибок, добавив try except и logger.error.
 
 **Оптимизированный код**
+
 ```python
+# -*- coding: utf-8 -*-
+# ! venv/bin/python/python3.12
+
 """
-Модуль для работы с локалями AliExpress.
+Модуль для загрузки данных локалей из JSON файла.
 =========================================================================================
 
-Этот модуль предоставляет функции для загрузки и обработки данных локалей из JSON файла,
-используемых для определения валют для различных языков.
+Этот модуль содержит функцию `get_locales`, которая загружает данные локалей из JSON файла.
 
 Пример использования
 --------------------
@@ -40,65 +45,56 @@
     from src.suppliers.aliexpress.utils.locales import get_locales
     from src import gs
 
-    locales_path = gs.path.src / 'suppliers' / 'aliexpress' / 'utils' / 'locales.json'
-    locales = get_locales(locales_path)
-    if locales:
-        print(locales)
+    locales = get_locales(gs.path.src / 'suppliers' / 'aliexpress' / 'utils' / 'locales.json')
+    print(locales)
     # [{'EN': 'USD'}, {'HE': 'ILS'}, {'RU': 'ILS'}, {'EN': 'EUR'}, {'EN': 'GBR'}, {'RU': 'EUR'}]
+
 """
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 
 from pathlib import Path
-from typing import List, Dict, Optional
-
-from src import gs
-# Импортируем j_loads_ns для чтения json
-from src.utils.jjson import j_loads_ns
-# Импортируем logger для логирования ошибок
+# импортируем logger для логирования ошибок
 from src.logger.logger import logger
+from src import gs
+# импортируем функции для работы с json
+from src.utils.jjson import j_loads_ns
 
 
-def get_locales(locales_path: Path | str) -> Optional[List[Dict[str, str]]]:
+def get_locales(locales_path: Path | str) -> list[dict[str, str]] | None:
     """
     Загружает данные локалей из JSON файла.
 
-    :param locales_path: Путь к JSON файлу с данными локалей.
+    :param locales_path: Путь к JSON файлу, содержащему данные локалей.
     :type locales_path: Path | str
     :return: Список словарей с парами локаль-валюта или None в случае ошибки.
-    :rtype: Optional[List[Dict[str, str]]]
+    :rtype: list[dict[str, str]] | None
+    :raises FileNotFoundError: Если файл не найден по указанному пути.
+    :raises Exception: В случае любой другой ошибки при загрузке или обработке данных.
 
-    Пример использования:
-
-    .. code-block:: python
-
-        from pathlib import Path
-        from src.suppliers.aliexpress.utils.locales import get_locales
-        from src import gs
-
-        locales_path = gs.path.src / 'suppliers' / 'aliexpress' / 'utils' / 'locales.json'
-        locales = get_locales(locales_path)
-        if locales:
-            print(locales)
-        # [{'EN': 'USD'}, {'HE': 'ILS'}, {'RU': 'ILS'}, {'EN': 'EUR'}, {'EN': 'GBR'}, {'RU': 'EUR'}]
+    Примеры:
+        >>> from pathlib import Path
+        >>> from src.suppliers.aliexpress.utils.locales import get_locales
+        >>> from src import gs
+        >>> locales = get_locales(gs.path.src / 'suppliers' / 'aliexpress' / 'utils' / 'locales.json')
+        >>> print(locales)
+        [{'EN': 'USD'}, {'HE': 'ILS'}, {'RU': 'ILS'}, {'EN': 'EUR'}, {'EN': 'GBR'}, {'RU': 'EUR'}]
     """
     try:
-        # Читает данные локалей из JSON файла
-        loaded_data = j_loads_ns(locales_path)
-        # Проверяет, что данные загрузились и имеют нужную структуру
-        if not isinstance(loaded_data, dict) or 'locales' not in loaded_data:
-           logger.error(f'Ошибка: Неверный формат данных в файле {locales_path}')
-           return None
-        # Возвращает данные локалей или None, если они отсутствуют
-        return loaded_data.get('locales') if isinstance(loaded_data.get('locales'), list) else None
-    except Exception as ex:
-        # Логирует ошибку, если что-то пошло не так
-        logger.error(f'Ошибка при загрузке локалей из файла {locales_path}: {ex}')
+        # загружает данные из файла
+        locales = j_loads_ns(locales_path)
+        # возвращает список локалей или None
+        return locales.locales or None
+    except FileNotFoundError as e:
+        # если файл не найден, логирует ошибку
+        logger.error(f'Файл не найден: {locales_path}', exc_info=True)
+        return None
+    except Exception as e:
+        # при любой другой ошибке логирует ошибку
+        logger.error(f'Ошибка при загрузке данных локалей: {e}', exc_info=True)
         return None
 
 
-# Загружает данные локалей при запуске модуля
-_locales: Optional[List[Dict[str, str]]] = get_locales(gs.path.src / 'suppliers' / 'aliexpress' / 'utils' / 'locales.json') # Определены локали для кампаний
+# получаем список локалей
+locales: list[dict[str, str]] | None = get_locales(
+    gs.path.src / 'suppliers' / 'aliexpress' / 'utils' / 'locales.json'
+)  # defined locales for campaigns
 ```

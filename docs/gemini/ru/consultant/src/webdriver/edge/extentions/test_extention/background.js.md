@@ -1,126 +1,116 @@
 # Анализ кода модуля `background.js`
 
 **Качество кода**
-8
--   Плюсы
-    -   Код выполняет заявленную функциональность: прослушивание событий браузера и отправка данных на сервер.
-    -   Используются асинхронные операции для взаимодействия с браузером и сервером.
-    -   Присутствует обработка ошибок при отправке данных на сервер.
-    -   Код достаточно читаемый и структурированный.
--   Минусы
-    -  Отсутствует документация в формате reStructuredText (RST).
-    -   Не используется `j_loads` или `j_loads_ns`.
-    -   Отсутствует логирование ошибок через `src.logger.logger`.
-    -   Используется `console.log` и `console.error` вместо `logger.debug` и `logger.error`.
-    -  Не все переменные имеют четкие и понятные имена (например, `result`).
-    -  URL сервера задан как константа, что не очень гибко для реального использования.
+
+8/10
+-  Плюсы
+    -   Код выполняет свою задачу по отправке данных на сервер.
+    -   Используется `chrome.storage.local` для хранения данных.
+    -   Код содержит подробные комментарии о работе слушателя сообщений.
+-  Минусы
+    -   Отсутствует обработка ошибок при чтении из `chrome.storage.local`.
+    -   Используется `console.log` и `console.error` для логирования, что не подходит для продакшен-кода.
+    -   Не хватает документации в формате RST.
+    -   Необходимо использовать `j_loads` или `j_loads_ns` для работы с `json`.
+    -   Отсутствует импорт `logger`.
+    -   Не стандартизирован стиль написания кода.
 
 **Рекомендации по улучшению**
 
-1.  **Документирование кода**:
-    -   Добавить docstring в формате reStructuredText (RST) для модуля, функций и переменных.
-2.  **Использование `j_loads`**:
-    -   Не применимо в данном контексте, так как нет чтения json файлов
-3.  **Логирование**:
-    -   Заменить `console.log` и `console.error` на `logger.debug` и `logger.error` для более гибкого логирования.
-    -   Добавить логирование ошибок в `chrome.storage.local.get`.
-4.  **Обработка ошибок**:
-    -   Использовать `logger.error` для отлавливания ошибок в `chrome.storage.local.get` и `fetch`.
-5.  **Улучшение именования переменных**:
-    -   Переименовать переменную `result` на более понятное имя, например `storageResult`.
-6.  **Гибкость настроек**:
-    -   Перенести URL сервера в настройки расширения для гибкости использования.
-7. **Безопасность**
-    - Добавить проверку корректности полученных данных, например `collectedData`
+1.  Добавить импорт `logger` из `src.logger`.
+2.  Заменить `console.log` и `console.error` на `logger.info`, `logger.error` и `logger.debug`.
+3.  Добавить обработку ошибок при чтении из `chrome.storage.local`, используя `try-except` и `logger.error`.
+4.  Добавить документацию в формате RST для каждой функции.
+5.  Использовать `j_loads` или `j_loads_ns` вместо `JSON.stringify` при отправке данных на сервер.
+6.  Соблюдать единый стандарт в именовании переменных.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для обработки событий браузера и отправки данных на сервер.
-=================================================================
+Модуль для фоновой обработки расширения.
+=========================================================================================
 
-Этот модуль прослушивает события браузера, такие как нажатие на иконку расширения и
-получение сообщений от content scripts.
-При получении соответствующих событий модуль собирает данные и отправляет их на сервер.
-
-Функциональность
---------------------
-
--   Прослушивание событий нажатия на иконку расширения.
--   Получение сообщений от content scripts для сбора данных.
--   Отправка собранных данных на сервер.
+Этот модуль отвечает за обработку сообщений, отправленных из контент-скриптов,
+и отправку собранных данных на сервер.
 
 Пример использования
 --------------------
 
+Пример прослушивания сообщения и отправки данных на сервер.
+
 .. code-block:: javascript
 
-    // Пример отправки сообщения из content script
-    chrome.runtime.sendMessage({ action: 'collectData', url: window.location.href });
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.action === 'collectData') {
+            sendDataToServer(message.url);
+        }
+    });
 """
-from src.logger.logger import logger  # Добавлен импорт logger
+from src.logger.logger import logger
+from src.utils.jjson import j_loads_ns
 
-# Слушатель события нажатия на иконку расширения.
-# Отправляет сообщение вкладке для сбора данных.
+# Слушатель события клика по иконке расширения.
 chrome.browserAction.onClicked.addListener(tab => {
-    # Отправляет сообщение вкладке с действием 'collectData' и URL текущей страницы.
+    # Отправка сообщения контент-скрипту для сбора данных.
     chrome.tabs.sendMessage(tab.id, { action: 'collectData', url: tab.url });
 });
 
-# Слушатель сообщений от content scripts.
-# Если действие сообщения 'collectData', то отправляет данные на сервер.
+# Слушатель сообщений от контент-скриптов.
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    # Проверяет, что действие сообщения равно 'collectData'.
+    # Проверка, что сообщение содержит действие 'collectData'.
     if (message.action === 'collectData') {
-        # Вызывает функцию sendDataToServer для отправки данных на сервер.
+        # Вызов функции для отправки данных на сервер.
         sendDataToServer(message.url);
     }
 });
 
-
-def sendDataToServer(url: str) -> None:
+async def sendDataToServer(url: str) -> None:
     """
     Отправляет собранные данные на сервер.
 
-    :param url: URL страницы, с которой были собраны данные.
-    :return: None
+    Args:
+        url (str): URL страницы, с которой были собраны данные.
+    
+    Raises:
+        Exception: Если не удалось отправить данные на сервер.
+
     """
     # URL сервера для отправки данных.
-    serverUrl = 'http://127.0.0.1/hypotez.online/api/' # TODO вынести в настройки
-    # Получает данные из локального хранилища.
-    chrome.storage.local.get('collectedData', (storageResult) => {
-        # Сохраняет полученные данные в переменную `collectedData`.
-        collectedData = storageResult.collectedData
-        # Проверяет, что данные существуют.
-        if collectedData:
-            try:
-                # Отправляет POST запрос на сервер с собранными данными.
-                fetch(serverUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(collectedData)
-                })
-                .then(response => {
-                    # Проверяет, что запрос успешен.
-                    if (!response.ok) {
-                        # Генерирует ошибку, если запрос не успешен.
-                         raise Exception(f'Failed to send data to server. Status code {response.status}')
-                    }
-                    # Выводит сообщение об успешной отправке данных.
-                    logger.debug('Data sent to server successfully')
-                })
-                .catch(error => {
-                    # Логирует ошибку при отправке данных на сервер.
-                    logger.error(f'Error sending data to server: {error}')
-                });
-            except Exception as ex:
-                # Логирует ошибку при получении данных из хранилища
-                logger.error(f'Error  {ex}')
-        else:
-             # Логирует ошибку, если нет собранных данных.
-            logger.error('No collected data found')
-    });
+    serverUrl = 'http://127.0.0.1/hypotez.online/api/'; # TODO: Вынести в конфиг
+
+    # Получение данных из локального хранилища.
+    try:
+      chrome.storage.local.get('collectedData', (result) => {
+          # Извлечение собранных данных.
+          collectedData = result.collectedData;
+          if (collectedData) {
+              # Отправка данных на сервер с использованием fetch.
+              fetch(serverUrl, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  # Преобразование данных в JSON и отправка.
+                  body: j_loads_ns(collectedData)
+              })
+              .then(response => {
+                  # Проверка успешности отправки данных.
+                  if (!response.ok) {
+                      logger.error('Failed to send data to server');
+                      raise Exception('Failed to send data to server')
+                  }
+                  logger.info('Data sent to server successfully');
+              })
+              .catch(error => {
+                   # Логирование ошибок при отправке данных.
+                  logger.error(f'Error sending data to server: {error}');
+              });
+          } else {
+             # Логирование ошибки, если нет собранных данных.
+              logger.error('No collected data found');
+          }
+      });
+    except Exception as ex:
+        logger.error(f'Ошибка получения данных из chrome.storage.local {ex}')
 ```

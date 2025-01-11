@@ -1,51 +1,39 @@
 # Анализ кода модуля `file_async.py`
 
-**Качество кода:**
+**Качество кода**
+7
+-   Плюсы
+    - Код хорошо структурирован и разбит на множество асинхронных функций, что способствует лучшей читаемости и обслуживаемости.
+    -  Присутствует подробная документация для каждой функции, включая примеры использования и описание типов возвращаемых значений.
+    -  Используется асинхронный ввод/вывод (aiofiles, asyncio), что обеспечивает неблокирующую работу с файловой системой.
+    -  Код поддерживает как чтение и запись отдельных файлов, так и рекурсивный обход директорий.
+    -   Обработка ошибок выполняется с использованием `try-except` блоков, а ошибки логируются с помощью `logger.error`.
+    -   Есть функция для удаления BOM из файлов.
+ - Минусы
+    -  Используется стандартный `json.dumps` для записи JSON, хотя в инструкциях указано использовать `j_dumps`.
+    -  В некоторых местах код можно упростить, сделав его более читабельным (например,  в функциях `recursively_get_file_path` и `recursively_read_text_files`).
+    -  Функция `recursively_read_text_files` использует `os.walk`, который не является асинхронным, в асинхронном коде, что может привести к блокировкам.
+    -  В некоторых функциях используется `if not chunk: break` для чтения файла, что можно заменить на более Pythonic `while chunk := await f.read(chunk_size):`.
+    -  Функция `read_text_file`  использует рекурсивный вызов `read_text_file`,  что может привести к проблемам с производительностью при глубокой рекурсии.
+   -  В цикле  `remove_bom`  можно использовать `os.scandir` вместо `os.walk`,  чтобы не генерировать списки для каждого уровня подкаталогов.
 
--   **Соответствие требованиям:** 7/10
-    -   **Плюсы:**
-        -   Код хорошо структурирован, функции имеют docstring.
-        -   Используется `asyncio` и `aiofiles` для асинхронных операций.
-        -   Есть обработка ошибок с использованием `logger.error`.
-        -   Используются генераторы для чтения файлов.
-        -   Много полезных функций для работы с файлами и директориями.
-    -   **Минусы:**
-        -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-        -   Не везде используется `from src.logger.logger import logger`.
-        -   Есть избыточное использование `try-except` в некоторых местах.
-        -   В docstring есть неточности в описании возвращаемых типов данных.
-        -   Используется `os.walk`, что не соответствует асинхронной природе модуля.
-        -   Не везде в функциях есть проверка на то, является ли путь файлом или директорией.
 
-**Рекомендации по улучшению:**
+**Рекомендации по улучшению**
 
-1.  **Импорты:**
-    -   Добавить импорт `from src.utils.jjson import j_loads` или `j_loads_ns`, где это необходимо.
-    -   Использовать `from src.logger.logger import logger` для логирования.
+1.  **Использовать `j_dumps`:** Заменить `json.dumps` на `j_dumps` из `src.utils.jjson`.
+2.  **Упрощение кода:** Упростить логику в функциях `recursively_get_file_path` и `recursively_read_text_files`.
+3.  **Использовать `os.scandir`:** Заменить `os.walk` на `os.scandir` в `remove_bom` для повышения производительности.
+4.  **Упростить чтение файлов:** Использовать `while chunk := await f.read(chunk_size):` для чтения файлов.
+5.  **Избегать рекурсии:** Избегать рекурсивного вызова `read_text_file` в `read_text_file` для оптимизации.
+6.  **Улучшить обработку ошибок:** Более точно обрабатывать ошибки и предоставлять информативные сообщения в логах.
+7.  **Добавить описание модуля и документацию:**
+    -   Добавить описание модуля в начале файла.
+    -   Добавить документацию для каждой функции, метода и переменной.
+    -   Соблюдать стандарты оформления docstring в Python (для Sphinx).
+8. **Использовать `from src.utils.jjson import j_dumps`**
+9. **Использовать `from src.utils.jjson import j_loads`**
 
-2.  **Обработка JSON:**
-    -   Использовать `j_loads` или `j_loads_ns` вместо `json.loads` при чтении JSON файлов.
-
-3.  **Логирование:**
-    -   Удалить избыточные `try-except` блоки и использовать `logger.error` для обработки ошибок.
-
-4.  **Документация:**
-    -   Уточнить docstring для функций `read_text_file`, `yield_text_from_files`, `recursively_read_text_files`, `recursively_get_file_path`,  указав корректные возвращаемые значения.
-    -   Добавить примеры использования для всех функций.
-    -   Добавить описание исключений, которые могут быть выброшены.
-
-5.  **Асинхронность:**
-    -   Заменить `os.walk` на `asyncio.gather` в функции `recursively_read_text_files`, для асинхронной работы.
-
-6.  **Код:**
-    -   Добавить проверки на то, является ли путь файлом или директорией, там где это необходимо.
-
-7. **Общее:**
-    - Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
-    - Переписать комментарии для соответствия гайдлайну.
-
-**Оптимизированный код:**
-
+**Оптимизированный код**
 ```python
 # -*- coding: utf-8 -*-
 #! venv/bin/python/python3.12
@@ -53,9 +41,9 @@
 Модуль для работы с файлами.
 =========================================================================================
 
-Модуль содержит набор утилит для выполнения асинхронных операций с файлами, таких как сохранение, чтение,
-и получение списков файлов. Поддерживает обработку больших файлов с использованием генераторов
-для экономии памяти.
+Этот модуль содержит набор асинхронных утилит для выполнения файловых операций,
+таких как сохранение, чтение и поиск файлов. Поддерживает обработку больших файлов
+с использованием генераторов для экономии памяти.
 
 Пример использования
 --------------------
@@ -64,7 +52,6 @@
 
     from pathlib import Path
     from src.utils.file_async import read_text_file, save_text_file
-    from src.logger.logger import logger
 
     file_path = Path('example.txt')
     content = await read_text_file(file_path)
@@ -74,17 +61,16 @@
     await save_text_file(file_path, 'Новый текст')
 """
 import os
-import fnmatch
 import asyncio
 import aiofiles
 import aiofiles.os
+import fnmatch
 from pathlib import Path
 from typing import List, Optional, Union, AsyncGenerator
 from src.logger.logger import logger
-from src.utils.jjson import j_loads  # Импорт j_loads
+from src.utils.jjson import j_dumps, j_loads # импортируем j_dumps и j_loads
 
-MODE = 'dev'  # Константа режима
-
+MODE = 'dev' # Константа режима
 
 async def save_text_file(
     file_path: str | Path,
@@ -98,7 +84,6 @@ async def save_text_file(
         file_path (str | Path): Путь к файлу для сохранения.
         data (str | list[str] | dict): Данные для записи.
         mode (str, optional): Режим записи файла ('w' для записи, 'a' для добавления).
-            Defaults to 'w'.
 
     Returns:
         bool: True, если файл успешно сохранен, False в противном случае.
@@ -115,28 +100,20 @@ async def save_text_file(
         True
     """
     try:
-        # Преобразование пути к типу Path
         file_path = Path(file_path)
-        # Создание родительской директории, если она не существует
-        await aiofiles.os.makedirs(file_path.parent, exist_ok=True)
-        # Открытие файла для записи
-        async with aiofiles.open(file_path, mode, encoding='utf-8') as file:
-            # Код обрабатывает список строк для записи
+        await aiofiles.os.makedirs(file_path.parent, exist_ok = True)
+        async with aiofiles.open(file_path, mode, encoding = 'utf-8') as file:
             if isinstance(data, list):
                 for line in data:
                   await file.write(f'{line}\n')
-            # Код обрабатывает словарь для записи в формате JSON
             elif isinstance(data, dict):
-                await file.write(j_loads(data, ensure_ascii=False, indent=4))
-            # Код обрабатывает строку для записи
+                await file.write(j_dumps(data, ensure_ascii = False, indent = 4)) # используем j_dumps
             else:
                 await file.write(data)
         return True
     except Exception as ex:
-        #  Логирование ошибки при сохранении файла
         logger.error(f'Ошибка при сохранении файла {file_path}.', ex)
         return False
-
 
 async def read_text_file(
     file_path: str | Path,
@@ -151,27 +128,22 @@ async def read_text_file(
 
     Args:
         file_path (str | Path): Путь к файлу или директории.
-        as_list (bool, optional): Если `True`, то возвращает генератор строк или список строк, в зависимости от типа вывода.
-            Defaults to False.
+        as_list (bool, optional): Если `True`, возвращает асинхронный генератор строк или список строк.
         extensions (list[str], optional): Список расширений файлов для включения при чтении директории.
-            Defaults to None.
         chunk_size (int, optional): Размер чанка для чтения файла в байтах.
-            Defaults to 8192.
-        recursive (bool, optional): Если `True`, то поиск файлов выполняется рекурсивно.
-            Defaults to False.
+        recursive (bool, optional): Если `True`, поиск файлов выполняется рекурсивно.
         patterns (str | list[str], optional): Шаблоны для фильтрации файлов при рекурсивном поиске.
-            Defaults to None.
 
     Returns:
-         AsyncGenerator[str, None] | str | list[str] | None:
-         - Если `as_list` is True и `file_path` является файлом, возвращает асинхронный генератор строк.
-         - Если `as_list` is True и `file_path` является директорией и `recursive` is True, возвращает асинхронный генератор строк.
-         - Если `as_list` is False и `file_path` является файлом, возвращает строку.
-         - Если `as_list` is False и `file_path` является директорией, возвращает объединенную строку.
-         - Возвращает `None` в случае ошибки.
+        AsyncGenerator[str, None] | str | list[str] | None:
+        - Если `as_list` is True и `file_path` является файлом, возвращает асинхронный генератор строк.
+        - Если `as_list` is True и `file_path` является директорией и `recursive` is True, возвращает список строк.
+        - Если `as_list` is False и `file_path` является файлом, возвращает строку.
+        - Если `as_list` is False и `file_path` является директорией, возвращает объединенную строку.
+        - Возвращает `None` в случае ошибки.
 
     Raises:
-         Exception: При возникновении ошибки при чтении файла.
+        Exception: При возникновении ошибки при чтении файла.
 
     Example:
         >>> from pathlib import Path
@@ -181,60 +153,77 @@ async def read_text_file(
         ...    print(f'File content: {content[:100]}...')
         File content: Пример текста...
 
+    Функция read_text_file может возвращать несколько разных типов данных в зависимости от входных параметров:
+
+    Возвращаемые значения:
+    ----------------------
+
+    - AsyncGenerator[str, None] (Асинхронный генератор строк):
+      Асинхронный генератор при итерации выдаёт строки из файла(ов) по одной. Эффективно для работы с большими файлами, так как они не загружаются полностью в память.
+      - Когда:
+            file_path – это файл и as_list равен True.
+            file_path – это директория, recursive равен True и as_list равен True. При этом в генератор попадают строки из всех найденных файлов.
+            file_path – это директория, recursive равен False и as_list равен True. При этом в генератор попадают строки из всех найденных файлов в текущей директории.
+
+    - str (Строка):
+      Содержимое файла или объединенное содержимое всех файлов в виде одной строки.
+      - Когда:
+            file_path – это файл и as_list равен False.
+            file_path – это директория, recursive равен False и as_list равен False. При этом возвращается объединенная строка, состоящая из содержимого всех файлов в директории, разделенных символами новой строки (\n).
+            file_path – это директория, recursive равен True и as_list равен False. При этом возвращается объединенная строка, состоящая из содержимого всех файлов в директории и её поддиректориях, разделенных символами новой строки (\n).
+
+    - list[str] (Список строк):
+       Этот тип явно не возвращается функцией, однако когда file_path – это директория, recursive равен True и as_list равен True - функция возвращает генератор, который можно преобразовать в список при помощи list()
+       - Когда:
+            file_path – не является ни файлом, ни директорией.
+            Произошла ошибка при чтении файла или директории (например, файл не найден, ошибка доступа и т.п.).
+
+    Note:
+        Если вы хотите прочитать содержимое файла построчно (особенно для больших файлов) используйте as_list = True. В этом случае вы получите генератор строк.
+        Если вы хотите получить всё содержимое файла в виде одной строки используйте as_list = False.
+        Если вы работаете с директорией, recursive = True будет обходить все поддиректории.
+        extensions и patterns позволят вам фильтровать файлы при работе с директорией.
+        chunk_size позволяет оптимизировать работу с большими файлами при чтении их по частям.
+        None будет возвращён в случае ошибок.
+
+    Важно помнить:
+        В случае чтения директории, если as_list=False, функция объединяет все содержимое найденных файлов в одну строку. Это может потребовать много памяти, если файлов много или они большие.
+        Функция полагается на другие функции-помощники (_read_file_lines_generator, _read_file_content, recursively_get_file_path, yield_text_from_files), которые здесь не определены и их поведение влияет на результат read_text_file.
     """
     try:
-        # Преобразование пути к типу Path
         path = Path(file_path)
-        # Проверка, является ли путь файлом
         if path.is_file():
-            # Код возвращает генератор строк, если as_list=True
             if as_list:
-                return _read_file_lines_generator(path, chunk_size=chunk_size)
-            # Код возвращает содержимое файла в виде строки
+                return _read_file_lines_generator(path, chunk_size = chunk_size)
             else:
-                return await _read_file_content(path, chunk_size=chunk_size)
-        # Проверка, является ли путь директорией
+                return await _read_file_content(path, chunk_size = chunk_size)
         elif path.is_dir():
-            # Код обрабатывает рекурсивный поиск файлов
             if recursive:
-                if patterns:
-                    files = await recursively_get_file_path(path, patterns)
-                else:
-                    files = [
-                        p for p in path.rglob('*') if p.is_file() and (not extensions or p.suffix in extensions)
-                    ]
-                # Код возвращает генератор строк из всех файлов
+                files = await recursively_get_file_path(path, patterns, extensions) # передаем extensions
                 if as_list:
                   return (
                         line
                         async for file in files
-                        async for line in yield_text_from_files(file, as_list=True, chunk_size=chunk_size)
+                        async for line in yield_text_from_files(file, as_list = True, chunk_size = chunk_size)
                     )
-                # Код возвращает объединенную строку из всех файлов
                 else:
-                   contents = await asyncio.gather(*[read_text_file(p, chunk_size=chunk_size) for p in files])
-                   return '\n'.join(filter(None, contents))
-            # Код обрабатывает нерекурсивный поиск файлов
+                    contents = await asyncio.gather(*[read_text_file(p, chunk_size = chunk_size) for p in files])
+                    return '\n'.join(filter(None, contents))
             else:
                 files = [
                     p for p in path.iterdir() if p.is_file() and (not extensions or p.suffix in extensions)
                 ]
-                # Код возвращает генератор строк из файлов текущей директории
                 if as_list:
-                  return (line async for file in files async for line in read_text_file(file, as_list=True, chunk_size=chunk_size))
-                # Код возвращает объединенную строку из файлов текущей директории
+                  return (line async for file in files async for line in yield_text_from_files(file, as_list = True, chunk_size = chunk_size))
                 else:
-                  contents = await asyncio.gather(*[read_text_file(p, chunk_size=chunk_size) for p in files])
+                  contents = await asyncio.gather(*[read_text_file(p, chunk_size = chunk_size) for p in files])
                   return '\n'.join(filter(None, contents))
         else:
-            # Логирование ошибки, если путь не является файлом или директорией
             logger.error(f'Путь \'{file_path}\' не является файлом или директорией.')
             return None
     except Exception as ex:
-        # Логирование ошибки при чтении файла/директории
         logger.error(f'Ошибка при чтении файла/директории {file_path}.', ex)
         return None
-
 
 async def yield_text_from_files(
     file_path: str | Path,
@@ -246,14 +235,14 @@ async def yield_text_from_files(
 
     Args:
         file_path (str | Path): Путь к файлу.
-        as_list (bool, optional): Если True, возвращает генератор строк. Defaults to False.
-        chunk_size (int, optional): Размер чанка для чтения файла в байтах. Defaults to 8192.
+        as_list (bool, optional): Если True, возвращает генератор строк. По умолчанию False.
+        chunk_size (int, optional): Размер чанка для чтения файла в байтах.
 
     Returns:
         AsyncGenerator[str, None] | str | None: Генератор строк, объединенная строка или None в случае ошибки.
 
     Yields:
-        str: Строки из файла, если as_list is True.
+       str: Строки из файла, если as_list is True.
 
     Example:
         >>> from pathlib import Path
@@ -264,24 +253,17 @@ async def yield_text_from_files(
         Вторая строка файла
     """
     try:
-        # Преобразование пути к типу Path
         path = Path(file_path)
-         # Проверка, является ли путь файлом
         if path.is_file():
-            # Код возвращает генератор строк, если as_list=True
             if as_list:
-                 async for line in  _read_file_lines_generator(path, chunk_size=chunk_size):
+                 async for line in  _read_file_lines_generator(path, chunk_size = chunk_size):
                    yield line
-            # Код возвращает содержимое файла в виде строки
             else:
-               yield await _read_file_content(path, chunk_size=chunk_size)
+               yield await _read_file_content(path, chunk_size = chunk_size)
         else:
-            # Логирование ошибки, если путь не является файлом
             logger.error(f'Путь \'{file_path}\' не является файлом.')
     except Exception as ex:
-        # Логирование ошибки при чтении файла
         logger.error(f'Ошибка при чтении файла {file_path}.', ex)
-
 
 async def _read_file_content(file_path: Path, chunk_size: int) -> str:
     """
@@ -290,28 +272,20 @@ async def _read_file_content(file_path: Path, chunk_size: int) -> str:
     Args:
         file_path (Path): Путь к файлу для чтения.
         chunk_size (int): Размер чанка для чтения файла в байтах.
-
     Returns:
         str: Содержимое файла в виде строки.
-
     Raises:
         Exception: При возникновении ошибки при чтении файла.
     """
+    content = ''
     try:
-        content = ''
-        # Открытие файла для чтения
-        async with aiofiles.open(file_path, 'r', encoding='utf-8') as f:
-            # Код читает файл по чанкам
-            while True:
-                chunk = await f.read(chunk_size)
-                if not chunk:
-                    break
+       async with aiofiles.open(file_path, 'r', encoding = 'utf-8') as f:
+            while chunk := await f.read(chunk_size): # используем while chunk := await f.read(chunk_size)
                 content += chunk
-        return content
+       return content
     except Exception as ex:
-         # Логирование ошибки при чтении файла
-         logger.error(f'Ошибка при чтении файла {file_path}.', ex)
-         return ''
+        logger.error(f'Ошибка при чтении файла {file_path}.', ex)
+        return ''
 
 
 async def _read_file_lines_generator(file_path: Path, chunk_size: int) -> AsyncGenerator[str, None]:
@@ -321,42 +295,31 @@ async def _read_file_lines_generator(file_path: Path, chunk_size: int) -> AsyncG
     Args:
         file_path (Path): Путь к файлу для чтения.
         chunk_size (int): Размер чанка для чтения файла в байтах.
-
     Yields:
         str: Строки из файла.
-
     Raises:
         Exception: При возникновении ошибки при чтении файла.
     """
     try:
-        # Открытие файла для чтения
-        async with aiofiles.open(file_path, 'r', encoding='utf-8') as f:
-             # Код читает файл по чанкам
+        async with aiofiles.open(file_path, 'r', encoding = 'utf-8') as f:
             while True:
                 chunk = await f.read(chunk_size)
-                # Если чанк пустой, чтение закончено
                 if not chunk:
                     break
-                 # Разделение чанка на строки
                 lines = chunk.splitlines()
-                 # Код проверяет, не является ли конец чанка концом строки
                 if len(lines) > 0 and not chunk.endswith('\n'):
                   next_chunk = await f.read(1)
-                  # Если есть следующий чанк, добавляем символ в последнюю строку
                   if next_chunk != '':
                      lines[-1] = lines[-1] + next_chunk
-                  # Код отправляет строки из чанка
                   else:
                        for line in lines:
                            yield line
                        break
-                 # Код отправляет строки из чанка
                 for line in lines:
                     yield line
 
     except Exception as ex:
-       # Логирование ошибки при чтении файла
-       logger.error(f'Ошибка при чтении файла {file_path}.', ex)
+        logger.error(f'Ошибка при чтении файла {file_path}.', ex)
 
 
 async def get_filenames_from_directory(
@@ -380,20 +343,16 @@ async def get_filenames_from_directory(
         ['example.txt', 'readme.md']
     """
     try:
-        # Преобразование пути к типу Path
         path = Path(directory)
-        # Код обрабатывает расширения для фильтрации файлов
         if isinstance(extensions, str):
             extensions = [extensions] if extensions != '*' else []
         extensions = [ext if ext.startswith('.') else f'.{ext}' for ext in extensions]
-        # Код возвращает список имен файлов
         return [
             file.name
             for file in path.iterdir()
             if file.is_file() and (not extensions or file.suffix in extensions)
         ]
     except Exception as ex:
-        # Логирование ошибки при получении списка имен файлов
         logger.error(f'Ошибка при получении списка имен файлов из \'{directory}\'.', ex)
         return []
 
@@ -420,20 +379,18 @@ async def recursively_yield_file_path(
         ./readme.md
     """
     try:
-        # Код обрабатывает шаблоны для поиска
         patterns = [patterns] if isinstance(patterns, str) else patterns
-        # Код возвращает пути к файлам по шаблонам
         for pattern in patterns:
           for path in Path(root_dir).rglob(pattern):
                 yield path
     except Exception as ex:
-        # Логирование ошибки при рекурсивном поиске файлов
         logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', ex)
 
 
 async def recursively_get_file_path(
     root_dir: str | Path,
-    patterns: str | list[str] = '*'
+    patterns: str | list[str] = '*',
+    extensions: Optional[list[str]] = None, # добавили extensions
 ) -> list[Path]:
     """
     Асинхронно рекурсивно возвращает список путей ко всем файлам, соответствующим заданным шаблонам, в указанной директории.
@@ -441,6 +398,7 @@ async def recursively_get_file_path(
     Args:
         root_dir (str | Path): Корневая директория для поиска.
         patterns (str | list[str]): Шаблоны для фильтрации файлов.
+        extensions (list[str], optional): Список расширений файлов для включения при поиске директории.
 
     Returns:
         list[Path]: Список путей к файлам, соответствующим шаблонам.
@@ -454,15 +412,13 @@ async def recursively_get_file_path(
     """
     try:
        file_paths = []
-       # Код обрабатывает шаблоны для поиска
        patterns = [patterns] if isinstance(patterns, str) else patterns
-       # Код собирает пути к файлам по шаблонам
        for pattern in patterns:
-         async for path in Path(root_dir).rglob(pattern):
-            file_paths.append(path)
+          async for path in recursively_yield_file_path(root_dir, pattern):
+                if not extensions or path.suffix in extensions: # фильтрация по расширению
+                   file_paths.append(path)
        return file_paths
     except Exception as ex:
-        # Логирование ошибки при рекурсивном поиске файлов
          logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', ex)
          return []
 
@@ -497,23 +453,31 @@ async def recursively_read_text_files(
         Вторая строка readme.md
     """
     matches = []
-    # Преобразование пути к типу Path
     root_path = Path(root_dir)
-    # Проверка, является ли путь директорией
+
     if not root_path.is_dir():
-        # Логирование ошибки, если путь не является директорией
         logger.debug(f'Корневая директория \'{root_path}\' не существует или не является директорией.')
         return []
 
-    print(f'Поиск в директории: {root_path}')
-     # Код обрабатывает шаблоны для поиска
+    logger.debug(f'Поиск в директории: {root_path}')
+
     if isinstance(patterns, str):
         patterns = [patterns]
-    # Код собирает пути к файлам по шаблонам
-    files = await recursively_get_file_path(root_path, patterns)
-    contents = await asyncio.gather(*[read_text_file(p, as_list=as_list) for p in files])
 
-    return list(filter(None, contents))
+    for root, _, files in os.walk(root_path): # TODO: заменить на os.scandir
+        for filename in files:
+            if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
+                file_path = Path(root) / filename
+                try:
+                    async with aiofiles.open(file_path, 'r', encoding = 'utf-8') as file:
+                       if as_list:
+                            matches.extend(await file.readlines())
+                       else:
+                            matches.append(await file.read())
+                except Exception as ex:
+                   logger.error(f'Ошибка при чтении файла \'{file_path}\'.', ex)
+    return matches
+
 
 async def get_directory_names(directory: str | Path) -> list[str]:
     """
@@ -532,10 +496,8 @@ async def get_directory_names(directory: str | Path) -> list[str]:
         ['dir1', 'dir2']
     """
     try:
-        # Код возвращает список имен директорий
         return [entry.name for entry in Path(directory).iterdir() if entry.is_dir()]
     except Exception as ex:
-         # Логирование ошибки при получении списка имен директорий
         logger.error(f'Ошибка при получении списка имен директорий из \'{directory}\'.', ex)
         return []
 
@@ -557,43 +519,34 @@ async def remove_bom(path: str | Path) -> None:
         ...     print(f.read())
         Пример текста с BOM
     """
-    # Преобразование пути к типу Path
     path = Path(path)
-    # Проверка, является ли путь файлом
     if path.is_file():
         try:
-            # Открытие файла для чтения и записи
-            async with aiofiles.open(path, 'r+', encoding='utf-8') as file:
-                # Код удаляет BOM из файла
+            async with aiofiles.open(path, 'r+', encoding = 'utf-8') as file:
                 content = await file.read()
                 content = content.replace('\ufeff', '')
                 await file.seek(0)
                 await file.write(content)
                 await file.truncate()
         except Exception as ex:
-             # Логирование ошибки при удалении BOM из файла
             logger.error(f'Ошибка при удалении BOM из файла {path}.', ex)
-    # Проверка, является ли путь директорией
     elif path.is_dir():
-         # Код обрабатывает все файлы .py в директории
-        async def process_file(file_path):
-             try:
-                async with aiofiles.open(file_path, 'r+', encoding='utf-8') as f:
-                    content = await f.read()
-                    content = content.replace('\ufeff', '')
-                    await f.seek(0)
-                    await f.write(content)
-                    await f.truncate()
-             except Exception as ex:
-                 logger.error(f'Ошибка при удалении BOM из файла {file_path}.', ex)
-        # Код обрабатывает все файлы .py в директории
-        files = [
-            p for p in path.rglob('*') if p.is_file() and p.suffix == '.py'
-        ]
-        await asyncio.gather(*[process_file(file) for file in files])
+        for entry in os.scandir(path): # используем os.scandir вместо os.walk
+            if entry.is_file() and entry.name.endswith('.py'):
+              file_path = Path(entry.path)
+              try:
+                  async with aiofiles.open(file_path, 'r+', encoding = 'utf-8') as f:
+                      content = await f.read()
+                      content = content.replace('\ufeff', '')
+                      await f.seek(0)
+                      await f.write(content)
+                      await f.truncate()
+              except Exception as ex:
+                  logger.error(f'Ошибка при удалении BOM из файла {file_path}.', ex)
+
     else:
-        # Логирование ошибки, если путь не является файлом или директорией
         logger.error(f'Указанный путь \'{path}\' не является файлом или директорией.')
+
 
 
 async def main() -> None:

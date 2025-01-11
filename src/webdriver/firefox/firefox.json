@@ -1,6 +1,6 @@
 {
-  "options": [  ],
-  "disabled_options": [ "--kiosk", "--headless"  ],
+  "options": [],
+  "disabled_options": [ "--kiosk", "--headless" ],
   "profile_directory": {
     "os": "%LOCALAPPDATA%\\Mozilla\\Firefox\\Profiles\\zojh5u5a.default-release-3",
     "internal": "webdriver\\firefox\\profiles\\95c5aq3n.default-release",
@@ -18,5 +18,6 @@
     "Accept-Language": "en-US,en;q=0.8",
     "Connection": "keep-alive"
   },
-  "proxy_enabled":false
+  "proxy_enabled": false,
+  "window_mode": null
 }

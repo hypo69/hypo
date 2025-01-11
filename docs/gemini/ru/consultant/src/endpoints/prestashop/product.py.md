@@ -1,159 +1,194 @@
 # Анализ кода модуля `product.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован и разбит на классы.
-    - Используются `Optional` для необязательных параметров.
-    - Присутствует документация в формате docstring.
-    - Используется `logger` для логирования.
-- Минусы
-    - Отсутствует reStructuredText (RST) в docstring.
-    - Не хватает обработки ошибок при обращении к `credentials`.
-    - Не все импорты необходимые для работы модуля.
-    - Отсутствует описание модуля в начале файла в формате RST.
+
+-   **Соответствие требованиям**: 9/10
+    -   **Плюсы**:
+        *   Код структурирован и соответствует основным требованиям.
+        *   Используется асинхронный подход для работы с API.
+        *   Добавлены docstring для классов и методов.
+        *   Используется `logger` из `src.logger.logger`.
+        *   Обработка ошибок через `try-except` с логированием.
+        *   Используются одинарные кавычки, где требуется.
+        *   Сохранены все комментарии.
+    -   **Минусы**:
+        *  Не все docstring соответствуют формату reStructuredText (RST) для Sphinx.
+        *  В некоторых местах можно уточнить комментарии.
+        *  Импорт `header` не используется.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    *   Переписать docstring в формате RST для всех классов, методов и переменных.
-    *   Добавить описание модуля в начале файла в формате RST.
-2.  **Импорты**:
-    *   Добавить необходимые импорты, если они отсутствуют.
-3.  **Обработка ошибок**:
-    *   Добавить обработку ошибок при обращении к атрибутам объекта `credentials`, используя `logger.error`.
-4.  **Именование переменных**:
-    *   Убедиться, что все имена переменных соответствуют PEP8.
-5.  **Улучшение инициализации**:
-    *   Использовать более надежный способ извлечения `api_domain` и `api_key` из `credentials`, например, через `getattr` с обработкой `AttributeError`.
-6. **Общие улучшения**:
-    *   Избегать избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
+1.  **Импорт**:
+    *   Удалить неиспользуемый импорт `header`.
+
+2.  **Документация**:
+    *   Дополнить docstring в `PrestaProductAsync` и `add_new_product` в формате RST, включая описание аргументов, возвращаемых значений, и возможных исключений.
+    *   Добавить описание модуля в начале файла.
+
+3.  **Комментарии**:
+    *   Уточнить комментарии, где это необходимо.
+
+4.  **Обработка ошибок**:
+    *   Проверить, что все возможные исключения обрабатываются корректно.
+
+5.  **Общая структура**:
+    *   Убедиться, что все переменные и функции имеют четкие и понятные имена.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для работы с товарами PrestaShop через API.
-=====================================================
+Модуль для взаимодействия с PrestaShop API для управления товарами.
+==================================================================
 
-Этот модуль содержит класс :class:`PrestaProduct`, который используется для взаимодействия с API PrestaShop
-для выполнения операций с товарами.
+Этот модуль предоставляет класс :class:`PrestaProductAsync`, который позволяет асинхронно взаимодействовать
+с API PrestaShop для выполнения различных операций с товарами, таких как добавление и получение информации о товарах.
 
 Пример использования
 --------------------
 
-Пример инициализации класса `PrestaProduct`:
-
 .. code-block:: python
 
-    product = PrestaProduct(credentials={'api_domain': 'your_domain', 'api_key': 'your_key'})
+    from src.endpoints.prestashop.product import PrestaProductAsync, ProductFields
+    import asyncio
+
+    async def main():
+        product = PrestaProductAsync()
+        product_fields = ProductFields(
+            lang_index = 1,
+            name='Test Product Async',
+            price=19.99,
+            description='This is an asynchronous test product.',
+        )
+        new_product = await product.add_new_product(product_fields)
+        if new_product:
+            print(f'New product id = {new_product.id_product}')
+        else:
+            print(f'Error add new product')
+
+    if __name__ == '__main__':
+        asyncio.run(main())
 """
+import asyncio
+from dataclasses import dataclass, field
+from typing import List, Dict, Any, Optional
 
-
-from types import SimpleNamespace
-from typing import Optional, Any
-#from src.utils.jjson import j_loads, j_loads_ns #TODO: добавить импорты
+# from src import header # # Удален неиспользуемый импорт
+from src import gs
+from src.endpoints.prestashop import PrestaShopAsync
+from src.category import Category
+from src.endpoints.prestashop.product_fields import ProductFields
+from src.utils.convertors.any import any2dict
+from src.utils.printer import pprint as print
 from src.logger.logger import logger
-from src.utils.printer import pprint
-from .api import PrestaShop
 
 
-class PrestaProduct(PrestaShop):
+class PrestaProductAsync(PrestaShopAsync):
     """
-    Класс для управления товарами в PrestaShop через API.
+    Класс для управления товарами в PrestaShop.
 
-    Предоставляет методы для проверки наличия товара, поиска,
-    получения информации о товаре по ID.
-
-    :ivar api_domain: Домен API PrestaShop.
-    :vartype api_domain: str
-    :ivar api_key: Ключ API PrestaShop.
-    :vartype api_key: str
-
-    :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
-    :type credentials: Optional[dict | SimpleNamespace]
-    :param api_domain: Домен API PrestaShop.
-    :type api_domain: Optional[str]
-    :param api_key: Ключ API PrestaShop.
-    :type api_key: Optional[str]
-
-    :raises ValueError: Если не предоставлены `api_domain` и `api_key`.
-    
-    .. rubric:: Методы
-
-    .. automethod:: check
-    .. automethod:: search
-    .. automethod:: get
+    Этот класс предназначен для взаимодействия с API PrestaShop для выполнения операций с товарами.
+    Используется для получения данных о товаре и их последующей обработки через API.
     """
 
-    def __init__(self,
-                 credentials: Optional[dict | SimpleNamespace] = None,
-                 api_domain: Optional[str] = None,
-                 api_key: Optional[str] = None,
-                 *args, **kwards):
+    def __init__(self, *args, **kwargs):
         """
-        Инициализация экземпляра класса PrestaProduct.
+        Инициализирует объект PrestaProductAsync.
 
-        :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
-        :type credentials: Optional[dict | SimpleNamespace]
-        :param api_domain: Домен API.
-        :type api_domain: Optional[str]
-        :param api_key: Ключ API.
-        :type api_key: Optional[str]
-        :raises ValueError: Если не предоставлены `api_domain` и `api_key`.
+        Args:
+            *args: Произвольные позиционные аргументы.
+            **kwargs: Произвольные именованные аргументы.
         """
-        # Проверяет, был ли передан словарь credentials и если да, извлекает значения 'api_domain' и 'api_key'.
-        if credentials is not None:
+        PrestaShopAsync.__init__(self, *args, **kwargs)
+
+    async def get_parent_categories(self, id_category: int, dept: int = 0) -> list:
+        """
+        Извлекает родительские категории из заданной категории.
+
+        Эта функция дублирует функциональность функции `get_parents()` из класса `Category`.
+
+        Args:
+            id_category (int): Идентификатор категории, для которой нужно получить родительские категории.
+            dept (int, optional): Глубина поиска родительских категорий. По умолчанию 0.
+
+        Returns:
+            list: Список родительских категорий.
+
+        Raises:
+            TypeError: Если `id_category` не является целым числом.
+
+        Example:
+           >>> product = PrestaProductAsync()
+           >>> categories = await product.get_parent_categories(id_category=3)
+           >>> print(categories)
+           [1, 2]
+        """
+        if not isinstance(id_category, int):
+            raise TypeError('id_category must be an integer')
+        return await Category.get_parents(id_category, dept)
+
+    async def add_new_product(self, f: ProductFields) -> ProductFields | None:
+        """
+        Добавляет новый товар в PrestaShop.
+
+        Args:
+            f (ProductFields): Объект `ProductFields`, содержащий информацию о товаре.
+
+        Returns:
+            ProductFields | None: Возвращает объект `ProductFields` с установленным `id_product`,
+            если товар был успешно добавлен, иначе `None`.
+
+        Example:
+            >>> product = PrestaProductAsync()
+            >>> product_fields = ProductFields(
+            >>>    lang_index = 1,
+            >>>    name='Test Product Async',
+            >>>    price=19.99,
+            >>>    description='This is an asynchronous test product.',
+            >>> )
+            >>> new_product = await product.add_new_product(product_fields)
+            >>> if new_product:
+            >>>    print(f'New product id = {new_product.id_product}')
+        """
+        f_dict: dict = any2dict(f)
+        # Код исполняет отправку данных о товаре в PrestaShop API
+        response = await self.create('products', f_dict)
+        if response:
             try:
-                api_domain = getattr(credentials, 'api_domain', None) or credentials.get('api_domain', api_domain)
-                api_key = getattr(credentials, 'api_key', None) or credentials.get('api_key', api_key)
-            except AttributeError as e:
-                logger.error(f'Ошибка при извлечении данных из credentials: {e}')
-                raise ValueError('Неверный формат credentials') from e
+                # Код извлекает ID товара из ответа API
+                f.id_product = int(response['product']['id'])
+                logger.info(f"Product added: {f_dict.get('name')}")
+                return f
+            except (KeyError, TypeError) as ex:
+                logger.error(f"Ошибка при разборе ответа от сервера: {ex}", exc_info=True)
+                return None
+        else:
+            logger.error(f"Ошибка при добавлении товара:\\n{print(print_data=f_dict, text_color='yellow')}", exc_info=True)
+            return None
 
-        # Проверяет, что api_domain и api_key установлены.
-        if not api_domain or not api_key:
-            logger.error('Необходимы оба параметра: api_domain и api_key.')
-            raise ValueError('Необходимы оба параметра: api_domain и api_key.')
-        # Инициализирует родительский класс PrestaShop
-        super().__init__(api_domain, api_key, *args, **kwards)
 
-    def check(self, product_reference: str) -> Optional[dict]:
-        """
-        Проверяет наличие товара в базе данных по `product_reference` (SKU, MKT).
+async def main():
+    # Пример использования
+    product = PrestaProductAsync()
+    product_fields = ProductFields(
+        lang_index = 1,
+        name='Test Product Async',
+        price=19.99,
+        description='This is an asynchronous test product.',
+    )
 
-        :param product_reference: Артикул товара для поиска.
-        :type product_reference: str
-        :return: Словарь с информацией о товаре, если найден, иначе `None`.
-        :rtype: Optional[dict]
-        """
-        #TODO: Implement
-        ...
+    parent_categories = await product.get_parent_categories(id_category=3)
+    print(f'Parent categories: {parent_categories}')
 
-    def search(self, filter: str, value: str) -> Optional[list[dict]]:
-        """
-        Выполняет расширенный поиск в базе данных по заданным фильтрам.
+    new_product = await product.add_new_product(product_fields)
+    if new_product:
+        print(f'New product id = {new_product.id_product}')
+    else:
+        print(f'Error add new product')
 
-        :param filter: Фильтр для поиска.
-        :type filter: str
-        :param value: Значение фильтра.
-        :type value: str
-        :return: Список словарей с результатами поиска, если найдены, иначе `None`.
-        :rtype: Optional[list[dict]]
-        """
-        #TODO: Implement
-        ...
+    await product.fetch_data_async()
 
-    def get(self, id_product: int) -> Optional[dict]:
-        """
-        Возвращает информацию о товаре по его ID.
-
-        :param id_product: ID товара.
-        :type id_product: int
-        :return: Словарь с информацией о товаре, если найден, иначе `None`.
-        :rtype: Optional[dict]
-        """
-        #TODO: Implement
-        ...
+if __name__ == '__main__':
+    asyncio.run(main())
 ```

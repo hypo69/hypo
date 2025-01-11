@@ -9,11 +9,11 @@
     имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
     
     **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```mermaid\
+    flowchart TD\
+        Start --> Header[<code>header.py</code><br> Determine Project Root]\
+    \
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] \
     ```
 
 3. **<объяснение>**: Предоставьте подробные объяснения:  
@@ -31,158 +31,223 @@
 
 ## <алгоритм>
 
-```mermaid
-graph LR
-    Start(Начало) --> InitializeLogger(Инициализация Logger);
-    
-    subgraph Singleton
-    InitializeLogger --> CheckInstance{Существует ли экземпляр Logger?};
-    CheckInstance -- Нет --> CreateInstance(Создание экземпляра Logger);
-    CreateInstance -->  SetLogPaths(Определение путей к лог-файлам);
-    SetLogPaths --> CreateLoggers(Создание логгеров);
-    SetLogPaths -->  EnsureDirsAndFiles(Создание директорий и файлов);    
-    CheckInstance -- Да --> ReturnInstance(Возврат существующего экземпляра);
-    end
-     
-    CreateLoggers --> SetupConsoleLogger(Настройка консольного логгера);
-    CreateLoggers --> SetupFileLoggers(Настройка файловых логгеров);
+**1. Инициализация логгера:**
 
-    SetupFileLoggers --> SetupInfoLogger(Настройка info логгера);
-    SetupFileLoggers --> SetupDebugLogger(Настройка debug логгера);
-    SetupFileLoggers --> SetupErrorLogger(Настройка error логгера);
-    SetupFileLoggers --> SetupJsonLogger(Настройка json логгера);
+   - **Запуск**: При первом обращении к классу `Logger` (через `logger: Logger = Logger()`), метакласс `SingletonMeta` обеспечивает создание только одного экземпляра класса.
+   - **Конфигурация**: 
+      - Читается конфигурация из файла `config.json` (путь формируется на основе `__root__` из `header.py`).
+      - Формируется путь для хранения логов на основе текущей даты и времени.
+      - Создаются директории для хранения логов, если они не существуют.
+      - Создаются файлы для логов (info, debug, errors, json), если они не существуют.
+   - **Настройка логгеров**:
+      - Создаются четыре логгера:
+         - `logger_console` (вывод в консоль).
+         - `logger_file_info` (запись INFO-сообщений в файл).
+         - `logger_file_debug` (запись DEBUG-сообщений в файл).
+         - `logger_file_errors` (запись ERROR/CRITICAL сообщений в файл).
+         - `logger_file_json` (запись всех сообщений в формате JSON).
+      - Настраиваются обработчики для каждого логгера, форматирование сообщений.
+      - Для JSON-логгера используется кастомный форматтер `JsonFormatter`.
+      - Удаляются все StreamHandler (чтобы избежать двойной записи в консоль).
+   
+**Пример:**
+  ```python
+  # Предположим, что config.json содержит: {"path": {"log": "logs"}}
+  # И текущая дата и время 10:30 16.05.2024
+  logger = Logger() # Создается экземпляр логгера
+  # В результате:
+  # Путь к файлам логов: /<project_root>/logs/1605241030
+  # Файлы: info.log, debug.log, errors.log в папке /logs/1605241030 и 1605241030.json в папке /logs
+  ```
 
+**2. Форматирование сообщений:**
 
-    SetupConsoleLogger --> ReturnInstance
-    SetupJsonLogger --> RemoveConsoleHandler(Удаление обработчика консоли из JSON логгера);
-    RemoveConsoleHandler --> ReturnInstance
-    ReturnInstance --> LogCall(Вызов метода log);
-    
-    LogCall --> FormatMessage(Форматирование сообщения);
-    FormatMessage --> CheckColor{Есть ли цвет?};
-    CheckColor -- Да --> ApplyColor(Применить цвет);
-    ApplyColor --> AddExceptionInfo(Добавить информацию об исключении);
-    CheckColor -- Нет --> AddExceptionInfo
-    
-    AddExceptionInfo --> CheckExcInfo{Нужно ли добавлять инф. об исключении};
-    CheckExcInfo -- Да --> GetFullExceptionInfo(Получение полной информации об исключении);
-    GetFullExceptionInfo --> LogMessage(Запись сообщения в лог);
-    CheckExcInfo -- Нет --> LogMessage
-    LogMessage --> End(Конец);
-    
-    
-     subgraph Example Use
-        Example1[Пример использования: <br>logger.info("Info message", ex=Exception("Test Ex"), exc_info=True, text_color="light_green", bg_color="blue")] --> LogCall
-     end
-    
-    subgraph header.py
-        HeaderStart[Начало: header.py] --> HeaderDetermineRoot[Определение корневого пути проекта]
-        HeaderDetermineRoot --> HeaderImportGS[Импорт глобальных настроек: from src import gs]
-    end
+   - **Функция `_format_message`**:
+      - Принимает сообщение, опциональные цвета текста и фона.
+      - Если цвета указаны, форматирует сообщение с использованием кодов `colorama`.
+      - Если цвета не указаны, возвращает сообщение без изменений.
+   - **Функция `_ex_full_info`**:
+      - Извлекает информацию о месте вызова функции (`файл`, `функция`, `номер строки`).
+      - Формирует строку с деталями исключения.
+**Пример:**
+   ```python
+   logger._format_message("Test message", color=("red", "white"))
+    # => "\x1b[31m\x1b[47mTest message \x1b[0m"
+   logger._ex_full_info(Exception("Some error")) 
+  # => "\nFile: <filename>, \n |\n  -Function: <function_name>, \n   |\n    --Line: <line_number>\nSome error"
+  ```
+**3. Запись логов:**
 
+   - **Функция `log`**:
+      - Принимает уровень лога (`logging.INFO`, `logging.DEBUG`, `logging.ERROR` и др.), сообщение, опциональное исключение, флаг `exc_info` и опциональные цвета.
+      - Форматирует сообщение с помощью `_format_message`.
+      - Если `exc_info` истинно, добавляет полную информацию об исключении с помощью `_ex_full_info`.
+      - Записывает сообщение в консольный логгер.
+   - **Функции `info`, `success`, `warning`, `debug`, `error`, `critical`**:
+      - Вызывают функцию `log` с соответствующим уровнем логирования и опциональными цветами по умолчанию.
+**Пример:**
+```python
+logger.info("Information message", text_color="blue") 
+# Выведет "Information message" синим цветом в консоль и запишет в info.log
+logger.debug("Debug message", exc_info=True, ex=Exception("Debug error"))
+# Выведет "Debug message" синим цветом в консоль с информацией об исключении и запишет в debug.log
 ```
+**4. Взаимодействие**:
+   - `header.py` -> `logger.py` : `header.py` определяет корень проекта, который используется для определения путей к файлам логов.
+   - `config.json` -> `logger.py` : `logger.py` читает `config.json` для определения пути к логам.
+   - `logger.py` -> `logging` : `logger.py` использует модуль `logging` для создания логгеров и записи логов.
+
 ## <mermaid>
+
 ```mermaid
 flowchart TD
-    Start[Start] --> ImportModules[Импорт модулей: logging, colorama, datetime, json, inspect, threading, pathlib, typing, header];
-    ImportModules --> DefineConstants[Определение констант: TEXT_COLORS, BG_COLORS];
-    DefineConstants --> DefineSingletonMetaClass[Определение метакласса SingletonMeta];
-     DefineSingletonMetaClass --> DefineJsonFormatterClass[Определение класса JsonFormatter];
-    DefineJsonFormatterClass --> DefineLoggerClass[Определение класса Logger];
-     DefineLoggerClass --> LoggerInit[Метод __init__ класса Logger];
-     LoggerInit --> LoadConfig[Загрузка конфигурации из JSON];
-     LoadConfig --> CreateLogPaths[Создание путей к лог файлам];
-     CreateLogPaths --> CreateDirectories[Создание директорий];
-    CreateDirectories --> CreateFiles[Создание лог файлов];
-     CreateFiles --> SetupLoggers[Настройка логгеров];
-     SetupLoggers --> ConsoleLogger[Настройка консольного логгера];
-    SetupLoggers --> FileLoggerInfo[Настройка файлового логгера INFO];
-    SetupLoggers --> FileLoggerDebug[Настройка файлового логгера DEBUG];
-     SetupLoggers --> FileLoggerError[Настройка файлового логгера ERROR];
-    SetupLoggers --> FileLoggerJson[Настройка файлового логгера JSON];
-    FileLoggerJson --> RemoveConsoleHandler[Удаление обработчика консоли из JSON логгера];
+    Start[Start] --> LoggerInit[Logger Initialization]
+    LoggerInit --> ReadConfig[Read config.json]
+    ReadConfig --> CreateLogPaths[Create log file paths]
+    CreateLogPaths --> EnsureDirsAndFiles[Ensure log directories and files exist]
+    EnsureDirsAndFiles --> CreateLoggers[Create loggers (console, info, debug, errors, json)]
+    CreateLoggers --> SetLoggerLevels[Set log levels for each logger]
+    SetLoggerLevels --> CreateHandlers[Create handlers for each logger]
+    CreateHandlers --> SetFormatters[Set formatters for each handler]
+    SetFormatters --> RemoveConsoleHandlers[Remove console handlers from json logger]
+    RemoveConsoleHandlers --> EndInit[End of Logger Initialization]
     
-     RemoveConsoleHandler --> LoggerMethods[Определение методов Logger: _format_message, _ex_full_info, log, info, success, warning, debug, error, critical];
-     LoggerMethods --> InstanceLogger[Создание экземпляра Logger]
-     InstanceLogger --> End[Конец];
-
+    LogMessage[Log Message] --> FormatMessage[Format Message with color (if provided)]
+    FormatMessage --> FullExceptionInfo[Get full exception information (if needed)]
+    FullExceptionInfo --> LogToConsole[Log to console]
+    LogToConsole --> EndLog[End Log Message]
+    
+    subgraph SingletonMeta
+    direction TB
+        SingletonStart[Singleton Entry] --> CheckInstance[Check if instance exists]
+        CheckInstance -- Yes --> ReturnInstance[Return existing instance]
+        CheckInstance -- No --> AcquireLock[Acquire lock]
+        AcquireLock --> CheckInstanceAgain[Check if instance exists again]
+        CheckInstanceAgain -- Yes --> ReleaseLock[Release lock]
+        ReleaseLock --> ReturnInstanceAgain[Return existing instance]
+        CheckInstanceAgain -- No --> CreateInstance[Create new instance]
+        CreateInstance --> StoreInstance[Store new instance]
+        StoreInstance --> ReleaseLockAgain[Release lock]
+        ReleaseLockAgain --> ReturnNewInstance[Return new instance]
+        ReturnInstanceAgain --> SingletonEnd[Singleton End]
+        ReturnNewInstance --> SingletonEnd
+    end
+    
+    Start --> SingletonStart
+    EndInit --> EndInit
+    EndLog --> EndLog
+    SingletonEnd --> LoggerInit
     
     subgraph header.py
-        HeaderStart[Начало: <code>header.py</code>] --> HeaderDetermineRoot[Определение корневого пути проекта]
-        HeaderDetermineRoot --> HeaderImportGS[Импорт глобальных настроек: <code>from src import gs</code>]
+    direction TB
+        HeaderStart[Start] --> DetermineRoot[Determine Project Root]
+        DetermineRoot --> ImportGS[Import Global Settings: <br><code>from src import gs</code>] 
+        ImportGS --> HeaderEnd[End]
     end
 ```
+
+### Анализ зависимостей `mermaid`:
+-   `Start` - начало выполнения кода
+-   `LoggerInit` - блок инициализации логгера.
+-   `ReadConfig` - чтение файла конфигурации `config.json`.
+-   `CreateLogPaths` - формирование путей к файлам логов на основе конфигурации.
+-   `EnsureDirsAndFiles` - создание папок и файлов для логов.
+-   `CreateLoggers` - создание объектов логгеров.
+-   `SetLoggerLevels` - установка уровней логирования для логгеров.
+-   `CreateHandlers` - создание обработчиков логгирования.
+-   `SetFormatters` - установка форматтеров для сообщений логгирования.
+-   `RemoveConsoleHandlers` - удаление обработчиков консоли для json-логгера.
+-   `EndInit` - конец инициализации логгера.
+-   `LogMessage` - начало записи сообщения лога.
+-   `FormatMessage` - форматирование сообщения, включая цвета.
+-   `FullExceptionInfo` - получение полной информации об исключении.
+-   `LogToConsole` - запись сообщения в консоль.
+-   `EndLog` - конец записи сообщения лога.
+-   `SingletonMeta` -  метакласс для реализации паттерна `Singleton`, гарантирующий, что существует только один экземпляр класса `Logger`
+-   `SingletonStart` - начало работы метакласса
+-   `CheckInstance` - проверка, существует ли уже экземпляр класса
+-   `ReturnInstance` - возврат существующего экземпляра
+-   `AcquireLock` - получение блокировки для потокобезопасного создания экземпляра
+-   `CheckInstanceAgain` - повторная проверка существования экземпляра внутри блокировки
+-   `ReleaseLock` - освобождение блокировки
+-   `ReturnInstanceAgain` - возврат существующего экземпляра после блокировки
+-   `CreateInstance` - создание нового экземпляра
+-   `StoreInstance` - сохранение экземпляра
+-   `ReleaseLockAgain` - повторное освобождение блокировки после создания экземпляра
+-   `ReturnNewInstance` - возврат нового экземпляра
+-   `SingletonEnd` - конец работы метакласса
+-  `header.py` - блок определяющий корень проекта
 
 ## <объяснение>
 
 ### Импорты:
-
--   `logging`: Стандартный модуль Python для логирования событий в приложении. Используется для записи сообщений в консоль и файлы.
--   `colorama`: Библиотека для добавления цветов в вывод консоли. Позволяет выделить важные сообщения цветом.
--   `datetime`: Стандартный модуль для работы с датой и временем. Используется для создания меток времени в логах.
--   `json`: Стандартный модуль для работы с данными в формате JSON. Используется для записи логов в JSON-файл.
--   `inspect`: Стандартный модуль для получения информации о стеке вызовов. Используется для получения информации об исключениях.
--   `threading`: Стандартный модуль для работы с многопоточностью. Используется для реализации Singleton.
--   `pathlib`: Стандартный модуль для работы с путями к файлам и директориям. Используется для создания путей к лог-файлам.
--   `typing`: Стандартный модуль для аннотации типов. Используется для объявления типов переменных.
--   `header`: Пользовательский модуль, используемый для определения корневой директории проекта.
--   `from header import __root__`: Импортирует переменную `__root__` из модуля `header`, которая содержит абсолютный путь к корню проекта.
+-   `logging`: Стандартный модуль Python для ведения логов.
+-   `colorama`: Библиотека для добавления цветов в вывод консоли.
+-   `datetime`: Модуль для работы с датой и временем, используется для создания уникальных имен папок с логами.
+-   `json`: Модуль для работы с данными в формате JSON, используется для логгирования в JSON-файл.
+-   `inspect`: Модуль для интроспекции, используется для получения информации о месте вызова функции.
+-   `threading`: Модуль для поддержки потоков, используется для реализации потокобезопасного синглтона.
+-   `pathlib.Path`: Модуль для работы с путями к файлам и директориям.
+-   `typing.Optional, Tuple`: Модуль для аннотации типов.
+-   `types.SimpleNamespace`: Модуль для создания объекта с атрибутами из словаря, используется для хранения конфигурации.
+-   `header`: Самописный модуль, определяющий корень проекта.
 
 ### Классы:
+-   **`SingletonMeta` (метакласс):**
+    -   Реализует паттерн Singleton, гарантирует, что у класса `Logger` будет только один экземпляр.
+    -   `_instances`: Словарь для хранения созданных экземпляров класса.
+    -   `_lock`: Объект блокировки для обеспечения потокобезопасности при создании экземпляра.
+    -   Метод `__call__` перехватывает вызов класса и либо возвращает существующий экземпляр, либо создает новый (при первом вызове).
 
-1.  `SingletonMeta`:
-    -   **Роль:** Метакласс для реализации паттерна Singleton. Гарантирует, что у класса будет только один экземпляр.
-    -   **Атрибуты:**
-        -   `_instances`: Словарь для хранения созданных экземпляров классов.
-        -   `_lock`: Объект блокировки для безопасного создания экземпляров в многопоточной среде.
-    -   **Методы:**
-        -   `__call__(cls, *args, **kwargs)`: Магический метод, вызываемый при создании экземпляра класса. Проверяет, существует ли уже экземпляр, и возвращает его, иначе создает новый и сохраняет в `_instances`.
-    
-2.  `JsonFormatter(logging.Formatter)`:
-    -   **Роль:** Класс для форматирования лог-сообщений в JSON. Наследуется от `logging.Formatter`.
-    -   **Методы:**
-        -   `format(self, record)`: Метод для форматирования записи лога в JSON. Преобразует `record` в словарь, затем в JSON-строку. Заменяет двойные кавычки на одинарные.
+-   **`JsonFormatter` (наследуется от `logging.Formatter`):**
+    -   Класс для форматирования логов в формате JSON.
+    -   Метод `format` преобразует запись лога в JSON-формат с полями `asctime`, `levelname`, `message`, `exc_info`.
 
-3.  `Logger(metaclass=SingletonMeta)`:
-    -   **Роль:** Основной класс для логирования. Использует паттерн Singleton, поэтому у него будет только один экземпляр.
-    -   **Атрибуты:**
-        -   `log_files_path`: Путь к директории с лог файлами.
-        -   `info_log_path`: Путь к файлу с info логами.
-        -   `debug_log_path`: Путь к файлу с debug логами.
-        -   `errors_log_path`: Путь к файлу с error логами.
-        -   `json_log_path`: Путь к json файлу.
-        -   `logger_console`: Объект логгера для консоли.
-        -   `logger_file_info`: Объект логгера для info лог файла.
-        -   `logger_file_debug`: Объект логгера для debug лог файла.
-        -   `logger_file_errors`: Объект логгера для error лог файла.
-        -   `logger_file_json`: Объект логгера для json файла.
-    -   **Методы:**
-        -   `__init__(self, info_log_path=None, debug_log_path=None, errors_log_path=None, json_log_path=None)`: Конструктор класса, инициирует логгеры, устанавливает пути к файлам. Создает директории и файлы, если их нет.
-        -  `_format_message(self, message, ex=None, color=None)`: Форматирует сообщение, добавляя цвет и информацию об исключении.
-        - `_ex_full_info(self, ex)`: Получает полную информацию об исключении (файл, функция, строка).
-        - `log(self, level, message, ex=None, exc_info=False, color=None)`: Записывает сообщение с заданным уровнем и цветом. Вызывает `_format_message` и `_ex_full_info`, если нужно.
-        - `info(self, message, ex=None, exc_info=False, text_color="green", bg_color="")`: Записывает сообщение info уровня.
-        - `success(self, message, ex=None, exc_info=False, text_color="yellow", bg_color="")`: Записывает сообщение info уровня, как успешное.
-        - `warning(self, message, ex=None, exc_info=False, text_color="black", bg_color="yellow")`: Записывает сообщение warning уровня.
-        - `debug(self, message, ex=None, exc_info=True, text_color="cyan", bg_color="")`: Записывает сообщение debug уровня.
-        - `error(self, message, ex=None, exc_info=True, text_color="red", bg_color="")`: Записывает сообщение error уровня.
-        - `critical(self, message, ex=None, exc_info=True, text_color="red", bg_color="white")`: Записывает сообщение critical уровня.
+-   **`Logger` (с метаклассом `SingletonMeta`):**
+    -   Основной класс логгера, реализует логику записи логов в консоль, файлы, и JSON.
+    -   Атрибуты: `log_files_path`, `info_log_path`, `debug_log_path`, `errors_log_path`, `json_log_path` (пути к файлам логов).
+    -   Метод `__init__`: Инициализирует логгер, создает пути для логов, создает логгеры, настраивает обработчики.
+    -   Метод `_format_message`: Форматирует сообщение, добавляет цвета (если указаны).
+    -   Метод `_ex_full_info`: Формирует строку с информацией об исключении, включая место вызова функции.
+    -   Метод `log`: Записывает сообщение в логгер нужного уровня с форматированием и возможностью добавления исключения.
+    -   Методы `info`, `success`, `warning`, `debug`, `error`, `critical`: Вызывают метод `log` с предопределенными уровнями логов и цветами.
 
 ### Функции:
--  `TEXT_COLORS`: Словарь для хранения кодов текстовых цветов из `colorama`.
--  `BG_COLORS`: Словарь для хранения кодов цветов фона из `colorama`.
+-   `SingletonMeta.__call__(cls, *args, **kwargs)`:  Обеспечивает создание единственного экземпляра класса.
+-   `JsonFormatter.format(self, record)`: Форматирует запись лога в JSON.
+-   `Logger.__init__(self, info_log_path=None, debug_log_path=None, errors_log_path=None, json_log_path=None)`: Инициализирует экземпляр логгера, создает пути, папки и файлы. Настраивает логгеры, обработчики и форматтеры.
+-  `Logger._format_message(self, message, ex=None, color=None)`:  Форматирует сообщение, добавляя цвета и информацию об исключении.
+-   `Logger._ex_full_info(self, ex)`: Извлекает и форматирует информацию об исключении.
+-   `Logger.log(self, level, message, ex=None, exc_info=False, color=None)`: Общая функция для записи лога.
+-   `Logger.info(self, message, ex=None, exc_info=False, text_color="green", bg_color="")`, `Logger.success(self, message, ex=None, exc_info=False, text_color="yellow", bg_color="")`, `Logger.warning(self, message, ex=None, exc_info=False, text_color="black", bg_color="yellow")`, `Logger.debug(self, message, ex=None, exc_info=True, text_color="cyan", bg_color="")`, `Logger.error(self, message, ex=None, exc_info=True, text_color="red", bg_color="")`, `Logger.critical(self, message, ex=None, exc_info=True, text_color="red", bg_color="white")`:  Функции для записи логов с предопределенным уровнем и цветом.
 
 ### Переменные:
--  `MODE`: Определяет режим работы приложения (`dev`, `prod` и т.д.). Используется для определения папки логгирования.
+-   `TEXT_COLORS`, `BG_COLORS`:  Словари с кодами цветов для текста и фона.
+-   `__root__`: Переменная, импортированная из `header.py`, содержащая корень проекта.
+-  `config` :  Объект `SimpleNamespace`, содержащий конфигурацию проекта из `config.json`.
+-   `timestamp`: Строка, содержащая текущую дату и время для создания уникальных путей к файлам.
+-   `log_files_path`, `info_log_path`, `debug_log_path`, `errors_log_path`, `json_log_path`: Переменные типа `Path` для хранения путей к файлам логов.
+-   `logger_console`, `logger_file_info`, `logger_file_debug`, `logger_file_errors`, `logger_file_json`: Экземпляры логгеров из модуля `logging`.
 
-### Потенциальные ошибки и области для улучшения:
--   **Управление логами:**  В коде закомментированы блоки записи в файлы. Сейчас запись ведется только в консоль. Нужно раскомментировать и настроить запись логов в файлы.
--   **Конфигурация путей:** Пути к логам формируются из `config.json`. Необходимо добавить возможность переопределять пути через переменные окружения. 
--   **Обработка исключений:**  В методе `_ex_full_info` необходимо продумать обработку `None` в `ex`.
--   **Общая ошибка**: Двойной вывод в консоль. Проблема в том, что консольный логгер не был выключен, а все файловые логгеры имеют по умолчанию `StreamHandler`. Чтобы этого избежать нужно либо выключить консольный логгер, либо удалить обработчики которые выводят в консоль.
--   **Именование переменных:** Необходимо унифицировать именование переменных, где то используется `logger_console`, где-то `self.logger_file_json`.
--   **Отказ от глобальных переменных**: Использование `MODE` как глобальной переменной может привести к проблемам в масштабировании.
+### Цепочка взаимосвязей:
+1.  `header.py` определяет корень проекта (`__root__`).
+2.  `logger.py` импортирует `__root__` из `header.py`.
+3.  `logger.py` использует `__root__` для чтения файла `config.json`.
+4.  `logger.py` создает пути к лог-файлам на основе данных из `config.json` и текущей даты и времени.
+5.  `logger.py` использует модуль `logging` для создания логгеров, настройки обработчиков и форматирования сообщений.
+6.  `logger.py` использует `colorama` для добавления цветов в консольный вывод.
+7. `logger.py` использует метакласс `SingletonMeta` для обеспечения единственного экземпляра класса `Logger`.
 
-### Взаимосвязи с другими частями проекта:
--   `header.py`: Используется для определения корневого пути проекта, относительно которого строятся пути к файлам логов и конфигурационному файлу.
--   `config.json`: Используется для настройки пути сохранения логов.
+### Потенциальные ошибки и улучшения:
+-   **Двойной вывод в консоль (исправлено)**: Изначально логи могли дублироваться, выводясь и в консоль, и в файл.  Это было исправлено путем удаления всех StreamHandler из JSON логгера.
+-   **Жестко закодированные пути к файлам**: Пути к лог-файлам относительно конфигурации.
+-   **Отсутствие ротации логов**: Файлы логов не ротируются, что может привести к их разрастанию.
+-   **Использование `inspect.stack()[3]`**: Зависимость от конкретного уровня стека вызова может привести к ошибке, если функция `log` будет вызываться с другого уровня.
+-   **Недостаточная гибкость**: Логика форматирования сообщений может быть расширена для поддержки дополнительных параметров.
+-  **Улучшение обработки исключений**: Можно добавить более подробное логирование исключений, включая трассировку стека.
+
+### Дополнительно:
+ -  Можно добавить автоматическую очистку старых логов, чтобы не переполнять дисковое пространство.
+ - Рассмотреть возможность использования сторонней библиотеки для управления логами (например, `loguru`).
+- Можно вынести все настройки форматера в config.json.
+- Рассмотреть возможность использования сторонней библиотеки для  управления цветами и стилями (например, `rich`).

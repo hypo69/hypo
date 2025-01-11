@@ -1,491 +1,475 @@
-## Анализ кода модуля `environment.py`
+# Анализ кода модуля `environment.py`
 
-**Качество кода: 8/10**
+**Качество кода: 7/10**
 
--   **Плюсы:**
-    *   Хорошая структура классов и методов, код разбит на логические блоки.
-    *   Использование `logger` для отладки и логирования.
-    *   Наличие базового класса `TinyWorld` и его расширения `TinySocialNetwork` демонстрирует принципы ООП.
-    *   Присутствует документация в формате docstring для большинства методов.
-    *   Реализованы основные методы для управления агентами и симуляцией.
-    *   Имеется возможность сохранения и восстановления состояния среды.
-    *   Использование `transactional` декоратора для обеспечения консистентности данных.
+-  **Плюсы**
+    - Код хорошо структурирован с использованием классов `TinyWorld` и `TinySocialNetwork`, что обеспечивает гибкость и расширяемость.
+    - Присутствует подробное документирование методов и классов.
+    - Используются логирование для отслеживания действий агентов и обработки ошибок.
+    - Реализованы методы для управления временем и шагами симуляции.
+    - Присутствуют методы для добавления, удаления и управления агентами.
+    - Код поддерживает сохранения и восстановление состояния среды.
+-  **Минусы**
+    -   Не все методы имеют docstring в формате RST.
+    -   Используется `logging`, а не `src.logger.logger`.
+    -   Много повторяющегося кода для `run_...` и `skip_...` методов, который можно вынести в одну функцию.
+    -  Импорт `datetime` выполняется как `import datetime`, в то время как нужно `from datetime import datetime, timedelta`.
+    -  Отсутствует проверка на типы для передаваемых аргументов в некоторых функциях.
 
--   **Минусы:**
-    *   Некоторые docstring не соответствуют стандартам (отсутствуют Args, Returns, Example).
-    *   Использование `datetime.datetime.now()` без указания `tzinfo` может привести к проблемам при работе с разными часовыми поясами.
-    *   Не все методы имеют полные docstring.
-    *   В некоторых местах используется `logger.info`, хотя по смыслу лучше подходит `logger.debug`.
-    *   Следует проверить именование переменных и методов на консистентность, в том числе сокращения `pp`.
-    *   Не хватает примеров использования для некоторых методов.
+**Рекомендации по улучшению**
 
-**Рекомендации по улучшению:**
+1.  **Импорты:**
+    -   Использовать `from src.logger.logger import logger` вместо `import logging` для логирования.
+    -   Использовать `from datetime import datetime, timedelta` вместо `import datetime`.
 
-1.  **Документация:**
-    *   Дополнить docstring для всех методов и классов, включая описание аргументов, возвращаемых значений и примеров использования.
-    *   Привести docstring к единому стандарту RST.
-    *   Добавить описание модуля в начале файла.
-2.  **Обработка времени:**
-    *   В `__init__` вместо `datetime.datetime.now()` использовать `datetime.datetime.now(datetime.timezone.utc)` для корректной работы с часовыми поясами.
-3.  **Логирование:**
-    *   Использовать `logger.debug` вместо `logger.info` для информационных сообщений о ходе выполнения, `logger.info` оставить для сообщений о важных событиях.
-4.  **Именование:**
-    *   Привести в соответствие имена переменных и методов с ранее обработанными файлами.
-5.  **Улучшения кода:**
-    *   Избегать избыточного использования `try-except`, использовать `logger.error` для обработки ошибок.
-    *   Добавить проверки на корректность типов входных данных.
-    *   Уточнить комментарии, где это необходимо.
+2.  **Документация:**
+    -   Добавить docstring в формате RST для всех функций, методов и классов.
+    -   Улучшить описания методов, сделав их более информативными и подробными.
+
+3.  **Рефакторинг:**
+    -   Вынести общую логику для методов `run_...` и `skip_...` в отдельные методы.
+    -   Улучшить обработку ошибок, используя `logger.error` вместо общих `try-except` блоков.
+    -   Добавить проверку типов для аргументов в функциях.
+
+4. **Улучшения:**
+    - Добавить возможность кастомизировать вывод сообщений в консоль.
+    - Использовать более конкретные исключения.
+    - Использовать `f-strings` для форматирования строк.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для определения окружения, в котором взаимодействуют агенты.
+Модуль для определения среды, в которой взаимодействуют агенты.
 =========================================================================================
 
-Этот модуль содержит классы:
+Этот модуль содержит классы :class:`TinyWorld` и :class:`TinySocialNetwork`,
+которые обеспечивают основу для создания и управления виртуальными средами,
+в которых действуют агенты.
 
-*   :class:`TinyWorld` - базовый класс для окружений.
-*   :class:`TinySocialNetwork` - класс для моделирования социальной сети.
+Класс `TinyWorld` является базовым классом для всех сред, предоставляя
+основные функции, такие как управление временем, агентами и их взаимодействиями.
 
-Оба класса предоставляют методы для управления агентами, моделирования времени и
-взаимодействия между агентами.
+Класс `TinySocialNetwork` расширяет `TinyWorld`, добавляя поддержку социальных
+отношений между агентами.
 
-Пример использования
+Примеры использования
 --------------------
 
 Пример создания и запуска симуляции:
 
 .. code-block:: python
 
-    from datetime import timedelta
-    from tinytroupe.environment import TinyWorld, TinyPerson
+    from datetime import datetime, timedelta
+    from tinytroupe.agent import TinyPerson
+    from tinytroupe.environment import TinyWorld
 
-    world = TinyWorld(name='MyWorld')
+    # Создание агентов
     agent1 = TinyPerson(name='Alice')
     agent2 = TinyPerson(name='Bob')
-    world.add_agents([agent1, agent2])
+
+    # Создание среды
+    world = TinyWorld(name='MyWorld', agents=[agent1, agent2], initial_datetime=datetime.now())
+
+    # Запуск симуляции на 10 шагов
     world.run(steps=10, timedelta_per_step=timedelta(minutes=1))
 
+Пример создания и использования социальной сети:
+
+.. code-block:: python
+
+    from datetime import datetime, timedelta
+    from tinytroupe.agent import TinyPerson
+    from tinytroupe.environment import TinySocialNetwork
+
+    # Создание агентов
+    agent1 = TinyPerson(name='Alice')
+    agent2 = TinyPerson(name='Bob')
+    agent3 = TinyPerson(name='Charlie')
+
+    # Создание социальной сети
+    social_network = TinySocialNetwork(name='MyNetwork', broadcast_if_no_target=True)
+
+    # Добавление агентов в сеть
+    social_network.add_agent(agent1).add_agent(agent2).add_agent(agent3)
+
+    # Установка отношений между агентами
+    social_network.add_relation(agent1, agent2, name='friends')
+
+    # Запуск симуляции на 5 шагов
+    social_network.run(steps=5, timedelta_per_step=timedelta(minutes=1))
 """
+from src.logger.logger import logger # Используем src.logger.logger для логирования
 import copy
 from datetime import datetime, timedelta
-from typing import Any, TypeVar, Union
-
-from rich.console import Console
-
-from src.logger.logger import logger
+from typing import Any, TypeVar, Union, List
+from pathlib import Path
 from tinytroupe.agent import TinyPerson
 from tinytroupe.utils import name_or_empty, pretty_datetime
 import tinytroupe.control as control
 from tinytroupe.control import transactional
-
+from rich.console import Console
+from tinytroupe.config import default
 
 AgentOrWorld = Union["TinyPerson", "TinyWorld"]
-
+Self = TypeVar("Self", bound="TinyWorld")
 
 class TinyWorld:
     """
     Базовый класс для окружений.
 
-    :ivar all_environments: Словарь всех созданных окружений.
-    :vartype all_environments: dict
-    :ivar communication_display: Флаг отображения коммуникаций.
-    :vartype communication_display: bool
+    Атрибуты:
+        all_environments (dict): Словарь всех созданных окружений.
+            Ключ - имя окружения, значение - объект окружения.
+        communication_display (bool): Флаг для отображения коммуникаций окружений.
+        name (str): Имя окружения.
+        current_datetime (datetime): Текущее время окружения.
+        broadcast_if_no_target (bool): Если True, то действия транслируются, если цель не найдена.
+        simulation_id (Any): ID симуляции, в которой используется окружение.
+        agents (list): Список агентов в окружении.
+        name_to_agent (dict): Словарь, связывающий имена агентов с их объектами.
+        _displayed_communications_buffer (list): Буфер для отображаемых сообщений.
+        console (Console): Объект для вывода в консоль.
     """
-
-    # Словарь всех созданных окружений.
-    all_environments = {}  # name -> environment
-
-    # Флаг для отображения коммуникаций в консоли.
+    all_environments = {} # name -> environment
     communication_display = True
 
-    def __init__(self, name: str = 'A TinyWorld', agents: list = [],
-                 initial_datetime: datetime = datetime.now(datetime.timezone.utc),
+    def __init__(self, name: str='A TinyWorld', agents: List[TinyPerson] = [],
+                 initial_datetime: datetime = datetime.now(),
                  broadcast_if_no_target: bool = True):
         """
         Инициализирует окружение.
 
-        :param name: Имя окружения.
-        :type name: str
-        :param agents: Список агентов для добавления в окружение.
-        :type agents: list
-        :param initial_datetime: Начальное время окружения.
-        :type initial_datetime: datetime
-        :param broadcast_if_no_target: Флаг широковещания действий, если цель не найдена.
-        :type broadcast_if_no_target: bool
+        Args:
+            name (str): Имя окружения.
+            agents (list): Список агентов для добавления в окружение.
+            initial_datetime (datetime): Начальное время окружения.
+            broadcast_if_no_target (bool): Если True, транслирует действия, если цель не найдена.
         """
         self.name = name
         self.current_datetime = initial_datetime
         self.broadcast_if_no_target = broadcast_if_no_target
-        self.simulation_id = None  # будет сброшен позже, если агент используется в рамках определенной симуляции
-
+        self.simulation_id = None # будет переопределено позже, если агент используется в рамках конкретной симуляции
+        
         self.agents = []
-        self.name_to_agent = {}  # {agent_name: agent, agent_name_2: agent_2, ...}
-
-        # буфер коммуникаций, который был отображен, используется для сохранения в другом формате
+        self.name_to_agent = {} # {agent_name: agent, agent_name_2: agent_2, ...}
         self._displayed_communications_buffer = []
-
         self.console = Console()
 
-        # добавление окружения в список всех окружений
         TinyWorld.add_environment(self)
-
         self.add_agents(agents)
-
+    
     #######################################################################
     # Методы управления симуляцией
     #######################################################################
     @transactional
-    def _step(self, timedelta_per_step: timedelta = None) -> dict:
+    def _step(self, timedelta_per_step: timedelta = None):
         """
-        Выполняет один шаг в окружении.
+        Выполняет один шаг симуляции. По умолчанию, вызывает действия всех агентов.
 
-        Этот метод вызывает метод act() у каждого агента в окружении
-        и обрабатывает полученные действия.
+        Args:
+            timedelta_per_step (timedelta): Временной интервал для шага.
 
-        :param timedelta_per_step: Временной интервал для шага.
-        :type timedelta_per_step: timedelta, optional
-        :return: Словарь действий агентов.
-        :rtype: dict
+        Returns:
+            dict: Словарь действий агентов.
         """
-        # увеличение текущей даты, если задано timedelta.
+        # Увеличивает текущее время, если задано.
         self._advance_datetime(timedelta_per_step)
 
-        # агенты выполняют действия
+        # Агенты выполняют действия.
         agents_actions = {}
         for agent in self.agents:
-            logger.debug(f'[{self.name}] Агент {name_or_empty(agent)} выполняет действие.')
+            logger.debug(f"[{self.name}] Agent {name_or_empty(agent)} действует.")
             actions = agent.act(return_actions=True)
             agents_actions[agent.name] = actions
 
             self._handle_actions(agent, agent.pop_latest_actions())
-
+        
         return agents_actions
 
-    def _advance_datetime(self, timedelta: timedelta) -> None:
+    def _advance_datetime(self, timedelta_per_step: timedelta):
         """
-        Увеличивает текущую дату на указанный интервал.
+        Увеличивает текущее время окружения на заданный интервал.
 
-        :param timedelta: Временной интервал для увеличения.
-        :type timedelta: timedelta
+        Args:
+            timedelta_per_step (timedelta): Временной интервал для увеличения времени.
         """
-        if timedelta is not None:
-            self.current_datetime += timedelta
+        if timedelta_per_step is not None:
+            self.current_datetime += timedelta_per_step
         else:
-            logger.info(f'[{self.name}] Временной интервал не указан, дата не изменена.')
+            logger.info(f"[{self.name}] Не задан интервал времени, время не было увеличено.")
 
     @transactional
-    def run(self, steps: int, timedelta_per_step: timedelta = None, return_actions: bool = False) -> list | None:
+    def run(self, steps: int, timedelta_per_step: timedelta = None, return_actions: bool = False):
         """
         Запускает симуляцию на заданное количество шагов.
 
-        :param steps: Количество шагов для запуска симуляции.
-        :type steps: int
-        :param timedelta_per_step: Временной интервал между шагами.
-        :type timedelta_per_step: timedelta, optional
-        :param return_actions: Флаг возврата действий агентов.
-        :type return_actions: bool, optional
-        :return: Список действий агентов за все шаги, если return_actions = True.
-        :rtype: list, optional
+        Args:
+            steps (int): Количество шагов для запуска симуляции.
+            timedelta_per_step (timedelta): Временной интервал между шагами.
+            return_actions (bool): Если True, возвращает действия агентов.
+
+        Returns:
+            list: Список действий агентов за все шаги, если return_actions True.
         """
         agents_actions_over_time = []
         for i in range(steps):
-            logger.info(f'[{self.name}] Запуск шага {i + 1} из {steps}.')
+            logger.info(f"[{self.name}] Запуск шага {i+1} из {steps}.")
 
             if TinyWorld.communication_display:
-                self._display_communication(cur_step=i + 1, total_steps=steps, kind='step',
-                                            timedelta_per_step=timedelta_per_step)
+                self._display_communication(cur_step=i+1, total_steps=steps, kind='step', timedelta_per_step=timedelta_per_step)
 
             agents_actions = self._step(timedelta_per_step=timedelta_per_step)
             agents_actions_over_time.append(agents_actions)
-
+        
         if return_actions:
             return agents_actions_over_time
-        return None
-
+    
     @transactional
-    def skip(self, steps: int, timedelta_per_step: timedelta = None) -> None:
+    def skip(self, steps: int, timedelta_per_step: timedelta = None):
         """
         Пропускает заданное количество шагов в окружении.
 
-        Время проходит, но никаких действий не выполняется.
-
-        :param steps: Количество шагов для пропуска.
-        :type steps: int
-        :param timedelta_per_step: Временной интервал между шагами.
-        :type timedelta_per_step: timedelta, optional
+        Args:
+            steps (int): Количество шагов для пропуска.
+            timedelta_per_step (timedelta): Временной интервал между шагами.
         """
         self._advance_datetime(steps * timedelta_per_step)
-
-    def run_minutes(self, minutes: int) -> None:
+    
+    def _run_time(self, steps: int, time_unit: str):
         """
-        Запускает симуляцию на заданное количество минут.
+        Выполняет симуляцию на заданное количество временных единиц.
 
-        :param minutes: Количество минут для запуска симуляции.
-        :type minutes: int
+        Args:
+            steps (int): Количество временных единиц.
+            time_unit (str): Единица времени ('minutes', 'hours', 'days', 'weeks', 'months', 'years').
         """
-        self.run(steps=minutes, timedelta_per_step=timedelta(minutes=1))
+        if time_unit == 'minutes':
+            self.run(steps=steps, timedelta_per_step=timedelta(minutes=1))
+        elif time_unit == 'hours':
+            self.run(steps=steps, timedelta_per_step=timedelta(hours=1))
+        elif time_unit == 'days':
+            self.run(steps=steps, timedelta_per_step=timedelta(days=1))
+        elif time_unit == 'weeks':
+            self.run(steps=steps, timedelta_per_step=timedelta(weeks=1))
+        elif time_unit == 'months':
+            self.run(steps=steps, timedelta_per_step=timedelta(weeks=4))
+        elif time_unit == 'years':
+            self.run(steps=steps, timedelta_per_step=timedelta(days=365))
+    
+    def _skip_time(self, steps: int, time_unit: str):
+        """
+        Пропускает заданное количество временных единиц в окружении.
 
-    def skip_minutes(self, minutes: int) -> None:
+        Args:
+            steps (int): Количество временных единиц для пропуска.
+            time_unit (str): Единица времени ('minutes', 'hours', 'days', 'weeks', 'months', 'years').
         """
-        Пропускает заданное количество минут в окружении.
+        if time_unit == 'minutes':
+            self.skip(steps=steps, timedelta_per_step=timedelta(minutes=1))
+        elif time_unit == 'hours':
+            self.skip(steps=steps, timedelta_per_step=timedelta(hours=1))
+        elif time_unit == 'days':
+            self.skip(steps=steps, timedelta_per_step=timedelta(days=1))
+        elif time_unit == 'weeks':
+            self.skip(steps=steps, timedelta_per_step=timedelta(weeks=1))
+        elif time_unit == 'months':
+            self.skip(steps=steps, timedelta_per_step=timedelta(weeks=4))
+        elif time_unit == 'years':
+            self.skip(steps=steps, timedelta_per_step=timedelta(days=365))
 
-        :param minutes: Количество минут для пропуска.
-        :type minutes: int
-        """
-        self.skip(steps=minutes, timedelta_per_step=timedelta(minutes=1))
-
-    def run_hours(self, hours: int) -> None:
-        """
-        Запускает симуляцию на заданное количество часов.
-
-        :param hours: Количество часов для запуска симуляции.
-        :type hours: int
-        """
-        self.run(steps=hours, timedelta_per_step=timedelta(hours=1))
-
-    def skip_hours(self, hours: int) -> None:
-        """
-        Пропускает заданное количество часов в окружении.
-
-        :param hours: Количество часов для пропуска.
-        :type hours: int
-        """
-        self.skip(steps=hours, timedelta_per_step=timedelta(hours=1))
-
-    def run_days(self, days: int) -> None:
-        """
-        Запускает симуляцию на заданное количество дней.
-
-        :param days: Количество дней для запуска симуляции.
-        :type days: int
-        """
-        self.run(steps=days, timedelta_per_step=timedelta(days=1))
-
-    def skip_days(self, days: int) -> None:
-        """
-        Пропускает заданное количество дней в окружении.
-
-        :param days: Количество дней для пропуска.
-        :type days: int
-        """
-        self.skip(steps=days, timedelta_per_step=timedelta(days=1))
-
-    def run_weeks(self, weeks: int) -> None:
-        """
-        Запускает симуляцию на заданное количество недель.
-
-        :param weeks: Количество недель для запуска симуляции.
-        :type weeks: int
-        """
-        self.run(steps=weeks, timedelta_per_step=timedelta(weeks=1))
-
-    def skip_weeks(self, weeks: int) -> None:
-        """
-        Пропускает заданное количество недель в окружении.
-
-        :param weeks: Количество недель для пропуска.
-        :type weeks: int
-        """
-        self.skip(steps=weeks, timedelta_per_step=timedelta(weeks=1))
-
-    def run_months(self, months: int) -> None:
-        """
-        Запускает симуляцию на заданное количество месяцев.
-
-        :param months: Количество месяцев для запуска симуляции.
-        :type months: int
-        """
-        self.run(steps=months, timedelta_per_step=timedelta(weeks=4))
-
-    def skip_months(self, months: int) -> None:
-        """
-        Пропускает заданное количество месяцев в окружении.
-
-        :param months: Количество месяцев для пропуска.
-        :type months: int
-        """
-        self.skip(steps=months, timedelta_per_step=timedelta(weeks=4))
-
-    def run_years(self, years: int) -> None:
-        """
-        Запускает симуляцию на заданное количество лет.
-
-        :param years: Количество лет для запуска симуляции.
-        :type years: int
-        """
-        self.run(steps=years, timedelta_per_step=timedelta(days=365))
-
-    def skip_years(self, years: int) -> None:
-        """
-        Пропускает заданное количество лет в окружении.
-
-        :param years: Количество лет для пропуска.
-        :type years: int
-        """
-        self.skip(steps=years, timedelta_per_step=timedelta(days=365))
+    def run_minutes(self, minutes: int):
+        """Запускает окружение на заданное количество минут."""
+        self._run_time(minutes, 'minutes')
+    
+    def skip_minutes(self, minutes: int):
+        """Пропускает заданное количество минут в окружении."""
+        self._skip_time(minutes, 'minutes')
+    
+    def run_hours(self, hours: int):
+        """Запускает окружение на заданное количество часов."""
+        self._run_time(hours, 'hours')
+    
+    def skip_hours(self, hours: int):
+       """Пропускает заданное количество часов в окружении."""
+       self._skip_time(hours, 'hours')
+    
+    def run_days(self, days: int):
+       """Запускает окружение на заданное количество дней."""
+       self._run_time(days, 'days')
+    
+    def skip_days(self, days: int):
+        """Пропускает заданное количество дней в окружении."""
+        self._skip_time(days, 'days')
+    
+    def run_weeks(self, weeks: int):
+        """Запускает окружение на заданное количество недель."""
+        self._run_time(weeks, 'weeks')
+    
+    def skip_weeks(self, weeks: int):
+        """Пропускает заданное количество недель в окружении."""
+        self._skip_time(weeks, 'weeks')
+    
+    def run_months(self, months: int):
+        """Запускает окружение на заданное количество месяцев."""
+        self._run_time(months, 'months')
+    
+    def skip_months(self, months: int):
+        """Пропускает заданное количество месяцев в окружении."""
+        self._skip_time(months, 'months')
+    
+    def run_years(self, years: int):
+        """Запускает окружение на заданное количество лет."""
+        self._run_time(years, 'years')
+    
+    def skip_years(self, years: int):
+        """Пропускает заданное количество лет в окружении."""
+        self._skip_time(years, 'years')
 
     #######################################################################
     # Методы управления агентами
     #######################################################################
-    def add_agents(self, agents: list) -> "TinyWorld":
+    def add_agents(self, agents: List[TinyPerson]) -> Self:
         """
         Добавляет список агентов в окружение.
 
-        :param agents: Список агентов для добавления.
-        :type agents: list
-        :return: self для возможности вызова цепочки.
-        :rtype: TinyWorld
+        Args:
+            agents (list): Список агентов для добавления.
+
+        Returns:
+            Self: Возвращает self для цепочного вызова.
         """
         for agent in agents:
             self.add_agent(agent)
+        
+        return self # for chaining
 
-        return self  # для цепочки
-
-    def add_agent(self, agent: TinyPerson) -> "TinyWorld":
+    def add_agent(self, agent: TinyPerson) -> Self:
         """
-        Добавляет агента в окружение.
+        Добавляет агента в окружение. Имя агента должно быть уникальным.
 
-        Имя агента должно быть уникальным в пределах окружения.
+        Args:
+            agent (TinyPerson): Агент для добавления.
 
-        :param agent: Агент для добавления.
-        :type agent: TinyPerson
-        :raises ValueError: Если имя агента не уникально.
-        :return: self для возможности вызова цепочки.
-        :rtype: TinyWorld
+        Raises:
+            ValueError: Если имя агента не уникально.
+
+        Returns:
+            Self: Возвращает self для цепочного вызова.
         """
-
-        # проверка, что агент еще не в окружении
         if agent not in self.agents:
-            logger.debug(f'Добавление агента {agent.name} в окружение.')
-
-            # Имена агентов должны быть уникальными в окружении.
-            # проверка, есть ли уже агент с таким именем.
+            logger.debug(f"Добавление агента {agent.name} в окружение.")
+            
             if agent.name not in self.name_to_agent:
                 agent.environment = self
                 self.agents.append(agent)
                 self.name_to_agent[agent.name] = agent
             else:
-                raise ValueError(f'Имена агентов должны быть уникальными, но \'{agent.name}\' уже есть в окружении.')
+                raise ValueError(f"Имена агентов должны быть уникальными, но \'{agent.name}\' уже есть в окружении.")
         else:
-            logger.warning(f'Агент {agent.name} уже в окружении.')
+            logger.warn(f"Агент {agent.name} уже в окружении.")
+        
+        return self # for chaining
 
-        return self  # для цепочки
-
-    def remove_agent(self, agent: TinyPerson) -> "TinyWorld":
+    def remove_agent(self, agent: TinyPerson) -> Self:
         """
         Удаляет агента из окружения.
 
-        :param agent: Агент для удаления.
-        :type agent: TinyPerson
-        :return: self для возможности вызова цепочки.
-        :rtype: TinyWorld
+        Args:
+            agent (TinyPerson): Агент для удаления.
+
+        Returns:
+            Self: Возвращает self для цепочного вызова.
         """
-        logger.debug(f'Удаление агента {agent.name} из окружения.')
+        logger.debug(f"Удаление агента {agent.name} из окружения.")
         self.agents.remove(agent)
         del self.name_to_agent[agent.name]
 
-        return self  # для цепочки
-
-    def remove_all_agents(self) -> "TinyWorld":
+        return self # for chaining
+    
+    def remove_all_agents(self) -> Self:
         """
         Удаляет всех агентов из окружения.
-        :return: self для возможности вызова цепочки.
-        :rtype: TinyWorld
+
+        Returns:
+            Self: Возвращает self для цепочного вызова.
         """
-        logger.debug(f'Удаление всех агентов из окружения.')
+        logger.debug(f"Удаление всех агентов из окружения.")
         self.agents = []
         self.name_to_agent = {}
 
-        return self  # для цепочки
+        return self # for chaining
 
     def get_agent_by_name(self, name: str) -> TinyPerson | None:
         """
-        Возвращает агента по имени.
+        Возвращает агента по имени. Если агента нет, возвращает None.
 
-        :param name: Имя агента.
-        :type name: str
-        :return: Агент с указанным именем или None, если такого агента нет.
-        :rtype: TinyPerson, optional
+        Args:
+            name (str): Имя агента для поиска.
+
+        Returns:
+            TinyPerson: Агент с указанным именем, или None.
         """
         if name in self.name_to_agent:
             return self.name_to_agent[name]
         else:
             return None
-
+    
     #######################################################################
     # Обработчики действий
-    #
-    # Действия агентов обрабатываются окружением,
-    # так как они имеют эффект за пределами агента.
     #######################################################################
     @transactional
-    def _handle_actions(self, source: TinyPerson, actions: list) -> None:
+    def _handle_actions(self, source: TinyPerson, actions: List[dict]):
         """
         Обрабатывает действия, выполненные агентами.
 
-        :param source: Агент, выполнивший действие.
-        :type source: TinyPerson
-        :param actions: Список действий, выполненных агентом.
-        :type actions: list
+        Args:
+            source (TinyPerson): Агент, выполнивший действия.
+            actions (list): Список действий агента.
         """
         for action in actions:
-            action_type = action['type']  # это единственное обязательное поле
-            content = action['content'] if 'content' in action else None
-            target = action['target'] if 'target' in action else None
+            action_type = action['type']
+            content = action.get('content')
+            target = action.get('target')
 
-            logger.debug(
-                f'[{self.name}] Обработка действия {action_type} от агента {name_or_empty(source)}. Содержание: {content}, цель: {target}.')
+            logger.debug(f"[{self.name}] Обработка действия {action_type} от агента {name_or_empty(source)}. Содержание: {content}, цель: {target}.")
 
-            # только некоторые действия требуют вмешательства окружения
             if action_type == 'REACH_OUT':
                 self._handle_reach_out(source, content, target)
             elif action_type == 'TALK':
                 self._handle_talk(source, content, target)
 
     @transactional
-    def _handle_reach_out(self, source_agent: TinyPerson, content: str, target: str) -> None:
+    def _handle_reach_out(self, source_agent: TinyPerson, content: str, target: str):
         """
         Обрабатывает действие REACH_OUT.
 
-        :param source_agent: Агент, выполнивший действие.
-        :type source_agent: TinyPerson
-        :param content: Содержание сообщения.
-        :type content: str
-        :param target: Цель сообщения.
-        :type target: str
+        Args:
+            source_agent (TinyPerson): Агент, инициирующий действие.
+            content (str): Содержание сообщения.
+            target (str): Цель сообщения.
         """
-
-        # реализация по умолчанию всегда позволяет REACH_OUT выполниться.
         target_agent = self.get_agent_by_name(target)
-
+        
         source_agent.make_agent_accessible(target_agent)
         target_agent.make_agent_accessible(source_agent)
 
-        source_agent.socialize(f'{name_or_empty(target_agent)} был успешно достигнут, и теперь доступен для взаимодействия.',
-                               source=self)
-        target_agent.socialize(f'{name_or_empty(source_agent)} обратился к вам, и теперь доступен для взаимодействия.',
-                               source=self)
+        source_agent.socialize(f"{name_or_empty(target_agent)} был успешно достигнут, и теперь доступен для взаимодействия.", source=self)
+        target_agent.socialize(f"{name_or_empty(source_agent)} обратился к вам, и теперь доступен для взаимодействия.", source=self)
 
     @transactional
-    def _handle_talk(self, source_agent: TinyPerson, content: str, target: str) -> None:
+    def _handle_talk(self, source_agent: TinyPerson, content: str, target: str):
         """
-        Обрабатывает действие TALK.
+        Обрабатывает действие TALK, доставляя сообщение цели.
 
-        Доставляет сообщение указанному агенту.
-
-        :param source_agent: Агент, выполнивший действие.
-        :type source_agent: TinyPerson
-        :param content: Содержание сообщения.
-        :type content: str
-        :param target: Цель сообщения.
-        :type target: str
+        Args:
+            source_agent (TinyPerson): Агент, инициирующий действие.
+            content (str): Содержание сообщения.
+            target (str): Цель сообщения.
         """
         target_agent = self.get_agent_by_name(target)
 
-        logger.debug(
-            f'[{self.name}] Доставка сообщения от {name_or_empty(source_agent)} к {name_or_empty(target_agent)}.')
+        logger.debug(f"[{self.name}] Доставка сообщения от {name_or_empty(source_agent)} к {name_or_empty(target_agent)}.")
 
         if target_agent is not None:
             target_agent.listen(content, source=source_agent)
@@ -496,112 +480,106 @@ class TinyWorld:
     # Методы взаимодействия
     #######################################################################
     @transactional
-    def broadcast(self, speech: str, source: AgentOrWorld = None) -> None:
+    def broadcast(self, speech: str, source: AgentOrWorld=None):
         """
-        Доставляет сообщение всем агентам в окружении.
+        Рассылает сообщение всем агентам в окружении.
 
-        :param speech: Содержание сообщения.
-        :type speech: str
-        :param source: Источник сообщения.
-        :type source: AgentOrWorld, optional
+        Args:
+            speech (str): Содержание сообщения.
+            source (AgentOrWorld): Агент или окружение, отправившее сообщение.
         """
-        logger.debug(f'[{self.name}] Широковещательное сообщение: \'{speech}\'.')
+        logger.debug(f"[{self.name}] Рассылка сообщения: \'{speech}\'.")
 
         for agent in self.agents:
-            # не доставлять сообщение источнику
             if agent != source:
                 agent.listen(speech, source=source)
-
+    
     @transactional
-    def broadcast_thought(self, thought: str, source: AgentOrWorld = None) -> None:
+    def broadcast_thought(self, thought: str, source: AgentOrWorld=None):
         """
-        Распространяет мысль среди всех агентов в окружении.
+        Рассылает мысль всем агентам в окружении.
 
-        :param thought: Содержание мысли.
-        :type thought: str
+        Args:
+            thought (str): Содержание мысли.
         """
-        logger.debug(f'[{self.name}] Широковещательная мысль: \'{thought}\'.')
+        logger.debug(f"[{self.name}] Рассылка мысли: \'{thought}\'.")
 
         for agent in self.agents:
             agent.think(thought)
-
+    
     @transactional
-    def broadcast_internal_goal(self, internal_goal: str) -> None:
+    def broadcast_internal_goal(self, internal_goal: str):
         """
-        Распространяет внутреннюю цель среди всех агентов в окружении.
+        Рассылает внутреннюю цель всем агентам в окружении.
 
-        :param internal_goal: Содержание внутренней цели.
-        :type internal_goal: str
+        Args:
+            internal_goal (str): Содержание внутренней цели.
         """
-        logger.debug(f'[{self.name}] Широковещательная внутренняя цель: \'{internal_goal}\'.')
+        logger.debug(f"[{self.name}] Рассылка внутренней цели: \'{internal_goal}\'.")
 
         for agent in self.agents:
             agent.internalize_goal(internal_goal)
-
+    
     @transactional
-    def broadcast_context_change(self, context: list) -> None:
+    def broadcast_context_change(self, context: list):
         """
-        Распространяет изменение контекста среди всех агентов в окружении.
+        Рассылает изменение контекста всем агентам в окружении.
 
-        :param context: Содержание изменения контекста.
-        :type context: list
+        Args:
+            context (list): Изменение контекста.
         """
-        logger.debug(f'[{self.name}] Широковещательное изменение контекста: \'{context}\'.')
+        logger.debug(f"[{self.name}] Рассылка изменения контекста: \'{context}\'.")
 
         for agent in self.agents:
             agent.change_context(context)
 
-    def make_everyone_accessible(self) -> None:
+    def make_everyone_accessible(self):
         """
-        Делает всех агентов в окружении доступными друг другу.
+        Делает всех агентов доступными друг для друга.
         """
         for agent_1 in self.agents:
             for agent_2 in self.agents:
                 if agent_1 != agent_2:
                     agent_1.make_agent_accessible(agent_2)
+            
 
     ###########################################################
     # Удобства форматирования
     ###########################################################
 
-    def _display_communication(self, cur_step: int, total_steps: int, kind: str,
-                              timedelta_per_step: timedelta = None) -> None:
+    def _display_communication(self, cur_step: int, total_steps: int, kind: str, timedelta_per_step: timedelta = None):
         """
-        Отображает текущую коммуникацию и сохраняет ее в буфере.
+        Отображает текущее сообщение и сохраняет его в буфере.
 
-        :param cur_step: Текущий шаг.
-        :type cur_step: int
-        :param total_steps: Общее количество шагов.
-        :type total_steps: int
-        :param kind: Тип коммуникации.
-        :type kind: str
-        :param timedelta_per_step: Временной интервал шага.
-        :type timedelta_per_step: timedelta, optional
+        Args:
+            cur_step (int): Текущий шаг симуляции.
+            total_steps (int): Общее количество шагов симуляции.
+            kind (str): Тип сообщения.
+            timedelta_per_step (timedelta, optional): Временной интервал между шагами.
         """
         if kind == 'step':
-            rendering = self._pretty_step(cur_step=cur_step, total_steps=total_steps,
-                                          timedelta_per_step=timedelta_per_step)
+            rendering = self._pretty_step(cur_step=cur_step, total_steps=total_steps, timedelta_per_step=timedelta_per_step)
         else:
-            raise ValueError(f'Неизвестный тип коммуникации: {kind}')
+            raise ValueError(f"Неизвестный тип сообщения: {kind}")
 
-        self._push_and_display_latest_communication({'content': rendering, 'kind': kind})
-
-    def _push_and_display_latest_communication(self, rendering: dict) -> None:
+        self._push_and_display_latest_communication({"content": rendering, "kind": kind})
+    
+    def _push_and_display_latest_communication(self, rendering: dict):
         """
-        Добавляет последние коммуникации в буфер.
+        Сохраняет последнее сообщение в буфер и отображает его.
 
-        :param rendering: Данные коммуникации.
-        :type rendering: dict
+        Args:
+            rendering (dict): Сообщение для отображения.
         """
         self._displayed_communications_buffer.append(rendering)
         self._display(rendering)
 
     def pop_and_display_latest_communications(self) -> list:
         """
-        Извлекает последние коммуникации из буфера и отображает их.
+        Извлекает и отображает все последние сообщения.
 
-        :return: Список извлеченных коммуникаций.
-        :rtype: list
+        Returns:
+            list: Список сообщений.
         """
         communications = self._displayed_communications_buffer
         self._displayed_communications_buffer = []
@@ -609,32 +587,30 @@ class TinyWorld:
         for communication in communications:
             self._display(communication)
 
-        return communications
+        return communications    
 
-    def _display(self, communication: dict | str) -> None:
+    def _display(self, communication: dict | str):
         """
-        Отображает коммуникацию в консоли.
+        Отображает сообщение.
 
-        :param communication: Данные коммуникации.
-        :type communication: dict | str
+        Args:
+            communication (dict|str): Сообщение для отображения.
         """
-        # извлекаем данные для отображения
         if isinstance(communication, dict):
-            content = communication['content']
-            kind = communication['kind']
+            content = communication["content"]
+            kind = communication["kind"]
         else:
             content = communication
             kind = None
-
-        # отображаем в зависимости от типа
+        
         if kind == 'step':
             self.console.rule(content)
         else:
             self.console.print(content)
-
-    def clear_communications_buffer(self) -> None:
+    
+    def clear_communications_buffer(self):
         """
-        Очищает буфер коммуникаций.
+        Очищает буфер сообщений.
         """
         self._displayed_communications_buffer = []
 
@@ -642,76 +618,65 @@ class TinyWorld:
         """
         Возвращает строковое представление объекта.
 
-        :return: Строковое представление объекта.
-        :rtype: str
+        Returns:
+            str: Строковое представление объекта.
         """
-        return f'TinyWorld(name=\'{self.name}\')'
+        return f"TinyWorld(name='{self.name}')"
 
     def _pretty_step(self, cur_step: int, total_steps: int, timedelta_per_step: timedelta = None) -> str:
         """
-        Форматирует строку для отображения шага.
+        Форматирует сообщение о шаге.
 
-        :param cur_step: Текущий шаг.
-        :type cur_step: int
-        :param total_steps: Общее количество шагов.
-        :type total_steps: int
-        :param timedelta_per_step: Временной интервал шага.
-        :type timedelta_per_step: timedelta, optional
-        :return: Отформатированная строка.
-        :rtype: str
+        Args:
+            cur_step (int): Текущий шаг.
+            total_steps (int): Общее количество шагов.
+            timedelta_per_step (timedelta, optional): Временной интервал между шагами.
+
+        Returns:
+            str: Отформатированное сообщение о шаге.
         """
-        rendering = f'{self.name} шаг {cur_step} из {total_steps}'
+        rendering = f"{self.name} шаг {cur_step} из {total_steps}"
         if timedelta_per_step is not None:
-            rendering += f' ({pretty_datetime(self.current_datetime)})'
+            rendering += f" ({pretty_datetime(self.current_datetime)})"
 
         return rendering
 
-    def pp_current_interactions(self, simplified: bool = True, skip_system: bool = True) -> None:
+    def pp_current_interactions(self, simplified: bool = True, skip_system: bool = True):
         """
-        Выводит в консоль текущие сообщения агентов в окружении.
+        Выводит в консоль текущие сообщения агентов.
 
-        :param simplified: Флаг упрощенного вывода.
-        :type simplified: bool, optional
-        :param skip_system: Флаг пропуска системных сообщений.
-        :type skip_system: bool, optional
+        Args:
+            simplified (bool, optional): Если True, вывод упрощен. Defaults to True.
+            skip_system (bool, optional): Если True, системные сообщения пропускаются. Defaults to True.
         """
         print(self.pretty_current_interactions(simplified=simplified, skip_system=skip_system))
 
-    def pretty_current_interactions(self, simplified: bool = True, skip_system: bool = True,
-                                   max_content_length: int = 1000, first_n: int = None, last_n: int = None,
-                                   include_omission_info: bool = True) -> str:
+    def pretty_current_interactions(self, simplified: bool = True, skip_system: bool = True, max_content_length: int = default["max_content_display_length"], first_n:int = None, last_n:int = None, include_omission_info:bool = True) -> str:
         """
-        Возвращает форматированную строку с текущими сообщениями агентов в окружении.
+        Возвращает отформатированную строку с сообщениями агентов.
 
-        :param simplified: Флаг упрощенного вывода.
-        :type simplified: bool, optional
-        :param skip_system: Флаг пропуска системных сообщений.
-        :type skip_system: bool, optional
-        :param max_content_length: Максимальная длина содержимого сообщения.
-        :type max_content_length: int, optional
-        :param first_n: Вывести первые N сообщений.
-        :type first_n: int, optional
-        :param last_n: Вывести последние N сообщений.
-        :type last_n: int, optional
-        :param include_omission_info: Включить информацию о пропущенных сообщениях.
-        :type include_omission_info: bool, optional
-        :return: Отформатированная строка.
-        :rtype: str
+        Args:
+            simplified (bool, optional): Если True, вывод упрощен. Defaults to True.
+            skip_system (bool, optional): Если True, системные сообщения пропускаются. Defaults to True.
+            max_content_length (int, optional): Максимальная длина сообщения. Defaults to default["max_content_display_length"].
+            first_n (int, optional): Количество первых сообщений для отображения. Defaults to None.
+            last_n (int, optional): Количество последних сообщений для отображения. Defaults to None.
+            include_omission_info (bool, optional): Если True, то выводится информация о пропущенных сообщениях. Defaults to True.
+
+        Returns:
+             str: Отформатированная строка с сообщениями агентов.
         """
         agent_contents = []
 
         for agent in self.agents:
-            agent_content = f'#### Взаимодействия с точки зрения агента {agent.name}:\\n'
-            agent_content += f'**НАЧАЛО ИСТОРИИ АГЕНТА {agent.name}.**\\n '
-            agent_content += agent.pretty_current_interactions(simplified=simplified, skip_system=skip_system,
-                                                              max_content_length=max_content_length, first_n=first_n,
-                                                              last_n=last_n,
-                                                              include_omission_info=include_omission_info) + '\\n'
-            agent_content += f'**КОНЕЦ ИСТОРИИ АГЕНТА {agent.name}.**\\n\\n'
+            agent_content = f"#### Взаимодействия от лица агента {agent.name}:\\n"
+            agent_content += f"**НАЧАЛО ИСТОРИИ АГЕНТА {agent.name}.**\\n "
+            agent_content += agent.pretty_current_interactions(simplified=simplified, skip_system=skip_system, max_content_length=max_content_length, first_n=first_n, last_n=last_n, include_omission_info=include_omission_info) + "\\n"
+            agent_content += f"**КОНЕЦ ИСТОРИИ АГЕНТА {agent.name}.**\\n\\n"
             agent_contents.append(agent_content)
-
-        return '\\n'.join(agent_contents)
-
+            
+        return "\\n".join(agent_contents)
+    
     #######################################################################
     # IO
     #######################################################################
@@ -720,12 +685,11 @@ class TinyWorld:
         """
         Кодирует полное состояние окружения в словарь.
 
-        :return: Словарь с полным состоянием окружения.
-        :rtype: dict
+        Returns:
+            dict: Словарь, содержащий полное состояние окружения.
         """
         to_copy = copy.copy(self.__dict__)
 
-        # удаление ненужных полей
         del to_copy['console']
         del to_copy['agents']
         del to_copy['name_to_agent']
@@ -733,145 +697,151 @@ class TinyWorld:
 
         state = copy.deepcopy(to_copy)
 
-        # агенты кодируются отдельно
-        state['agents'] = [agent.encode_complete_state() for agent in self.agents]
-
-        # дата тоже кодируется отдельно
-        state['current_datetime'] = self.current_datetime.isoformat()
+        state["agents"] = [agent.encode_complete_state() for agent in self.agents]
+        state["current_datetime"] = self.current_datetime.isoformat()
 
         return state
-
-    def decode_complete_state(self, state: dict) -> "TinyWorld":
+    
+    def decode_complete_state(self, state: dict) -> Self:
         """
         Декодирует полное состояние окружения из словаря.
 
-        :param state: Словарь с полным состоянием окружения.
-        :type state: dict
-        :return: Объект окружения.
-        :rtype: TinyWorld
+        Args:
+            state (dict): Словарь с состоянием окружения.
+
+        Returns:
+            Self: Восстановленное окружение.
         """
         state = copy.deepcopy(state)
 
-        #################################
-        # восстановление агентов
-        #################################
         self.remove_all_agents()
-        for agent_state in state['agents']:
+        for agent_state in state["agents"]:
             try:
                 try:
-                    agent = TinyPerson.get_agent_by_name(agent_state['name'])
+                    agent = TinyPerson.get_agent_by_name(agent_state["name"])
                 except Exception as e:
-                    raise ValueError(f'Не удалось найти агента {agent_state["name"]} для окружения {self.name}.') from e
-
+                    raise ValueError(f"Не удалось найти агента {agent_state['name']} для окружения {self.name}.") from e
+                
                 agent.decode_complete_state(agent_state)
                 self.add_agent(agent)
-
+                
             except Exception as e:
-                raise ValueError(f'Не удалось декодировать агента {agent_state["name"]} для окружения {self.name}.') from e
+                raise ValueError(f"Не удалось декодировать агента {agent_state['name']} для окружения {self.name}.") from e
+        
+        del state["agents"]
+        state["current_datetime"] = datetime.fromisoformat(state["current_datetime"])
 
-        # удаление агентов, чтобы обновить остальное состояние
-        del state['agents']
-
-        # восстановление даты
-        state['current_datetime'] = datetime.fromisoformat(state['current_datetime'])
-
-        # восстановление остальных полей
         self.__dict__.update(state)
 
         return self
 
     @staticmethod
-    def add_environment(environment: "TinyWorld") -> None:
+    def add_environment(environment: Self):
         """
-        Добавляет окружение в список всех окружений.
+        Добавляет окружение в список всех окружений. Имена должны быть уникальными.
 
-        Имена окружений должны быть уникальными.
+        Args:
+            environment (TinyWorld): Окружение для добавления.
 
-        :param environment: Окружение для добавления.
-        :type environment: TinyWorld
-        :raises ValueError: Если имя окружения не уникально.
+        Raises:
+            ValueError: Если имя окружения не уникально.
         """
         if environment.name in TinyWorld.all_environments:
-            raise ValueError(f'Имена окружений должны быть уникальными, но \'{environment.name}\' уже определено.')
+            raise ValueError(f"Имена окружений должны быть уникальными, но \'{environment.name}\' уже определено.")
         else:
             TinyWorld.all_environments[environment.name] = environment
+        
 
     @staticmethod
-    def set_simulation_for_free_environments(simulation) -> None:
+    def set_simulation_for_free_environments(simulation: Any):
         """
-        Устанавливает симуляцию, если она None.
+        Устанавливает симуляцию для свободных окружений.
 
-        Позволяет свободным окружениям быть захваченными в рамках симуляции.
-
-        :param simulation: Объект симуляции.
-        :type simulation: Simulation
+        Args:
+            simulation (Any): Симуляция для установки.
         """
         for environment in TinyWorld.all_environments.values():
             if environment.simulation_id is None:
                 simulation.add_environment(environment)
-
+    
     @staticmethod
-    def get_environment_by_name(name: str) -> "TinyWorld" | None:
+    def get_environment_by_name(name: str) -> Self | None:
         """
         Возвращает окружение по имени.
 
-        :param name: Имя окружения.
-        :type name: str
-        :return: Окружение с указанным именем или None, если такого окружения нет.
-        :rtype: TinyWorld, optional
+        Args:
+            name (str): Имя окружения для поиска.
+
+        Returns:
+            TinyWorld: Окружение с указанным именем.
         """
         if name in TinyWorld.all_environments:
             return TinyWorld.all_environments[name]
         else:
             return None
-
+    
     @staticmethod
-    def clear_environments() -> None:
+    def clear_environments():
         """
         Очищает список всех окружений.
         """
         TinyWorld.all_environments = {}
 
-
 class TinySocialNetwork(TinyWorld):
     """
-    Класс для моделирования социальной сети.
+    Класс для социальных сетей, расширяет TinyWorld.
 
-    :ivar relations: Словарь связей между агентами.
-    :vartype relations: dict
+    Атрибуты:
+        relations (dict): Словарь отношений между агентами.
     """
     def __init__(self, name: str, broadcast_if_no_target: bool = True):
         """
         Создает новую социальную сеть.
 
-        :param name: Имя окружения.
-        :type name: str
-        :param broadcast_if_no_target: Флаг трансляции действий.
-        :type broadcast_if_no_target: bool
+        Args:
+            name (str): Имя социальной сети.
+            broadcast_if_no_target (bool): Если True, транслирует действия через отношения.
         """
-
         super().__init__(name, broadcast_if_no_target=broadcast_if_no_target)
-
         self.relations = {}
-
+    
     @transactional
-    def add_relation(self, agent_1: TinyPerson, agent_2: TinyPerson, name: str = 'default') -> "TinySocialNetwork":
+    def add_relation(self, agent_1: TinyPerson, agent_2: TinyPerson, name: str = "default") -> Self:
         """
-        Добавляет связь между двумя агентами.
+        Добавляет отношение между двумя агентами.
 
-        :param agent_1: Первый агент.
-        :type agent_1: TinyPerson
-        :param agent_2: Второй агент.
-        :type agent_2: TinyPerson
-        :param name: Имя связи.
-        :type name: str, optional
-        :return: self для возможности вызова цепочки.
-        :rtype: TinySocialNetwork
+        Args:
+            agent_1 (TinyPerson): Первый агент.
+            agent_2 (TinyPerson): Второй агент.
+            name (str): Имя отношения.
+
+        Returns:
+            Self: Возвращает self для цепочного вызова.
         """
-        logger.debug(f'Добавление связи {name} между {agent_1.name} и {agent_2.name}.')
+        logger.debug(f"Добавление отношения {name} между {agent_1.name} и {agent_2.name}.")
 
-        # агенты должны быть в окружении, если нет, они добавляются
         if agent_1 not in self.agents:
             self.agents.append(agent_1)
         if agent_2 not in self.agents:
-            self.agents.append(
+            self.agents.append(agent_2)
+
+        if name in self.relations:
+            self.relations[name].append((agent_1, agent_2))
+        else:
+            self.relations[name] = [(agent_1, agent_2)]
+
+        return self # for chaining
+    
+    @transactional
+    def _update_agents_contexts(self):
+        """
+        Обновляет контекст агентов на основе текущего состояния мира.
+        """
+        for agent in self.agents:
+            agent.make_all_agents_inaccessible()
+
+        for relation_name, relation in self.relations.items():
+            logger.debug(f"Обновление контекста агентов для отношения {relation_name}.")
+            for agent_1, agent_2 in relation:
+                agent_1.make_agent_accessible(agent_2)
+                agent_2.make_

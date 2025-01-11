@@ -1,112 +1,109 @@
 # Анализ кода модуля `graber.py`
 
 **Качество кода**
-8
--  Плюсы
-    - Код использует docstring для описания модуля.
-    - Используется наследование от класса `Graber` из модуля `src.suppliers.graber`.
-    - Присутствует инициализация класса с префиксом поставщика.
-    - Используется кастомный декоратор для обработки всплывающих окон (хотя и закомментирован).
--  Минусы
-    - Отсутствуют необходимые импорты `Callable`, `wraps`, `ExecuteLocatorException`.
-    - Не используется `from src.logger.logger import logger` для логирования, хотя он импортирован.
-    - Комментарии в коде не в формате reStructuredText (RST).
-    -  Класс `Context` используется как глобальная переменная. Это антипаттерн.
-    - Декоратор `@close_pop_up` закомментирован, хотя предполагается его использование.
-    -  Отсутствует документация в стиле RST для класса и методов.
+7
+-   Плюсы
+    -   Код имеет базовую структуру, включая импорты и определение класса.
+    -   Используется наследование от класса `Graber` (`Grbr`).
+    -   Присутствует инициализация класса и установка префикса поставщика.
+    -   Есть заготовка для кастомного декоратора (хотя и закомментирована).
+    -   Присутствуют docstring для модуля.
+-   Минусы
+    -   Отсутствует docstring для класса `Graber` и метода `__init__`.
+    -   Не все импорты используются.
+    -   Не используется `j_loads` или `j_loads_ns` для загрузки json.
+    -   Присутствует шаблон декоратора, который не используется.
+    -   Используется try-except с `logger.debug` вместо `logger.error`.
+    -   Некоторые комментарии не соответствуют стандарту RST.
+    -   Нет примеров использования.
 
 **Рекомендации по улучшению**
 
-1. Добавить отсутствующие импорты `Callable`, `wraps` из `functools` и `ExecuteLocatorException` из `src.webdriver.exceptions`.
-2. Использовать `from src.logger.logger import logger` для логирования ошибок.
-3. Переписать все комментарии и docstring в формате RST.
-4. Раскомментировать и доработать декоратор `close_pop_up` для использования.
-5. Использовать более явные способы передачи данных, вместо использования глобального `Context`.
-6.  Добавить описание для класса и методов в формате RST.
-7. Избегать использования `...` в коде (если это не преднамеренная остановка для отладки).
+1.  **Документация**:
+    -   Добавить docstring для класса `Graber` и метода `__init__`.
+    -   Уточнить docstring модуля, указать назначение класса.
+2.  **Импорты**:
+    -   Удалить неиспользуемый импорт `header`.
+    -   Импортировать `wraps` из `functools`, если используется декоратор.
+3.  **Декоратор**:
+    -   Убрать закомментированный код декоратора, если он не используется, или реализовать его.
+    -   Если декоратор используется, импортировать `wraps` из `functools`.
+4.  **Обработка ошибок**:
+    -   Использовать `logger.error` вместо `logger.debug` для ошибок.
+    -   Использовать `try-except` только в случае необходимости обработки конкретных ошибок.
+5.  **Общие улучшения**:
+    -   Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+    -   Добавить комментарии в формате RST ко всем функциям, методам и классам.
+    -   Использовать `from src.logger.logger import logger` для логирования ошибок.
+    -   Избегать избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
+"""
+.. module:: src.suppliers.cdata
+    :platform: Windows, Unix
+    :synopsis:  Класс для сбора данных о товарах с сайта `cdata.co.il`.
+        Предоставляет функции для обработки полей товаров, наследуя базовую функциональность от класса `Graber`.
+        Позволяет переопределять методы обработки полей для нестандартных ситуаций.
+        Использует декораторы для выполнения предварительных действий перед запросом к веб-драйверу.
+        ------------------
+        Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор.
+        Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал, надо передать значение
+        в `Context.locator`. Если надо реализовать свой декоратор - раскомментируйте строки с декоратором и переопределите его поведение.
 
 """
-Модуль для сбора данных о товарах с сайта cdata.co.il.
-=====================================================
-
-Этот модуль содержит класс :class:`Graber`, который наследуется от :class:`src.suppliers.graber.Graber`
-и предназначен для сбора данных о товарах с сайта `cdata.co.il`.
-Модуль переопределяет некоторые методы родительского класса для обработки полей.
-
-Пример использования
---------------------
-
-Пример создания экземпляра класса `Graber`:
-
-.. code-block:: python
-
-    from src.webdriver.driver import Driver
-    driver = Driver()
-    graber = Graber(driver=driver)
-"""
-
 
 from typing import Any, Callable
-from functools import wraps
-
+# from functools import wraps # если будет использоваться декоратор
 from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.webdriver.driver import Driver
-from src.webdriver.exceptions import ExecuteLocatorException
 from src.logger.logger import logger
+# from src.webdriver.exceptions import ExecuteLocatorException # если будет использоваться декоратор
 
 #
 #
 #           DECORATOR TEMPLATE.
 #
-def close_pop_up(value: Any = None) -> Callable:
-    """
-    Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
-
-    :param value: Дополнительное значение для декоратора.
-    :type value: Any
-    :return: Декоратор, оборачивающий функцию.
-    :rtype: Callable
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # Код исполняет попытку закрытия всплывающего окна.
-                await Context.driver.execute_locator(Context.locator_for_decorator)
-            except ExecuteLocatorException as e:
-                # Логирование ошибки при выполнении локатора.
-                logger.debug(f'Ошибка выполнения локатора: {e}')
-            # Код исполняет вызов основной функции.
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
+# def close_pop_up(value: Any = None) -> Callable:
+#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+#
+#     Args:
+#         value (Any): Дополнительное значение для декоратора.
+#
+#     Returns:
+#         Callable: Декоратор, оборачивающий функцию.
+#     """
+#     def decorator(func: Callable) -> Callable:
+#         @wraps(func)
+#         async def wrapper(*args, **kwargs):
+#             try:
+#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close
+#                 ...
+#             except ExecuteLocatorException as e:
+#                 logger.error(f'Ошибка выполнения локатора: {e}')
+#             return await func(*args, **kwargs)  # Await the main function
+#         return wrapper
+#     return decorator
 
 class Graber(Grbr):
     """
-    Класс для сбора данных о товарах с сайта cdata.co.il.
+    Класс для сбора данных о товарах с сайта `cdata.co.il`.
 
-    Наследуется от :class:`src.suppliers.graber.Graber`.
+    Наследует функциональность от класса :class:`src.suppliers.graber.Graber`.
+    Предоставляет методы для обработки различных полей товаров.
     """
     supplier_prefix: str
-    
+    """Префикс поставщика."""
     def __init__(self, driver: Driver):
         """
         Инициализация класса сбора полей товара.
 
-        :param driver: Экземпляр веб-драйвера.
-        :type driver: Driver
+        Args:
+            driver (:obj:`Driver`): Экземпляр веб-драйвера для взаимодействия с сайтом.
         """
         self.supplier_prefix = 'cdata'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
-        # Код устанавливает значение локатора для декоратора в `None`.
         Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
-
 ```

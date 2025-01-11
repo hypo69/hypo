@@ -1,41 +1,31 @@
 # Анализ кода модуля README.md
 
 **Качество кода**
-8
--   Плюсы
-    -   Хорошо структурированный и информативный файл README.md.
-    -   Содержит подробное описание проекта, его целей, возможностей и примеров использования.
-    -   Включает инструкции по установке и использованию библиотеки.
-    -   Охватывает важные аспекты, такие как принципы работы, структура проекта, возможности настройки.
-    -   Содержит разделы о вкладе в проект, благодарностях, цитировании и юридических аспектах.
-    -   Использует Markdown для структурирования информации, делая ее читаемой и понятной.
-    -   Присутствуют примеры использования и скриншоты, наглядно демонстрирующие возможности библиотеки.
-    -   Есть разделы о кэшировании и файле `config.ini` для настройки библиотеки.
--   Минусы
-    -   Некоторые разделы могли бы быть более подробными (например, описание TinyTool, TinyStory, TinyPersonValidator и др.).
-    -   Отсутствует автоматическая проверка качества кода, а также примеры кода, которые могут быть проверены (тесты).
+9
+ -  Плюсы
+    - Документ хорошо структурирован и содержит подробное описание проекта.
+    -  Используется Markdown для форматирования, что обеспечивает читаемость.
+    -  Представлены примеры использования библиотеки с иллюстрациями.
+    -  Подробно описаны шаги установки и настройки окружения.
+    -  Четко сформулированы принципы работы библиотеки и ее отличия от других решений.
+    -  Даны инструкции по участию в проекте и лицензированию.
+    -  Присутствует юридическое предупреждение об ответственности за использование результатов.
+    -  Есть информация о команде разработчиков и благодарности.
+ -  Минусы
+    -   Отсутствуют конкретные примеры кода для демонстрации использования функций, хотя сами функции и их назначение хорошо описаны.
+    -   Некоторые разделы, например, "Utilities", описаны поверхностно, без подробных примеров.
+    -   Нет четкой структуры docstring в примерах кода, что затрудняет автоматическую генерацию документации.
 
 **Рекомендации по улучшению**
-1. **Более подробное описание компонентов**:
-    - Добавить более детальное описание таких компонентов, как `TinyTool`, `TinyStory`, `TinyPersonValidator`, и других, с примерами их использования. Это поможет пользователям лучше понять их назначение и возможности.
-2. **Улучшение раздела "Contributing"**:
-    -  В разделе "Contributing" можно добавить более подробные инструкции по созданию тестов и демонстраций, а также конкретные примеры того, как и куда добавлять новый код (например, указать конкретные файлы или каталоги).
-    -  Добавить примеры для форматирования кода, чтобы поддерживать единый стиль.
-3. **Дополнение примерами кода:**
-   -   Добавить примеры кода, которые демонстрируют использование основных компонентов библиотеки.
-   -   Рассмотреть возможность добавления более сложных примеров, показывающих взаимодействие нескольких агентов в различных средах.
-4. **Улучшение раздела "Principles"**:
-    -  Расширить описание каждого из принципов, чтобы сделать их более понятными.
-    - Можно добавить сравнение с другими подходами и технологиями.
-5. **Ссылки на документацию:**
-    -   Если есть отдельная документация к библиотеке, стоит добавить ссылку на нее.
-6. **Информация о версиях:**
-    -   Добавить информацию о версиях библиотеки и изменениях между ними.
-7.  **Уточнение примеров**:
-    - В примерах, где показан вывод (скриншоты), добавить комментарии о том, что именно на них представлено, для лучшего понимания.
+
+1.  **Добавить больше примеров кода:** В разделах "TinyPerson", "TinyWorld" и "Utilities" следует добавить конкретные примеры кода, демонстрирующие использование классов и функций. Это сделает документацию более практичной и понятной для пользователей.
+2.  **Уточнить описание утилит:** Раздел "Utilities" должен быть расширен с подробными описаниями и примерами использования каждой утилиты.
+3.  **Унифицировать docstring:**  В примерах кода нужно добавить docstring в формате, подходящем для Sphinx, как показано в инструкции, чтобы обеспечить возможность автоматической генерации документации.
+4.  **Раздел CONTRIBUTING:** Нужно описать детальнее процесс отправки `Pull Request` в репозиторий.
+5.  **Ссылки:** Все ссылки стоит оформить в виде гиперссылок.
+6. **Добавить информацию о тестировании**: Добавить пример, как можно протестировать написанный код.
 
 **Оптимизированный код**
-
 ```markdown
 # TinyTroupe 🤠🤓🥸🧐
 *LLM-powered multiagent persona simulation for imagination enhancement and business insights.*
@@ -56,13 +46,13 @@ In all of the above, and many others, we hope experimenters can **gain insights*
 
 We are releasing *TinyTroupe* at a relativelly early stage, with considerable work still to be done, because we are looking for feedback and contributions to steer development in productive directions. We are particularly interested in finding new potential use cases, for instance in specific industries. 
 
->[!NOTE] 
->🚧 **WORK IN PROGRESS: expect frequent changes**.\
->TinyTroupe is an ongoing research project, still under **very significant development** and requiring further **tidying up**. In particular, the API is still subject to frequent changes. Experimenting with API variations is essential to shape it correctly, but we are working to stabilize it and provide a more consistent and friendly experience over time. We appreciate your patience and feedback as we continue to improve the library.
+> [!NOTE] 
+> 🚧 **WORK IN PROGRESS: expect frequent changes**.
+> TinyTroupe is an ongoing research project, still under **very significant development** and requiring further **tidying up**. In particular, the API is still subject to frequent changes. Experimenting with API variations is essential to shape it correctly, but we are working to stabilize it and provide a more consistent and friendly experience over time. We appreciate your patience and feedback as we continue to improve the library.
 
->[!CAUTION] 
->⚖️ **Read the LEGAL DISCLAIMER.**\
->TinyTroupe is for research and simulation only. You are fully responsible for any use you make of the generated outputs. Various important additional legal considerations apply and constrain its use, please read the full [Legal Disclaimer](#legal-disclaimer) section below before using TinyTroupe.
+> [!CAUTION] 
+> ⚖️ **Read the LEGAL DISCLAIMER.**
+> TinyTroupe is for research and simulation only. You are fully responsible for any use you make of the generated outputs. Various important additional legal considerations apply and constrain its use, please read the full [Legal Disclaimer](#legal-disclaimer) section below before using TinyTroupe.
 
 
 ## Contents
@@ -84,11 +74,11 @@ We are releasing *TinyTroupe* at a relativelly early stage, with considerable wo
 
 To get a sense of what TinyTroupe can do, here are some examples of its use. These examples are available in the [examples/](./examples/) folder, and you can either inspect the pre-compiled Jupyter notebooks or run them yourself locally. Notice the interactive nature of TinyTroupe experiments -- just like you use Jupyter notebooks to interact with data, you can use TinyTroupe to interact with simulated people and environments, for the purpose of gaining insights.
 
->[!NOTE]
+> [!NOTE]
 > Currently, simulation outputs are better visualized against dark backgrounds, so we recommend using a dark theme in your Jupyter notebook client.
 
 ### 🧪**Example 1** *(from [interview_with_customer.ipynb](./examples/interview_with_customer.ipynb))*\
-Let\'s begin with a simple customer interview scenario, where a business consultant approaches a banker:
+Let's begin with a simple customer interview scenario, where a business consultant approaches a banker:
 <p align="center">
   <img src="./docs/example_screenshot_customer-interview-1.png" alt="An example.">
 </p>
@@ -99,8 +89,9 @@ The conversation can go on for a few steps to dig deeper and deeper until the co
 </p>
 
 
+
 ### 🧪**EXAMPLE 2** *(from [advertisement_for_tv.ipynb](./examples/advertisement_for_tv.ipynb))*\
-Let\'s evaluate some online ads options to pick the best one. Here\'s one example output for TV ad evaluation:
+Let's evaluate some online ads options to pick the best one. Here's one example output for TV ad evaluation:
 
 <p align="center">
   <img src="./docs/example_screenshot_tv-ad-1.png" alt="An example.">
@@ -113,13 +104,13 @@ Now, instead of having to carefully read what the agents said, we can extract th
 </p>
 
 ### 🧪 **EXAMPLES 3** *(from [product_brainstorming.ipynb](./examples/product_brainstorming.ipynb))*\
-And here\'s a focus group starting to brainstorm about new AI features for Microsoft Word. Instead of interacting with each agent individually, we manipulate the environment to make them interact with each other:
+And here's a focus group starting to brainstorm about new AI features for Microsoft Word. Instead of interacting with each agent individually, we manipulate the environment to make them interact with each other:
 
 <p align="center">
   <img src="./docs/example_screenshot_brainstorming-1.png" alt="An example.">
 </p>
 
-After running a simulation, we can extract the results in a machine-readable manner, to reuse elsewhere (e.g., a report generator); here\'s what we get for the above brainstorming session:
+After running a simulation, we can extract the results in a machine-readable manner, to reuse elsewhere (e.g., a report generator); here's what we get for the above brainstorming session:
 
 <p align="center">
   <img src="./docs/example_screenshot_brainstorming-2.png" alt="An example.">
@@ -137,8 +128,8 @@ To run the library, you need:
       * For OpenAI, you will need to set the `OPENAI_API_KEY` environment variable to your API key.
   - By default, TinyTroupe `config.ini` is set to use some specific API, model and related parameters. You can customize these values by including your own `config.ini` file in the same folder as the program or notebook you are running. An example of a `config.ini` file is provided in the [examples/](./examples/) folder.
 
->[!IMPORTANT]
-> **Content Filters**: To ensure no harmful content is generated during simulations, it is strongly recommended to use content filters whenever available at the API level. In particular, **if using Azure OpenAI, there\'s extensive support for content moderation, and we urge you to use it.** For details about how to do so, please consult [the corresponding Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter). If content filters are in place, and an API call is rejected by them, the library will raise an exception, as it will be unable to proceed with the simulation at that point.
+> [!IMPORTANT]
+> **Content Filters**: To ensure no harmful content is generated during simulations, it is strongly recommended to use content filters whenever available at the API level. In particular, **if using Azure OpenAI, there's extensive support for content moderation, and we urge you to use it.** For details about how to do so, please consult [the corresponding Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter). If content filters are in place, and an API call is rejected by them, the library will raise an exception, as it will be unable to proceed with the simulation at that point.
 
 
 ## Installation
@@ -155,7 +146,7 @@ To run the library, you need:
       conda activate tinytroupe
       ```
 4. Make sure you have eihter Azure OpenAI or OpenAI API keys set as environment variables, as described in the [Pre-requisites](#pre-requisites) section.
-5. Clone the repository, as we\'ll perform a local install (we **will not install from PyPI**):
+5. Clone the repository, as we'll perform a local install (we **will not install from PyPI**):
     ```bash
     git clone https://github.com/microsoft/tinytroupe
     cd tinytroupe
@@ -163,7 +154,7 @@ To run the library, you need:
   
 6. Install the library **from this repository, not PyPI**: 
       ```bash   
-      pip install .\
+      pip install .
       ```
 7. You can now run the examples in the [examples/](./examples/) folder or use TinyTroupe to create your simulations 🥳. If you want to run the examples in the 
    [examples/](./examples/) folder or modify TinyTroupe itself, however, you should clone the repository as described below.
@@ -173,7 +164,7 @@ To run the library, you need:
 
 If you want to modify TinyTroupe itself, you can install it in editable mode (i.e., changes to the code will be reflected immediately):
 ```bash
-pip install -e .\
+pip install -e .
 ```
 
 ## Principles 
@@ -254,11 +245,11 @@ lisa.define("occupation_description",
               """)
 
 lisa.define_several("personality_traits",
-                      [\
+                      [
                           {"trait": "You are curious and love to learn new things."},
                           {"trait": "You are analytical and like to solve problems."},
                           {"trait": "You are friendly and enjoy working with others."},
-                          {"trait": "You don't give up easily, and always try to find a solution. However, sometimes you can get frustrated when things don't work as expected."}\
+                          {"trait": "You don\'t give up easily, and always try to find a solution. However, sometimes you can get frustrated when things don\'t work as expected."}
                       ])
 ```
 
@@ -284,7 +275,6 @@ world.run(4)
 ```
 
 This produces the following conversation:
-
 
 ```text
 USER --> Lisa: [CONVERSATION] 
@@ -336,6 +326,7 @@ TinyTroupe provides a number of utilities and conveniences to help you create si
 In general, elements that represent simulated entities or complementary mechanisms are prefixed with `Tiny`, while those that are more infrastructural are not. This is to emphasize the simulated nature of the elements that are part of the simulation itself.
 
 ### Caching
+
 Calling LLM APIs can be expensive, thus caching strategies are important to help reduce that cost.
 TinyTroupe comes with two such mechanisms: one for the simulation state, another for the LLM calls themselves.
 
@@ -355,7 +346,7 @@ provide useful simulation management methods:
 
 #### Caching LLM API Calls
 
-This is enabled preferably in the `config.ini` file, and alternativelly via the `openai_utils.force_api_cache()`.\
+This is enabled preferably in the `config.ini` file, and alternativelly via the `openai_utils.force_api_cache()`.
 
 LLM API caching, when enabled, works at a lower and simpler level than simulation state caching. Here,
 what happens is a very straightforward: every LLM call is kept in a map from the input to the generated output;
@@ -397,6 +388,7 @@ If you would like to make a contribution, please try to follow these general gui
   - **Tests:** If you are writing some new mechanism, please also create at least a unit test `tests/unit/`, and if you can a functional scenario test (`tests/scenarios/`).
   - **Demonstrations:** If you'd like to demonstrate a new scenario, please design it preferably as a new Jupyter notebook within `examples/`.
   - **Microsoft:** If you are implementing anything that is Microsoft-specific and non-confidential, please put it under a `.../microsoft/` folder.
+  - **Pull Request:** Чтобы внести свой вклад в проект, создайте ветку, внесите изменения и создайте `Pull Request` в основную ветку. Убедитесь, что ваш `Pull Request` содержит четкое и подробное описание внесенных изменений, а также указание, к какому разделу проекта они относятся. Код должен быть хорошо отформатирован и, по возможности, содержать комментарии. Также рекомендуется включить тесты, демонстрирующие работоспособность внесенных изменений.
 
 ## Acknowledgements
 
@@ -425,7 +417,6 @@ Other special contributions were made by:
 We are working on an introductory paper that will be the official academic citation for TinyTroupe. In the meantime, please just cite this repository including the core team members as authors. For instance:
 
 >Paulo Salem, Christopher Olsen, Paulo Freire, Yi Ding, Prerit Saxena (2024). **TinyTroupe: LLM-powered multiagent persona simulation for imagination enhancement and business insights.** [Computer software]. GitHub repository. https://github.com/microsoft/tinytroupe
-
 
 Or as bibtex:
   

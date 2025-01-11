@@ -2,64 +2,83 @@
 
 **Качество кода**
 8
--  Плюсы
-    -  Код хорошо структурирован, функции имеют понятные имена.
-    -  Используется `pathlib` для работы с путями, что является хорошей практикой.
-    -  Функция `set_project_root` корректно определяет корневую директорию проекта.
-    -  Код проверяет наличие файла `settings.json` и обрабатывает исключения при его отсутствии или некорректном формате.
--  Минусы
-    - Отсутствует reStructuredText (RST) документация для модуля, функций и переменных.
-    -  Используется `json.load` вместо `j_loads` или `j_loads_ns`.
-    -  Излишнее использование стандартного `try-except` блока для чтения файла, лучше использовать `logger.error`.
-    -  Не используется логирование ошибок.
+- Плюсы
+    - Код выполняет функцию определения корневой директории проекта.
+    - Используется `pathlib` для работы с путями.
+    - Присутствует обработка исключений при чтении файла настроек.
+    - Есть описание модуля и функций.
+- Минусы
+    - Не используется `j_loads` для чтения json
+    - Отсутствуют некоторые импорты, например `logger`.
+    - Нет подробной документации для переменных.
+    - Используются двойные кавычки вместо одинарных в коде.
 
 **Рекомендации по улучшению**
-1.  Добавить RST документацию для модуля, функций и переменных.
-2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.load` для чтения файла настроек.
-3.  Использовать `logger.error` для обработки ошибок при чтении файла настроек, вместо стандартного `try-except`.
-4.  Добавить импорт `logger` из `src.logger.logger`.
-5.  Удалить неиспользуемые shebang.
+
+1.  **Импорты**: Добавить `from src.logger.logger import logger` для логирования, `from src.utils.jjson import j_loads` для чтения JSON.
+2.  **Использование `j_loads`**: Заменить `json.load` на `j_loads` для чтения файла `settings.json`.
+3.  **Использование одинарных кавычек**: Заменить двойные кавычки на одинарные для строк в коде, кроме случаев вывода.
+4.  **Обработка ошибок**: Добавить логирование ошибок с использованием `logger.error` вместо `print`.
+5.  **Документация**:
+    -   Добавить документацию для глобальных переменных `__root__` и `settings`
+    -   Привести к стандарту rst docstring
+6.  **Переменные**: Заменить тип `dict` на `dict[str, Any]` у `settings`
 
 **Оптимизированный код**
+
 ```python
+# -*- coding: utf-8 -*-
+
 """
 Модуль для определения корневой директории проекта и загрузки настроек.
-=======================================================================
+======================================================================
 
-Этот модуль определяет корневую директорию проекта и загружает настройки из файла `settings.json`.
+Модуль :mod:`header` предназначен для автоматического определения
+корневой директории проекта, что упрощает работу с путями в рамках всего проекта.
+Также модуль загружает настройки из файла `settings.json`.
 
 Пример использования
 --------------------
 
+Для определения корневой директории проекта и загрузки настроек необходимо выполнить импорт:
+
 .. code-block:: python
 
-    from src.suppliers.aliexpress.gui.header import settings
-    print(settings)
+    from src.suppliers.aliexpress.gui.header import __root__, settings
+
+    print(__root__) # Корневая директория
+    print(settings) # Словарь с настройками
 """
-# -*- coding: utf-8 -*-
-
-
 
 import sys
 from pathlib import Path
-# TODO: добавить этот импорт
-from src.utils.jjson import j_loads
-from src.logger.logger import logger # импорт logger
+from typing import Any
+
 from packaging.version import Version
-from src import gs
+from src.logger.logger import logger # Импорт logger
+from src.utils.jjson import j_loads # Импорт j_loads
 
 
-def set_project_root(marker_files=('__root__','.git')) -> Path:
+def set_project_root(marker_files: tuple[str, ...] = ('__root__', '.git')) -> Path:
     """
-    Определение корневого каталога проекта.
+    Определяет корневую директорию проекта, начиная с директории текущего файла.
 
-    Функция ищет корневой каталог проекта, начиная с текущего каталога файла,
-    двигаясь вверх и останавливаясь в первом каталоге, содержащем любой из файлов-маркеров.
+    Поиск ведется вверх по структуре каталогов до тех пор, пока не будет найдена
+    директория, содержащая один из маркеров, указанных в `marker_files`.
 
-    :param marker_files: Кортеж с именами файлов или каталогов для идентификации корня проекта.
-    :type marker_files: tuple
-    :return: Путь к корневому каталогу, если он найден, иначе каталог, где расположен скрипт.
+    :param marker_files: Список файлов или каталогов, обозначающих корень проекта.
+    :type marker_files: tuple[str, ...]
+    :raises FileNotFoundError: Если ни один из маркеров не найден.
+    :return: Путь к корневой директории проекта.
     :rtype: Path
+
+    :Example:
+
+    .. code-block:: python
+
+        root_path = set_project_root()
+        print(root_path)
+
     """
     __root__: Path
     current_path: Path = Path(__file__).resolve().parent
@@ -73,17 +92,21 @@ def set_project_root(marker_files=('__root__','.git')) -> Path:
     return __root__
 
 
-# Получение корневой директории проекта
-__root__ = set_project_root()
-"""Path: Путь к корневому каталогу проекта."""
+# Код исполняет поиск корневой директории проекта
+__root__: Path = set_project_root()
+"""Path: Корневая директория проекта."""
 
-settings: dict = None
-# TODO:  Используем j_loads вместо json.load и заменяем try-except на logger.error
+from src import gs
+
+settings: dict[str, Any] = None
+"""dict: Словарь с настройками проекта."""
+
 try:
-    # код загружает настройки из файла settings.json
+    # Код исполняет загрузку настроек из файла settings.json
     with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
-         settings = j_loads(settings_file)
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error(f'Ошибка при загрузке файла настроек: {e}')
+        settings = j_loads(settings_file) # Используем j_loads для чтения json
+except (FileNotFoundError, json.JSONDecodeError) as ex:
+    # Код исполняет логирование ошибки при загрузке настроек
+    logger.error('Не удалось загрузить настройки из файла settings.json', exc_info=ex)
     ...
 ```

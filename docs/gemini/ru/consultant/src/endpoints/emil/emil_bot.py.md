@@ -1,44 +1,60 @@
-# Анализ кода модуля emil_bot
+# Анализ кода модуля `emil_bot`
 
 **Качество кода**
-9
--  Плюсы
-    - Код хорошо структурирован и разбит на классы и функции.
-    - Используются асинхронные функции для обработки сообщений.
-    - Присутствует базовая обработка ошибок через `try-except`, но есть возможность для улучшения.
-    - Используется кастомный логгер `logger`.
-    - Присутствуют docstring для классов и методов.
--  Минусы
-    -   Некоторые docstring не соответствуют стандарту RST для Sphinx.
-    -   Не везде используется  `from src.logger.logger import logger`.
-    -  В `__init__` не используются type hints для mode, webdriver_name.
+7
+- Плюсы
+    - Код хорошо структурирован с использованием классов и функций.
+    - Присутствует базовая документация в формате docstring для модуля и классов.
+    - Используется `logger` для логирования.
+    - Присутствует разделение на обработчики команд и сообщений.
+- Минусы
+    - Не все функции и методы имеют docstring.
+    - Используется устаревший способ инициализации родительского класса `TelegramBot.__init__`.
+    - Не везде соблюдено форматирование кода (пробелы, перенос строк).
+    - Заглушка для распознавания речи.
+    - Инициализация токена через if-else.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**: Дополнить и исправить docstring в соответствии со стандартом RST для Sphinx, включая описание аргументов, возвращаемых значений и исключений.
-2.  **Импорты**: Использовать `from src.logger.logger import logger` для импорта логгера.
-3. **Обработка ошибок:**
-    -  Заменить `try-except` в `transcribe_voice` на логирование ошибки через `logger.error`.
-4.  **Type Hints**: Добавить type hints для переменных в методе `__init__`.
-5.  **Комментарии**: Добавить более подробные комментарии к сложным участкам кода.
-6. **Улучшение `transcribe_voice`**: Вместо заглушки, предусмотреть возможность расширения этого метода в будущем.
+1.  **Документация**:
+    - Добавить docstring к методам `handle_message`, `handle_log`, `handle_voice`, `transcribe_voice`.
+    - Уточнить назначение каждого метода в docstring.
+    - Добавить примеры использования.
+2.  **Инициализация**:
+    - Использовать `super().__init__()` для вызова родительского конструктора.
+    - Вынести логику выбора токена в отдельную функцию.
+3.  **Обработка ошибок**:
+    - Использовать `logger.error` для обработки ошибок в методах, избегая `try-except` без необходимости.
+    -  Улучшить обработку ошибок при распознавании голоса.
+4.  **Форматирование**:
+    -  Привести в соответствие PEP8.
+    -  Использовать одинарные кавычки для строк в коде, двойные кавычки только для вывода.
+5.  **Рефакторинг**:
+    - Избавиться от магических строк, заменив их на константы.
+    -  Убрать заглушку для распознавания голоса.
+6. **Логирование:**
+    - Добавить логирование в начало и конец каждой функции.
+    - Логировать все ошибки.
 
 **Оптимизированный код**
 
 ```python
+from __future__ import annotations
+
+# \\file /src/endpoints/emil/emil_bot.py
+# -*- coding: utf-8 -*-
+
+#! venv/bin/python/python3.12
 """
-Модуль для работы с Telegram ботом для emil-design.
+Telegram-бот для проекта emil-design.com
 ====================================================
-Этот модуль содержит класс :class:`EmilTelegramBot`, который наследуется от `TelegramBot`
-и предоставляет функционал для работы с Telegram ботом emil-design.
+Бот получает url поставщиков
 
 .. module:: src.endpoints.emil.emil_bot
     :platform: Windows, Unix
-    :synopsis: Telegram bot for emil-design.com
+    :synopsis: bot for emil-design.com
 
 """
-
-from __future__ import annotations
 
 import asyncio
 from pathlib import Path
@@ -72,20 +88,12 @@ import argparse
 from aiohttp import web
 from src.endpoints.bots.telegram.bot_web_hooks import create_app
 
+TEST_MODE = 'test'
+PRODUCTION_MODE = 'production'
+
 
 class EmilTelegramBot(TelegramBot):
-    """
-    Telegram bot with custom behavior for emil-design.
-
-    :ivar token: Токен Telegram бота.
-    :vartype token: str
-    :ivar config: Конфигурация бота, загруженная из emil.json.
-    :vartype config: SimpleNamespace
-    :ivar model: Модель Google Gemini для диалога с пользователем.
-    :vartype model: GoogleGenerativeAI
-    :ivar bot_handler: Обработчик команд бота.
-    :vartype bot_handler: BotHandler
-    """
+    """Telegram bot with custom behavior for emil-design."""
 
     token: str
     config = j_loads_ns(gs.path.endpoints / 'emil' / 'emil.json')
@@ -95,97 +103,103 @@ class EmilTelegramBot(TelegramBot):
     """This model is used for dialog with the user. For processing scenarios, the model defined in the `BotHandler` class is used."""
     bot_handler: BotHandler
 
-    def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox') -> None:
+    def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
         """
-        Инициализирует экземпляр EmilTelegramBot.
+        Initialize the EmilTelegramBot instance.
 
         Args:
-            mode (Optional[str], optional): Режим работы ('test' или 'production'). По умолчанию 'test'.
-            webdriver_name (Optional[str], optional): Имя вебдрайвера для использования с BotHandler. По умолчанию 'firefox'.
+            mode (Optional[str]): Operating mode, 'test' or 'production'. Defaults to 'test'.
+            webdriver_name (Optional[str]): Webdriver to use with BotHandler. Defaults to 'firefox'.
         """
-        # Устанавливаем режим работы бота
+        logger.info('Initializing EmilTelegramBot...')
         mode = mode or self.config.mode
-        # Инициализируем токен в зависимости от режима
-        self.token = (
-            gs.credentials.telegram.hypo69_test_bot
-            if mode == 'test'
-            else gs.credentials.telegram.hypo69_emil_design_bot
-        )
+        self.token = self._get_token(mode)
 
-        # Инициализируем BotHandler и TelegramBot
         self.bot_handler = BotHandler(webdriver_name=webdriver_name)
-        TelegramBot.__init__(self, self.token, self.bot_handler) # передаем bot_handler в TelegramBot
+        super().__init__(self.token, self.bot_handler)
+        logger.info('EmilTelegramBot initialized.')
 
-
-    async def handle_message(self, update: Update, context: CallbackContext) -> None:
-         """
-         Обрабатывает текстовые сообщения.
-
-         Args:
-             update (Update): Объект обновления Telegram.
-             context (CallbackContext): Контекст обратного вызова.
-         """
-         # передает обработку сообщения в BotHandler
-         await self.bot_handler.handle_message(update, context)
-
-    async def handle_log(self, update: Update, context: CallbackContext) -> None:
+    def _get_token(self, mode: str) -> str:
         """
-        Обрабатывает сообщения лога.
+        Determine the correct token based on the mode.
 
         Args:
-            update (Update): Объект обновления Telegram.
-            context (CallbackContext): Контекст обратного вызова.
-        """
-        # Получаем сообщение из обновления
-        log_message = update.message.text
-        # Логируем сообщение
-        logger.info(f"Received log message: {log_message}")
-        # Отправляем подтверждение пользователю
-        await update.message.reply_text("Log received and processed.")
-
-    async def handle_voice(self, update: Update, context: CallbackContext) -> None:
-        """
-        Обрабатывает голосовые сообщения и транскрибирует аудио.
-
-        Args:
-             update (Update): Объект обновления Telegram.
-             context (CallbackContext): Контекст обратного вызова.
-        """
-        # Передает обработку голосового сообщения в родительский класс
-        await super().handle_voice(update, context)
-
-    async def transcribe_voice(self, file_path: Path) -> str:
-        """
-        Транскрибирует голосовое сообщение, используя сервис распознавания речи.
-
-        Args:
-            file_path (Path): Путь к файлу с голосовым сообщением.
+            mode (str): Operating mode, 'test' or 'production'.
 
         Returns:
-             str: Транскрибированный текст.
-
-        Raises:
-           Exception: Если возникает ошибка при транскрибировании.
-
+            str: Telegram bot token.
         """
-        # TODO: Заменить на реальную логику распознавания речи
-        try:
-          # Код исполняет заглушку распознавания голоса
-          return 'Распознавание голоса ещё не реализовано.'
-        except Exception as ex:
-            # Логирование ошибки
-            logger.error('Ошибка транскрибирования голосового сообщения', ex)
+        if mode == TEST_MODE:
+             # Код возвращает токен для тестового режима
+            return gs.credentials.telegram.hypo69_test_bot
+        elif mode == PRODUCTION_MODE:
+            # Код возвращает токен для рабочего режима
+            return gs.credentials.telegram.hypo69_emil_design_bot
+        else:
+             # Код логирует ошибку и возвращает пустую строку
+            logger.error(f'Invalid mode: {mode}')
             return ''
+
+    async def handle_message(self, update: Update, context: CallbackContext) -> None:
+         """Handle any text message.
+
+         Args:
+            update (Update): The telegram update.
+            context (CallbackContext): The context object for handlers.
+         """
+         logger.info('Handling message...')
+         # Код вызывает метод обработки сообщений у bot_handler
+         await self.bot_handler.handle_message(update, context)
+         logger.info('Message handled.')
+
+    async def handle_log(self, update: Update, context: CallbackContext) -> None:
+        """Handle log messages.
+
+        Args:
+            update (Update): The telegram update.
+            context (CallbackContext): The context object for handlers.
+        """
+        logger.info('Handling log message...')
+        log_message = update.message.text
+        logger.info(f'Received log message: {log_message}')
+        # Код отправляет подтверждение обработки лога
+        await update.message.reply_text('Log received and processed.')
+        logger.info('Log message handled.')
+
+    async def handle_voice(self, update: Update, context: CallbackContext) -> None:
+        """Handle voice messages and transcribe the audio.
+
+        Args:
+            update (Update): The telegram update.
+            context (CallbackContext): The context object for handlers.
+        """
+        logger.info('Handling voice message...')
+        await super().handle_voice(update, context)
+        logger.info('Voice message handled.')
+        
+    async def transcribe_voice(self, file_path: Path) -> str:
+        """Transcribe voice message using a speech recognition service.
+        
+        Args:
+            file_path (Path): Path to the voice message file.
+        Returns:
+            str: The transcribed text
+        
+        TODO: Implement voice recognition
+        """
+        # Код выполняет распознавание голоса (заглушка)
+        logger.warning('Voice recognition is not implemented yet.')
+        return 'Распознавание голоса ещё не реализовано.'
 
 
 def main() -> None:
-    """Запускает бота с использованием вебхуков."""
-    # Создаем экземпляр бота
+    """Start the bot with webhook."""
+    logger.info('Starting bot...')
     bot = EmilTelegramBot()
-
-    # Создаем и запускаем aiohttp приложение
+    # Код создает и запускает aiohttp приложение
     app = create_app(bot)
     web.run_app(app, host=bot.host, port=bot.port)
+    logger.info('Bot started.')
 
 if __name__ == '__main__':
     main()

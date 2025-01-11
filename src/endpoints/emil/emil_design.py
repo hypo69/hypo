@@ -164,8 +164,6 @@ class EmilDesign:
             await save_text_file(described_images_path, described_images)
 
         
-
-
     async def promote_to_facebook(self):
         """ Promote images and their descriptions to Facebook.
 
@@ -212,7 +210,7 @@ class EmilDesign:
 
             # convert to prestashop fields
             f.name = product_ns.name
-            f.id_category_default = product_ns.category
+            f.id_category_default = product_ns.id_category_default	
             f.id_supplier = 11366 #  https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
             f.description = product_ns.description
             f.images_urls = product_ns.local_image_path

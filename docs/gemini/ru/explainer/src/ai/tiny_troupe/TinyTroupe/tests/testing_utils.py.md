@@ -1,239 +1,363 @@
 ## <алгоритм>
 
-**Блок-схема:**
+**1. `contains_action_type(actions, action_type)`:**
+   - **Вход:** Список `actions` (список словарей, где каждый словарь содержит информацию о действии, включая тип) и `action_type` (строка, представляющая тип действия).
+   - **Процесс:**
+     - Итерируется по списку `actions`.
+     - Для каждого действия проверяет, равно ли значение ключа `"type"` в словаре `"action"` значению `action_type`.
+     - Если найдено совпадение, возвращает `True`.
+     - Если итерация завершена без совпадений, возвращает `False`.
+   - **Выход:** `True`, если в списке есть действие заданного типа, иначе `False`.
 
-1. **Импорт библиотек:**
-   - Импортируются необходимые библиотеки: `os`, `sys`, `time`, `tinytroupe.openai_utils`, `tinytroupe.agent`, `tinytroupe.environment`, `pytest`, `importlib`.
-   - `sys.path.append()` добавляет пути к директориям, содержащим модули проекта, что обеспечивает возможность импорта модулей `tinytroupe`.
+**Пример:**
+```
+actions = [{"action": {"type": "move", "content": "go forward"}}, {"action": {"type": "talk", "content": "hello"}}]
+action_type = "talk"
+# Результат: True
 
-   _Пример:_ Импорт `os` позволяет работать с файловой системой, например, для проверки существования файлов и их удаления.
+action_type = "jump"
+# Результат: False
+```
 
-2. **`force_api_cache`:**
-   - Функция `openai_utils.force_api_cache(True, "tests_cache.pickle")` активирует кэширование API-запросов OpenAI для тестов, что уменьшает использование API.
+**2. `contains_action_content(actions, action_content)`:**
+   - **Вход:** Список `actions` и `action_content` (строка, представляющая текст, который нужно найти в содержании действия).
+   - **Процесс:**
+     - Итерируется по списку `actions`.
+     - Для каждого действия проверяет, содержится ли `action_content` (приведенный к нижнему регистру) в содержимом действия (`action["action"]["content"]`, приведенном к нижнему регистру).
+     - Если найдено совпадение, возвращает `True`.
+     - Если итерация завершена без совпадений, возвращает `False`.
+   - **Выход:** `True`, если найдено действие с заданным содержанием, иначе `False`.
 
-3. **Функции проверки действий и стимулов:**
-   - `contains_action_type(actions, action_type)`: Проверяет, содержит ли список действий действие заданного типа. Возвращает `True`, если такое действие найдено, иначе `False`.
-     - _Пример:_ `contains_action_type(actions, "talk")` вернет `True` если в списке `actions` есть действие типа "talk".
-   - `contains_action_content(actions, action_content)`: Проверяет, содержит ли список действий действие с заданным содержимым (без учета регистра). Возвращает `True`, если такое действие найдено, иначе `False`.
-     - _Пример:_ `contains_action_content(actions, "hello")` вернет `True` если в списке `actions` есть действие, содержание которого содержит "hello".
-   - `contains_stimulus_type(stimuli, stimulus_type)`: Проверяет, содержит ли список стимулов стимул заданного типа. Возвращает `True`, если такой стимул найден, иначе `False`.
-     - _Пример:_ `contains_stimulus_type(stimuli, "observation")` вернет `True` если в списке `stimuli` есть стимул типа "observation".
-   - `contains_stimulus_content(stimuli, stimulus_content)`: Проверяет, содержит ли список стимулов стимул с заданным содержимым (без учета регистра). Возвращает `True`, если такой стимул найден, иначе `False`.
-     - _Пример:_ `contains_stimulus_content(stimuli, "the sky is blue")` вернет `True` если в списке `stimuli` есть стимул, содержание которого содержит "the sky is blue".
-   - `terminates_with_action_type(actions, action_type)`: Проверяет, завершается ли список действий действием заданного типа. Возвращает `True` если список не пуст и последний элемент соответствует требуемому типу, иначе `False`.
-     - _Пример:_ `terminates_with_action_type(actions, "leave")` вернет `True`, если последнее действие в `actions` имеет тип "leave".
+**Пример:**
+```
+actions = [{"action": {"type": "talk", "content": "Hello there"}}, {"action": {"type": "think", "content": "I am hungry"}}]
+action_content = "hello"
+# Результат: True
 
-4.  **`proposition_holds(proposition)`:**
-    -   Формирует системное и пользовательское сообщение для LLM, чтобы проверить, является ли заданное утверждение истинным.
-    -   Отправляет запрос в LLM через `openai_utils.client().send_message()`.
-    -   Обрабатывает ответ, извлекая из него только буквенно-цифровые символы.
-    -   Возвращает `True`, если ответ LLM начинается с "true" (без учета регистра), `False`, если ответ начинается с "false", или выбрасывает исключение, если ответ не соответствует ожидаемому формату.
-    - _Пример:_ `proposition_holds("the text contains some ideas for a product")` отправит запрос LLM для проверки этого утверждения.
+action_content = "hungry"
+# Результат: True
 
-5.  **`only_alphanumeric(string)`:**
-    -  Удаляет все не буквенно-цифровые символы из строки.
-    -  Возвращает новую строку с только буквенно-цифровыми символами.
-    -   _Пример:_ `only_alphanumeric("Hello, world! 123")` вернет `"Helloworld123"`.
+action_content = "goodbye"
+# Результат: False
+```
 
-6. **`create_test_system_user_message(user_prompt, system_prompt)`:**
-    - Создает список сообщений, содержащий системное сообщение и, если указано, пользовательское сообщение.
-    - _Пример:_ `create_test_system_user_message("What is your name?", "You are an AI assistant")` создает список из двух сообщений, системное и пользовательское, для отправки в LLM.
+**3. `contains_stimulus_type(stimuli, stimulus_type)`:**
+    - **Вход:** Список `stimuli` (список словарей, где каждый словарь содержит информацию о стимуле, включая тип) и `stimulus_type` (строка, представляющая тип стимула).
+    - **Процесс:**
+      - Итерируется по списку `stimuli`.
+      - Для каждого стимула проверяет, равно ли значение ключа `"type"` значению `stimulus_type`.
+      - Если найдено совпадение, возвращает `True`.
+      - Если итерация завершена без совпадений, возвращает `False`.
+    - **Выход:** `True`, если в списке есть стимул заданного типа, иначе `False`.
 
-7. **`agents_configs_are_equal(agent1, agent2, ignore_name)`:**
-    - Сравнивает конфигурации двух агентов на равенство. По умолчанию сравниваются все параметры, если `ignore_name` = `True` то поле "name" игнорируется.
-     -  _Пример:_ `agents_configs_are_equal(agent1, agent2)` вернет True если у агентов совпадают все параметры конфигурации, иначе False.
+**Пример:**
+```
+stimuli = [{"type": "visual", "content": "red light"}, {"type": "sound", "content": "loud noise"}]
+stimulus_type = "sound"
+# Результат: True
 
-8.  **`remove_file_if_exists(file_path)`:**
-    -  Проверяет существование файла по указанному пути.
-    -  Удаляет файл, если он существует.
-    - _Пример:_ `remove_file_if_exists("test_file.txt")` удалит файл, если он существует.
+stimulus_type = "olfactory"
+# Результат: False
+```
 
-9.  **`get_relative_to_test_path(path_suffix)`:**
-     -  Формирует абсолютный путь к файлу относительно текущего файла, используя переданный `path_suffix`.
-     -   _Пример:_ `get_relative_to_test_path("data/example.json")` вернет абсолютный путь к файлу `example.json`, находящегося в поддиректории `data`.
+**4. `contains_stimulus_content(stimuli, stimulus_content)`:**
+   - **Вход:** Список `stimuli` и `stimulus_content` (строка, представляющая текст, который нужно найти в содержании стимула).
+   - **Процесс:**
+     - Итерируется по списку `stimuli`.
+     - Для каждого стимула проверяет, содержится ли `stimulus_content` (приведенный к нижнему регистру) в содержимом стимула (`stimulus["content"]`, приведенном к нижнему регистру).
+     - Если найдено совпадение, возвращает `True`.
+     - Если итерация завершена без совпадений, возвращает `False`.
+   - **Выход:** `True`, если найдено стимул с заданным содержанием, иначе `False`.
 
-10. **Фикстуры `focus_group_world` и `setup`:**
-    - `focus_group_world`: Фикстура `pytest`, создающая тестовый мир `TinyWorld` с тремя агентами (Lisa, Oscar и Marcos).
-    - `setup`: Фикстура `pytest`, очищающая списки агентов и миров перед каждым тестом, обеспечивая чистую среду для тестов.
+**Пример:**
+```
+stimuli = [{"type": "visual", "content": "red car"}, {"type": "text", "content": "important message"}]
+stimulus_content = "red"
+# Результат: True
+
+stimulus_content = "message"
+# Результат: True
+
+stimulus_content = "blue"
+# Результат: False
+```
+
+**5. `terminates_with_action_type(actions, action_type)`:**
+   - **Вход:** Список `actions` и `action_type`.
+   - **Процесс:**
+     - Проверяет, пуст ли список `actions`. Если пуст, возвращает `False`.
+     - Если список не пуст, проверяет, равен ли тип действия последнего элемента списка (`actions[-1]["action"]["type"]`) значению `action_type`.
+     - Возвращает `True`, если типы совпадают, иначе `False`.
+   - **Выход:** `True`, если последнее действие имеет заданный тип, иначе `False`.
+
+**Пример:**
+```
+actions = [{"action": {"type": "move", "content": "go forward"}}, {"action": {"type": "talk", "content": "hello"}}]
+action_type = "talk"
+# Результат: True
+
+action_type = "move"
+# Результат: False
+
+actions = []
+# Результат: False
+```
+
+**6. `proposition_holds(proposition)`:**
+   - **Вход:** `proposition` (строка, представляющая утверждение).
+   - **Процесс:**
+     - Создает системное сообщение (system_prompt), указывающее LLM проверять истинность или ложность утверждения.
+     - Создает пользовательское сообщение (user_prompt) с утверждением.
+     - Отправляет запрос LLM с использованием `openai_utils.client().send_message()`.
+     - Извлекает ответ LLM и удаляет из него все не буквенно-цифровые символы.
+     - Проверяет, начинается ли очищенный ответ со строк `"true"` или `"false"` (без учета регистра).
+     - Возвращает `True`, если начинается с `"true"`, `False`, если начинается с `"false"`. В противном случае вызывает исключение.
+   - **Выход:** `True` или `False` в зависимости от результата LLM или исключение.
+
+**Пример:**
+```
+proposition = "The sky is blue."
+# Результат: (зависит от ответа LLM, ожидается True)
+
+proposition = "The moon is made of cheese"
+# Результат: (зависит от ответа LLM, ожидается False)
+```
+
+**7. `only_alphanumeric(string)`:**
+   - **Вход:** Строка `string`.
+   - **Процесс:**
+     - Создает новую строку, содержащую только буквенно-цифровые символы из входной строки.
+     - Возвращает новую строку.
+   - **Выход:** Строка, содержащая только буквенно-цифровые символы.
+
+**Пример:**
+```
+string = "Hello, world! 123"
+# Результат: "Helloworld123"
+```
+
+**8. `create_test_system_user_message(user_prompt, system_prompt)`:**
+   - **Вход:** `user_prompt` (строка с текстом сообщения пользователя) и `system_prompt` (строка с текстом системного сообщения, по умолчанию "You are a helpful AI assistant.").
+   - **Процесс:**
+     - Создает список `messages` с первым элементом в виде системного сообщения.
+     - Если `user_prompt` не является `None`, то добавляет в список `messages` пользовательское сообщение.
+     - Возвращает список `messages`.
+   - **Выход:** Список сообщений для LLM.
+
+**Пример:**
+```
+user_prompt = "Tell me a joke."
+system_prompt = "You are a comedian."
+# Результат: [{"role": "system", "content": "You are a comedian."}, {"role": "user", "content": "Tell me a joke."}]
+
+user_prompt = None
+# Результат: [{"role": "system", "content": "You are a helpful AI assistant."}]
+```
+
+**9. `agents_configs_are_equal(agent1, agent2, ignore_name)`:**
+   - **Вход:** Два объекта `agent1` и `agent2`, `ignore_name` (логическое значение, указывающее, нужно ли игнорировать имя агента при сравнении).
+   - **Процесс:**
+     - Создает список `ignore_keys`.
+     - Если `ignore_name` равно `True`, добавляет в список `ignore_keys` ключ `"name"`.
+     - Итерирует по ключам конфигурации первого агента (`agent1._configuration`).
+     - Если текущий ключ есть в списке `ignore_keys`, пропускает итерацию.
+     - Сравнивает значения конфигураций агентов по текущему ключу.
+     - Если значения не равны, возвращает `False`.
+     - Если все значения совпадают, возвращает `True`.
+   - **Выход:** `True`, если конфигурации агентов равны (с учетом флага `ignore_name`), иначе `False`.
+
+**Пример:**
+```
+agent1 = MockAgent(configuration={"name": "agent1", "age": 30, "role": "engineer"})
+agent2 = MockAgent(configuration={"name": "agent2", "age": 30, "role": "engineer"})
+ignore_name = False
+# Результат: False
+
+ignore_name = True
+# Результат: True
+```
+
+**10. `remove_file_if_exists(file_path)`:**
+    - **Вход:** `file_path` (строка с путём к файлу).
+    - **Процесс:**
+        - Проверяет, существует ли файл по указанному пути.
+        - Если файл существует, удаляет его.
+    - **Выход:** None
+
+**Пример:**
+```
+file_path = "temp.txt"
+# если temp.txt существует, он будет удален.
+```
+
+**11. `get_relative_to_test_path(path_suffix)`:**
+    - **Вход:** `path_suffix` (строка с суффиксом пути относительно файла теста).
+    - **Процесс:**
+        - Получает абсолютный путь к директории файла теста.
+        - Объединяет путь к директории теста с `path_suffix` с помощью `os.path.join`.
+    - **Выход:** Строка с абсолютным путём до файла теста с указанным суффиксом.
+
+**Пример:**
+```
+path_suffix = "test_file.txt"
+# Результат: (путь к файлу test_file.txt в той же директории, что и текущий файл)
+```
+
+**12. `focus_group_world()` (fixture):**
+    - **Вход:** Нет
+    - **Процесс:**
+        - Создаёт `TinyWorld` с именем "Focus group"
+        - Инициализирует `TinyPerson` Lisa, Oscar и Marcos используя example методы
+        - Добавляет созданных `TinyPerson` в мир `TinyWorld`.
+    - **Выход:** `TinyWorld` с тремя агентами внутри.
+
+**Пример:**
+```
+# Результат: TinyWorld("Focus group", [lisa, oscar, marcos])
+```
+
+**13. `setup()` (fixture):**
+    - **Вход:** Нет
+    - **Процесс:**
+        - Очищает список агентов с помощью `TinyPerson.clear_agents()`
+        - Очищает список окружений с помощью `TinyWorld.clear_environments()`
+    - **Выход:** None
+
+**Пример:**
+```
+# Результат: пустые списки TinyPerson и TinyWorld
+```
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph File: testing_utils.py
-        A[Start] --> B(import os, sys, time, tinytroupe.openai_utils, TinyPerson, TinyWorld, TinySocialNetwork, pytest, importlib);
-        B --> C{force_api_cache};
-        C --> D[contains_action_type];
-        C --> E[contains_action_content];
-        C --> F[contains_stimulus_type];
-        C --> G[contains_stimulus_content];
-        C --> H[terminates_with_action_type];
-        C --> I[proposition_holds];
-        C --> J[only_alphanumeric];
-        C --> K[create_test_system_user_message];
-        C --> L[agents_configs_are_equal];
-        C --> M[remove_file_if_exists];
-        C --> N[get_relative_to_test_path];
-        C --> O[focus_group_world Fixture];
-        C --> P[setup Fixture];
-        
-        D --> Z(End);
-        E --> Z;
-        F --> Z;
-        G --> Z;
-        H --> Z;
-        I --> Z;
-        J --> Z;
-        K --> Z;
-        L --> Z;
-        M --> Z;
-        N --> Z;
-        O --> Z;
-        P --> Z;
-    end
-    
-    subgraph tinytroupe.openai_utils
-    T[openai_utils] --> T1(force_api_cache)
-    T --> T2(client)
-    T2 --> T3(send_message)
-    end
-    
-    subgraph tinytroupe.agent
-    U[tinytroupe.agent] --> U1(TinyPerson)
-    end
+    subgraph Testing Utilities
+    A[contains_action_type] --> B{Iterate through actions}
+    B -- Action found --> C[Return True]
+    B -- No action found --> D[Return False]
 
-    subgraph tinytroupe.environment
-    V[tinytroupe.environment] --> V1(TinyWorld)
-    V --> V2(TinySocialNetwork)
-    end
+    E[contains_action_content] --> F{Iterate through actions}
+    F -- Action found --> G[Return True]
+    F -- No action found --> H[Return False]
 
-    B -.-> T
-    B -.-> U
-    B -.-> V
-    
-    style T fill:#f9f,stroke:#333,stroke-width:2px
-    style U fill:#ccf,stroke:#333,stroke-width:2px
-     style V fill:#aaf,stroke:#333,stroke-width:2px
+    I[contains_stimulus_type] --> J{Iterate through stimuli}
+    J -- Stimulus found --> K[Return True]
+    J -- No stimulus found --> L[Return False]
+
+    M[contains_stimulus_content] --> N{Iterate through stimuli}
+    N -- Stimulus found --> O[Return True]
+    N -- No stimulus found --> P[Return False]
+
+    Q[terminates_with_action_type] --> R{Check if actions is empty}
+    R -- Yes --> S[Return False]
+    R -- No --> T{Check last action type}
+    T -- Type matches --> U[Return True]
+    T -- Type does not match --> V[Return False]
+
+    W[proposition_holds] --> X{Prepare messages}
+    X --> Y[Call LLM: openai_utils.client().send_message()]
+    Y --> Z{Process LLM response}
+    Z --> AA{Check if response starts with "true"}
+    AA -- Yes --> AB[Return True]
+     Z --> AC{Check if response starts with "false"}
+    AC -- Yes --> AD[Return False]
+     AA -- No --> AC
+    AC -- No --> AE[Raise Exception]
+ 
+     AF[only_alphanumeric] --> AG{Create new string with only alphanumeric characters}
+    AG --> AH[Return new string]
+
+    AI[create_test_system_user_message] --> AJ{Create System Message}
+    AJ --> AK{Add User message if exist}
+    AK --> AL[Return messages list]
+     
+    AM[agents_configs_are_equal] --> AN{Create ignore_keys}
+    AN --> AO{Iterate through agent1 configuration keys}
+    AO -- Key in ignore_keys --> AO
+    AO -- Key not in ignore_keys --> AP{Compare agent1 and agent2 configurations}
+    AP -- Configuration different --> AQ[Return False]
+     AP -- Configuration equal --> AO
+      AO -- All keys checked --> AR[Return True]
+
+      AS[remove_file_if_exists] --> AT{Check if file exists}
+      AT -- File Exists --> AU[Remove file]
+      AU --> AV
+      AT -- File not Exists --> AV
+     AV --> AW[Return]
+
+    AX[get_relative_to_test_path] --> AY{Get absolute path to test dir}
+    AY --> AZ[Join with path suffix]
+    AZ --> BA[Return absolute path]
+
+
+    BB[focus_group_world] --> BC{Create TinyWorld}
+    BC --> BD{Create Lisa, Oscar, Marcos TinyPerson}
+    BD --> BE{Add persons to TinyWorld}
+    BE --> BF[Return TinyWorld with agents]
+
+     BG[setup] --> BH{Clear TinyPerson}
+    BH --> BI{Clear TinyWorld}
+    BI --> BJ[Return None]
+
+    end
 ```
-
-**Объяснение `mermaid`:**
-
--   **File: `testing_utils.py`**: Главный граф представляет файл `testing_utils.py`.
-    -   **Start**: Начало выполнения скрипта.
-    -   **Импорт**:  Импорт необходимых модулей и библиотек: `os`, `sys`, `time`, `tinytroupe.openai_utils`, `TinyPerson`, `TinyWorld`, `TinySocialNetwork`, `pytest`, `importlib`.
-    -   **Функции**: Далее следуют функции, описанные в разделе `<алгоритм>`, которые используются для тестирования.
-    -   **Фикстуры**: `focus_group_world` и `setup` - это фикстуры `pytest`.
-    -   **End**: Конец выполнения скрипта.
--   **`tinytroupe.openai_utils`**: Представлены функции для работы с API OpenAI: `force_api_cache`, `client`, `send_message`.
--  **`tinytroupe.agent`**:  Представлен класс `TinyPerson`.
--   **`tinytroupe.environment`**: Представлены классы `TinyWorld` и `TinySocialNetwork`.
--   Стрелки `-.->` обозначают импорт модулей.
 
 ## <объяснение>
 
-**Импорты:**
+### Импорты:
+- **`os`**: Модуль для взаимодействия с операционной системой, используется для работы с файловой системой (удаление файлов, получение пути к директории).
+- **`sys`**: Модуль для работы с интерпретатором Python, используется для добавления путей поиска модулей (`sys.path.append`).
+- **`time.sleep`**: Используется для приостановки выполнения программы на заданное количество секунд.
+- **`tinytroupe.openai_utils`**: Модуль, содержащий утилиты для работы с OpenAI API, например `force_api_cache` для кэширования запросов и `client` для вызова LLM.
+- **`tinytroupe.agent.TinyPerson`**: Класс, представляющий агента в системе, используется для создания и управления агентами.
+- **`tinytroupe.environment.TinyWorld`**: Класс, представляющий окружение, в котором действуют агенты, используется для создания и управления окружениями.
+- **`tinytroupe.environment.TinySocialNetwork`**: Класс, представляющий социальную сеть агентов.
+-   **`pytest`**: Фреймворк для тестирования.
+-   **`importlib`**: Модуль для динамического импорта модулей.
 
--   `os`: Предоставляет функции для взаимодействия с операционной системой, используется для работы с путями к файлам и удаления файлов.
--   `sys`: Предоставляет доступ к некоторым переменным и функциям, связанным с интерпретатором Python, используется для добавления путей поиска модулей.
--   `time`: Предоставляет функции для работы со временем, используется в тестах, если необходимо.
--   `tinytroupe.openai_utils`: Содержит утилиты для работы с API OpenAI, используется для кэширования запросов и отправки сообщений LLM.
--   `tinytroupe.agent`: Содержит классы, связанные с агентами (например, `TinyPerson`).
--   `tinytroupe.environment`: Содержит классы, связанные с окружением агентов (`TinyWorld`, `TinySocialNetwork`).
--   `pytest`: Библиотека для написания и запуска тестов.
--  `importlib`: Предоставляет инструменты для управления импортом модулей.
+### Функции:
+- **`contains_action_type(actions, action_type)`**: Проверяет, содержится ли в списке действий `actions` действие с заданным типом `action_type`. Возвращает `True`, если такое действие есть, иначе `False`.
+- **`contains_action_content(actions, action_content)`**: Проверяет, содержится ли в списке действий `actions` действие, в содержимом которого есть подстрока `action_content`. Возвращает `True`, если такое действие есть, иначе `False`.
+- **`contains_stimulus_type(stimuli, stimulus_type)`**: Проверяет, содержится ли в списке стимулов `stimuli` стимул с заданным типом `stimulus_type`. Возвращает `True`, если такой стимул есть, иначе `False`.
+- **`contains_stimulus_content(stimuli, stimulus_content)`**: Проверяет, содержится ли в списке стимулов `stimuli` стимул, в содержимом которого есть подстрока `stimulus_content`. Возвращает `True`, если такой стимул есть, иначе `False`.
+- **`terminates_with_action_type(actions, action_type)`**: Проверяет, заканчивается ли список действий `actions` действием с типом `action_type`. Возвращает `True`, если это так, иначе `False`.
+- **`proposition_holds(proposition)`**: Проверяет, истинно ли утверждение `proposition`, с помощью запроса к LLM. Возвращает `True`, если LLM считает утверждение истинным, `False`, если ложным, и вызывает исключение в случае невалидного ответа от LLM.
+- **`only_alphanumeric(string)`**: Возвращает новую строку, содержащую только буквенно-цифровые символы из входной строки `string`.
+- **`create_test_system_user_message(user_prompt, system_prompt="You are a helpful AI assistant.")`**: Создает список сообщений для LLM, содержащий системное сообщение и пользовательское сообщение, если оно есть.
+- **`agents_configs_are_equal(agent1, agent2, ignore_name=False)`**: Проверяет, равны ли конфигурации двух агентов, с возможностью игнорировать ключ "name". Возвращает `True`, если конфигурации равны, иначе `False`.
+- **`remove_file_if_exists(file_path)`**: Удаляет файл по указанному пути, если он существует.
+- **`get_relative_to_test_path(path_suffix)`**: Возвращает путь к файлу относительно пути файла с тестами.
 
-**Классы:**
+### Переменные:
+- **`actions`**: Список словарей, каждый словарь представляет действие и содержит информацию о типе и содержании действия.
+- **`action_type`**: Строка, представляющая тип действия.
+- **`action_content`**: Строка, представляющая содержимое действия.
+- **`stimuli`**: Список словарей, каждый словарь представляет стимул и содержит информацию о типе и содержании стимула.
+- **`stimulus_type`**: Строка, представляющая тип стимула.
+- **`stimulus_content`**: Строка, представляющая содержимое стимула.
+-   **`file_path`**: Строка, представляющая путь к файлу.
+-   **`path_suffix`**: Строка, представляющая суффикс пути.
+-   **`proposition`**: Строка, представляющая утверждение, которое нужно проверить.
+-   **`system_prompt`**: Строка, представляющая системное сообщение для LLM.
+-   **`user_prompt`**: Строка, представляющая пользовательское сообщение для LLM.
+-   **`agent1`, `agent2`**: Объекты агентов.
+-   **`ignore_name`**: Логическая переменная, указывающая, нужно ли игнорировать имя агента при сравнении.
 
--   `TinyPerson`: Представляет агента в `tinytroupe`, используется для создания экземпляров агентов в тестах.
--   `TinyWorld`: Представляет мир, в котором действуют агенты, используется для создания тестовых окружений.
--   `TinySocialNetwork`: Класс, представляющий социальную сеть агентов. В коде не используется напрямую, но импортируется из модуля `tinytroupe.environment`.
+###  Fixtures:
+-   **`focus_group_world()`**: Фикстура для создания тестового мира `TinyWorld` с тремя агентами.
+-   **`setup()`**: Фикстура для очистки агентов и окружений перед каждым тестом.
 
-**Функции:**
+### Потенциальные ошибки и области для улучшения:
+- **Обработка ошибок LLM**: Функция `proposition_holds` вызывает исключение, если LLM возвращает неожиданный ответ. Можно добавить более точную обработку ошибок, например, повторить запрос или использовать стратегию отката.
+- **Тестирование LLM**: Тесты, зависящие от вызовов LLM, могут быть нестабильными.
+- **Кэширование LLM**: Кэширование результатов LLM-вызовов может привести к устаревшим результатам, если кэш не инвалидировать вовремя.
+- **Сложность сравнения конфигураций агентов**: Функция `agents_configs_are_equal` сравнивает конфигурации агентов по ключам. Стоит добавить проверку на тип данных в конфигурации.
 
--   `contains_action_type(actions, action_type)`:
-    -   **Аргументы**:
-        -   `actions` (list): Список действий, каждое из которых представляет собой словарь с ключом "action".
-        -   `action_type` (str): Тип действия, который нужно найти.
-    -   **Возвращаемое значение**: `True`, если действие с заданным типом найдено, иначе `False`.
-    -   **Назначение**: Проверяет, есть ли в списке действий действие с определенным типом.
--   `contains_action_content(actions, action_content)`:
-    -   **Аргументы**:
-        -   `actions` (list): Список действий, каждое из которых представляет собой словарь с ключом "action" и под ключом "content"
-        -   `action_content` (str): Содержание действия, которое нужно найти.
-    -   **Возвращаемое значение**: `True`, если действие с заданным содержанием найдено, иначе `False`.
-    -   **Назначение**: Проверяет, есть ли в списке действий действие с определенным содержанием.
--   `contains_stimulus_type(stimuli, stimulus_type)`:
-    -   **Аргументы**:
-        -   `stimuli` (list): Список стимулов, каждый из которых представляет собой словарь с ключом "type".
-        -   `stimulus_type` (str): Тип стимула, который нужно найти.
-    -   **Возвращаемое значение**: `True`, если стимул с заданным типом найден, иначе `False`.
-    -   **Назначение**: Проверяет, есть ли в списке стимулов стимул с определенным типом.
--   `contains_stimulus_content(stimuli, stimulus_content)`:
-    -   **Аргументы**:
-        -   `stimuli` (list): Список стимулов, каждый из которых представляет собой словарь с ключом "content".
-        -   `stimulus_content` (str): Содержание стимула, которое нужно найти.
-    -   **Возвращаемое значение**: `True`, если стимул с заданным содержанием найден, иначе `False`.
-    -   **Назначение**: Проверяет, есть ли в списке стимулов стимул с определенным содержанием.
--   `terminates_with_action_type(actions, action_type)`:
-    -   **Аргументы**:
-        -   `actions` (list): Список действий.
-        -   `action_type` (str): Тип действия, которым должен заканчиваться список.
-    -   **Возвращаемое значение**: `True`, если список заканчивается действием заданного типа, иначе `False`.
-    -   **Назначение**: Проверяет, заканчивается ли список действий определенным типом действия.
--   `proposition_holds(proposition)`:
-    -   **Аргументы**:
-        -   `proposition` (str): Предложение, истинность которого нужно проверить с помощью LLM.
-    -   **Возвращаемое значение**: `True`, если LLM подтверждает истинность предложения, `False` в противном случае.
-    -   **Назначение**: Проверяет истинность предложений, которые трудно проверить автоматически.
--   `only_alphanumeric(string)`:
-    -   **Аргументы**:
-        -   `string` (str): Строка для обработки.
-    -   **Возвращаемое значение**: Строка, содержащая только буквенно-цифровые символы.
-    -   **Назначение**: Очищает строку от не буквенно-цифровых символов.
--  `create_test_system_user_message(user_prompt, system_prompt)`:
-    -   **Аргументы**:
-         -   `user_prompt` (str): Сообщение пользователя.
-         -   `system_prompt` (str): Сообщение системы (по умолчанию "You are a helpful AI assistant.").
-    -   **Возвращаемое значение**: Список, содержащий системное сообщение и, если указано, пользовательское сообщение.
-    -   **Назначение**: Создает список сообщений для LLM.
--   `agents_configs_are_equal(agent1, agent2, ignore_name)`:
-    -  **Аргументы**:
-        -  `agent1`: Первый агент для сравнения.
-        -  `agent2`: Второй агент для сравнения.
-        -  `ignore_name` (bool): Если True, поле "name" не будет учитываться при сравнении.
-    -   **Возвращаемое значение**: `True`, если конфигурации агентов равны, иначе `False`.
-    -   **Назначение**: Сравнивает конфигурации двух агентов.
--   `remove_file_if_exists(file_path)`:
-    -   **Аргументы**:
-        -   `file_path` (str): Путь к файлу.
-    -   **Возвращаемое значение**: None
-    -   **Назначение**: Удаляет файл, если он существует.
--   `get_relative_to_test_path(path_suffix)`:
-    -   **Аргументы**:
-        -   `path_suffix` (str): Суффикс пути.
-    -   **Возвращаемое значение**: Абсолютный путь к файлу.
-    -   **Назначение**: Возвращает путь к файлу относительно текущего файла.
+### Взаимосвязь с другими частями проекта:
+- Этот файл используется в тестах для TinyTroupe.
+- Использует `openai_utils` для взаимодействия с LLM.
+- Использует классы `TinyPerson` и `TinyWorld` из пакета `tinytroupe` для создания и управления агентами и окружениями.
+- Зависит от `pytest` для запуска тестов.
 
-**Переменные:**
-
--   `messages`: Список словарей, представляющий сообщения для LLM.
--   `next_message`: Ответ LLM.
--   `cleaned_message`: Очищенный ответ LLM.
--   `world`: Экземпляр `TinyWorld`, созданный в фикстуре `focus_group_world`.
--   `system_prompt`: Шаблон системного сообщения для LLM.
--   `user_prompt`: Шаблон пользовательского сообщения для LLM.
--   `ignore_keys`: Список ключей для игнорирования при сравнении конфигураций агентов.
-
-**Потенциальные ошибки и области для улучшения:**
-
--   **Обработка ошибок LLM**: В функции `proposition_holds` не производится детальная обработка ошибок от LLM, кроме проверки начала сообщения на "true" или "false", что может привести к непредсказуемым результатам. Следует добавить более надежную проверку формата ответа.
--   **Отсутствие документации:** Не все функции имеют docstring, что затрудняет их понимание. Необходимо добавить docstring ко всем функциям.
--  **Жестко заданные пути**: Использование `sys.path.append` для добавления путей может привести к проблемам с переносимостью кода. Стоит рассмотреть более гибкие способы организации импорта модулей.
-- **Магические строки**: в функции `proposition_holds` используются "true" и "false" в виде строк, лучше использовать константы или перечисления для избежания опечаток и улучшению читаемости.
-- **Тестирование**: Файл содержит много полезных функций для тестирования, но сами тесты в нем не написаны. Следует написать тесты для всех функций.
-
-**Взаимосвязи с другими частями проекта:**
-
--   Этот модуль тесно связан с модулями `tinytroupe.openai_utils`, `tinytroupe.agent` и `tinytroupe.environment`. Он использует их для создания тестовых окружений и агентов, а также для взаимодействия с LLM через API OpenAI.
-
-В целом, файл `testing_utils.py` представляет собой набор вспомогательных функций и фикстур, которые используются для облегчения написания и запуска тестов для проекта `tinytroupe`. Он предоставляет инструменты для проверки действий агентов, стимулов, а также для проверки текстовых свойств с помощью LLM.
+Этот файл предоставляет набор утилит, необходимых для тестирования функциональности агентов и окружений в TinyTroupe, включая проверку действий, стимулов и утверждений, а также для создания тестовых окружений и агентов.

@@ -1,56 +1,63 @@
 # Анализ кода модуля `__init__.py`
 
 **Качество кода**
+
 8
--   Плюсы
-    -   Код соответствует PEP8, включает импорты из других модулей.
-    -   Модуль имеет описание в docstring.
-    -   Код выполняет задачу, не содержит явных ошибок
--   Минусы
-    -   Отсутствует reStructuredText (RST) документация для модуля.
-    -   Не используется `logger` для логирования ошибок.
-    -   Используются стандартные блоки `try-except` без логгирования.
-    -   Не все импорты используются.
+- Плюсы
+    - Код структурирован и содержит импорты, что соответствует начальным требованиям.
+    - Есть комментарий для обозначения окружения (`venv win`).
+    - Имеется описание модуля в docstring.
+- Минусы
+    - Отсутствуют docstring для модуля, функций, переменных.
+    - Не все импорты могут быть необходимыми для модуля, нужно проверить.
+    - Не используется `from src.logger.logger import logger`
+    -  Не хватает подробных комментариев к коду и RST документации для модуля.
 
 **Рекомендации по улучшению**
 
-1.  Добавить reStructuredText (RST) документацию для модуля.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок, если они есть в импортированных модулях.
-3.  Удалить неиспользуемые импорты (если это так на самом деле).
-4.  Избегать избыточного использования стандартных блоков `try-except`.
-5.  Добавить docstrings для всех функций.
-6.  Проверить и добавить отсутствующие импорты, если это требуется.
+1.  **Добавить docstring модуля**: Добавить подробное описание модуля, его назначения и примеры использования.
+2.  **Импорты**: Проверить все импорты на актуальность и удалить лишние.
+3.  **Добавить RST документацию**: Добавить документацию для модуля в формате RST.
+4.  **Использовать logger**: Заменить импорт `from src.logger import logger` на `from src.logger.logger import logger`.
+5.  **Формат строк**: Проверить, что все строки кода используют одинарные кавычки, а двойные кавычки только для `print` и `logger`.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
+# <- venv win
 """
 Модуль: `src.suppliers.aliexpress.api.helpers`
-==============================================
+================================================
 
 Этот модуль предоставляет набор вспомогательных функций для работы с API AliExpress.
 Он включает в себя функции для отправки запросов, обработки аргументов,
 парсинга продуктов и фильтрации категорий.
 
-Пример использования
---------------------
-    
-    from src.suppliers.aliexpress.api.helpers import api_request, get_list_as_string
+Примеры использования
+---------------------
 
-    # Пример использования api_request
-    # result = await api_request(...)
+Импорт необходимых функций:
 
-    # Пример использования get_list_as_string
-    # string_list = get_list_as_string([1, 2, 3])
+.. code-block:: python
 
+    from src.suppliers.aliexpress.api.helpers import api_request, get_list_as_string, get_product_ids, parse_products, filter_parent_categories, filter_child_categories
+
+Использование `api_request` для отправки запроса:
+
+.. code-block:: python
+
+    # TODO: Пример использования api_request
+    pass
 """
-from src.logger.logger import logger # подключаем логгер
-# from .requests import api_request # импорт функции для выполнения API-запросов
-# from .arguments import get_list_as_string, get_product_ids  # импорт функций для обработки аргументов
-# from .products import parse_products # импорт функции для парсинга продуктов
-# from .categories import filter_parent_categories, filter_child_categories # импорт функций для фильтрации категорий
-# TODO: если импорты не используются, их нужно удалить. Оставил их для примера, так как нет их фактической реализации
-
-
+# добавляем импорт logger
+from src.logger.logger import logger
+# импорт функций для работы с API
+from .requests import api_request
+# импорт функций для обработки аргументов
+from .arguments import get_list_as_string, get_product_ids
+# импорт функции для парсинга продуктов
+from .products import parse_products
+# импорт функций для фильтрации категорий
+from .categories import filter_parent_categories, filter_child_categories
 ```

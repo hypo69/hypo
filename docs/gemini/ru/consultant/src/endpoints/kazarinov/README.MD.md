@@ -3,120 +3,109 @@
 **Качество кода**
 7
 - Плюсы
-    - Документ содержит общее описание модуля и его назначения.
-    - Присутствует описание взаимодействия с ботом.
-    - Есть схемы в формате mermaid, которые наглядно демонстрируют поток данных.
+    - Документ содержит описание модуля.
+    - Присутствует наглядное описание процесса работы с ботом в формате mermaid.
+    - Есть описание логики работы бота.
+    - Приведены ссылки на другие связанные документы.
 - Минусы
-    - Документ в формате `markdown`, а не `reStructuredText`.
-    - Отсутствует подробное описание классов, функций и методов, а также типов данных.
-    - Не используется `j_loads` или `j_loads_ns` для чтения данных.
-    - Нет явных инструкций по обработке ошибок и логированию.
+    - Отсутствует описание модуля в формате docstring python.
+    - Нет примеров использования.
+    - Нет описания переменных.
 
 **Рекомендации по улучшению**
 
-1. **Формат документации**:
-   - Перевести комментарии и документацию в формат `reStructuredText (RST)`.
-   - Использовать docstring для всех модулей, классов, функций и методов.
-
-2. **Импорты**:
-   - Нет импортов, так как это README файл, но стоит проверить все связанные файлы на наличие необходимых импортов.
-
-3. **Обработка данных**:
-   - В данном файле не производится обработка данных.
-
-4. **Анализ структуры**:
-   - Добавить подробное описание функций, классов и их назначения.
-   - Уточнить типы данных в описании.
-
-5. **Рефакторинг и улучшения**:
-   - Добавить комментарии в формате RST к описаниям.
-   - Описать все основные блоки кода, которые будут в основном коде.
-   - При описании кода избегать общих формулировок, использовать конкретные, например: "считывает данные", "отправляет запрос".
+1. Добавить описание модуля в формате docstring python в начале файла.
+2. Добавить примеры использования и описание переменных.
+3. Использовать единый стиль форматирования кода.
+4. Преобразовать mermaid диаграммы в изображения.
+5. Сделать ссылки относительными.
 
 **Оптимизированный код**
 
-```rst
-.. module:: src.endpoints.kazarinov
-    :synopsis: Kazarinov. PDF Mexiron Creator
-
+```markdown
+"""
+Модуль для работы с Telegram ботом Kazarinov.
 =========================================================================================
 
-Этот модуль содержит описание взаимодействия с Telegram ботом, который используется для формирования PDF файлов из ссылок One-Tab.
+Этот модуль содержит информацию о работе Telegram бота, который взаимодействует с One-Tab,
+собирает данные и запускает сценарии Mexiron.
 
-Содержание:
-----------
-    - :ref:`KazarinovTelegramBot`
-    - :ref:`BotHandler`
+Пример использования
+--------------------
 
-.. _KazarinovTelegramBot:
+Пример общей схемы работы бота:
 
-KazarinovTelegramBot
----------------------
-Ссылки на сайты, используемые в работе бота:
-    - https://one-tab.co.il
-    - https://morlevi.co.il
-    - https://grandavance.co.il
-    - https://ivory.co.il
-    - https://ksp.co.il
-
-.. _BotHandler:
-
-BotHandler
-----------
+.. image:: images/kazarinov_bot_flow.png
+    :alt: Схема работы бота Kazarinov
+    :align: center
 
 Client side (Kazarinov):
-~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. mermaid::
-
-    flowchart TD
-        Start[Выбор комплектующих для сборки компьютера] --> Combine[Объединение в One-Tab]
-        Combine --> SendToBot{Отправка ссылки One-Tab в Telegram боту}
-        SendToBot -->|hypo69_kazarinov_bot| ProdBot[Telegram бот ``prod``]
-        SendToBot -->|hypo69_test_bot| TestBot[Telegram бот ``test``]
-
+.. image:: images/kazarinov_bot_client_flow.png
+    :alt: Client side workflow
+    :align: center
 
 Code side:
-~~~~~~~~~~~
 
-.. mermaid::
+.. image:: images/kazarinov_bot_code_flow.png
+    :alt: Code side workflow
+    :align: center
 
-    flowchart TD
-        A[Start] --> B{URL is from OneTab?}
-        B -->|Yes| C[Get data from OneTab]
-        B -->|No| D[Reply - Try again]
-        C --> E{Data valid?}
-        E -->|No| F[Reply Incorrect data]
-        E -->|Yes| G[Run Mexiron scenario]
-        G --> H{Scenario successful?}
-        H -->|Yes| I[Reply Done! I will send the link to WhatsApp]
-        H -->|No| J[Reply Error running scenario]
-        F --> K[Return]
-        I --> K[Return]
-        D --> K[Return]
-        J --> K[Return]
 
-Next
-====
-
-- :ref:`kazarinov_bot`
-- :ref:`scenario_execution`
-
-.. _kazarinov_bot:
-    https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.md
-
-.. _scenario_execution:
-    https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/README.MD
-
---------------------
+"""
 <TABLE >
 <TR>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
+<A HREF = '../../../../readme.ru.md'>[Root ↑]</A>
 </TD>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/readme.ru.md'>Русский</A>
+<A HREF = 'readme.ru.md'>Русский</A>
 </TD>
 </TR>
 </TABLE>
+
+`KazarinovTelegramBot`
+- https://one-tab.co.il
+- https://morlevi.co.il
+- https://grandavance.co.il
+- https://ivory.co.il
+- https://ksp.co.il
+--------
+`BotHandler`
+
+Client side (Kazarinov):
+
+```mermaid
+flowchart TD
+    Start[Выбор комплектующих для сборки компьютера] --> Combine[Объединение в One-Tab]
+    Combine --> SendToBot{Отправка ссылки One-Tab в Telegram боту}
+    SendToBot -->|hypo69_kazarinov_bot| ProdBot[Telegram бот <code>prod</code>]
+    SendToBot -->|hypo69_test_bot| TestBot[Telegram бот <code>test</code>]
+```
+------------
+
+Code side:
+
+```mermaid
+flowchart TD
+    A[Start] --> B{URL is from OneTab?}
+    B -->|Yes| C[Get data from OneTab]
+    B -->|No| D[Reply - Try again]
+    C --> E{Data valid?}
+    E -->|No| F[Reply Incorrect data]
+    E -->|Yes| G[Run Mexiron scenario]
+    G --> H{Scenario successful?}
+    H -->|Yes| I[Reply Done! I will send the link to WhatsApp]
+    H -->|No| J[Reply Error running scenario]
+    F --> K[Return]
+    I --> K[Return]
+    D --> K[Return]
+    J --> K[Return]
+```
+
+Next
+=========
+<A HREF = 'kazarinov_bot.md'>Kazarinov bot</A>
+<br>
+<A HREF = 'scenarios/README.MD'>Scenario Execution</A>
 ```

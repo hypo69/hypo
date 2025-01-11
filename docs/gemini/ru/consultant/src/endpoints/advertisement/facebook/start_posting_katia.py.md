@@ -1,68 +1,86 @@
 # Анализ кода модуля `start_posting_katia.py`
 
 **Качество кода**
-- 7
-    - Плюсы
-        - Код структурирован и разделен на логические блоки.
-        - Используется логгер для отслеживания ошибок и событий.
-        - Присутствует обработка прерывания через `KeyboardInterrupt`.
-    - Минусы
-        - Отсутствует документация в формате RST.
-        - Не все импорты соответствуют стандартам.
-        - Захардкоженные значения переменных, таких как `MODE`.
-        - Не используется `j_loads` или `j_loads_ns` для чтения файлов.
-        - Нет проверок на корректность данных в `filenames` и `campaigns`.
-        - Нет комментариев к коду, который бы пояснял его предназначение.
-        - Не используется `asyncio`.
+    
+-   Плюсы
+        - Код соответствует базовым требованиям по импортам и структуре.
+        - Присутствует обработка прерывания с клавиатуры (KeyboardInterrupt).
+        - Используется кастомный класс `FacebookPromoter`.
+    
+-   Минусы
+        - Отсутствует документация модуля и функций в формате RST.
+        - Не используются `j_loads` или `j_loads_ns` для загрузки JSON файлов.
+        - Жестко заданы значения для `filenames` и `campaigns` в коде.
+        - Нет обработки возможных ошибок при работе с `FacebookPromoter`.
 
 **Рекомендации по улучшению**
 
-1.  **Документирование**: Добавить docstring к модулю, функциям и классам в формате RST.
-2.  **Импорты**: Пересмотреть и привести в соответствие импорты.
-3.  **Конфигурация**: Заменить захардкоженные значения на конфигурационные переменные.
-4.  **Чтение файлов**: Использовать `j_loads` или `j_loads_ns` для чтения файлов.
-5.  **Обработка ошибок**: Заменить стандартные блоки `try-except` на обработку ошибок через `logger.error`.
-6.  **Проверка данных**: Добавить проверки на валидность данных, таких как `filenames` и `campaigns`.
-7.  **Асинхронность**: Использовать `asyncio` для неблокирующих операций.
-8. **Комментарии**: Добавить комментарии к коду, которые бы поясняли его предназначение.
+1.  **Добавить документацию модуля и функций**:
+    -   В начале файла добавить описание модуля в формате RST.
+    -   Добавить docstring для класса `FacebookPromoter`, его методов.
+2.  **Использовать `j_loads_ns` для загрузки JSON**:
+    -  Изменить способ загрузки JSON файлов для использования `j_loads_ns` из `src.utils.jjson`.
+3.  **Обработка ошибок**:
+    - Добавить обработку исключений, которые могут возникнуть при работе с `FacebookPromoter`, с использованием `logger.error`.
+4.  **Улучшить читаемость**:
+    -   Использовать константы для хранения `filenames` и `campaigns`.
+5.  **Улучшение логирования**:
+   -  Использовать `logger` для записи информационных сообщений, а не только для ошибок.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для запуска рекламной кампании в Facebook через Katia.
-==============================================================
+Модуль для запуска рекламных кампаний Facebook.
+=========================================================================================
 
-Этот модуль предназначен для автоматизации процесса публикации рекламных объявлений в группах Facebook.
-Использует класс `FacebookPromoter` для управления процессом публикации.
+Модуль :mod:`src.endpoints.advertisement.facebook.start_posting_katia` предназначен
+для автоматизации процесса публикации рекламных объявлений в группах Facebook.
+Использует класс :class:`FacebookPromoter` для управления рекламными кампаниями.
 
 Пример использования
 --------------------
 
+Запуск рекламных кампаний:
+
 .. code-block:: python
 
-    python start_posting_katia.py
+    from src.webdriver.driver import Driver, Chrome
+    from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
+    from src.logger.logger import logger
+
+    d = Driver(Chrome)
+    d.get_url(r"https://facebook.com")
+
+    filenames = ['katia_homepage.json']
+    campaigns = [
+        'sport_and_activity',
+        'bags_backpacks_suitcases',
+        'pain',
+        'brands',
+        'mom_and_baby',
+        'house',
+    ]
+
+    promoter = FacebookPromoter(d, group_file_paths=filenames, no_video=False)
+
+    try:
+        promoter.run_campaigns(campaigns)
+    except KeyboardInterrupt:
+        logger.info("Campaign promotion interrupted.")
+
 """
-# Импортируем необходимые библиотеки
-from src.utils.jjson import j_loads_ns # Используем j_loads_ns для загрузки json файлов
+#  Описание модуля в начале файла.
+from pathlib import Path
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
-from src.logger.logger import logger
-from typing import List
-import os
+from src.logger.logger import logger  # logger импортирован из src.logger.logger
+from src.utils.jjson import j_loads_ns #  Импорт j_loads_ns из src.utils.jjson
 
-MODE = os.getenv('MODE', 'dev') # Используем переменную окружения для режима работы
-
-# Инициализация веб-драйвера
-driver = Driver(Chrome)
-driver.get_url("https://facebook.com")
-
-
-# Пути к файлам с настройками групп
-filenames: List[str] = ['katia_homepage.json']
-# Список кампаний для запуска
-campaigns: List[str] = [
+# Константы для имен файлов и кампаний
+FILENAMES: list = ['katia_homepage.json']  # Список имен файлов для загрузки
+CAMPAIGNS: list = [ # Список рекламных кампаний
     'sport_and_activity',
     'bags_backpacks_suitcases',
     'pain',
@@ -72,18 +90,15 @@ campaigns: List[str] = [
 ]
 
 
-try:
-    # Инициализация промоутера
-    promoter = FacebookPromoter(driver, group_file_paths=filenames, no_video=False)
-    # Запуск рекламных кампаний
-    promoter.run_campaigns(campaigns)
-except KeyboardInterrupt:
-    # Логирование прерывания кампании
-    logger.info("Campaign promotion interrupted.")
-except Exception as ex:
-    # Логирование любой другой ошибки
-    logger.error(f"An error occurred during campaign promotion: {ex}")
-finally:
-    # Закрытие драйвера
-    driver.close()
+d = Driver(Chrome)  # Инициализация драйвера Chrome
+d.get_url(r"https://facebook.com")  #  Открытие страницы Facebook
+
+promoter = FacebookPromoter(d, group_file_paths=FILENAMES, no_video=False)  #  Инициализация промоутера с драйвером и файлами
+
+try: #  Блок try-except для обработки ошибок
+    promoter.run_campaigns(CAMPAIGNS) #  Запуск рекламных кампаний
+except KeyboardInterrupt: #  Обработка прерывания с клавиатуры
+    logger.info("Campaign promotion interrupted.") #  Логирование прерывания
+except Exception as e: #  Обработка возможных ошибок при работе промоутера
+    logger.error(f"An error occurred during campaign promotion: {e}") #  Логирование ошибок
 ```

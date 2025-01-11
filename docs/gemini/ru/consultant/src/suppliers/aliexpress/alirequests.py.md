@@ -1,94 +1,94 @@
 # Анализ кода модуля `alirequests.py`
 
 **Качество кода**
-9
+8
 -  Плюсы
-    - Код хорошо структурирован, разбит на классы и функции.
+    - Код хорошо структурирован и разбит на логические блоки.
     - Используется `logger` для логирования ошибок.
-    - Применяется `fake_useragent` для генерации `User-Agent`.
-    - Использование `requests.Session` для управления сессией.
-    - Обработка кукисов.
-    - Учтены разные случаи при загрузке кукис.
- -  Минусы
-    -  Не все функции и методы снабжены комментариями в формате RST.
-    -  В некоторых функциях избыточное использование try-except, можно использовать `logger.error` с `return False`
-    -  Метод `_handle_session_id` можно упростить.
-    -  Отсутствуют docstring к модулю.
+    - Применяется `requests.Session()` для повторного использования сессий.
+    -  Используются f-строки для форматирования строк.
+    -  Присутствует документация для классов и методов.
+-  Минусы
+    - Не все функции имеют docstring в формате RST (не указаны параметры, возвращаемые значения, исключения)
+    - Есть дублирование кода в блоках `except` (вывод в logger), это можно упростить.
+    - Метод `_handle_session_id` имеет лишнюю проверку `if self.session_id == cookie.value`
+    -  Использование `logger.success` является не стандартным, лучше использовать `logger.info`.
+    - Не везде соблюдается использование одинарных кавычек.
 
 **Рекомендации по улучшению**
-- Добавить docstring к модулю в формате RST.
-- Все функции и методы должны иметь docstring в формате RST.
-- Избегать избыточного использования try-except, в основном через `logger.error` и `return False`.
-- Упростить метод `_handle_session_id`.
-- Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`, если это необходимо, но в данном случае нет прямого использования json.
+
+1.  Добавить подробные docstring в формате RST для всех методов, с описанием параметров, возвращаемых значений и возможных исключений.
+2.  Упростить обработку исключений в методах, вынеся повторяющийся код в отдельную функцию или используя более общую обработку.
+3.  Убрать лишнюю проверку в `_handle_session_id`, если нужно обновить `JSESSIONID`, то нужно его всегда обновлять, иначе не обновлять.
+4.  Заменить `logger.success` на `logger.info` для логирования успешных операций.
+5.  Унифицировать использование кавычек (использовать одинарные кавычки везде, кроме операций вывода).
+6. Добавить описание модуля в начале файла
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для работы с запросами к AliExpress.
-=====================================================
-
-Этот модуль содержит класс :class:`AliRequests`, который используется
-для выполнения HTTP-запросов к AliExpress с использованием
-сессий и обработки cookies.
+Модуль для обработки запросов к AliExpress.
+===========================================
+Этот модуль содержит класс :class:`AliRequests`, который используется для отправки HTTP-запросов к AliExpress,
+управления куки и получения коротких ссылок.
 """
 import pickle
 import requests
 from pathlib import Path
-from typing import List, Optional, Dict
+from typing import List, Optional
 from requests.cookies import RequestsCookieJar
 from urllib.parse import urlparse
 from fake_useragent import UserAgent
 
 from src import gs
-from src.utils.jjson import j_dumps
+# from src.utils.jjson import j_dumps # не используется
 from src.logger.logger import logger
+
 
 class AliRequests:
     """
-    Класс для управления запросами к AliExpress.
+    Класс для отправки запросов к AliExpress.
 
-    Использует библиотеку `requests` для выполнения HTTP-запросов,
-    управляет сессиями, обрабатывает cookies и генерирует
-    короткие партнерские ссылки.
+    Этот класс управляет куки, сессиями и отправляет GET запросы к AliExpress.
     """
 
     def __init__(self, webdriver_for_cookies: str = 'chrome'):
         """
-        Инициализирует класс AliRequests.
+        Инициализация класса AliRequests.
 
-        :param webdriver_for_cookies: Имя вебдрайвера для загрузки cookies.
-        :type webdriver_for_cookies: str
+        Args:
+            webdriver_for_cookies (str, optional): Имя вебдрайвера для загрузки куки. По умолчанию 'chrome'.
         """
         self.cookies_jar = RequestsCookieJar()
         self.session_id = None
         self.headers = {'User-Agent': UserAgent().random}
         self.session = requests.Session()
-        # Загружает куки из файла
+
         self._load_webdriver_cookies_file(webdriver_for_cookies)
 
     def _load_webdriver_cookies_file(self, webdriver_for_cookies: str = 'chrome') -> bool:
         """
         Загружает куки из файла вебдрайвера.
 
-        :param webdriver_for_cookies: Имя вебдрайвера.
-        :type webdriver_for_cookies: str
-        :return: True, если куки успешно загружены, False в противном случае.
-        :rtype: bool
+        Args:
+            webdriver_for_cookies (str): Имя вебдрайвера.
+
+        Returns:
+            bool: True, если куки успешно загружены, False в противном случае.
+
+        Raises:
+            FileNotFoundError: Если файл куки не найден.
+            ValueError: Если возникают ошибки при чтении файла куки.
+            Exception: При возникновении других ошибок.
         """
         cookie_file_path = Path(gs.dir_cookies, 'aliexpress.com', webdriver_for_cookies, 'cookie')
-        
+
         try:
-            # код исполняет открытие файла кукис в бинарном режиме для чтения
             with open(cookie_file_path, 'rb') as file:
-                # код исполняет десериализацию кукис
                 cookies_list = pickle.load(file)
                 for cookie in cookies_list:
-                    # код исполняет установку кукис в jar
                     self.cookies_jar.set(
                         cookie['name'],
                         cookie['value'],
@@ -98,101 +98,106 @@ class AliRequests:
                         rest={'HttpOnly': cookie.get('HttpOnly', 'false'), 'SameSite': cookie.get('SameSite', 'unspecified')},
                         expires=cookie.get('expirationDate')
                     )
-                logger.success(f"Cookies loaded from {cookie_file_path}")
-                # Обновляет куки сессии после загрузки
+                logger.info(f"Cookies loaded from {cookie_file_path}")
                 self._refresh_session_cookies()
                 return True
         except FileNotFoundError as ex:
-            logger.error(f"Failed to load cookies from {cookie_file_path}", ex)
+            logger.error(f"Failed to load cookies from {cookie_file_path}", exc_info=ex)
             return False
-        except (ValueError, Exception) as ex:
-            logger.error("An error occurred while loading cookies", ex)
+        except ValueError as ex:
+            logger.error(f"Failed to load cookies from {cookie_file_path}", exc_info=ex)
             return False
-    
-    def _refresh_session_cookies(self):
-        """
-        Обновляет куки сессии.
+        except Exception as ex:
+            logger.error("An error occurred while loading cookies", exc_info=ex)
+            return False
 
-        Выполняет GET-запрос для обновления куки сессии,
-        используя текущие cookies.
-        """
+    def _refresh_session_cookies(self):
+        """Обновляет куки сессии."""
         url = 'https://portals.aliexpress.com'
         try:
-            # код исполняет отправку GET-запроса для обновления кукис
-            resp = self.session.get(url, headers=self.headers, cookies=self.cookies_jar) if self.cookies_jar else self.session.get(url, headers=self.headers)
+            if self.cookies_jar:
+                resp = self.session.get(url, headers=self.headers, cookies=self.cookies_jar)
+            else:
+                resp = self.session.get(url, headers=self.headers)
+
             self._handle_session_id(resp.cookies)
         except requests.RequestException as ex:
-            logger.error(f"Failed to refresh session cookies from {url}", ex)
+            logger.error(f"Failed to refresh session cookies from {url}", exc_info=ex)
         except Exception as ex:
-            logger.error("An error occurred while refreshing session cookies", ex)
-    
-    def _handle_session_id(self, response_cookies: RequestsCookieJar):
-        """
-        Обрабатывает JSESSIONID в cookies ответа.
+            logger.error("An error occurred while refreshing session cookies", exc_info=ex)
 
-        :param response_cookies: Cookies, полученные в ответе.
-        :type response_cookies: requests.cookies.RequestsCookieJar
+    def _handle_session_id(self, response_cookies):
         """
-        
-        session_id = next((cookie.value for cookie in response_cookies if cookie.name == 'JSESSIONID'), None)
-        if session_id:
-            if self.session_id != session_id:
-                self.session_id = session_id
-                for cookie in response_cookies:
-                    if cookie.name == 'JSESSIONID':
-                        self.cookies_jar.set(
-                        cookie.name,
-                        cookie.value,
-                        domain=cookie.domain,
-                        path=cookie.path,
-                        secure=cookie.secure,
-                        rest={'HttpOnly': cookie._rest.get('HttpOnly', 'false'), 'SameSite': cookie._rest.get('SameSite', 'unspecified')},
-                        expires=cookie.expires
-                        )
-                return
-        logger.warning("JSESSIONID not found in response cookies")
-       
+        Обрабатывает JSESSIONID в куки ответа.
 
-    def make_get_request(self, url: str, cookies: Optional[List[Dict]] = None, headers: Optional[Dict] = None) -> Optional[requests.Response]:
+        Args:
+            response_cookies (requests.cookies.RequestsCookieJar): Куки ответа.
         """
-        Выполняет GET-запрос с cookies.
+        session_id_found = False
+        for cookie in response_cookies:
+            if cookie.name == 'JSESSIONID':
+                # Обновляет session_id и куки, если JSESSIONID найден
+                self.session_id = cookie.value
+                self.cookies_jar.set(
+                    cookie.name,
+                    cookie.value,
+                    domain=cookie.domain,
+                    path=cookie.path,
+                    secure=cookie.secure,
+                    rest={'HttpOnly': cookie._rest.get('HttpOnly', 'false'), 'SameSite': cookie._rest.get('SameSite', 'unspecified')},
+                    expires=cookie.expires
+                )
+                session_id_found = True
+                break
 
-        :param url: URL для выполнения GET-запроса.
-        :type url: str
-        :param cookies: Список cookies для использования в запросе.
-        :type cookies: Optional[List[Dict]]
-        :param headers: Заголовки для включения в запрос.
-        :type headers: Optional[Dict]
-        :return: Объект requests.Response в случае успеха, False в противном случае.
-        :rtype: Optional[requests.Response]
+        if not session_id_found:
+            logger.warning("JSESSIONID not found in response cookies")
+
+
+    def make_get_request(self, url: str, cookies: Optional[List[dict]] = None, headers: Optional[dict] = None) -> Optional[requests.Response]:
+        """
+        Выполняет GET запрос с куки.
+
+        Args:
+            url (str): URL для отправки GET запроса.
+            cookies (List[dict], optional): Список куки для использования в запросе.
+            headers (dict, optional): Дополнительные заголовки для запроса.
+
+        Returns:
+            requests.Response: Объект requests.Response, если запрос успешен, иначе None.
+        Raises:
+            requests.RequestException: При ошибке HTTP запроса
+            Exception: При возникновении других ошибок.
         """
         headers = headers or self.headers
         try:
-            # Обновляет cookies сессии перед выполнением запроса
             self.session.cookies.update(self.cookies_jar)
-            # код исполняет отправку GET-запроса
             resp = self.session.get(url, headers=headers)
             resp.raise_for_status()
+
             self._handle_session_id(resp.cookies)
+
             return resp
         except requests.RequestException as ex:
-            logger.error(f"Request to {url} failed", ex)
-            return False
+            logger.error(f"Request to {url} failed", exc_info=ex)
+            return None
         except Exception as ex:
-            logger.error(f"An error occurred while making a GET request to {url}", ex)
-            return False
+            logger.error(f"An error occurred while making a GET request to {url}", exc_info=ex)
+            return None
 
     def short_affiliate_link(self, link_url: str) -> Optional[requests.Response]:
         """
-        Генерирует короткую партнерскую ссылку.
+        Получает короткую партнерскую ссылку.
 
-        :param link_url: URL для сокращения.
-        :type link_url: str
-        :return: Объект requests.Response в случае успеха, False в противном случае.
-        :rtype: Optional[requests.Response]
+        Args:
+            link_url (str): URL для сокращения.
+
+        Returns:
+            requests.Response: Объект requests.Response, если запрос успешен, иначе None.
         """
         base_url = 'https://portals.aliexpress.com/affiportals/web/link_generator.htm'
         track_id = 'default'
         url = f"{base_url}?trackId={track_id}&targetUrl={link_url}"
         return self.make_get_request(url)
+
 ```

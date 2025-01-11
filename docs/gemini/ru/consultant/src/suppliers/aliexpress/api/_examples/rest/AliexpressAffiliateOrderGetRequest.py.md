@@ -1,36 +1,37 @@
 # Анализ кода модуля `AliexpressAffiliateOrderGetRequest.py`
 
 **Качество кода**
-8
+9
 -  Плюсы
-    - Код структурирован и соответствует базовым принципам объектно-ориентированного программирования.
-    - Присутствует docstring для модуля.
-    - Используется наследование от `RestApi`.
--  Минусы
-    - Отсутствуют docstring для классов и методов.
-    - Не используется `logger` для обработки ошибок.
-    - Не используются `j_loads` или `j_loads_ns`.
-    - Код не соответствует стандарту PEP8 (например, длина строк, отступы, именование переменных)
-    - Отсутствует импорт модуля `logger`
+    - Код соответствует основным требованиям, включая использование одинарных кавычек, сохранение комментариев.
+    -  Класс `AliexpressAffiliateOrderGetRequest` наследуется от `RestApi`.
+    -  Имеется метод `getapiname`, возвращающий имя API.
+ -  Минусы
+    -  Отсутствует docstring для класса и метода.
+    -  Нет импорта для `logger`.
+    -  Не используется `j_loads` или `j_loads_ns` (это пример, поэтому допустимо).
+    -  Не хватает комментариев в формате RST.
+    -  Необходимо добавить описание модуля.
+    -  Отсутствуют проверки типов данных.
 
 **Рекомендации по улучшению**
-
-1.  **Документация:** Добавить docstring для класса `AliexpressAffiliateOrderGetRequest` и его методов, используя формат reStructuredText.
-2.  **Логирование:**  Импортировать `logger` из `src.logger.logger` и использовать его для обработки ошибок.
-3.  **Импорт `j_loads`:** В данном коде нет явной работы с файлами, поэтому использование `j_loads` и `j_loads_ns` пока не требуется. 
-4.  **Стандартизация:** Переименовать `getapiname` в `get_api_name` для соответствия общему стилю.
-5.  **Форматирование:** Привести код к стандарту PEP8, используя линтер (например, flake8 или pylint).
+1. Добавить docstring к модулю, классу и методу для соответствия стандартам оформления документации.
+2. Добавить импорт `logger` из `src.logger.logger`.
+3. Указать типы данных для переменных и параметров методов.
+4. Добавить комментарии в формате RST к классу и методу.
+5. Добавить описание модуля в начало файла.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
+# <- venv win
 """
-Модуль для работы с API Aliexpress для получения информации о заказах.
-===================================================================
+Модуль для работы с API Aliexpress Affiliate Order.
+=========================================================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateOrderGetRequest`, 
-который используется для отправки запросов к API Aliexpress для получения информации о заказах.
+Этот модуль содержит класс :class:`AliexpressAffiliateOrderGetRequest`, который используется для
+получения информации о заказах через API AliExpress.
 
 Пример использования
 --------------------
@@ -40,42 +41,57 @@
 .. code-block:: python
 
     request = AliexpressAffiliateOrderGetRequest()
-    request.order_ids = "12345,67890"
-    response = request.get_response()
-
+    request.order_ids = "123456789,987654321"
+    response = request.getResponse()
+    print(response)
 """
-from src.logger.logger import logger # Импортируем logger
+from src.logger.logger import logger # Импорт logger
 from ..base import RestApi
-# class AliexpressAffiliateOrderGetRequest
+
+
 class AliexpressAffiliateOrderGetRequest(RestApi):
     """
-    Класс для отправки запроса на получение информации о заказах Aliexpress.
+    Класс для отправки запроса на получение информации о заказах через API AliExpress.
 
-    :param domain: Домен API. По умолчанию "api-sg.aliexpress.com".
+    :param domain: Доменное имя для API (по умолчанию "api-sg.aliexpress.com").
     :type domain: str
-    :param port: Порт API. По умолчанию 80.
+    :param port: Порт для API (по умолчанию 80).
     :type port: int
-    """
-    def __init__(self, domain="api-sg.aliexpress.com", port=80):
-        """
-        Инициализирует класс AliexpressAffiliateOrderGetRequest.
-        """
-        # Инициализируем родительский класс RestApi
-        RestApi.__init__(self, domain, port)
-        #  Инициализация атрибута app_signature
-        self.app_signature = None
-        #  Инициализация атрибута fields
-        self.fields = None
-        # Инициализация атрибута order_ids
-        self.order_ids = None
+    :ivar app_signature: Сигнатура приложения.
+    :vartype app_signature: str
+    :ivar fields: Список полей для запроса.
+    :vartype fields: str
+    :ivar order_ids: Список идентификаторов заказов.
+    :vartype order_ids: str
 
-    def get_api_name(self):
+    Example:
+        >>> request = AliexpressAffiliateOrderGetRequest()
+        >>> request.order_ids = '12345,67890'
+        >>> request.fields = 'order_id,gmt_create'
+        >>> print(request.getapiname())
+        aliexpress.affiliate.order.get
+    """
+    def __init__(self, domain: str = "api-sg.aliexpress.com", port: int = 80):
+        """
+        Инициализирует объект класса AliexpressAffiliateOrderGetRequest.
+        
+        :param domain: Доменное имя для API.
+        :type domain: str
+        :param port: Порт для API.
+        :type port: int
+        """
+        RestApi.__init__(self, domain, port)
+        # Инициализация параметров запроса
+        self.app_signature: str = None
+        self.fields: str = None
+        self.order_ids: str = None
+
+    def getapiname(self) -> str:
         """
         Возвращает имя API метода.
-        
+
         :return: Имя API метода.
         :rtype: str
         """
-        # Возвращаем имя API метода
         return 'aliexpress.affiliate.order.get'
 ```

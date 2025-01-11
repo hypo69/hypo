@@ -28,11 +28,12 @@ import header
 from src import gs
 from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_dumps
-from src.endpoints.prestashop import PrestaCategory
+from src.endpoints.prestashop.category import PrestaCategory, PrestaCategoryAsync
 
 
-class Category(PrestaCategory):
+class Category(PrestaCategoryAsync):
     """Category handler for product categories. Inherits from PrestaCategory."""
+
     credentials: Dict = None
 
     def __init__(self, api_credentials, *args, **kwargs):
@@ -44,14 +45,6 @@ class Category(PrestaCategory):
         """
         super().__init__(api_credentials, *args, **kwargs)
 
-    def get_parents(self, id_category, dept):
-        """Retrieves a list of parent categories.
-
-        :param id_category: The ID of the category to retrieve parents for.
-        :param dept: Depth level of the category.
-        :returns: A list of parent categories.
-        """
-        return super().get_list_parent_categories(id_category)
 
     async def crawl_categories_async(self, url, depth, driver, locator, dump_file, default_category_id, category=None):
         """Asynchronously crawls categories, building a hierarchical dictionary.
@@ -71,7 +64,7 @@ class Category(PrestaCategory):
                 'url': url,
                 'name': '',
                 'presta_categories': {
-                    'default_category': id_category_default,
+                    'default_category': default_category_id,
                     'additional_categories': []
                 },
                 'children': {}
@@ -89,10 +82,10 @@ class Category(PrestaCategory):
                 return category
 
             tasks = [
-                self.crawl_categories_async(link_url, depth - 1, driver, locator, dump_file, id_category_default, new_category)
+                self.crawl_categories_async(link_url, depth - 1, driver, locator, dump_file, default_category_id, new_category)
                 for name, link_url in category_links
                 if not self._is_duplicate_url(category, link_url)
-                for new_category in [{'url': link_url, 'name': name, 'presta_categories': {'default_category': id_category_default, 'additional_categories': []}, 'children': {}}]
+                for new_category in [{'url': link_url, 'name': name, 'presta_categories': {'default_category': default_category_id, 'additional_categories': []}, 'children': {}}]
             ]
             await asyncio.gather(*tasks)
 
@@ -101,7 +94,7 @@ class Category(PrestaCategory):
             logger.error(f"An error occurred during category crawling: ", ex)
             return category
 
-    def crawl_categories(self, url, depth, driver, locator, dump_file, id_category_default, category={}):
+    def crawl_categories(self, url, depth, driver, locator, dump_file, default_category_id, category={}):
         """
         Crawls categories recursively and builds a hierarchical dictionary.
 
@@ -132,12 +125,12 @@ class Category(PrestaCategory):
                     'url': link_url,
                     'name': name,
                     'presta_categories': {
-                        'default_category': id_category_default,
+                        'default_category': default_category_id,
                         'additional_categories': []
                     }
                 }
                 category[name] = new_category
-                self.crawl_categories(link_url, depth - 1, driver, locator, dump_file, id_category_default, new_category)
+                self.crawl_categories(link_url, depth - 1, driver, locator, dump_file, default_category_id, new_category)
             # Using j_loads and j_dumps for safe JSON handling
             loaded_data = j_loads(dump_file)
             category = {**loaded_data, **category}

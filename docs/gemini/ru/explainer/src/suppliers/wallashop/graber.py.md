@@ -1,145 +1,125 @@
 ## АНАЛИЗ КОДА: `hypotez/src/suppliers/wallashop/graber.py`
 
-### <алгоритм>
+### 1. <алгоритм>
+   
+   **Блок-схема:**
+   
+   ```mermaid
+   flowchart TD
+      Start[Начало] --> ImportModules[Импорт модулей];
+      ImportModules --> ClassGraber[Определение класса `Graber`];
+      ClassGraber --> InitMethod[Инициализация `__init__`];
+      InitMethod --> SetPrefix[Установка `supplier_prefix`];
+      SetPrefix --> SuperInit[Вызов `super().__init__`];
+      SuperInit --> SetContextLocator[Установка `Context.locator_for_decorator = None`];
+      SetContextLocator --> End[Конец];
 
-1.  **Импорт модулей и классов:**
-    *   Импортируются необходимые модули и классы из `typing`, `header`, `src.suppliers.graber`, `src.webdriver.driver`, `src.logger.logger`.
+   style Start fill:#f9f,stroke:#333,stroke-width:2px
+   style End fill:#f9f,stroke:#333,stroke-width:2px
+   ```
+
+   **Примеры:**
+
+   *   **Импорт модулей**:
+        *   `from typing import Any`: Импортирует `Any` для аннотаций типов.
+        *   `import header`: Импортирует модуль `header` для определения корня проекта.
+        *   `from src.suppliers.graber import Graber as Grbr, Context, close_pop_up`: Импортирует класс `Graber` (как `Grbr`), `Context` и `close_pop_up` из модуля `src.suppliers.graber`.
+        *   `from src.webdriver.driver import Driver`: Импортирует класс `Driver` из модуля `src.webdriver.driver`.
+        *    `from src.logger.logger import logger`: Импортирует `logger` для логирования.
     
-        *   `from typing import Any` - Импорт `Any` для аннотаций типов, позволяющий переменным быть любого типа.
-        *   `import header` - Импорт модуля `header`, предположительно содержащего общие настройки и константы проекта.
-        *  `from src.suppliers.graber import Graber as Grbr, Context, close_pop_up` - Импорт `Graber` (как `Grbr`), `Context`, и `close_pop_up` из `src.suppliers.graber`.
-        *   `from src.webdriver.driver import Driver` - Импорт `Driver` из `src.webdriver.driver`.
-        *   `from src.logger.logger import logger` - Импорт `logger` из `src.logger.logger` для логирования.
-
-2.  **Определение класса `Graber`:**
-    *   Класс `Graber` наследуется от класса `Graber` (импортированного как `Grbr`) из модуля `src.suppliers.graber`.
-    *   Определяется атрибут класса `supplier_prefix` со значением `wallashop`.
-    *   Метод `__init__` инициализирует экземпляр класса:
-        *   Устанавливает `supplier_prefix` как `'wallashop'`.
-        *   Вызывает конструктор родительского класса `Grbr` с `supplier_prefix` и экземпляром `driver`.
-        *   Устанавливает `Context.locator_for_decorator = None`. Это означает, что стандартный декоратор не будет вызван.
-
-3.  **Декоратор `close_pop_up` (закомментирован):**
-    *   Функция `close_pop_up` предназначена для создания декоратора, который закрывает всплывающие окна перед выполнением основной функции.
-    *   Декоратор перехватывает `ExecuteLocatorException` и логирует ошибку.
-    *   Пример использования декоратора:
-
-     ```python
-    # @close_pop_up()
-    # async def some_function(self, value):
-    #     # ... основная логика функции
-     ```
-   *   Если `Context.locator` установлен, то при вызове функции с этим декоратором, выполниться запрос к веб-драйверу.
-
-4.  **Примеры:**
-    *   При создании объекта `Graber`  вызывается метод `__init__` класса, который установит `supplier_prefix` и вызовет инициализацию родительского класса.
-    *   Метод `Context.locator_for_decorator = None` в методе инициализации отменяет вызов декоратора по умолчанию.
-
-### <mermaid>
-
+   *   **Определение класса `Graber`**:
+        *   Создается класс `Graber`, наследующийся от `Grbr`.
+        
+   *   **Инициализация `__init__`**:
+        *  Устанавливается `supplier_prefix` как `'wallashop'`.
+        *  Вызывается конструктор родительского класса `Grbr` с установленным префиксом и драйвером.
+        *   `Context.locator_for_decorator` устанавливается в `None` для отключения декоратора по умолчанию.
+      
+   
+### 2. <mermaid>
 ```mermaid
-flowchart TD
-    subgraph src.suppliers.wallashop.graber
-        A[<code>graber.py</code><br> Class Graber]
-        B[<code>src.suppliers.graber.Graber</code> <br> (as Grbr)]
-         C[<code>src.suppliers.graber.Context</code> <br>  Class Context]
+    flowchart TD
+        Start[Начало] --> ImportModules[Импорт модулей];
+        ImportModules --> ClassGraber[Определение класса `Graber`];
+        ClassGraber --> InitMethod[Метод `__init__`];
+        InitMethod --> SetSupplierPrefix[Установка `supplier_prefix`];
+        SetSupplierPrefix --> CallSuperInit[Вызов `super().__init__`];
+        CallSuperInit --> SetContextLocator[Установка `Context.locator_for_decorator = None`];
+        SetContextLocator --> End[Конец];
 
-    end
-   subgraph header
-       D[<code>header.py</code><br> Determine Project Root]
-       E[Import Global Settings: <br><code>from src import gs</code>]
-   end    
-    subgraph src.webdriver
-       F[<code>src.webdriver.driver.Driver</code> <br> Class Driver]
-   end
-   subgraph src.logger
-        G[<code>src.logger.logger</code> <br> module logger]
-    end
+        classDef default fill:#f9f,stroke:#333,stroke-width:2px
 
-    A --> B : Inheritance
-    A --> C : Uses Context
-    A --> F : Uses driver
-    A --> G : Uses logger
+        class Start default
+        class End default
 
-   D --> E
+        style Start fill:#f9f,stroke:#333,stroke-width:2px
+        style End fill:#f9f,stroke:#333,stroke-width:2px
+
+        ImportModules -->|import header| HeaderModule[<code>header.py</code>]
+    
+
+    
 ```
 
-**Анализ зависимостей:**
-
-*   **`graber.py` (Class Graber):**
-    *   **Наследуется** от `src.suppliers.graber.Graber` (обозначен как `Grbr`). Это означает, что класс `Graber` в `graber.py` расширяет функциональность базового класса `Graber`.
-    *   **Использует** `src.suppliers.graber.Context` для доступа к общим настройкам и веб-драйверу.
-    *   **Использует**  `src.webdriver.driver.Driver` для управления веб-браузером.
-    *    **Использует** `src.logger.logger` для логирования событий и ошибок.
-
-*   **`header.py`:**
-   *   Определяет корневую директорию проекта.
-   *   Импортирует глобальные настройки `from src import gs`.
-
-*   **`src.suppliers.graber.Graber`:**
-    *   Базовый класс для сбора данных, который обеспечивает общую логику.
+```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
     
-*   **`src.suppliers.graber.Context`:**
-    *  Контекст, содержащий общие данные, такие как веб-драйвер и настройки.
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
+ 
 
-*   **`src.webdriver.driver.Driver`:**
-    *   Класс, управляющий веб-браузером для имитации действий пользователя.
+   **Объяснение зависимостей `mermaid`:**
 
-*    **`src.logger.logger`:**
-    *    Предоставляет функциональность для логирования, что помогает в отладке и мониторинге.
+   *  `flowchart TD`:  Объявляет тип диаграммы как блок-схема.
+   *   `Start --> ...`: Обозначает поток выполнения программы, начиная с блока `Start`.
+   *   `ImportModules`: Блок, представляющий импорт модулей.
+   *  `ClassGraber`: Блок, представляющий определение класса `Graber`.
+   *  `InitMethod`: Блок, представляющий метод `__init__` класса `Graber`.
+   *  `SetSupplierPrefix`: Блок, представляющий установку переменной `supplier_prefix`.
+   *   `CallSuperInit`: Блок, представляющий вызов конструктора родительского класса.
+   * `SetContextLocator`: Блок, представляющий установку `Context.locator_for_decorator = None`
+   *   `End`: Конечный блок.
+   *  `ImportModules -->|import header| HeaderModule[<code>header.py</code>]`: Показывает зависимость от `header.py`, который импортируется в `graber.py`.
+  *  `HeaderModule`: Показывает, что импортируется модуль `header.py`, который определяет корень проекта.
+    
+### 3. <объяснение>
 
-### <объяснение>
+*   **Импорты:**
+    *   `from typing import Any`:  Используется для аннотации типов, где `Any` означает, что переменная может быть любого типа.
+    *   `import header`: Импортирует модуль `header`, который, как правило, отвечает за определение корня проекта и может содержать глобальные настройки.
+    *   `from src.suppliers.graber import Graber as Grbr, Context, close_pop_up`: Импортирует:
+        *   `Graber` (переименованный в `Grbr`) – родительский класс для сбора данных.
+        *   `Context` – класс для хранения контекстной информации, например, драйвера веб-браузера и локаторов для декоратора.
+        *   `close_pop_up` – функция-декоратор для закрытия всплывающих окон.
+    *    `from src.webdriver.driver import Driver`: Импортирует класс `Driver`, который управляет веб-драйвером.
+    *   `from src.logger.logger import logger`: Импортирует объект `logger` для логирования действий.
 
-**Импорты:**
-
-*   `from typing import Any`: `Any` используется для аннотации типов, позволяя переменной иметь любой тип данных.
-*   `import header`: Импортирует модуль `header`, который может содержать общие настройки проекта. Это позволяет получать доступ к общим константам и настройкам.
-*  `from src.suppliers.graber import Graber as Grbr, Context, close_pop_up`:
-    *   `Graber as Grbr`: Импортирует класс `Graber` из `src.suppliers.graber` и переименовывает его в `Grbr`.
-    *    `Context`: Класс `Context`  используется для хранения общих данных, таких как веб-драйвер и настройки.
-    *    `close_pop_up`:  импортирует функцию-декоратор, который закрывает всплывающее окно (но в данном случае она не используется).
-*  `from src.webdriver.driver import Driver`:  Импортирует класс `Driver` из `src.webdriver.driver`, который используется для управления веб-браузером.
-*  `from src.logger.logger import logger`: Импортирует объект `logger` из `src.logger.logger` для ведения журнала.
-
-**Классы:**
-
-*   `class Graber(Grbr)`:
-    *   **Роль:** Класс `Graber` предназначен для сбора данных со страниц товаров веб-сайта `wallashop.co.il`. Он наследуется от класса `Graber` (обозначен как `Grbr`) из модуля `src.suppliers.graber`, предоставляя базовую функциональность сбора данных.
+*   **Класс `Graber`:**
+    *   **Роль**: Специализированный класс для сбора данных с сайта `wallashop.co.il`, наследуется от `src.suppliers.graber.Graber` (`Grbr`).
     *   **Атрибуты:**
-        *   `supplier_prefix (str)`:  Указывает префикс поставщика `wallashop`, используется для определения контекста.
+        *   `supplier_prefix`: Строка, определяющая префикс поставщика (в данном случае `'wallashop'`).
     *   **Методы:**
-        *   `__init__(self, driver: Driver)`:
-            *   Инициализирует экземпляр класса.
-            *   Устанавливает `self.supplier_prefix` как `'wallashop'`.
-            *   Вызывает конструктор родительского класса `Grbr`, передавая `supplier_prefix` и объект `driver`.
-            *   Устанавливает `Context.locator_for_decorator = None` для отмены использования стандартного декоратора.
+        *   `__init__(self, driver: Driver)`: Конструктор класса:
+            *   Принимает объект `Driver` для управления веб-браузером.
+            *   Устанавливает префикс поставщика.
+            *   Вызывает конструктор родительского класса `Grbr` для базовой инициализации.
+            *   Устанавливает `Context.locator_for_decorator` в `None`, отключая использование декоратора по умолчанию в родительском классе.
 
-**Функции:**
-
-*   `close_pop_up(value: Any = None) -> Callable` (закомментирована):
-    *   **Аргументы**:
-        *   `value: Any = None`:  Необязательный аргумент произвольного типа.
-    *   **Возвращаемое значение:** `Callable`. Декоратор, который можно использовать для закрытия всплывающих окон.
-    *   **Назначение:** Создает декоратор для закрытия всплывающих окон перед выполнением функции. Ловит исключения типа `ExecuteLocatorException`, при ошибке выполнит запись в лог.
-
-**Переменные:**
-
-*   `supplier_prefix: str = 'wallashop'`:  Строковая переменная, содержащая префикс поставщика. Используется для определения контекста работы класса.
-*   `Context.locator_for_decorator`:  Атрибут `Context`,  указывает, какой локатор использовать в декораторе. Если значение None, декоратор по умолчанию не будет выполняться.
-
-**Потенциальные ошибки и области для улучшения:**
-
-*   **Закомментированный декоратор**: Декоратор `close_pop_up` закомментирован. Если требуется его использование, необходимо раскомментировать код и правильно настроить его поведение.
-*   **Обработка исключений**:  В закомментированном коде декоратора есть обработка `ExecuteLocatorException`, но нет общей обработки ошибок.
-*   **Расширяемость**: Можно добавить больше методов и атрибутов для специфической обработки данных с сайта `wallashop.co.il`.
-*   **Конфигурация**: `supplier_prefix` является константой. Можно вынести в конфигурационный файл, для более гибкого использования.
-
-**Взаимосвязи с другими частями проекта:**
-
-*   Класс `Graber` наследует от базового класса `Graber` из `src.suppliers.graber`, что указывает на иерархическую структуру в организации сбора данных.
-*   Используется `Context` для доступа к общим ресурсам (например, веб-драйверу).
-*   Взаимодействует с `src.webdriver.driver.Driver` для управления браузером.
-*   Использует `src.logger.logger` для логирования операций.
-*  Импортирует `header`, который определяет корневую директорию проекта и глобальные настройки.
-
-Этот анализ предоставляет подробное понимание функциональности кода, его зависимостей и потенциальных улучшений.
+*   **Переменные:**
+    *   `supplier_prefix`: Строковая переменная, хранит префикс поставщика.
+   
+*   **Цепочка взаимосвязей:**
+    1.  `header.py` определяет корень проекта и глобальные настройки, которые используются в других модулях.
+    2.  `graber.py` наследуется от базового класса `Graber` (`Grbr`) из `src.suppliers.graber`, что позволяет использовать его функциональность для сбора данных.
+    3.  Для управления браузером используется класс `Driver` из `src.webdriver.driver`.
+    4.  Для логирования используется модуль `logger` из `src.logger.logger`.
+    5.  Модуль использует класс `Context` для передачи контекстных данных и настроек.
+*   **Потенциальные ошибки и области для улучшения:**
+    *   В коде есть закомментированный блок с реализацией декоратора `@close_pop_up`.
+    *   Несмотря на наличие блока `DECORATOR TEMPLATE`, он не используется, и вызов  `Context.locator` проигнорируется, т.к.  `Context.locator_for_decorator = None`.
+    *   В целом, декоратор можно реализовать для более гибкой обработки данных до или после выполнения сбора.
+    *   Логирование может быть расширено для более подробной отладки и мониторинга.
+*  **Дополнительно:**
+  *  В данном коде основной фокус на инициализации класса и настройке `Context`,  подразумевается, что вся основная логика сбора данных будет переопределена в методах родительского класса `Graber`.
+  *  `Context.locator_for_decorator = None` по умолчанию отключает декоратор закрытия всплывающих окон.

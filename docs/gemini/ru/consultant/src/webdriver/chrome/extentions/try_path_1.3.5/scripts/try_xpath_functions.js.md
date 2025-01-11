@@ -1,56 +1,55 @@
-# Анализ кода модуля tryxpath_functions.js
+# Анализ кода модуля `try_xpath_functions.js`
 
-**Качество кода: 7/10**
+**Качество кода**
+    -  Соответствие требованиям: 7/10
+    -  Плюсы:
+        - Код хорошо структурирован, функции разделены по назначению.
+        - Используется IIFE для предотвращения конфликтов имен.
+        - Присутствуют проверки типов и обработка ошибок.
+        - Наличие констант для типов узлов и результатов XPath.
+    -  Минусы:
+        - Отсутствует описание модуля.
+        - Не хватает документации для функций (docstring).
+        - Не используется `logger` для логирования ошибок.
+        - Некоторые проверки можно упростить.
+        - Использование `JSON.parse` без обработки ошибок, если `obj` не строка.
+        - Наличие `// console.log(err);` в функции `fu.onError`, что является закомментированным кодом, который лучше удалить.
 
-*   **Плюсы:**
-    *   Код хорошо структурирован и разбит на логические функции.
-    *   Используются строгие режимы (`"use strict"`).
-    *   Присутствует обработка различных типов результатов XPath.
-    *   Функции имеют четкие имена, описывающие их предназначение.
-    *   Используются Map для хранения соответствий, что улучшает производительность.
-    *   Наличие функций для работы с DOM (добавление/удаление классов, атрибутов).
-    *   Функции для работы с фреймами.
-*   **Минусы:**
-    *   Отсутствуют комментарии в формате reStructuredText (RST).
-    *   Не используется логирование ошибок через `src.logger.logger`.
-    *   Множественные блоки `try-catch` без явного логирования ошибок.
-    *   В некоторых местах можно улучшить читаемость кода, например, используя `const` вместо `var` там где это уместно.
-    *   Не все функции имеют docstring.
-    *   Не используются импорты из других модулей, так как это JavaScript, в данном случае не применимо.
+**Рекомендации по улучшению**
 
-**Рекомендации по улучшению:**
+1.  **Добавить описание модуля:** В начале файла добавить описание модуля.
+2.  **Добавить документацию:** Добавить документацию в формате RST для всех функций, методов и переменных.
+3.  **Использовать `logger`:** Использовать `logger.error` для обработки ошибок вместо `throw new Error`.
+4.  **Упростить проверки:** Упростить проверки типов, где это возможно.
+5.  **Обработать `JSON.parse`:** Проверять, является ли `obj` строкой, перед использованием `JSON.parse`.
+6.  **Удалить закомментированный код:** Удалить закомментированную строку `// console.log(err);` из `fu.onError`.
+7. **Использовать let и const:** Заменить var на let или const, где это уместно.
+8. **Избегать сокращений:** Использовать полные имена переменных и функций для улучшения читаемости.
+9. **Улучшить форматирование:** Добавить пустые строки между функциями для улучшения читаемости.
+10. **Изменить способ bind:** Изменить bind на стрелочную функцию, это улучшит читаемость и производительность.
 
-1.  **Документация RST:** Добавить docstring в формате RST для всех функций, переменных и блоков кода.
-2.  **Логирование:** Использовать `src.logger.logger` для логирования ошибок и отладочной информации.
-3.  **Обработка ошибок:** Заменить множественные `try-catch` на более централизованную обработку ошибок с логированием.
-4.  **Улучшение читаемости:** Заменить `var` на `const` и `let` где это возможно.
-5.  **Использовать Map:** Использовать `Map` вместо обычных объектов, где это уместно.
-6.  **Форматирование:** Сделать код более читаемым за счет форматирования и разделения длинных строк.
-
-**Оптимизированный код:**
+**Оптимизированный код**
 
 ```javascript
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
-/**
- * Модуль для работы с XPath и DOM элементами.
+/*
+ * Модуль `tryxpath.functions`
  * =========================================================================================
  *
- * Этот модуль содержит функции для выполнения XPath запросов,
- * обработки результатов, управления атрибутами и классами DOM элементов,
- * а также для работы с фреймами.
+ *  Этот модуль предоставляет набор функций для работы с XPath и DOM, включая выполнение запросов,
+ *  преобразование результатов, манипуляцию элементами и атрибутами, а также утилиты для работы с фреймами.
  *
- * Пример использования
- * --------------------
+ *  Модуль предназначен для использования в контексте расширения tryxpath для браузера.
  *
- * .. code-block:: javascript
+ *  Пример использования
+ *  --------------------
  *
- *      // Пример выполнения XPath запроса
- *      const result = tryxpath.functions.execExpr('//div', 'evaluate', { context: document });
- *      console.log(result.items);
+ *  .. code-block:: javascript
+ *
+ *      let result = tryxpath.functions.execExpr('//div', 'querySelectorAll', {context: document});
+ *      let items = result.items;
+ *      let details = tryxpath.functions.getItemDetails(items);
  */
+
 // namespace
 if (!tryxpath) {
     var tryxpath = {};
@@ -63,9 +62,9 @@ if (!tryxpath.functions) {
     "use strict";
 
     // alias
-    const tx = tryxpath;
-    const fu = tryxpath.functions;
-
+    var tx = tryxpath;
+    var fu = tryxpath.functions;
+    
     // prevent multiple execution
     if (fu.done) {
         return;
@@ -73,53 +72,54 @@ if (!tryxpath.functions) {
     fu.done = true;
 
     /**
-     * Выполняет XPath выражение.
+     * Выполняет XPath выражение или запрос CSS-селектора.
      *
-     * :param expr: XPath выражение.
-     * :param method: Метод выполнения запроса ("evaluate", "querySelector", "querySelectorAll").
-     * :param opts: Опции выполнения запроса.
-     * :return: Объект с результатами запроса.
-     *
-     * :raises Error: Если контекст не является узлом или атрибутом при использовании evaluate,
-     *                или если контекст не является документом или элементом при использовании querySelector/querySelectorAll.
+     * @param {string} expr Выражение XPath или CSS-селектор.
+     * @param {string} method Метод запроса: "evaluate", "querySelector", "querySelectorAll".
+     * @param {object} [opts] Опции запроса.
+     * @param {Node} [opts.context=document] Контекстный узел для выполнения запроса.
+     * @param {object|string} [opts.resolver] Пространство имен для XPath.
+     * @param {Document} [opts.document] Документ для выполнения запроса.
+     * @param {number} [opts.resultType] Тип результата XPath.
+     * @returns {object} Объект с результатами запроса.
+     * @throws {Error} Если контекст является ни узлом, ни атрибутом (для evaluate) или не является документом или элементом (для querySelector, querySelectorAll).
      */
     fu.execExpr = function(expr, method, opts) {
         opts = opts || {};
-        const context = opts.context || document;
-        const resolver = ("resolver" in opts) ? opts.resolver : null;
-        const doc = opts.document || fu.getOwnerDocument(context) || context;
+        let context = opts.context || document;
+        let resolver = ("resolver" in opts) ? opts.resolver : null;
+        let doc = opts.document || fu.getOwnerDocument(context) || context;
 
         let items, resultType;
 
         switch (method) {
         case "evaluate":
+             // Проверка, является ли контекст узлом или атрибутом
             if (!fu.isNodeItem(context) && !fu.isAttrItem(context)) {
-                throw new Error("The context is either Nor nor Attr.");
+                throw new Error("The context is neither Node nor Attr.");
             }
-            const evalResolver = fu.makeResolver(resolver);
+            resolver = fu.makeResolver(resolver);
             resultType = opts.resultType || xpathResult.ANY_TYPE;
-            let result = doc.evaluate(expr, context, evalResolver, resultType,
-                                      null);
+            let result = doc.evaluate(expr, context, resolver, resultType, null);
             items = fu.resToArr(result, resultType);
             if (resultType === xpathResult.ANY_TYPE) {
                 resultType = result.resultType;
             }
             break;
-
         case "querySelector":
+            // Проверка, является ли контекст документом или элементом
             if (!fu.isDocOrElem(context)) {
-                throw new Error("The context is either Document nor Element.");
+                throw new Error("The context is neither Document nor Element.");
             }
             let elem = context.querySelector(expr);
             items = elem ? [elem] : [];
             resultType = null;
             break;
-
         case "querySelectorAll":
         default:
-            if (!fu.isDocOrElem(context)) {
-                throw new Error(
-                    "The context is neither Document nor Element.");
+            // Проверка, является ли контекст документом или элементом
+             if (!fu.isDocOrElem(context)) {
+                throw new Error("The context is neither Document nor Element.");
             }
             let elems = context.querySelectorAll(expr);
             items = fu.listToArr(elems);
@@ -137,18 +137,17 @@ if (!tryxpath.functions) {
     /**
      * Преобразует результат XPath в массив.
      *
-     * :param res: Результат XPath.
-     * :param type: Тип результата XPath.
-     * :return: Массив элементов.
-     *
-     * :raises Error: Если resultType не является допустимым типом.
+     * @param {XPathResult} res Результат XPath.
+     * @param {number} [type=res.resultType] Тип результата XPath.
+     * @returns {Array} Массив элементов.
+     * @throws {Error} Если тип результата невалидный.
      */
     fu.resToArr = function (res, type) {
         if (type === undefined || (type === xpathResult.ANY_TYPE)) {
             type = res.resultType;
         }
 
-        const arr = [];
+        let arr = [];
         switch(type) {
         case xpathResult.NUMBER_TYPE :
             arr.push(res.numberValue);
@@ -161,9 +160,9 @@ if (!tryxpath.functions) {
             break;
         case xpathResult.ORDERED_NODE_ITERATOR_TYPE :
         case xpathResult.UNORDERED_NODE_ITERATOR_TYPE :
-            for (let node = res.iterateNext()
-                 ; node !== null
-                 ; node = res.iterateNext()) {
+            for (let node = res.iterateNext();
+                 node !== null;
+                 node = res.iterateNext()) {
                 arr.push(node);
             }
             break;
@@ -182,14 +181,13 @@ if (!tryxpath.functions) {
         }
         return arr;
     };
-
+    
     /**
-     * Создает резолвер пространства имен.
+     * Создает преобразователь пространства имен из объекта или строки JSON.
      *
-     * :param obj: Объект, строка JSON или функция резолвера.
-     * :return: Функция резолвера.
-     *
-     * :raises Error: Если переданный резолвер не валиден.
+     * @param {object|string|function} obj Объект, строка JSON или функция преобразователь.
+     * @returns {function|null} Функция преобразователь или null.
+     * @throws {Error} Если преобразователь невалидный.
      */
     fu.makeResolver = function (obj) {
         if (obj === null) {
@@ -201,18 +199,19 @@ if (!tryxpath.functions) {
 
         let dict;
         if (typeof(obj) === "string") {
+             // Попытка преобразовать строку в объект JSON, иначе ошибка
             try {
                 dict = JSON.parse(obj);
             } catch (e) {
-                throw new Error("Invalid resolver [" + obj + "]. : "
-                                + e.message);
+                 // Выбрасываем ошибку, если JSON не удалось разобрать
+                throw new Error("Invalid resolver [" + obj + "]. : " + e.message);
             }
         } else {
             dict = obj;
         }
 
         if (fu.isValidDict(dict)) {
-            const map = fu.objToMap(dict);
+            let map = fu.objToMap(dict);
             return function (str) {
                 if (map.has(str)) {
                     return map.get(str);
@@ -220,21 +219,22 @@ if (!tryxpath.functions) {
                 return "";
             };
         }
-        throw new Error("Invalid resolver. "
-                        + JSON.stringify(dict, null));
+         // Выбрасываем ошибку, если преобразователь не является валидным словарем
+        throw new Error("Invalid resolver. " + JSON.stringify(dict, null));
     };
 
     /**
-     * Проверяет, является ли объект допустимым словарем для резолвера.
+     * Проверяет, является ли объект валидным словарем для преобразователя.
      *
-     * :param obj: Объект для проверки.
-     * :return: True, если объект - допустимый словарь, False в противном случае.
+     * @param {object} obj Объект для проверки.
+     * @returns {boolean} `true`, если объект валидный, `false` иначе.
      */
     fu.isValidDict = function (obj) {
         if ((obj === null) || (typeof(obj) !== "object")) {
             return false;
         }
-        for (const key of Object.keys(obj)) {
+         // Проверка, что все значения в объекте - строки
+        for (let key of Object.keys(obj)) {
             if (typeof(obj[key]) !== "string") {
                 return false;
             }
@@ -245,11 +245,11 @@ if (!tryxpath.functions) {
     /**
      * Преобразует объект в Map.
      *
-     * :param obj: Объект для преобразования.
-     * :return: Map, содержащий пары ключ-значение из объекта.
+     * @param {object} obj Объект для преобразования.
+     * @returns {Map} Map, созданный из объекта.
      */
     fu.objToMap = function (obj) {
-        const map = new Map();
+        let map = new Map();
         Object.keys(obj).forEach(function(item) {
             map.set(item, obj[item]);
         });
@@ -259,24 +259,21 @@ if (!tryxpath.functions) {
     /**
      * Проверяет, является ли объект документом или элементом.
      *
-     * :param obj: Объект для проверки.
-     * :return: True, если объект - документ или элемент, False в противном случае.
+     * @param {object} obj Объект для проверки.
+     * @returns {boolean} `true`, если объект документ или элемент, `false` иначе.
      */
     fu.isDocOrElem = function(obj) {
-        if ((obj.nodeType === 1) || (obj.nodeType === 9)) {
-            return true;
-        }
-        return false;
+        return (obj && (obj.nodeType === Node.ELEMENT_NODE || obj.nodeType === Node.DOCUMENT_NODE));
     };
 
     /**
      * Преобразует NodeList в массив.
      *
-     * :param list: NodeList для преобразования.
-     * :return: Массив элементов.
+     * @param {NodeList} list NodeList для преобразования.
+     * @returns {Array} Массив элементов.
      */
     fu.listToArr = function(list) {
-        const elems = [];
+        let elems = [];
         for (let i = 0; i < list.length; i++) {
             elems.push(list[i]);
         }
@@ -284,14 +281,12 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Получает детали элемента.
+     * Получает детали элемента, включая тип, имя, значение и текстовое содержимое.
      *
-     * :param item: Элемент для получения деталей.
-     * :return: Объект с деталями элемента.
+     * @param {object} item Элемент для получения деталей.
+     * @returns {object} Объект с деталями элемента.
      */
     fu.getItemDetail = function (item) {
-        const typeStr = typeof(item);
-
         switch (typeof(item)) {
         case "string":
             return {
@@ -326,7 +321,7 @@ if (!tryxpath.functions) {
                 "textContent": item.textContent
             };
         }
-
+        
         // item is Attr
         if (fu.isAttrItem(item)) {
             return {
@@ -350,11 +345,11 @@ if (!tryxpath.functions) {
     /**
      * Получает детали для массива элементов.
      *
-     * :param items: Массив элементов.
-     * :return: Массив объектов с деталями элементов.
+     * @param {Array} items Массив элементов.
+     * @returns {Array} Массив объектов с деталями элементов.
      */
     fu.getItemDetails = function (items) {
-        const details = [];
+        let details = [];
         for (let i = 0; i < items.length; i++) {
             details.push(fu.getItemDetail(items[i]));
         }
@@ -379,14 +374,11 @@ if (!tryxpath.functions) {
     /**
      * Получает строковое представление типа узла.
      *
-     * :param nodeType: Тип узла.
-     * :return: Строковое представление типа узла.
+     * @param {number} nodeType Числовое значение типа узла.
+     * @returns {string} Строковое представление типа узла.
      */
     fu.getNodeTypeStr = function(nodeType) {
-        if (nodeTypeMap.has(nodeType)) {
-            return nodeTypeMap.get(nodeType);
-        }
-        return "Unknown";
+        return nodeTypeMap.get(nodeType) || "Unknown";
     };
 
     const xpathResultMaps = {
@@ -428,34 +420,30 @@ if (!tryxpath.functions) {
     /**
      * Получает строковое представление типа результата XPath.
      *
-     * :param resultType: Числовое представление типа результата XPath.
-     * :return: Строковое представление типа результата XPath.
+     * @param {number} resultType Числовое значение типа результата XPath.
+     * @returns {string} Строковое представление типа результата XPath.
      */
     fu.getxpathResultStr = function (resultType) {
-        if (xpathResultMaps.numToStr.has(resultType)) {
-            return xpathResultMaps.numToStr.get(resultType);
-        }
-        return "Unknown";
+         // Возвращаем строковое представление, если оно есть в карте
+        return xpathResultMaps.numToStr.get(resultType) || "Unknown";
     };
 
     /**
      * Получает числовое представление типа результата XPath.
      *
-     * :param resultTypeStr: Строковое представление типа результата XPath.
-     * :return: Числовое представление типа результата XPath.
+     * @param {string} resultTypeStr Строковое представление типа результата XPath.
+     * @returns {number} Числовое значение типа результата XPath.
      */
     fu.getxpathResultNum = function (resultTypeStr) {
-        if (xpathResultMaps.strToNum.has(resultTypeStr)) {
-            return xpathResultMaps.strToNum.get(resultTypeStr);
-        }
-        return NaN;
+         // Возвращаем числовое представление, если оно есть в карте, иначе NaN
+        return xpathResultMaps.strToNum.get(resultTypeStr) || NaN;
     };
 
     /**
      * Проверяет, является ли элемент атрибутом.
      *
-     * :param item: Элемент для проверки.
-     * :return: True, если элемент - атрибут, False в противном случае.
+     * @param {object} item Элемент для проверки.
+     * @returns {boolean} `true`, если элемент является атрибутом, `false` иначе.
      */
     fu.isAttrItem = function (item) {
         return Object.prototype.toString.call(item) === "[object Attr]";
@@ -464,8 +452,8 @@ if (!tryxpath.functions) {
     /**
      * Проверяет, является ли элемент узлом.
      *
-     * :param item: Элемент для проверки.
-     * :return: True, если элемент - узел, False в противном случае.
+     * @param {object} item Элемент для проверки.
+     * @returns {boolean} `true`, если элемент является узлом, `false` иначе.
      */
     fu.isNodeItem = function (item) {
         if (fu.isAttrItem(item)) {
@@ -480,26 +468,22 @@ if (!tryxpath.functions) {
             return true;
         }
     };
-
+    
     /**
-     * Проверяет, является ли элемент элементом DOM.
+     * Проверяет, является ли элемент элементом (Node.ELEMENT_NODE).
      *
-     * :param item: Элемент для проверки.
-     * :return: True, если элемент - DOM элемент, False в противном случае.
+     * @param {object} item Элемент для проверки.
+     * @returns {boolean} `true`, если элемент является элементом, `false` иначе.
      */
     fu.isElementItem = function (item) {
-        if (fu.isNodeItem(item)
-            && (item.nodeType === Node.ELEMENT_NODE)) {
-            return true;
-        }
-        return false;
+        return fu.isNodeItem(item) && item.nodeType === Node.ELEMENT_NODE;
     };
 
     /**
      * Добавляет класс к элементу.
      *
-     * :param clas: Класс для добавления.
-     * :param item: Элемент.
+     * @param {string} clas Класс для добавления.
+     * @param {Element} item Элемент для добавления класса.
      */
     fu.addClassToItem = function (clas, item) {
         if (fu.isElementItem(item)) {
@@ -510,11 +494,11 @@ if (!tryxpath.functions) {
     /**
      * Добавляет класс к массиву элементов.
      *
-     * :param clas: Класс для добавления.
-     * :param items: Массив элементов.
+     * @param {string} clas Класс для добавления.
+     * @param {Array<Element>} items Массив элементов.
      */
     fu.addClassToItems = function (clas, items) {
-        for (const item of items) {
+        for (let item of items) {
             fu.addClassToItem(clas, item);
         }
     };
@@ -522,8 +506,8 @@ if (!tryxpath.functions) {
     /**
      * Сохраняет класс элемента.
      *
-     * :param item: Элемент.
-     * :return: Объект с элементом и его оригинальным классом.
+     * @param {Element} item Элемент для сохранения класса.
+     * @returns {object} Объект с элементом и сохраненным классом.
      */
     fu.saveItemClass = function (item) {
         if (!fu.isElementItem(item)) {
@@ -539,13 +523,13 @@ if (!tryxpath.functions) {
         return {
             "elem": item,
             "origClass": clas
-        }
+        };
     };
 
     /**
      * Восстанавливает класс элемента.
      *
-     * :param savedClass: Объект с элементом и его оригинальным классом.
+     * @param {object} savedClass Объект с сохраненным классом.
      */
     fu.restoreItemClass = function (savedClass) {
         if (savedClass === null) {
@@ -562,12 +546,12 @@ if (!tryxpath.functions) {
     /**
      * Сохраняет классы массива элементов.
      *
-     * :param items: Массив элементов.
-     * :return: Массив объектов с элементами и их оригинальными классами.
+     * @param {Array<Element>} items Массив элементов.
+     * @returns {Array<object>} Массив объектов с сохраненными классами.
      */
     fu.saveItemClasses = function (items) {
-        const savedClasses = [];
-        for (const item of items) {
+        let savedClasses = [];
+        for (let item of items) {
             savedClasses.push(fu.saveItemClass(item));
         }
         return savedClasses;
@@ -576,10 +560,10 @@ if (!tryxpath.functions) {
     /**
      * Восстанавливает классы массива элементов.
      *
-     * :param savedClasses: Массив объектов с элементами и их оригинальными классами.
+     * @param {Array<object>} savedClasses Массив объектов с сохраненными классами.
      */
     fu.restoreItemClasses = function (savedClasses) {
-        for (const savedClass of savedClasses) {
+        for (let savedClass of savedClasses) {
             fu.restoreItemClass(savedClass);
         }
     };
@@ -587,9 +571,9 @@ if (!tryxpath.functions) {
     /**
      * Устанавливает атрибут элемента.
      *
-     * :param name: Имя атрибута.
-     * :param value: Значение атрибута.
-     * :param item: Элемент.
+     * @param {string} name Имя атрибута.
+     * @param {string} value Значение атрибута.
+     * @param {Element} item Элемент для установки атрибута.
      */
     fu.setAttrToItem = function(name, value, item) {
         if (fu.isElementItem(item)) {
@@ -600,8 +584,8 @@ if (!tryxpath.functions) {
     /**
      * Удаляет атрибут элемента.
      *
-     * :param name: Имя атрибута.
-     * :param item: Элемент.
+     * @param {string} name Имя атрибута.
+     * @param {Element} item Элемент для удаления атрибута.
      */
     fu.removeAttrFromItem = function(name, item) {
         if (fu.isElementItem(item)) {
@@ -610,10 +594,10 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Удаляет атрибут у массива элементов.
+     * Удаляет атрибут у всех элементов массива.
      *
-     * :param name: Имя атрибута.
-     * :param items: Массив элементов.
+     * @param {string} name Имя атрибута.
+     * @param {Array<Element>} items Массив элементов.
      */
     fu.removeAttrFromItems = function(name, items) {
         items.forEach(item => {
@@ -622,10 +606,10 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Устанавливает индекс в качестве атрибута для массива элементов.
+     * Устанавливает индекс как атрибут элементам.
      *
-     * :param name: Имя атрибута.
-     * :param items: Массив элементов.
+     * @param {string} name Имя атрибута.
+     * @param {Array<Element>} items Массив элементов.
      */
     fu.setIndexToItems = function(name, items) {
         for (let i = 0; i < items.length; i++) {
@@ -634,15 +618,15 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Получает родительский элемент.
+     * Получает родительский элемент для узла или атрибута.
      *
-     * :param item: Элемент.
-     * :return: Родительский элемент или null.
+     * @param {object} item Узел или атрибут.
+     * @returns {Element|null} Родительский элемент или `null`.
      */
     fu.getParentElement = function (item) {
         if (fu.isAttrItem(item)) {
-            const parent = item.ownerElement;
-            return parent ? parent : null;
+            let parent = item.ownerElement;
+            return parent || null;
         }
 
         if (fu.isNodeItem(item)) {
@@ -659,14 +643,13 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Получает все родительские элементы.
+     * Получает массив всех родительских элементов.
      *
-     * :param elem: Элемент.
-     * :return: Массив родительских элементов.
+     * @param {Element} elem Элемент.
+     * @returns {Array<Element>} Массив родительских элементов.
      */
     fu.getAncestorElements = function (elem) {
-        const ancs = [];
-
+        let ancs = [];
         let cur = elem;
         let parent = cur.parentElement;
         while (parent) {
@@ -681,19 +664,19 @@ if (!tryxpath.functions) {
             cur = parent;
             parent = cur.parentNode;
         }
-
+        
         return ancs;
     };
 
     /**
-     * Получает документ владельца элемента.
+     * Получает документ, которому принадлежит элемент.
      *
-     * :param item: Элемент.
-     * :return: Документ владельца или null.
+     * @param {object} item Узел или атрибут.
+     * @returns {Document|null} Документ или `null`.
      */
     fu.getOwnerDocument = function (item) {
         if (fu.isAttrItem(item)) {
-            const elem = item.ownerElement;
+            let elem = item.ownerElement;
             if (elem) {
                 return elem.ownerDocument;
             }
@@ -710,17 +693,18 @@ if (!tryxpath.functions) {
     /**
      * Создает строку заголовка таблицы.
      *
-     * :param values: Массив значений для заголовков.
-     * :param opts: Опции.
-     * :return: Строка заголовка таблицы.
+     * @param {Array<string>} values Массив заголовков.
+     * @param {object} [opts] Опции.
+     * @param {Document} [opts.document=document] Документ для создания элементов.
+     * @returns {HTMLTableRowElement} Строка заголовка таблицы.
      */
     fu.createHeaderRow = function (values, opts) {
         opts = opts || {};
-        const doc = opts.document || document;
+        let doc = opts.document || document;
 
-        const tr = doc.createElement("tr");
-        for (const value of values) {
-            const th = doc.createElement("th");
+        let tr = doc.createElement("tr");
+        for (let value of values) {
+            let th = doc.createElement("th");
             th.textContent = value;
             tr.appendChild(th);
         }
@@ -728,20 +712,21 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Создает заголовок таблицы с деталями.
+     * Создает строку заголовка таблицы деталей.
      *
-     * :param opts: Опции.
-     * :return: Строка заголовка таблицы с деталями.
+     * @param {object} [opts] Опции.
+     * @param {Document} [opts.document=document] Документ для создания элементов.
+     * @returns {HTMLTableRowElement} Строка заголовка таблицы.
      */
     fu.createDetailTableHeader = function (opts) {
         opts = opts || {};
-        const doc = opts.document || document;
+        let doc = opts.document || document;
 
-        const tr = doc.createElement("tr");
+        let tr = doc.createElement("tr");
         let th = doc.createElement("th");
         th.textContent = "Index";
         tr.appendChild(th);
-
+        
         th = doc.createElement("th");
         th.textContent = "Type";
         tr.appendChild(th);
@@ -762,32 +747,34 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Создает строку таблицы с деталями.
+     * Создает строку деталей таблицы.
      *
-     * :param index: Индекс строки.
-     * :param detail: Объект с деталями.
-     * :param opts: Опции.
-     * :return: Строка таблицы с деталями.
+     * @param {number} index Индекс строки.
+     * @param {object} detail Детали для строки.
+     * @param {object} [opts] Опции.
+     * @param {Document} [opts.document=document] Документ для создания элементов.
+     * @param {Array<string>} [opts.keys=["type", "name", "value"]] Ключи для деталей.
+     * @returns {HTMLTableRowElement} Строка деталей таблицы.
      */
     fu.createDetailRow = function (index, detail, opts) {
         opts = opts || {};
-        const doc = opts.document || document;
-        const keys = opts.keys || ["type", "name", "value"];
+        let doc = opts.document || document;
+        let keys = opts.keys || ["type", "name", "value"];
 
-        const tr = doc.createElement("tr");
+        let tr = doc.createElement("tr");
 
         let td = doc.createElement("td");
         td.textContent = index;
         tr.appendChild(td);
 
-        for (const key of keys) {
+        for (let key of keys) {
             let td = doc.createElement("td");
             td.textContent = detail[key];
             tr.appendChild(td);
         }
 
         td = doc.createElement("td");
-        const button = doc.createElement("button");
+        let button = doc.createElement("button");
         button.textContent = "Focus";
         button.setAttribute("data-index", index);
         td.appendChild(button);
@@ -797,26 +784,31 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Добавляет строки деталей в таблицу.
+     * Добавляет строки деталей в родительский элемент.
      *
-     * :param parent: Родительский элемент таблицы.
-     * :param details: Массив объектов с деталями.
-     * :param opts: Опции.
-     * :return: Promise, который разрешается после добавления всех строк.
+     * @param {Element} parent Родительский элемент.
+     * @param {Array<object>} details Массив деталей.
+     * @param {object} [opts] Опции.
+     * @param {number} [opts.chunkSize=1000] Размер чанка.
+     * @param {number} [opts.begin=0] Начальный индекс.
+     * @param {number} [opts.end=details.length] Конечный индекс.
+     * @param {function} [opts.createRow=fu.createDetailRow] Функция создания строки.
+     * @param {Array<string>} [opts.detailKeys] Ключи для деталей.
+     * @returns {Promise<void>} Promise, который завершается после добавления всех строк.
      */
-    fu.appendDetailRows = function (parent, details, opts) {
+     fu.appendDetailRows = function (parent, details, opts) {
         return Promise.resolve().then(() => {
             opts = opts || {};
-            const chunkSize = opts.chunkSize || 1000;
-            const begin = opts.begin || 0;
-            const end = opts.end || details.length;
-            const createRow = opts.createRow || fu.createDetailRow.bind(fu);
-            const detailKeys = opts.detailKeys || undefined;
+            let chunkSize = opts.chunkSize || 1000;
+            let begin = opts.begin || 0;
+            let end = opts.end || details.length;
+            let createRow = opts.createRow || ((index, detail, opts) => fu.createDetailRow(index, detail, opts));
+            let detailKeys = opts.detailKeys || undefined;
 
-            const doc = parent.ownerDocument;
-            const frag = doc.createDocumentFragment();
+            let doc = parent.ownerDocument;
+            let frag = doc.createDocumentFragment();
             let index = Math.max(begin, 0);
-            const chunkEnd = Math.min(index + chunkSize, details.length, end);
+            let chunkEnd = Math.min(index + chunkSize, details.length, end);
 
             for ( ; index < chunkEnd; index++) {
                 frag.appendChild(createRow(index, details[index], {
@@ -834,26 +826,31 @@ if (!tryxpath.functions) {
                     "createRow": createRow,
                     "detailKeys": detailKeys
                 });
-            } else {
-                return ;
             }
+            return;
         });
     };
+
 
     /**
      * Обновляет таблицу с деталями.
      *
-     * :param parent: Родительский элемент таблицы.
-     * :param details: Массив объектов с деталями.
-     * :param opts: Опции.
-     * :return: Promise, который разрешается после обновления таблицы.
+     * @param {Element} parent Родительский элемент таблицы.
+     * @param {Array<object>} details Массив деталей.
+     * @param {object} [opts] Опции.
+     * @param {number} [opts.chunkSize=1000] Размер чанка.
+     * @param {number} [opts.begin=0] Начальный индекс.
+     * @param {number} [opts.end=details.length] Конечный индекс.
+     * @param {Array<string>} [opts.detailKeys] Ключи для деталей.
+     * @param {Array<string>} [opts.headerValues] Заголовки таблицы.
+     * @returns {Promise<void>} Promise, который завершается после обновления таблицы.
      */
     fu.updateDetailsTable = function (parent, details, opts) {
         opts = opts || {};
-        const chunkSize = opts.chunkSize || 1000;
-        const begin = opts.begin || 0;
-        const end = opts.end || details.length;
-        const detailKeys = opts.detailKeys || undefined;
+        let chunkSize = opts.chunkSize || 1000;
+        let begin = opts.begin || 0;
+        let end = opts.end || details.length;
+        let detailKeys = opts.detailKeys || undefined;
         let headerValues;
         if (opts.headerValues) {
             headerValues = ["Index"].concat(opts.headerValues, ["Focus"]);
@@ -861,11 +858,10 @@ if (!tryxpath.functions) {
             headerValues = ["Index", "Type", "Name", "Value", "Focus"];
         }
 
-        const doc = parent.ownerDocument;
+        let doc = parent.ownerDocument;
 
         fu.emptyChildNodes(parent);
-        parent.appendChild(fu.createHeaderRow(headerValues,
-                                              { "document": doc }));
+        parent.appendChild(fu.createHeaderRow(headerValues, { "document": doc }));
 
         return fu.appendDetailRows(parent, details, {
             "chunkSize": chunkSize,
@@ -876,9 +872,9 @@ if (!tryxpath.functions) {
     };
 
     /**
-     * Очищает все дочерние узлы элемента.
+     * Удаляет все дочерние узлы элемента.
      *
-     * :param elem: Элемент.
+     * @param {Element} elem Элемент.
      */
     fu.emptyChildNodes = function (elem) {
         while (elem.firstChild) {
@@ -889,15 +885,15 @@ if (!tryxpath.functions) {
     /**
      * Сохраняет атрибут элемента.
      *
-     * :param item: Элемент.
-     * :param attr: Имя атрибута.
-     * :param storage: Map для хранения атрибутов.
-     * :param overwrite: Флаг перезаписи атрибута.
-     * :return: Map с сохраненными атрибутами.
+     * @param {Element} item Элемент.
+     * @param {string} attr Имя атрибута.
+     * @param {Map} [storage=new Map()] Хранилище для сохранения.
+     * @param {boolean} [overwrite=false] Перезаписать существующее значение.
+     * @returns {Map} Хранилище.
      */
     fu.saveAttrForItem = function(item, attr, storage, overwrite) {
         storage = storage || new Map();
-
+        
         if (!fu.isElementItem(item)) {
             return storage;
         }
@@ -908,98 +904,3 @@ if (!tryxpath.functions) {
         } else {
             elemStor = new Map();
             storage.set(item, elemStor);
-        }
-
-        const val = item.hasAttribute(attr) ? item.getAttribute(attr)
-            : null;
-
-        if (overwrite || !elemStor.has(attr)) {
-            elemStor.set(attr, val);
-        }
-
-        return storage;
-    };
-
-    /**
-     * Сохраняет атрибуты массива элементов.
-     *
-     * :param items: Массив элементов.
-     * :param attr: Имя атрибута.
-     * :param storage: Map для хранения атрибутов.
-     * :param overwrite: Флаг перезаписи атрибута.
-     * :return: Map с сохраненными атрибутами.
-     */
-    fu.saveAttrForItems = function(items, attr, storage, overwrite) {
-        storage = storage || new Map();
-
-        for (const item of items) {
-            fu.saveAttrForItem(item, attr, storage, overwrite);
-        }
-
-        return storage;
-    };
-
-    /**
-     * Восстанавливает атрибуты массива элементов.
-     *
-     * :param storage: Map с сохраненными атрибутами.
-     */
-    fu.restoreItemAttrs = function (storage) {
-        for (const [elem, elemStor] of storage) {
-            for (const [attr, value] of elemStor) {
-                if (value === null) {
-                    elem.removeAttribute(attr);
-                } else {
-                    elem.setAttribute(attr, value);
-                }
-            }
-        }
-    };
-
-    /**
-     * Получает предков фрейма.
-     *
-     * :param inds: Массив индексов фреймов.
-     * :param win: Окно.
-     * :return: Массив фреймов.
-     *
-     * :raises Error: Если фрейм не существует или нет доступа к нему.
-     */
-    fu.getFrameAncestry = function (inds, win) {
-        win = win || window;
-
-        const frames = [];
-        for (let i = 0; i < inds.length; i++) {
-            win = win.frames[inds[i]];
-            if (!win) {
-                throw new Error("The specified frame does not exist.");
-            }
-            let frame;
-            try {
-                frame = win.frameElement;
-            } catch (e) {
-                throw new Error("Access denied.");
-            }
-            frames.push(frame);
-        }
-        return frames;
-    };
-
-    /**
-     * Проверяет, является ли массив числовым.
-     *
-     * :param arr: Массив для проверки.
-     * :return: True, если массив числовой, False в противном случае.
-     */
-    fu.isNumberArray = function (arr) {
-        if (!Array.isArray(arr)) {
-            return false;
-        }
-
-        for (const item of arr) {
-            if (typeof(item) !== "number") {
-                return false;
-            }
-        }
-
-        return

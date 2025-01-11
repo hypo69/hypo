@@ -1,176 +1,172 @@
 ## <алгоритм>
 
-1.  **Начало**: Пользователь знакомится с описанием библиотеки `Tiny Utils` в файле `README.MD`.
-2.  **Обзор**: Пользователь узнаёт о назначении библиотеки как коллекции вспомогательных функций для различных задач.
-3.  **Навигация**: Пользователь может перемещаться по разделам с помощью оглавления.
-4.  **Установка**: Пользователь клонирует репозиторий и устанавливает зависимости, как указано в разделе "Installation".
-    *   Пример:
-        ```bash
-        git clone https://github.com/hypo69/tiny-utils.git
-        cd tiny_utils
-        pip install -r requirements.txt
-        ```
-5.  **Обзор модулей**: Пользователь изучает список модулей `Tiny Utils`, каждый из которых отвечает за определенную функциональность.
-    *   Примеры модулей: `Convertors`, `String Utilities`, `File Operations`, `Date-Time Utilities` и т.д.
-6.  **Описание модулей**: Пользователь подробно изучает описание каждого модуля:
-    *   `Convertors`: Описание функций конвертации данных между форматами (текст-в-изображение, webp-в-png, JSON, XML, Base64, и т.д.).
-        *   Примеры файлов: `text2png.py`, `tts.py`, `webp2png.py`, `xml2dict.py`, `base64.py`, `json.py`, и т.д.
-    *   `String Utilities`: Инструменты для расширенной работы со строками.
-    *   `File Operations`: Операции с файлами (чтение, запись, копирование, удаление, перемещение).
-    *   `Date-Time Utilities`: Функции для работы с датой и временем.
-    *   `FTP Utilities`: Функции для работы с FTP.
-    *   `Image Utilities`: Базовые операции с изображениями (изменение размера, кадрирование, форматирование).
-    *   `PDF Utilities`: Функции для работы с PDF.
-    *   `Printer Utilities`: Функции для отправки данных на печать.
-7.  **Примеры использования**: Пользователь изучает примеры использования библиотеки:
-    *   Пример 1: Конвертация текста в PNG изображение
-        ```python
-        from tiny_utils.convertors import text2png
-        
-        text = "Hello, World!"
-        output_path = "output_image.png"
-        text2png.convert(text, output_path)
-        ```
-    *   Пример 2: Конвертация XML в словарь Python
-        ```python
-        from tiny_utils.convertors import xml2dict
-        
-        xml_data = "<root><item>Hello</item></root>"
-        dictionary = xml2dict.convert(xml_data)
-        print(dictionary)
-        ```
-    *   Пример 3: Разбор и работа с JSON
-        ```python
-        from tiny_utils.convertors import json
-        
-        json_data = '{"name": "John", "age": 30}'
-        parsed_data = json.parse(json_data)
-        print(parsed_data)
-        ```
-8.  **Документация**: Пользователь направляется к вики-странице для получения более подробной информации.
-9.  **Вклад**: Пользователь приглашается внести свой вклад в развитие библиотеки.
-10. **Лицензия**: Пользователь узнает о лицензии MIT, под которой распространяется библиотека.
-11. **Конец**: Завершение ознакомления с библиотекой.
+1. **Начало**: Документ начинается с общей информации о библиотеке `Tiny Utils`.
+
+2. **Оглавление**: Представлено оглавление, которое помогает пользователю ориентироваться в документе.
+
+3. **Установка**: Инструкции по установке `Tiny Utils` с использованием `git clone` и `pip install`.
+
+4. **Обзор модулей**: Краткое описание основных модулей библиотеки:
+   - **Конверторы (Convertors)**: Модули для преобразования данных между форматами (например, text-to-image, XML-to-dictionary, JSON-to-python).
+   - **Строковые утилиты (String Utilities)**: Инструменты для расширенной работы со строками.
+   - **Файловые операции (File Operations)**: Функции для обработки файлов (чтение, запись, копирование и т.д.).
+   - **Утилиты даты и времени (Date-Time Utilities)**: Функции для работы с датами и временем.
+   - **FTP утилиты (FTP Utilities)**: Функции для работы с FTP.
+   - **Изображения (Image Utilities)**: Базовые функции обработки изображений.
+   - **PDF утилиты (PDF Utilities)**: Функции для работы с PDF файлами.
+   - **Принтер (Printer Utilities)**: Функции для отправки данных на печать.
+
+5. **Описание модулей**: Подробное описание каждого модуля, включая:
+    - **Convertors**: 
+      -  **text2png.py**:  Преобразует текст в PNG изображение.
+          *Пример:* `text = "Привет, мир!"; output = "image.png"; text2png.convert(text, output)`
+      -  **tts.py**:  Преобразует текст в речь (аудио файл).
+          *Пример:* `text = "Запишите это"; output = "audio.mp3"; tts.convert(text, output)`
+      -  **webp2png.py**:  Преобразует WebP изображение в PNG.
+          *Пример:* `input = "image.webp"; output = "image.png"; webp2png.convert(input, output)`
+      -  **xls.py**:  Обрабатывает XLS файлы.
+          *Пример:* `input = "file.xls"; data = xls.parse(input)`
+      -  **xml2dict.py**:  Преобразует XML в словарь Python.
+          *Пример:* `xml = "<root><item>value</item></root>"; dictionary = xml2dict.convert(xml)`
+      -  **base64.py**:  Кодирование/декодирование Base64.
+          *Пример:* `data = "example"; encoded = base64.encode(data); decoded = base64.decode(encoded)`
+      -  **csv.py**:  Разбор и работа с CSV файлами.
+          *Пример:* `input = "data.csv"; csv_data = csv.parse(input)`
+      -  **dict.py**: Утилиты для работы со словарями.
+          *Пример:* `data = {'a': 1}; dict.merge(data, {'b': 2})`
+      -  **html.py**:  Конвертирует HTML контент.
+          *Пример:* `input = "<html>...</html>"; output = html.convert(input)`
+      -  **json.py**:  Разбор и работа с JSON.
+          *Пример:* `input = '{"key":"val"}'; json_data = json.parse(input)`
+      -  **md2dict.py**:  Преобразует Markdown в словарь.
+          *Пример:* `input = "# Header\nText"; dictionary = md2dict.convert(input)`
+      -  **ns.py**:  Конвертация пространств имен.
+          *Пример:* `ns.convert(data, from_ns, to_ns)`
+    - **String Utilities**: Функции для обработки строк.
+    - **File Operations**: Функции для обработки файлов.
+    - **Date-Time Utilities**: Функции для работы с датами и временем.
+    - **FTP Utilities**: Функции для работы с FTP.
+    - **Image Utilities**: Функции для работы с изображениями.
+    - **PDF Utilities**: Функции для работы с PDF.
+    - **Printer Utilities**: Функции для работы с принтерами.
+
+6. **Примеры использования**: Приведены примеры использования модулей:
+   - Конвертация текста в PNG изображение.
+   - Конвертация XML в словарь.
+   - Разбор и работа с JSON.
+
+7. **Ссылка на Wiki**: Ссылка на Wiki для подробной документации.
+8.  **Вклад**: Условия для участия в разработке проекта.
+9. **Лицензия**: Информация о лицензии MIT.
 
 ## <mermaid>
-
 ```mermaid
 flowchart TD
-    Start(Start) --> Overview[Обзор библиотеки Tiny Utils];
-    Overview --> Navigation[Навигация по разделам README];
-    Navigation --> Installation[Установка библиотеки];
-    Installation --> ModulesOverview[Обзор модулей];
-    ModulesOverview --> ModuleDescriptions[Описание модулей];
-    ModuleDescriptions --> ConvertorsModule[Модуль Convertors];
-    ModuleDescriptions --> StringUtilitiesModule[Модуль String Utilities];
-    ModuleDescriptions --> FileOperationsModule[Модуль File Operations];
-    ModuleDescriptions --> DateTimeUtilitiesModule[Модуль Date-Time Utilities];
-    ModuleDescriptions --> FTPUtilitiesModule[Модуль FTP Utilities];
-    ModuleDescriptions --> ImageUtilitiesModule[Модуль Image Utilities];
-    ModuleDescriptions --> PDFUtilitiesModule[Модуль PDF Utilities];
-    ModuleDescriptions --> PrinterUtilitiesModule[Модуль Printer Utilities];
-    ConvertorsModule --> Text2Png[text2png.py];
-    ConvertorsModule --> Tts[tts.py];
-    ConvertorsModule --> Webp2Png[webp2png.py];
-    ConvertorsModule --> Xls[xls.py];
-     ConvertorsModule --> Xml2Dict[xml2dict.py];
-     ConvertorsModule --> Base64[base64.py];
-     ConvertorsModule --> Csv[csv.py];
-     ConvertorsModule --> Dict[dict.py];
-     ConvertorsModule --> Html[html.py];
-    ConvertorsModule --> Json[json.py];
-     ConvertorsModule --> Md2Dict[md2dict.py];
-     ConvertorsModule --> Ns[ns.py];
-    ModuleDescriptions --> UsageExamples[Примеры использования];
-    UsageExamples --> Example1[Пример конвертации текста в PNG];
-    UsageExamples --> Example2[Пример конвертации XML в словарь];
-    UsageExamples --> Example3[Пример разбора и работы с JSON];
-    UsageExamples --> DocumentationLink[Ссылка на Wiki];
-   DocumentationLink -->  Contribution[Вклад в проект];
-    Contribution --> License[Лицензия MIT];
-    License --> End(End);
+    Start[Начало] --> Install[Установка Tiny Utils]
+    Install --> Modules[Обзор модулей]
+    Modules --> Convertors[Конверторы]
+    Modules --> StringUtils[Строковые утилиты]
+    Modules --> FileOps[Файловые операции]
+    Modules --> DateTimeUtils[Утилиты даты и времени]
+    Modules --> FTPUtils[FTP утилиты]
+    Modules --> ImageUtils[Изображения]
+    Modules --> PDFUtils[PDF утилиты]
+     Modules --> PrinterUtils[Принтер]
+
+    Convertors --> TextToPng[text2png.py: Convert text to PNG]
+        Convertors --> Tts[tts.py: Convert text to speech]
+        Convertors --> WebpToPng[webp2png.py: Convert WebP to PNG]
+        Convertors --> Xls[xls.py: Handle XLS files]
+        Convertors --> XmlToDict[xml2dict.py: Convert XML to dict]
+        Convertors --> Base64[base64.py: Base64 encode/decode]
+        Convertors --> Csv[csv.py: Parse CSV files]
+        Convertors --> Dict[dict.py: Dictionary utilities]
+        Convertors --> Html[html.py: Convert HTML content]
+        Convertors --> Json[json.py: Parse and manipulate JSON]
+        Convertors --> MdToDict[md2dict.py: Convert Markdown to dict]
+        Convertors --> Ns[ns.py: Namespace conversion]
+  
+    Modules --> UsageExamples[Примеры использования]
+    UsageExamples --> TextToPngExample[Convert Text to PNG Example]
+    UsageExamples --> XmlToDictExample[Convert XML to Dictionary Example]
+    UsageExamples --> JsonExample[Parse and Manipulate JSON Example]
+        
+   
+    UsageExamples --> WikiLink[Tiny Utils Wiki]
+    WikiLink --> Contribute[Вклад]
+    Contribute --> License[Лицензия]
+    License --> End[Конец]
+
 ```
 
-**Описание `mermaid` диаграммы:**
+**Описание зависимостей `mermaid`:**
 
-*   `Start`: Начало процесса ознакомления с файлом `README.MD`.
-*   `Overview`: Общее описание библиотеки `Tiny Utils`.
-*   `Navigation`: Этап навигации по разделам файла.
-*   `Installation`: Шаг, описывающий установку библиотеки.
-*   `ModulesOverview`: Этап, где рассматривается обзор модулей библиотеки.
-*   `ModuleDescriptions`: Подробное описание каждого модуля.
-*   `ConvertorsModule`, `StringUtilitiesModule`, `FileOperationsModule`, `DateTimeUtilitiesModule`, `FTPUtilitiesModule`, `ImageUtilitiesModule`, `PDFUtilitiesModule`, `PrinterUtilitiesModule`: Описание модулей.
-*   `Text2Png`, `Tts`, `Webp2Png`, `Xls`, `Xml2Dict`, `Base64`, `Csv`, `Dict`, `Html`, `Json`, `Md2Dict`, `Ns`: Файлы, входящие в модуль `Convertors`.
-*   `UsageExamples`: Раздел с примерами использования.
-*   `Example1`, `Example2`, `Example3`: Примеры кода для различных операций.
-*   `DocumentationLink`: Ссылка на вики-документацию.
-*   `Contribution`: Раздел, приглашающий к участию в проекте.
-*   `License`: Информация о лицензии MIT.
-*  `End`: Конец процесса ознакомления с `README.MD`.
+- **`Start`**: Начало процесса описания библиотеки.
+- **`Install`**: Шаг, который описывает процесс установки библиотеки Tiny Utils.
+- **`Modules`**: Описывает общую структуру библиотеки, разделие на модули.
+- **`Convertors`**: Описывает модуль конвертации различных форматов данных.
+    - **`TextToPng`**:  Указывает на модуль `text2png.py` и его назначение.
+    -  **`Tts`**:  Указывает на модуль `tts.py` и его назначение.
+    -  **`WebpToPng`**:  Указывает на модуль `webp2png.py` и его назначение.
+    -  **`Xls`**:  Указывает на модуль `xls.py` и его назначение.
+    -  **`XmlToDict`**:  Указывает на модуль `xml2dict.py` и его назначение.
+    -  **`Base64`**:  Указывает на модуль `base64.py` и его назначение.
+    -  **`Csv`**:  Указывает на модуль `csv.py` и его назначение.
+    -  **`Dict`**:  Указывает на модуль `dict.py` и его назначение.
+    -  **`Html`**:  Указывает на модуль `html.py` и его назначение.
+    -  **`Json`**:  Указывает на модуль `json.py` и его назначение.
+     -  **`MdToDict`**:  Указывает на модуль `md2dict.py` и его назначение.
+      -  **`Ns`**:  Указывает на модуль `ns.py` и его назначение.
+-  **`StringUtils`**: Описывает модуль строковых утилит.
+-  **`FileOps`**: Описывает модуль файловых операций.
+-  **`DateTimeUtils`**: Описывает модуль утилит даты и времени.
+-  **`FTPUtils`**: Описывает модуль FTP утилит.
+-  **`ImageUtils`**: Описывает модуль обработки изображений.
+-  **`PDFUtils`**: Описывает модуль работы с PDF.
+-  **`PrinterUtils`**: Описывает модуль работы с принтером.
+- **`UsageExamples`**: Раздел с примерами использования библиотеки.
+    - **`TextToPngExample`**: Пример конвертации текста в PNG.
+    - **`XmlToDictExample`**: Пример конвертации XML в словарь.
+    - **`JsonExample`**: Пример работы с JSON.
+- **`WikiLink`**: Ссылка на документацию Wiki.
+- **`Contribute`**: Раздел, посвященный вкладу в проект.
+- **`License`**: Информация о лицензии проекта.
+- **`End`**: Завершение описания.
 
 ## <объяснение>
 
 **Импорты:**
 
-В данном файле `README.MD` нет импортов, так как это Markdown-файл, а не Python-код. Тем не менее, в примерах использования библиотеки `tiny_utils` демонстрируются импорты из пакета `tiny_utils.convertors`, например:
-
-*   `from tiny_utils.convertors import text2png` - импортирует модуль `text2png` из подпакета `convertors`.
-*   `from tiny_utils.convertors import xml2dict` - импортирует модуль `xml2dict` из подпакета `convertors`.
-*    `from tiny_utils.convertors import json` - импортирует модуль `json` из подпакета `convertors`.
+В данном файле README.MD нет импортов, так как это файл документации, а не код на Python. Он предоставляет обзор структуры и функциональности библиотеки `Tiny Utils`.
 
 **Классы:**
 
-В этом файле `README.MD` нет классов. Описание классов может присутствовать в файлах, на которые ссылается этот файл, таких как `text2png.py`, `xml2dict.py`, и т.д.
+Файл README.MD не содержит классов, так как это документационный файл, а не исходный код.
 
 **Функции:**
 
-В данном файле `README.MD` нет функций. Однако в примерах использования вызываются функции из модулей `tiny_utils`:
-
-*   `text2png.convert(text, output_path)`: Функция для преобразования текста в PNG изображение.
-    *   Аргументы: `text` (текст для преобразования) и `output_path` (путь к выходному файлу).
-    *   Возвращает: Сохраняет изображение в файл.
-*   `xml2dict.convert(xml_data)`: Функция для преобразования XML данных в словарь Python.
-    *   Аргументы: `xml_data` (строка с XML данными).
-    *   Возвращает: Словарь Python, представляющий XML данные.
-*   `json.parse(json_data)`: Функция для разбора JSON данных.
-    *   Аргументы: `json_data` (строка с JSON данными).
-    *   Возвращает: Объект Python, представляющий JSON данные.
+Файл README.MD не содержит функций, так как это документационный файл, а не исходный код. В данном файле описываются функции, которые находятся в модулях библиотеки Tiny Utils.
 
 **Переменные:**
 
-В файле `README.MD` используются переменные в примерах кода, например:
-* `text`, `output_path` - это переменные, которые используются в примере конвертации текста в изображение.
-*   `xml_data`, `dictionary` - это переменные, которые используются в примере конвертации XML в словарь.
-* `json_data`, `parsed_data` - это переменные, которые используются в примере разбора JSON.
+Файл README.MD не содержит переменных, так как это документационный файл, а не исходный код. В данном файле описываются переменные, которые используются в примерах, но они являются частью кода, который находится в других файлах.
 
 **Объяснение:**
 
-Файл `README.MD` предназначен для предоставления общего обзора и документации по использованию библиотеки `Tiny Utils`. Он структурирован таким образом, чтобы пользователь мог легко понять назначение библиотеки, её модули, и примеры использования. Основные разделы включают:
+- **README.MD**: Этот файл представляет собой документацию к библиотеке `Tiny Utils`. Он содержит обзор всех модулей, предоставляет инструкции по установке, описывает функциональность каждого модуля, и приводит примеры использования.
+- **Структура библиотеки**: Библиотека `Tiny Utils` разделена на несколько модулей, каждый из которых отвечает за определенную область задач. Это позволяет пользователям легко находить нужные функции и использовать их в своих проектах.
+- **Примеры использования**: Примеры показывают, как можно использовать библиотеку для решения конкретных задач, таких как конвертация текста в изображение, преобразование XML в словарь, и разбор JSON данных.
+- **Область применения**: Библиотека предназначена для широкого круга задач, включая обработку данных различных форматов, работу со строками и файлами, а также интеграцию с внешними сервисами, такими как FTP и принтеры.
+- **Улучшения**:
+   - Добавить более подробные примеры использования для каждого модуля.
+   - Указать зависимости для каждого модуля, если таковые имеются.
+   - Добавить описание ошибок, которые могут возникнуть при использовании библиотеки.
+   - Улучшить структуру и форматирование документа для более удобного чтения.
 
-*   **Описание библиотеки**: Общее назначение и возможности библиотеки.
-*   **Установка**: Инструкции по установке и настройке.
-*   **Обзор модулей**: Краткое описание каждого модуля.
-*   **Описание модулей**: Подробное описание функционала каждого модуля.
-*   **Примеры использования**: Демонстрация использования библиотеки через код.
-*   **Документация**: Ссылка на подробную вики-документацию.
-*   **Вклад**: Приглашение к участию в проекте.
-*   **Лицензия**: Информация о лицензировании проекта.
+**Взаимосвязь с другими частями проекта:**
 
-**Потенциальные ошибки и области для улучшения:**
+- **`src/`**: Этот файл README.MD находится в директории `src/utils`, что означает, что он относится к утилитам проекта. Этот файл является частью общего проекта и взаимодействует с кодом, который находится в других директориях.
+- **`requirements.txt`**: Файл `requirements.txt` указан в инструкциях по установке, что указывает на зависимость проекта от внешних библиотек.
+- **`LICENSE`**: Файл `LICENSE` содержит информацию о лицензии, что указывает на то, что проект имеет открытую лицензию.
 
-*   **Отсутствие подробной документации:** `README.MD` предоставляет лишь общее представление о библиотеке. Подробная документация, включая примеры и пояснения к каждой функции, должна быть доступна через вики-документацию, на которую дана ссылка.
-*   **Неполные примеры:** Приведенные примеры являются базовыми и могут не охватывать все возможности библиотеки.
-*   **Недостаток тестирования:** В `README.MD` нет информации о модульном или интеграционном тестировании. Это является важной частью любого проекта.
-*   **Не указана поддержка Python версий:** Не указаны поддерживаемые версии Python, что может привести к проблемам совместимости.
-*   **Различные форматы документации**: Информация раскидана между `README.MD` и вики-страницей.
-
-**Цепочка взаимосвязей с другими частями проекта:**
-
-`README.MD` является отправной точкой для взаимодействия с библиотекой `Tiny Utils`. Он связан с остальными частями проекта следующим образом:
-
-1.  **Исходный код**: `README.MD` описывает модули и функции, код которых находится в каталоге `src/utils`.
-2.  **`requirements.txt`**: Файл, упомянутый в разделе "Installation", содержит зависимости, необходимые для работы библиотеки.
-3.  **Вики-документация**: `README.MD` содержит ссылку на вики-страницу, где находится более подробная информация по использованию библиотеки.
-4.  **Лицензионный файл**: Ссылка на лицензионный файл `LICENSE` подтверждает условия использования библиотеки.
-
-В целом, `README.MD` выполняет свою роль в качестве отправной точки для знакомства с библиотекой `Tiny Utils`, но требует дополнения в виде подробной документации, примеров и тестирования.
+В целом, этот файл README.MD является важной частью проекта, так как он предоставляет всю необходимую информацию о библиотеке, ее структуре и функциональности. Он позволяет пользователям быстро начать использовать библиотеку в своих проектах.

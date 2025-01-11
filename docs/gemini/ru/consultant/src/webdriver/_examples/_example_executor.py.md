@@ -1,250 +1,270 @@
-# Анализ кода модуля `_example_executor.py`
+## Анализ кода модуля `_example_executor.py`
 
-**Качество кода:** 7/10
+**Качество кода: 7/10**
+
 -   **Плюсы:**
-    *   Код предоставляет ясные примеры использования класса `ExecuteLocator`.
-    *   Присутствуют примеры работы с разными типами локаторов и атрибутов.
-    *   Код демонстрирует обработку ошибок и продолжение выполнения при ошибках.
-    *   Примеры использования методов `send_message` и `evaluate_locator`.
-    *   Логика кода хорошо структурирована.
-
+    -   Код предоставляет примеры использования класса `ExecuteLocator`.
+    -   Присутствуют примеры различных типов локаторов (простой, сложный, множественный).
+    -   Есть примеры обработки ошибок и использования `send_message` и `evaluate_locator`.
+    -   Код хорошо структурирован и легко читается.
 -   **Минусы:**
-    *   Отсутствует reStructuredText документация для модуля, функций, классов.
-    *   Избыточное использование `print` для отладочного вывода, что не подходит для продакшн кода.
-    *   Использование `try-except` для обработки ошибок, что можно было бы заменить на логирование с использованием `logger.error`.
-    *   Отсутствует импорт `logger` для логирования.
-    *   Некоторые комментарии недостаточно информативны, например, `# Create WebDriver instance (e.g., Chrome)`.
-    *   В коде используются  `print` а не `logger`
-    *   Присутствуют дублирующиеся блоки кода
+    -   Отсутствует документация модуля.
+    -   Не используются `j_loads` или `j_loads_ns` для загрузки данных.
+    -   Не все строки соответствуют PEP 8 (например, длинные строки).
+    -   Не используются `logger.error` для обработки ошибок.
+    -   Не все примеры соответствуют стилю документации RST.
+    -   Использование `print` вместо `logger` для логирования.
 
 **Рекомендации по улучшению:**
 
-1.  **Добавить reStructuredText документацию:**
-    *   Добавить документацию модуля в начале файла.
-    *   Добавить docstring для функции `main`.
-
-2.  **Использовать `logger` для логирования:**
-    *   Импортировать `logger` из `src.logger.logger`.
-    *   Заменить все `print` на `logger.info`, `logger.debug` или `logger.error`, в зависимости от ситуации.
-
-3.  **Улучшить обработку ошибок:**
-    *   Убрать блоки `try-except` там где возможно, и использовать `logger.error` для логирования ошибок.
-
-4.  **Улучшить комментарии:**
-    *   Сделать комментарии более информативными и точными, описывая, что именно делает код.
-
-5.  **Убрать дублирование кода:**
-   *   По возможности вынести дублирующийся код в отдельные функции
-
-6.  **Привести в порядок переменные:**
-   *   Привести в соответствие имена переменных и параметров с ранее обработанными файлами
+1.  Добавить документацию модуля в формате RST.
+2.  Использовать `logger` из `src.logger.logger` для логирования.
+3.  Избегать избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
+4.  Унифицировать кавычки (использовать одинарные кавычки для строк в коде).
+5.  Добавить документацию к функциям и переменным.
+6.  Разделить длинные строки для соответствия PEP 8.
+7.  Добавить примеры документации RST.
+8.  Убрать избыточные комментарии.
+9.  Удалить не нужные импорты и добавить нужные.
 
 **Оптимизированный код:**
 
 ```python
 # -*- coding: utf-8 -*-
+
+#! venv/bin/python/python3.12
+
 """
-Модуль содержит примеры использования класса ExecuteLocator для демонстрации
-различных способов взаимодействия с веб-элементами.
-========================================================================
+Модуль предоставляет примеры использования класса `ExecuteLocator`.
+=================================================================
 
-Этот модуль демонстрирует, как использовать класс :class:`ExecuteLocator` для выполнения
-различных действий с веб-элементами, таких как получение текста, отправка сообщений,
-клик и т.д.
-
-Примеры включают:
-
-    - Простые и сложные локаторы.
-    - Обработку ошибок.
-    - Использование метода `send_message`.
-    - Использование списка локаторов.
-    - Использование метода `evaluate_locator`.
+Этот модуль демонстрирует, как использовать класс `ExecuteLocator` для взаимодействия с элементами веб-страницы.
+Примеры включают в себя простые и сложные локаторы, обработку ошибок, отправку сообщений и оценку атрибутов.
 
 Пример использования
 --------------------
 
-Пример запуска модуля:
-
 .. code-block:: python
+
+    from selenium import webdriver
+    from src.webdriver.executor import ExecuteLocator
+    from src import gs
+    from src.logger.logger import logger
+
+    def main():
+        # Создание экземпляра WebDriver
+        driver = webdriver.Chrome(executable_path=gs['chrome_driver_path'])
+        driver.get("https://example.com")
+
+        # Создание экземпляра ExecuteLocator
+        locator = ExecuteLocator(driver)
+        ...
+        driver.quit()
 
     if __name__ == "__main__":
         main()
 """
+
 from selenium import webdriver
-from src.webdriver.executor import ExecuteLocator
+# from src.webdriver.executor import ExecuteLocator # импорт перенесен ниже
 from src import gs
-# Импортируем logger для логирования
+# from src.logger.exceptions import ExecuteLocatorException # импорт перенесен ниже
 from src.logger.logger import logger
+from src.webdriver.executor import ExecuteLocator
 from src.logger.exceptions import ExecuteLocatorException
 
 
 def main():
     """
-    Главная функция для демонстрации работы с ExecuteLocator.
-
-    Создает экземпляр веб-драйвера, переходит на заданную страницу,
-    создает экземпляр ExecuteLocator и выполняет различные примеры
-    использования этого класса.
+    Главная функция, демонстрирующая использование `ExecuteLocator`.
+    
+    Этот метод выполняет ряд примеров для показа возможностей класса `ExecuteLocator`,
+    включая простые и сложные локаторы, обработку ошибок, отправку сообщений и оценку атрибутов.
     """
-    # Создание экземпляра веб-драйвера (например, Chrome)
-    try:
-        driver = webdriver.Chrome(executable_path=gs['chrome_driver_path'])
-        logger.info('Драйвер Chrome успешно запущен.')
-    except Exception as ex:
-        logger.error(f'Ошибка при инициализации драйвера: {ex}')
-        return
+    # Создание экземпляра WebDriver (например, Chrome)
+    driver = webdriver.Chrome(executable_path=gs['chrome_driver_path'])
+    driver.get('https://example.com')  # Навигация на веб-сайт
 
-    try:
-        driver.get("https://example.com")  # Переход на веб-страницу
-        logger.info(f"Успешно перешли на страницу: https://example.com")
-    except Exception as ex:
-        logger.error(f'Ошибка при переходе на страницу: {ex}')
-        driver.quit()  # Закрыть драйвер в случае ошибки
-        return
     # Создание экземпляра ExecuteLocator
     locator = ExecuteLocator(driver)
-    logger.info('Экземпляр ExecuteLocator создан.')
 
-    # Простой пример использования локатора
-    logger.info('Простой пример использования локатора')
+    # Простой пример создания экземпляра и использования методов
+    print('Simple example of creating an instance and using methods') # TODO: заменить print на logger
+
+    # Простой локатор для получения элемента по XPath
     simple_locator = {
-        "by": "XPATH",
-        "selector": "//h1",
-        "attribute": "textContent",
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": None,
-        "if_list": "first", "use_mouse": False,
-        "mandatory": True,
-        "locator_description": "Получение заголовка страницы"
+        'by': 'XPATH',
+        'selector': '//h1',
+        'attribute': 'textContent',
+        'timeout': 0,
+        'timeout_for_event': 'presence_of_element_located',
+        'event': None,
+        'if_list': 'first',
+        'use_mouse': False,
+        'mandatory': True,
+        'locator_description': 'Getting the page title'
     }
 
-    # Выполнение простого локатора
+    # Код исполняет локатор
     result = locator.execute_locator(simple_locator)
-    logger.info(f"Результат выполнения простого локатора: {result}")
+    print(f'Result of executing simple locator: {result}')  # TODO: заменить print на logger
 
+    # Пример использования различных событий и атрибутов
+    print('\nExample of using different events and attributes')  # TODO: заменить print на logger
 
-    # Пример использования разных событий и атрибутов
-    logger.info('Пример использования разных событий и атрибутов')
+    # Локатор для отправки сообщения и получения атрибута
     complex_locator = {
-        "product_links": {
-            "attribute": "href",
-            "by": "XPATH",
-            "selector": "//a[contains(@class, \'product\')]",
-            "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": None,
-            "if_list": "first", "use_mouse": False,
-            "mandatory": True,
-            "locator_description": "Получение ссылки на продукт"
+        'product_links': {
+            'attribute': 'href',
+            'by': 'XPATH',
+            'selector': '//a[contains(@class, \'product\')]',
+            'timeout': 0,
+            'timeout_for_event': 'presence_of_element_located',
+            'event': None,
+            'if_list': 'first',
+            'use_mouse': False,
+            'mandatory': True,
+            'locator_description': 'Getting the product link'
         },
-        "pagination": {
-            "ul": {
-                "attribute": None,
-                "by": "XPATH",
-                "selector": "//ul[@class=\'pagination\']",
-                "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "click()",
-                "if_list": "first", "use_mouse": False,
-                "mandatory": True,
-                "locator_description": "Клик по пагинации"
+        'pagination': {
+            'ul': {
+                'attribute': None,
+                'by': 'XPATH',
+                'selector': '//ul[@class=\'pagination\']',
+                'timeout': 0,
+                'timeout_for_event': 'presence_of_element_located',
+                'event': 'click()',
+                'if_list': 'first',
+                'use_mouse': False,
+                'mandatory': True,
+                'locator_description': 'Click on pagination'
             },
-            "->": {
-                "attribute": None,
-                "by": "XPATH",
-                "selector": "//*[@class = \'ui-pagination-navi util-left\']/a[@class=\'ui-pagination-next\']",
-                "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "click()",
-                "if_list": "first", "use_mouse": False,
-                "mandatory": True,
-                "locator_description": "Клик по следующей странице"
+            '->': {
+                'attribute': None,
+                'by': 'XPATH',
+                'selector': '//*[@class = \'ui-pagination-navi util-left\']/a[@class=\'ui-pagination-next\']',
+                'timeout': 0,
+                'timeout_for_event': 'presence_of_element_located',
+                'event': 'click()',
+                'if_list': 'first',
+                'use_mouse': False,
+                'mandatory': True,
+                'locator_description': 'Click on the next page'
             }
         }
     }
 
-    # Выполнение локатора с разными событиями
+    # Код исполняет локатор с различными событиями
     result = locator.execute_locator(complex_locator)
-    logger.info(f"Результат выполнения сложного локатора: {result}")
+    print(f'Result of executing complex locator: {result}')  # TODO: заменить print на logger
 
-    # Пример обработки ошибок и продолжения выполнения при ошибках
-    logger.info('Пример обработки ошибок и продолжения выполнения при ошибках')
+    # Пример обработки ошибок и продолжения при ошибках
+    print('\nExample of error handling and continuing on errors')  # TODO: заменить print на logger
+
     try:
         locator.execute_locator(complex_locator, continue_on_error=True)
     except ExecuteLocatorException as ex:
-        logger.error(f"Произошла ошибка при выполнении локатора, но выполнение продолжилось: {ex}")
+        print(f'An error occurred: {ex}')  # TODO: заменить print на logger
+        logger.error(f'An error occurred: {ex}')
 
     # Пример использования `send_message`
-    logger.info('Пример использования `send_message`')
+    print('\nExample of using `send_message`')  # TODO: заменить print на logger
+
+    # Локатор для отправки сообщения в текстовое поле
     message_locator = {
-        "by": "XPATH",
-        "selector": "//input[@name=\'search\']",
-        "attribute": None,
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "%SEARCH%",
-        "if_list": "first", "use_mouse": False,
-        "mandatory": True,
-        "locator_description": "Отправка поискового запроса"
+        'by': 'XPATH',
+        'selector': '//input[@name=\'search\']',
+        'attribute': None,
+        'timeout': 0,
+        'timeout_for_event': 'presence_of_element_located',
+        'event': '%SEARCH%',
+        'if_list': 'first',
+        'use_mouse': False,
+        'mandatory': True,
+        'locator_description': 'Sending a search query'
     }
 
-    # Отправка сообщения с использованием метода send_message
-    message = "Купить новый телефон"
+    # Код отправляет сообщение используя метод send_message
+    message = 'Buy a new phone'
     result = locator.send_message(message_locator, message, typing_speed=0.05, continue_on_error=True)
-    logger.info(f"Результат отправки сообщения: {result}")
+    print(f'Result of sending message: {result}')  # TODO: заменить print на logger
 
     # Пример использования списка локаторов
-    logger.info('Пример использования списка локаторов')
+    print('\nExample of using a list of locators')  # TODO: заменить print на logger
+
+    # Локатор для нескольких элементов
     multi_locator = {
-        "by": ["XPATH", "XPATH"],
-        "selector": ["//button[@id=\'submit\']", "//input[@id=\'username\']"],
-        "attribute": ["textContent", "value"],
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": ["click()", "send_keys(\'user\')"],
-        "if_list": "first", "use_mouse": [True, False],
-        "mandatory": [True, True],
-        "locator_description": ["Клик по кнопке submit", "Ввод имени пользователя"]
+        'by': ['XPATH', 'XPATH'],
+        'selector': ['//button[@id=\'submit\']', '//input[@id=\'username\']'],
+        'attribute': ['textContent', 'value'],
+        'timeout': 0,
+        'timeout_for_event': 'presence_of_element_located',
+        'event': ['click()', 'send_keys(\'user\')'],
+        'if_list': 'first',
+        'use_mouse': [True, False],
+        'mandatory': [True, True],
+        'locator_description': ['Click the submit button', 'Enter username']
     }
 
-    # Выполнение локатора с несколькими элементами
+    # Код исполняет локатор с несколькими элементами
     results = locator.execute_locator(multi_locator)
-    logger.info(f"Результаты выполнения нескольких локаторов: {results}")
+    print(f'Results of executing multiple locators: {results}')  # TODO: заменить print на logger
 
-    # Пример использования `evaluate_locator`
-    logger.info('Пример использования `evaluate_locator`')
+    # Пример `evaluate_locator`
+    print('\nExample of using `evaluate_locator`')  # TODO: заменить print на logger
+
+    # Локатор для оценки атрибута
     attribute_locator = {
-        "by": "XPATH",
-        "selector": "//meta[@name=\'description\']",
-        "attribute": "content",
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": None,
-        "if_list": "first", "use_mouse": False,
-        "mandatory": True,
-        "locator_description": "Получение мета-описания страницы"
+        'by': 'XPATH',
+        'selector': '//meta[@name=\'description\']',
+        'attribute': 'content',
+        'timeout': 0,
+        'timeout_for_event': 'presence_of_element_located',
+        'event': None,
+        'if_list': 'first',
+        'use_mouse': False,
+        'mandatory': True,
+        'locator_description': 'Getting the page meta-description'
     }
 
-    # Оценка локатора и получение атрибута
+    # Код оценивает локатор и получает атрибут
     attribute_value = locator.evaluate_locator(attribute_locator['attribute'])
-    logger.info(f"Значение атрибута: {attribute_value}")
+    print(f'Attribute value: {attribute_value}')  # TODO: заменить print на logger
+
+    # Пример обработки исключений
+    print('\nExample of exception handling')  # TODO: заменить print на logger
 
     # Пример обработки исключений при выполнении локатора
-    logger.info('Пример обработки исключений при выполнении локатора')
-
     try:
         locator.execute_locator(simple_locator)
     except ExecuteLocatorException as ex:
-        logger.error(f"Произошла ошибка при выполнении локатора: {ex}")
+       print(f'An error occurred during locator execution: {ex}')  # TODO: заменить print на logger
+       logger.error(f'An error occurred during locator execution: {ex}')
 
     # Полный пример теста
-    logger.info('Полный пример теста')
+    print('\nFull test example')  # TODO: заменить print на logger
+
+    # Пример тестового локатора
     test_locator = {
-        "by": "XPATH",
-        "selector": "//h1",
-        "attribute": "textContent",
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": None,
-        "if_list": "first", "use_mouse": False,
-        "mandatory": True,
-        "locator_description": "Получение заголовка страницы (тестовый локатор)"
+        'by': 'XPATH',
+        'selector': '//h1',
+        'attribute': 'textContent',
+        'timeout': 0,
+        'timeout_for_event': 'presence_of_element_located',
+        'event': None,
+        'if_list': 'first',
+        'use_mouse': False,
+        'mandatory': True,
+        'locator_description': 'Getting the page title'
     }
 
-    # Выполнение тестового локатора
+    # Код исполняет тестовый локатор
     result = locator.execute_locator(test_locator)
-    logger.info(f"Результат выполнения тестового локатора: {result}")
-
+    print(f'Result of executing test locator: {result}')  # TODO: заменить print на logger
 
     # Закрытие драйвера
     driver.quit()
-    logger.info('Драйвер закрыт.')
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()
-```

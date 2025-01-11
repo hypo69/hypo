@@ -1,143 +1,185 @@
-# Анализ кода модуля `category.py`
+## Анализ кода модуля src.suppliers.hb.category
 
 **Качество кода**
-7
--  Плюсы
-    - Код достаточно структурирован и разделен на функции, что упрощает его понимание.
-    - Используется `logger` для логирования, что полезно для отслеживания ошибок и хода выполнения.
-    - Код использует аннотации типов, что улучшает читаемость и помогает в отладке.
-    - Присутствуют docstring для функций.
-
--  Минусы
-    - Присутствует избыточная документация с повторяющимися комментариями в начале файла.
-    - Не все комментарии соответствуют стандарту reStructuredText (RST).
-    - Не используется `j_loads` или `j_loads_ns` для загрузки JSON, хотя это указано в инструкции.
-     -  Много `...` в коде, которые выглядят как заглушки, и не несут смысловой нагрузки.
-     -  Не везде используется проверка на None и пустые списки.
-    -  Функция `paginator` не возвращает `False` в случае отсутствия элементов и может привести к ошибке.
-    - Присутствует неоднозначность с возвращаемыми значениями функций, не везде тип `list`.
-    - Отсутствуют импорты, которые используются в коде.
-     - Есть неиспользуемые переменные
+8
+- Плюсы
+    - Код содержит docstring для модуля.
+    - Используется `logger` для логирования.
+    - Присутствуют проверки на наличие данных.
+    - Код разбит на функции.
+- Минусы
+    - Некоторые комментарии не соответствуют формату RST.
+    - Не все функции имеют docstring.
+    - Используется `...` в коде.
+    - Нет обработки ошибок внутри функций.
+    - Присутствуют неиспользуемые импорты (например `gs`).
+    - Использование переменной `d`, `l` без пояснений затрудняет чтение кода
+    - Использование `list_products_in_category.append()` в цикле. Должен быть метод extend
 
 **Рекомендации по улучшению**
-
-1. **Удалить избыточные комментарии:** Очистить блок комментариев в начале файла, оставив только необходимую информацию о модуле.
-2. **Использовать RST для docstring:** Переписать docstring в соответствии со стандартом reStructuredText.
-3. **Заменить `json.load` на `j_loads` или `j_loads_ns`:** Использовать `j_loads` или `j_loads_ns` для загрузки JSON-данных из файлов.
-4. **Убрать `...`:** Заменить все `...` на осмысленный код.
-5. **Добавить обработку ошибок:** Улучшить обработку ошибок, добавив проверки на `None` и пустые списки.
-6. **Уточнить возвращаемые значения:** Убедиться, что все функции возвращают значения ожидаемого типа, и явно обрабатывать ситуации, когда данные отсутствуют.
-7.  **Добавить импорты:** Добавить необходимые импорты, которые используются в коде.
-8.  **Улучшить логику `paginator`**:  Функция `paginator` должна явно возвращать `False`, если не находит элемент пагинации, чтобы избежать бесконечного цикла.
-9. **Проверить неиспользуемые переменные:** Удалить все неиспользуемые переменные, чтобы код был чище.
+1. Добавить docstring для каждой функции, включая описание параметров и возвращаемых значений.
+2.  Удалить неиспользуемые импорты.
+3.  Избегать использования `...` в коде. Вместо этого, реализовать полноценную логику.
+4.  Добавить обработку ошибок с использованием `logger.error` и `try-except`.
+5.  Улучшить читаемость кода, давая более осмысленные имена переменным.
+6.  Использовать  `extend`  вместо  `append`  для добавления списка ссылок в  `list_products_in_category`.
+7.  Соблюдать PEP 8 стандарты именования.
 
 **Оптимизированный код**
 ```python
-# -*- coding: utf-8 -*-
 """
-Модуль для сбора товаров со страницы категорий поставщика hb.co.il.
+Модуль для сбора товаров со страницы категорий поставщика hb.co.il через вебдрайвер.
+=========================================================================================
 
-Этот модуль содержит функции для сбора списка категорий и товаров с веб-сайта поставщика.
-Использует Selenium WebDriver для взаимодействия с веб-страницами.
+Этот модуль содержит функции для сбора списка категорий и товаров со страниц поставщика hb.co.il.
+Каждый поставщик имеет свой сценарий обработки категорий.
 
-.. module:: src.suppliers.hb.category
-   :platform: Windows, Unix
-   :synopsis: Модуль для сбора категорий и товаров.
+- Модуль собирает список категорий со страниц продавца с помощью функции `get_list_categories_from_site()`.
+- Собирает список товаров со страницы категории с помощью функции `get_list_products_in_category()`.
+- Итерируясь по списку, передает управление в `grab_product_page()`, отправляя функции текущий URL страницы.
+  `grab_product_page()` обрабатывает поля товара и передает управление классу `Product`.
 
-Функции:
-    - :func:`get_list_products_in_category`: Возвращает список URL товаров со страницы категории.
-    - :func:`paginator`: Выполняет навигацию по страницам, если есть пагинация.
-    - :func:`get_list_categories_from_site`: Собирает список категорий с сайта.
+Пример использования:
+--------------------
 
+.. code-block:: python
+
+    from src.suppliers.hb.category import get_list_categories_from_site, get_list_products_in_category
+    from src.suppliers import Supplier
+    from src.webdriver.driver import Driver
+    # Assume 'supplier' is an instance of the class 'Supplier' and has a configured 'driver'.
+    # You need to replace this with actual initialization
+    
+    #Example with mock
+    class MockDriver:
+        def __init__(self):
+            self.current_url = 'https://hb.co.il/category1'
+            self.previous_url = None
+            self.scroll_count = 0
+        def wait(self, time):
+            pass
+        def execute_locator(self, locator):
+             if locator == 'close_banner':
+                 return True
+             if locator == 'product_links':
+                if self.scroll_count == 0:
+                    self.scroll_count += 1
+                    return ['/product1','/product2']
+                if self.scroll_count == 1:
+                    self.scroll_count += 1
+                    return ['/product3','/product4']
+             if locator == '<-':
+                 if self.scroll_count < 3:
+                     self.previous_url = self.current_url
+                     self.current_url = 'https://hb.co.il/category2'
+                     return True
+                 return None
+
+        def scroll(self):
+             pass
+    class MockSupplier:
+        def __init__(self):
+            self.driver = MockDriver()
+            self.locators = {
+                 'category':{
+                     'product_links':'product_links',
+                     'pagination': {
+                        '<-': '<-'
+                    }
+                  },
+                 'product':{
+                    'close_banner':'close_banner'
+                }
+            }
+            self.current_scenario = {'name':'test_category'}
+    supplier = MockSupplier()
+    categories = get_list_categories_from_site(supplier)
+    print(f'Categories:{categories=}')
+    products = get_list_products_in_category(supplier)
+    print(f'Products:{products=}')
 """
-from typing import Dict, List, Optional, Any
-
-from src import gs
+from typing import List
 from src.logger.logger import logger
 from src.webdriver.driver import Driver
 from src.suppliers import Supplier
-from src.utils.jjson import j_loads # import j_loads
 
 
-
-def get_list_products_in_category(s: Supplier) -> Optional[List[str]]:
+def get_list_products_in_category(supplier: Supplier) -> list[str]:
     """
-    Возвращает список URL товаров со страницы категории.
+    Извлекает список URL товаров со страницы категории.
 
-    :param s: Объект поставщика.
-    :type s: Supplier
-    :return: Список URL товаров или None, если список не найден.
-    :rtype: Optional[List[str]]
+    Args:
+        supplier (Supplier): Объект поставщика с настроенным веб-драйвером и локаторами.
 
-    .. todo:: 
-      Проверить обработку пагинации в случае, когда список товаров не найден.
+    Returns:
+        list[str]: Список URL товаров, найденных на странице категории.
+        Возвращает пустой список, если не найдено ни одного товара или произошла ошибка.
+
+    Raises:
+         Exception: Если возникают ошибки при выполнении запросов.
+
     """
-    d: Driver = s.driver
-    l: Dict = s.locators['category']
+    driver: Driver = supplier.driver
+    locators: dict = supplier.locators['category']
 
-    d.wait(1)
-    # код исполняет закрытие баннера
-    d.execute_locator(s.locators['product']['close_banner'])
-    # код исполняет скролл страницы
-    d.scroll()
+    try:
+        driver.wait(1)
+        driver.execute_locator(supplier.locators['product']['close_banner'])
+        driver.scroll()
 
-    # код исполняет получение списка ссылок на товары
-    list_products_in_category: List = d.execute_locator(l['product_links'])
+        list_products_in_category = driver.execute_locator(locators['product_links'])
+        if not list_products_in_category:
+            logger.warning('Не найдено ссылок на товары в категории.')
+            return []
+            
+        all_products = list_products_in_category if isinstance(list_products_in_category, list) else [list_products_in_category]
 
-    if not list_products_in_category:
-        logger.warning('Нет ссылок на товары.')
-        return None
+        while driver.current_url != driver.previous_url:
+           if paginator(driver, locators, all_products):
+               new_products = driver.execute_locator(locators['product_links'])
+               if new_products:
+                   all_products.extend(new_products if isinstance(new_products, list) else [new_products])
+           else:
+               break
 
-    # код исполняет пагинацию
-    while d.current_url != d.previous_url:
-        if paginator(d, l, list_products_in_category):
-            # код исполняет получение и добавление новых ссылок на товары
-            new_products = d.execute_locator(l['product_links'])
-            if new_products:
-                list_products_in_category.extend(new_products)
-        else:
-            break
+        logger.debug(f'Найдено {len(all_products)} товаров в категории {supplier.current_scenario["name"]}')
+        return all_products
+    except Exception as e:
+        logger.error(f'Произошла ошибка при получении списка товаров в категории: {e}')
+        return []
 
-    # код преобразовывает одиночный url в список, если это строка
-    if isinstance(list_products_in_category, str):
-        list_products_in_category = [list_products_in_category]
-    
-    logger.debug(f'Найдено {len(list_products_in_category)} товаров в категории {s.current_scenario["name"]}')
-    return list_products_in_category
-
-
-def paginator(d: Driver, locator: Dict, list_products_in_category: List) -> bool:
+def paginator(driver: Driver, locator: dict, list_products_in_category: list) -> bool:
     """
-    Выполняет навигацию по страницам, если есть пагинация.
+    Осуществляет навигацию по страницам пагинации.
 
-    :param d: Объект веб-драйвера.
-    :type d: Driver
-    :param locator: Локаторы для пагинации.
-    :type locator: Dict
-    :param list_products_in_category: Текущий список URL товаров.
-    :type list_products_in_category: List
-    :return: True, если пагинация была выполнена, False в противном случае.
-    :rtype: bool
+    Args:
+        driver (Driver): Объект веб-драйвера.
+        locator (dict): Локаторы элементов пагинации.
+        list_products_in_category (list): Список URL товаров для обновления.
+
+    Returns:
+        bool: True, если переход на следующую страницу выполнен, False в противном случае.
     """
-    # код исполняет попытку нажать на кнопку "следующая страница"
-    response = d.execute_locator(locator['pagination']['<-'])
-    if not response or (isinstance(response, list) and len(response) == 0):
-        return False
-    return True
+    try:
+        response = driver.execute_locator(locator['pagination']['<-'])
+        if not response or (isinstance(response, list) and len(response) == 0):
+             return False
+        return True
+    except Exception as e:
+         logger.error(f'Произошла ошибка при переключении страницы пагинации: {e}')
+         return False
 
 
-def get_list_categories_from_site(s: Supplier) -> Optional[List[str]]:
+def get_list_categories_from_site(supplier: Supplier) -> None:
     """
-    Собирает список категорий с сайта.
+    Извлекает список категорий с сайта.
 
-     :param s: Объект поставщика.
-     :type s: Supplier
-     :return: Список URL категорий или None.
-     :rtype: Optional[List[str]]
+    Args:
+         supplier (Supplier): Объект поставщика.
 
-    .. todo::
-       Реализовать сборщик категорий с сайта.
+    Returns:
+         None: Функция ничего не возвращает, но логирует результат работы.
     """
+    # todo: Реализовать логику получения списка категорий с сайта
+    logger.info(f"Функция получения списка категорий для {supplier} - не реализована")
     ...
-
-```

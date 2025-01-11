@@ -1,93 +1,87 @@
-# Анализ кода модуля `__morlevi__.py`
+## Анализ кода модуля `__morlevi__.py`
 
-**Качество кода: 6/10**
+**Качество кода**
 
-- **Плюсы**
-    - Код структурирован в функции, что облегчает понимание и поддержку.
-    - Используется logging для отслеживания ошибок и отладки.
-    - Присутствуют docstring для некоторых функций, но они не соответствуют стандарту reStructuredText.
-    - Код использует `execute_locator` для взаимодействия с веб-элементами, что делает его более гибким.
-- **Минусы**
-    - Комментарии не соответствуют формату reStructuredText.
-    - Используются стандартные `try-except` блоки вместо `logger.error` для обработки ошибок.
-    - Есть повторения кода, например, в обработке `_product_list_from_page` в `list_products_in_category_from_pagination`.
-    - Не все функции и переменные имеют docstring.
-    - Не используются импорты `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    - Есть неиспользуемый код.
-    - Встречаются конструкции типа `if str(type(close_pop_up_btn)).execute_locator("class \'list\'") >-1`, которые выглядят неоптимально и трудночитаемы.
-    - Используется eval для вычисления цены, что небезопасно.
-    - Есть `...`  в коде.
-    - Отсутствует обработка ошибок в функциях `set_images`, `set_combinations` и других.
-    - Не везде соблюдается консистентность в именовании переменных (иногда с `_` в начале, иногда без)
+- **Соответствие требованиям по оформлению кода: 6/10**
+  -  Плюсы:
+    - Код структурирован, присутствуют импорты и функции.
+    - Используются `logger` для логирования.
+  -  Минусы:
+    - Не все комментарии соответствуют стандарту RST.
+    - Используются двойные кавычки в строках кода, где нужно одинарные.
+    -  Не все функции имеют docstring.
+    - В коде встречаются конструкции `try-except` без конкретной обработки исключений.
+    - Присутствуют неиспользуемые переменные и комментарии.
+    - Не хватает форматирования кода.
 
 **Рекомендации по улучшению**
 
-1.  **Формат документации**:
-    -   Переписать все комментарии в формате reStructuredText.
-    -   Добавить docstring для всех функций, классов и методов.
-2.  **Обработка ошибок**:
-    -   Использовать `logger.error` вместо `try-except` для обработки ошибок.
-    -   Добавить проверку на корректность данных перед их использованием.
-3.  **Импорты**:
-    -   Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов (если это требуется).
-    -   Добавить отсутствующие импорты.
-4.  **Рефакторинг**:
-    -   Упростить и переписать конструкции типа `if str(type(close_pop_up_btn)).execute_locator("class \'list\'") >-1`.
-    -   Вынести повторяющийся код в отдельные функции.
-    -   Избегать использования `eval`. Применять более безопасные способы вычисления цены.
-    -   Улучшить логику обработки списка товаров в категории и пагинации.
-    -   Удалить неиспользуемый код и `...`  в коде.
-5.  **Безопасность**:
-    -   Заменить `eval` на безопасный способ вычисления цены, например, с использованием `ast.literal_eval` или более явно написанной логики.
-6. **Консистентность**:
-    - Привести к единообразию именование переменных.
-7.  **Дополнительные улучшения**:
-    -   Добавить type hints для параметров и возвращаемых значений функций.
-    -   Рассмотреть возможность добавления асинхронности в функции.
+1.  **Импорты**:
+    -   Добавить `from src.utils.jjson import j_loads, j_loads_ns` для обработки JSON файлов.
+    -   Импортировать `logger` через `from src.logger import logger`.
+2.  **Форматирование**:
+    -   Заменить двойные кавычки на одинарные в коде, за исключением строк для вывода.
+    -   Удалить лишние комментарии и пустые строки.
+    -   Добавить docstring к каждой функции и классу в формате RST.
+    -   Переписать комментарии после `#` для более точного описания кода.
+3.  **Логирование**:
+    -   Использовать `logger.error` с указанием исключения вместо общих `try-except`.
+4.  **Обработка данных**:
+    -   Использовать `j_loads` или `j_loads_ns` для чтения JSON файлов (если применимо).
+    -   Убрать лишние `...` или заменить их конкретной логикой.
+5.  **Структура**:
+    -   Разбить большие функции на более мелкие, если необходимо.
+    -   Унифицировать именование переменных и функций.
+6.  **Улучшения**:
+    -   В функции `grab_product_page` заменить `eval` на безопасный метод вычисления.
+    -   Проверить и доработать все `TODO`
+    -   Перенести вычисления `set_rewritted_URL` в функцию `set_rewritted_URL`
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для работы с поставщиком Morlevi.
+Модуль для работы с поставщиком Morlevi
 =========================================================================================
 
-Этот модуль содержит функции для авторизации на сайте Morlevi,
-сбора информации о товарах и их категориях.
+Этот модуль содержит функции для взаимодействия с сайтом поставщика Morlevi,
+включая авторизацию, парсинг данных о продуктах и категориях.
 
-.. module:: src.suppliers.ivory
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком Morlevi
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.suppliers.ivory import __morlevi__
+    from src.suppliers.supplier import Supplier
+    from selenium import webdriver
+
+    driver = webdriver.Chrome()
+    supplier = Supplier(driver=driver, supplier_prefix='morlevi',settings={},locators={}, product_fields={})
+    __morlevi__.login(supplier)
+
 """
-
-import ast
 from pathlib import Path
 import requests
 import pandas as pd
-from typing import List, Any
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.keys import Keys
-
 from src.settings import StringFormatter
-from src.settings import json_loads
-from src.logger.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 from src.suppliers.Product import Product
-
-
+import settings  # TODO: проверить, нужен ли этот импорт. Скорее всего нет, и его нужно удалить
 
 
 def login(supplier):
     """
-    Выполняет вход на сайт поставщика.
+    Выполняет вход на сайт поставщика Morlevi.
 
-    :param supplier: Объект поставщика.
-    :type supplier: object
-    :return: True в случае успешного входа, None в случае ошибки.
-    :rtype: bool or None
+    Args:
+        supplier (Supplier): Объект поставщика.
+
+    Returns:
+        bool: True в случае успешного входа, иначе False.
     """
     _s = supplier
     _d = _s.driver
@@ -96,44 +90,47 @@ def login(supplier):
         return True
     else:
         try:
+            #  Код закрывает модальные окна на сайте
+            #  выпадающие до входа
             logger.error('Ошибка, пытаюсь закрыть popup')
             _d.page_refresh()
             if _login(_s):
                 return True
-
             close_pop_up_locator = _s.locators['login']['close_pop_up_locator']
             close_pop_up_btn = _d.execute_locator(close_pop_up_locator)
             _d.wait(5)
-            # Проверка типа элемента и закрытие popup
-            if isinstance(close_pop_up_btn, list):
+            if isinstance(close_pop_up_btn, list):  # Если появилось несколько
                 for b in close_pop_up_btn:
                     try:
                         b.click()
                         if _login(_s):
                             return True
                     except Exception as ex:
-                        logger.error(f'Ошибка закрытия модального окна: {ex}')
-                        continue
-            elif isinstance(close_pop_up_btn, WebElement):
+                        logger.error(f'Ошибка при закрытии popup {ex}')
+                        ...
+            if isinstance(close_pop_up_btn, WebElement):  # нашелся только один элемент
                 close_pop_up_btn.click()
                 return _login(_s)
         except Exception as ex:
-            logger.error(f'Не удалось залогиниться: {ex}')
-            return
+            logger.error(f'Не удалось залогиниться {ex}')
+            return False
 
-def _login(_s):
+
+def _login(_s) -> bool:
     """
-    Вспомогательная функция для выполнения входа на сайт.
+    Вспомогательная функция для выполнения фактического входа на сайт Morlevi.
 
-    :param _s: Объект поставщика.
-    :type _s: object
-    :return: True в случае успешного входа, None в случае ошибки.
-    :rtype: bool or None
+    Args:
+        _s (Supplier): Объект поставщика.
+
+    Returns:
+        bool: True в случае успешного входа, иначе False.
     """
     logger.debug('Собссно, логин Морлеви')
+    _s.driver.refresh()
     _d = _s.driver
-    _d.refresh()
-    _l = _s.locators['login']
+    _l: dict = _s.locators['login']
+
     try:
         _d.execute_locator(_l['open_login_dialog_locator'])
         _d.wait(1.3)
@@ -145,144 +142,146 @@ def _login(_s):
         logger.debug('Mor logged in')
         return True
     except Exception as ex:
-        logger.error(f'LOGIN ERROR: {ex}')
-        return
+        logger.error(f'LOGIN ERROR {ex}')
+        return False
 
-def grab_product_page(s):
+
+def grab_product_page(s) -> Product:
     """
-    Собирает информацию о товаре на странице.
+    Извлекает данные о продукте со страницы товара.
 
-    :param s: Объект поставщика.
-    :type s: object
-    :return: Объект Product с собранными данными или None в случае ошибки.
-    :rtype: Product or None
+    Args:
+        s (Supplier): Объект поставщика.
+
+    Returns:
+        Product: Объект Product с данными о товаре.
     """
     p = Product(supplier=s)
-    _l = s.locators['product']
+    _: dict = s.locators['product']
     _d = s.driver
     _field = p.fields
+    _s = s
 
-    # Закрытие модального окна
-    try:
-        _d.click(s.locators['close_pop_up_locator'])
-    except Exception as ex:
-       logger.error(f'Не удалось закрыть модальное окно: {ex}')
-       return None
-    
+    # Код закрывает модальное окно, если оно есть
+    _d.click(s.locators['close_pop_up_locator'])
+
     def set_id():
-        """Устанавливает id товара."""
-        _id = _d.execute_locator(_l['sku_locator'])
+        """Устанавливает ID товара."""
+        _id = _d.execute_locator(_['sku_locator'])
         if isinstance(_id, list):
             _field['id'] = _id[0]
             _field['Rewritten URL'] = str(_id[1]).replace(' ', '-')
 
     def set_sku_suppl():
-        """Устанавливает sku поставщика."""
+        """Устанавливает артикул поставщика."""
         _field['sku suppl'] = _field['id']
 
     def set_sku_prod():
-         """Устанавливает sku товара."""
-         _field['sku'] = f'mlv-{_field["id"]}'
+        """Устанавливает артикул товара."""
+        _field['sku'] = str('mlv-') + _field['id']
 
     def set_title():
-         """Устанавливает заголовок товара."""
-         _field['title'] = _d.title
+        """Устанавливает заголовок товара."""
+        _field['title'] = _d.title
 
     def set_summary():
         """Устанавливает краткое описание товара."""
-        _field['summary'] = _d.execute_locator(_l['summary_locator'])
+        _field['summary'] = _d.execute_locator(_['summary_locator'])
         _field['meta description'] = _field['summary']
 
     def set_description():
-         """Устанавливает полное описание товара."""
-         _field['description'] = _d.execute_locator(_l['description_locator'])
+        """Устанавливает полное описание товара."""
+        _field['description'] = _d.execute_locator(_['description_locator'])
 
     def set_cost_price():
-        """Устанавливает цену товара."""
-        _price = _d.execute_locator(_l['price_locator'])
+        """Устанавливает закупочную цену товара."""
+        _price = _d.execute_locator(_['price_locator'])
         if _price:
             _price = _price.replace(',', '')
+            # Может прийти все, что угодно
             _price = StringFormatter.clear_price(_price)
             try:
-                 _field['cost price'] = round(eval(f'{_price}{s.settings["price_rule"]}'))
-            except (ValueError, TypeError, SyntaxError) as ex:
-                logger.error(f'Ошибка при вычислении цены: {ex}, price: {_price}')
+                _field['cost price'] = round(eval(f'{_price}{s.settings["price_rule"]}'))
+            except Exception as ex:
+                logger.error(f'Ошибка при вычислении цены: {ex}')
                 return False
         else:
-            logger.error('Не найдена цена для товара')
+            logger.error('Not found price for ...')
             return False
         return True
 
-
     def set_before_tax_price():
-        """Устанавливает цену без налога."""
+        """Устанавливает цену товара без налога."""
         _field['price tax excluded'] = _field['cost price']
         return True
 
     def set_delivery():
-        """Устанавливает параметры доставки (TODO: перенести в комбинации)."""
+        """Устанавливает информацию о доставке."""
+        # TODO: перенести в комбинации
         ...
 
-    def set_images():
-        """Устанавливает изображения товара."""
-        _images = _d.execute_locator(_l['main_image_locator'])
+    def set_images(via_ftp=False):
+        """Устанавливает URL изображения товара."""
+        _images = _d.execute_locator(_['main_image_locator'])
         if not _images:
             return
         _field['img url'] = _images
 
     def set_combinations():
-        """Устанавливает комбинации товара."""
-        ...
+      """Устанавливает комбинации товара."""
+      ...
 
     def set_qty():
-         """Устанавливает количество товара."""
-         ...
+      """Устанавливает количество товара."""
+      ...
 
     def set_specification():
         """Устанавливает спецификацию товара."""
-        _field['specification'] = _d.execute_locator(_l['product_name_locator'])
+        _field['specification'] = _d.execute_locator(_['product_name_locator'])
 
     def set_customer_reviews():
-         """Устанавливает отзывы покупателей."""
-         ...
+      """Устанавливает отзывы клиентов о товаре."""
+      ...
 
     def set_supplier():
-         """Устанавливает ID поставщика."""
-         _field['supplier'] = '2784'
-         ...
+        """Устанавливает ID поставщика."""
+        _field['supplier'] = '2784'
+        ...
 
     def set_rewritted_URL():
-         """Устанавливает переписанный URL."""
-         ...
-    
+        """Устанавливает переписанный URL товара."""
+        _field['Rewritten URL'] = StringFormatter.set_rewritted_URL(_field['title'])
+
     set_id()
     set_sku_suppl()
     set_sku_prod()
     set_title()
     if not set_cost_price():
-        return None
+        return
     set_before_tax_price()
     set_delivery()
     set_images()
     set_combinations()
+    # set_qty()
     set_description()
     set_summary()
+    set_specification()
+    # set_customer_reviews()
     set_supplier()
     set_rewritted_URL()
-    set_specification()
-
 
     return p
 
 
-def list_products_in_category_from_pagination(supplier):
+def list_products_in_category_from_pagination(supplier) -> list:
     """
-    Собирает список ссылок на товары в категории с пагинацией.
+    Получает список ссылок на товары из категории с пагинацией.
 
-    :param supplier: Объект поставщика.
-    :type supplier: object
-    :return: Список ссылок на товары.
-    :rtype: list
+    Args:
+        supplier (Supplier): Объект поставщика.
+
+    Returns:
+        list: Список ссылок на товары.
     """
     _s = supplier
     _d = _s.driver
@@ -290,8 +289,11 @@ def list_products_in_category_from_pagination(supplier):
 
     list_products_in_category = []
     _product_list_from_page = _d.execute_locator(_l)
-
+    # может вернуться или список адресов или строка или None
+    # если нет товаров на странице на данный момент
     if not _product_list_from_page:
+        # нет смысла продожать. Нет товаров в категории
+        # Возвращаю пустой список
         return list_products_in_category
 
     if isinstance(_product_list_from_page, list):
@@ -302,37 +304,33 @@ def list_products_in_category_from_pagination(supplier):
     pages = _d.execute_locator(_s.locators['pagination']['a'])
     if isinstance(pages, list):
         for page in pages:
-            _perv_url = _d.current_url
-            try:
-                page.click()
-                _product_list_from_page = _d.execute_locator(_l)
-            except Exception as ex:
-                logger.error(f"Ошибка при клике на страницу пагинации: {ex}")
-                break
+            _product_list_from_page = _d.execute_locator(_l)
+            # может вернуться или список адресов или строка.
+            if isinstance(_product_list_from_page, list):
+                list_products_in_category.extend(_product_list_from_page)
+            else:
+                list_products_in_category.append(_product_list_from_page)
 
+            _perv_url = _d.current_url
+            page.click()
+
+            # дошел до конца листалки
             if _perv_url == _d.current_url:
                 break
 
-            if isinstance(_product_list_from_page, list):
-                list_products_in_category.extend(_product_list_from_page)
-            elif _product_list_from_page:
-                 list_products_in_category.append(_product_list_from_page)
-
-
-    return list(set(list_products_in_category)) if isinstance(list_products_in_category, list) else list_products_in_category
+    if isinstance(list_products_in_category, list):
+        list_products_in_category = list(set(list_products_in_category))
+    return list_products_in_category
 
 
 def get_list_products_in_category(s, scenario, presath):
     """
-    Получает список товаров в категории.
+    Получает список продуктов в категории.
 
-    :param s: Объект поставщика.
-    :type s: object
-    :param scenario: JSON сценарий.
-    :type scenario: dict
-    :param presath: Объект PrestaShopWebServiceDict.
-    :type presath: object
-    :return: None
+    Args:
+        s (Supplier): Объект поставщика.
+        scenario (dict): Словарь со сценарием.
+        presath (PrestaShopWebServiceDict): Объект для работы с PrestaShop.
     """
     l = list_products_in_category_from_pagination(s)
     ...
@@ -342,14 +340,9 @@ def get_list_categories_from_site(s, scenario_file, brand=''):
     """
     Получает список категорий с сайта.
 
-    :param s: Объект поставщика.
-    :type s: object
-    :param scenario_file: Путь к файлу сценария.
-    :type scenario_file: str
-    :param brand: Бренд.
-    :type brand: str
-    :return: None
+    Args:
+        s (Supplier): Объект поставщика.
+        scenario_file (str): Путь к файлу сценария.
+        brand (str, optional): Бренд. Defaults to ''.
     """
     ...
-
-```

@@ -1,463 +1,518 @@
 ## <алгоритм>
 
-### 1. `compose_initial_LLM_messages_with_templates`
-   - **Вход:** `system_template_name` (str), `user_template_name` (str, optional), `rendering_configs` (dict, optional)
-   - **Шаг 1:** Формирует путь к файлу шаблона системного сообщения (`system_prompt_template_path`), используя `system_template_name` и текущую директорию.
-     - *Пример:* Если `system_template_name` равно `"system_task.md"`, путь может быть `/path/to/tinytroupe/prompts/system_task.md`.
-   - **Шаг 2:** Создает пустой список `messages`.
-   - **Шаг 3:** Читает содержимое файла шаблона системного сообщения и рендерит его с использованием `chevron.render` и `rendering_configs`.
-     - *Пример:* Если файл содержит `"The agent's name is {{agent_name}}"` и `rendering_configs` содержит `{'agent_name': 'John'}`, то отрендеренное содержимое будет `"The agent's name is John"`.
-   - **Шаг 4:** Добавляет отрендеренное сообщение в список `messages` с ролью `"system"`.
-   - **Шаг 5:** Если `user_template_name` не `None`:
-     - **Шаг 5.1:** Формирует путь к файлу шаблона пользовательского сообщения (`user_prompt_template_path`), используя `user_template_name` и текущую директорию.
-       - *Пример:* Если `user_template_name` равно `"user_query.md"`, путь может быть `/path/to/tinytroupe/prompts/user_query.md`.
-     - **Шаг 5.2:** Читает содержимое файла шаблона пользовательского сообщения и рендерит его с использованием `chevron.render` и `rendering_configs`.
-     - **Шаг 5.3:** Добавляет отрендеренное сообщение в список `messages` с ролью `"user"`.
-   - **Шаг 6:** Возвращает список `messages`.
-   - **Выход:** `messages` (list)
+1.  **`compose_initial_LLM_messages_with_templates(system_template_name, user_template_name, rendering_configs)`**
+    *   **Вход**: `system_template_name` (строка, имя файла шаблона для системного сообщения), `user_template_name` (строка, имя файла шаблона для пользовательского сообщения, может быть `None`), `rendering_configs` (словарь, параметры для рендеринга шаблона).
+    *   **Шаг 1**: Формирование полных путей к файлам шаблонов: `system_prompt_template_path` и `user_prompt_template_path`.  Пути формируются относительно текущего местоположения файла `utils.py`,  используя `os.path.join`.
+    *   **Шаг 2**: Создание списка `messages` для хранения сообщений.
+    *   **Шаг 3**: Добавление системного сообщения:
+        *   Читается содержимое файла шаблона по пути `system_prompt_template_path`.
+        *   Рендеринг шаблона с использованием `chevron.render` и словаря `rendering_configs`.
+        *   Создание словаря с ключами `role` (значение "system") и `content` (результат рендеринга).
+        *   Добавление словаря в список `messages`.
+    *   **Шаг 4**: Проверка, есть ли пользовательское сообщение (`user_template_name` не `None`).
+        *   Если есть, повторяются шаги, аналогичные добавлению системного сообщения, но с ролью "user" и путем `user_prompt_template_path`.
+    *   **Выход**: Список словарей `messages`, представляющих сообщения для LLM.
 
-### 2. `extract_json`
-   - **Вход:** `text` (str)
-   - **Шаг 1:** Использует регулярное выражение для удаления всего текста до первой открывающей фигурной или квадратной скобки.
-     - *Пример:* Если `text` равно `"some text { "key": "value" }`, то `text` станет `"{ "key": "value" }"`.
-   - **Шаг 2:** Использует регулярное выражение для удаления всего текста после последней закрывающей фигурной или квадратной скобки.
-     - *Пример:* Если `text` равно `"{ "key": "value" } some text"`, то `text` станет `"{ "key": "value" }"`.
-   - **Шаг 3:** Удаляет некорректные escape-последовательности, заменяя `\\'` на `'`.
-     - *Пример:* Если `text` равно `"{ \\"key\\": \\"value\\\' }"` , то `text` станет `"{ \\"key\\": \\"value\\" }"`
-   - **Шаг 4:** Пытается распарсить `text` как JSON и возвращает словарь.
-   - **Шаг 5:** В случае ошибки возвращает пустой словарь.
-   - **Выход:** `dict`
+    **Пример**:
+    ```python
+    messages = compose_initial_LLM_messages_with_templates(
+        system_template_name='system_prompt.txt',
+        user_template_name='user_prompt.txt',
+        rendering_configs={'name': 'John', 'task': 'write a story'}
+    )
+    # messages может быть:
+    # [
+    #   { "role": "system", "content": "You are an assistant." },
+    #   { "role": "user", "content": "John, please write a story." }
+    # ]
+    ```
 
-### 3. `extract_code_block`
-    - **Вход:** `text` (str)
-    - **Шаг 1:** Использует регулярное выражение для удаления всего текста до первой открывающей последовательности из трех обратных кавычек (` ``` `).
-      - *Пример:* Если `text` равно `"some text ```code block```"`, то `text` станет `"```code block```"`.
-    - **Шаг 2:** Использует регулярное выражение для удаления всего текста после последней закрывающей последовательности из трех обратных кавычек (` ``` `).
-      - *Пример:* Если `text` равно `"```code block``` some text"`, то `text` станет `"```code block```"`.
-    - **Шаг 3:** Возвращает извлеченный блок кода.
-    - **Шаг 4:** В случае ошибки возвращает пустую строку.
-    - **Выход:** `str`
+2.  **`extract_json(text)`**
+    *   **Вход**: `text` (строка, текст для извлечения JSON).
+    *   **Шаг 1**: Используя регулярные выражения, удалить весь текст до первой открывающей фигурной или квадратной скобки.
+    *   **Шаг 2**: Используя регулярные выражения, удалить весь текст после последней закрывающей фигурной или квадратной скобки.
+    *   **Шаг 3**: Заменить недопустимые escape-последовательности, например  `\\\'` на `'`.
+    *   **Шаг 4**: Попытка преобразовать строку в JSON с использованием `json.loads()`.
+    *   **Шаг 5**: Если возникает исключение, возвращается пустой словарь `{}`.
+    *   **Выход**: Извлеченный словарь JSON или пустой словарь.
 
-### 4. `repeat_on_error`
-   - **Вход:** `retries` (int), `exceptions` (list)
-   - **Шаг 1:** Возвращает декоратор `decorator`
-   - **Шаг 2:** Декоратор `decorator` принимает функцию `func`
-   - **Шаг 3:** Возвращает функцию-обертку `wrapper`
-   - **Шаг 4:** Функция-обертка `wrapper` :
-     -  Итерирует `retries` раз.
-     -  Пытается выполнить вызов `func(*args, **kwargs)`
-        -  Если исключения нет, возвращает результат `func`.
-     -  Если возникает исключение из списка `exceptions`
-        -  Логирует ошибку.
-        -  Если это последняя попытка, выбрасывает исключение.
-        -  Иначе, логирует повторную попытку и продолжает цикл.
-   - **Выход:** Декорированная функция
+    **Пример**:
+    ```python
+    text = 'some text { "name": "John", "age": 30 } some other text'
+    result = extract_json(text)  # result будет {'name': 'John', 'age': 30}
 
-### 5. `check_valid_fields`
-   - **Вход:** `obj` (dict), `valid_fields` (list)
-   - **Шаг 1:** Итерирует по ключам в словаре `obj`.
-   - **Шаг 2:** Если ключ не найден в списке `valid_fields`, выбрасывает `ValueError`.
-   - **Выход:** `None`
+    text = 'invalid json'
+    result = extract_json(text)  # result будет {}
+    ```
 
-### 6. `sanitize_raw_string`
-   - **Вход:** `value` (str)
-   - **Шаг 1:** Кодирует строку в UTF-8, игнорируя ошибки, и декодирует обратно.
-   - **Шаг 2:** Возвращает строку, обрезанную до максимальной длины строки Python.
-   - **Выход:** `str`
+3.  **`extract_code_block(text)`**
+    *   **Вход**: `text` (строка, текст для извлечения кодового блока).
+    *   **Шаг 1**: Используя регулярные выражения, удалить весь текст до первой открывающей последовательности тройных обратных кавычек (```).
+    *   **Шаг 2**: Используя регулярные выражения, удалить весь текст после последней закрывающей последовательности тройных обратных кавычек (```).
+    *  **Шаг 3**: Возвращается извлеченный блок кода
+    *   **Шаг 4**: Если возникает исключение, возвращается пустая строка `""`.
+    *   **Выход**: Извлеченный кодовый блок или пустая строка.
 
-### 7. `sanitize_dict`
-   - **Вход:** `value` (dict)
-   - **Шаг 1:** Преобразует словарь в JSON строку, исключая ASCII.
-   - **Шаг 2:** Санитизирует строку, используя `sanitize_raw_string`.
-   - **Шаг 3:** Преобразует санитизированную JSON строку обратно в словарь.
-   - **Выход:** `dict`
+    **Пример**:
+    ```python
+    text = 'some text ```python\nprint("Hello")\n``` some other text'
+    result = extract_code_block(text)  # result будет ```python\nprint("Hello")\n```
+    
+    text = 'no code block'
+    result = extract_code_block(text) # result будет ""
+    ```
 
-### 8. `add_rai_template_variables_if_enabled`
-   - **Вход:** `template_variables` (dict)
-   - **Шаг 1:** Импортирует конфигурацию `from tinytroupe import config`.
-   - **Шаг 2:** Определяет, включена ли защита от вредоносного контента и нарушения авторских прав, считывая значения из `config.ini`.
-   - **Шаг 3:** Формирует путь к файлу с информацией о предотвращении вредоносного контента.
-   - **Шаг 4:** Считывает содержимое файла.
-   - **Шаг 5:** Добавляет содержимое файла в `template_variables` под ключом `'rai_harmful_content_prevention'`, если соответствующая защита включена, иначе присваивает `None`.
-   - **Шаг 6:** Формирует путь к файлу с информацией о предотвращении нарушения авторских прав.
-   - **Шаг 7:** Считывает содержимое файла.
-   - **Шаг 8:** Добавляет содержимое файла в `template_variables` под ключом `'rai_copyright_infringement_prevention'`, если соответствующая защита включена, иначе присваивает `None`.
-   - **Выход:** `template_variables` (dict)
+4.  **`repeat_on_error(retries, exceptions)`**
+    *   **Вход**: `retries` (целое число, количество попыток), `exceptions` (список классов исключений).
+    *   **Шаг 1**: Декоратор: создается функция `decorator`, которая принимает функцию `func` в качестве аргумента.
+    *   **Шаг 2**: Функция `wrapper`, которая является внутренней функцией декоратора, принимает произвольные аргументы `*args`, `**kwargs` и вызывает декорируемую функцию.
+    *   **Шаг 3**: Запускается цикл `for` от `0` до `retries - 1` для повторных вызовов `func`.
+        *   **Шаг 4**: Вызывается `func(*args, **kwargs)` в блоке `try`.
+        *   **Шаг 5**: Если возникает исключение, проверяется, является ли оно одним из указанных в списке `exceptions`.
+        *   **Шаг 6**: Если исключение есть и это последняя попытка, исключение выбрасывается. В ином случае - попытка повторяется.
+    *   **Выход**: Декорированная функция.
 
-### 9. `inject_html_css_style_prefix`
-   - **Вход:** `html` (str), `style_prefix_attributes` (str)
-   - **Шаг 1:** Заменяет все вхождения `style="` на `style="{style_prefix_attributes};` в `html`.
-   - **Выход:** `html` (str)
+    **Пример**:
+    ```python
+    @repeat_on_error(retries=3, exceptions=[ValueError])
+    def flaky_function(x):
+        if random.random() < 0.5:
+            raise ValueError("Oops!")
+        return x * 2
 
-### 10. `break_text_at_length`
-    - **Вход:** `text` (str | dict), `max_length` (int, optional)
-    - **Шаг 1:** Если `text` является словарем, преобразует его в JSON-строку с отступами.
-    - **Шаг 2:** Если `max_length` является `None` или длина `text` меньше или равна `max_length`, возвращает `text`.
-    - **Шаг 3:** Иначе, обрезает `text` до `max_length`, добавляет " (...) " и возвращает.
-    - **Выход:** `str`
+    result = flaky_function(5)
+    # Функция будет вызываться до 3 раз, пока не вернёт результат или не исчерпает количество попыток
+    ```
 
-### 11. `pretty_datetime`
-    - **Вход:** `dt` (datetime)
-    - **Шаг 1:** Форматирует `dt` в строку в формате "ГГГГ-ММ-ДД ЧЧ:ММ".
-    - **Выход:** `str`
+5.  **`check_valid_fields(obj, valid_fields)`**
+    *   **Вход**: `obj` (словарь), `valid_fields` (список допустимых ключей).
+    *   **Шаг 1**: Для каждого ключа в `obj` выполняется проверка его наличия в списке `valid_fields`.
+    *   **Шаг 2**: Если ключ не найден в `valid_fields`, выбрасывается исключение `ValueError` с сообщением об ошибке.
+    *   **Выход**: Ничего не возвращает, но может вызвать исключение `ValueError`.
 
-### 12. `dedent`
-    - **Вход:** `text` (str)
-    - **Шаг 1:** Удаляет общий отступ из `text`.
-    - **Шаг 2:** Удаляет пробелы в начале и конце `text`.
-    - **Выход:** `str`
+    **Пример**:
+    ```python
+    data = {'name': 'John', 'age': 30, 'city': 'New York'}
+    valid = ['name', 'age']
+    check_valid_fields(data, valid)  # Вызовет ValueError
+    
+    valid = ['name', 'age', 'city']
+    check_valid_fields(data, valid)  # Не вызовет исключение
+    ```
 
-### 13. `read_config_file`
-    - **Вход:** `use_cache` (bool, default True), `verbose` (bool, default True)
-    - **Шаг 1:** Если `use_cache` равно True и глобальная переменная `_config` не None, возвращает кэшированный конфиг.
-    - **Шаг 2:** Создает экземпляр `configparser.ConfigParser`.
-    - **Шаг 3:** Формирует путь к файлу конфигурации по умолчанию (`config.ini`) в текущей директории модуля.
-      -  Пример:  `./tinytroupe/config.ini`
-    - **Шаг 4:** Если файл существует, считывает его содержимое, устанавливает `_config` и переходит к шагу 6, если нет, то ошибка.
-    - **Шаг 5:** Формирует путь к пользовательскому файлу конфигурации (`config.ini`) в текущей рабочей директории.
-      -  Пример: `./config.ini`
-    - **Шаг 6:** Если файл существует, считывает его содержимое, устанавливает `_config` и возвращает конфиг, если нет, выводит сообщение и переходит к шагу 8.
-    - **Шаг 7:** Если не удалось найти пользовательский конфиг, то выводит сообщение о том, что будут использоваться только значения по умолчанию.
-    - **Шаг 8:** Возвращает загруженный конфиг.
-    - **Выход:** `configparser.ConfigParser`
+6. **`sanitize_raw_string(value)`**
+    *   **Вход**: `value` (строка).
+    *   **Шаг 1**: Кодирует строку в UTF-8 с игнорированием ошибок, а затем декодирует обратно в UTF-8.
+    *   **Шаг 2**: Возвращает строку, усеченную до максимальной длины строки в Python (`sys.maxsize`).
+    *   **Выход**: Санированная строка.
 
-### 14. `pretty_print_config`
-    - **Вход:** `config` (configparser.ConfigParser)
-    - **Шаг 1:** Выводит в консоль текущую конфигурацию с форматированным выводом.
-    - **Выход:** `None`
+7. **`sanitize_dict(value)`**
+    *   **Вход**: `value` (словарь).
+    *   **Шаг 1**: Преобразует словарь в JSON строку, с отключением экранирования ASCII символов.
+    *   **Шаг 2**: Санирует JSON строку с помощью `sanitize_raw_string`.
+    *   **Шаг 3**:  Преобразует обратно JSON строку в словарь.
+    *   **Выход**: Санированный словарь.
 
-### 15. `start_logger`
-    - **Вход:** `config` (configparser.ConfigParser)
-    - **Шаг 1:** Получает или создает логгер с именем "tinytroupe".
-    - **Шаг 2:** Получает уровень логирования из конфига, по умолчанию 'INFO'.
-    - **Шаг 3:** Устанавливает уровень логирования для логгера.
-    - **Шаг 4:** Создает обработчик консольного вывода.
-    - **Шаг 5:** Устанавливает уровень логирования для обработчика.
-    - **Шаг 6:** Создает форматтер лога.
-    - **Шаг 7:** Устанавливает форматтер для обработчика.
-    - **Шаг 8:** Добавляет обработчик к логгеру.
-    - **Выход:** `None`
+8.  **`add_rai_template_variables_if_enabled(template_variables)`**
+    *   **Вход**: `template_variables` (словарь переменных шаблона).
+    *   **Шаг 1**: Импортируется конфигурация из `tinytroupe.config`, чтобы избежать циклического импорта.
+    *   **Шаг 2**: Определяется, включена ли обработка `RAI_HARMFUL_CONTENT_PREVENTION` и `RAI_COPYRIGHT_INFRINGEMENT_PREVENTION` из `config.ini`.
+    *   **Шаг 3**: Открываются файлы с предупреждениями RAI из каталога `prompts`.
+    *   **Шаг 4**: Если `rai_harmful_content_prevention` включена, в `template_variables` добавляется переменная `rai_harmful_content_prevention`, иначе она устанавливается в `None`.
+    *   **Шаг 5**: Если `rai_copyright_infringement_prevention` включена, в `template_variables` добавляется переменная `rai_copyright_infringement_prevention`, иначе она устанавливается в `None`.
+    *   **Выход**: Обновленный словарь `template_variables` с переменными RAI.
 
-### 16. `JsonSerializableRegistry`
-    - **Класс-миксин** для поддержки сериализации и десериализации JSON.
-    - **`to_json`**:
-        - **Вход:** `include` (list, optional), `suppress` (list, optional), `file_path` (str, optional).
-        - **Шаг 1:** Собирает все атрибуты для сериализации и подавления, основываясь на иерархии классов.
-        - **Шаг 2:** Переопределяет атрибуты, если переданы `include` и `suppress`.
-        - **Шаг 3:** Создает словарь, включающий имя класса, и итерирует по атрибутам:
-            - Если атрибут является экземпляром `JsonSerializableRegistry`, вызывает `to_json` рекурсивно.
-            - Если атрибут является списком, рекурсивно вызывает `to_json` для каждого элемента (если они являются экземплярами `JsonSerializableRegistry`).
-            - Если атрибут является словарем, рекурсивно вызывает `to_json` для каждого значения (если они являются экземплярами `JsonSerializableRegistry`).
-            - Иначе, выполняет глубокое копирование значения.
-        - **Шаг 4:** Если передан `file_path`, создает необходимые директории и записывает JSON в файл.
-        - **Выход:** `dict`
-    - **`from_json`**:
-        - **Вход:** `json_dict_or_path` (dict or str), `suppress` (list, optional), `post_init_params` (dict, optional)
-        - **Шаг 1:** Читает JSON из файла (если `json_dict_or_path` является строкой) или напрямую (если `json_dict_or_path` является словарем).
-        - **Шаг 2:** Получает имя подкласса и класс из `class_mapping`.
-        - **Шаг 3:** Создает экземпляр класса без вызова `__init__`.
-        - **Шаг 4:** Собирает все атрибуты для сериализации, кастомные инициализаторы и атрибуты для подавления, основываясь на иерархии классов.
-        - **Шаг 5:** Итерирует по ключам JSON (или атрибутам для сериализации):
-            - Если ключ имеет кастомный инициализатор, вызывает его для значения и устанавливает его.
-            - Если значение является словарем с именем класса, десериализует значение рекурсивно, вызывая `from_json`.
-            - Если значение является списком, десериализует каждый элемент.
-            - Иначе, выполняет глубокое копирование значения и устанавливает его.
-        - **Шаг 6:** Если существует метод `_post_deserialization_init`, вызывает его после десериализации.
-        - **Выход:** `object` (instance of the class)
-    - **`__init_subclass__`**:
-        - **Шаг 1:** Регистрирует подкласс в `class_mapping` по имени класса.
-        - **Шаг 2:** Расширяет списки сериализуемых атрибутов и кастомных инициализаторов из родительских классов.
-    - **`_post_deserialization_init`**:
-        - **Шаг 1:** Вызывает метод `_post_init`, если таковой имеется.
-        - **Выход:** `None`
+9. **`inject_html_css_style_prefix(html, style_prefix_attributes)`**
+    *   **Вход**: `html` (строка HTML), `style_prefix_attributes` (строка с CSS).
+    *  **Шаг 1**: Замена всех вхождений `style="` на `style="{style_prefix_attributes};`.
+    *   **Выход**: HTML строка со стилями.
 
-### 17. `post_init`
-    - **Вход:** `cls` (class)
-    - **Шаг 1:** Декоратор, заменяет оригинальный метод `__init__` класса.
-    - **Шаг 2:** Новый `__init__` вызывает оригинальный, а затем, если есть `_post_init`, вызывает его.
-    - **Выход:** Декорированный класс
+10. **`break_text_at_length(text, max_length)`**
+    *   **Вход**: `text` (строка или словарь), `max_length` (максимальная длина, может быть `None`).
+    *   **Шаг 1**: Если `text` - словарь, он преобразуется в JSON строку с отступами.
+    *   **Шаг 2**: Если `max_length` равен `None` или длина `text` не превышает `max_length`, возвращается `text` без изменений.
+    *   **Шаг 3**: Иначе, текст обрезается до `max_length` и к концу добавляется `(...)`.
+    *   **Выход**: Обрезанная или исходная строка.
 
-### 18. `name_or_empty`
-    - **Вход:** `named_entity` (`AgentOrWorld`)
-    - **Шаг 1:** Если `named_entity` равен `None`, возвращает пустую строку.
-    - **Шаг 2:** Иначе, возвращает атрибут `name` переданного объекта.
-    - **Выход:** `str`
+11. **`pretty_datetime(dt)`**
+    *   **Вход**: `dt` (объект `datetime`).
+    *   **Шаг 1**: Форматирование объекта `datetime` в строку в виде `YYYY-MM-DD HH:MM`.
+    *   **Выход**: Отформатированная строка.
 
-### 19. `custom_hash`
-    - **Вход:** `obj` (any)
-    - **Шаг 1:** Преобразует объект в строку.
-    - **Шаг 2:** Вычисляет SHA256-хеш от строки, закодированной в байты.
-    - **Шаг 3:** Возвращает хеш в виде шестнадцатеричной строки.
-    - **Выход:** `str`
+12. **`dedent(text)`**
+     *   **Вход**: `text` (строка).
+     *   **Шаг 1**: Удаляет общие начальные отступы из текста с помощью `textwrap.dedent()`.
+     *  **Шаг 2**: Удаляет начальные и конечные пробельные символы.
+     *   **Выход**: Деидентированный текст.
 
-### 20. `fresh_id`
-    - **Вход:** `None`
-    - **Шаг 1:** Увеличивает глобальную переменную `_fresh_id_counter` на 1.
-    - **Шаг 2:** Возвращает текущее значение `_fresh_id_counter`.
-    - **Выход:** `int`
+13. **`read_config_file(use_cache, verbose)`**
+    *   **Вход**: `use_cache` (булево значение, использовать ли кэш), `verbose` (булево значение, выводить ли сообщения).
+    *   **Шаг 1**: Если `use_cache` истинно и кэшированная конфигурация `_config` существует, возвращается кэшированная конфигурация.
+    *   **Шаг 2**: Создается новый объект `configparser.ConfigParser`.
+    *   **Шаг 3**: Поиск файла `config.ini` в директории модуля, попытка прочитать значения.
+    *   **Шаг 4**: Переопределение значений, если есть пользовательский `config.ini` в текущей директории.
+    *   **Выход**: Объект `configparser.ConfigParser`.
+
+14. **`pretty_print_config(config)`**
+    *   **Вход**: `config` (объект `configparser.ConfigParser`).
+    *   **Шаг 1**: Печать конфигурации в удобочитаемом виде, разделяя секции и их содержимое.
+    *   **Выход**: Ничего не возвращает, выводит на печать.
+
+15. **`start_logger(config)`**
+    *  **Вход**: `config` (объект `configparser.ConfigParser`).
+    *  **Шаг 1**: Создание объекта logger `tinytroupe` и установка уровня логирования из конфигурации, по умолчанию INFO.
+    *  **Шаг 2**: Создание обработчика для вывода в консоль, установка уровня логирования.
+    *  **Шаг 3**: Создание форматера для вывода сообщений в определенном формате.
+    *  **Шаг 4**: Установка форматера для обработчика.
+    *  **Шаг 5**: Добавление обработчика к логгеру.
+    *  **Выход**: Ничего не возвращает, настраивает logger.
+
+16. **`JsonSerializableRegistry`**
+    *  **Класс**, предоставляющий методы для сериализации и десериализации объектов в JSON.
+        * **`to_json(include, suppress, file_path)`**: Сериализует объект в JSON словарь. Может включать/исключать определенные атрибуты, также имеет возможность сохранить результат в файл. Рекурсивно обрабатывает вложенные объекты `JsonSerializableRegistry`.
+        * **`from_json(json_dict_or_path, suppress, post_init_params)`**: Десериализует объект из JSON словаря или файла. При этом также рекурсивно обрабатывает вложенные объекты `JsonSerializableRegistry`.
+        * **`__init_subclass__(cls, **kwargs)`**: Метод, вызываемый при создании подкласса. Регистрирует подкласс и обновляет `serializable_attributes`, `suppress_attributes_from_serialization` и `custom_serialization_initializers` из родительских классов.
+        * **`_post_deserialization_init(self, **kwargs)`**: Метод, вызываемый после десериализации, для дополнительной инициализации объекта, если метод `_post_init` существует.
+
+17.  **`post_init(cls)`**
+    *   **Вход**: `cls` (класс).
+    *   **Шаг 1**: Декоратор, добавляющий вызов метода `_post_init` после вызова конструктора `__init__`, если этот метод существует.
+    *   **Выход**: Модифицированный класс с добавленным пост-инициализатором.
+
+18. **`name_or_empty(named_entity)`**
+    *   **Вход**: `named_entity` (объект типа `AgentOrWorld`).
+    *   **Шаг 1**: Если `named_entity` равен `None`, возвращается пустая строка.
+    *   **Шаг 2**: Иначе возвращается атрибут `name` объекта.
+    *   **Выход**: Строка с именем объекта или пустая строка.
+
+19. **`custom_hash(obj)`**
+    *   **Вход**: `obj` (объект).
+    *   **Шаг 1**: Преобразует объект в строку.
+    *   **Шаг 2**: Вычисляет SHA-256 хэш от строки.
+    *   **Выход**: Хэш объекта в виде шестнадцатеричной строки.
+
+20. **`fresh_id()`**
+    *   **Вход**: Нет.
+    *   **Шаг 1**: Увеличивает глобальный счетчик `_fresh_id_counter` на 1.
+    *   **Шаг 2**: Возвращает новое значение счетчика.
+    *   **Выход**: Уникальный идентификатор.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph "tinytroupe/utils.py"
-    A[compose_initial_LLM_messages_with_templates] --> B(os.path.join: Construct Prompt Paths)
-    B --> C(chevron.render: Render Templates)
-    C --> D[Return LLM Messages]
-    
-    E[extract_json] --> F(re.sub: Remove Pre-JSON Text)
-    F --> G(re.sub: Remove Post-JSON Text)
-    G --> H(re.sub: Sanitize Escape Sequences)
-    H --> I(json.loads: Parse JSON)
-    I --> J[Return JSON Dict]
-    
-    K[extract_code_block] --> L(re.sub: Remove Pre-Code Text)
-    L --> M(re.sub: Remove Post-Code Text)
-    M --> N[Return Code Block]
-
-    O[repeat_on_error] --> P(decorator: Decorator Function)
-    P --> Q(wrapper: Wrapper Function)
-    Q --> R{try-except}
-    R -- Success --> S[Return Function Result]
-    R -- Exception --> T{Retries Left?}
-    T -- Yes --> Q
-    T -- No --> U[Raise Exception]
-
-    V[check_valid_fields] --> W{Check Keys}
-    W -- Invalid Key --> X[Raise ValueError]
-    W -- Valid Keys --> Y[Return None]
-    
-    Z[sanitize_raw_string] --> AA(value.encode: Encode to UTF-8)
-    AA --> BB(value.decode: Decode to UTF-8)
-    BB --> CC(value[:sys.maxsize]: Limit String Length)
-    CC --> DD[Return Sanitized String]
-
-    EE[sanitize_dict] --> FF(json.dumps: Convert to JSON)
-    FF --> GG(sanitize_raw_string: Sanitize JSON string)
-    GG --> HH(json.loads: Convert back to dict)
-    HH --> II[Return Sanitized Dict]
-
-    JJ[add_rai_template_variables_if_enabled] --> KK(config.getboolean: Read Config Flags)
-    KK --> LL(open: Read RAI Prompts)
-    LL --> MM[Update template_variables]
-    MM --> NN[Return template_variables]
-
-    OO[inject_html_css_style_prefix] --> PP(html.replace: Inject Style Prefix)
-    PP --> QQ[Return Modified HTML]
-
-    RR[break_text_at_length] --> SS{Is dict?}
-    SS -- Yes --> TT(json.dumps: Convert dict to JSON String)
-    TT --> UU{Check Max Length}
-    SS -- No --> UU
-    UU -- Length Check Pass --> VV[Return String]
-    UU -- Length Check Fail --> WW(Slice and append "(...)")
-    WW --> VV
-    
-    XX[pretty_datetime] --> YY(dt.strftime: Format Datetime)
-    YY --> ZZ[Return Formatted String]
-
-    AAA[dedent] --> BBB(textwrap.dedent: Dedent String)
-    BBB --> CCC(strip: Remove Leading/Trailing Spaces)
-    CCC --> DDD[Return Dedented String]
-    
-    EEE[read_config_file] --> FFF{use_cache and config?}
-    FFF -- Yes --> GGG[Return cached config]
-    FFF -- No --> HHH(configparser.ConfigParser: Init Config)
-    HHH --> III(Path: Construct Config Path)
-    III --> JJJ{Does config file exist?}
-    JJJ -- Yes --> KKK(config.read: Read Default Config)
-    KKK --> LLL{Custom config file exist?}
-    JJJ -- No --> MMM[Raise ValueError]
-    LLL -- Yes --> NNN(config.read: Read Custom Config)
-    NNN --> OOO[Return config]
-    LLL -- No --> OOO
-    
-    PPP[pretty_print_config] --> QQQ(Iterate Config Sections)
-    QQQ --> RRR(Print Formatted Config)
-    
-    SSS[start_logger] --> TTT(logging.getLogger: Get Logger)
-    TTT --> UUU(config.get: Get Log Level)
-    UUU --> VVV(logger.setLevel: Set Log Level)
-    VVV --> WWW(logging.StreamHandler: Create Handler)
-    WWW --> XXX(logging.Formatter: Create Formatter)
-    XXX --> YYY(ch.setFormatter: Set Formatter)
-    YYY --> ZZZ(logger.addHandler: Add Handler)
-    
-    A1[JsonSerializableRegistry]
-    subgraph A1
-    A11[to_json] --> A12(Gather Serializable Attrs)
-    A12 --> A13(Iterate Attributes)
-    A13 --> A14{Attribute is JsonSerializableRegistry?}
-        A14 -- Yes --> A15(Recursively call to_json)
-        A14 -- No --> A16{Attribute is a list?}
-            A16 -- Yes --> A17(Recursively call to_json for list elements)
-            A16 -- No --> A18{Attribute is a dict?}
-                A18 -- Yes --> A19(Recursively call to_json for dict values)
-                A18 -- No --> A1A(copy.deepcopy: Copy attribute)
-                A19 --> A1A
-            A17 --> A1A
-        A15 --> A1A
-    A1A --> A1B[Build JSON Dict]
-    A1B --> A1C{File Path provided?}
-        A1C -- Yes --> A1D(os.makedirs: Create directories)
-        A1D --> A1E(json.dump: Write to file)
-        A1C -- No --> A1E
-    A1E --> A1F[Return JSON Dict]
-
-    A1G[from_json] --> A1H{json_dict_or_path is str?}
-        A1H -- Yes --> A1I(open/json.load: read file)
-        A1I --> A1J[Get subclass, create instance]
-        A1H -- No --> A1J
-    A1J --> A1K(Gather Serialization Attrs)
-    A1K --> A1L(Iterate JSON keys)
-    A1L --> A1M{key has custom initializer?}
-    A1M -- Yes --> A1N(Call custom Initializer)
-    A1M -- No --> A1O{Value is another JsonSerializableRegistry?}
-    A1O -- Yes --> A1P(Recursively call from_json)
-    A1O -- No --> A1Q{Value is a list?}
-        A1Q -- Yes --> A1R(Deserialize list items recursively)
-        A1R --> A1S(setattr)
-        A1Q -- No --> A1S
-    A1P --> A1S
-    A1N --> A1S
-    A1S --> A1T{has _post_deserialization_init?}
-    A1T -- Yes --> A1U(Call _post_deserialization_init)
-    A1T -- No --> A1V[Return object]
-    A1U --> A1V
-
-    A1W[__init_subclass__] --> A1X(Register the subclass)
-    A1X --> A1Y(Extend serializable attributes and custom initializers)
-
-    A1Z[_post_deserialization_init] --> A2A(call _post_init if exists)
+    subgraph Model Input Utilities
+        A[compose_initial_LLM_messages_with_templates]
+        A --> B[os.path.join]
+        B --> C[chevron.render]
     end
 
-    A2B[post_init] --> A2C(Wraps __init__)
-    A2C --> A2D(Calls _post_init if exists)
+    subgraph Model Output Utilities
+        D[extract_json]
+        D --> E[re.sub]
+        E --> F[json.loads]
 
-    A2E[name_or_empty] --> A2F{named_entity is None?}
-    A2F -- Yes --> A2G[Return empty String]
-    A2F -- No --> A2H(Return named_entity.name)
-
-    A2I[custom_hash] --> A2J(str: Convert to string)
-    A2J --> A2K(hashlib.sha256: create hash)
-    A2K --> A2L[Return Hex String]
-
-    A2M[fresh_id] --> A2N(Increment _fresh_id_counter)
-    A2N --> A2O[Return _fresh_id_counter]
+        G[extract_code_block]
+        G --> H[re.sub]
     end
+
+    subgraph Model Control Utilities
+        I[repeat_on_error]
+        I --> J[decorator]
+        J --> K[wrapper]
+        K --> L[func]
+        L --> M[logging.debug]
+    end
+
+    subgraph Validation
+        N[check_valid_fields]
+        N --> O[ValueError]
+        P[sanitize_raw_string]
+        P --> Q[encode]
+        Q --> R[decode]
+        S[sanitize_dict]
+        S --> T[json.dumps]
+        T --> U[sanitize_raw_string]
+        U --> V[json.loads]
+    end
+    
+    subgraph Prompt engineering
+        W[add_rai_template_variables_if_enabled]
+        W --> X[tinytroupe.config]
+        X --> Y[os.path.join]
+    end
+    
+    subgraph Rendering and markup 
+        Z[inject_html_css_style_prefix]
+        AA[break_text_at_length]
+        AA --> AB[json.dumps]
+        AC[pretty_datetime]
+        AD[dedent]
+        AD --> AE[textwrap.dedent]
+    end
+
+    subgraph IO and startup utilities
+        AF[read_config_file]
+        AG[pretty_print_config]
+        AH[start_logger]
+        AH --> AI[logging.getLogger]
+        AI --> AJ[logging.StreamHandler]
+        AJ --> AK[logging.Formatter]
+    end
+
+    subgraph JsonSerializableRegistry
+        AL[JsonSerializableRegistry]
+        AL --> AM[to_json]
+        AM --> AN[copy.deepcopy]
+        AL --> AO[from_json]
+        AO --> AP[JsonSerializableRegistry.from_json]
+        AL --> AQ[__init_subclass__]
+        AL --> AR[_post_deserialization_init]
+        AL --> AS[JsonSerializableRegistry.class_mapping]
+    end
+
+    subgraph Other
+        AT[post_init]
+        AU[name_or_empty]
+        AV[custom_hash]
+        AV --> AW[hashlib.sha256]
+        AX[fresh_id]
+    end
+
 ```
 
-###  Импорты:
+**Импорты и зависимости:**
 
--   `re`: Используется для работы с регулярными выражениями, в основном для извлечения JSON и блоков кода.
--   `json`: Используется для работы с JSON, включая сериализацию и десериализацию.
--   `os`: Используется для взаимодействия с операционной системой, например, для построения путей к файлам.
--   `sys`: Предоставляет доступ к некоторым переменным и функциям, взаимодействующим с интерпретатором Python, используется для определения максимальной длины строки.
--   `hashlib`: Предоставляет алгоритмы хеширования, используется для создания детерминированного хеша.
--   `textwrap`: Используется для форматирования текста, в частности, для удаления отступов.
--   `logging`: Используется для создания логов, записи сообщений и управления уровнем отладки.
--   `chevron`: Используется для рендеринга шаблонов с подстановками переменных.
--   `copy`: Используется для создания глубоких копий объектов, чтобы избежать нежелательных изменений.
--  `typing`: Используется для статической типизации, чтобы улучшить читаемость и облегчить отладку.
--  `datetime`: Используется для работы с датой и временем, форматирование в удобочитаемый формат.
--   `pathlib`: Используется для работы с файловыми путями в объектно-ориентированном стиле.
--   `configparser`: Используется для чтения и обработки файлов конфигурации в формате `.ini`.
--  `AgentOrWorld`:  `Union` type hint для использования типов  `TinyPerson` или `TinyWorld`
+*   `re`: Модуль для работы с регулярными выражениями, используется для извлечения JSON и кодовых блоков.
+*   `json`: Модуль для работы с JSON, используется для сериализации и десериализации данных.
+*   `os`: Модуль для работы с операционной системой, используется для работы с путями к файлам.
+*   `sys`: Модуль для доступа к системным переменным, используется для получения максимальной длины строки.
+*   `hashlib`: Модуль для работы с хэш-функциями, используется для создания хэша объекта.
+*    `textwrap`: Модуль для работы с текстом, используется для удаления отступов.
+*   `logging`: Модуль для логирования, используется для отладки и записи сообщений о событиях.
+*   `chevron`: Модуль для рендеринга шаблонов, используется для создания сообщений для LLM.
+*   `copy`: Модуль для создания глубоких копий объектов, используется для работы с `JsonSerializableRegistry`.
+*   `typing`: Модуль для аннотаций типов, используется для определения типов аргументов и возвращаемых значений.
+*   `datetime`: Модуль для работы с датами и временем, используется для форматирования дат.
+*   `pathlib`: Модуль для работы с путями к файлам, используется для формирования путей к файлам конфигурации.
+*   `configparser`: Модуль для работы с файлами конфигурации, используется для чтения конфигурации из файла.
+*  `tinytroupe.config`: Импортируется для доступа к настройкам приложения, используется в функции `add_rai_template_variables_if_enabled`, но импортируется внутри функции, чтобы избежать циклического импорта.
 
-###  Функции:
+## <объяснение>
 
--   `compose_initial_LLM_messages_with_templates(system_template_name: str, user_template_name: str = None, rendering_configs: dict = {}) -> list`:
-    -   **Аргументы:**
-        -   `system_template_name`: Имя файла шаблона для системного сообщения.
-        -   `user_template_name`: Имя файла шаблона для пользовательского сообщения (опционально).
-        -   `rendering_configs`: Словарь с переменными для подстановки в шаблоны.
-    -   **Возвращает:** Список словарей, представляющих сообщения для LLM, каждое с ключами `"role"` и `"content"`.
-    -   **Назначение:** Создает начальные сообщения для языковой модели (LLM), используя шаблоны и конфигурации.
--   `extract_json(text: str) -> dict`:
-    -   **Аргументы:** `text`: Строка, из которой нужно извлечь JSON.
-    -   **Возвращает:** Словарь, представляющий JSON-объект, или пустой словарь в случае ошибки.
-    -   **Назначение:** Извлекает JSON-объект из строки, игнорируя текст до и после JSON.
--   `extract_code_block(text: str) -> str`:
-    -   **Аргументы:** `text`: Строка, из которой нужно извлечь блок кода.
-    -   **Возвращает:** Строку, представляющую блок кода, или пустую строку в случае ошибки.
-    -   **Назначение:** Извлекает блок кода из строки, игнорируя текст до и после блока кода.
--   `repeat_on_error(retries: int, exceptions: list)`:
-    -   **Аргументы:**
-        -   `retries`: Количество попыток повтора вызова функции в случае ошибки.
-        -   `exceptions`: Список типов исключений, которые следует перехватывать.
-    -   **Возвращает:** Декоратор.
-    -   **Назначение:** Декоратор для повторного вызова функции в случае возникновения исключения.
--   `check_valid_fields(obj: dict, valid_fields: list) -> None`:
-    -   **Аргументы:**
-        -   `obj`: Словарь, ключи которого нужно проверить.
-        -   `valid_fields`: Список допустимых ключей.
-    -   **Возвращает:** `None`.
-    -   **Назначение:** Проверяет, что все ключи в словаре `obj` присутствуют в списке `valid_fields`.
--   `sanitize_raw_string(value: str) -> str`:
-    -   **Аргументы:** `value`: Строка, которую нужно санитизировать.
-    -   **Возвращает:** Санитизированная строка.
-    -   **Назначение:** Санитизирует строку, удаляя недопустимые символы и обрезая ее до максимальной длины.
--   `sanitize_dict(value: dict) -> dict`:
-    -   **Аргументы:** `value`: Словарь, который нужно санитизировать.
-    -   **Возвращает:** Санитизированный словарь.
-    -   **Назначение:** Санитизирует словарь, удаляя недопустимые символы и обеспечивая отсутствие слишком глубокой вложенности.
--  `add_rai_template_variables_if_enabled(template_variables: dict) -> dict`:
-    - **Аргументы:** `template_variables`: Словарь переменных шаблона.
-    - **Возвращает:** Обновленный словарь переменных шаблона.
-    - **Назначение:** Добавляет переменные шаблона, связанные с RAI (Responsible AI), в словарь переменных шаблона, если соответствующие флаги включены в конфигурации.
--  `inject_html_css_style_prefix(html: str, style_prefix_attributes: str) -> str`:
-    -  **Аргументы:** `html` - строка с HTML кодом, `style_prefix_attributes` - строка с css стилями.
-    -  **Возвращает:** Модифицированная html строка.
-    -  **Назначение:** Добавляет префикс к стилям в HTML строке.
--  `break_text_at_length(text: Union[str, dict], max_length: int = None) -> str`:
-    - **Аргументы:** `text` - текст или словарь, `max_length` - максимальная длинна.
-    - **Возвращает:** обрезанный текст, если длинна превысила `max_length`.
-    - **Назначение:**  Обрезает текст по длинне, если текст - словарь, то преобразует его в JSON.
--  `pretty_datetime(dt: datetime) -> str`:
-    - **Аргументы:** `dt` - объект datetime.
-    - **Возвращает:** Строка с отформатированной датой.
-    - **Назначение:**  Преобразует объект datetime в удобочитаемый формат.
--   `dedent(text: str) -> str`:
-    -   **Аргументы:** `text`: Строка, у которой нужно удалить отступы.
-    -   **Возвращает:** Строка без отступов.
-    -   **Назначение:** Удаляет отступы из многострочного текста.
--   `read_config_file(use_cache: bool = True, verbose: bool = True) -> configparser.ConfigParser`:
-    -   **Аргументы:**
-        -   `use_cache`: Флаг использования кэшированного файла.
-        -   `verbose`: Флаг подробного вывода.
-    -   **Возвращает:** Объект `configparser.ConfigParser` с загруженной конфигурацией.
-    -   **Назначение:** Читает файл конфигурации, возвращает кэшированный конфиг, если возможно.
--   `pretty_print_config(config: configparser.ConfigParser)`:
-    -   **Аргументы:** `config`: Объект `configparser.ConfigParser` с конфигурацией.
-    -   **Возвращает:** `None`.
-    -   **Назначение:** Выводит текущую конфигурацию в консоль в удобочитаемом виде.
--   `start_logger(config: configparser.ConfigParser)`:
-    -   **Аргументы:** `config`: Объект `configparser.ConfigParser` с конфигурацией.
-    -   **Возвращает:** `None`.
-    -   **Назначение:** Инициализирует логгер с заданным уровнем логирования.
--   `name_or_empty(named_entity: AgentOrWorld) -> str`:
-    - **Аргументы:**  `named_entity`: Объект типа `AgentOrWorld`, то есть `TinyPerson` или `TinyWorld`
-    - **Возвращает:** Имя объекта, или пустая строка, если объект равен `None`.
-    - **Назначение:** Возвращает имя объекта, или пустую строку.
-- `custom_hash(obj: Any) -> str`:
-    - **Аргументы:** `obj`: Объект, который нужно хешировать.
-    - **Возвращает:** Шестнадцатеричная строка хеша.
-    - **Назначение:** Создает детерминированный хеш для любого объекта.
--   `fresh_id() -> int`:
-    -   **Аргументы:** Нет.
-    -   **Возвращает:** Уникальный идентификатор.
-    -   **Назначение:** Генерирует уникальный ID для объектов.
+### Импорты:
+-   `re`: Модуль `re` используется для работы с регулярными выражениями, которые применяются в функциях `extract_json` и `extract_code_block` для извлечения JSON объектов и кодовых блоков из текста.
+-   `json`: Модуль `json` используется для кодирования и декодирования JSON объектов в функциях `extract_json`, `sanitize_dict`, `break_text_at_length`, и класса `JsonSerializableRegistry`.
+-   `os`: Модуль `os` предоставляет функции для взаимодействия с операционной системой, включая создание путей к файлам в функциях `compose_initial_LLM_messages_with_templates`, `add_rai_template_variables_if_enabled`, `read_config_file` и классе `JsonSerializableRegistry`.
+-   `sys`: Модуль `sys` используется для доступа к параметрам и функциям, специфичным для среды выполнения, например, для получения максимальной длины строки в `sanitize_raw_string`.
+-   `hashlib`: Модуль `hashlib` используется для вычисления хэшей данных в функции `custom_hash`.
+-   `textwrap`: Модуль `textwrap` используется для удаления отступов в начале строк в функции `dedent`.
+-    `logging`: Модуль `logging` используется для ведения журнала работы приложения, в частности в функциях `start_logger` и декораторе `repeat_on_error`.
+-   `chevron`: Модуль `chevron` используется для рендеринга шаблонов в функции `compose_initial_LLM_messages_with_templates`.
+-   `copy`: Модуль `copy` используется для создания глубоких копий объектов в классе `JsonSerializableRegistry`, избегая проблем с ссылками.
+-    `typing`: Модуль `typing` используется для определения типов переменных, аргументов и возвращаемых значений, что улучшает читаемость и сопровождение кода.
+-    `datetime`: Модуль `datetime` используется для работы с датами и временем в функции `pretty_datetime`.
+-   `pathlib`: Модуль `pathlib` используется для создания путей к файлам и каталогам в более удобной форме.
+-  `configparser`: Модуль `configparser` используется для работы с файлами конфигурации в функциях `read_config_file` и `start_logger`.
+- `tinytroupe.config`: Импортируется динамически для доступа к настройкам RAI, чтобы избежать циклических импортов.
 
-###  Классы:
+### Классы:
 
-- `JsonSerializableRegistry`:
-  -   **Роль:** Класс-миксин для поддержки сериализации и десериализации объектов в JSON.
-    -   `class_mapping`: Статический атрибут для хранения соответствия имени класса с самим классом для возможности десериализации.
-    -   `to_json(self, include: list = None, suppress: list = None, file_path: str = None) -> dict`:
-        -   **Назначение:** Преобразует объект в JSON.
-    -   `from_json(cls, json_dict_or_path, suppress: list = None, post_init_params: dict = None)`:
-        -   **Назначение:** Создает объект из JSON.
-    -   `__init_subclass__(cls, **kwargs)`:
-        -   **Назначение:** Регистрирует подкласс и наследует атрибуты для сериализации.
-    - `_post_deserialization_init(self, **kwargs)`:
-        -
+*   **`JsonSerializableRegistry`**:
+    *   **Роль**: Предоставляет функционал для сериализации и десериализации объектов в JSON, а также для автоматической регистрации подклассов.
+    *   **Атрибуты**:
+        *   `class_mapping`: Словарь, который содержит отображение имен классов на сами классы, используется для регистрации и поиска подклассов.
+    *   **Методы**:
+        *   `to_json(self, include=None, suppress=None, file_path=None)`: Сериализует объект в JSON. Параметры `include` и `suppress` позволяют управлять тем, какие атрибуты будут включены или исключены из JSON-представления. Если `file_path` указан, результат записывается в файл. Рекурсивно обрабатывает другие объекты `JsonSerializableRegistry`.
+        *  `from_json(cls, json_dict_or_path, suppress=None, post_init_params=None)`: Десериализует объект из JSON. Параметр `suppress` позволяет исключить некоторые атрибуты из загрузки. После десериализации вызывает метод `_post_deserialization_init`, если он есть у класса.
+        * `__init_subclass__(cls, **kwargs)`: Регистрирует подкласс в `class_mapping` и обновляет атрибуты `serializable_attributes`, `suppress_attributes_from_serialization` и `custom_serialization_initializers` из родительских классов.
+        * `_post_deserialization_init(self, **kwargs)`: Выполняет пост-инициализацию объекта после десериализации.
+    *   **Взаимодействие**: Используется в качестве базового класса для объектов, которые требуется сериализовать/десериализовать.
+
+### Функции:
+
+*   **`compose_initial_LLM_messages_with_templates(system_template_name, user_template_name, rendering_configs)`**:
+    *   **Аргументы**:
+        *   `system_template_name` (str): Имя файла шаблона для системного сообщения.
+        *   `user_template_name` (str, optional): Имя файла шаблона для пользовательского сообщения.
+        *   `rendering_configs` (dict): Словарь параметров для рендеринга шаблона.
+    *   **Возвращаемое значение**: `list`: Список словарей с сообщениями для LLM.
+    *   **Назначение**: Создает начальные сообщения для LLM, используя шаблоны и конфигурации.
+    *   **Пример**:
+        ```python
+        messages = compose_initial_LLM_messages_with_templates(
+            system_template_name='system_prompt.txt',
+            user_template_name='user_prompt.txt',
+            rendering_configs={'name': 'John', 'task': 'write a story'}
+        )
+        ```
+
+*   **`extract_json(text)`**:
+    *   **Аргументы**:
+        *   `text` (str): Текст, из которого нужно извлечь JSON.
+    *   **Возвращаемое значение**: `dict`: Извлеченный JSON объект или пустой словарь.
+    *   **Назначение**: Извлекает JSON объект из строки, игнорируя лишний текст.
+    *   **Пример**:
+        ```python
+        text = 'some text { "name": "John", "age": 30 } some other text'
+        result = extract_json(text)
+        ```
+
+*   **`extract_code_block(text)`**:
+    *  **Аргументы**:
+         * `text` (str): Текст, из которого нужно извлечь кодовый блок
+    *   **Возвращаемое значение**: `str`: Извлеченный кодовый блок или пустая строка.
+    *   **Назначение**: Извлекает кодовый блок из строки, игнорируя лишний текст.
+    *   **Пример**:
+         ```python
+         text = 'some text ```python\nprint("Hello")\n``` some other text'
+         result = extract_code_block(text)
+         ```
+*   **`repeat_on_error(retries, exceptions)`**:
+    *   **Аргументы**:
+        *   `retries` (int): Количество попыток повторения вызова функции.
+        *   `exceptions` (list): Список классов исключений, которые нужно перехватывать.
+    *   **Возвращаемое значение**: `function`: Декорированная функция.
+    *   **Назначение**: Декоратор для повторения вызова функции при возникновении определенных исключений.
+    *   **Пример**:
+        ```python
+        @repeat_on_error(retries=3, exceptions=[ValueError])
+        def flaky_function(x):
+            if random.random() < 0.5:
+                raise ValueError("Oops!")
+            return x * 2
+        ```
+
+*   **`check_valid_fields(obj, valid_fields)`**:
+    *   **Аргументы**:
+        *   `obj` (dict): Словарь, поля которого нужно проверить.
+        *   `valid_fields` (list): Список допустимых ключей.
+    *   **Возвращаемое значение**: `None`: Возвращает `None` в случае успешной проверки.
+    *  **Назначение**: Проверяет, все ли ключи в словаре входят в список допустимых.
+    *   **Пример**:
+        ```python
+        data = {'name': 'John', 'age': 30, 'city': 'New York'}
+        valid = ['name', 'age']
+        check_valid_fields(data, valid)
+        ```
+
+*   **`sanitize_raw_string(value)`**:
+    *   **Аргументы**:
+        *   `value` (str): Строка для санирования.
+    *   **Возвращаемое значение**: `str`: Санированная строка.
+    *   **Назначение**: Санирует строку, удаляя недопустимые символы и ограничивая длину.
+    *   **Пример**:
+        ```python
+        text = "some invalid chars \x00"
+        sanitized = sanitize_raw_string(text)
+        ```
+
+*   **`sanitize_dict(value)`**:
+    *  **Аргументы**:
+         * `value` (dict): Словарь для санирования.
+    *   **Возвращаемое значение**: `dict`: Санированный словарь.
+    *   **Назначение**: Санирует словарь, удаляя недопустимые символы и ограничивая глубину вложенности.
+    *   **Пример**:
+       ```python
+        data = { "a" :  "some invalid chars \x00" }
+        sanitized = sanitize_dict(data)
+        ```
+*   **`add_rai_template_variables_if_enabled(template_variables)`**:
+    *   **Аргументы**:
+        *   `template_variables` (dict): Словарь переменных шаблона.
+    *   **Возвращаемое значение**: `dict`: Обновленный словарь с переменными RAI.
+    *   **Назначение**: Добавляет переменные RAI (Responsible AI) в словарь шаблона, если это разрешено в конфигурации.
+    *   **Пример**:
+        ```python
+        template_vars = {}
+        updated_vars = add_rai_template_variables_if_enabled(template_vars)
+        ```
+
+*   **`inject_html_css_style_prefix(html, style_prefix_attributes)`**:
+    *   **Аргументы**:
+        *   `html` (str): HTML строка.
+        *   `style_prefix_attributes` (str): CSS стили для префикса.
+    *   **Возвращаемое значение**: `str`: HTML строка со стилями.
+    *   **Назначение**: Вставляет префикс CSS стилей в атрибуты `style` HTML-строки.
+    *   **Пример**:
+        ```python
+        html = '<div style="color: red;">Hello</div>'
+        result = inject_html_css_style_prefix(html, "font-size: 20px")
+        ```
+*   **`break_text_at_length(text, max_length=None)`**:
+    *   **Аргументы**:
+        *   `text` (str или dict): Текст или JSON объект для обработки.
+        *   `max_length` (int, optional): Максимальная длина текста.
+    *   **Возвращаемое значение**: `str`: Обработанный текст.
+    *   **Назначение**: Обрезает текст до заданной длины, добавляя " (...)".
+    *  **Пример**:
+        ```python
+        text = "This is a long text"
+        result = break_text_at_length(text, max_length = 10)
+        ```
+*   **`pretty_datetime(dt)`**:
+    *   **Аргументы**:
+        *   `dt` (`datetime`): Объект даты и времени.
+    *   **Возвращаемое значение**: `str`: Строка с отформатированной датой и временем.
+    *   **Назначение**: Возвращает отформатированную строку даты и времени.
+    *   **Пример**:
+        ```python
+        now = datetime.now()
+        formatted_time = pretty_datetime(now)
+        ```
+
+*   **`dedent(text)`**:
+    *   **Аргументы**:
+        *   `text` (str): Текст, который нужно деидентифицировать.
+    *   **Возвращаемое значение**: `str`: Деидентифицированный текст.
+    *   **Назначение**: Удаляет отступы в начале строк.
+    *   **Пример**:
+        ```python
+        text = "  \n    Hello, world!\n  "
+        result = dedent(text)
+        ```
+*   **`read_config_file(use_cache=True, verbose=True)`**:
+    *   **Аргументы**:
+        *   `use_cache` (bool, optional): Использовать ли кэшированную конфигурацию.
+        *   `verbose` (bool, optional): Выводить ли сообщения о процессе.
+    *   **Возвращаемое значение**: `configparser.ConfigParser`: Объект с загруженной конфигурацией.
+    *   **Назначение**: Считывает конфигурацию из файла `config.ini` и использует кэширование.
+    *   **Пример**:
+        ```python
+        config = read_config_file()
+        ```
+*   **`pretty_print_config(config)`**:
+    *   **Аргументы**:
+        *   `config` (`configparser.ConfigParser`): Объект с конфигурацией.
+    *   **Возвращаемое значение**: `None`: Не возвращает ничего, выводит конфигурацию в консоль.
+    *  **Назначение**: Выводит конфигурацию на печать в читаемом формате.
+    *   **Пример**:
+        ```python
+        config = read_config_file()
+        pretty_print_config(config)
+        ```
+
+*  **`start_logger(config)`**:
+    * **Аргументы**:
+       *  `config` (`configparser.ConfigParser`): Объект конфигурации.
+    *  **Возвращаемое значение**: `None`.
+    *  **Назначение**: Настраивает логгер для записи сообщений в консоль на заданном уровне.
+    *  **Пример**:
+        ```python
+        config = read_config_file()
+        start_logger(config)
+        ```
+
+*   **`post_init(cls)`**:
+    *   **Аргументы**:
+        *   `cls` (class): Класс, к которому применяется декоратор.
+    *   **Возвращаемое значение**: `class`: Модифицированный класс.
+    *   **Назначение**: Декоратор для вызова `_post_init` метода после вызова конструктора класса.
+    *   **Пример**:
+        ```python
+        @post_init
+        class MyClass:
+           def __init__(self, x):
+               self.x = x
+           def _post_init(self):
+               self.y =

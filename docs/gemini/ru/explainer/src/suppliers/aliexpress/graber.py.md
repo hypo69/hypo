@@ -1,190 +1,127 @@
-## ИНСТРУКЦИЯ:
-
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
-
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
-    ```
-
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
-
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
-
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
-
 ## <алгоритм>
 
-**Общая схема работы `graber.py`:**
+1.  **Импорт библиотек:**
+    *   Импортируются необходимые модули и библиотеки: `typing`, `functools`, `src.suppliers.graber`, `src.webdriver.driver`, `src.logger.logger`, `src.logger.exceptions`.
+2.  **Определение класса `Graber`:**
+    *   Создается класс `Graber`, который наследуется от `src.suppliers.graber.Graber`.
+    *   Устанавливается атрибут `supplier_prefix` в значение `'aliexpress'`.
+    *   Определяется метод `__init__`, конструктор класса, принимающий объект веб-драйвера `Driver`.
+    *   В конструкторе вызывается конструктор родительского класса `Graber` (из `src.suppliers.graber`) с передачей `supplier_prefix` и `driver`.
+    *   Устанавливается `Context.locator_for_decorator` в `None`.
 
-1.  **Инициализация**:
-    *   Создается экземпляр класса `Graber`, который принимает объект `Driver` в качестве аргумента.
-    *   Устанавливается префикс поставщика `supplier_prefix` как `'aliexpress'`.
-    *   Вызывается конструктор родительского класса `Grbr` (из `src.suppliers.graber`) для инициализации базовых свойств грабера.
-    *   Устанавливается `Context.locator_for_decorator` в `None`, что отключает использование декоратора по умолчанию, который используется для закрытия всплывающих окон (если будет установлено значение, то оно выполнится в декораторе `@close_pop_up`).
-2.  **Работа с декоратором (опционально)**:
-    *   Если `Context.locator_for_decorator` установлено значение, то перед выполнением основной функции для захвата данных, будет выполнятся декоратор `@close_pop_up`.
-    *  Декоратор `@close_pop_up` проверяет наличие локатора для закрытия всплывающего окна (`Context.locator_for_decorator.close_pop_up`).
-    *   Если локатор есть, выполняется `Context.driver.execute_locator`, который взаимодействует с веб-драйвером для закрытия всплывающего окна.
-    *   Логируется ошибка, если локатор не может быть выполнен (`ExecuteLocatorException`).
-3.  **Сбор данных (основная логика, не показана в этом коде)**:
-    *   Методы для сбора данных о товарах (не показаны в данном коде) могут использовать `self.driver` для взаимодействия с браузером и извлечения нужной информации.
-    *   Методы для обработки полей товара (не показаны в данном коде) могут быть переопределены в классе `Graber` для специфичной логики.
-4.  **Завершение**:
-    *   После сбора данных экземпляр `Graber` может быть использован для других задач.
+**Пример:**
+    ```python
+    # Инициализация класса Graber
+    driver = Driver()  # Предполагается, что Driver инициализирован
+    graber = Graber(driver)
 
-**Пример использования:**
-
-```python
-from src.webdriver.driver import Driver  # Предположим, что Driver импортирован корректно
-from src.suppliers.aliexpress.graber import Graber
-# Инициализация веб-драйвера
-driver_instance = Driver()
-# Создание экземпляра грабера
-aliexpress_graber = Graber(driver=driver_instance)
-# Получение данных о товаре (пример, метод не показан в коде)
-# product_data = await aliexpress_graber.get_product_data()
-# print(product_data)
-```
-
-**Поток данных:**
-
-1.  `Driver` -> `Graber.__init__` (экземпляр драйвера передается в грабер).
-2.  `Graber.__init__` -> `Grbr.__init__` (вызов конструктора родительского класса).
-3.  `Context` -> `Context.locator_for_decorator` (установка локатора для декоратора).
-4.  Если `Context.locator_for_decorator` установлен, то `Context.driver`  -> `close_pop_up` декоратору (выполнение локатора для закрытия попапа).
-5. `Graber` instance-> методы сбора данных (вызов методов для сбора данных о товаре).
+    # Теперь graber готов к работе
+    # graber.process_field(...)
+    ```
+    **Поток данных:**
+    1. `Driver` инициализируется (предполагается).
+    2. `Driver` передается в конструктор `Graber`.
+    3. `Graber` вызывает конструктор родительского класса.
+    4. `Graber` устанавливает `Context.locator_for_decorator` в `None`.
+    5. Возвращается объект `Graber`.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Start] --> InitGraber[Инициализация Graber: <br><code>Graber(driver)</code>]
-    InitGraber --> SetSupplierPrefix[Установка префикса поставщика: <br><code>self.supplier_prefix = 'aliexpress'</code>]
-    SetSupplierPrefix --> InitParent[Инициализация родительского класса: <br><code>super().__init__(supplier_prefix, driver)</code>]
-    InitParent --> SetLocatorNone[Установка locator_for_decorator в None: <br><code>Context.locator_for_decorator = None</code>]
-    SetLocatorNone --> OptionalDecoratorCheck[Проверка наличия locator_for_decorator]
-    OptionalDecoratorCheck -- Да, locator установлен -->  DecoratorExecution[Выполнение декоратора close_pop_up]
-    OptionalDecoratorCheck -- Нет, locator не установлен --> ContinueGrabbing[Продолжить сбор данных (методы сбора)]
-    DecoratorExecution --> ExecuteLocator[Выполнение локатора: <br><code>driver.execute_locator(locator_for_decorator.close_pop_up)</code>]
-    ExecuteLocator --> ExceptionCheck[Проверка исключения ExecuteLocatorException]
-    ExceptionCheck -- Да, ошибка --> LogError[Логирование ошибки]
-     ExceptionCheck -- Нет, ошибки нет --> ContinueGrabbing
-    LogError --> ContinueGrabbing
-    ContinueGrabbing --> End[Конец]
-
-
-    classDef classGreen fill:#90EE90,stroke:#333,stroke-width:2px
-    class Start,End, InitGraber, SetSupplierPrefix,InitParent, SetLocatorNone, OptionalDecoratorCheck, ContinueGrabbing, DecoratorExecution,ExecuteLocator, ExceptionCheck, LogError  classGreen
+    subgraph src.suppliers.aliexpress.graber
+    A[<code>graber.py</code><br>Start] --> B(Import Modules: <br>typing, functools, src.suppliers.graber, src.webdriver.driver, src.logger.logger, src.logger.exceptions);
+    B --> C[Class Graber <br>Inherits from src.suppliers.graber.Graber];
+    C --> D[Method <code>__init__</code><br>(driver:Driver)];
+    D --> E[Set supplier_prefix = 'aliexpress'];
+     E --> F[Call Parent Constructor <br><code>super().__init__(supplier_prefix, driver)</code>];
+    F --> G[Set Context.locator_for_decorator = None];
+    G --> H[End];
+    end
+    subgraph src.suppliers.graber
+       I[<code>graber.py</code><br>Parent Graber Class]
+    end
+    H -->|Inheritance|I
+    
+    
+    
 ```
 
-```mermaid
-flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
-
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-```
-
-**Анализ зависимостей `mermaid`:**
-
-*   **`Start`**: Начало процесса инициализации грабера.
-*   **`InitGraber`**: Инициализация класса `Graber` с передачей экземпляра `Driver`.
-*   **`SetSupplierPrefix`**: Присвоение атрибуту `supplier_prefix` значения `'aliexpress'`.
-*    **`InitParent`**:  Инициализация родительского класса `Grbr`.
-*   **`SetLocatorNone`**: Установка `Context.locator_for_decorator` в `None`, что отключает выполнение декоратора по умолчанию.
-*   **`OptionalDecoratorCheck`**: Проверка, установлено ли значение для  `Context.locator_for_decorator`.
-*   **`DecoratorExecution`**: Выполняется декоратор `@close_pop_up`, если `Context.locator_for_decorator` имеет значение.
-*   **`ExecuteLocator`**:  Выполнение локатора `driver.execute_locator` для взаимодействия с веб-драйвером.
-*   **`ExceptionCheck`**: Проверка на наличие исключения `ExecuteLocatorException`.
-*   **`LogError`**: Логирование ошибки, если она возникла при выполнении локатора.
-*   **`ContinueGrabbing`**: Продолжение выполнения основной логики для сбора данных, если нет ошибок.
-*   **`End`**: Завершение процесса.
-
-**Зависимости (импорты):**
-
-1.  `from typing import Any, Callable`: Импортирует типы `Any` и `Callable` для аннотации типов.
-2.  `from functools import wraps`: Импортирует декоратор `wraps` для сохранения метаданных декорируемой функции.
-3.  `from src.suppliers.graber import Graber as Grbr, Context, close_pop_up`:
-    *   `Graber as Grbr`: Импортирует базовый класс `Graber` из модуля `src.suppliers.graber` и переименовывает его в `Grbr`.
-    *   `Context`: Импортирует класс `Context` из модуля `src.suppliers.graber`, вероятно, для хранения контекста выполнения.
-    *   `close_pop_up`: Импортирует функцию `close_pop_up` из модуля `src.suppliers.graber`, которая используется как декоратор.
-4.  `from src.webdriver.driver import Driver`: Импортирует класс `Driver` из модуля `src.webdriver.driver` для управления веб-драйвером.
-5.  `from src.logger.logger import logger`: Импортирует объект `logger` для логирования событий.
-6.  `from src.logger.exceptions import ExecuteLocatorException`: Импортирует исключение `ExecuteLocatorException` для обработки ошибок при выполнении локаторов.
-
+**Объяснение зависимостей `mermaid`:**
+1.  **`flowchart TD`**:  Определяет тип диаграммы как блок-схему, направление сверху вниз (`TD`).
+2.  **`subgraph src.suppliers.aliexpress.graber`**: Обозначает начало подграфа, представляющего модуль `graber.py` из пакета `src.suppliers.aliexpress`.
+3.  **`A[<code>graber.py</code><br>Start]`**: Начальная точка графа, представляющая начало выполнения скрипта `graber.py`.
+4.  **`B(Import Modules: <br>typing, functools, src.suppliers.graber, src.webdriver.driver, src.logger.logger, src.logger.exceptions)`**: Узел, представляющий импорт необходимых модулей.
+    *   `typing`: Модуль для аннотации типов.
+    *   `functools`: Модуль для работы с функциями (в частности, декораторы).
+    *   `src.suppliers.graber`: Модуль, содержащий базовый класс `Graber`, от которого наследуется текущий класс `Graber`.
+    *   `src.webdriver.driver`: Модуль, предоставляющий функциональность для управления веб-драйвером.
+    *   `src.logger.logger`: Модуль, предоставляющий функциональность для логирования.
+    *   `src.logger.exceptions`: Модуль, содержащий пользовательские исключения.
+5.  **`C[Class Graber <br>Inherits from src.suppliers.graber.Graber]`**: Узел, представляющий объявление класса `Graber`, который наследуется от класса `Graber` из `src.suppliers.graber`.
+6.  **`D[Method __init__<br>(driver:Driver)]`**: Узел, представляющий метод инициализации `__init__` класса `Graber`, принимающий объект `Driver` в качестве аргумента.
+7.  **`E[Set supplier_prefix = 'aliexpress']`**: Узел, представляющий присваивание атрибуту `supplier_prefix` значения `'aliexpress'`.
+8.  **`F[Call Parent Constructor <br>super().__init__(supplier_prefix, driver)]`**: Узел, представляющий вызов конструктора родительского класса `Graber` с передачей значений `supplier_prefix` и `driver`.
+9.  **`G[Set Context.locator_for_decorator = None]`**: Узел, представляющий присваивание атрибуту `Context.locator_for_decorator` значения `None`.
+10. **`H[End]`**: Конечная точка графа, представляющая завершение работы скрипта `graber.py`
+11. **`subgraph src.suppliers.graber`**: Начало подграфа, представляющего класс `Graber` в `src.suppliers.graber`
+12. **`I[<code>graber.py</code><br>Parent Graber Class]`**: Узел, представляющий  класс `Graber` в `src.suppliers.graber`.
+13. **`H -->|Inheritance|I`**: Указывает на наследование класса `Graber` от класса в `src.suppliers.graber`
+   
 ## <объяснение>
 
 **Импорты:**
 
-*   `typing.Any` и `typing.Callable`: Используются для статической типизации, помогая сделать код более читаемым и менее подверженным ошибкам. `Any` означает, что переменная может быть любого типа, а `Callable` — что переменная является вызываемой функцией.
-*   `functools.wraps`: Декоратор, который сохраняет метаданные оборачиваемой функции (например, `__name__`, `__doc__`), что полезно при использовании декораторов, так как без него метаданные оборачиваемой функции будут заменены метаданными декоратора.
-*   `src.suppliers.graber.Graber as Grbr`: Импортируется базовый класс `Graber` из модуля `src.suppliers.graber` и переименовывается в `Grbr`. Это позволяет избежать конфликта имен, так как в текущем файле также есть класс `Graber`. Этот класс предоставляет базовую функциональность для граберов, которую наследует класс `Graber` в текущем файле.
-*   `src.suppliers.graber.Context`: Импортируется класс `Context` из модуля `src.suppliers.graber`, который, вероятно, используется для хранения глобального контекста (например, драйвера, локаторов) для текущей операции грабинга.
-*   `src.suppliers.graber.close_pop_up`: Импортируется функция, которая используется для закрытия всплывающих окон. Этот функционал вынесен в отдельную функцию, скорее всего, для переиспользования и унификации кода.
-*   `src.webdriver.driver.Driver`: Импортируется класс `Driver`, который предоставляет абстракцию над веб-драйвером (например, Selenium), позволяя взаимодействовать с браузером для сбора данных.
-*   `src.logger.logger.logger`: Импортируется объект `logger` для логирования ошибок и других важных событий. `src.logger.logger` это модуль для логирования, это позволяет записывать в логи все важные события для дебага и мониторинга.
-*   `src.logger.exceptions.ExecuteLocatorException`: Импортируется исключение `ExecuteLocatorException`, которое используется для обработки ошибок при выполнении локаторов.
+*   **`from typing import Any, Callable`**:
+    *   `Any`: Используется для аннотации типов, когда тип переменной может быть любым.
+    *   `Callable`: Используется для аннотации типов функций.
+*   **`from functools import wraps`**:
+    *   `wraps`: Декоратор, помогающий сохранять метаданные декорируемой функции (например, имя, docstring). Используется для создания декораторов.
+*   **`from src.suppliers.graber import Graber as Grbr, Context, close_pop_up`**:
+    *   `Graber as Grbr`: Импортирует базовый класс `Graber` из `src.suppliers.graber` и переименовывает его в `Grbr` для краткости.
+    *   `Context`: Импортируется класс `Context`, предположительно хранящий контекст приложения.
+    *   `close_pop_up`: Импортируется декоратор для закрытия всплывающих окон (используется в коде в виде примера).
+*   **`from src.webdriver.driver import Driver`**:
+    *   `Driver`: Импортирует класс `Driver` из `src.webdriver.driver`, который управляет веб-драйвером (например, Chrome, Firefox).
+*   **`from src.logger.logger import logger`**:
+    *   `logger`: Импортирует объект `logger` из `src.logger.logger`, который используется для логирования сообщений.
+*   **`from src.logger.exceptions import ExecuteLocatorException`**:
+    *   `ExecuteLocatorException`: Импортируется исключение, которое может возникнуть при выполнении локатора.
 
 **Классы:**
 
-*   **`Graber(Grbr)`:**
-    *   **Роль:** Класс для сбора данных с AliExpress, наследуется от базового класса `Graber` (`Grbr`). Предоставляет методы для специфической обработки полей товара на AliExpress.
-    *   **Атрибуты:**
-        *   `supplier_prefix (str)`: Префикс поставщика, устанавливается как `'aliexpress'`.
-    *   **Методы:**
-        *   `__init__(self, driver: Driver)`: Конструктор класса, принимает экземпляр `Driver` и инициализирует атрибуты `supplier_prefix` и вызывает конструктор родительского класса `Grbr`. Также устанавливает `Context.locator_for_decorator` в `None`, отключая декоратор для закрытия всплывающих окон по умолчанию.
+*   **`class Graber(Grbr)`**:
+    *   Роль: Класс `Graber` отвечает за сбор данных с веб-сайта AliExpress. Он наследуется от базового класса `Graber` (`Grbr`) из `src.suppliers.graber`, что позволяет ему повторно использовать общую логику.
+    *   Атрибуты:
+        *   `supplier_prefix` (`str`): Указывает префикс поставщика (`'aliexpress'`).
+    *   Методы:
+        *   `__init__(self, driver: Driver)`: Конструктор класса. Принимает объект веб-драйвера `Driver`, устанавливает `supplier_prefix` и вызывает конструктор родительского класса. Также устанавливает `Context.locator_for_decorator` в `None`.
+    *   Взаимодействие: Наследуется от `src.suppliers.graber.Graber`, что подразумевает использование его методов и атрибутов. Использует `Driver` для управления веб-браузером и `Context` для доступа к глобальным параметрам.
 
 **Функции:**
 
-*   **`close_pop_up(value: Any = None)` (закомментирована):**
-    *   **Аргументы:**
-        *   `value (Any, optional)`: Дополнительное значение, которое может быть передано в декоратор.
-    *   **Возвращаемое значение:**
-        *   `Callable`: Возвращает декоратор, который оборачивает функцию.
-    *   **Назначение:** Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
-    *   **Пример:** Предположим, что `Context.locator_for_decorator.close_pop_up` содержит локатор для закрытия всплывающего окна. Тогда, когда функция, обернутая этим декоратором, будет вызвана, сначала будет выполнено закрытие всплывающего окна (если локатор установлен и выполняется без ошибок), а затем будет выполнена основная логика.
-*   **`wrapper(*args, **kwargs)`** (внутри декоратора `close_pop_up`):
-    *   **Аргументы:**
-        *   `*args`: Позиционные аргументы, переданные в оборачиваемую функцию.
-        *   `**kwargs`: Именованные аргументы, переданные в оборачиваемую функцию.
-    *   **Возвращаемое значение:**
-        *   `Any`: Результат выполнения обернутой функции.
-    *   **Назначение:** Вспомогательная функция, обертывающая основную функцию для выполнения операций перед и после вызова функции.
+*   **`__init__(self, driver: Driver)`**:
+    *   Аргументы:
+        *   `self`: Ссылка на экземпляр класса.
+        *   `driver` (`Driver`): Экземпляр веб-драйвера.
+    *   Возвращаемое значение: `None` (конструктор).
+    *   Назначение: Инициализирует объект класса `Graber`, вызывая конструктор родительского класса и устанавливая `Context.locator_for_decorator` в `None`.
 
 **Переменные:**
 
-*   `supplier_prefix (str)`:  Атрибут класса `Graber`, хранящий префикс поставщика `'aliexpress'`.
-*   `Context.locator_for_decorator`: Переменная в классе `Context`, которая используется для хранения локатора для закрытия всплывающих окон. Если она установлена, то при вызове любой функции, обернутой декоратором `close_pop_up` будет вызван метод `execute_locator` для взаимодействия с браузером. Если значение `None`, то декоратор выполнятся не будет.
+*   **`supplier_prefix` (`str`):** Атрибут класса, хранит префикс поставщика `'aliexpress'`. Используется для идентификации поставщика.
+*   **`Context.locator_for_decorator` (`Any`):** Переменная класса `Context` из `src.suppliers.graber`, которая может хранить локатор для декоратора всплывающих окон. По умолчанию устанавливается в `None`, что отключает выполнение декоратора.
 
-**Потенциальные ошибки и области для улучшения:**
+**Потенциальные ошибки и улучшения:**
 
-*   **Обработка ошибок:**  В декораторе `@close_pop_up` есть блок `try-except` для обработки `ExecuteLocatorException`, но другие потенциальные ошибки не обрабатываются.  Следует добавить обработку других исключений для повышения надежности.
-*   **Гибкость декоратора:** Декоратор `@close_pop_up`  зависит от `Context.locator_for_decorator`.  Можно сделать его более гибким, передавая локатор в качестве аргумента декоратора, или использовать множественные декораторы для разных задач.
-*   **Отсутствие методов для сбора данных:**  Класс `Graber` является лишь заготовкой, не содержит методов для сбора и обработки данных.  Нужно добавить методы для взаимодействия с веб-драйвером и извлечения данных о товарах с AliExpress.
-*  **Закомментированный код:** Декоратор `@close_pop_up` закомментирован, но код внутри него  потенциально рабочий.  Стоит либо убрать его, либо использовать (разкомментировать) по необходимости.
-*  **Асинхронность:** Код использует `async` функции внутри декоратора, но неясно, используются ли асинхронные операции в других частях кода. Нужно проверить, используется ли асинхронность в других модулях, чтобы не было блокировки event loop.
+*   **Декоратор `close_pop_up`:** Код декоратора закомментирован, но подразумевает закрытие всплывающих окон. Необходимо его раскомментировать и адаптировать под нужды приложения.
+*   **Обработка исключений:** Присутствует базовая обработка `ExecuteLocatorException`, но стоит добавить более детальную обработку исключений.
+*   **Абстракция:** В данный момент метод `__init__` содержит конкретное значение `aliexpress`. Имеет смысл вынести эту переменную, чтобы класс стал более абстрактным.
 
 **Взаимосвязи с другими частями проекта:**
+*   Зависимость от `src.suppliers.graber`: Наследует и использует общую логику базового класса `Graber`.
+*   Зависимость от `src.webdriver.driver`: Использует `Driver` для управления браузером.
+*   Зависимость от `src.logger`: Использует `logger` для логирования.
+*   Зависимость от `src.logger.exceptions`: Использует `ExecuteLocatorException` для обработки исключений.
 
-*   **`src.suppliers.graber`**:  Модуль, предоставляющий базовый класс `Graber` и контекст `Context`, а также  декоратор `close_pop_up`.
-*   **`src.webdriver.driver`**:  Модуль, предоставляющий класс `Driver` для управления веб-драйвером.
-*   **`src.logger.logger`**:  Модуль для логирования ошибок и других событий.
-*   **`src.logger.exceptions`**:  Модуль, предоставляющий пользовательские исключения, например, `ExecuteLocatorException`.
-
-Этот код является частью более крупного проекта, вероятно, системы для сбора данных.
+Этот анализ обеспечивает всестороннее понимание структуры и функциональности кода `graber.py` и его связей с другими компонентами проекта.

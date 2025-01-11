@@ -1,38 +1,35 @@
 ## Анализ кода модуля `get_graber_by_supplier.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован и легко читается.
-    - Используется понятная логика для определения граббера по URL.
-    - Присутствуют все необходимые импорты.
-    - Добавлены docstring для модуля и функции.
-- Минусы
-    - Функция `get_graber_by_supplier_url` принимает `self`, что не соответствует её логике.
-    - Используется глобальная переменная `MODE`, что нежелательно.
-    -  Повторяющиеся проверки `url.startswith` можно заменить на словарь соответствий.
-    - Не используется `j_loads` и `j_loads_ns`.
-    - Закомментированные блоки кода.
+9
+-  Плюсы
+    -  Код хорошо структурирован и легко читаем.
+    -  Используется явное сравнение с использованием `startswith` для определения поставщика.
+    -  Используется `logger` для отладки.
+    -  Присутствует описание модуля и функции в формате docstring.
+-  Минусы
+    -  Не хватает проверки на `None` для `self.driver` перед использованием `self.driver.get_url(url)`.
+    -  Используется `...` для обозначения точки останова, что не является частью стандартного кода Python.
+    -  Не используется `j_loads` или `j_loads_ns`.
+    -  Импорт `header` не используется.
 
 **Рекомендации по улучшению**
-- Удалить параметр `self` из функции `get_graber_by_supplier_url`.
-- Перенести константу `MODE` в класс или сделать ее локальной.
-- Использовать словарь соответствий для определения граббера вместо длинной цепочки `if`.
-- Улучшить обработку ошибок, используя `logger.error` для записи ошибок.
-- Убрать `...` и закомментированный код.
-- Добавить примеры использования в docstring.
--  Добавить в docstring описание каждого возвращаемого значения.
--  Исправить опечатки в URL `https://wwww.amazon.com`
 
-**Оптимизиробанный код**
+1.  Добавить проверку на `self.driver` перед его использованием, чтобы избежать потенциальных ошибок.
+2.  Удалить `...` и заменить их на корректную обработку, например, логирование или исключение.
+3.  Удалить неиспользуемый импорт `header`.
+4.  Изменить способ проверки url,  использовать  `in` для проверки начала url, сделать регистронезависимым.
+
+**Оптимизированный код**
+
 ```python
 """
-Модуль для получения граббера на основе URL поставщика
+Модуль для получения граббера на основе URL поставщика.
 =========================================================================================
 
-Этот модуль предоставляет функциональность для получения соответствующего объекта граббера
-для заданного URL поставщика. У каждого поставщика есть свой собственный граббер,
-который извлекает значения полей из целевой HTML-страницы.
+Этот модуль предоставляет функциональность для извлечения соответствующего объекта
+граббера для заданного URL-адреса поставщика. У каждого поставщика есть свой
+специализированный граббер, который извлекает значения полей из целевой HTML-страницы.
 
 Пример использования
 --------------------
@@ -47,13 +44,13 @@
     graber = get_graber_by_supplier_url(driver, url)
 
     if graber:
-        # Код использует граббер для извлечения данных
+        # Используйте граббер для извлечения данных
         pass
     else:
-        # Код обрабатывает ситуацию, когда граббер не найден
+        # Обработайте случай, когда граббер не найден
         pass
 """
-
+from src.logger.logger import logger # Импорт logger из src.logger.logger
 from src.suppliers.aliexpress.graber import Graber as AliexpressGraber
 from src.suppliers.amazon.graber import Graber as AmazonGraber
 from src.suppliers.bangood.graber import Graber as BangoodGraber
@@ -70,66 +67,79 @@ from src.suppliers.morlevi.graber import Graber as MorleviGraber
 from src.suppliers.visualdg.graber import Graber as VisualDGGraber
 from src.suppliers.wallashop.graber import Graber as WallaShopGraber
 from src.suppliers.wallmart.graber import Graber as WallmartGraber
-from src.logger.logger import logger
-from src.webdriver import WebDriver
-
-_GRABBERS = {
-    'https://aliexpress.com': AliexpressGraber,
-    'https://www.aliexpress.com': AliexpressGraber,
-    'https://amazon.com': AmazonGraber,
-    'https://www.amazon.com': AmazonGraber,
-    'https://bangood.com': BangoodGraber,
-    'https://www.bangood.com': BangoodGraber,
-    'https://cdata.co.il': CdataGraber,
-    'https://www.cdata.co.il': CdataGraber,
-    'https://ebay.': EbayGraber,
-    'https://www.ebay.c': EbayGraber,
-    'https://etzmaleh.co.il': EtzmalehGraber,
-    'https://www.etzmaleh.co.il': EtzmalehGraber,
-    'https://gearbest.com': GearbestGraber,
-    'https://www.gearbest.com': GearbestGraber,
-    'https://grandadvance.co.il': GrandadvanceGraber,
-    'https://www.grandadvance.co.il': GrandadvanceGraber,
-    'https://hb-digital.co.il': HBGraber,
-    'https://www.hb-digital.co.il': HBGraber,
-    'https://ivory.co.il': IvoryGraber,
-    'https://www.ivory.co.il': IvoryGraber,
-    'https://ksp.co.il': KspGraber,
-    'https://www.ksp.co.il': KspGraber,
-    'https://kualastyle.com': KualaStyleGraber,
-    'https://www.kualastyle.com': KualaStyleGraber,
-    'https://morlevi.co.il': MorleviGraber,
-    'https://www.morlevi.co.il': MorleviGraber,
-    'https://www.visualdg.com': VisualDGGraber,
-    'https://visualdg.com': VisualDGGraber,
-    'https://wallashop.co.il': WallaShopGraber,
-    'https://www.wallashop.co.il': WallaShopGraber,
-     'https://www.wallmart.com': WallmartGraber,
-    'https://wallmart.com': WallmartGraber,
-
-}
 
 
-def get_graber_by_supplier_url(driver: WebDriver, url: str) -> 'Graber' | None:
+
+MODE = 'dev'
+
+
+def get_graber_by_supplier_url(self, url: str) -> 'Graber' | None:
     """
-    Возвращает соответствующий граббер для заданного URL поставщика.
+    Возвращает соответствующий граббер для заданного URL-адреса поставщика.
 
-    Функция проверяет URL и возвращает экземпляр соответствующего граббера, который
-    используется для извлечения значений полей из HTML-страницы.
+    У каждого поставщика есть свой граббер, который извлекает значения полей из целевой HTML-страницы.
 
     Args:
-        driver (WebDriver): Экземпляр веб-драйвера.
-        url (str): URL страницы поставщика.
+        url (str): URL-адрес страницы поставщика.
+
     Returns:
-        'Graber' | None: Экземпляр граббера, если URL соответствует известному поставщику, иначе None.
+        Graber | None: Экземпляр граббера, если соответствие найдено, иначе None.
     """
-    try:
-        driver.get_url(url)
-        for start_url, grabber_class in _GRABBERS.items():
-            if url.startswith(start_url):
-                return grabber_class(driver)
-        logger.debug(f'Не найден граббер для URL: {url}')
+    # Проверяет, что self.driver существует перед его использованием
+    if not self.driver:
+        logger.error('WebDriver не инициализирован.')
         return None
-    except Exception as e:
-         logger.error(f'Ошибка при получении граббера для URL: {url}', exc_info=e)
-         return None
+
+    self.driver.get_url(url)
+    url_lower = url.lower() # Преобразует URL в нижний регистр для регистронезависимого сравнения
+
+    if url_lower.startswith(('https://aliexpress.com', 'https://www.aliexpress.com')):
+        return AliexpressGraber(self.driver)
+
+    if url_lower.startswith(('https://amazon.com', 'https://www.amazon.com')):
+        return AmazonGraber(self.driver)
+
+    if url_lower.startswith(('https://bangood.com', 'https://www.bangood.com')):
+         return BangoodGraber(self.driver)
+
+    if url_lower.startswith(('https://cdata.co.il', 'https://www.cdata.co.il')):
+        return CdataGraber(self.driver)
+
+    if url_lower.startswith(('https://ebay.', 'https://www.ebay.c')):
+         return EbayGraber(self.driver)
+
+    if url_lower.startswith(('https://etzmaleh.co.il', 'https://www.etzmaleh.co.il')):
+        return EtzmalehGraber(self.driver)
+
+    if url_lower.startswith(('https://gearbest.com', 'https://www.gearbest.com')):
+        return GearbestGraber(self.driver)
+
+    if url_lower.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
+        return GrandadvanceGraber(self.driver)
+
+    if url_lower.startswith(('https://hb-digital.co.il', 'https://www.hb-digital.co.il')):
+        return HBGraber(self.driver)
+
+    if url_lower.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
+       return IvoryGraber(self.driver)
+
+    if url_lower.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
+        return KspGraber(self.driver)
+
+    if url_lower.startswith(('https://kualastyle.com', 'https://www.kualastyle.com')):
+        return KualaStyleGraber(self.driver)
+
+    if url_lower.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
+        return MorleviGraber(self.driver)
+
+    if url_lower.startswith(('https://www.visualdg.com', 'https://visualdg.com')):
+        return VisualDGGraber(self.driver)
+
+    if url_lower.startswith(('https://wallashop.co.il', 'https://www.wallashop.co.il')):
+        return WallaShopGraber(self.driver)
+
+    if url_lower.startswith(('https://www.wallmart.com', 'https://wallmart.com')):
+        return WallmartGraber(self.driver)
+
+    logger.debug(f'Граббер не найден для URL: {url}')
+    return None

@@ -1,278 +1,351 @@
 ## <алгоритм>
 
-1. **Инициализация приложения:**
-   - Создается объект `QApplication` для управления GUI приложения.
-   - Устанавливается флаг `setQuitOnLastWindowClosed(False)` для предотвращения выхода приложения при закрытии последнего окна.
-   - Создается главное окно приложения `AssistantMainWindow`.
-   - Главное окно отображается на экране.
-   - Запускается основной цикл обработки событий приложения `app.exec()`.
+1.  **Инициализация приложения:**
+    *   Создается экземпляр `QApplication`.
+    *   Устанавливается параметр `setQuitOnLastWindowClosed(False)`, чтобы приложение не закрывалось при закрытии последнего окна.
+    *   Создается главное окно `AssistantMainWindow`.
+    *   Главное окно отображается.
+    *   Запускается основной цикл приложения `app.exec()`.
+    
+    **Пример:**
+    ```python
+        app = QApplication(sys.argv)
+        app.setQuitOnLastWindowClosed(False)
+        window = AssistantMainWindow()
+        window.show()
+        sys.exit(app.exec())
+    ```
 
-2. **Инициализация `AssistantMainWindow`:**
-   - Устанавливаются флаги окна для управления его поведением.
-   - Устанавливаются размеры окна на 3/4 экрана и центрируется.
-   - Запрашивается выбор браузера по умолчанию (`ask_for_browser()`).
-     - Вызывается диалог `QMessageBox.getItem` для выбора браузера (Chrome, Firefox, Edge).
-     - Возвращается выбранное имя браузера или `None`, если выбор не сделан или диалог отменен.
-   - На основе выбора браузера определяется путь к профилю браузера.
-   - Создается профиль веб-движка `QWebEngineProfile`.
-   - Создается виджет для отображения веб-страниц `QWebEngineView` и настраивается для использования созданного профиля.
-   - Создается верхняя панель `QWidget` и настраивается стилем.
-   - Создается поле для ввода URL-адреса `QLineEdit`, подключается событие `returnPressed` к методу `load_url`.
-   - Создаются кнопки для управления приложением:
-     - Загрузка URL (`load_button`), подключается событие `clicked` к методу `load_url`.
-     - Свернуть в трей (`minimize_button`), подключается событие `clicked` к методу `hide_to_tray`.
-     - Открыть на весь экран (`fullscreen_button`), подключается событие `clicked` к методу `showFullScreen`.
-     - Закрыть окно (`close_button`), подключается событие `clicked` к методу `hide_to_tray`.
-   - Создается макет `QHBoxLayout` для верхней панели, добавляются виджеты и кнопки.
-   - Создается основной макет окна `QVBoxLayout`, добавляется верхняя панель и виджет `QWebEngineView`.
-   - Создается центральный виджет `QWidget`, устанавливается основной макет и устанавливается в главное окно.
-   - Создается иконка в системном трее `QSystemTrayIcon`, устанавливается иконка.
-   - Создается контекстное меню для иконки в трее:
-     - Добавляется действие "Восстановить окно" (`restore_action`), подключается к методу `showNormal`.
-     - Добавляется действие "Выход" (`quit_action`), подключается к методу `quit_app`.
-   - Устанавливается меню в трее, иконка отображается.
-   - Создается меню "Сервисы Google" (`url_menu`):
-     - Добавляются действия для популярных сервисов Google (Google Login, Gmail, Docs, Sheets, Drive, Photos), подключаются к методу `load_url` с соответствующим URL.
-   - Создается меню "Выбор модели" (`model_menu`):
-     - Добавляются действия для выбора моделей (ChatGPT, Gemini, Claude), подключаются к методу `load_url` с соответствующими URL.
-   - Создаются кнопки для открытия меню "Сервисы Google" и "Выбор модели" и добавляются в верхнюю панель.
+2.  **Инициализация главного окна `AssistantMainWindow`:**
+    *   Устанавливается флаг окна, чтобы убрать кнопку максимизации.
+    *   Устанавливаются размеры окна на 75% от экрана.
+    *   Вызывается метод `ask_for_browser()` для выбора браузера.
+        
+        **Пример:** `browser_choice = self.ask_for_browser()`
+        
+        *   Если выбор есть, то устанавливается путь к профилю браузера.
+    *   Создается профиль браузера `QWebEngineProfile`.
+    *   Создается `QWebEngineView` для отображения веб-страниц.
+    *   Создается верхняя панель инструментов (`QWidget`) для кнопок.
+    *   Создается поле ввода URL (`QLineEdit`).
+    *   Создается кнопка загрузки URL (`QPushButton`).
+    *   Создается кнопка сворачивания в трей (`QPushButton`).
+    *   Создается кнопка открытия на весь экран (`QPushButton`).
+    *   Создается кнопка закрытия окна (`QPushButton`).
+    *   Создается макет (`QHBoxLayout`) для верхней панели.
+    *   Создается макет (`QVBoxLayout`) для всего окна.
+    *   Создается центральный виджет (`QWidget`) и устанавливается макет для него.
+    *   Создается иконка в системном трее (`QSystemTrayIcon`).
+    *   Создается контекстное меню для иконки в трее (`QMenu`).
+    *   Создается меню для выбора URL-адресов Google (`QMenu`).
+    *   Создается меню для выбора модели (`QMenu`).
+    *   Создаются кнопки для открытия меню (`QPushButton`).
+    *   Добавляются кнопки и виджеты в макеты.
+    
+    **Пример:**
+    ```python
+        self.title_bar = QWidget(self)
+        self.url_input = QLineEdit(self.title_bar)
+        self.load_button = QPushButton("Загрузить", self.title_bar)
+        title_bar_layout = QHBoxLayout(self.title_bar)
+        main_layout = QVBoxLayout()
+        central_widget = QWidget()
+        central_widget.setLayout(main_layout)
+        self.setCentralWidget(central_widget)
+    ```
+    
 
-3. **Загрузка URL (`load_url()`):**
-   - Получает URL из поля ввода или из параметра.
-   - Проверяет, начинается ли URL с "http", и добавляет "http://" при необходимости.
-   - Устанавливает URL в `QWebEngineView` для загрузки веб-страницы.
+3.  **Метод `ask_for_browser()`:**
+    *   Выводит диалоговое окно `QMessageBox` для выбора браузера из списка.
+    *   Возвращает выбранный браузер или `None`.
+        
+        **Пример:**
+        ```python
+        choices = ['Chrome', 'Firefox', 'Edge']
+        choice, ok = QMessageBox.getItem(self, "Выберите браузер", "Какой браузер вы используете по умолчанию?", choices, 0, False)
+        ```
 
-4. **Скрытие в трей (`hide_to_tray()`):**
-   - Скрывает главное окно приложения.
+4.  **Метод `load_url()`:**
+    *   Если передан URL, то загружает его, иначе берет URL из поля ввода.
+    *   Добавляет "http://" если URL не начинается с него.
+    *   Устанавливает URL для браузера `QWebEngineView`.
+        
+        **Пример:**
+        ```python
+            url = self.url_input.text() if not url else url
+            if not url.startswith("http"):
+                url = "http://" + url
+            self.browser.setUrl(QUrl(url))
+        ```
+    
 
-5. **Выход из приложения (`quit_app()`):**
-   - Скрывает иконку приложения из системного трея.
-   - Завершает работу приложения.
+5.  **Метод `hide_to_tray()`:**
+    *   Скрывает главное окно.
+    
+        **Пример:** `self.hide()`
 
-6. **Обработка события закрытия окна (`closeEvent()`):**
-   - Перехватывает событие закрытия окна.
-   - Игнорирует закрытие окна.
-   - Вызывает метод `hide_to_tray()` для скрытия окна в системный трей.
+6.  **Метод `quit_app()`:**
+    *   Скрывает иконку в трее.
+    *   Закрывает приложение.
+    
+    **Пример:**
+    ```python
+        self.tray_icon.hide()
+        QApplication.quit()
+    ```
+
+7. **Обработчик `closeEvent()`:**
+    * Игнорирует событие закрытия окна (крестик).
+    * Вызывает `hide_to_tray` для скрытия окна в трей.
+    
+    **Пример:**
+    ```python
+        event.ignore()
+        self.hide_to_tray()
+    ```
 
 ## <mermaid>
+
 ```mermaid
 flowchart TD
-    Start[Начало приложения] --> CreateApp[Создать QApplication];
-    CreateApp --> SetQuitOnLastWindowClosed[app.setQuitOnLastWindowClosed(False)];
-    SetQuitOnLastWindowClosed --> CreateWindow[Создать AssistantMainWindow];
-    CreateWindow --> ShowWindow[window.show()];
-    ShowWindow --> StartEventLoop[Запустить app.exec()];
-    StartEventLoop --> End[Конец приложения];
+    Start(Start Application) --> InitApp[Initialize QApplication]
+    InitApp --> SetQuitOnLastWindowClosed[app.setQuitOnLastWindowClosed(False)]
+    SetQuitOnLastWindowClosed --> InitMainWindow[Initialize AssistantMainWindow]
+    InitMainWindow --> SetWindowFlags[Set Window Flags: Remove Maximize]
+    SetWindowFlags --> SetGeometry[Set Window Size 3/4 of Screen]
+    SetGeometry --> AskForBrowser[browser_choice = ask_for_browser()]
+    AskForBrowser -- User Chooses Browser --> SetProfilePath[Set Browser Profile Path]
+    SetProfilePath --> CreateProfile[Create QWebEngineProfile]
+    CreateProfile --> CreateBrowserView[Create QWebEngineView]
+    CreateBrowserView --> CreateTitleBar[Create Title Bar Widget]
+    CreateTitleBar --> CreateUrlInput[Create URL Input Field]
+    CreateUrlInput --> CreateLoadButton[Create Load URL Button]
+    CreateLoadButton --> CreateMinimizeButton[Create Minimize to Tray Button]
+    CreateMinimizeButton --> CreateFullscreenButton[Create Fullscreen Button]
+    CreateFullscreenButton --> CreateCloseButton[Create Close Button]
+    CreateCloseButton --> CreateTitleBarLayout[Create Title Bar Layout]
+    CreateTitleBarLayout --> CreateMainLayout[Create Main Layout]
+    CreateMainLayout --> CreateCentralWidget[Create Central Widget]
+    CreateCentralWidget --> SetCentralWidget[Set Central Widget]
+    SetCentralWidget --> CreateSystemTrayIcon[Create QSystemTrayIcon]
+    CreateSystemTrayIcon --> CreateTrayMenu[Create Tray Context Menu]
+    CreateTrayMenu --> CreateUrlMenu[Create URL Menu]
+    CreateUrlMenu --> CreateModelMenu[Create Model Menu]
+    CreateModelMenu --> CreateUrlButton[Create URL Menu Button]
+    CreateUrlButton --> CreateModelButton[Create Model Menu Button]
+    CreateModelButton --> AddButtonsToLayout[Add Buttons to Layout]
+    AddButtonsToLayout --> ShowWindow[window.show()]
+    ShowWindow --> RunAppLoop[sys.exit(app.exec())]
+    RunAppLoop --> End(End Application)
 
-    subgraph AssistantMainWindow
-        CreateWindow --> InitMainWindow[__init__()]
-        InitMainWindow --> SetWindowFlags[Настроить флаги окна]
-        SetWindowFlags --> SetGeometry[Установить размеры и положение окна]
-        SetGeometry --> AskBrowser[ask_for_browser()]
-        AskBrowser --> DetermineProfilePath{Определить путь к профилю браузера}
-        DetermineProfilePath -- Chrome --> ChromeProfilePath[Путь к профилю Chrome]
-        DetermineProfilePath -- Firefox --> FirefoxProfilePath[Путь к профилю Firefox]
-        DetermineProfilePath -- Edge --> EdgeProfilePath[Путь к профилю Edge]
-        DetermineProfilePath -- Unknown --> BrowserError[Сообщение об ошибке и выход]
-        ChromeProfilePath --> CreateWebEngineProfile[Создать QWebEngineProfile]
-        FirefoxProfilePath --> CreateWebEngineProfile
-        EdgeProfilePath --> CreateWebEngineProfile
-        CreateWebEngineProfile --> CreateWebView[Создать QWebEngineView]
-        CreateWebView --> CreateTitleBar[Создать верхнюю панель (QWidget)]
-        CreateTitleBar --> CreateUrlInput[Создать поле ввода URL (QLineEdit)]
-        CreateUrlInput --> ConnectUrlInput[Подключить returnPressed к load_url]
-        ConnectUrlInput --> CreateButtons[Создать кнопки управления]
-        CreateButtons --> SetupTitleBarLayout[Настроить макет верхней панели (QHBoxLayout)]
-        SetupTitleBarLayout --> SetupMainLayout[Настроить основной макет окна (QVBoxLayout)]
-        SetupMainLayout --> CreateCentralWidget[Создать центральный виджет (QWidget)]
-        CreateCentralWidget --> SetCentralWidget[Установить центральный виджет]
-        SetCentralWidget --> CreateSystemTrayIcon[Создать иконку в системном трее (QSystemTrayIcon)]
-        CreateSystemTrayIcon --> SetupTrayMenu[Настроить контекстное меню для трея (QMenu)]
-         SetupTrayMenu --> ShowTrayIcon[tray_icon.show()]
-        ShowTrayIcon --> CreateUrlMenu[Создать меню "Сервисы Google"]
-         CreateUrlMenu --> CreateModelMenu[Создать меню "Выбор модели"]
-         CreateModelMenu --> CreateMenuButtons[Создать кнопки открытия меню]
-        CreateMenuButtons --> AddMenuButtonsToTitleBar[Добавить кнопки меню на верхнюю панель]
-        AddMenuButtonsToTitleBar --> InitDone[Инициализация завершена]
-        InitDone --> ShowWindow
+    subgraph Ask For Browser
+    AskForBrowser --> BrowserChoiceDialog[Show Browser Choice Dialog]
+    BrowserChoiceDialog -- User selects browser --> ReturnBrowserChoice[Return chosen browser]
+    BrowserChoiceDialog -- User cancels --> ReturnNone[Return None]
+    end
+    
+    subgraph Load URL
+    CreateLoadButton -- Clicked --> LoadUrlFunction[load_url(url)]
+    LoadUrlFunction --> GetUrlFromInput[Get URL from input field]
+    GetUrlFromInput --> CheckUrlPrefix[Check if URL starts with "http"]
+    CheckUrlPrefix -- No "http" prefix --> AddHttpPrefix[Add "http://" prefix]
+    AddHttpPrefix --> SetBrowserUrl[browser.setUrl(QUrl(url))]
+    CheckUrlPrefix -- "http" prefix present --> SetBrowserUrl
+    end
+    
+    subgraph Hide To Tray
+     CreateMinimizeButton -- Clicked --> HideToTrayFunction[hide_to_tray()]
+    HideToTrayFunction --> HideMainWindow[mainWindow.hide()]
+    end
+    
+   subgraph Quit App
+      CreateCloseButton -- Clicked --> QuitAppFunction[quit_app()]
+      QuitAppFunction --> HideTrayIcon[tray_icon.hide()]
+      HideTrayIcon --> QuitApplication[QApplication.quit()]
     end
 
-    subgraph BrowserChoice
-        AskBrowser --> ShowBrowserDialog[QMessageBox.getItem()]
-         ShowBrowserDialog --> BrowserSelected{Браузер выбран?}
-         BrowserSelected -- Yes --> ReturnBrowserName[Вернуть имя браузера]
-         BrowserSelected -- No --> ReturnNone[Вернуть None]
+     subgraph Close Event
+      MainWindow -- Close Event --> CloseEventFunction[closeEvent(event)]
+      CloseEventFunction --> IgnoreCloseEvent[event.ignore()]
+       IgnoreCloseEvent --> HideToTrayCall[hide_to_tray()]
     end
-    subgraph LoadUrl
-        load_url --> GetUrlFromInput{Получить URL из поля ввода}
-        GetUrlFromInput --> CheckUrlProtocol{URL начинается с "http"?}
-        CheckUrlProtocol -- Yes --> LoadPage[browser.setUrl(QUrl(url))]
-         CheckUrlProtocol -- No --> AddHttpToUrl[Добавить "http://" к URL]
-         AddHttpToUrl --> LoadPage
-    end
-   
-    subgraph HideToTray
-        hide_to_tray --> HideMainWindow[self.hide()]
-    end
-     subgraph QuitApp
-         quit_app --> HideTrayIcon[self.tray_icon.hide()]
-         HideTrayIcon --> ExitApp[QApplication.quit()]
-     end
-      subgraph CloseEvent
-        closeEvent --> IgnoreCloseEvent[event.ignore()]
-        IgnoreCloseEvent --> CallHideToTray[self.hide_to_tray()]
-      end
-    
-    CreateButtons --> MinimizeButton[Кнопка "Свернуть"]
-    CreateButtons --> FullscreenButton[Кнопка "На весь экран"]
-    CreateButtons --> CloseButton[Кнопка "Закрыть"]
-    CreateButtons --> LoadButton[Кнопка "Загрузить"]
-    
-    MinimizeButton -- click --> HideToTray
-    FullscreenButton -- click --> ShowFullScreen
-    CloseButton -- click --> HideToTray
-     LoadButton -- click --> load_url
-     ConnectUrlInput -- returnPressed --> load_url
-    
-     HideMainWindow --> StartEventLoop
-      ExitApp --> End
-     CallHideToTray --> StartEventLoop
-  
 ```
+
+### **Объяснение Mermaid Diagram:**
+
+*   **Start Application:** Начальная точка приложения.
+*   **Initialize QApplication:** Создание экземпляра `QApplication`.
+*   **app.setQuitOnLastWindowClosed(False):**  Установка флага для предотвращения закрытия приложения при закрытии последнего окна.
+*   **Initialize AssistantMainWindow:** Создание экземпляра главного окна.
+*   **Set Window Flags: Remove Maximize:** Установка флагов окна для удаления кнопки максимизации.
+*   **Set Window Size 3/4 of Screen:** Установка размера окна на 75% от размера экрана.
+*   **browser_choice = ask_for_browser():** Вызов метода для запроса выбора браузера.
+*   **Ask For Browser:** Поток управления, связанный с выбором браузера.
+    *   **Show Browser Choice Dialog:** Отображение диалогового окна для выбора браузера.
+    *   **Return chosen browser:** Возвращение выбранного браузера.
+    *   **Return None:** Возвращение `None`, если пользователь не выбрал браузер.
+*   **Set Browser Profile Path:** Установка пути к профилю выбранного браузера.
+*   **Create QWebEngineProfile:** Создание экземпляра `QWebEngineProfile`.
+*   **Create QWebEngineView:** Создание экземпляра `QWebEngineView` для отображения веб-страниц.
+*   **Create Title Bar Widget:** Создание виджета для панели инструментов.
+*   **Create URL Input Field:** Создание поля ввода для URL.
+*   **Create Load URL Button:** Создание кнопки для загрузки URL.
+*   **Create Minimize to Tray Button:** Создание кнопки для сворачивания в трей.
+*   **Create Fullscreen Button:** Создание кнопки для открытия на весь экран.
+*   **Create Close Button:** Создание кнопки для закрытия окна.
+*   **Create Title Bar Layout:** Создание горизонтального макета для панели инструментов.
+*   **Create Main Layout:** Создание вертикального макета для всего окна.
+*   **Create Central Widget:** Создание центрального виджета.
+*   **Set Central Widget:** Установка центрального виджета для главного окна.
+*   **Create QSystemTrayIcon:** Создание экземпляра для иконки в трее.
+*   **Create Tray Context Menu:** Создание контекстного меню для иконки в трее.
+*   **Create URL Menu:** Создание меню для выбора URL-адресов Google.
+*   **Create Model Menu:** Создание меню для выбора моделей.
+*   **Create URL Menu Button:** Создание кнопки для открытия URL Menu.
+*   **Create Model Menu Button:** Создание кнопки для открытия Model Menu.
+*   **Add Buttons to Layout:** Добавление кнопок в макет.
+*   **window.show():** Отображение главного окна.
+*   **sys.exit(app.exec()):** Запуск основного цикла приложения.
+*   **Load URL:** Поток управления для загрузки URL
+*   **load_url(url):** Вызов функции загрузки URL.
+*   **Get URL from input field:** Получение URL из поля ввода.
+*   **Check if URL starts with "http":** Проверка, начинается ли URL с префикса "http".
+*   **Add "http://" prefix:** Добавление префикса "http://" если URL его не имеет.
+*  **browser.setUrl(QUrl(url)):** Установка URL для отображения в браузере.
+*   **Hide To Tray:** Поток управления для сворачивания в трей
+*  **hide_to_tray():** Вызов метода для скрытия в трей
+*   **mainWindow.hide():** Скрытие главного окна
+*   **Quit App:** Поток управления для завершения приложения
+*   **quit_app():** Вызов метода для завершения приложения
+*  **tray_icon.hide():** Скрытие иконки в трее
+*   **QApplication.quit():** Завершение приложения
+*   **Close Event:** Поток управления для события закрытия окна
+*   **closeEvent(event):** Вызов обработчика события закрытия
+*  **event.ignore():** Игнорирование события закрытия
+*   **hide_to_tray():** Скрытие главного окна в трей
 
 **Зависимости:**
 
-- `PyQt6.QtCore`: Основные классы и функции для работы с Qt, включая `Qt` для флагов окна и `QUrl` для работы с URL.
-- `PyQt6.QtGui`: Классы для работы с графическим интерфейсом, включая `QIcon` для иконок, `QAction` для действий меню.
-- `PyQt6.QtWidgets`: Классы для создания виджетов, включая `QApplication` для приложения, `QMainWindow` для главного окна, `QSystemTrayIcon` для иконки в трее, `QMenu` для меню, `QPushButton` для кнопок, `QVBoxLayout` и `QHBoxLayout` для макетов, `QWidget` для контейнеров, `QLineEdit` для ввода текста, `QMessageBox` для диалогов.
-- `PyQt6.QtWebEngineWidgets`: Классы для отображения веб-контента, включая `QWebEngineView` для просмотра веб-страниц.
-- `PyQt6.QtWebEngineCore`: Классы для работы с веб-профилями, включая `QWebEngineProfile` для управления настройками браузера.
-- `sys`: Стандартный модуль для доступа к параметрам командной строки и функциям выхода.
-- `os`: Стандартный модуль для работы с операционной системой, например, для определения пути к профилям браузера.
+*   Диаграмма показывает зависимости между различными частями кода: от инициализации приложения до загрузки URL, сворачивания в трей и выхода из приложения.
+*   Основные зависимости включают взаимодействие между `QApplication`, `QMainWindow`, `QWebEngineView`, `QSystemTrayIcon` и другими виджетами PyQt6.
+*   Также отражены зависимости, связанные с пользовательским вводом и действиями (например, нажатие кнопок и выбор браузера).
 
 ## <объяснение>
 
-### Импорты
+### **Импорты:**
 
--   `sys`: Используется для доступа к аргументам командной строки (sys.argv) и для завершения работы приложения (sys.exit).
--   `os`: Используется для работы с путями к файлам и каталогам, в частности, для получения пути к профилю браузера пользователя.
--   `PyQt6.QtCore`:
-    -   `Qt`: Предоставляет перечисление констант, например, для флагов окон (Qt.WindowType).
-    -   `QUrl`: Используется для представления URL-адресов и их обработки.
--   `PyQt6.QtGui`:
-    -   `QIcon`: Используется для создания иконок для кнопок и иконки в системном трее.
-    -   `QAction`: Используется для создания действий в меню.
--   `PyQt6.QtWidgets`:
-    -   `QApplication`: Управляет жизненным циклом приложения и его основными параметрами.
-    -   `QMainWindow`: Класс для создания главного окна приложения.
-    -   `QSystemTrayIcon`: Позволяет отображать иконку приложения в системном трее.
-    -   `QMenu`: Создает меню для кнопок и иконки в трее.
-    -   `QPushButton`: Создает кнопки, которые реагируют на нажатия.
-    -   `QVBoxLayout`, `QHBoxLayout`: Управляют расположением виджетов в контейнерах.
-    -   `QWidget`: Базовый класс для создания виджетов и контейнеров.
-    -   `QLineEdit`: Поле для ввода URL-адреса.
-    -    `QMessageBox`: Используется для отображения диалоговых окон, таких как запрос на выбор браузера.
--   `PyQt6.QtWebEngineWidgets`:
-    -   `QWebEngineView`: Используется для отображения веб-страниц в приложении.
--   `PyQt6.QtWebEngineCore`:
-    -   `QWebEngineProfile`: Используется для управления профилем веб-движка, позволяя использовать профили браузера пользователя.
+*   `import sys`: Используется для доступа к системным переменным и функциям, в данном случае для завершения приложения (`sys.exit()`).
+*   `import os`: Используется для работы с операционной системой, в частности для получения пути к профилю пользователя (`os.path.expanduser()`).
+*   `from PyQt6.QtCore import Qt, QUrl`:
+    *   `Qt`: Используется для определения констант, таких как флаги окна.
+    *   `QUrl`: Используется для работы с URL-адресами.
+*   `from PyQt6.QtGui import QIcon, QAction`:
+    *   `QIcon`: Используется для создания иконок для кнопок и трея.
+    *   `QAction`: Используется для создания действий в меню.
+*   `from PyQt6.QtWidgets import (QApplication, QMainWindow, QSystemTrayIcon, QMenu, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QLineEdit, QMessageBox)`:
+    *   `QApplication`: Основа любого приложения PyQt6.
+    *   `QMainWindow`: Главное окно приложения.
+    *   `QSystemTrayIcon`: Иконка в системном трее.
+    *   `QMenu`: Меню, используемое для иконки в трее и выпадающих списков.
+    *   `QPushButton`: Кнопка.
+    *   `QVBoxLayout`: Вертикальный макет.
+    *   `QHBoxLayout`: Горизонтальный макет.
+    *   `QWidget`: Базовый виджет, используемый для контейнеров.
+    *   `QLineEdit`: Поле ввода текста.
+    *   `QMessageBox`: Диалоговое окно для вывода сообщений.
+*   `from PyQt6.QtWebEngineWidgets import QWebEngineView`: Используется для отображения веб-страниц.
+*   `from PyQt6.QtWebEngineCore import QWebEngineProfile`: Используется для создания и управления профилями браузера.
 
-### Классы
+### **Классы:**
 
-#### `AssistantMainWindow`
+*   **`AssistantMainWindow(QMainWindow)`**:
+    *   **Роль:** Главное окно приложения, отвечает за создание и управление интерфейсом.
+    *   **Атрибуты:**
+        *   `browser`: Экземпляр `QWebEngineView` для отображения веб-страниц.
+        *   `profile`: Экземпляр `QWebEngineProfile` для управления профилем браузера.
+        *   `title_bar`: `QWidget` для верхней панели инструментов.
+        *   `url_input`: `QLineEdit` для ввода URL.
+        *   `load_button`: `QPushButton` для загрузки URL.
+        *   `minimize_button`, `fullscreen_button`, `close_button`: Кнопки для управления окном.
+        *   `tray_icon`: `QSystemTrayIcon` для иконки в трее.
+        *   `url_menu`, `model_menu`: Меню для выбора URL и модели.
+        *   `url_button`, `model_button`: Кнопки для открытия меню.
+    *   **Методы:**
+        *   `__init__`: Конструктор, инициализирует интерфейс, настраивает размеры и обрабатывает запросы браузера.
+        *   `ask_for_browser`: Запрашивает у пользователя выбор браузера.
+        *   `load_url`: Загружает URL в `QWebEngineView`.
+        *   `hide_to_tray`: Скрывает окно и помещает иконку в трей.
+        *   `quit_app`: Завершает приложение.
+        *   `closeEvent`: Обработчик события закрытия окна, перехватывает закрытие и сворачивает в трей.
+    * **Взаимодействие**: Взаимодействует с `QApplication`, `QWebEngineView` и системным треем, а также с другими элементами интерфейса (кнопки, меню).
 
--   **Роль:** Главное окно приложения, управляет всеми остальными элементами GUI.
--   **Атрибуты:**
-    -   `profile`: Экземпляр `QWebEngineProfile` для управления профилем браузера.
-    -   `browser`: Экземпляр `QWebEngineView` для отображения веб-страниц.
-    -   `title_bar`: Виджет `QWidget`, представляющий верхнюю панель приложения.
-    -   `url_input`: Виджет `QLineEdit` для ввода URL-адреса.
-    -   `load_button`, `minimize_button`, `fullscreen_button`, `close_button`: Виджеты `QPushButton` для управления приложением.
-    -   `tray_icon`: Экземпляр `QSystemTrayIcon` для управления иконкой в системном трее.
-    -   `url_menu`: Виджет `QMenu`, представляющий меню сервисов Google.
-     -   `model_menu`: Виджет `QMenu`, представляющий меню выбора моделей.
-    -   `url_button`: Виджет `QPushButton`, открывающий меню сервисов Google.
-    -   `model_button`: Виджет `QPushButton`, открывающий меню выбора моделей.
--   **Методы:**
-    -   `__init__()`: Конструктор класса, инициализирует все компоненты главного окна.
-    -   `ask_for_browser()`: Запрашивает у пользователя выбор браузера по умолчанию.
-    -   `load_url(url: str = None)`: Загружает указанный URL в `QWebEngineView`.
-    -   `hide_to_tray()`: Скрывает окно приложения и помещает его иконку в системный трей.
-    -   `quit_app()`: Завершает работу приложения.
-    -   `closeEvent(event)`: Переопределенный метод, обрабатывает событие закрытия окна, скрывая его в трей.
+### **Функции:**
 
-### Функции
+*   **`__init__(self)`**:
+    *   **Аргументы:** `self` (ссылка на экземпляр класса).
+    *   **Возвращаемое значение:** Нет.
+    *   **Назначение:** Инициализация главного окна, установка размеров, создание виджетов, обработка сигналов кнопок, настройка иконки в системном трее и меню.
+    *   **Пример:** Создает экземпляр окна, устанавливает начальный размер, вызывает `ask_for_browser`, создает браузерное окно и необходимые кнопки, а так же устанавливает обработчики сигналов.
+*   **`ask_for_browser(self)`**:
+    *   **Аргументы:** `self`.
+    *   **Возвращаемое значение:** Строка с именем выбранного браузера или `None`.
+    *   **Назначение:** Выводит диалоговое окно для выбора браузера.
+    *   **Пример:** `browser_choice = self.ask_for_browser()`, диалоговое окно предлагает пользователю выбрать `Chrome`, `Firefox` или `Edge`.
+*   **`load_url(self, url=None)`**:
+    *   **Аргументы:** `self`, `url` (необязательный, URL для загрузки).
+    *   **Возвращаемое значение:** Нет.
+    *   **Назначение:** Загружает URL в `QWebEngineView`. Если `url` не указан, берет его из поля ввода. Добавляет "http://", если URL не начинается с него.
+    *   **Пример:** `self.load_url("https://www.google.com")` или `self.load_url()`, если URL введен в поле `url_input`.
+*   **`hide_to_tray(self)`**:
+    *   **Аргументы:** `self`.
+    *   **Возвращаемое значение:** Нет.
+    *   **Назначение:** Скрывает главное окно.
+    *   **Пример:** Вызывается при нажатии кнопки минимизации или при закрытии окна через "X".
+*   **`quit_app(self)`**:
+    *   **Аргументы:** `self`.
+    *   **Возвращаемое значение:** Нет.
+    *   **Назначение:** Скрывает иконку в трее и завершает приложение.
+    *   **Пример:** Вызывается при выборе пункта "Выход" из контекстного меню трея.
+*   **`closeEvent(self, event)`**:
+    *   **Аргументы:** `self`, `event` (событие закрытия окна).
+    *   **Возвращаемое значение:** Нет.
+    *   **Назначение:** Переопределяет стандартное поведение закрытия окна, игнорируя его и вызывая `hide_to_tray`.
+    *  **Пример:** При нажатии на кнопку закрытия "X" на главном окне.
 
--   `ask_for_browser(self)`:
-    -   **Аргументы:** `self` (ссылка на экземпляр класса `AssistantMainWindow`).
-    -   **Возвращаемое значение:** Строка с выбранным браузером ('Chrome', 'Firefox', 'Edge') или `None`, если выбор не сделан.
-    -   **Назначение:** Вызывает диалоговое окно для выбора браузера по умолчанию.
-    -   **Пример:**
-        ```python
-        browser = self.ask_for_browser()
-        if browser == 'Chrome':
-            print("Выбран браузер Chrome.")
-        ```
--   `load_url(self, url: str = None)`:
-    -   **Аргументы:**
-        -   `self` (ссылка на экземпляр класса `AssistantMainWindow`).
-        -   `url` (опционально): URL-адрес для загрузки.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Загружает веб-страницу по указанному URL.
-    -   **Пример:**
-        ```python
-        self.load_url("https://www.google.com") # Загрузка Google
-        self.load_url() # Загрузка URL из поля ввода
-        ```
--   `hide_to_tray(self)`:
-    -   **Аргументы:** `self` (ссылка на экземпляр класса `AssistantMainWindow`).
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Скрывает главное окно приложения.
-    -   **Пример:**
-        ```python
-        self.hide_to_tray()
-        ```
--   `quit_app(self)`:
-    -   **Аргументы:** `self` (ссылка на экземпляр класса `AssistantMainWindow`).
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Завершает работу приложения.
-    -   **Пример:**
-        ```python
-        self.quit_app()
-        ```
--  `closeEvent(self, event)`:
-    -   **Аргументы:**
-          -   `self` (ссылка на экземпляр класса `AssistantMainWindow`).
-          -   `event` (событие закрытия окна).
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Перехватывает событие закрытия окна и скрывает окно в трей.
-    -   **Пример:**
-          ```python
-          def closeEvent(self, event):
-               event.ignore()
-               self.hide_to_tray()
-          ```
-### Переменные
+### **Переменные:**
 
--   `app`: Экземпляр `QApplication`, управляющий приложением.
--   `window`: Экземпляр `AssistantMainWindow`, представляющий главное окно приложения.
--   `screen_geometry`: Геометрия экрана, используется для позиционирования окна.
--   `width`, `height`: Размеры окна, вычисляемые на основе геометрии экрана.
--   `browser_choice`: Строка, содержащая выбор браузера пользователя.
--   `profile_path`: Путь к профилю выбранного браузера.
--  `google_login_action`,`gmail_action`,`google_docs_action`,`google_sheets_action`, `google_drive_action`,`google_photos_action`: Действия в меню "Сервисы Google", открывающие соответствующие URL.
-   `chatgpt_action`,`gemini_action`,`claude_action`: Действия в меню "Выбор модели", открывающие соответствующие URL.
+*   `app`: Экземпляр `QApplication`, главный объект приложения.
+*   `window`: Экземпляр `AssistantMainWindow`, главное окно.
+*   `browser_choice`: Строка, хранящая выбор браузера пользователя.
+*   `profile_path`: Строка, хранящая путь к профилю браузера.
+*  `profile`: Экземпляр `QWebEngineProfile`, представляет профиль браузера.
+*  `browser`: Экземпляр `QWebEngineView`, виджет для отображения веб-страниц.
+*  `title_bar`: Экземпляр `QWidget`, панель с кнопками.
+*  `url_input`: Экземпляр `QLineEdit`, поле ввода URL.
+*  `load_button`, `minimize_button`, `fullscreen_button`, `close_button`: Экземпляры `QPushButton`, кнопки для взаимодействия с пользователем.
+*  `tray_icon`: Экземпляр `QSystemTrayIcon`, иконка приложения в системном трее.
+*  `tray_menu`, `url_menu`, `model_menu`: Экземпляры `QMenu`, выпадающие меню.
+*  `google_login_action`, `gmail_action`, `google_docs_action` , `google_sheets_action`, `google_drive_action`, `google_photos_action`: Экземпляры `QAction`, действия для меню `url_menu`.
+*  `chatgpt_action`, `gemini_action`, `claude_action`: Экземпляры `QAction`, действия для меню `model_menu`.
+*   `url`, переменная для хранения URL.
 
-### Потенциальные ошибки и области для улучшения
+### **Потенциальные ошибки и области для улучшения:**
 
--   **Обработка ошибок при выборе браузера:** Если пользователь не выбирает браузер или выбирает неподдерживаемый, приложение завершается. Можно улучшить обработку, позволяя пользователю выбрать другой браузер или предлагая варианты по умолчанию.
--   **Некорректные URL:** Нет валидации URL перед загрузкой. Можно добавить проверку на корректность URL и обработку ошибок.
--   **Пути к профилям браузеров:** Пути к профилям жёстко заданы и могут не работать для всех пользователей и разных версий ОС. Можно сделать их более гибкими, например, использовать переменные окружения или системные вызовы.
--   **Отсутствие поддержки других браузеров:** Поддерживаются только Chrome, Firefox и Edge. Можно добавить поддержку других браузеров, если требуется.
--   **Иконки:** Иконки загружаются из системной темы, что может отличаться на разных системах. Можно добавить свои иконки для единообразия.
--   **Gemini и Claude URL:** Заглушки URL для Gemini и Claude.
--   **Локализация:** Нет локализации интерфейса.
+*   **Обработка ошибок выбора браузера:** Если пользователь не выбирает браузер, приложение завершается. Можно добавить обработку этого случая и предложить пользователю повторить выбор.
+*   **Поддержка других браузеров:** В данный момент поддерживаются только Chrome, Firefox и Edge. Можно расширить список поддерживаемых браузеров.
+*   **Валидация URL:** Можно добавить валидацию введенного URL, чтобы убедиться, что он имеет корректный формат.
+*   **Использование `QSettings`**:  Для сохранения выбора браузера, размера окна и других пользовательских настроек можно использовать `QSettings`. Это позволит пользователям не выбирать браузер каждый раз при запуске.
+*   **Замена  `https://gemini.example.com/` и `https://claude.example.com/` на реальные URL**
+*   **Отсутствие явного отображения ошибки:**  Если пользователь введет URL с ошибкой, например `htpp://`, браузер не загрузит страницу, но пользователь не увидит уведомления об этом.
+*   **Отсутствие функции обновления страницы**
+*   **Обработка случаев, когда пользователь нажимает "X" на форме выбора браузера.**
 
-### Взаимосвязи с другими частями проекта
+### **Взаимосвязи с другими частями проекта:**
 
--   Этот модуль `main.py` является точкой входа в GUI приложение и не взаимодействует напрямую с другими частями проекта. Все импорты связаны с PyQt6 и стандартными библиотеками Python.
+*   Данный файл является частью GUI, отвечающего за отображение веб-интерфейса для работы с моделями.
+*   Использует стандартные библиотеки Python (`sys`, `os`) и библиотеку PyQt6 для построения графического интерфейса.
+*   Может зависеть от других частей проекта, если, например, для работы с моделями потребуется вызывать дополнительные функции.
+*   Непосредственной связи с `header.py` в данном коде нет, поэтому `mermaid` блок для него не требуется.
+
+**В заключение:**
+Этот код представляет собой приложение на PyQt6, которое позволяет пользователю просматривать веб-страницы, выбирать браузер, сворачивать окно в трей и выбирать предопределенные URL-адреса. Код включает в себя обработку событий, настройку интерфейса и управление браузером.

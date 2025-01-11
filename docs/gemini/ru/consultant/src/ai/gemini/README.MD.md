@@ -1,44 +1,57 @@
 # Анализ кода модуля `src.ai.gemini`
 
 **Качество кода**
-8
- -  Плюсы
-    -   Хорошее описание функциональности модуля и его основных методов.
-    -   Подробное описание обработки ошибок и логирования.
-    -   Наличие примеров использования и перечисления зависимостей.
-    -   Описаны все функции, их аргументы и возвращаемые значения.
- -  Минусы
-    -  Нет конкретных примеров кода для каждой функции в формате reStructuredText (RST).
-    -  Не все функции снабжены примерами использования в формате doctest.
-    -  Используются двойные кавычки в примерах, необходимо использовать одинарные.
-    -  Не указана обработка исключений в примерах кода.
-    -  Используется `Optional` без указания конкретного типа, что может быть неочевидным.
+7
+-  Плюсы
+    -  Хорошее общее описание функциональности класса `GoogleGenerativeAI`.
+    -  Подробное описание каждой функции и их назначения.
+    -  Четкое описание обработки ошибок и логирования.
+    -  Указание зависимостей модуля.
+    -  Пример использования класса.
+-  Минусы
+    -  Отсутствие docstring в формате reStructuredText (RST) для модуля и функций.
+    -  Нет примеров документации для каждой функции, как указано в инструкции.
+    -  Некоторые функции описаны без конкретики (например, `upload_file`).
+    -  Не все зависимости указаны с полными путями импорта (например, `src.logger`, `src.utils.printer`).
 
 **Рекомендации по улучшению**
 
-1.  **Документация в стиле RST:**
-    -   Добавить примеры кода для каждой функции в формате RST, используя `.. code-block:: python`.
-    -   Привести примеры кода к использованию одинарных кавычек.
-    -   Обеспечить соответствие стандартам оформления docstring в Python (для Sphinx).
-
-2.  **Примеры использования (doctest):**
-    -   Добавить примеры использования в формате doctest для каждой функции, где это уместно.
-    -   Указать обработку исключений в примерах кода.
-
-3.  **Уточнение типов:**
-    -   Уточнить типы для параметров и возвращаемых значений, где `Optional` может быть неоднозначным.
-    -   Использовать аннотации типов, где это необходимо.
-
-4.  **Импорты:**
-     -   Убедиться, что все импортируемые модули перечислены в начале файла и в разделе зависимостей.
-
-5.  **Обработка ошибок:**
-    -  Пересмотреть логику обработки ошибок, делая её более детализированной и информативной.
+1.  **Добавить docstring в формате RST для модуля**:
+    -   Необходимо добавить docstring в начале файла для описания модуля, его назначения и примера использования.
+2.  **Добавить docstring в формате RST для функций**:
+    -   Для каждой функции нужно добавить docstring, включая описание аргументов, возвращаемых значений, возможных исключений и примеров использования.
+3.  **Уточнить описание функций**:
+    -   Описания функций должны быть более конкретными, избегая общих фраз. Например, `upload_file` должен описывать, какие данные принимаются, что именно отправляется и какие ответы ожидаются.
+4.  **Добавить примеры документации**:
+    -   Необходимо добавить примеры использования функций в формате, подходящем для документации Sphinx.
+5.  **Уточнить зависимости**:
+    -   В разделе зависимостей нужно указать полные пути импорта, например `from src.logger.logger import logger` и т.д.
+6.  **Разделить описание на более мелкие блоки**:
+    -   Разделить описания на более мелкие блоки для улучшения читаемости.
 
 **Оптимизированный код**
 
 ```markdown
-.. module:: src.ai.gemini
+    """
+    Модуль для работы с Google Generative AI.
+    =========================================================================================
+
+    Этот модуль предоставляет класс :class:`GoogleGenerativeAI`, который обеспечивает взаимодействие с моделями
+    генеративного искусственного интеллекта от Google. Он позволяет отправлять запросы, обрабатывать ответы,
+    управлять диалогами и интегрироваться с различными AI-функциями.
+
+    Пример использования
+    --------------------
+
+    Пример инициализации и отправки запроса с использованием класса `GoogleGenerativeAI`:
+
+    .. code-block:: python
+
+        from src.ai.gemini.gemini_ai import GoogleGenerativeAI
+        ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction="Instruction")
+        response = ai.ask("Как дела?")
+        print(response)
+    """
 
 [Русский](https://github.com/hypo69/hypo/tree/master/src/ai/gemini/readme.ru.md)
 
@@ -59,32 +72,12 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 - Defines paths for logging dialogues and storing history.
 - Initializes the Google Generative AI model.
 
-**Example**:
-```python
-    >>> from pathlib import Path
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> ai = GoogleGenerativeAI(api_key='test_key', system_instruction='Test instruction')
-    >>> print(ai.system_instruction)
-    Test instruction
-```
-
 ### `config()`
 
 **Purpose**: Retrieves the configuration from a settings file.
 
 **Details**:
 - Reads and parses the configuration file located at `gs.path.src / 'ai' / 'gemini' / 'generative_ai.json'`.
-
-**Example**:
-```python
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> from pathlib import Path
-    >>> gs_path = Path('src')
-    >>> gs_path.src = gs_path
-    >>> ai = GoogleGenerativeAI(api_key='test_key')
-    >>> ai.config()
-    ...
-```
 
 ### `_start_chat(self)`
 
@@ -93,15 +86,6 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 **Details**:
 - Initializes a chat session with an empty history.
 
-**Example**:
-```python
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> ai = GoogleGenerativeAI(api_key='test_key')
-    >>> ai._start_chat()
-    >>> print(ai.chat_session.history)
-    []
-```
-
 ### `_save_dialogue(self, dialogue: list)`
 
 **Purpose**: Saves a dialogue to both text and JSON files.
@@ -109,27 +93,6 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 **Details**:
 - Appends each message in the dialogue to a text file.
 - Appends each message in JSON format to a JSON file.
-
-**Example**:
-```python
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> from pathlib import Path
-    >>> ai = GoogleGenerativeAI(api_key='test_key')
-    >>> dialogue = [{'role': 'user', 'parts': ['Hello']}]
-    >>> ai.dialogue_path = Path('test_dialogue.txt')
-    >>> ai.history_path = Path('test_history.json')
-    >>> ai._save_dialogue(dialogue)
-    >>> with open('test_dialogue.txt', 'r') as f:
-    ...     print(f.read())
-    {'role': 'user', 'parts': ['Hello']}
-    >>> import json
-    >>> with open('test_history.json', 'r') as f:
-    ...    print(json.load(f))
-    [{'role': 'user', 'parts': ['Hello']}]
-    >>> import os
-    >>> os.remove('test_dialogue.txt')
-    >>> os.remove('test_history.json')
-```
 
 ### `ask(self, q: str, attempts: int = 15) -> Optional[str]`
 
@@ -140,13 +103,6 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 - Logs errors and retries with exponential backoff.
 - Saves the dialogue to history files.
 
-**Example**:
-```python
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> ai = GoogleGenerativeAI(api_key='test_key')
-    >>> response = ai.ask('Как дела?')
-    ...
-```
 ### `chat(self, q: str) -> str`
 
 **Purpose**: Sends a chat message to the AI model and retrieves the response.
@@ -155,14 +111,6 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 - Uses the chat session initialized by `_start_chat`.
 - Logs errors and returns the response text.
 
-**Example**:
-```python
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> ai = GoogleGenerativeAI(api_key='test_key')
-    >>> ai._start_chat()
-    >>> response = ai.chat('Привет')
-    ...
-```
 ### `describe_image(self, image_path: Path) -> Optional[str]`
 
 **Purpose**: Generates a textual description of an image.
@@ -171,16 +119,6 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 - Encodes the image in base64 and sends it to the AI model.
 - Returns the generated description or logs an error if the operation fails.
 
-**Example**:
-```python
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> from pathlib import Path
-    >>> ai = GoogleGenerativeAI(api_key='test_key')
-    >>> image_path = Path('test_image.png')
-    >>> response = ai.describe_image(image_path)
-    ...
-```
-
 ### `upload_file(self, file: str | Path | IOBase, file_name: Optional[str] = None) -> bool`
 
 **Purpose**: Uploads a file to the AI model.
@@ -188,20 +126,6 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 **Details**:
 - Handles file upload and logs the success or failure.
 - Provides retry logic in case of errors.
-
-**Example**:
-```python
-    >>> from src.ai.gemini.gemini import GoogleGenerativeAI
-    >>> from pathlib import Path
-    >>> ai = GoogleGenerativeAI(api_key='test_key')
-    >>> file_path = Path('test_file.txt')
-    >>> with open(file_path, 'w') as f:
-    ...     f.write('test content')
-    >>> response = ai.upload_file(file_path, 'test_file.txt')
-    >>> import os
-    >>> os.remove('test_file.txt')
-    ...
-```
 
 ## Error Handling
 
@@ -224,7 +148,7 @@ All interactions with the AI models are logged, and dialogues are saved in both 
 - `grpc`
 - `google.api_core.exceptions`
 - `google.auth.exceptions`
-- `src.logger`
+- `src.logger.logger`
 - `src.utils.printer`
 - `src.utils.file`
 - `src.utils.date_time`
@@ -234,8 +158,9 @@ All interactions with the AI models are logged, and dialogues are saved in both 
 ## Usage Example
 
 ```python
-ai = GoogleGenerativeAI(api_key='your_api_key', system_instruction='Instruction')
-response = ai.ask('Как дела?')
+from src.ai.gemini.gemini_ai import GoogleGenerativeAI
+ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction="Instruction")
+response = ai.ask("Как дела?")
 print(response)
 ```
 

@@ -1,82 +1,85 @@
 # Анализ кода модуля `chat_gpt`
 
 **Качество кода**
-6
+8
 -  Плюсы
-    - Код использует константу `MODE`.
-    - Код использует `Path` для работы с путями.
-    - Код импортирует необходимые модули.
+    -   Код соответствует базовым требованиям, включая импорты и структуру класса.
+    -   Используется `Path` для работы с путями, что является хорошей практикой.
+    -   Присутствует определение класса и функции.
 -  Минусы
-    - Отсутствует docstring для модуля.
-    - docstring для метода `yeld_conversations_htmls` пуст.
-    - Отсутствует обработка ошибок.
-    - Есть неиспользуемые импорты.
-    - Не используются `j_loads` или `j_loads_ns`.
-    - Код не соответствует PEP 8.
+    -   Отсутствует документация модуля и docstring для метода `yeld_conversations_htmls`.
+    -   Используются многострочные комментарии не по назначению.
+    -   Отсутствует импорт `logger`.
+    -   Нет обработки ошибок.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля с описанием его назначения и примером использования.
-2.  Добавить docstring для метода `yeld_conversations_htmls` с описанием его назначения, параметров и возвращаемого значения.
-3.  Использовать `from src.logger.logger import logger` для логирования ошибок и избегать избыточного использования `try-except`.
-4.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.load` при работе с файлами.
-5.  Удалить неиспользуемые импорты.
-6.  Привести код в соответствие со стандартом PEP 8 (например, использовать 4 пробела для отступов).
+1.  Добавить docstring для модуля с описанием назначения и примером использования.
+2.  Добавить docstring для метода `yeld_conversations_htmls` с описанием его работы, аргументов и возвращаемых значений.
+3.  Импортировать `logger` из `src.logger.logger`.
+4.  Добавить обработку ошибок в методе `yeld_conversations_htmls` с использованием `logger.error`.
+5.  Убрать избыточные комментарии.
+6.  Исправить опечатку `yeld` -> `yield`.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-Модуль для работы с файлами HTML, сгенерированными ChatGPT
-=========================================================================================
 
-Этот модуль предоставляет функциональность для обработки HTML файлов,
-которые содержат историю бесед с ChatGPT. Он использует библиотеку pathlib
-для работы с путями к файлам и модули из проекта src.
+#! venv/bin/python/python3.12
+"""
+Модуль для взаимодействия с ChatGPT.
+====================================
+
+Этот модуль содержит класс `ChatGpt`, который используется для
+обработки HTML файлов с разговорами ChatGPT.
 
 Пример использования
 --------------------
 
-Пример использования класса `ChatGpt`:
-
 .. code-block:: python
 
-    chat_gpt_processor = ChatGpt()
-    for html_file in chat_gpt_processor.yeld_conversations_htmls():
-        print(html_file)
+    chat_gpt = ChatGpt()
+    for html_content in chat_gpt.yield_conversations_htmls():
+        print(html_content)
 """
-
-
 from pathlib import Path
 from src import gs
-# from src.utils.file import recursively_read_text_files # TODO: Удален неиспользуемый импорт
-from src.logger.logger import logger # TODO: Добавлен импорт логгера
+from src.utils.file import recursively_read_text_files
+from src.logger.logger import logger
 
 class ChatGpt:
     """
-    Класс для обработки файлов HTML, сгенерированных ChatGPT.
+    Класс для работы с HTML файлами разговоров ChatGPT.
 
-    Этот класс предоставляет метод для перебора HTML файлов, содержащих беседы
-    с ChatGPT.
+    Этот класс предоставляет метод для итерации по HTML файлам
+    разговоров, расположенных в определенной директории.
     """
-    def yeld_conversations_htmls(self) -> str:
+    def yield_conversations_htmls(self) -> str:
         """
-        Генерирует пути к HTML файлам с беседами ChatGPT.
+        Генератор для получения HTML-содержимого из файлов разговоров.
 
-        :return: Путь к HTML файлу.
-        :rtype: str
+        Метод ищет все HTML файлы в директории `data/chat_gpt/conversations`
+        и возвращает содержимое каждого файла.
+
+        Returns:
+            str: Содержимое HTML файла.
+
+        Yields:
+            str: HTML-содержимое из каждого файла.
+
         """
         try:
-            # Получение пути к директории с беседами
+            # Код получает путь к директории с файлами разговоров.
             conversation_directory = Path(gs.path.data / 'chat_gpt' / 'conversations')
-             # Ищет все html файлы в директории
-            html_files = conversation_directory.glob("*.html")
-
-            for file in html_files: # TODO: Добавлен цикл для возврата файлов
-                 yield file
-        except Exception as e: # TODO: Заменили блок try-except на logger.error
-            logger.error(f"Ошибка при поиске HTML файлов: {e}")
-            return # TODO: Возвращаем значение, чтобы не было ошибки
-
+            # Код ищет все HTML файлы в указанной директории.
+            html_files = conversation_directory.glob('*.html')
+            # Код итерируется по найденным файлам.
+            for html_file in html_files:
+                # Код читает содержимое файла.
+                yield html_file.read_text(encoding='utf-8')
+        except Exception as ex:
+            # Код логирует ошибку, если она возникла.
+            logger.error(f"Ошибка при чтении файлов HTML: {ex}")
+            return
 ```

@@ -1,250 +1,298 @@
-## ИНСТРУКЦИЯ:
+## АНАЛИЗ КОДА `src/webdriver/driver.py`
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+### 1. <алгоритм>
 
-1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
-2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
-    которые импортируются при создании диаграммы.
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+**Блок-схема работы класса `Driver`:**
 
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
+1. **Инициализация ( `__init__` ):**
+   - Принимает класс веб-драйвера (например, `Chrome`, `Firefox`) и его аргументы.
+   - Проверяет, что переданный класс имеет метод `get`.
+   - Создает экземпляр веб-драйвера (`self.driver`).
+   - Пример: `driver = Driver(Chrome, executable_path='/path/to/chromedriver')`
 
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-    ```
+2. **Инициализация подкласса (`__init_subclass__`):**
+   - Вызывается автоматически при создании подкласса `Driver`.
+   - Требует обязательного указания аргумента `browser_name`.
+   - Сохраняет имя браузера в атрибуте класса.
+   - Пример: `class MyDriver(Driver, browser_name='Chrome')`
 
-3.  **<объяснение>**: Предоставьте подробные объяснения:
-    *   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
-    *   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
-    *   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
-    *   **Переменные**: Их типы и использование.
-    *   Выделите потенциальные ошибки или области для улучшения.
+3. **Доступ к атрибутам драйвера (`__getattr__`):**
+   - Позволяет обращаться к атрибутам и методам внутреннего драйвера `self.driver` напрямую через экземпляр `Driver`.
+   - Пример: `driver.current_url` (обращается к `self.driver.current_url`)
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+4. **Прокрутка страницы (`scroll`):**
+    - Принимает параметры прокрутки (количество, размер, направление, задержка).
+    - Вызывает внутреннюю функцию `carousel` для выполнения прокрутки в заданном направлении.
+    - Ловит исключения и логирует ошибки.
+   -  Пример: `driver.scroll(scrolls=2, direction='down', frame_size=300, delay=0.5)`
 
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
+5. **Определение локали (`locale`):**
+    - Пытается получить код языка из мета-тега `Content-Language`.
+    - Если не удается, вызывает метод `get_page_lang()` для получения языка из JavaScript.
+    - Возвращает код языка или `None`, если язык не найден.
+   -  Пример: `lang_code = driver.locale`
 
-## <алгоритм>
+6. **Переход по URL (`get_url`):**
+   - Сохраняет текущий URL.
+   - Выполняет переход по заданному URL через `self.driver.get(url)`.
+   - Ожидает загрузки страницы (`self.ready_state != 'complete'`).
+   - Сохраняет куки в локальный файл.
+   - Ловит исключения, связанные с веб-драйвером и ошибками URL.
+   - Возвращает `True` при успехе, `False` при ошибке.
+   - Пример: `driver.get_url('https://example.com')`
 
-1.  **Инициализация `Driver`**:
-    *   При создании экземпляра `Driver` (например, `driver = Driver(Chrome, executable_path='/path/to/chromedriver')`), вызывается `__init__`.
-    *   Проверяется, что переданный класс `webdriver_cls` имеет метод `get`.
-    *   Создается экземпляр `webdriver_cls` (например, `Chrome`) с переданными аргументами, который сохраняется в `self.driver`.
-    *   При наследовании класса `Driver` (например, `class MyDriver(Driver, browser_name='my_browser')`),  `__init_subclass__` проверяет, что задано `browser_name` и устанавливает его как атрибут класса.
+7.  **Открытие нового окна/вкладки (`window_open`):**
+   -   Открывает новую вкладку через `self.execute_script('window.open();')`.
+   -   Переключается на новую вкладку.
+   -   Если передан URL, открывает его в новой вкладке.
+    -  Пример: `driver.window_open('https://example.com/new_page')`
 
-2.  **Доступ к атрибутам драйвера**:
-    *   При обращении к атрибуту `driver` через экземпляр `Driver` (например, `driver.current_url`), вызывается `__getattr__`.
-    *   `__getattr__` перенаправляет запрос к соответствующему атрибуту экземпляра `self.driver` (например, `self.driver.current_url`).
+8.  **Ожидание (`wait`):**
+   -   Просто приостанавливает выполнение на заданное время через `time.sleep(delay)`.
+   -   Пример: `driver.wait(1.5)`
 
-3.  **Прокрутка страницы (`scroll`)**:
-    *   Метод `scroll` принимает параметры: `scrolls` (количество прокруток), `frame_size` (размер прокрутки), `direction` (направление), `delay` (задержка).
-    *   Внутри `scroll` определена локальная функция `carousel`, которая выполняет фактическую прокрутку.
-    *   `carousel` использует JavaScript (`window.scrollBy`) для прокрутки страницы в указанном направлении.
-    *   Метод `scroll` вызывает `carousel` с соответствующим направлением.
-    *   Направление может быть `forward`/`down`, `backward`/`up` или `both`. В случае `both` прокрутка выполняется в обоих направлениях.
+9. **Сохранение куки (`_save_cookies_localy`):**
+   - Сохраняет текущие куки браузера в файл (имя файла берется из глобальных настроек `gs`).
+    - Использует `pickle` для сериализации куки.
+   - Ловит исключения и логирует ошибки.
+   - Пример: `driver._save_cookies_localy()`
 
-4.  **Определение языка страницы (`locale`)**:
-    *   Метод `locale` пытается получить язык страницы из мета-тега `Content-Language` с помощью CSS-селектора.
-    *   Если не удалось, пытается получить язык из JavaScript с помощью метода `get_page_lang`.
-    *   Возвращает код языка или `None`.
+10. **Извлечение HTML (`fetch_html`):**
+    - Принимает URL (локальный файл или HTTP/HTTPS).
+    - Если URL начинается с `file://`, считывает HTML из файла.
+    - Если URL начинается с `http://` или `https://`, переходит по URL и получает `page_source`.
+    - Возвращает `True` при успехе, `False` при ошибке.
+   -  Пример: `driver.fetch_html('file://path/to/file.html')` или `driver.fetch_html('https://example.com')`
 
-5.  **Переход по URL (`get_url`)**:
-    *   `get_url` принимает URL в качестве аргумента.
-    *   Сохраняет текущий URL в `_previous_url`.
-    *   Переходит по новому URL с помощью `self.driver.get(url)`.
-    *   Ожидает загрузки страницы.
-    *   Сохраняет предыдущий URL в атрибут `previous_url`, если URL изменился.
-    *   Сохраняет куки локально, вызывая `_save_cookies_localy`.
-
-6.  **Открытие нового окна/вкладки (`window_open`)**:
-    *   Метод `window_open` открывает новую вкладку с помощью JavaScript.
-    *   Переключает фокус на новую вкладку.
-    *   Если передан URL, то переходит по нему.
-
-7.  **Ожидание (`wait`)**:
-    *   Метод `wait` приостанавливает выполнение на указанное время.
-
-8.  **Сохранение куки (`_save_cookies_localy`)**:
-    *   Метод `_save_cookies_localy` сохраняет куки браузера в локальный файл.
-    *   В текущей версии метод не выполняет запись куки, а возвращает `True`
-
-9.  **Получение HTML-контента (`fetch_html`)**:
-    *   Метод `fetch_html` принимает URL как аргумент, который может быть как путем к файлу, так и URL-ом.
-    *   Если URL начинается с `file://`, метод извлекает HTML из локального файла.
-        *   Очищает URL от `file://`.
-        *   Ищет корректный путь к файлу, например, `C:\path\to\file.html`.
-        *   Если файл найден, читает его содержимое и сохраняет в `self.html_content`.
-    *   Если URL начинается с `http://` или `https://`, то используется метод `get_url` для перехода по URL.
-    *   Сохраняет `page_source` в `self.html_content`.
-
-## <mermaid>
+### 2. <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph DriverClass [Class: `Driver`]
-        Init[<code>__init__</code><br>Initialize Driver Instance]
-        SubclassInit[<code>__init_subclass__</code><br>Handle Subclass Initialization]
-        GetAttr[<code>__getattr__</code><br>Proxy Attribute Access]
-        Scroll[<code>scroll</code><br>Scroll Web Page]
-        Carousel[<code>carousel</code><br>Scroll Implementation]
-        Locale[<code>locale</code><br>Get Page Language]
-        GetURL[<code>get_url</code><br>Navigate to URL]
-        WindowOpen[<code>window_open</code><br>Open New Tab]
-        Wait[<code>wait</code><br>Pause Execution]
-        SaveCookies[<code>_save_cookies_localy</code><br>Save Cookies]
-        FetchHTML[<code>fetch_html</code><br>Fetch HTML Content]
+    subgraph Driver
+        A[<code>__init__(webdriver_cls, *args, **kwargs)</code><br>Initialize Driver]
+        B[<code>__init_subclass__(cls, *, browser_name=None, **kwargs)</code><br>Initialize Subclass]
+        C[<code>__getattr__(item)</code><br>Access Driver Attributes]
+        D[<code>scroll(scrolls=1, frame_size=600, direction='both', delay=.3)</code><br>Scroll Page]
+        E[<code>locale()</code><br>Get Page Locale]
+        F[<code>get_url(url)</code><br>Navigate to URL]
+        G[<code>window_open(url)</code><br>Open New Tab]
+        H[<code>wait(delay=.3)</code><br>Wait]
+        I[<code>_save_cookies_localy()</code><br>Save Cookies]
+        J[<code>fetch_html(url)</code><br>Fetch HTML Content]
     end
 
-    Start --> Init
-    Init --> SubclassInit
-    SubclassInit --> GetAttr
-    GetAttr --> Scroll
-    Scroll --> Carousel
-    Scroll --> Locale
-    Locale --> GetURL
-    GetURL --> WindowOpen
-    WindowOpen --> Wait
-    Wait --> SaveCookies
-     SaveCookies --> FetchHTML
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+    A --> G
+    A --> H
+    A --> I
+    A --> J
     
-    
-    subgraph DriverUsage [Example Usage]
-        CreateDriver[Create `Driver` Instance <br> e.g., `driver = Driver(Chrome, executable_path='path')`]
-        AccessAttribute[Access Driver Attribute <br> e.g., `driver.current_url`]
-        CallScroll[Call `scroll` Method <br> e.g., `driver.scroll()`]
-        CallLocale[Call `locale` Property <br> e.g., `lang = driver.locale`]
-        CallGetURL[Call `get_url` Method <br> e.g., `driver.get_url('https://example.com')`]
-        CallWindowOpen[Call `window_open` Method <br> e.g., `driver.window_open()`]
-         CallWait[Call `wait` Method <br> e.g., `driver.wait(1)`]
-         CallFetchHTML[Call `fetch_html` Method <br> e.g., `driver.fetch_html('file:///local_path.html')`]
-        end
-    
-    
-    CreateDriver --> Init
-    AccessAttribute --> GetAttr
-    CallScroll --> Scroll
-    CallLocale --> Locale
-    CallGetURL --> GetURL
-    CallWindowOpen --> WindowOpen
-    CallWait --> Wait
-    CallFetchHTML --> FetchHTML
-    
-    
-   subgraph HeaderModule [<code>header.py</code>]
-    HeaderStart[Start <br><code>header.py</code>]
-       ImportGlobalSettings[Import Global Settings: <br><code>from src import gs</code>]
-   end
+     subgraph carousel
+        carousel_start[<code>carousel(direction, scrolls, frame_size, delay)</code> <br> Scroll Carousel]
+        carousel_start -->  execute_script_scroll[<code>execute_script("window.scrollBy(0,{direction}{frame_size})")</code><br> Execute JavaScript Scroll]
+        execute_script_scroll --> wait[<code>wait(delay)</code><br>Delay]
+        wait --> carousel_end[return True or False]
+    end
+    D --> carousel_start
 
-   HeaderStart --> ImportGlobalSettings
+    F --> save_cookies[<code>_save_cookies_localy()</code> <br>Save Cookies]
+    
+    E --> meta_selector[find_element(By.CSS_SELECTOR, "meta[http-equiv='Content-Language']") <br> Find Meta Tag]
+    meta_selector --> get_attribute_content[meta_language.get_attribute('content') <br>Get Content]
+    E --> get_lang_js[<code>get_page_lang()</code> <br>  Get page language from Javascript]
+   
+    J --> check_url_file[Check if url startswith  file:// ]
+    check_url_file -- Yes --> file_path_exist[ Check file_path.exists() ]
+    file_path_exist -- Yes --> open_read_file[open file with utf-8]
+    open_read_file --> file_content_return[return True or False]
+    
+    check_url_file -- No --> check_url_http[Check if url startswith http(s):// ]
+    check_url_http -- Yes --> F
+    
+    
+    F --> switch_to_new_window[Switch to new window if window_open]
 ```
 
-### Описание диаграммы `mermaid`:
+**Объяснение зависимостей в `mermaid`:**
 
-*   **`DriverClass`**: Подграф, представляющий класс `Driver` и его методы.
-    *   `Init`: Метод `__init__`, используемый для инициализации экземпляра `Driver`.
-    *   `SubclassInit`: Метод `__init_subclass__`, обрабатывает инициализацию при наследовании класса `Driver`.
-    *   `GetAttr`: Метод `__getattr__`, обеспечивает проксирование вызовов к методам и атрибутам `webdriver`.
-    *   `Scroll`: Метод `scroll`, используемый для прокрутки веб-страницы.
-    *   `Carousel`: Локальный метод `carousel`, который фактически выполняет прокрутку.
-    *   `Locale`: Метод `locale`, используется для определения языка текущей страницы.
-    *   `GetURL`: Метод `get_url`, используется для перехода по URL.
-    *   `WindowOpen`: Метод `window_open`, для открытия нового окна или вкладки.
-    *   `Wait`: Метод `wait`, используется для приостановки выполнения на заданное время.
-    *   `SaveCookies`: Метод `_save_cookies_localy`, для сохранения куков в локальный файл.
-    *   `FetchHTML`: Метод `fetch_html`, для извлечения HTML контента из файла или URL.
-*   **`DriverUsage`**: Подграф, демонстрирующий пример использования класса `Driver`.
-    *   `CreateDriver`: Пример создания экземпляра класса `Driver`.
-    *   `AccessAttribute`: Пример доступа к атрибуту драйвера, через проксирование.
-    *   `CallScroll`: Пример вызова метода `scroll`.
-    *   `CallLocale`: Пример вызова метода `locale`.
-    *  `CallGetURL`: Пример вызова метода `get_url`.
-    *   `CallWindowOpen`: Пример вызова метода `window_open`.
-     *   `CallWait`: Пример вызова метода `wait`.
-    *    `CallFetchHTML`: Пример вызова метода `fetch_html`.
+-   **`Driver`**: Обозначает класс `Driver` и его методы.
+-   **`__init__`**: Конструктор класса, устанавливает начальное состояние.
+-   **`__init_subclass__`**: Метод для настройки подклассов `Driver`.
+-   **`__getattr__`**: Метод для делегирования атрибутов к внутреннему драйверу.
+-   **`scroll`**: Метод для прокрутки страницы, вызывает внутренний метод `carousel` для прокрутки в определенном направлении.
+-   **`locale`**: Метод для определения языка страницы.
+-  **`get_url`**: Метод для перехода по URL, вызывает `_save_cookies_localy` для сохранения cookie.
+-   **`window_open`**: Метод для открытия новой вкладки.
+-   **`wait`**: Метод для добавления задержки.
+-   **`_save_cookies_localy`**: Метод для сохранения куки.
+-   **`fetch_html`**: Метод для извлечения HTML контента из файла или веб-страницы.
+-   **`carousel`**: Вложенный метод для прокрутки экрана.
+-   **`execute_script`**: Используется для выполнения JavaScript для прокрутки.
+-   **`find_element`**: Используется для поиска мета-тега языка.
+-  **`get_attribute_content`**: Используется для получения значения атрибута `content` тега.
+-  **`get_page_lang`**: Используется для определения языка через JavaScript.
+-  **`check_url_file`**: Проверяет является ли URL локальным файлом.
+-  **`file_path_exist`**: Проверяет существование локального файла.
+-  **`open_read_file`**: Открывает и считывает локальный файл.
+-  **`check_url_http`**: Проверяет является ли URL http(s).
+-  **`save_cookies`**: Метод для сохранения куков.
+- **`switch_to_new_window`**: Метод для переключения на новую вкладку/окно.
 
-*   **`HeaderModule`**: Подграф, представляющий функциональность `header.py`.
-    *   `HeaderStart`: Начальная точка `header.py`.
-    *    `ImportGlobalSettings`: Импорт глобальных настроек из пакета `src`.
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-### Зависимости `mermaid`:
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+```
 
-Диаграмма показывает, как методы и атрибуты класса `Driver` используются при работе с Selenium WebDriver, а так же демонстрирует зависимости и порядок вызовов методов класса `Driver`.
-Дополнительно, блок `HeaderModule` показывает как импортируется и используется `header.py`.
+**Объяснение `header.py`:**
 
-## <объяснение>
+Диаграмма показывает, что `header.py` отвечает за определение корневой директории проекта. Этот процесс, в свою очередь, позволяет импортировать глобальные настройки проекта из `src.gs`.
 
-### Импорты:
+### 3. <объяснение>
 
-*   `copy`: Используется для создания копии URL, чтобы избежать проблем с ссылками на один и тот же объект.
-*   `pickle`: Используется для сериализации и десериализации данных, в данном случае для сохранения и загрузки куки.
-*   `time`: Используется для задержки выполнения кода с помощью `time.sleep()`.
-*   `re`: Используется для работы с регулярными выражениями, например, для разбора URL.
-*   `pathlib`: Используется для работы с путями к файлам.
-*   `typing.Optional`: Используется для определения необязательных типов, например, `Optional[str]`.
-*   `selenium.webdriver.common.by.By`: Используется для поиска элементов на веб-странице с помощью различных селекторов.
-*   `selenium.common.exceptions`: Набор исключений, которые могут возникнуть при работе с веб-драйвером.
-*   `header`: Пользовательский модуль для определения корневой директории проекта.
-*   `src`:  Содержит `gs` (global settings) для доступа к глобальным настройкам приложения, а так же `logger`,  который предоставляет функции для логирования.
+#### Импорты:
 
-### Классы:
+-   `copy`: Используется для создания копий объектов, например, при сохранении предыдущего URL.
+-   `pickle`: Используется для сериализации и десериализации объектов Python (например, куки) для сохранения в файл.
+-   `time`: Используется для добавления задержек (`time.sleep`).
+-   `re`: Используется для работы с регулярными выражениями (например, для поиска локальных путей).
+-   `pathlib.Path`: Используется для работы с путями файлов.
+-   `typing.Optional`: Используется для аннотации типов, указывая, что значение может быть `None`.
+-   `selenium.webdriver.common.by.By`: Используется для определения стратегии поиска элементов на странице (например, по CSS-селектору).
+-   `selenium.common.exceptions`: Набор исключений, которые могут возникнуть при работе с Selenium.
+-   `header`: Используется для определения пути к корневой директории проекта (импортируется как `header`).
+-   `src.gs`: Импортирует глобальные настройки проекта.
+-   `src.logger.logger.logger`: Используется для логирования.
+-   `src.logger.exceptions`: Импортирует пользовательские исключения.
 
-*   `Driver`:
-    *   **Роль**: Предоставляет унифицированный интерфейс для работы с Selenium WebDriver.
-    *   **Атрибуты**:
-        *   `driver`: Экземпляр Selenium WebDriver (например, `Chrome`, `Firefox`).
-        *   `browser_name`: (атрибут класса) название браузера.
-        *   `html_content`: (атрибут экземпляра) для хранения html страницы.
-        *   `previous_url`: (атрибут экземпляра) для хранения предыдущего url.
-    *   **Методы**:
-        *   `__init__(self, webdriver_cls, *args, **kwargs)`: Инициализирует драйвер, проверяя, что переданный класс имеет метод `get`.
-        *   `__init_subclass__(cls, *, browser_name=None, **kwargs)`: Автоматически вызывается при создании подкласса `Driver`, устанавливает имя браузера.
-        *   `__getattr__(self, item)`: Проксирует вызовы атрибутов и методов к экземпляру `self.driver`.
-        *   `scroll(self, scrolls=1, frame_size=600, direction='both', delay=.3)`: Прокручивает страницу в указанном направлении.
-        *   `locale(self)`: Определяет язык страницы.
-        *   `get_url(self, url)`: Переходит по указанному URL и сохраняет куки.
-        *   `window_open(self, url=None)`: Открывает новую вкладку.
-        *   `wait(self, delay=.3)`: Приостанавливает выполнение на заданное время.
-        *   `_save_cookies_localy(self)`: Сохраняет куки в файл.
-        *   `fetch_html(self, url)`: Извлекает HTML контент из файла или URL.
+#### Классы:
 
-### Функции:
+-   **`Driver`**:
+    -   **Роль**: Предоставляет унифицированный интерфейс для работы с Selenium WebDriver.
+    -   **Атрибуты**:
+        -   `driver`: Экземпляр Selenium WebDriver.
+        -   `browser_name`: Имя браузера (устанавливается при наследовании).
+        -   `previous_url`: Предыдущий URL.
+        -   `html_content`: HTML содержимое страницы.
+    -   **Методы**:
+        -   `__init__`: Инициализирует драйвер.
+        -   `__init_subclass__`: Настраивает подклассы `Driver`.
+        -   `__getattr__`: Позволяет обращаться к методам драйвера напрямую.
+        -   `scroll`: Прокручивает страницу.
+        -   `locale`: Определяет язык страницы.
+        -   `get_url`: Переходит по URL и сохраняет куки.
+        -   `window_open`: Открывает новую вкладку.
+        -   `wait`: Добавляет задержку.
+        -   `_save_cookies_localy`: Сохраняет куки в файл.
+        -   `fetch_html`: Извлекает HTML контент.
+-   **Вложенный класс  `carousel`**:
+    -   **Роль**:  Выполняет прокрутку экрана.
+    -   **Методы**:
+         -  `carousel`: Принимает направление, количество прокруток, размер и задержку для прокрутки, выполняет JS скрипт `window.scrollBy`.
+#### Функции:
+-  **`__init__(self, webdriver_cls, *args, **kwargs)`**:
+     -   **Аргументы**:
+         -   `webdriver_cls`: Класс веб-драйвера (например, `Chrome`).
+         -   `*args`: Позиционные аргументы для драйвера.
+         -   `**kwargs`: Ключевые аргументы для драйвера.
+    -   **Возвращает**: Ничего
+    -  **Назначение**:  Инициализирует экземпляр класса Driver, создает экземпляр веб-драйвера.
+-   **`__init_subclass__(cls, *, browser_name=None, **kwargs)`**:
+    -   **Аргументы**:
+        -   `cls`: Класс, для которого вызывается метод.
+        -   `browser_name`: Имя браузера.
+        -   `kwargs`: Дополнительные аргументы.
+    -   **Возвращает**: Ничего
+    -   **Назначение**: Автоматически вызывается при создании подкласса `Driver`, устанавливает имя браузера.
+-    **`__getattr__(self, item)`**:
+    -   **Аргументы**:
+        -   `item`: Имя атрибута.
+    -   **Возвращает**: Атрибут внутреннего драйвера.
+    -   **Назначение**: Прокси для доступа к атрибутам драйвера.
+-    **`scroll(self, scrolls: int = 1, frame_size: int = 600, direction: str = 'both', delay: float = .3)`**:
+   -   **Аргументы**:
+        -   `scrolls`: Количество прокруток.
+        -   `frame_size`: Размер прокрутки в пикселях.
+        -   `direction`: Направление прокрутки (`both`, `down`, `up`).
+        -   `delay`: Задержка между прокрутками.
+    -   **Возвращает**: `True` при успехе, `False` при неудаче.
+    -   **Назначение**: Прокручивает страницу.
+-    **`locale(self) -> Optional[str]`**:
+    -   **Аргументы**: Нет.
+    -   **Возвращает**: Код языка или `None`.
+    -   **Назначение**: Определяет язык страницы.
+-   **`get_url(self, url: str) -> bool`**:
+    -   **Аргументы**:
+        -   `url`: URL для перехода.
+    -   **Возвращает**: `True` при успехе, `False` при неудаче.
+    -   **Назначение**: Переходит по указанному URL и сохраняет куки.
+-   **`window_open(self, url: Optional[str] = None) -> None`**:
+    -   **Аргументы**:
+        -   `url`: URL для открытия в новой вкладке.
+    -   **Возвращает**: Ничего.
+    -   **Назначение**: Открывает новую вкладку или окно.
+-   **`wait(self, delay: float = .3) -> None`**:
+    -   **Аргументы**:
+        -   `delay`: Задержка в секундах.
+    -   **Возвращает**: Ничего.
+    -   **Назначение**: Добавляет задержку.
+-   **`_save_cookies_localy(self) -> None`**:
+    -   **Аргументы**: Нет.
+    -   **Возвращает**: Ничего.
+    -   **Назначение**: Сохраняет куки в файл.
+-    **`fetch_html(self, url: str) -> Optional[bool]`**:
+    -   **Аргументы**:
+        -   `url`: URL файла или веб-страницы.
+    -   **Возвращает**: `True` при успехе, `False` при неудаче, `None` в случае ошибки.
+    -   **Назначение**: Извлекает HTML контент.
+-   **`carousel(direction: str = '', scrolls: int = 1, frame_size: int = 600, delay: float = .3) -> bool`**:
+    -   **Аргументы**:
+         -   `direction`: Направление прокрутки (`down`, `up`).
+         -   `scrolls`: Количество прокруток.
+         -    `frame_size`: Размер прокрутки.
+         -   `delay`: Задержка между прокрутками.
+    -   **Возвращает**: `True` при успехе, `False` при неудаче.
+    -   **Назначение**:  Локальный метод для прокрутки экрана.
 
-*   В классе `Driver` описаны методы, которые ведут себя как функции
-*   `carousel(direction='', scrolls=1, frame_size=600, delay=.3)`: Локальная функция в методе `scroll` для фактической прокрутки страницы.
-    *   **Аргументы**: `direction` (направление прокрутки), `scrolls` (количество прокруток), `frame_size` (размер прокрутки), `delay` (задержка).
-    *   **Возвращает**: `True` при успешной прокрутке, `False` при ошибке.
-    *   **Назначение**: Прокручивает страницу с использованием JavaScript `window.scrollBy`.
+#### Переменные:
 
-### Переменные:
+-   `self.driver`: Экземпляр веб-драйвера.
+-   `self.browser_name`: Имя браузера.
+-   `self.previous_url`: Предыдущий URL.
+-   `self.html_content`: HTML-содержимое страницы.
+-   `gs.cookies_filepath`: Путь к файлу для сохранения куки (из глобальных настроек).
+-   `url` : Строка, представляющая URL.
+-   `cleaned_url`:  Строка, представляющая отчищенный url.
+-   `match`: Строка, представляющая регулярное выражение для поиска пути.
+-   `file_path`: Переменная типа `Path`, представляющая путь к файлу.
+-   `ex`: Исключение.
+-    `webdriver_cls`:  Класс веб-драйвера.
+-   `item`: Строка, представляющая имя атрибута.
+-   `direction`: Направление прокрутки.
+-    `scrolls`: Количество прокруток.
+-    `frame_size`: Размер прокрутки.
+-   `delay`: Задержка.
 
-*   `MODE`: Глобальная переменная, определяющая режим работы приложения (например, `dev`, `prod`).
-*   `webdriver_cls`: Класс WebDriver, переданный при инициализации Driver.
-*   `url`: URL для загрузки или навигации.
-*   `scrolls`, `frame_size`, `direction`, `delay`: Параметры для метода `scroll`.
-*   `file_path`: Путь к файлу при загрузке HTML.
-*   `meta_language`: Объект найденный с помощью селектора `By.CSS_SELECTOR, "meta[http-equiv=\'Content-Language\']"`
-*   `_previous_url`: URL перед переходом на новый.
+#### Потенциальные ошибки и области для улучшения:
 
-### Потенциальные ошибки и области для улучшения:
+1.  **Обработка ошибок:**  В некоторых местах используются общие `Exception`, лучше использовать более специфические типы исключений. Например, обработка исключения при сохранении куки.
+2.  **Сохранение куки**:   Метод `_save_cookies_localy`  возвращает `True` для отладки и не сохраняет куки,  это нужно исправить в релизной версии.
+3.  **Ожидание загрузки страницы:**  Ожидание `self.ready_state != 'complete'` в `get_url` может быть недостаточно надежным, лучше использовать `WebDriverWait` с явными ожиданиями.
+4.  **Улучшить обработку исключений в методе `fetch_html`**: Можно использовать  метод `try-except-else-finally` для более точного отслеживания ошибок и закрытия файлов.
+5.  **Безопасность пути**: В методе `fetch_html`, не помешает добавить валидацию пути и проверить на наличие `..` для избежания чтения файла вне целевой директории.
+6.  **Логирование**: Добавить больше контекста в логи, например, какой именно драйвер используется и т.д.
+7.  **`__getattr__`**: Стоит добавить проверку на наличие атрибута у внутреннего драйвера, чтобы не возникали непредвиденные ошибки.
+8. **`__init__`**: Использовать `isinstance` для проверки типа `webdriver_cls`.
 
-*   **Обработка исключений**: В методах `scroll` и `fetch_html` используется общая обработка исключений `except Exception as ex`,  нужно уточнить типы исключений для более точной обработки.
-*   **Метод `_save_cookies_localy`**: В текущем виде не сохраняет куки, требуется исправить на корректную реализацию.
-*   **Определение языка страницы**: Метод `locale` использует `try-except` блоки, можно рассмотреть использование более надежных методов.
-*   **Проверка типов**: Можно добавить проверки типов для аргументов методов с помощью `isinstance()`, чтобы избежать ошибок в рантайме.
-*   **Логирование**: В некоторых местах логируется только сообщение об ошибке без стектрейса.
-*   **Управление задержками**: Жестко заданные задержки `time.sleep(delay)` могут замедлить выполнение кода, нужно рассмотреть более гибкие стратегии ожидания.
-*   **Сохранение предыдущего URL**: Условие `if url != _previous_url:` может не работать если url заканчивается слешем (`/`), и нужно сделать нормализацию URL перед сравнением.
+#### Взаимосвязи с другими частями проекта:
 
-### Взаимосвязи с другими частями проекта:
+-   **`src.gs`**:  Используется для получения глобальных настроек проекта, таких как путь к файлу для куки.
+-   **`src.logger`**:  Используется для логирования ошибок и другой информации, что помогает отслеживать работу драйвера.
+-   **`header`**:  Используется для определения пути к корневой директории проекта, что обеспечивает правильную работу импортов.
 
-*   `header.py`: Используется для определения корневой директории проекта, что важно для загрузки настроек и ресурсов.
-*   `src.gs`: Используется для доступа к глобальным настройкам, например, пути к файлу для сохранения куки.
-*   `src.logger`: Используется для логирования ошибок и отладочной информации, что помогает отслеживать работу драйвера и обнаруживать проблемы.
-*   `selenium`: Обеспечивает функциональность для взаимодействия с веб-браузерами.
-
-Данный код является базовым модулем для управления Selenium Webdriver, он предоставляет удобный интерфейс для выполнения навигации, прокрутки, работы с куками и загрузки контента. Но требует некоторых улучшений для обеспечения стабильности и надежности.
+Этот класс `Driver` является фундаментальным компонентом для автоматизации браузера, предоставляя абстрактный слой над Selenium WebDriver и упрощая взаимодействие с веб-страницами.

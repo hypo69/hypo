@@ -5,7 +5,8 @@
   ],
   "profiles": {
     "os": "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default",
-    "internal": "webdriver\\edge\\profiles\\default"
+    "internal": "webdriver\\edge\\profiles\\default",
+    "default": "os"
   },
   "executable_path": {
     "default": "webdrivers\\edge\\123.0.2420.97\\msedgedriver.exe"
@@ -17,5 +18,6 @@
     "Accept-Encoding": "none",
     "Accept-Language": "en-US,en;q=0.8",
     "Connection": "keep-alive"
-  }
+  },
+  "window_mode": null
 }

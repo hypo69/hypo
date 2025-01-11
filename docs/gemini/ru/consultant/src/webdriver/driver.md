@@ -1,155 +1,142 @@
-# Анализ кода модуля `driver.py`
+# Анализ кода модуля `driver`
 
-**Качество кода: 7/10**
-- **Плюсы**
-    - Код предоставляет базовый класс `Driver` для управления Selenium WebDriver.
-    - Присутствуют методы для навигации, скроллинга, работы с куки и обработки ошибок.
-    - Используется логирование для отслеживания ошибок.
-    - Добавлены проверки и обработка исключений при навигации.
-    - Код содержит базовую документацию.
-- **Минусы**
-    - Отсутствует подробная документация в формате RST для всех функций и методов.
-    - Присутствует избыточное использование блоков `try-except`.
-    - Сохранение куки закомментировано, что может быть критично при работе с сайтами.
-    - Логика определения языка сайта через meta и javascript выглядит сложной и может быть упрощена.
-    - Некоторые методы имеют потенциал для рефакторинга.
-    - Отсутствуют проверки для обязательных параметров, например `url` в методе `get_url`
-    - Отсутствует проверка аргументов у функции `carousel`
+**Качество кода**
+8
+-  Плюсы
+    -  Хорошо структурированный код с четким разделением на классы и методы.
+    -  Используется логирование для отслеживания ошибок и предупреждений.
+    -  Реализовано управление cookies.
+    -  Поддержка проксирования доступа к атрибутам `webdriver`.
+    -  Асинхронный скролл.
+    -  Обработка URL для локальных файлов и web-адресов.
+ -  Минусы
+    -  Отсутствует документация в формате RST для функций, методов и классов.
+    -  Не все исключения обрабатываются с помощью `logger.error`.
+    -  Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -  Некоторые комментарии не соответствуют формату.
+    -   Использование `copy.copy` для `current_url` выглядит избыточным, можно просто присвоить.
+    -   Блок `wait` простая задержка `time.sleep`.
+    -   `_save_cookies_localy` не сохраняет cookies.
+    -   Слишком много  `try-except`  блоков.
 
 **Рекомендации по улучшению**
-
-1.  **Документация**: Добавить подробную документацию в формате RST для всех методов и класса `Driver`, включая описания аргументов, возвращаемых значений и возможных исключений.
-2.  **Обработка ошибок**: Заменить избыточные `try-except` блоки на обработку ошибок с помощью `logger.error`, добавив информацию о типе ошибки и контексте.
-3.  **Логирование**:  Использовать `from src.logger.logger import logger` для единообразия импорта логгера.
-4.  **Сохранение куки**: Раскомментировать код сохранения куки и проверить его работоспособность.
-5. **Упрощение логики**: Упростить логику определения языка сайта.
-6. **Рефакторинг**: Разбить некоторые методы на более мелкие и переиспользовать код.
-7. **Проверки аргументов**: Добавить проверки на обязательные аргументы и их тип.
+1. **Документация**: Добавить документацию в формате RST для всех функций, методов и классов.
+2. **Импорты**: Добавить недостающие импорты `copy`, `time`, `re`, `pickle`, `Optional`, `Path`, `By`, `WebDriverException`, `InvalidArgumentException`,  `from src.logger.logger import logger`,  `from pathlib import Path`.
+3. **Логирование**: Использовать `logger.error` для всех обработок исключений, убрать лишние `try-except` блоки.
+4. **Cookies**: исправить сохранение cookies.
+5. **Обработка данных**: не применимо.
+6. **Рефакторинг**: Упростить код с `copy.copy`, заменить `time.sleep` на `asyncio.sleep`.
+7. **Комментарии**: переделать комментарии в соответствии с инструкцией.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль для работы с Selenium WebDriver.
+Модуль для работы с веб-драйверами Selenium
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`Driver`, который является оберткой для Selenium WebDriver.
-Он обеспечивает унифицированный интерфейс для взаимодействия с веб-драйвером, включая навигацию,
-управление куки, обработку исключений и другие операции.
+Этот модуль содержит класс :class:`Driver`, который обеспечивает унифицированный интерфейс
+для взаимодействия с веб-драйверами Selenium.
 
 Пример использования
 --------------------
 
-Пример создания экземпляра класса `Driver` и перехода по URL:
+Пример создания и использования драйвера Chrome:
 
 .. code-block:: python
 
     from selenium.webdriver import Chrome
     from src.webdriver.driver import Driver
-
     driver = Driver(Chrome, executable_path='/path/to/chromedriver')
     driver.get_url('https://example.com')
 """
 import copy
 import time
-import pickle
 import re
+import pickle
+from typing import Optional
 from pathlib import Path
-from typing import Optional, Any
-# from selenium.webdriver import Chrome # TODO: Убери от сюда этот импорт
-from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
-from selenium.common.exceptions import WebDriverException, InvalidArgumentException
 from selenium.webdriver.common.by import By
-from src.logger.logger import logger
-# from src.config import gs #TODO: Убери от сюда этот импорт
-# from src.utils.jjson import j_loads_ns #TODO: Убери от сюда этот импорт
-
+from selenium.common.exceptions import WebDriverException, InvalidArgumentException
+from src.logger.logger import logger # импортируем logger
+#from src.utils.jjson import j_loads # пока не используется
+import asyncio
 
 class Driver:
     """
-    Класс для управления Selenium WebDriver.
+    Класс для управления веб-драйверами Selenium.
 
-    Предоставляет методы для инициализации, навигации, управления cookie,
-    обработки исключений и других операций веб-драйвера.
+    Предоставляет унифицированный интерфейс для взаимодействия с веб-драйверами,
+    включая инициализацию, навигацию, управление куками и обработку ошибок.
     """
-    browser_name: str = None
-
-    def __init__(self, webdriver_cls: type[RemoteWebDriver], *args, **kwargs):
+    def __init__(self, webdriver_cls, *args, **kwargs):
         """
-        Инициализирует экземпляр класса Driver.
+        Инициализирует драйвер веб-браузера.
 
         Args:
-            webdriver_cls (type[RemoteWebDriver]): Класс веб-драйвера (например, Chrome, Firefox).
-            *args: Позиционные аргументы для инициализации веб-драйвера.
-            **kwargs: Именованные аргументы для инициализации веб-драйвера.
-
+            webdriver_cls: Класс веб-драйвера (например, Chrome, Firefox).
+            *args: Позиционные аргументы для инициализации драйвера.
+            **kwargs: Именованные аргументы для инициализации драйвера.
         Raises:
             TypeError: Если `webdriver_cls` не является допустимым классом веб-драйвера.
         """
         if not hasattr(webdriver_cls, 'get'):
             raise TypeError('`webdriver_cls` must be a valid WebDriver class.')
         self.driver = webdriver_cls(*args, **kwargs)
-        self.previous_url: str = ''
-        self.html_content: str = ''
 
     def __init_subclass__(cls, *, browser_name=None, **kwargs):
         """
-        Автоматически вызывается при создании подкласса Driver.
-
+        Автоматически вызывается при создании подкласса `Driver`.
+        
         Args:
-            browser_name (str, optional): Имя браузера.
+            browser_name (str): Имя браузера.
             **kwargs: Дополнительные именованные аргументы.
-
         Raises:
-            ValueError: Если `browser_name` не указан.
+            ValueError: Если не указан аргумент `browser_name`.
         """
         super().__init_subclass__(**kwargs)
         if browser_name is None:
             raise ValueError(f'Class {cls.__name__} must specify the `browser_name` argument.')
         cls.browser_name = browser_name
 
-    def __getattr__(self, item: str) -> Any:
+    def __getattr__(self, item):
         """
-        Перенаправляет доступ к атрибутам объекта драйвера.
-
+        Перенаправляет доступ к атрибутам драйвера.
+        
         Args:
             item (str): Имя атрибута.
-
         Returns:
-            Any: Значение атрибута драйвера.
+             Любой: Значение атрибута или вызывает исключение.
         """
         return getattr(self.driver, item)
 
-    def scroll(self, scrolls: int = 1, frame_size: int = 600, direction: str = 'both', delay: float = .3) -> bool:
+    async def scroll(self, scrolls: int = 1, frame_size: int = 600, direction: str = 'both', delay: float = .3) -> bool:
         """
-        Прокручивает страницу в заданном направлении.
+        Выполняет скроллинг страницы в указанном направлении.
 
         Args:
             scrolls (int, optional): Количество прокруток. По умолчанию 1.
             frame_size (int, optional): Размер прокрутки в пикселях. По умолчанию 600.
             direction (str, optional): Направление прокрутки ('both', 'down', 'up'). По умолчанию 'both'.
             delay (float, optional): Задержка между прокрутками в секундах. По умолчанию 0.3.
-
         Returns:
-            bool: True, если прокрутка выполнена успешно, False в противном случае.
+             bool: `True` если скроллинг успешен, `False` в противном случае.
         """
-        def carousel(direction: str = '', scrolls: int = 1, frame_size: int = 600, delay: float = .3) -> bool:
+        async def carousel(direction: str = '', scrolls: int = 1, frame_size: int = 600, delay: float = .3) -> bool:
             """
-            Вспомогательная функция для выполнения прокрутки.
-
+            Внутренняя функция для выполнения скроллинга.
+            
             Args:
-                direction (str, optional): Направление прокрутки ('', '-').
-                scrolls (int, optional): Количество прокруток.
-                frame_size (int, optional): Размер прокрутки в пикселях.
-                delay (float, optional): Задержка между прокрутками в секундах.
-
+                direction (str, optional): Направление прокрутки. По умолчанию ''.
+                scrolls (int, optional): Количество прокруток. По умолчанию 1.
+                frame_size (int, optional): Размер прокрутки в пикселях. По умолчанию 600.
+                delay (float, optional): Задержка между прокрутками в секундах. По умолчанию 0.3.
             Returns:
-                bool: True, если прокрутка выполнена успешно, False в противном случае.
+                bool: `True` если скроллинг успешен, `False` в противном случае.
             """
             try:
                 for _ in range(scrolls):
                     self.execute_script(f'window.scrollBy(0,{direction}{frame_size})')
-                    self.wait(delay)
+                    await asyncio.sleep(delay) # Заменено time.sleep на asyncio.sleep
                 return True
             except Exception as ex:
                 logger.error('Error while scrolling', exc_info=ex)
@@ -157,26 +144,22 @@ class Driver:
 
         try:
             if direction == 'forward' or direction == 'down':
-                return carousel('', scrolls, frame_size, delay)
+                return await carousel('', scrolls, frame_size, delay)
             elif direction == 'backward' or direction == 'up':
-                return carousel('-', scrolls, frame_size, delay)
+                return await carousel('-', scrolls, frame_size, delay)
             elif direction == 'both':
-                return carousel('', scrolls, frame_size, delay) and carousel('-', scrolls, frame_size, delay)
-            return False # TODO: добавить логирование о том, что направление не распознано
+                return await carousel('', scrolls, frame_size, delay) and await carousel('-', scrolls, frame_size, delay)
         except Exception as ex:
             logger.error('Error in scroll function', exc_info=ex)
             return False
 
-
     @property
     def locale(self) -> Optional[str]:
         """
-        Определяет язык страницы.
-
-        Пытается определить язык страницы через метатег `Content-Language` или JavaScript.
+        Определяет язык страницы на основе мета-тегов или JavaScript.
 
         Returns:
-            Optional[str]: Код языка, если он найден, в противном случае None.
+            Optional[str]: Код языка, если найден, иначе None.
         """
         try:
             meta_language = self.find_element(By.CSS_SELECTOR, "meta[http-equiv='Content-Language']")
@@ -191,20 +174,15 @@ class Driver:
 
     def get_url(self, url: str) -> bool:
         """
-        Переходит по указанному URL.
+        Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
 
         Args:
             url (str): URL для перехода.
-
-         Returns:
-            bool: True, если переход выполнен успешно, False в противном случае.
+        Returns:
+            bool: `True`, если переход успешен и текущий URL соответствует ожидаемому, `False` в противном случае.
         """
-        if not url:
-            logger.error("URL cannot be empty.")
-            return False
-
         try:
-            _previous_url = copy.copy(self.current_url)
+            previous_url = self.current_url # Заменено copy.copy на прямое присваивание
         except Exception as ex:
             logger.error("Error getting current URL", exc_info=ex)
             return False
@@ -212,10 +190,10 @@ class Driver:
         try:
             self.driver.get(url)
             while self.ready_state != 'complete':
-                """ Wait for the page to finish loading """
+                """  Ожидание полной загрузки страницы """
 
-            if url != _previous_url:
-                self.previous_url = _previous_url
+            if url != previous_url:
+                self.previous_url = previous_url
 
             self._save_cookies_localy()
             return True
@@ -228,15 +206,15 @@ class Driver:
             logger.error(f"InvalidArgumentException {url}", exc_info=ex)
             return False
         except Exception as ex:
-            logger.error(f'Error navigating to URL: {url}\\n', exc_info=ex)
+            logger.error(f'Error navigating to URL: {url}\n', exc_info=ex)
             return False
-
+        
     def window_open(self, url: Optional[str] = None) -> None:
         """
-        Открывает новое окно/вкладку и переключается на него.
+        Открывает новую вкладку в текущем окне браузера и переключается на нее.
 
         Args:
-            url (Optional[str], optional): URL для открытия в новом окне/вкладке.
+            url (Optional[str], optional): URL для открытия в новой вкладке. По умолчанию None.
         """
         self.execute_script('window.open();')
         self.switch_to.window(self.window_handles[-1])
@@ -244,41 +222,33 @@ class Driver:
             self.get(url)
 
     def wait(self, delay: float = .3) -> None:
-        """
-        Приостанавливает выполнение на заданное время.
-
-        Args:
-            delay (float, optional): Время задержки в секундах. По умолчанию 0.3.
-        """
-        time.sleep(delay)
+         """
+         Ожидает указанное время.
+         
+         Args:
+             delay (float, optional): Время задержки в секундах. По умолчанию 0.3.
+         """
+         asyncio.sleep(delay) # Заменено time.sleep на asyncio.sleep
 
     def _save_cookies_localy(self) -> None:
         """
         Сохраняет текущие куки веб-драйвера в локальный файл.
         """
-        # return True # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
         try:
-            # with open(gs.cookies_filepath, 'wb') as cookiesfile: # TODO: раскоментить после добавления gs
-            #     pickle.dump(self.driver.get_cookies(), cookiesfile)
-            ... # TODO: добавить сохранение кук
-            pass
+            with open(gs.cookies_filepath, 'wb') as cookiesfile:
+                pickle.dump(self.driver.get_cookies(), cookiesfile)
         except Exception as ex:
             logger.error('Error saving cookies:', exc_info=ex)
 
     def fetch_html(self, url: str) -> Optional[bool]:
         """
-        Извлекает HTML контент из файла или веб-страницы.
+        Получает HTML-контент из файла или веб-страницы.
 
         Args:
-            url (str): URL или путь к файлу для извлечения HTML контента.
-
+            url (str): Путь к файлу или URL для получения HTML-контента.
         Returns:
-             Optional[bool]: True, если HTML контент успешно получен, False в противном случае.
+            Optional[bool]: True, если контент успешно получен, иначе None.
         """
-        if not isinstance(url, str):
-           logger.error(f"URL must be a string, got: {type(url)}")
-           return False
-
         if url.startswith('file://'):
             cleaned_url = url.replace('file://', '')
             match = re.search(r'[a-zA-Z]:[\\/].*', cleaned_url)
@@ -293,8 +263,8 @@ class Driver:
                         logger.error('Error reading file:', exc_info=ex)
                         return False
                 else:
-                    logger.error('Local file not found:', file_path)
-                    return False
+                     logger.error('Local file not found:', file_path)
+                     return False
             else:
                 logger.error('Invalid file path:', cleaned_url)
                 return False

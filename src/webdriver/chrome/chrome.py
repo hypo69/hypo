@@ -1,201 +1,187 @@
 ## \file /src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
+
 """
-```rst
+rst
 .. module:: src.webdriver.chrome
-    .. synonpsys: Module for Chrome WebDriver
-```
-Chrome WebDriver
-=========================================================================================
-
-This module contains a custom implementation of the Chrome WebDriver using Selenium. It integrates
-configuration settings defined in the `chrome.json` file, such as user-agent and browser profile settings,
-to enable flexible and automated browser interactions.
-
-Key Features:
-    - Centralized configuration via JSON files.
-    - Support for multiple browser profiles.
-    - Enhanced logging and error handling.
-    - Ability to pass custom options during initialization.
-
-Example usage
---------------------
-
-Example of using the `Chrome` class:
-
-.. code-block:: python
-
-    from src.webdriver.chrome import Chrome
-
-    # Initialize Chrome WebDriver with user-agent settings and custom options
-    browser = Chrome(user_agent='Mozilla/5.0...', options=["--headless", "--disable-gpu"])
-    browser.get("https://www.example.com")
-    browser.quit()
+    :synopsys: Модуль для работы с WebDriver Chrome
 """
-
-
 
 import os
-import sys
 from pathlib import Path
 from typing import Optional, List
-from types import SimpleNamespace
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from fake_useragent import UserAgent
+
+from selenium.webdriver import Chrome as WebDriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import WebDriverException
 
-import header
 from src import gs
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
+from src.webdriver.proxy import get_proxies_dict, check_proxy
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
+from fake_useragent import UserAgent
+import random
 
 
-class Chrome(webdriver.Chrome):
+class Chrome(WebDriver):
     """
-    Class for Chrome WebDriver.
+    Расширение для `webdriver.Chrome` с дополнительной функциональностью.
 
-    This class extends the Selenium Chrome WebDriver and provides a singleton pattern and custom configurations.
-    """
-
-    _instance = None
-    """
-    _instance (Chrome): The single instance of the Chrome WebDriver.
+    :param profile_name: Имя пользовательского профиля Chrome.
+    :type profile_name: Optional[str]
+    :param chromedriver_version: Версия chromedriver.
+    :type chromedriver_version: Optional[str]
+    :param user_agent: Пользовательский агент в формате строки.
+    :type user_agent: Optional[str]
+    :param proxy_file_path: Путь к файлу с прокси.
+    :type proxy_file_path: Optional[str]
+     :param options: Список опций для Chrome.
+    :type options: Optional[List[str]]
+    :param window_mode: Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.)
+    :type window_mode: Optional[str]
     """
     driver_name: str = 'chrome'
-    """
-    driver_name (str): The name of the driver ('chrome').
-    """
-    config: SimpleNamespace
-    """
-    config (SimpleNamespace): Configuration settings loaded from a JSON file.
-    """
+    def __init__(self, profile_name: Optional[str] = None,
+                 chromedriver_version: Optional[str] = None,
+                 user_agent: Optional[str] = None,
+                 proxy_file_path: Optional[str] = None,
+                 options: Optional[List[str]] = None,
+                 window_mode: Optional[str] = None,
+                 *args, **kwargs) -> None:
+        #  объявление переменных
+        service = None
+        options_obj = None
 
-    def __new__(cls, *args, **kwargs):
-        """
-        Ensure a single instance of Chrome WebDriver.
+        # Загрузка настроек Chrome
+        settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'chrome' / 'chrome.json'))
 
-        If an instance already exists, it calls `window_open()`.
+        # Путь к chromedriver
+        chromedriver_path: str = str(Path(gs.path.root, settings.executable_path.chromedriver))
 
-        :return: The singleton instance of the Chrome WebDriver.
-        :rtype: Chrome
-        """
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        else:
-            cls._instance.window_open()  # Open a new window if instance already exists
-        return cls._instance
+         # Инициализация сервиса
+        service = Service(chromedriver_path)
 
-    def __init__(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs):
-        """
-        Initializes the Chrome WebDriver with specified options and profile.
+        # Настройка опций Chrome
+        options_obj = Options()
 
-        :param user_agent: The user-agent string to be used. Defaults to a random user agent.
-        :type user_agent: Optional[str]
-        :param options: A list of Chrome options to be passed during initialization.
-        :type options: Optional[List[str]]
-        """
+        #  Добавление опций из файла настроек
+        if hasattr(settings, 'options') and settings.options:
+            for option in settings.options:
+                options_obj.add_argument(option)
+
+        #  Установка режима окна из конфига
+        if hasattr(settings, 'window_mode') and settings.window_mode:
+            window_mode = window_mode or settings.window_mode
+        #  Установка режима окна из параметров
+        if window_mode:
+            if window_mode == 'kiosk':
+                options_obj.add_argument("--kiosk")
+            elif window_mode == 'windowless':
+               options_obj.add_argument("--headless")
+            elif window_mode == 'full_window':
+                 options_obj.add_argument("--start-maximized")
+
+
+        #  Добавление опций, переданных при инициализации
+        if options:
+            for option in options:
+                options_obj.add_argument(option)
+
+
+        # Установка пользовательского агента
+        user_agent = user_agent or UserAgent().random
+        options_obj.add_argument(f'--user-agent={user_agent}')
+
+        # Установка прокси, если включены
+        if hasattr(settings, 'proxy_enabled') and settings.proxy_enabled:
+             self.set_proxy(options_obj)
+
+
+        # Настройка директории профиля
+        profile_directory = settings.profile_directory.os if settings.profile_directory.default == 'os' else str(Path(gs.path.src, settings.profile_directory.internal))
+
+        if profile_name:
+             profile_directory = str(Path(profile_directory).parent / profile_name)
+        if '%LOCALAPPDATA%' in profile_directory:
+              profile_directory = Path(profile_directory.replace('%LOCALAPPDATA%', os.environ.get('LOCALAPPDATA')))
+        options_obj.add_argument(f"--user-data-dir={profile_directory}")
         try:
-            # Set user_agent or generate a random one
-            user_agent = user_agent or UserAgent().random
-            # Load configurations from JSON file
-            self.config = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))
-
-            # Check if the configuration is loaded
-            if not self.config:
-                logger.debug('Error in `chrome.json` file.')
-                return
-
-            # Initialize options
-            options_obj = ChromeOptions()
-
-            # Add arguments from the configuration's options
-            if hasattr(self.config, 'options') and self.config.options:
-                for option in self.config.options:
-                    options_obj.add_argument(option)
-
-            # Add custom options passed during initialization
-            if options:
-                for option in options:
-                    options_obj.add_argument(option)
-
-            # Add arguments from the configuration's headers
-            if hasattr(self.config, 'headers') and self.config.headers:
-                for key, value in vars(self.config.headers).items():
-                    options_obj.add_argument(f'--{key}={value}')
-
-            # Normalize paths
-            def normalize_path(path: str) -> str:
-                """
-                Replace placeholders with actual environment paths.
-
-                :param path: The path string with placeholders like %APPDATA% or %LOCALAPPDATA%.
-                :type path: str
-                :return: The normalized path with environment variables substituted.
-                :rtype: str
-                """
-                if not path:
-                    return ''
-                return (
-                    path.replace('%APPDATA%', os.environ.get('APPDATA', ''))
-                    .replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA', ''))
-                )
-
-            profile_directory = Path(gs.path.root / normalize_path(self.config.profile_directory.testing))
-            binary_location = Path(gs.path.root / normalize_path(self.config.binary_location.binary))
-
-            # Check if the profile directory exists and add the argument
-            if profile_directory:
-                options_obj.add_argument(f'user-data-dir={profile_directory}')
-
-            # Set the path to the executable file
-            options_obj.binary_location = str(binary_location)
-            # Initialize the Chrome driver service
-            service = ChromeService(executable_path=str(binary_location)) if binary_location else ChromeService()
-
-        except Exception as ex:
-            logger.error('Error setting up Chrome WebDriver:', ex)
-            return
-
-        try:
-            # Initialize the WebDriver
-            super().__init__(options=options_obj, service=service)
+            logger.info('Запуск Chrome WebDriver')
+            super().__init__(service=service, options=options_obj)
+            self._payload()
         except WebDriverException as ex:
-            logger.critical('Error initializing Chrome WebDriver:', ex)
-            return
+                logger.critical("""
+                    ---------------------------------
+                        Ошибка запуска WebDriver
+                        Возможные причины:
+                        - Обновление Chrome
+                        - Отсутствие Chrome на ОС
+                    ----------------------------------""", ex)
+                return  # Явный возврат при ошибке
         except Exception as ex:
-            logger.critical('Chrome WebDriver crashed. General error:', ex)
-            return
+            logger.critical('Ошибка работы Chrome WebDriver:', ex)
+            return  # Явный возврат при ошибке
 
-        self._payload()
+    def set_proxy(self, options: Options) -> None:
+        """
+        Настройка прокси из словаря, возвращаемого get_proxies_dict.
+
+        :param options: Опции Chrome, в которые добавляются настройки прокси.
+        :type options: Options
+        """
+        # Получение словаря прокси
+        proxies_dict = get_proxies_dict()
+        # Создание списка всех прокси
+        all_proxies = proxies_dict.get('socks4', []) + proxies_dict.get('socks5', [])
+        # Перебор прокси для поиска рабочего
+        working_proxy = None
+        for proxy in random.sample(all_proxies, len(all_proxies)):
+            if check_proxy(proxy):
+                working_proxy = proxy
+                break
+         # Настройка прокси, если он найден
+        if working_proxy:
+            proxy = working_proxy
+            protocol = proxy.get('protocol')
+            # Настройка прокси в зависимости от протокола
+            if protocol == 'http':
+                options.add_argument(f'--proxy-server=http://{proxy["host"]}:{proxy["port"]}')
+                logger.info(f"Настройка HTTP Proxy: http://{proxy['host']}:{proxy['port']}")
+
+            elif protocol == 'socks4':
+                 options.add_argument(f'--proxy-server=socks4://{proxy["host"]}:{proxy["port"]}')
+                 logger.info(f"Настройка SOCKS4 Proxy: {proxy['host']}:{proxy['port']}")
+
+            elif protocol == 'socks5':
+                options.add_argument(f'--proxy-server=socks5://{proxy["host"]}:{proxy["port"]}')
+                logger.info(f"Настройка SOCKS5 Proxy: {proxy['host']}:{proxy['port']}")
+            else:
+                 logger.warning(f"Неизвестный тип прокси: {protocol}")
+        else:
+            logger.warning('Нет доступных прокси в предоставленном файле.')
 
     def _payload(self) -> None:
-        """
-        Load executor for locators and JavaScript scenarios.
+         """
+        Загружает исполнителей для локаторов и JavaScript сценариев.
+         """
+         j = JavaScript(self)
+         self.get_page_lang = j.get_page_lang
+         self.ready_state = j.ready_state
+         self.get_referrer = j.ready_state
+         self.unhide_DOM_element = j.unhide_DOM_element
+         self.window_focus = j.window_focus
 
-        This method initializes and assigns the necessary executors for web element interaction and
-        JavaScript execution within the WebDriver.
-        """
-        js_executor = JavaScript(self)
-        self.get_page_lang = js_executor.get_page_lang
-        self.ready_state = js_executor.ready_state
-        self.get_referrer = js_executor.get_referrer
-        self.unhide_DOM_element = js_executor.unhide_DOM_element
-        self.window_focus = js_executor.window_focus
-
-        execute_locator = ExecuteLocator(self)
-        self.execute_locator = execute_locator.execute_locator
-        self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot
-        self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
-        self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
-        self.send_message = self.send_key_to_webelement = execute_locator.send_message
-
+         execute_locator = ExecuteLocator(self)
+         self.execute_locator = execute_locator.execute_locator
+         self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot
+         self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
+         self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
+         self.send_message = self.send_key_to_webelement = execute_locator.send_message
 
 if __name__ == "__main__":
-    driver = Chrome(options=["--headless", "--disable-gpu"])
+    driver = Chrome(window_mode='full_window')
     driver.get(r"https://google.com")

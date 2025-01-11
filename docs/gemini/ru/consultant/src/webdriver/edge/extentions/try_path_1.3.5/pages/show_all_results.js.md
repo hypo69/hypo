@@ -1,342 +1,281 @@
 # Анализ кода модуля show_all_results.js
 
 **Качество кода**
-7
--  Плюсы
-    - Код хорошо структурирован и использует функции для разделения логики.
-    - Присутствует обработка событий для взаимодействия с элементами DOM.
-    - Используются `browser.runtime.sendMessage` и `browser.tabs.sendMessage` для взаимодействия с расширением.
-    - Код использует `tryxpath` и его функции (`fu`).
--  Минусы
-    - Отсутствуют docstring для функций и переменных, что затрудняет понимание кода.
-    - Не используется `from src.logger.logger import logger` для логирования ошибок.
-    - Используются конструкции `try...catch` без логирования ошибок.
-    - Код использует `JSON.stringify` для преобразования данных в текст, что может быть избыточным.
-    -  Не хватает обработки ошибок в некоторых частях кода.
+9
+- Плюсы
+    - Код хорошо структурирован и читаем, с четким разделением на функции.
+    - Используются осмысленные имена переменных и функций.
+    - Код содержит обработку событий для взаимодействия с элементами страницы.
+    - Присутствует функциональность для экспорта данных в текстовый файл.
+    - Используются `browser.runtime.sendMessage` и `browser.tabs.sendMessage` для обмена сообщениями с расширением.
+- Минусы
+    - Не хватает обработки ошибок при получении данных от `browser.runtime.sendMessage` и `browser.tabs.sendMessage`.
+    - Отсутствует описание модуля и документация к функциям.
+    - Используется `catch(fu.onError)`, что может скрыть ошибки. Необходимо использовать `from src.logger.logger import logger` для логирования.
+    - Некоторые участки кода можно сделать более лаконичными, например, преобразование данных в текстовый формат.
+    - Нет импорта необходимых модулей, в частности `from src.logger.logger import logger`
 
 **Рекомендации по улучшению**
-1. Добавить docstring к функциям и переменным для улучшения читаемости и документирования кода.
-2. Использовать `from src.logger.logger import logger` для логирования ошибок вместо стандартного `try...catch`.
-3. Заменить `JSON.stringify` на более подходящий способ преобразования данных в текст, если это необходимо.
-4. Добавить обработку ошибок при отправке сообщений через `browser.runtime.sendMessage` и `browser.tabs.sendMessage`.
-5. Упростить код, где это возможно.
 
-**Оптимизиробанный код**
-```python
-"""
-Модуль для отображения результатов XPath на странице.
-=========================================================================================
+1.  **Добавить описание модуля:**
+    - В начале файла добавить описание модуля с использованием docstring.
 
-Этот модуль обрабатывает и отображает результаты выполнения XPath запросов, полученных от расширения.
-Он отображает результаты на странице, предоставляет возможность экспорта данных и обеспечивает взаимодействие
-с элементами на странице результатов.
+2.  **Добавить документацию к функциям:**
+    - Добавить docstring к каждой функции, описывая ее назначение, параметры и возвращаемые значения.
 
-"""
-# /* This Source Code Form is subject to the terms of the Mozilla Public
-#  * License, v. 2.0. If a copy of the MPL was not distributed with this
-#  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+3.  **Улучшить обработку ошибок:**
+    - Заменить `catch(fu.onError)` на использование `logger.error` для логирования ошибок с подробной информацией.
 
-# (function (window, undefined) {
-#     "use strict";
-#
-#     // alias
-#     var tx = tryxpath;
-#     var fu = tryxpath.functions;
-#
-#     var document = window.document;
-#
-#     var detailKeys = ["type", "name", "value", "textContent"];
-#     var headerValues = ["Type", "Name", "Value", "textContent"];
-#     var relatedTabId;
-#     var relatedFrameId;
-#     var executionId;
-from src.logger.logger import logger  # Импортируем logger
+4.  **Оптимизировать код:**
+    - Рассмотреть возможность использования более лаконичного синтаксиса для преобразования данных в текст.
 
+5.  **Добавить импорты:**
+    - Добавить импорты необходимых модулей, в частности `from src.logger.logger import logger`
 
-def showAllResults(results):
-    """
-    Отображает результаты XPath на странице.
+6.  **Использовать константы:**
+    - Заменить магические строки на константы (например, "Type", "Name", "Value", "textContent").
 
-    :param results: Объект, содержащий результаты XPath запроса.
-    :type results: dict
-    """
-    try:
-        # Код устанавливает текст элементов message, title, url, frame-id
-        document.getElementById("message").textContent = results.message
-        document.getElementById("title").textContent = results.title
-        document.getElementById("url").textContent = results.href
-        document.getElementById("frame-id").textContent = results.frameId
+7. **Улучшить читаемость `makeTextDownloadUrl`**
+    - Добавить имя переменной для blob, для улучшения читаемости кода
+    - Добавить обработку ошибок если URL не создался
 
-        if results.context:
-            # Код обрабатывает контекст, если он существует
-            cont = results.context
-            # Код устанавливает текст элементов context-method, context-expression, context-specified-result-type, context-result-type, context-resolver
-            document.getElementById("context-method").textContent = cont.method
-            document.getElementById("context-expression").textContent = cont.expression
-            document.getElementById("context-specified-result-type").textContent = cont.specifiedResultType
-            document.getElementById("context-result-type").textContent = cont.resultType
-            document.getElementById("context-resolver").textContent = cont.resolver
-            # Код получает элемент tbody для context-detail
-            contTbody = document.getElementById("context-detail").getElementsByTagName("tbody")[0]
-            if cont.itemDetail:
-                # Код обновляет таблицу деталей контекста
+**Оптимизированный код**
+
+```javascript
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/**
+ * Модуль для отображения результатов выполнения XPath запросов.
+ * =========================================================================================
+ *
+ * Этот модуль отвечает за отображение результатов XPath запросов, полученных из расширения
+ * tryxpath. Он отображает результаты в табличном виде и предоставляет возможность экспорта
+ * данных в текстовый файл.
+ *
+ * Функциональность:
+ * - Получение данных от расширения через `browser.runtime.sendMessage`.
+ * - Отображение информации о запросе, контексте и найденных элементах.
+ * - Экспорт данных в текстовый файл.
+ * - Взаимодействие с элементами страницы через `browser.tabs.sendMessage`.
+ *
+ */
+(function (window, undefined) {
+    "use strict";
+    
+    // import logger
+    //TODO: from src.logger.logger import logger
+    
+    // alias
+    var tx = tryxpath;
+    var fu = tryxpath.functions;
+
+    var document = window.document;
+    
+    // Константы для ключей и заголовков
+    var DETAIL_KEYS = ["type", "name", "value", "textContent"];
+    var HEADER_VALUES = ["Type", "Name", "Value", "textContent"];
+    var relatedTabId;
+    var relatedFrameId;
+    var executionId;
+    
+    /**
+     * Функция для отображения всех результатов на странице.
+     * @param {Object} results - Объект с результатами запроса.
+     * @param {string} results.message - Сообщение.
+     * @param {string} results.title - Заголовок.
+     * @param {string} results.href - URL.
+     * @param {string} results.frameId - ID фрейма.
+     * @param {Object} results.context - Объект с информацией о контексте.
+     * @param {Object} results.main - Объект с основной информацией.
+     */
+    function showAllResults(results) {
+        // устанавливаем текст сообщения
+        document.getElementById("message").textContent = results.message;
+        // устанавливаем текст заголовка
+        document.getElementById("title").textContent = results.title;
+        // устанавливаем текст URL
+        document.getElementById("url").textContent = results.href;
+        // устанавливаем текст frameId
+        document.getElementById("frame-id").textContent = results.frameId;
+    
+        // проверка наличия контекста
+        if (results.context) {
+            let cont = results.context;
+            // устанавливаем метод контекста
+            document.getElementById("context-method").textContent = cont.method;
+            // устанавливаем выражение контекста
+            document.getElementById("context-expression").textContent = cont.expression;
+            // устанавливаем тип результата контекста
+            document.getElementById("context-specified-result-type").textContent = cont.specifiedResultType;
+            // устанавливаем результирующий тип контекста
+            document.getElementById("context-result-type").textContent = cont.resultType;
+            // устанавливаем резолвер контекста
+            document.getElementById("context-resolver").textContent = cont.resolver;
+            // получаем tbody элемента контекста
+            let contTbody = document.getElementById("context-detail").getElementsByTagName("tbody")[0];
+             // Проверяем наличие деталей контекста и обновляем таблицу
+            if (cont.itemDetail) {
+                 // Обновляем таблицу с деталями контекста
                 fu.updateDetailsTable(contTbody, [cont.itemDetail], {
-                    "headerValues": headerValues,
-                    "detailKeys": detailKeys
-                }).catch(fu.onError)
-        else:
-            # Код удаляет область контекста, если она не существует
-            area = document.getElementById("context-area")
-            area.parentNode.removeChild(area)
-
-        # Код обрабатывает основные результаты
-        main = results.main
-        # Код устанавливает текст элементов main-method, main-expression, main-specified-result-type, main-result-type, main-resolver, main-count
-        document.getElementById("main-method").textContent = main.method
-        document.getElementById("main-expression").textContent = main.expression
-        document.getElementById("main-specified-result-type").textContent = main.specifiedResultType
-        document.getElementById("main-result-type").textContent = main.resultType
-        document.getElementById("main-resolver").textContent = main.resolver
-        document.getElementById("main-count").textContent = main.itemDetails.length
-        # Код получает элемент tbody для main-details
-        mainTbody = document.getElementById("main-details").getElementsByTagName("tbody")[0]
-        # Код обновляет таблицу основных деталей
+                    "headerValues": HEADER_VALUES,
+                    "detailKeys": DETAIL_KEYS
+                }).catch(function(error) {
+                    // Логируем ошибку
+                    //TODO: logger.error("Ошибка при обновлении таблицы контекста", error);
+                     console.error("Ошибка при обновлении таблицы контекста", error)
+                });
+            }
+        } else {
+            // если контекста нет, удаляем область контекста
+            let area = document.getElementById("context-area");
+            area.parentNode.removeChild(area);
+        }
+        
+        var main = results.main;
+         // устанавливаем метод main
+        document.getElementById("main-method").textContent = main.method;
+         // устанавливаем выражение main
+        document.getElementById("main-expression").textContent = main.expression;
+         // устанавливаем тип результата main
+        document.getElementById("main-specified-result-type").textContent = main.specifiedResultType;
+         // устанавливаем результирующий тип main
+        document.getElementById("main-result-type").textContent = main.resultType;
+         // устанавливаем резолвер main
+        document.getElementById("main-resolver").textContent = main.resolver;
+         // устанавливаем количество элементов main
+        document.getElementById("main-count").textContent = main.itemDetails.length;
+        
+        // получаем tbody элемента main
+        var mainTbody = document.getElementById("main-details").getElementsByTagName("tbody")[0];
+        // Обновляем таблицу с деталями main
         fu.updateDetailsTable(mainTbody, main.itemDetails, {
-            "headerValues": headerValues,
-            "detailKeys": detailKeys
-        }).catch(fu.onError)
-    except Exception as ex:
-        # Код логирует ошибку, если что-то пошло не так при отображении результатов
-        logger.error("Ошибка при отображении результатов", ex)
+            "headerValues": HEADER_VALUES,
+            "detailKeys": DETAIL_KEYS
+        }).catch(function(error) {
+             // Логируем ошибку
+            //TODO: logger.error("Ошибка при обновлении таблицы main", error);
+            console.error("Ошибка при обновлении таблицы main", error);
+        });
+    }
+    /**
+     * Создает URL для скачивания текстового файла.
+     *
+     * @param {string} text - Текст для скачивания.
+     * @returns {string} URL для скачивания файла.
+    */
+    function makeTextDownloadUrl(text) {
+       try{
+           const blob = new Blob([text], { "type": "text/plain"});
+            return URL.createObjectURL(blob);
+        }catch (error){
+            // Логируем ошибку
+            //TODO: logger.error("Ошибка при создании URL для скачивания", error);
+            console.error("Ошибка при создании URL для скачивания", error)
+            return ''
+        }
+    }
+     /**
+     * Формирует текстовое представление информации о результатах.
+     *
+     * @param {Object} results - Объект с результатами запроса.
+     * @returns {string} Текстовое представление информации.
+     */
+    function makeInfoText(results) {
+        let cont = results.context;
+        let main = results.main;
+        return `[Information]\nMessage:     ${results.message}\nTitle:       ${results.title}\nURL:         ${results.href}\nframeId:     ${results.frameId}\n\n${!cont ? "" : `[Context information]\nMethod:                  ${cont.method}\nExpression:              ${cont.expression}\nSpecified resultType:    ${cont.specifiedResultType}\nresultType:              ${cont.resultType}\nResolver:                ${cont.resolver}\n\n[Context detail]\n${HEADER_VALUES.join(", ")}\n${fu.makeDetailText(cont.itemDetail, DETAIL_KEYS, ", ")}\n`}\n[Main information]\nMethod:                  ${main.method}\nExpression:              ${main.expression}\nSpecified resultType:    ${main.specifiedResultType}\nresultType:              ${main.resultType}\nResolver:                ${main.resolver}\nCount:                   ${main.itemDetails.length}\n\n[Main details]\n${["Index"].concat(HEADER_VALUES).join(", ")}\n${main.itemDetails.map((detail, ind) => {
+          return fu.makeDetailText(detail, ["index"].concat(DETAIL_KEYS), ", ", {
+              "index": val => { return ind; }
+          });
+      }).join("\\n")}\n`;
+    }
+    /**
+     * Формирует текстовое представление информации о результатах с JSON преобразованием.
+     *
+     * @param {Object} results - Объект с результатами запроса.
+     * @returns {string} Текстовое представление информации с JSON преобразованием.
+     */
+    function makeConvertedInfoText(results) {
+        let cont = results.context;
+        let main = results.main;
+        return `[Information]\nMessage:     ${results.message}\nTitle:       ${results.title}\nURL:         ${results.href}\nframeId:     ${results.frameId}\n\n${!cont ? "" : `[Context information]\nMethod:                  ${cont.method}\nExpression(JSON):        ${JSON.stringify(cont.expression)}\nSpecified resultType:    ${cont.specifiedResultType}\nresultType:              ${cont.resultType}\nResolver:                ${cont.resolver}\n\n[Context detail]\nType, Name, Value(JSON), textContent(JSON)\n${fu.makeDetailText(cont.itemDetail, DETAIL_KEYS, ", ", {
+            "value": JSON.stringify,
+            "textContent": JSON.stringify
+        })}\n`}\n[Main information]\nMethod:                  ${main.method}\nExpression(JSON):        ${JSON.stringify(main.expression)}\nSpecified resultType:    ${main.specifiedResultType}\nresultType:              ${main.resultType}\nResolver:                ${main.resolver}\nCount:                   ${main.itemDetails.length}\n\n[Main details]\nIndex, Type, Name, Value(JSON), textContent(JSON)\n${main.itemDetails.map((detail, ind) => {
+          return fu.makeDetailText(detail, ["index"].concat(DETAIL_KEYS), ", ", {
+              "index": val => { return ind; },
+              "value": JSON.stringify,
+              "textContent": JSON.stringify
+          });
+      }).join("\\n")}\n`;
+    }
 
+    window.addEventListener("load", function() {
+         // Отправляем сообщение для получения результатов
+        browser.runtime.sendMessage({"event":"loadResults"}).then(results => {
+            if (results) {
+                relatedTabId = results.tabId;
+                relatedFrameId = results.frameId;
+                executionId = results.executionId;
+                // получаем элемент для экспорта текста
+                let expoText = document.getElementById("export-text");
+                // устанавливаем атрибут download для экспорта текста
+                expoText.setAttribute("download", `tryxpath-${results.title}.txt`);
+                // устанавливаем href для экспорта текста
+                expoText.href = makeTextDownloadUrl(makeInfoText(results));
+                // получаем элемент для экспорта частично преобразованного текста
+                let expoPartConv = document.getElementById("export-partly-converted");
+                 // устанавливаем атрибут download для экспорта частично преобразованного текста
+                expoPartConv.setAttribute("download", `tryxpath-converted-${results.title}.txt`);
+                 // устанавливаем href для экспорта частично преобразованного текста
+                expoPartConv.href = makeTextDownloadUrl(makeConvertedInfoText(results));
+               // отображаем все результаты
+                showAllResults(results);
+            }
+        }).catch(function(error) {
+            // Логируем ошибку
+            //TODO: logger.error("Ошибка при получении результатов из background", error);
+            console.error("Ошибка при получении результатов из background", error);
+        });
+        
+        var contDetail = document.getElementById("context-detail");
+        contDetail.addEventListener("click", function(event) {
+            var target = event.target;
+            // Проверяем, что клик был по кнопке
+            if (target.tagName.toLowerCase() === "button") {
+                browser.tabs.sendMessage(relatedTabId, {
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
+                    "executionId": executionId
+                }, {
+                    "frameId": relatedFrameId
+                }).catch(function(error) {
+                    // Логируем ошибку
+                    //TODO: logger.error("Ошибка при отправке сообщения focusContextItem", error);
+                    console.error("Ошибка при отправке сообщения focusContextItem", error);
+                });;
+            }
+        });
+        
+        var mainDetails = document.getElementById("main-details");
+        mainDetails.addEventListener("click", function(event) {
+            var target = event.target;
+             // Проверяем, что клик был по кнопке
+            if (target.tagName.toLowerCase() === "button") {
+                let ind = parseInt(target.getAttribute("data-index"), 10);
+                browser.tabs.sendMessage(relatedTabId, {
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
+                    "executionId": executionId,
+                    "index": ind
+                }, {
+                    "frameId": relatedFrameId
+                }).catch(function(error) {
+                    // Логируем ошибку
+                    //TODO: logger.error("Ошибка при отправке сообщения focusItem", error);
+                    console.error("Ошибка при отправке сообщения focusItem", error);
+                });
+            }
+        });
+    });
 
-def makeTextDownloadUrl(text):
-    """
-    Создает URL для скачивания текстового файла.
-
-    :param text: Текст для скачивания.
-    :type text: str
-    :return: URL для скачивания.
-    :rtype: str
-    """
-    # Код создает URL для скачивания текстового файла
-    return URL.createObjectURL(new Blob([text], { "type": "text/plain"}))
-
-
-def makeInfoText(results):
-    """
-    Создает текстовое представление результатов для скачивания.
-
-    :param results: Объект, содержащий результаты XPath запроса.
-    :type results: dict
-    :return: Текстовое представление результатов.
-    :rtype: str
-    """
-    # Код формирует текстовое представление результатов
-    cont = results.context
-    main = results.main
-    return f"""[Information]
-Message:     {results.message}
-Title:       {results.title}
-URL:         {results.href}
-frameId:     {results.frameId}
-
-{"" if not cont else f"""[Context information]
-Method:                  {cont.method}
-Expression:              {cont.expression}
-Specified resultType:    {cont.specifiedResultType}
-resultType:              {cont.resultType}
-Resolver:                {cont.resolver}
-
-[Context detail]
-{", ".join(headerValues)}
-{fu.makeDetailText(cont.itemDetail, detailKeys, ", ")}
-"""}
-[Main information]
-Method:                  {main.method}
-Expression:              {main.expression}
-Specified resultType:    {main.specifiedResultType}
-resultType:              {main.resultType}
-Resolver:                {main.resolver}
-Count:                   {main.itemDetails.length}
-
-[Main details]
-{", ".join(["Index"] + headerValues)}
-{"\\n".join(main.itemDetails.map(lambda detail, ind: fu.makeDetailText(detail, ["index"] + detailKeys, ", ", {
-          "index": lambda val: ind
-      })))}
-"""
-
-
-def makeConvertedInfoText(results):
-    """
-    Создает текстовое представление результатов с преобразованными значениями JSON для скачивания.
-
-    :param results: Объект, содержащий результаты XPath запроса.
-    :type results: dict
-    :return: Текстовое представление результатов с преобразованными значениями.
-    :rtype: str
-    """
-    # Код формирует текстовое представление результатов с преобразованными значениями
-    cont = results.context
-    main = results.main
-    return f"""[Information]
-Message:     {results.message}
-Title:       {results.title}
-URL:         {results.href}
-frameId:     {results.frameId}
-
-{"" if not cont else f"""[Context information]
-Method:                  {cont.method}
-Expression(JSON):        {JSON.stringify(cont.expression)}
-Specified resultType:    {cont.specifiedResultType}
-resultType:              {cont.resultType}
-Resolver:                {cont.resolver}
-
-[Context detail]
-Type, Name, Value(JSON), textContent(JSON)
-{fu.makeDetailText(cont.itemDetail, detailKeys, ", ", {
-    "value": JSON.stringify,
-    "textContent": JSON.stringify
-})}
-"""}
-[Main information]
-Method:                  {main.method}
-Expression(JSON):        {JSON.stringify(main.expression)}
-Specified resultType:    {main.specifiedResultType}
-resultType:              {main.resultType}
-Resolver:                {main.resolver}
-Count:                   {main.itemDetails.length}
-
-[Main details]
-Index, Type, Name, Value(JSON), textContent(JSON)
-{"\\n".join(main.itemDetails.map(lambda detail, ind: fu.makeDetailText(detail, ["index"] + detailKeys, ", ", {
-          "index": lambda val: ind,
-          "value": JSON.stringify,
-          "textContent": JSON.stringify
-      })))}
-"""
-
-
-# window.addEventListener("load", function() {
-#
-#
-#         browser.runtime.sendMessage({"event":"loadResults"}).then(results => {
-#             if (results) {
-#                 relatedTabId = results.tabId;
-#                 relatedFrameId = results.frameId;
-#                 executionId = results.executionId;
-#
-#                 let expoText = document.getElementById("export-text");
-#                 expoText.setAttribute(
-#                     "download", `tryxpath-${results.title}.txt`);
-#                 expoText.href =  makeTextDownloadUrl(makeInfoText(results));
-#                 let expoPartConv = document.getElementById(
-#                     "export-partly-converted");
-#                 expoPartConv.setAttribute(
-#                     "download", `tryxpath-converted-${results.title}.txt`);
-#                 expoPartConv.href =  makeTextDownloadUrl(
-#                     makeConvertedInfoText(results));
-#
-#                 showAllResults(results);
-#             }
-#         }).catch(fu.onError);
-#
-#
-#         var contDetail = document.getElementById("context-detail");
-#         contDetail.addEventListener("click", function(event) {
-#             var target = event.target;
-#             if (target.tagName.toLowerCase() === "button") {
-#                 browser.tabs.sendMessage(relatedTabId, {
-#                     "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
-#                     "executionId": executionId
-#                 }, {
-#                     "frameId": relatedFrameId
-#                 });
-#             }
-#         });
-#
-#         var mainDetails = document.getElementById("main-details");
-#         mainDetails.addEventListener("click", function(event) {
-#             var target = event.target;
-#             if (target.tagName.toLowerCase() === "button") {
-#                 let ind = parseInt(target.getAttribute("data-index"), 10);
-#                 browser.tabs.sendMessage(relatedTabId, {
-#                     "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
-#                     "executionId": executionId,
-#                     "index": ind
-#                 }, {
-#                     "frameId": relatedFrameId
-#                 });
-#             }
-#         });
-#     });
-
-# window.addEventListener("load", function() {
-# Обработчик события загрузки окна
-def on_window_load():
-    """
-    Обработчик события загрузки окна.
-    """
-    # Код отправляет сообщение для получения результатов
-    browser.runtime.sendMessage({"event":"loadResults"}).then(lambda results: {
-        # Код обрабатывает полученные результаты
-        if results:
-            # Код устанавливает значения переменных relatedTabId, relatedFrameId, executionId
-            global relatedTabId, relatedFrameId, executionId
-            relatedTabId = results.tabId
-            relatedFrameId = results.frameId
-            executionId = results.executionId
-
-            # Код получает элемент export-text и устанавливает атрибуты download и href
-            expoText = document.getElementById("export-text")
-            expoText.setAttribute(
-                "download", f"tryxpath-{results.title}.txt")
-            expoText.href =  makeTextDownloadUrl(makeInfoText(results))
-            # Код получает элемент export-partly-converted и устанавливает атрибуты download и href
-            expoPartConv = document.getElementById(
-                "export-partly-converted")
-            expoPartConv.setAttribute(
-                "download", f"tryxpath-converted-{results.title}.txt")
-            expoPartConv.href =  makeTextDownloadUrl(
-                makeConvertedInfoText(results))
-            # Код отображает результаты на странице
-            showAllResults(results)
-    }).catch(lambda ex: logger.error("Ошибка при получении результатов", ex))
-
-    # Код получает элемент context-detail и устанавливает обработчик события click
-    contDetail = document.getElementById("context-detail")
-    contDetail.addEventListener("click", lambda event: {
-        # Код обрабатывает клик на элементе context-detail
-        target = event.target
-        if target.tagName.lower() == "button":
-            # Код отправляет сообщение для фокусировки на элементе контекста
-            browser.tabs.sendMessage(relatedTabId, {
-                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
-                "executionId": executionId
-            }, {
-                "frameId": relatedFrameId
-            }).catch(lambda ex: logger.error("Ошибка при отправке сообщения для фокусировки на элементе контекста", ex))
-    })
-
-    # Код получает элемент main-details и устанавливает обработчик события click
-    mainDetails = document.getElementById("main-details")
-    mainDetails.addEventListener("click", lambda event: {
-        # Код обрабатывает клик на элементе main-details
-        target = event.target
-        if target.tagName.lower() == "button":
-            # Код получает индекс элемента
-            ind = int(target.getAttribute("data-index"), 10)
-            # Код отправляет сообщение для фокусировки на элементе
-            browser.tabs.sendMessage(relatedTabId, {
-                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
-                "executionId": executionId,
-                "index": ind
-            }, {
-                "frameId": relatedFrameId
-            }).catch(lambda ex: logger.error("Ошибка при отправке сообщения для фокусировки на элементе", ex))
-    })
-
-
-window.addEventListener("load", on_window_load)
-# })(window);
+})(window);

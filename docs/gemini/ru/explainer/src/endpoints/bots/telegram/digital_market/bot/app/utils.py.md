@@ -1,224 +1,259 @@
-## АНАЛИЗ КОДА: `hypotez/src/endpoints/bots/telegram/digital_market/bot/app/utils.py`
+## <алгоритм>
 
-### 1. <алгоритм>
+1.  **`calculate_signature(login, cost, inv_id, password, user_id, user_telegram_id, product_id, is_result=False)`**:
+    *   **Входные данные**: `login` (строка, логин магазина в Robokassa), `cost` (число, стоимость заказа), `inv_id` (число, номер заказа), `password` (строка, пароль магазина), `user_id` (число, ID пользователя), `user_telegram_id` (число, ID пользователя в Telegram), `product_id` (число, ID продукта), `is_result` (логическое, флаг для Result URL).
+    *   **Логика**:
+        *   Если `is_result` равен `True`, формирует строку `base_string` как `"{cost}:{inv_id}:{password}"`. **Пример**: `base_string` = "100:12345:password_from_robokassa"
+        *   Если `is_result` равен `False`, формирует строку `base_string` как `"{login}:{cost}:{inv_id}:{password}"`. **Пример**: `base_string` = "merchant_login:100:12345:password_from_robokassa".
+        *   Создает словарь `additional_params` с ключами `Shp_user_id`, `Shp_user_telegram_id`, `Shp_product_id` и соответствующими значениями.
+            **Пример**: `additional_params` = `{'Shp_user_id': 1, 'Shp_user_telegram_id': 123456789, 'Shp_product_id': 5}`.
+        *   Сортирует ключи словаря `additional_params` и добавляет к `base_string` параметры в формате `:{key}={value}`.
+            **Пример**:  `base_string` после добавления параметров "merchant_login:100:12345:password_from_robokassa:Shp_product_id=5:Shp_user_id=1:Shp_user_telegram_id=123456789"
+        *   Вычисляет MD5-хэш строки `base_string` и возвращает его в шестнадцатеричном формате.
+    *   **Выходные данные**: Строка, MD5-хэш.
 
-**Общая схема работы:**
+2.  **`generate_payment_link(cost, number, description, user_id, user_telegram_id, product_id, is_test=1, robokassa_payment_url='https://auth.robokassa.ru/Merchant/Index.aspx')`**:
+    *   **Входные данные**: `cost` (число, стоимость заказа), `number` (число, номер заказа), `description` (строка, описание заказа), `user_id` (число, ID пользователя), `user_telegram_id` (число, ID пользователя в Telegram), `product_id` (число, ID продукта), `is_test` (число, флаг тестового режима), `robokassa_payment_url` (строка, URL Robokassa).
+    *   **Логика**:
+        *   Вызывает `calculate_signature` для генерации подписи.
+        *   Создает словарь `data` с необходимыми параметрами для формирования URL оплаты Robokassa.
+        *   Формирует URL, объединяя `robokassa_payment_url` и параметры из словаря `data`, используя `urllib.parse.urlencode`.
+    *   **Выходные данные**: Строка, URL для оплаты.
 
-1.  **Генерация платежной ссылки:**
-    *   Функция `generate_payment_link` принимает данные о заказе и пользователе.
-    *   Вызывает `calculate_signature` для создания подписи на основе входных данных.
-    *   Формирует URL для Robokassa с необходимыми параметрами и подписью.
+3.  **`parse_response(request)`**:
+    *   **Входные данные**: `request` (строка, строка запроса с параметрами).
+    *   **Логика**:
+        *   Использует `urllib.parse.urlparse` для разбора URL и получения строки запроса.
+        *   Использует `urllib.parse.parse_qsl` для разбора строки запроса в список кортежей (ключ, значение).
+        *   Преобразует список кортежей в словарь.
+    *   **Выходные данные**: Словарь, содержащий параметры запроса.
 
-2.  **Обработка ответа от Robokassa (ResultURL):**
-    *   Функция `result_payment` получает запрос (строку) от Robokassa.
-    *   Использует `parse_response` для извлечения параметров запроса.
-    *   Вызывает `check_signature_result` для проверки подписи.
-    *   Возвращает "OK" + номер заказа при успешной проверке, или "bad sign" в противном случае.
+4.  **`check_signature_result(out_sum, inv_id, received_signature, password, user_id, user_telegram_id, product_id)`**:
+    *   **Входные данные**: `out_sum` (число, стоимость заказа), `inv_id` (число, номер заказа), `received_signature` (строка, подпись из запроса), `password` (строка, пароль магазина), `user_id` (число, ID пользователя), `user_telegram_id` (число, ID пользователя в Telegram), `product_id` (число, ID продукта).
+    *   **Логика**:
+        *   Вызывает `calculate_signature` с флагом `is_result=True` для вычисления правильной подписи.
+        *   Сравнивает полученную подпись с подписью из запроса (без учета регистра).
+    *   **Выходные данные**: Логическое значение, `True` если подписи совпадают, `False` иначе.
 
-3.  **Обработка успешного платежа (SuccessURL):**
-    *   Функция `check_success_payment` получает запрос от Robokassa.
-    *   Использует `parse_response` для извлечения параметров запроса.
-    *   Вызывает `check_signature_result` для проверки подписи (используется другой пароль).
-    *   Возвращает сообщение об успехе или "bad sign".
+5.  **`result_payment(request)`**:
+    *   **Входные данные**: `request` (строка, строка запроса с параметрами).
+    *   **Логика**:
+        *   Вызывает `parse_response` для получения параметров из запроса.
+        *   Извлекает `out_sum`, `inv_id`, `signature`, `user_id`, `user_telegram_id`, `product_id` из словаря параметров.
+        *   Вызывает `check_signature_result` для проверки подписи, используя `settings.MRH_PASS_2`.
+        *   Возвращает `"OK{inv_id}"` если подпись верна, иначе `"bad sign"`.
+    *   **Выходные данные**: Строка, `"OK{inv_id}"` или `"bad sign"`.
 
-**Примеры работы:**
+6.  **`check_success_payment(request)`**:
+    *   **Входные данные**: `request` (строка, строка запроса с параметрами).
+    *   **Логика**:
+        *   Вызывает `parse_response` для получения параметров из запроса.
+        *   Извлекает `out_sum`, `inv_id`, `signature`, `user_id`, `user_telegram_id`, `product_id` из словаря параметров.
+        *    Вызывает `check_signature_result` для проверки подписи, используя `settings.MRH_PASS_1`.
+        *   Возвращает `"Thank you for using our service"` если подпись верна, иначе `"bad sign"`.
+    *   **Выходные данные**: Строка, `"Thank you for using our service"` или `"bad sign"`.
 
-*   **Генерация ссылки:**
-    *   Вход: `cost=100.0, number=123, description="Test Order", user_id=1, user_telegram_id=12345, product_id=10`.
-    *   Вызов `calculate_signature` создаёт подпись.
-    *   Выход: `https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=login&OutSum=100.0&InvId=123&Description=Test+Order&SignatureValue=signature_hash&IsTest=1&Shp_user_id=1&Shp_user_telegram_id=12345&Shp_product_id=10`
-
-*   **Обработка ResultURL:**
-    *   Вход:  `request` = `https://example.com/result?OutSum=100.0&InvId=123&SignatureValue=result_signature&Shp_user_id=1&Shp_user_telegram_id=12345&Shp_product_id=10`.
-    *   `parse_response` извлекает параметры.
-    *   `check_signature_result` проверяет `result_signature` с использованием `settings.MRH_PASS_2`.
-    *   Выход: `"OK123"` или `"bad sign"`.
-
-*   **Обработка SuccessURL:**
-    *   Вход: `request` = `https://example.com/success?OutSum=100.0&InvId=123&SignatureValue=success_signature&Shp_user_id=1&Shp_user_telegram_id=12345&Shp_product_id=10`.
-    *   `parse_response` извлекает параметры.
-    *   `check_signature_result` проверяет `success_signature` с использованием `settings.MRH_PASS_1`.
-    *   Выход: `"Thank you for using our service"` или `"bad sign"`.
-
-**Поток данных:**
-
-```mermaid
-flowchart TD
-    A[Начало] --> B{Генерировать ссылку?};
-    B -- Да --> C[generate_payment_link];
-    C --> D[calculate_signature];
-    D --> E[Формирование URL];
-    E --> F[Отправка пользователя на страницу оплаты];
-    B -- Нет --> G{Обработка ResultURL?};
-    G -- Да --> H[result_payment];
-    H --> I[parse_response];
-    I --> J[check_signature_result];
-    J -- Подпись верна --> K[Возврат "OK"+номер_заказа];
-    J -- Подпись неверна --> L[Возврат "bad sign"];
-    G -- Нет --> M{Обработка SuccessURL?};
-    M -- Да --> N[check_success_payment];
-     N --> O[parse_response];
-    O --> P[check_signature_result];
-    P -- Подпись верна --> Q[Возврат сообщения об успехе];
-    P -- Подпись неверна --> R[Возврат "bad sign"];
-     M -- Нет --> S[Конец]
-    
-    F-->S
-    K-->S
-    L-->S
-    Q-->S
-    R-->S
-```
-
-### 2. <mermaid>
+## <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph Robokassa Payment Flow
-        A[Начало] --> B(generate_payment_link);
-        B --> C(calculate_signature);
-        C --> D{Формирование данных для запроса};
-        D --> E[Создание ссылки для оплаты];
-        E --> F[Редирект пользователя на страницу оплаты Robokassa];
-        F --> G{Robokassa обрабатывает платеж};
-        G --> H{Robokassa отправляет результат (ResultURL)};
-        H --> I(result_payment);
-        I --> J(parse_response);
-         J --> K(check_signature_result_for_result);
-        K -- Подпись верна --> L[Возврат "OK"+номер_заказа];
-         K -- Подпись неверна --> M[Возврат "bad sign"];
-        G --> N{Robokassa отправляет SuccessURL};
-        N --> O(check_success_payment);
-        O --> P(parse_response_for_success);
-          P --> Q(check_signature_result_for_success);
-        Q -- Подпись верна --> R[Возврат сообщения об успехе];
-        Q -- Подпись неверна --> S[Возврат "bad sign"];
-         
-     end
-      L --> Z[Конец]
-      M --> Z
-      R --> Z
-      S --> Z
+    Start(Начало) --> calculateSignatureCall[Вызов <code>calculate_signature</code>]
+    calculateSignatureCall --> calculateSignature[<code>calculate_signature</code><br>Вычисление подписи]
+    calculateSignature --> checkIsResult{Проверка <code>is_result</code>}
+    checkIsResult -- True --> createBaseStringResult[Формирование <code>base_string</code> для Result URL]
+    checkIsResult -- False --> createBaseStringInit[Формирование <code>base_string</code> для Initial/Success URL]
+    createBaseStringResult --> addParams[Добавление дополнительных параметров к <code>base_string</code>]
+    createBaseStringInit --> addParams
+    addParams --> calculateHash[Вычисление MD5-хэша]
+    calculateHash --> ReturnSignature[Возврат подписи]
+    ReturnSignature --> generatePaymentLinkCall[Вызов <code>generate_payment_link</code>]
+    generatePaymentLinkCall --> generatePaymentLink[<code>generate_payment_link</code><br>Генерация ссылки для оплаты]
+    generatePaymentLink --> calculateSignaturePaymentLink[Вызов <code>calculate_signature</code>]
+    calculateSignaturePaymentLink --> calculateSignature
+    calculateSignature --> checkIsResult
+     checkIsResult -- False --> createBaseStringInit
+    createBaseStringInit --> addParams
+    addParams --> calculateHash
+    calculateHash -->ReturnSignature
+    ReturnSignature --> createDataDict[Создание словаря с данными для URL]
+    createDataDict --> createPaymentURL[Формирование URL оплаты]
+    createPaymentURL --> ReturnPaymentLink[Возврат URL оплаты]
+    ReturnPaymentLink --> parseResponseCall[Вызов <code>parse_response</code>]
+    parseResponseCall --> parseResponse[<code>parse_response</code><br>Разбор строки запроса]
+    parseResponse --> parseURL[Разбор URL]
+    parseURL --> parseQueryString[Разбор строки запроса]
+    parseQueryString --> returnParamsDict[Возврат словаря с параметрами]
+    returnParamsDict --> checkSignatureResultCall[Вызов <code>check_signature_result</code>]
+    checkSignatureResultCall --> checkSignatureResult[<code>check_signature_result</code><br>Проверка подписи]
+    checkSignatureResult --> calculateSignatureCheck[Вызов <code>calculate_signature</code> для проверки]
+    calculateSignatureCheck --> calculateSignature
+    calculateSignature --> checkIsResult
+    checkIsResult -- True --> createBaseStringResult
+    createBaseStringResult --> addParams
+    addParams --> calculateHash
+    calculateHash -->ReturnSignature
+    ReturnSignature --> compareSignatures[Сравнение подписей]
+    compareSignatures --> returnSignatureCheckResult{Возврат результата проверки подписи}
+     returnSignatureCheckResult --> resultPaymentCall[Вызов <code>result_payment</code>]
+    resultPaymentCall --> resultPayment[<code>result_payment</code><br>Обработка результата оплаты]
+     resultPayment --> parseResponseResultPayment[Вызов <code>parse_response</code>]
+    parseResponseResultPayment --> parseResponse
+    parseResponse --> parseURL
+    parseURL --> parseQueryString
+    parseQueryString --> returnParamsDict
+    returnParamsDict --> checkSignatureResultCallResultPayment[Вызов <code>check_signature_result</code>]
+    checkSignatureResultCallResultPayment --> checkSignatureResult
+     checkSignatureResult --> calculateSignatureCheck
+     calculateSignatureCheck --> calculateSignature
+    calculateSignature --> checkIsResult
+    checkIsResult -- True --> createBaseStringResult
+    createBaseStringResult --> addParams
+    addParams --> calculateHash
+    calculateHash -->ReturnSignature
+     ReturnSignature --> compareSignatures
+    compareSignatures --> checkSignatureResultOutput{Возврат проверки подписи}
+    checkSignatureResultOutput -- True --> returnOK[Возврат "OK{inv_id}"]
+    checkSignatureResultOutput -- False --> returnBadSign[Возврат "bad sign"]
+    returnBadSign --> endResultPayment[Конец <code>result_payment</code>]
+        returnOK --> endResultPayment
+    endResultPayment --> checkSuccessPaymentCall[Вызов <code>check_success_payment</code>]
+      checkSuccessPaymentCall --> checkSuccessPayment[<code>check_success_payment</code><br>Проверка успешности оплаты]
+    checkSuccessPayment --> parseResponseSuccessPayment[Вызов <code>parse_response</code>]
+    parseResponseSuccessPayment --> parseResponse
+    parseResponse --> parseURL
+    parseURL --> parseQueryString
+    parseQueryString --> returnParamsDict
+    returnParamsDict --> checkSignatureResultCallSuccessPayment[Вызов <code>check_signature_result</code>]
+     checkSignatureResultCallSuccessPayment --> checkSignatureResult
+      checkSignatureResult --> calculateSignatureCheck
+      calculateSignatureCheck --> calculateSignature
+    calculateSignature --> checkIsResult
+     checkIsResult -- True --> createBaseStringResult
+    createBaseStringResult --> addParams
+    addParams --> calculateHash
+    calculateHash -->ReturnSignature
+    ReturnSignature --> compareSignatures
+    compareSignatures --> checkSignatureResultOutputSuccess{Возврат проверки подписи}
+        checkSignatureResultOutputSuccess -- True --> returnThankYou[Возврат "Thank you for using our service"]
+        checkSignatureResultOutputSuccess -- False --> returnBadSignSuccess[Возврат "bad sign"]
+    returnBadSignSuccess --> endSuccessPayment[Конец <code>check_success_payment</code>]
+        returnThankYou --> endSuccessPayment
+        endSuccessPayment --> End(Конец)
 
-
-    classDef green fill:#90EE90,stroke:#333,stroke-width:2px
-    class B,C,I,J,K,O,P,Q green
 ```
-**Зависимости:**
 
-*   `hashlib`: Используется для вычисления MD5 хеша подписи.
-*   `urllib.parse`: Используется для кодирования параметров URL и разбора URL.
-*   `bot.config.settings`: Используется для получения настроек (логин, пароли) для Robokassa.
+## <объяснение>
 
-### 3. <объяснение>
+### Импорты:
 
-#### Импорты:
+1.  **`import hashlib`**:
+    *   **Назначение**: Предоставляет инструменты для вычисления различных хеш-функций, включая MD5, которая используется для создания подписи.
+    *   **Взаимосвязь с `src`**: Непосредственно не связан с другими пакетами `src`, поскольку это стандартная библиотека Python.
 
-*   `import hashlib`: Этот модуль используется для создания хеш-значений. В данном коде он применяется для вычисления MD5 хеша, который используется в качестве подписи для запросов к Robokassa.
-*   `from urllib import parse`: Этот модуль предоставляет функции для разбора и формирования URL, включая кодирование параметров запроса (query parameters).
-*   `from urllib.parse import urlparse`: Этот модуль используется для разбора URL, в частности для извлечения query-параметров.
-*   `from bot.config import settings`: Импортирует объект `settings` из модуля `bot.config`. Этот объект, вероятно, содержит настройки приложения, включая учетные данные для доступа к Robokassa (`MRH_LOGIN`, `MRH_PASS_1`, `MRH_PASS_2`). Предполагается, что `bot.config` это пакет в каталоге `src`.
+2.  **`from urllib import parse`**:
+    *   **Назначение**: Предоставляет функции для работы с URL, включая парсинг URL и кодирование параметров.
+    *   **Взаимосвязь с `src`**: Непосредственно не связан с другими пакетами `src`, поскольку это стандартная библиотека Python.
+    *   **Используется**: Для формирования URL оплаты и разбора параметров из запроса.
 
-#### Функции:
+3.  **`from urllib.parse import urlparse`**:
+    *   **Назначение**: Предоставляет функцию для разбора URL на составляющие компоненты, такие как протокол, хост, путь и строка запроса.
+    *   **Взаимосвязь с `src`**: Непосредственно не связан с другими пакетами `src`, поскольку это стандартная библиотека Python.
+    *   **Используется**: Для извлечения строки запроса из полного URL.
 
-*   `calculate_signature(login, cost, inv_id, password, user_id, user_telegram_id, product_id, is_result=False)`:
-    *   **Назначение**: Генерирует подпись для запросов к Robokassa.
+4.  **`from bot.config import settings`**:
+    *   **Назначение**: Импортирует объект `settings`, содержащий конфигурационные параметры приложения, такие как логин, пароли и URL для Robokassa.
+    *   **Взаимосвязь с `src`**: Импортирует настройки из `src/bot/config/settings.py`, что обеспечивает доступ к параметрам приложения.
+    *   **Используется**: Для доступа к параметрам аутентификации и URL-ам Robokassa.
+
+### Функции:
+
+1.  **`calculate_signature(login, cost, inv_id, password, user_id, user_telegram_id, product_id, is_result=False)`**:
     *   **Аргументы**:
-        *   `login`: Логин продавца.
-        *   `cost`: Стоимость заказа.
-        *   `inv_id`: Номер заказа.
-        *   `password`: Пароль для генерации подписи.
-        *   `user_id`: ID пользователя в системе.
-        *   `user_telegram_id`: Telegram ID пользователя.
-        *   `product_id`: ID продукта.
-        *   `is_result`: Флаг, указывающий, что подпись генерируется для Result URL.
-    *   **Возвращаемое значение**: MD5 хеш в виде шестнадцатеричной строки.
-    *   **Пример**:
-        ```python
-        signature = calculate_signature("test_login", 100.0, 123, "test_password", 1, 12345, 10)
-        print(signature) # -> 'd41d8cd98f00b204e9800998ecf8427e'
-        ```
-    *   **Примечание**: Подпись формируется из конкатенации параметров и пароля, что обеспечивает безопасность транзакции. Для `ResultURL` используется другая последовательность параметров.
+        *   `login` (str): Логин магазина в Robokassa.
+        *   `cost` (float): Стоимость заказа.
+        *   `inv_id` (int): Номер заказа.
+        *   `password` (str): Пароль магазина.
+        *   `user_id` (int): ID пользователя.
+        *   `user_telegram_id` (int): ID пользователя в Telegram.
+        *   `product_id` (int): ID товара.
+        *   `is_result` (bool, optional): Флаг для Result URL. По умолчанию `False`.
+    *   **Возвращаемое значение**: Строка, MD5-хэш, шестнадцатеричное представление.
+    *   **Назначение**: Вычисляет подпись для запросов к Robokassa. Формирует строку на основе параметров и хеширует её с помощью MD5.
+    *   **Пример**: `calculate_signature("merchant_login", 100.0, 12345, "password", 1, 123456789, 5)`
+        возвращает строку, представляющую MD5 хэш.
 
-*   `generate_payment_link(cost, number, description, user_id, user_telegram_id, product_id, is_test=1, robokassa_payment_url='https://auth.robokassa.ru/Merchant/Index.aspx')`:
-    *   **Назначение**: Генерирует URL для оплаты через Robokassa.
+2.  **`generate_payment_link(cost, number, description, user_id, user_telegram_id, product_id, is_test=1, robokassa_payment_url='https://auth.robokassa.ru/Merchant/Index.aspx')`**:
     *   **Аргументы**:
-        *   `cost`: Стоимость товара.
-        *   `number`: Номер заказа.
-        *   `description`: Описание заказа.
-        *   `user_id`: ID пользователя.
-        *   `user_telegram_id`: Telegram ID пользователя.
-        *   `product_id`: ID товара.
-        *   `is_test`: Флаг тестового режима.
-        *   `robokassa_payment_url`: URL Robokassa.
-    *   **Возвращаемое значение**: Ссылка на страницу оплаты Robokassa.
+        *   `cost` (float): Стоимость товара.
+        *   `number` (int): Номер заказа.
+        *   `description` (str): Описание заказа.
+        *   `user_id` (int): ID пользователя.
+        *   `user_telegram_id` (int): Telegram ID пользователя.
+        *   `product_id` (int): ID товара.
+        *   `is_test` (int, optional): Флаг тестового режима (1 - тест, 0 - боевой режим). По умолчанию `1`.
+        *   `robokassa_payment_url` (str, optional): URL для оплаты Robokassa. По умолчанию `'https://auth.robokassa.ru/Merchant/Index.aspx'`.
+    *   **Возвращаемое значение**: Строка, URL для оплаты.
+    *   **Назначение**: Генерирует ссылку для оплаты через Robokassa.
     *   **Пример**:
-        ```python
-        link = generate_payment_link(100.0, 123, "Test Order", 1, 12345, 10)
-        print(link)
-        # -> 'https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=test_login&OutSum=100.0&InvId=123&Description=Test+Order&SignatureValue=signature&IsTest=1&Shp_user_id=1&Shp_user_telegram_id=12345&Shp_product_id=10'
-        ```
-    *   **Примечание**: Использует `calculate_signature` для генерации подписи и `parse.urlencode` для формирования строки запроса.
+        `generate_payment_link(100.0, 12345, "Test product", 1, 123456789, 5)`
+        возвращает строку, представляющую URL для оплаты.
 
-*   `parse_response(request)`:
+3.  **`parse_response(request)`**:
+    *   **Аргументы**: `request` (str): Строка запроса.
+    *   **Возвращаемое значение**: Словарь, содержащий параметры запроса.
     *   **Назначение**: Разбирает строку запроса на параметры.
+    *   **Пример**: `parse_response("https://example.com?param1=value1&param2=value2")`
+    возвращает `{"param1": "value1", "param2": "value2"}`.
+
+4.  **`check_signature_result(out_sum, inv_id, received_signature, password, user_id, user_telegram_id, product_id)`**:
     *   **Аргументы**:
-        *   `request`: Строка запроса.
-    *   **Возвращаемое значение**: Словарь с параметрами запроса.
-    *   **Пример**:
-       ```python
-       request = "https://example.com?param1=value1&param2=value2"
-       parsed_params = parse_response(request)
-       print(parsed_params)
-       # -> {'param1': 'value1', 'param2': 'value2'}
-        ```
-    *   **Примечание**: Использует `urlparse` для разбора URL и `parse.parse_qsl` для извлечения параметров запроса.
+        *   `out_sum` (float): Сумма заказа.
+        *   `inv_id` (int): Номер заказа.
+        *   `received_signature` (str): Подпись из запроса.
+        *   `password` (str): Пароль магазина.
+        *   `user_id` (int): ID пользователя.
+        *    `user_telegram_id` (int): ID пользователя в Telegram.
+        *   `product_id` (int): ID товара.
+    *   **Возвращаемое значение**: Логическое значение, `True` если подписи совпадают, `False` иначе.
+    *   **Назначение**: Проверяет подпись результата оплаты.
+    *  **Пример**:
+         `check_signature_result(100.0, 12345, "calculated_signature", "password", 1, 123456789, 5)`
+         возвращает True или False.
 
-*   `check_signature_result(out_sum, inv_id, received_signature, password, user_id, user_telegram_id, product_id)`:
-    *   **Назначение**: Проверяет подпись для ResultURL.
-    *   **Аргументы**:
-        *   `out_sum`: Сумма заказа.
-        *   `inv_id`: Номер заказа.
-        *   `received_signature`: Полученная подпись.
-        *   `password`: Пароль.
-        *   `user_id`: ID пользователя.
-        *   `user_telegram_id`: Telegram ID пользователя.
-        *   `product_id`: ID продукта.
-    *   **Возвращаемое значение**: `True`, если подпись верна, иначе `False`.
-    *   **Примечание**: Вызывает `calculate_signature` с `is_result=True` для генерации ожидаемой подписи и сравнивает с полученной.
+5.  **`result_payment(request)`**:
+    *   **Аргументы**: `request` (str): Строка запроса с параметрами оплаты.
+    *   **Возвращаемое значение**: Строка, `"OK{inv_id}"` если оплата прошла успешно, иначе `"bad sign"`.
+    *   **Назначение**: Обрабатывает результат оплаты (ResultURL).
+    *   **Пример**: `result_payment("https://example.com?OutSum=100&InvId=12345&SignatureValue=calculated_signature&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=5")`
+        возвращает `OK12345` или `"bad sign"`.
 
-*  `result_payment(request)`:
-    *   **Назначение**: Обрабатывает запрос ResultURL от Robokassa.
-    *   **Аргументы**:
-        *   `request`: Строка запроса с параметрами оплаты.
-    *   **Возвращаемое значение**: `'OK' + номер заказа` при успешной проверке подписи, иначе `'bad sign'`.
-    *   **Примечание**: Вызывает `parse_response` для извлечения параметров, затем `check_signature_result` для проверки подписи, используя `settings.MRH_PASS_2`.
+6.  **`check_success_payment(request)`**:
+    *   **Аргументы**: `request` (str): Строка запроса с параметрами оплаты.
+    *   **Возвращаемое значение**: Строка, `"Thank you for using our service"` если оплата прошла успешно, иначе `"bad sign"`.
+    *   **Назначение**: Проверяет успешность оплаты (SuccessURL).
+    *   **Пример**: `check_success_payment("https://example.com?OutSum=100&InvId=12345&SignatureValue=calculated_signature&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=5")`
+        возвращает `"Thank you for using our service"` или `"bad sign"`.
 
-*   `check_success_payment(request)`:
-    *   **Назначение**: Обрабатывает запрос SuccessURL от Robokassa.
-    *   **Аргументы**:
-        *   `request`: Строка запроса с параметрами оплаты.
-    *   **Возвращаемое значение**: `'Thank you for using our service'` при успешной проверке подписи, иначе `'bad sign'`.
-    *   **Примечание**: Вызывает `parse_response` для извлечения параметров, затем `check_signature_result` для проверки подписи, используя `settings.MRH_PASS_1`.
+### Переменные:
 
-#### Переменные:
+*   **`settings`**: Объект, содержащий настройки приложения из `bot.config.settings`, включая логин, пароли, и URL Robokassa.
+*   Внутри функций используются локальные переменные для хранения промежуточных данных: `base_string`, `additional_params`, `signature`, `data`, `params`, `out_sum`, `inv_id`, `received_signature`, `user_id`, `user_telegram_id`, `product_id`.
 
-*   `settings.MRH_LOGIN`: Логин продавца для Robokassa.
-*   `settings.MRH_PASS_1`: Пароль для генерации подписи для SuccessURL.
-*   `settings.MRH_PASS_2`: Пароль для генерации подписи для ResultURL.
-*   `robokassa_payment_url`: URL платежной страницы Robokassa.
+### Потенциальные ошибки и области для улучшения:
 
-#### Потенциальные ошибки и улучшения:
+1.  **Безопасность**:
+    *   **MD5**: MD5 считается криптографически слабым и подверженным коллизиям. Рекомендуется использовать более надежные хеш-функции, такие как SHA-256.
+    *   **Пароли**: Пароли хранятся в `settings`, что может быть небезопасным. Следует рассмотреть использование более безопасных методов хранения, таких как переменные окружения или менеджеры секретов.
+2.  **Обработка ошибок**:
+    *   Функции `result_payment` и `check_success_payment` возвращают `"bad sign"` в случае неверной подписи, но не предоставляют детальной информации об ошибке. Целесообразно добавить более подробные сообщения об ошибках для отладки.
+    *   Не обрабатываются исключения при разборе URL. Стоит добавить обработку исключений для `urllib.parse.urlparse` и `urllib.parse.parse_qsl`.
+3.  **Типизация**: Хотя в коде есть аннотации типов, можно добавить более строгую типизацию для большей надежности и лучшего понимания кода.
+4.  **Модульность**: Функции могут быть разделены на более мелкие, специализированные модули для улучшения читаемости и повторного использования. Например, можно создать отдельную функцию для добавления дополнительных параметров к `base_string`.
 
-*   **Безопасность**: Хранение паролей в `settings` может быть небезопасным, особенно если `settings` хранится в исходном коде. Рассмотреть использование переменных окружения или других безопасных способов хранения секретов.
-*   **Обработка ошибок**: В случае некорректных данных или проблем с Robokassa не предусмотрено явной обработки ошибок. Можно добавить логирование или более подробные сообщения об ошибках.
-*   **Типизация**:  Можно улучшить типизацию в коде, например используя `mypy`.
-*  **Упрощение**: Можно рассмотреть упрощение функции `check_signature_result`  выделив общую логику подписи.
+### Цепочка взаимосвязей с другими частями проекта:
 
-#### Взаимосвязи с другими частями проекта:
+1.  **`bot.config.settings`**: Зависимость от модуля настроек, обеспечивающего доступ к учетным данным и URL Robokassa.
+2.  **Другие части `bot`**: Этот модуль, вероятно, используется в других частях бота для генерации ссылок на оплату и обработки уведомлений об оплате.
+3.  **Модули `src`**: Связан через `bot.config.settings`, которые могут быть частью более крупной структуры конфигурации в `src`.
 
-*   Этот модуль является частью логики обработки платежей.
-*   Он взаимодействует с модулем `bot.config`, который предоставляет настройки для подключения к Robokassa.
-*   Этот модуль может использоваться контроллерами или другими частями приложения, которые требуют интеграции с Robokassa.
-
-Этот анализ кода обеспечивает структурированное и всестороннее понимание его функциональности, зависимостей и потенциальных областей для улучшения.
+Этот анализ предоставляет подробное понимание функциональности кода, его зависимостей и потенциальных улучшений.

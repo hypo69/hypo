@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+from src.utils.jjson import j_dumps
 # -*- coding: utf-8 -*-
 """
 .. module:: src.product.product 
@@ -54,8 +56,9 @@ class ProductAsync(PrestaShopAsync):
             ProductFields | None: Returns the `ProductFields` object with `id_product` set, if the product was added successfully, `None` otherwise.
         """
 
-        f.additional_categories = self.presta_category_async.get_parent_categories_list(f.id_category_default)
+        f.additional_categories = await self.presta_category_async.get_parent_categories_list(f.id_category_default)
         f_dict: dict = any2dict(f)
+        j_dumps(f_dict, gs.path.external_data / 'prestahop' / 'dit.json', f_dict)
         
         new_f:ProductFields = await self.create('products', f_dict)
 

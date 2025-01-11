@@ -1,323 +1,354 @@
-## Анализ кода модуля show_all_results.js
+# Анализ кода модуля show_all_results.js
 
 **Качество кода**
-
 7
--  Плюсы
-    - Код достаточно хорошо структурирован и читаем.
-    - Используется IIFE (Immediately Invoked Function Expression) для изоляции области видимости.
-    - Есть обработка событий `click` для элементов таблицы.
-    - Данные для отображения и экспорта подготавливаются отдельно.
-    - Присутствует обработка ошибок через `.catch(fu.onError)`.
--  Минусы
-    -  Отсутствует явное указание типа для переменных `tx`, `fu` и `document`.
-    -  Используется `document.getElementById` многократно, что может быть оптимизировано.
-    -  Нет комментариев в формате RST.
-    -  Не используется `logger` для логирования ошибок.
-    -  Используется `JSON.stringify` без обработки возможных ошибок.
-    -  Функции `makeTextDownloadUrl`, `makeInfoText` и `makeConvertedInfoText` не имеют документации.
-    -  Многократное использование `document.getElementById` может привести к снижению производительности.
-    -  Не проверяется наличие элементов в DOM перед обращением к ним, что может вызвать ошибки, если элемент не найден.
+ -  Плюсы
+    - Код хорошо структурирован и разбит на функции, что облегчает чтение и понимание.
+    - Используются понятные имена переменных.
+    - Присутствует обработка событий `click` для элементов таблицы.
+    - Присутствует функция для создания URL для скачивания текста.
+ -  Минусы
+    - Отсутствуют docstring для функций.
+    - Не используется `from src.logger.logger import logger` для логирования ошибок.
+    - Обработка ошибок `fu.onError` не совсем подходит, лучше использовать `logger.error`.
+    - Отсутствуют импорты.
+    - Не используются константы для ключей `detailKeys`, `headerValues`.
+    - Код использует `var` вместо `const` и `let`.
+    -  Используется `document.getElementById` несколько раз, что может быть оптимизировано.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить документацию:**
-    - Добавить docstring в формате RST для всех функций, чтобы сделать код более понятным и поддерживаемым.
-2.  **Улучшить обработку ошибок:**
-    - Использовать `logger.error` для логирования ошибок вместо `catch(fu.onError)`.
-3.  **Улучшить читаемость и производительность:**
-    - Кешировать результаты `document.getElementById` для часто используемых элементов.
-    - Проверять наличие элементов в DOM перед обращением к ним.
-4.  **Обработка JSON:**
-    - Добавить `try-except` для обработки ошибок при `JSON.stringify`.
-5.  **Явное объявление типов:**
-    -  Добавить `/** @type {type} */` комментарии для переменных `tx`, `fu` и `document`, чтобы было понятно, что это за переменные.
-6.  **Импорты:**
-    - Добавить необходимые импорты `from src.logger.logger import logger`
+1.  Добавить docstring к каждой функции для лучшей читаемости и понимания кода.
+2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+3.  Заменить `fu.onError` на `logger.error` для более точной обработки ошибок.
+4.  Добавить необходимые импорты.
+5.  Использовать константы для ключей `detailKeys`, `headerValues`.
+6.  Заменить `var` на `const` и `let`.
+7.  Оптимизировать повторные вызовы `document.getElementById` путем сохранения ссылок на элементы.
+8.  Разделить код на более мелкие функции для улучшения читаемости и поддержки.
+9.  Использовать форматирование строк f-string.
+10. Добавить комментарии к блокам кода для объяснения их назначения.
 
-**Оптимизиробанный код**
-
+**Оптимизированный код**
 ```python
 """
-Модуль для отображения результатов XPath запросов в расширении Firefox.
-===================================================================
+Модуль для отображения результатов поиска XPath на странице расширения.
+======================================================================
 
-Этот модуль отвечает за отображение результатов XPath запросов, полученных
-от фоновой страницы, в HTML-странице расширения. Он также предоставляет
-возможность экспорта результатов в текстовый файл.
+Модуль `show_all_results.js` предназначен для отображения результатов выполнения XPath запросов
+в расширении браузера. Он получает данные о результатах через сообщение от фонового скрипта и
+отображает их в HTML-странице, позволяя пользователю просматривать детали каждого найденного элемента,
+экспортировать результаты в текстовый файл, а также подсвечивать выбранные элементы на исходной странице.
 
-Функции:
-    - showAllResults: Отображает результаты запроса на странице.
-    - makeTextDownloadUrl: Создает URL для скачивания текстового файла.
-    - makeInfoText: Формирует текстовое представление результатов.
-    - makeConvertedInfoText: Формирует текстовое представление результатов с JSON.
+Основные возможности модуля:
+    - Отображение основных данных запроса (сообщение, заголовок, URL, ID фрейма).
+    - Отображение информации о контексте запроса (метод, выражение, тип результата).
+    - Отображение деталей найденных элементов в виде таблицы.
+    - Экспорт результатов в текстовый файл с форматированием JSON.
+    - Подсветка элемента при клике на строку в таблице.
+
+Пример использования
+--------------------
+Для просмотра результатов, необходимо отправить сообщение `loadResults` из фонового скрипта в этот модуль.
+После получения данных, результаты будут отображены на странице.
 """
 from src.logger.logger import logger
-# from src.utils.jjson import j_loads_ns  # TODO: Возможно потребуется
-# from typing import Any, Dict, List  # TODO: Возможно потребуется
-# TODO: Уточнить какие импорты нужны
+#   Импорт модуля logger для логирования ошибок
 
 (function (window, undefined) {
     "use strict";
+    # Устанавливаем строгий режим для избежания ошибок
 
-    /** @type {tryxpath} */
-    var tx = tryxpath;
-    /** @type {tryxpath.functions} */
-    var fu = tryxpath.functions;
-    /** @type {Document} */
-    var document = window.document;
+    // alias
+    const tx = tryxpath;
+    #  Объявляем константу tx как сокращение для tryxpath
+    const fu = tryxpath.functions;
+    # Объявляем константу fu как сокращение для tryxpath.functions
 
-    var detailKeys = ["type", "name", "value", "textContent"];
-    var headerValues = ["Type", "Name", "Value", "textContent"];
-    var relatedTabId;
-    var relatedFrameId;
-    var executionId;
+    const document = window.document;
+    # Объявляем константу document как ссылку на объект document
+
+    const DETAIL_KEYS = ["type", "name", "value", "textContent"];
+    # Объявляем константу DETAIL_KEYS для ключей деталей
+    const HEADER_VALUES = ["Type", "Name", "Value", "textContent"];
+    # Объявляем константу HEADER_VALUES для заголовков таблицы
+    let relatedTabId;
+    # Объявляем переменную relatedTabId для хранения ID вкладки
+    let relatedFrameId;
+    # Объявляем переменную relatedFrameId для хранения ID фрейма
+    let executionId;
+    # Объявляем переменную executionId для хранения ID выполнения
 
     /**
-     * Отображает результаты XPath запроса на странице.
+     * Функция для отображения всех результатов в HTML.
      *
-     * :param results: Объект с результатами запроса.
-     * :type results: dict
-     */
+     * Args:
+     *  results (object): Объект с результатами поиска, содержащий message, title, href, frameId,
+     *  context и main.
+     *
+     *  Результаты отображаются в соответствующих элементах HTML страницы.
+    */
     function showAllResults(results) {
-        try {
-            var messageElement = document.getElementById("message");
-            var titleElement = document.getElementById("title");
-            var urlElement = document.getElementById("url");
-            var frameIdElement = document.getElementById("frame-id");
-
-            if (messageElement) {
-                messageElement.textContent = results.message;
-            }
-            if (titleElement) {
-                 titleElement.textContent = results.title;
-            }
-            if (urlElement) {
-                urlElement.textContent = results.href;
-            }
-            if (frameIdElement) {
-                frameIdElement.textContent = results.frameId;
-            }
-
-        }
-        except Exception as ex:
-            logger.error('Ошибка при установке основных текстовых полей', ex)
-            return
+        # Функция отображает результаты в соответствующих элементах HTML страницы.
+        document.getElementById("message").textContent = results.message;
+        #  Заполняем элемент message текстом сообщения
+        document.getElementById("title").textContent = results.title;
+        #  Заполняем элемент title текстом заголовка
+        document.getElementById("url").textContent = results.href;
+        #  Заполняем элемент url текстом URL
+        document.getElementById("frame-id").textContent = results.frameId;
+        #  Заполняем элемент frame-id текстом ID фрейма
 
         if (results.context) {
-             try:
-                let cont = results.context;
-                var contextMethodElement = document.getElementById("context-method");
-                var contextExpressionElement = document.getElementById("context-expression");
-                var contextSpecifiedResultTypeElement = document.getElementById("context-specified-result-type");
-                var contextResultTypeElement = document.getElementById("context-result-type");
-                var contextResolverElement = document.getElementById("context-resolver");
-                var contTbody = document.getElementById("context-detail").getElementsByTagName("tbody")[0];
-                if (contextMethodElement) {
-                     contextMethodElement.textContent = cont.method;
-                }
-                if (contextExpressionElement) {
-                     contextExpressionElement.textContent = cont.expression;
-                }
-                if (contextSpecifiedResultTypeElement) {
-                     contextSpecifiedResultTypeElement.textContent = cont.specifiedResultType;
-                }
-                if (contextResultTypeElement) {
-                     contextResultTypeElement.textContent = cont.resultType;
-                }
-                if (contextResolverElement) {
-                    contextResolverElement.textContent = cont.resolver;
-                }
-
-
-                if (cont.itemDetail) {
-                    fu.updateDetailsTable(contTbody, [cont.itemDetail], {
-                        "headerValues": headerValues,
-                        "detailKeys": detailKeys
-                    }).catch(function(error){
-                         logger.error('Ошибка при обновлении таблицы context-detail', error)
-                    });
-                }
-             except Exception as ex:
-                logger.error('Ошибка при установке context полей', ex)
-                return
+            #  Проверяем наличие контекстных данных
+            const cont = results.context;
+            #  Объявляем константу cont как ссылку на контекстные данные
+            document.getElementById("context-method").textContent = cont.method;
+            #  Заполняем элемент context-method методом контекста
+            document.getElementById("context-expression").textContent = cont.expression;
+            #  Заполняем элемент context-expression выражением контекста
+            document.getElementById("context-specified-result-type").textContent = cont.specifiedResultType;
+            #  Заполняем элемент context-specified-result-type типом результата контекста
+            document.getElementById("context-result-type").textContent = cont.resultType;
+             #  Заполняем элемент context-result-type типом результата
+            document.getElementById("context-resolver").textContent = cont.resolver;
+            #  Заполняем элемент context-resolver резолвером
+            const contTbody = document.getElementById("context-detail").getElementsByTagName("tbody")[0];
+            #  Получаем tbody элемента context-detail
+            if (cont.itemDetail) {
+                 #  Проверяем наличие itemDetail в контексте
+                fu.updateDetailsTable(contTbody, [cont.itemDetail], {
+                     # Обновляем таблицу деталей контекста
+                    "headerValues": HEADER_VALUES,
+                    # передаём заголовки таблицы
+                    "detailKeys": DETAIL_KEYS
+                     # передаём ключи для извлечения данных
+                }).catch(error => logger.error("Ошибка при обновлении таблицы деталей контекста", error));
+                 #  Перехватываем и логируем ошибку при обновлении таблицы
+            }
         } else {
-             try:
-                var area = document.getElementById("context-area");
-                if(area && area.parentNode){
-                     area.parentNode.removeChild(area);
-                }
-             except Exception as ex:
-                logger.error('Ошибка при удалении context area', ex)
-                return
+             # Если контекстных данных нет
+            const area = document.getElementById("context-area");
+             #  Получаем элемент context-area
+            area.parentNode.removeChild(area);
+             # Удаляем context-area из DOM
         }
-        try:
-            var main = results.main;
-            var mainMethodElement = document.getElementById("main-method");
-            var mainExpressionElement = document.getElementById("main-expression");
-            var mainSpecifiedResultTypeElement = document.getElementById("main-specified-result-type");
-            var mainResultTypeElement = document.getElementById("main-result-type");
-            var mainResolverElement = document.getElementById("main-resolver");
-            var mainCountElement = document.getElementById("main-count");
-            var mainTbody = document.getElementById("main-details").getElementsByTagName("tbody")[0];
 
-            if(mainMethodElement){
-               mainMethodElement.textContent = main.method;
-            }
-            if(mainExpressionElement){
-               mainExpressionElement.textContent = main.expression;
-            }
-            if(mainSpecifiedResultTypeElement){
-              mainSpecifiedResultTypeElement.textContent = main.specifiedResultType;
-            }
-            if (mainResultTypeElement){
-              mainResultTypeElement.textContent = main.resultType;
-            }
-            if(mainResolverElement){
-                mainResolverElement.textContent = main.resolver;
-            }
-            if(mainCountElement){
-                mainCountElement.textContent = main.itemDetails.length;
-            }
-
-
-            fu.updateDetailsTable(mainTbody, main.itemDetails, {
-                "headerValues": headerValues,
-                "detailKeys": detailKeys
-            }).catch(function(error){
-                logger.error('Ошибка при обновлении таблицы main-details', error)
-            });
-        except Exception as ex:
-              logger.error('Ошибка при установке main полей', ex)
-              return
-    };
-
+        const main = results.main;
+         #  Объявляем константу main как ссылку на основные результаты
+        document.getElementById("main-method").textContent = main.method;
+        #  Заполняем элемент main-method методом
+        document.getElementById("main-expression").textContent = main.expression;
+        #  Заполняем элемент main-expression выражением
+        document.getElementById("main-specified-result-type").textContent = main.specifiedResultType;
+        #  Заполняем элемент main-specified-result-type типом результата
+        document.getElementById("main-result-type").textContent = main.resultType;
+        #  Заполняем элемент main-result-type типом результата
+        document.getElementById("main-resolver").textContent = main.resolver;
+        #  Заполняем элемент main-resolver резолвером
+        document.getElementById("main-count").textContent = main.itemDetails.length;
+        #  Заполняем элемент main-count количеством найденных элементов
+        const mainTbody = document.getElementById("main-details").getElementsByTagName("tbody")[0];
+        # Получаем tbody элемента main-details
+        fu.updateDetailsTable(mainTbody, main.itemDetails, {
+            # Обновляем таблицу основных деталей
+            "headerValues": HEADER_VALUES,
+            # передаём заголовки таблицы
+            "detailKeys": DETAIL_KEYS
+            # передаём ключи для извлечения данных
+        }).catch(error => logger.error("Ошибка при обновлении таблицы основных деталей", error));
+         #  Перехватываем и логируем ошибку при обновлении таблицы
+    }
     /**
-     * Создает URL для скачивания текстового файла.
+     * Функция для создания URL для скачивания текстового файла.
      *
-     * :param text: Текст для скачивания.
-     * :type text: str
-     * :return: URL для скачивания.
-     * :rtype: str
+     * Args:
+     *   text (str): Текст для сохранения в файл.
+     * Returns:
+     *   (str): URL для скачивания файла.
      */
     function makeTextDownloadUrl(text) {
+        # Функция создаёт URL для скачивания текстового файла.
         return URL.createObjectURL(new Blob([text], { "type": "text/plain"}));
-    };
-
+        # Возвращает URL для скачивания файла
+    }
     /**
-     * Формирует текстовое представление результатов.
+     * Функция для формирования текстовой информации о результатах.
      *
-     * :param results: Объект с результатами запроса.
-     * :type results: dict
-     * :return: Текстовое представление результатов.
-     * :rtype: str
+     * Args:
+     *   results (object): Объект с результатами поиска.
+     * Returns:
+     *  (str): Текстовая информация о результатах.
      */
     function makeInfoText(results) {
-        let cont = results.context;
-        let main = results.main;
-        return `[Information]\nMessage:     ${results.message}\nTitle:       ${results.title}\nURL:         ${results.href}\nframeId:     ${results.frameId}\n\n${!cont ? "" : `[Context information]\nMethod:                  ${cont.method}\nExpression:              ${cont.expression}\nSpecified resultType:    ${cont.specifiedResultType}\nresultType:              ${cont.resultType}\nResolver:                ${cont.resolver}\n\n[Context detail]\n${headerValues.join(", ")}\n${fu.makeDetailText(cont.itemDetail, detailKeys, ", ")}\n`}\n[Main information]\nMethod:                  ${main.method}\nExpression:              ${main.expression}\nSpecified resultType:    ${main.specifiedResultType}\nresultType:              ${main.resultType}\nResolver:                ${main.resolver}\nCount:                   ${main.itemDetails.length}\n\n[Main details]\n${["Index"].concat(headerValues).join(", ")}\n${main.itemDetails.map((detail, ind) => {
-          return fu.makeDetailText(detail, ["index"].concat(detailKeys), ", ", {
-              "index": val => { return ind; }
-          });
-      }).join("\\n")}\n`;
-    };
+        # Функция формирует текстовую информацию о результатах.
+        const cont = results.context;
+        #  Объявляем константу cont как ссылку на контекстные данные
+        const main = results.main;
+        #  Объявляем константу main как ссылку на основные результаты
+        return `[Information]
+Message:     ${results.message}
+Title:       ${results.title}
+URL:         ${results.href}
+frameId:     ${results.frameId}
 
+${!cont ? "" : `[Context information]
+Method:                  ${cont.method}
+Expression:              ${cont.expression}
+Specified resultType:    ${cont.specifiedResultType}
+resultType:              ${cont.resultType}
+Resolver:                ${cont.resolver}
+
+[Context detail]
+${HEADER_VALUES.join(", ")}
+${fu.makeDetailText(cont.itemDetail, DETAIL_KEYS, ", ")}
+`}
+[Main information]
+Method:                  ${main.method}
+Expression:              ${main.expression}
+Specified resultType:    ${main.specifiedResultType}
+resultType:              ${main.resultType}
+Resolver:                ${main.resolver}
+Count:                   ${main.itemDetails.length}
+
+[Main details]
+${["Index"].concat(HEADER_VALUES).join(", ")}
+${main.itemDetails.map((detail, ind) => {
+      return fu.makeDetailText(detail, ["index"].concat(DETAIL_KEYS), ", ", {
+          "index": val => { return ind; }
+      });
+  }).join("\\n")}
+`;
+        #  Возвращает отформатированную текстовую информацию о результатах
+    }
     /**
-     * Формирует текстовое представление результатов с JSON.
+     * Функция для формирования текстовой информации о результатах с JSON преобразованием.
      *
-     * :param results: Объект с результатами запроса.
-     * :type results: dict
-     * :return: Текстовое представление результатов с JSON.
-     * :rtype: str
+     * Args:
+     *   results (object): Объект с результатами поиска.
+     * Returns:
+     *   (str): Текстовая информация о результатах с JSON преобразованием.
      */
     function makeConvertedInfoText(results) {
-        let cont = results.context;
-        let main = results.main;
-        let contextExpression, mainExpression
-        try:
-            contextExpression = JSON.stringify(cont.expression)
-        except Exception as ex:
-            logger.error('Ошибка при преобразовании context expression в JSON', ex)
-            contextExpression = "error"
-        try:
-            mainExpression = JSON.stringify(main.expression)
-        except Exception as ex:
-            logger.error('Ошибка при преобразовании main expression в JSON', ex)
-            mainExpression = "error"
+        # Функция формирует текстовую информацию о результатах с преобразованием в JSON.
+        const cont = results.context;
+        #  Объявляем константу cont как ссылку на контекстные данные
+        const main = results.main;
+        #  Объявляем константу main как ссылку на основные результаты
+        return `[Information]
+Message:     ${results.message}
+Title:       ${results.title}
+URL:         ${results.href}
+frameId:     ${results.frameId}
 
-        return `[Information]\nMessage:     ${results.message}\nTitle:       ${results.title}\nURL:         ${results.href}\nframeId:     ${results.frameId}\n\n${!cont ? "" : `[Context information]\nMethod:                  ${cont.method}\nExpression(JSON):        ${contextExpression}\nSpecified resultType:    ${cont.specifiedResultType}\nresultType:              ${cont.resultType}\nResolver:                ${cont.resolver}\n\n[Context detail]\nType, Name, Value(JSON), textContent(JSON)\n${fu.makeDetailText(cont.itemDetail, detailKeys, ", ", {\n    "value": JSON.stringify,\n    "textContent": JSON.stringify\n})}\n`}\n[Main information]\nMethod:                  ${main.method}\nExpression(JSON):        ${mainExpression}\nSpecified resultType:    ${main.specifiedResultType}\nresultType:              ${main.resultType}\nResolver:                ${main.resolver}\nCount:                   ${main.itemDetails.length}\n\n[Main details]\nIndex, Type, Name, Value(JSON), textContent(JSON)\n${main.itemDetails.map((detail, ind) => {\n      return fu.makeDetailText(detail, ["index"].concat(detailKeys), ", ", {\n          "index": val => { return ind; },\n          "value": JSON.stringify,\n          "textContent": JSON.stringify\n      });\n  }).join("\\n")}\n`;
-    };
+${!cont ? "" : `[Context information]
+Method:                  ${cont.method}
+Expression(JSON):        ${JSON.stringify(cont.expression)}
+Specified resultType:    ${cont.specifiedResultType}
+resultType:              ${cont.resultType}
+Resolver:                ${cont.resolver}
+
+[Context detail]
+Type, Name, Value(JSON), textContent(JSON)
+${fu.makeDetailText(cont.itemDetail, DETAIL_KEYS, ", ", {
+    "value": JSON.stringify,
+    "textContent": JSON.stringify
+})}
+`}
+[Main information]
+Method:                  ${main.method}
+Expression(JSON):        ${JSON.stringify(main.expression)}
+Specified resultType:    ${main.specifiedResultType}
+resultType:              ${main.resultType}
+Resolver:                ${main.resolver}
+Count:                   ${main.itemDetails.length}
+
+[Main details]
+Index, Type, Name, Value(JSON), textContent(JSON)
+${main.itemDetails.map((detail, ind) => {
+      return fu.makeDetailText(detail, ["index"].concat(DETAIL_KEYS), ", ", {
+          "index": val => { return ind; },
+          "value": JSON.stringify,
+          "textContent": JSON.stringify
+      });
+  }).join("\\n")}
+`;
+        #  Возвращает отформатированную текстовую информацию о результатах с JSON преобразованием
+    }
 
     window.addEventListener("load", function() {
-         browser.runtime.sendMessage({"event":"loadResults"}).then(results => {
+        # Добавляем слушатель события загрузки окна
+        browser.runtime.sendMessage({"event":"loadResults"}).then(results => {
+            # Отправляем сообщение loadResults и ждем ответа
             if (results) {
+                #  Если есть результаты
                 relatedTabId = results.tabId;
+                #  Сохраняем ID вкладки
                 relatedFrameId = results.frameId;
+                #  Сохраняем ID фрейма
                 executionId = results.executionId;
+                #  Сохраняем ID выполнения
 
-                let expoText = document.getElementById("export-text");
-                if(expoText){
-                    expoText.setAttribute(
-                        "download", `tryxpath-${results.title}.txt`);
-                    expoText.href =  makeTextDownloadUrl(makeInfoText(results));
-                }
-
-
-                let expoPartConv = document.getElementById(
+                const expoText = document.getElementById("export-text");
+                 #  Получаем элемент export-text
+                expoText.setAttribute(
+                    # Устанавливаем атрибут download
+                    "download", `tryxpath-${results.title}.txt`);
+                expoText.href =  makeTextDownloadUrl(makeInfoText(results));
+                # Устанавливаем ссылку на скачивание текстовой информации
+                const expoPartConv = document.getElementById(
+                    # Получаем элемент export-partly-converted
                     "export-partly-converted");
-                if(expoPartConv){
-                    expoPartConv.setAttribute(
-                       "download", `tryxpath-converted-${results.title}.txt`);
-                    expoPartConv.href =  makeTextDownloadUrl(
-                        makeConvertedInfoText(results));
-                }
-
-
+                expoPartConv.setAttribute(
+                    #  Устанавливаем атрибут download
+                    "download", `tryxpath-converted-${results.title}.txt`);
+                expoPartConv.href =  makeTextDownloadUrl(
+                     # Устанавливаем ссылку на скачивание JSON информации
+                   makeConvertedInfoText(results));
                 showAllResults(results);
+                # Отображаем результаты
             }
-        }).catch(function(error) {
-            logger.error('Ошибка при получении результатов от background script', error);
+        }).catch(error => logger.error("Ошибка при получении результатов", error));
+        #  Перехватываем и логируем ошибку при получении результатов
+
+        const contDetail = document.getElementById("context-detail");
+         #  Получаем элемент context-detail
+        contDetail.addEventListener("click", function(event) {
+            #  Добавляем слушатель события клика по таблице контекстных деталей
+            const target = event.target;
+            #  Получаем цель клика
+            if (target.tagName.toLowerCase() === "button") {
+                #  Если цель - кнопка
+                browser.tabs.sendMessage(relatedTabId, {
+                    # Отправляем сообщение фоновому скрипту для фокуса на элементе
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
+                    "executionId": executionId
+                }, {
+                    "frameId": relatedFrameId
+                });
+            }
         });
 
-
-        var contDetail = document.getElementById("context-detail");
-        if(contDetail){
-            contDetail.addEventListener("click", function(event) {
-                var target = event.target;
-                if (target.tagName.toLowerCase() === "button") {
-                    browser.tabs.sendMessage(relatedTabId, {
-                        "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
-                        "executionId": executionId
-                    }, {
-                        "frameId": relatedFrameId
-                    }).catch(function(error){
-                        logger.error('Ошибка при отправке сообщения focusContextItem', error);
-                    });
-                }
-            });
-        }
-
-
-
-        var mainDetails = document.getElementById("main-details");
-        if(mainDetails){
-             mainDetails.addEventListener("click", function(event) {
-                var target = event.target;
-                if (target.tagName.toLowerCase() === "button") {
-                    let ind = parseInt(target.getAttribute("data-index"), 10);
-                    browser.tabs.sendMessage(relatedTabId, {
-                        "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
-                        "executionId": executionId,
-                        "index": ind
-                    }, {
-                        "frameId": relatedFrameId
-                    }).catch(function(error){
-                        logger.error('Ошибка при отправке сообщения focusItem', error);
-                    });
-                }
-             });
-        }
-
+        const mainDetails = document.getElementById("main-details");
+        #  Получаем элемент main-details
+        mainDetails.addEventListener("click", function(event) {
+             # Добавляем слушатель события клика по таблице основных деталей
+            const target = event.target;
+             # Получаем цель клика
+            if (target.tagName.toLowerCase() === "button") {
+                 # Если цель - кнопка
+                const ind = parseInt(target.getAttribute("data-index"), 10);
+                #  Получаем индекс элемента
+                browser.tabs.sendMessage(relatedTabId, {
+                    # Отправляем сообщение фоновому скрипту для фокуса на элементе
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
+                    "executionId": executionId,
+                    "index": ind
+                }, {
+                    "frameId": relatedFrameId
+                });
+            }
+        });
     });
 
 })(window);

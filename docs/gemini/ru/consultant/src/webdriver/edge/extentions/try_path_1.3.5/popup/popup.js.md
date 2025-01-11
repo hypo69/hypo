@@ -2,54 +2,52 @@
 
 **Качество кода**
 8
-- Плюсы
-    - Код хорошо структурирован и разбит на логические функции.
-    - Используются константы для классов и значений, что повышает читаемость.
-    - Присутствуют обработчики событий для элементов интерфейса.
-    - Код использует асинхронные операции с `Promise`, что соответствует современным стандартам.
-- Минусы
-    - Отсутствует документация в формате reStructuredText (RST) для функций и переменных.
-    - Не используется `logger` для логирования ошибок.
-    - Некоторые блоки try-except отсутствуют, что может привести к необработанным ошибкам.
-    - Использование `Object.create(null)` для создания объектов может быть не совсем понятным для всех разработчиков.
-    - Не все переменные объявлены с использованием `const` или `let`.
+-  Плюсы
+    - Код разбит на функции, что улучшает читаемость и поддерживаемость.
+    - Используются константы для строк и числовых значений, что облегчает поддержку и модификацию кода.
+    - Присутствует обработка событий для различных элементов интерфейса, что обеспечивает интерактивность.
+    - Используется `Promise` для асинхронных операций, что способствует улучшению производительности и обработки ошибок.
+    - Есть механизм сохранения и восстановления состояния попапа, что удобно для пользователя.
+-  Минусы
+    -   Не хватает документации для функций и переменных, что затрудняет понимание кода.
+    -   Используется `var` вместо `let` и `const` в некоторых местах, что может привести к проблемам с областью видимости.
+    -   Использование `Object.create(null)` может быть не очевидно для всех разработчиков и требует пояснения.
+    -   Много повторяющегося кода, особенно при обработке видимости элементов (например, `changeContextVisible`, `changeResolverVisible` и т.д.).
+    -  Отсутствует обработка ошибок в некоторых местах, например, при разборе `frameId` из `frameIdExpression.value`.
+    -  Избыточное использование `then` и вложенности `then`, можно переписать с async/await.
+    -  Не используется импорт `logger`, для логирования ошибок
 
 **Рекомендации по улучшению**
 
-1. **Документация**: Добавить docstring в формате RST для всех функций и переменных.
-2. **Логирование**: Использовать `logger.error` для обработки и логирования ошибок вместо стандартных блоков `try-catch`.
-3. **Управление ошибками**: Добавить обработку ошибок в асинхронных операциях и в местах, где это необходимо.
-4. **Объявление переменных**: Использовать `const` для констант и `let` для переменных.
-5. **Упрощение создания объектов**: Использовать литералы объектов `{}` вместо `Object.create(null)` там, где это уместно.
-6. **Импорты**: Добавить необходимые импорты, такие как `logger`.
+1.  **Добавить документацию:**
+    - Документировать каждую функцию, метод и переменную, используя docstring в формате RST.
+2.  **Использовать `let` и `const`:**
+    - Заменить `var` на `let` или `const` в зависимости от необходимости изменения переменной.
+3.  **Упростить создание объектов:**
+    - Использовать литералы объектов `{}` вместо `Object.create(null)` там, где это возможно.
+4.  **Рефакторинг функций:**
+    - Объединить функции для изменения видимости в одну, принимающую элемент и класс в качестве параметров.
+5.  **Добавить обработку ошибок:**
+    - Добавить обработку ошибок, особенно при преобразовании `frameId` в число.
+6. **Использовать async/await:**
+   - Переписать цепочки `then` с использованием `async/await`.
+7.  **Импортировать и использовать `logger`:**
+    - Импортировать `logger` из `src.logger` и использовать для логирования ошибок.
+8.  **Улучшить именование переменных и функций:**
+    - Использовать более информативные имена для переменных и функций.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для управления popup окном расширения try_path.
-======================================================
+Модуль для управления popup окном расширения.
+=========================================================================================
 
-Этот модуль отвечает за взаимодействие с пользователем через popup окно,
-отправку запросов в content script и обработку ответов.
-
-Основные функции:
-    - Управление видимостью элементов popup окна.
-    - Отправка сообщений в content script для выполнения XPath запросов.
-    - Отображение результатов выполнения запросов.
-    - Сохранение и восстановление состояния popup окна.
-
-Пример использования
---------------------
-
-Запуск popup окна расширения и взаимодействие с его элементами.
+Этот модуль содержит JavaScript код для управления popup окном расширения,
+обрабатывает взаимодействие с контент скриптом и сохраняет состояние.
 """
-from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+from src.logger import logger #  импортируем logger
 
 (function (window) {
     "use strict";
@@ -66,8 +64,8 @@ from src.utils.jjson import j_loads, j_loads_ns
     const invalidExecutionId = NaN;
     const invalidFrameId = -1;
 
-    # Объявление переменных для элементов popup
-    let mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
+    # Объявление переменных для элементов DOM
+    var mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
         contextWay, contextExpression, resolverHeader, resolverBody,
         resolverCheckbox, resolverExpression, frameDesignationHeader,
         frameDesignationCheckbox, frameDesignationBody,
@@ -76,6 +74,7 @@ from src.utils.jjson import j_loads, j_loads_ns
         resultsTbody, contextTbody, resultsCount, resultsFrameId,
         detailsPageCount, helpBody, helpCheckbox;
 
+    # Объявление переменных для хранения состояния
     let relatedTabId = invalidTabId;
     let relatedFrameId = invalidFrameId;
     let executionId = invalidExecutionId;
@@ -83,35 +82,37 @@ from src.utils.jjson import j_loads, j_loads_ns
     const detailsPageSize = 50;
     let detailsPageIndex = 0;
 
-
     /**
      * Отправляет сообщение активной вкладке.
      *
-     * :param msg: Сообщение для отправки.
-     * :param opts: Опции для отправки сообщения.
-     * :return: Promise с результатом отправки.
+     * @param {object} msg - Сообщение для отправки.
+     * @param {object} [opts] - Дополнительные опции для `browser.tabs.sendMessage`.
+     * @returns {Promise<any>} - Promise с результатом отправки сообщения.
      */
-    function sendToActiveTab(msg, opts) {
+    async function sendToActiveTab(msg, opts) {
         opts = opts || {};
-        return browser.tabs.query({
-            "active": true,
-            "currentWindow": true
-        }).then(tabs => {
+        try {
+            const tabs = await browser.tabs.query({
+                "active": true,
+                "currentWindow": true
+            });
             return browser.tabs.sendMessage(tabs[0].id, msg, opts);
-        });
-    }
+        } catch (e) {
+            logger.error('Ошибка отправки сообщения активной вкладке', e)
+        }
 
+    };
 
-    /**
-     * Отправляет сообщение в указанный фрейм.
+   /**
+     * Отправляет сообщение указанному фрейму.
      *
-     * :param msg: Сообщение для отправки.
-     * :return: Promise с результатом отправки.
+     * @param {object} msg - Сообщение для отправки.
+     * @returns {Promise<void>} - Promise, который разрешается после отправки сообщения.
      */
     async function sendToSpecifiedFrame(msg) {
         const frameId = getSpecifiedFrameId();
         try {
-            const ress = await browser.tabs.executeScript({
+           let ress =  await browser.tabs.executeScript({
                 "file": "/scripts/try_xpath_check_frame.js",
                 "matchAboutBlank": true,
                 "runAt": "document_start",
@@ -121,18 +122,17 @@ from src.utils.jjson import j_loads, j_loads_ns
                 await execContentScript();
             }
             await sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "initializeBlankWindows" });
-            return await sendToActiveTab(msg, { "frameId": frameId });
+            await sendToActiveTab(msg, { "frameId": frameId });
         } catch (e) {
-            logger.error("An error occurred. The frameId may be incorrect.", e);
-            showError("An error occurred. The frameId may be incorrect.",
-                    frameId);
+            logger.error('Произошла ошибка. frameId может быть неверным.', e)
+            showError("An error occurred. The frameId may be incorrect.", frameId);
         }
-    }
+    };
 
-    /**
+     /**
      * Собирает состояние popup окна.
      *
-     * :return: Объект с состоянием popup.
+     * @returns {object} - Объект с текущим состоянием popup.
      */
     function collectPopupState() {
         const state = {};
@@ -153,91 +153,70 @@ from src.utils.jjson import j_loads, j_loads_ns
         state.specifiedFrameId = getSpecifiedFrameId();
         state.detailsPageIndex = detailsPageIndex;
         return state;
-    }
+    };
 
     /**
-     * Изменяет видимость блока контекста.
+     * Изменяет видимость элемента.
      *
+     * @param {HTMLElement} element - DOM элемент, видимость которого нужно изменить.
+     * @param {boolean} isVisible -  флаг, указывающий, нужно ли показать или скрыть элемент.
      */
-    function changeContextVisible () {
-        if (contextCheckbox.checked) {
-            contextBody.classList.remove(noneClass);
+    function changeVisible(element, isVisible) {
+        if (isVisible) {
+            element.classList.remove(noneClass);
         } else {
-            contextBody.classList.add(noneClass);
+            element.classList.add(noneClass);
         }
-    }
+    };
 
-
-    /**
-     * Изменяет видимость блока резолвера.
-     *
+     /**
+     * Изменяет видимость контекстного блока.
      */
-    function changeResolverVisible () {
-        if (resolverCheckbox.checked) {
-            resolverBody.classList.remove(noneClass);
-        } else {
-            resolverBody.classList.add(noneClass);
-        }
-    }
+    function changeContextVisible() {
+        changeVisible(contextBody, contextCheckbox.checked);
+    };
 
     /**
-     * Изменяет видимость блока выбора фрейма по ID.
-     *
+     * Изменяет видимость блока с настройками резолвера.
      */
-    function changeFrameIdVisible () {
-        if (frameIdCheckbox.checked) {
-            frameIdBody.classList.remove(noneClass);
-        } else {
-            frameIdBody.classList.add(noneClass);
-        }
-    }
+    function changeResolverVisible() {
+       changeVisible(resolverBody, resolverCheckbox.checked);
+    };
 
     /**
-     * Изменяет видимость блока выбора фрейма по designation.
-     *
+     * Изменяет видимость блока с настройками frame ID.
+     */
+    function changeFrameIdVisible() {
+         changeVisible(frameIdBody, frameIdCheckbox.checked);
+    };
+
+    /**
+     * Изменяет видимость блока с настройками назначения фрейма.
      */
     function changeFrameDesignationVisible() {
-        if (frameDesignationCheckbox.checked) {
-            frameDesignationBody.classList.remove(noneClass);
-        } else {
-            frameDesignationBody.classList.add(noneClass);
-        }
-    }
-
+        changeVisible(frameDesignationBody, frameDesignationCheckbox.checked);
+    };
 
     /**
-     * Изменяет видимость блока помощи.
-     *
+     * Изменяет видимость элементов помощи.
      */
     function changeHelpVisible() {
-        const helps = document.getElementsByClassName(helpClass);
-        if (helpCheckbox.checked) {
-            for (let i = 0; i < helps.length; i++) {
-                helps[i].classList.remove(noneClass);
-            }
-        } else {
-            for (let i = 0; i < helps.length; i++) {
-                helps[i].classList.add(noneClass);
-            }
+         const helps = document.getElementsByClassName(helpClass);
+        for (let i = 0; i < helps.length; i++) {
+            changeVisible(helps[i], helpCheckbox.checked);
         }
-    }
-
+    };
 
     /**
-     * Создает сообщение для выполнения запроса.
+     * Создает сообщение для выполнения скрипта.
      *
-     * :return: Объект с сообщением для выполнения запроса.
+     * @returns {object} - Сообщение для отправки.
      */
     function makeExecuteMessage() {
         const msg = {};
         msg.event = "execute";
 
-        let resol;
-        if (resolverCheckbox.checked) {
-            resol = resolverExpression.value;
-        } else {
-            resol = null;
-        }
+        const resol = resolverCheckbox.checked ? resolverExpression.value : null;
 
         const way = mainWay.selectedOptions[0];
         msg.main = {};
@@ -247,12 +226,12 @@ from src.utils.jjson import j_loads, j_loads_ns
         msg.main.resolver = resol;
 
         if (contextCheckbox.checked) {
-            let way = contextWay.selectedOptions[0];
-            msg.context = {};
-            msg.context.expression = contextExpression.value;
-            msg.context.method = way.getAttribute("data-method");
-            msg.context.resultType = way.getAttribute("data-type");
-            msg.context.resolver = resol;
+            const way = contextWay.selectedOptions[0];
+             msg.context = {};
+             msg.context.expression = contextExpression.value;
+             msg.context.method = way.getAttribute("data-method");
+             msg.context.resultType = way.getAttribute("data-type");
+             msg.context.resolver = resol;
         }
 
         if (frameDesignationCheckbox.checked) {
@@ -260,74 +239,86 @@ from src.utils.jjson import j_loads, j_loads_ns
         }
 
         return msg;
-    }
-
+    };
 
     /**
-     * Возвращает ID указанного фрейма.
+     * Получает ID указанного фрейма.
      *
-     * :return: ID фрейма.
+     * @returns {number} - ID фрейма.
      */
-    function getSpecifiedFrameId () {
+    function getSpecifiedFrameId() {
         if (!frameIdCheckbox.checked) {
             return 0;
         }
         const id = frameIdList.selectedOptions[0].getAttribute("data-frame-id");
         if (id === "manual") {
-            return parseInt(frameIdExpression.value, 10);
+            const manualId = parseInt(frameIdExpression.value, 10);
+            if (isNaN(manualId)) {
+                logger.error(`Некорректный manual id = ${frameIdExpression.value}`)
+                return 0
+            }
+            return manualId;
         }
-        return parseInt(id, 10);
-    }
-
+         const parsedId = parseInt(id, 10);
+         if (isNaN(parsedId)) {
+            logger.error(`Некорректный id = ${id}`)
+            return 0
+        }
+        return parsedId
+    };
 
     /**
-     * Выполняет content script.
+     * Выполняет контент скрипты.
      *
-     * :return: Promise с результатом выполнения.
+     * @returns {Promise<void>} - Promise, который разрешается после выполнения скриптов.
      */
     async function execContentScript() {
-        await browser.tabs.executeScript({
-            "file": "/scripts/try_xpath_functions.js",
-            "matchAboutBlank": true,
-            "runAt": "document_start",
-            "allFrames": true
-        });
-        return await browser.tabs.executeScript({
-            "file": "/scripts/try_xpath_content.js",
-            "matchAboutBlank": true,
-            "runAt": "document_start",
-            "allFrames": true
-        });
-    }
+        try {
+           await browser.tabs.executeScript({
+                "file": "/scripts/try_xpath_functions.js",
+                "matchAboutBlank": true,
+                "runAt": "document_start",
+                "allFrames": true
+            });
+            await browser.tabs.executeScript({
+                "file": "/scripts/try_xpath_content.js",
+                "matchAboutBlank": true,
+                "runAt": "document_start",
+                "allFrames": true
+            });
+        }
+        catch (e) {
+            logger.error('Ошибка выполнения контент скрипта', e)
+        }
+    };
 
 
     /**
      * Отправляет сообщение на выполнение.
-     *
      */
     function sendExecute() {
         sendToSpecifiedFrame(makeExecuteMessage());
-    }
+    };
 
     /**
-     * Обрабатывает нажатие клавиши Enter в полях ввода.
+     * Обрабатывает нажатие клавиши Enter в текстовом поле.
      *
-     * :param event: Событие нажатия клавиши.
+     * @param {KeyboardEvent} event - Событие клавиатуры.
      */
-    function handleExprEnter (event) {
+    function handleExprEnter(event) {
         if ((event.key === "Enter") && !event.shiftKey) {
             event.preventDefault();
             sendExecute();
         }
-    }
+    };
 
     /**
-     * Отображает страницу с результатами.
+     * Показывает страницу с деталями результата.
      *
-     * :param index: Индекс страницы для отображения.
+     * @param {number} index - Индекс страницы.
      */
     async function showDetailsPage(index) {
-        const max = Math.floor(resultedDetails.length / detailsPageSize);
+         let max = Math.floor(resultedDetails.length / detailsPageSize);
 
         if (!Number.isInteger(index)) {
             index = 0;
@@ -335,8 +326,8 @@ from src.utils.jjson import j_loads, j_loads_ns
         index = Math.max(0, index);
         index = Math.min(index, max);
 
-        const scrollY = window.scrollY;
-        const scrollX = window.scrollX;
+        let scrollY = window.scrollY;
+        let scrollX = window.scrollX;
 
         try {
             await fu.updateDetailsTable(resultsTbody, resultedDetails, {
@@ -347,16 +338,15 @@ from src.utils.jjson import j_loads, j_loads_ns
             detailsPageIndex = index;
             window.scrollTo(scrollX, scrollY);
         } catch (e) {
-            logger.error("Error updating details table", e);
+           logger.error('Ошибка при обновлении таблицы деталей', e)
         }
-    }
-
+    };
 
     /**
-     * Отображает сообщение об ошибке.
+     * Показывает сообщение об ошибке.
      *
-     * :param message: Сообщение об ошибке.
-     * :param frameId: ID фрейма, в котором произошла ошибка.
+     * @param {string} message - Сообщение об ошибке.
+     * @param {number} frameId - ID фрейма.
      */
     async function showError(message, frameId) {
         relatedTabId = invalidTabId;
@@ -367,40 +357,41 @@ from src.utils.jjson import j_loads, j_loads_ns
         resultedDetails = [];
         resultsCount.textContent = resultedDetails.length;
         resultsFrameId.textContent = frameId;
-
-        try {
-            await fu.updateDetailsTable(contextTbody, []);
-        } catch (e) {
-             logger.error("Error updating context table", e);
+        
+        try{
+            await fu.updateDetailsTable(contextTbody, [])
         }
-        showDetailsPage(0);
-    }
+        catch(e){
+           logger.error('Ошибка при обновлении контекстной таблицы', e)
+        }
 
+         showDetailsPage(0);
+    };
 
-    /**
-     * Обрабатывает входящие сообщения.
+   /**
+     * Общий обработчик сообщений.
      *
-     * :param message: Сообщение.
-     * :param sender: Отправитель сообщения.
-     * :param sendResponse: Функция для отправки ответа.
-     * :return: Результат работы обработчика.
+     * @param {object} message - Сообщение.
+     * @param {object} sender - Отправитель сообщения.
+     * @param {function} sendResponse - Функция для отправки ответа.
+     * @returns {any} - Результат работы обработчика.
      */
     function genericListener(message, sender, sendResponse) {
         const listener = genericListener.listeners[message.event];
         if (listener) {
             return listener(message, sender, sendResponse);
         }
-    }
-    genericListener.listeners = {};
+    };
+    genericListener.listeners = {};;
     browser.runtime.onMessage.addListener(genericListener);
 
     /**
-     * Обработчик сообщения showResultsInPopup.
+     * Обработчик сообщений для отображения результатов в popup.
      *
-     * :param message: Сообщение.
-     * :param sender: Отправитель сообщения.
+     * @param {object} message - Сообщение.
+     * @param {object} sender - Отправитель сообщения.
      */
-    genericListener.listeners.showResultsInPopup = async function (message, sender){
+    genericListener.listeners.showResultsInPopup = async function (message, sender) {
         relatedTabId = sender.tab.id;
         relatedFrameId = sender.frameId;
         executionId = message.executionId;
@@ -412,21 +403,23 @@ from src.utils.jjson import j_loads, j_loads_ns
 
         if (message.context && message.context.itemDetail) {
             try {
-                 await fu.updateDetailsTable(contextTbody, [message.context.itemDetail]);
-            } catch (e) {
-                logger.error("Error updating context table", e);
+               await fu.updateDetailsTable(contextTbody, [message.context.itemDetail]);
             }
+            catch (e) {
+                logger.error('Ошибка при обновлении таблицы контекстных деталей', e)
+            }
+
         }
 
         showDetailsPage(detailsPageIndex);
-    }
+    };
 
     /**
-     * Обработчик сообщения restorePopupState.
+     * Обработчик сообщений для восстановления состояния popup.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Сообщение.
      */
-    genericListener.listeners.restorePopupState = function (message) {
+    genericListener.listeners.restorePopupState = async function (message) {
         const state = message.state;
 
         if (state) {
@@ -453,34 +446,41 @@ from src.utils.jjson import j_loads, j_loads_ns
         changeResolverVisible();
         changeFrameDesignationVisible();
         changeFrameIdVisible();
-
-        sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup" });
-    }
+        try {
+            await sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup" });
+        }
+         catch(e){
+                logger.error('Ошибка при отправке сообщения в requestShowResultsInPopup', e)
+        }
+    };
 
     /**
-     * Обработчик сообщения insertStyleToPopup.
+     * Обработчик сообщений для вставки стилей в popup.
      *
-     * :param message: Сообщение.
+     * @param {object} message - Сообщение.
      */
     genericListener.listeners.insertStyleToPopup = function(message) {
         const style = document.createElement("style");
         style.textContent = message.css;
         document.head.appendChild(style);
-    }
+    };
 
     /**
-     * Обработчик сообщения addFrameId.
+     * Обработчик сообщений для добавления ID фрейма.
      *
-     * :param message: Сообщение.
-     * :param sender: Отправитель сообщения.
+     * @param {object} message - Сообщение.
+     * @param {object} sender - Отправитель сообщения.
      */
     genericListener.listeners.addFrameId = function (message, sender) {
         const opt = document.createElement("option");
         opt.setAttribute("data-frame-id", sender.frameId);
         opt.textContent = sender.frameId;
         frameIdList.appendChild(opt);
-    }
+    };
 
+     /**
+     * Обработчик события загрузки окна.
+     */
     window.addEventListener("load", () => {
         helpBody = document.getElementById("help-body");
         helpCheckbox = document.getElementById("help-switch");
@@ -565,7 +565,7 @@ from src.utils.jjson import j_loads, j_loads_ns
                     "matchAboutBlank": true,
                     "runAt": "document_start",
                     "allFrames": true
-                }).catch(e => logger.error("Error adding frame id", e));
+                }).catch(fu.onError);
             });
 
         document.getElementById("show-previous-results").addEventListener(
@@ -636,7 +636,7 @@ from src.utils.jjson import j_loads, j_loads_ns
             const target = event.target;
             if (target.tagName.toLowerCase() === "button") {
                 const ind = parseInt(target.getAttribute("data-index"), 10);
-                browser.tabs.sendMessage(relatedTabId, {
+                 browser.tabs.sendMessage(relatedTabId, {
                     "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
                     "executionId": executionId,
                     "index": ind
@@ -649,7 +649,7 @@ from src.utils.jjson import j_loads, j_loads_ns
         window.addEventListener("unload", () => {
             const state = collectPopupState();
             browser.runtime.sendMessage({
-                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "storePopupState",
+                 "timeout":0,"timeout_for_event":"presence_of_element_located","event": "storePopupState",
                 "state": state
             });
         });
@@ -663,4 +663,3 @@ from src.utils.jjson import j_loads, j_loads_ns
 
 
 })(window);
-```

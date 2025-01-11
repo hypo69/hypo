@@ -1,75 +1,68 @@
 # Анализ кода модуля `warehouse.py`
 
 **Качество кода**
-6
+7
 -  Плюсы
-    -  Используется импорт `from src.logger.logger import logger` для логирования.
-    -  Используется базовый класс `PrestaShop`.
-    -  Присутствуют необходимые импорты `os, sys, attr, attrs, pathlib, header, src, printer`.
+    -   Присутствует описание модуля.
+    -   Используется импорт logger из `src.logger.logger`.
+    -   Код структурирован.
+
 -  Минусы
-    -  Отсутствует docstring для модуля.
-    -  Отсутствует импорт `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Используются не все импорты в соответствии с рекомендациями.
-    -  Не используется RST формат в комментариях.
-    -  Отсутствует документация к классу.
-    -  Присутствует неиспользуемый ``
-    -  Остутствуют константы для `MODE`
+    -   Отсутствует подробная документация в формате RST для класса `PrestaWarehouse`.
+    -   Импорт `attr, attrs` не используется.
+    -   Импорты `os, sys, header` не используются.
+    -   Импорт `from src import gs`  не информативный.
+    -   Импорт `from src.utils.printer import pprint` не информативный.
+    -   Комментарии к модулю не соответствуют стандарту оформления docstring в Python (для Sphinx)
+    -   Отсутствуют `...` для обозначения заглушек в коде.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля в формате RST.
-2.  Использовать `j_loads` или `j_loads_ns` для чтения файлов если это необходимо.
-3.  Добавить docstring для класса `PrestaWarehouse`.
-4.  Удалить неиспользуемую переменную `MODE`.
-5.  Добавить константы `MODE_DEV` и `MODE_PROD` вместо литералов.
-6.  Переписать все комментарии в формате RST.
-7.  Добавить обработку ошибок с использованием `logger.error`.
+1.  Удалить неиспользуемые импорты: `os`, `sys`, `header`, `attr`, `attrs`.
+2.  Добавить описание класса `PrestaWarehouse` в формате RST.
+3.  Уточнить импорты `from src import gs` и  `from src.utils.printer import pprint` .
+4.  Добавить  `...` в код для обозначения заглушки.
+5.  Привести комментарии в начале файла к виду docstring.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
 """
-Модуль для работы с API PrestaShop для управления складом.
-===========================================================
+Модуль для работы с API PrestaShop для управления складами
+========================================================
 
 Этот модуль содержит класс :class:`PrestaWarehouse`, который наследуется от :class:`PrestaShop`
-и предоставляет методы для работы с API PrestaShop для управления складом.
+и предназначен для взаимодействия с API PrestaShop для управления складами.
 
 Пример использования
 --------------------
 
-Пример создания экземпляра класса::
+Пример создания экземпляра класса `PrestaWarehouse`:
+
+.. code-block:: python
 
     from src.endpoints.prestashop.warehouse import PrestaWarehouse
-    warehouse = PrestaWarehouse(api_url='https://your-prestashop.com/api', api_key='your_api_key')
+
+    warehouse_api = PrestaWarehouse(url='your_prestashop_url', api_key='your_api_key')
+
 """
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
-import os, sys
-from attr import attr, attrs
 from pathlib import Path
-import header
-from src import gs
-# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить если надо
-from src.utils.printer import pprint
+# from attr import attr, attrs # не используется
+# import os,sys # не используется
+# import header # не используется
+# from src import gs #  не информативный
+# from src.utils.printer import  pprint # не информативный
 from .api import PrestaShop
 from src.logger.logger import logger
 
-MODE_DEV = 'dev'
-MODE_PROD = 'prod'
-
-@attrs
 class PrestaWarehouse(PrestaShop):
     """
-    Класс для работы с API PrestaShop для управления складом.
+    Класс для работы с API PrestaShop для управления складами.
 
-    Наследуется от :class:`PrestaShop` и предоставляет методы для выполнения операций со складом,
-    используя API PrestaShop.
-
-    :param api_url: URL API PrestaShop.
-    :param api_key: API ключ PrestaShop.
+    Наследуется от :class:`PrestaShop` и предоставляет методы для взаимодействия
+    с API PrestaShop для управления складами, такие как получение, создание,
+    обновление и удаление складов.
     """
     ...
 ```

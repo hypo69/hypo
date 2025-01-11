@@ -1,165 +1,116 @@
 ## <алгоритм>
-
-1. **Инициализация:**
-   - Определяется глобальная переменная `MODE` со значением `'dev'`. Это может использоваться для переключения между режимами разработки и продакшна.
-   - Импортируются необходимые классы и типы из библиотек `typing_extensions` и `openai`.
-
-2. **Создание класса `EventHandler`:**
-   - Создается класс `EventHandler`, который наследуется от `AssistantEventHandler`.
-   - Этот класс переопределяет несколько методов, которые вызываются при возникновении различных событий во время стриминга ответа от OpenAI Assistant.
-
-3. **Метод `on_text_created`:**
-   - Вызывается, когда создается новый текстовый блок.
-   - Печатает "assistant > " в консоль, подготавливая вывод текста от ассистента.
-
-   ```python
-   def on_text_created(self, text: Text) -> None:
-       print(f"\nassistant > ", end="", flush=True)
-   ```
-
-4. **Метод `on_text_delta`:**
-   - Вызывается при получении текстовой дельты (части текста).
-   - Печатает полученную дельту в консоль, таким образом стримя текст по частям.
-
-   ```python
-   def on_text_delta(self, delta: TextDelta, snapshot: Text):
-       print(delta.value, end="", flush=True)
-   ```
-
-5. **Метод `on_tool_call_created`:**
-   - Вызывается, когда создается новый вызов инструмента (например, code interpreter).
-   - Выводит в консоль тип вызванного инструмента.
-
-   ```python
-   def on_tool_call_created(self, tool_call: ToolCall):
-       print(f"\nassistant > {tool_call.type}\n", flush=True)
-   ```
-
-6. **Метод `on_tool_call_delta`:**
-   - Вызывается при получении дельты вызова инструмента.
-   - Проверяет, является ли инструмент `code_interpreter`.
-   - Если это code_interpreter, то выводит входной код и логи (выходы) в консоль.
-
-   ```python
-   def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
-       if delta.type == "code_interpreter" and delta.code_interpreter:
-           if delta.code_interpreter.input:
-               print(delta.code_interpreter.input, end="", flush=True)
-           if delta.code_interpreter.outputs:
-               print(f"\n\noutput >", flush=True)
-               for output in delta.code_interpreter.outputs:
-                   if output.type == "logs":
-                       print(f"\n{output.logs}", flush=True)
-   ```
+1.  **Инициализация:**
+    *   Создается класс `EventHandler`, наследующий от `AssistantEventHandler`. Этот класс будет обрабатывать события, возникающие во время потоковой передачи ответов от OpenAI Assistant.
+2.  **Обработка события `on_text_created`:**
+    *   При создании нового текстового фрагмента (событие `on_text_created`) выводится строка `"\nassistant > "` в консоль.  
+        *   Пример: Выводится `"\nassistant > "` перед началом потоковой передачи текста ответа.
+3.  **Обработка события `on_text_delta`:**
+    *   При получении дельты (изменения) текста (событие `on_text_delta`) выводится значение дельты (`delta.value`) в консоль. Это позволяет отображать текст ответа асинхронно по мере его поступления.
+        *   Пример: По мере поступления текста выводится каждое слово или предложение, образуя полноценный ответ.
+4.  **Обработка события `on_tool_call_created`:**
+    *   При создании вызова инструмента (событие `on_tool_call_created`) выводится в консоль строка с типом инструмента `\nassistant > {tool_call.type}\n`.
+        *   Пример: Если инструмент - `code_interpreter`, выводится строка `\nassistant > code_interpreter\n`.
+5.  **Обработка события `on_tool_call_delta`:**
+    *   При получении дельты вызова инструмента (событие `on_tool_call_delta`) проверяется, является ли инструмент `code_interpreter`.
+        *   Если это `code_interpreter`:
+            *   Если есть ввод (`delta.code_interpreter.input`), он выводится в консоль.
+                 * Пример: `print("print(1+1)", flush=True)`
+            *   Если есть вывод (`delta.code_interpreter.outputs`):
+                *   Выводится строка `"\n\noutput >"` в консоль.
+                *   Для каждого вывода проверяется, является ли он логами (`output.type == "logs"`).
+                    *   Если это логи, они выводятся в консоль.
+                          * Пример: `print("\n2", flush=True)`
+6.  **Использование `EventHandler`:**
+    *   Класс `EventHandler` предназначен для использования с SDK OpenAI `stream`, чтобы отслеживать и обрабатывать события при выполнении запроса к ассистенту.
 
 ## <mermaid>
-
 ```mermaid
 flowchart TD
-    Start[Start] --> EventHandlerClass[Class: <code>EventHandler</code>]
-    
-    EventHandlerClass --> on_text_created[Method: <code>on_text_created(text: Text)</code>]
-    on_text_created --> PrintAssistantTextCreated[Print: "assistant > "]
-    PrintAssistantTextCreated --> EndOnTextCreated[End: <code>on_text_created</code>]
-    
-    EventHandlerClass --> on_text_delta[Method: <code>on_text_delta(delta: TextDelta, snapshot: Text)</code>]
-    on_text_delta --> PrintTextDelta[Print: <code>delta.value</code>]
-     PrintTextDelta --> EndOnTextDelta[End: <code>on_text_delta</code>]
-    
-    EventHandlerClass --> on_tool_call_created[Method: <code>on_tool_call_created(tool_call: ToolCall)</code>]
-    on_tool_call_created --> PrintToolCallType[Print: <code>tool_call.type</code>]
-    PrintToolCallType --> EndOnToolCallCreated[End: <code>on_tool_call_created</code>]
+    classDef eventHandlerClass fill:#f9f,stroke:#333,stroke-width:2px
+    classDef eventHandlerMethod fill:#ccf,stroke:#333,stroke-width:2px
 
-    EventHandlerClass --> on_tool_call_delta[Method: <code>on_tool_call_delta(delta: ToolCallDelta, snapshot: ToolCall)</code>]
-    on_tool_call_delta --> CheckToolType[Check: <code>delta.type == "code_interpreter"</code>]
-    CheckToolType -- Yes --> CheckCodeInterpreterInput[Check: <code>delta.code_interpreter.input</code>]
-     CheckCodeInterpreterInput -- Yes --> PrintCodeInterpreterInput[Print: <code>delta.code_interpreter.input</code>]
-     PrintCodeInterpreterInput --> CheckCodeInterpreterOutputs[Check: <code>delta.code_interpreter.outputs</code>]
-     CheckCodeInterpreterInput -- No --> CheckCodeInterpreterOutputs
-     CheckCodeInterpreterOutputs -- Yes --> PrintOutputHeader[Print: "output >"]
-      PrintOutputHeader --> LoopOutputs[Loop: for output in <code>delta.code_interpreter.outputs</code>]
-        LoopOutputs --> CheckOutputType[Check: <code>output.type == "logs"</code>]
-            CheckOutputType -- Yes --> PrintLogs[Print: <code>output.logs</code>]
-             PrintLogs --> EndLoopOutputs[End loop]
-            CheckOutputType -- No --> EndLoopOutputs
-     CheckCodeInterpreterOutputs -- No --> EndOnToolCallDelta
-    CheckToolType -- No --> EndOnToolCallDelta
+    Start --> EventHandlerClass[EventHandler Class <br/> (Inherits AssistantEventHandler)]:::eventHandlerClass
+    
+    EventHandlerClass --> onTextCreatedMethod[on_text_created(text: Text): void]:::eventHandlerMethod
+    EventHandlerClass --> onTextDeltaMethod[on_text_delta(delta: TextDelta, snapshot: Text): void]:::eventHandlerMethod
+    EventHandlerClass --> onToolCallCreatedMethod[on_tool_call_created(tool_call: ToolCall): void]:::eventHandlerMethod
+    EventHandlerClass --> onToolCallDeltaMethod[on_tool_call_delta(delta: ToolCallDelta, snapshot: ToolCall): void]:::eventHandlerMethod
+
+    onTextCreatedMethod --> PrintTextCreated[Print "assistant >" to console]
+    
+    onTextDeltaMethod --> PrintTextDelta[Print delta.value to console]
+    
+    onToolCallCreatedMethod --> PrintToolCallType[Print tool_call.type to console]
+    
+    onToolCallDeltaMethod --> CheckToolType[Check if delta.type is "code_interpreter"]
+    
+    CheckToolType -- Yes --> CheckCodeInput[Check if delta.code_interpreter.input exists]
+    CheckToolType -- No --> End
+    
+    CheckCodeInput -- Yes --> PrintCodeInput[Print delta.code_interpreter.input to console]
+    CheckCodeInput -- No --> CheckCodeOutput[Check if delta.code_interpreter.outputs exists]
+
+    CheckCodeOutput -- Yes --> PrintOutputHeader[Print "output >" to console]
+    CheckCodeOutput -- No --> End
+    
+    PrintOutputHeader --> LoopThroughOutputs[Loop through delta.code_interpreter.outputs]
+    
+    LoopThroughOutputs --> CheckOutputType[Check if output.type is "logs"]
+    
+    CheckOutputType -- Yes --> PrintLogs[Print output.logs to console]
+    CheckOutputType -- No --> LoopThroughOutputs
+     PrintLogs --> LoopThroughOutputs
    
-    EndOnTextCreated --> End[End]
-    EndOnTextDelta --> End
-    EndOnToolCallCreated --> End
-    EndOnToolCallDelta --> End
-    EndLoopOutputs -->EndOnToolCallDelta
 ```
 
-### Анализ зависимостей `mermaid`
-- **`EventHandlerClass`**: Представляет класс `EventHandler`, который отвечает за обработку событий от OpenAI Assistant.
-- **`on_text_created`, `on_text_delta`, `on_tool_call_created`, `on_tool_call_delta`**: Это методы класса `EventHandler`, которые обрабатывают различные типы событий.
-- **`Text`, `TextDelta`, `ToolCall`, `ToolCallDelta`**: Типы данных, представляющие текстовые и инструментальные вызовы, используемые в методах.
-- **`PrintAssistantTextCreated`, `PrintTextDelta`, `PrintToolCallType`, `PrintCodeInterpreterInput`, `PrintOutputHeader`, `PrintLogs`**: Операции вывода в консоль различных данных.
-- **`CheckToolType`, `CheckCodeInterpreterInput`, `CheckCodeInterpreterOutputs`, `CheckOutputType`**: Логические проверки условий.
-- **`LoopOutputs`**: Цикл для обработки нескольких выходов `code_interpreter`.
+**Объяснение зависимостей в диаграмме:**
+*   Диаграмма `mermaid` описывает логику класса `EventHandler` и его методов.
+*   `EventHandlerClass` - это класс, который наследует от `AssistantEventHandler` и переопределяет его методы для обработки событий.
+*   `on_text_created`, `on_text_delta`, `on_tool_call_created`, `on_tool_call_delta` - это методы, которые переопределяют методы родительского класса `AssistantEventHandler` и предназначены для обработки соответствующих событий.
+*   Методы выводят информацию в консоль, используя `print`.
+*   Метод `on_tool_call_delta` содержит сложную логику для обработки выводов инструмента `code_interpreter`, включая проверку типа вывода и вывод логов.
+*   В диаграмме используется `classDef`, чтобы стилизовать блоки.
 
 ## <объяснение>
+**Импорты:**
 
-### Импорты
+*   `from typing_extensions import override`: Импортирует декоратор `override` для явного указания переопределения методов родительского класса.
+*   `from openai import AssistantEventHandler, OpenAI`: Импортирует базовый класс `AssistantEventHandler` и класс `OpenAI` из библиотеки `openai`. `AssistantEventHandler` - это абстрактный класс, который определяет интерфейс для обработки событий от ассистента OpenAI, а `OpenAI` - класс, представляющий клиент для работы с API OpenAI.
+*   `from openai.types.beta.threads import Text, TextDelta`: Импортирует типы `Text` и `TextDelta`, представляющие текстовые фрагменты и их изменения в потоке ответов от ассистента OpenAI. `Text` представляет полный текстовый фрагмент, а `TextDelta` представляет изменения в тексте.
+*   `from openai.types.beta.threads.runs import ToolCall, ToolCallDelta`: Импортирует типы `ToolCall` и `ToolCallDelta`, представляющие вызовы инструментов и их изменения в потоке ответов от ассистента OpenAI. `ToolCall` представляет вызов определенного инструмента, а `ToolCallDelta` представляет изменения в вызове инструмента.
 
--   `from typing_extensions import override`: Импортируется декоратор `override`, который используется для аннотации методов, переопределяющих методы родительского класса. Это улучшает читаемость и помогает избежать ошибок при рефакторинге.
--   `from openai import AssistantEventHandler, OpenAI`: Импортируется `AssistantEventHandler` – базовый класс для обработки событий ассистента OpenAI и `OpenAI` - класс для взаимодействия с OpenAI API.
--   `from openai.types.beta.threads import Text, TextDelta`: Импортируются типы данных `Text` и `TextDelta`, представляющие текстовые данные и их изменения при стриминге. Эти типы используются для обработки текстовых ответов от ассистента.
--   `from openai.types.beta.threads.runs import ToolCall, ToolCallDelta`: Импортируются типы данных `ToolCall` и `ToolCallDelta`, представляющие вызовы инструментов (например, code interpreter) и их изменения при стриминге.
+**Классы:**
 
-### Классы
+*   **`EventHandler(AssistantEventHandler)`**:
+    *   **Роль**: Этот класс обрабатывает события, происходящие при потоковой передаче ответа от ассистента OpenAI. Он определяет, как должны быть обработаны различные типы событий, такие как создание текста, изменение текста, вызовы инструментов и изменения вызовов инструментов.
+    *   **Атрибуты**: Нет явно определенных атрибутов.
+    *   **Методы**:
+        *   `on_text_created(self, text: Text) -> None`: Метод вызывается при создании нового текстового фрагмента. Он выводит `"\nassistant > "` в консоль.
+        *   `on_text_delta(self, delta: TextDelta, snapshot: Text)`: Метод вызывается при получении изменения текстового фрагмента. Он выводит дельту (`delta.value`) в консоль.
+        *   `on_tool_call_created(self, tool_call: ToolCall)`: Метод вызывается при создании вызова инструмента. Он выводит тип инструмента `tool_call.type` в консоль.
+        *   `on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall)`: Метод вызывается при получении изменения в вызове инструмента. Он обрабатывает изменения, связанные с инструментом `code_interpreter`, выводя его ввод и логи в консоль.
+    *   **Взаимодействие**: Этот класс предназначен для использования с SDK OpenAI `stream`, который будет передавать ему события для обработки. Он взаимодействует с консолью, выводя информацию об этих событиях.
 
--   **`EventHandler(AssistantEventHandler)`**:
-    -   **Роль**: Этот класс обрабатывает события, возникающие во время стриминга ответов от OpenAI Assistant. Он наследуется от `AssistantEventHandler`, переопределяя его методы для кастомизации обработки событий.
-    -   **Атрибуты**: Класс не имеет атрибутов.
-    -   **Методы**:
-        -   `on_text_created(self, text: Text) -> None`:
-            -   **Аргументы**: `text` типа `Text` (новый текстовый блок).
-            -   **Возвращаемое значение**: `None`.
-            -   **Назначение**: Вызывается при создании нового текстового блока. Выводит в консоль "assistant > ", подготавливая вывод текста.
-        -   `on_text_delta(self, delta: TextDelta, snapshot: Text)`:
-            -   **Аргументы**: `delta` типа `TextDelta` (изменение текста), `snapshot` типа `Text` (текущий текст).
-            -   **Возвращаемое значение**: `None`.
-            -   **Назначение**: Вызывается при получении дельты текста. Выводит значение дельты в консоль, обеспечивая стриминг текста.
-        -   `on_tool_call_created(self, tool_call: ToolCall)`:
-            -   **Аргументы**: `tool_call` типа `ToolCall` (вызов инструмента).
-            -   **Возвращаемое значение**: `None`.
-            -   **Назначение**: Вызывается при создании вызова инструмента. Выводит в консоль тип вызванного инструмента.
-        -   `on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall)`:
-            -   **Аргументы**: `delta` типа `ToolCallDelta` (дельта вызова инструмента), `snapshot` типа `ToolCall` (текущий вызов инструмента).
-            -   **Возвращаемое значение**: `None`.
-            -   **Назначение**: Вызывается при получении дельты вызова инструмента. Если это вызов `code_interpreter`, выводит входной код и логи (выходы).
-    -   **Взаимодействие**: Класс взаимодействует с API OpenAI, перехватывая события стриминга.
+**Функции**:
 
-### Функции
+*   В коде явно не определены функции, кроме методов класса `EventHandler`. Все методы являются обработчиками событий и не имеют возвращаемых значений (`-> None`).
 
--   В данном коде нет отдельных функций, все операции выполняются внутри методов класса `EventHandler`.
+**Переменные**:
 
-### Переменные
+*   В коде не используется глобальных переменных, кроме тех, что импортируются из других модулей.
+*   Переменные `text`, `delta`, `snapshot`, `tool_call` используются как параметры в методах класса `EventHandler`.
 
--   `MODE`: Глобальная переменная, определяющая режим работы (по умолчанию 'dev'). Возможно, используется для изменения поведения кода в разных средах.
-- `text`:  Переменная типа `Text`, используется в методе `on_text_created`, представляет текстовый блок ответа от ассистента
-- `delta`:  Переменная типа `TextDelta`, используется в методе `on_text_delta`, представляет изменение текста
-- `snapshot`:  Переменная типа `Text`, используется в методе `on_text_delta`, представляет текущий текст
-- `tool_call`: Переменная типа `ToolCall`, используется в методе `on_tool_call_created`, представляет вызов инструмента от ассистента
-- `delta`:  Переменная типа `ToolCallDelta`, используется в методе `on_tool_call_delta`, представляет изменение вызова инструмента
-- `snapshot`: Переменная типа `ToolCall`, используется в методе `on_tool_call_delta`, представляет текущий вызов инструмента
-- `output`: Переменная итератор в цикле `for output in delta.code_interpreter.outputs`, которая представляет собой отдельный выход code_interpreter
+**Потенциальные ошибки и области для улучшения:**
 
-### Потенциальные ошибки и области для улучшения
+1.  **Обработка ошибок**: Код не обрабатывает возможные ошибки при выводе в консоль. В реальном приложении, необходимо добавить обработку исключений.
+2.  **Расширяемость**: Если потребуется обрабатывать другие типы инструментов, метод `on_tool_call_delta` нужно будет расширить, что может сделать его сложным. Возможно, стоит рассмотреть использование паттерна `strategy`.
+3.  **Логирование**: Вывод в консоль полезен для отладки, но для production-приложения необходимо использовать систему логирования.
+4.  **Конфигурация**: Жестко заданный вывод в консоль может быть неудобным. Можно было бы добавить возможность конфигурировать вывод, например, использовать разные потоки вывода.
 
--   **Обработка ошибок**: Код не включает обработку ошибок, таких как ошибки API OpenAI или проблемы с сетью. Добавление обработки исключений сделает код более надежным.
--   **Логирование**: Вместо вывода в консоль, можно добавить логирование для отслеживания событий и ошибок в продакшене.
--   **Конфигурация**: Значение `` задано статически. Можно сделать этот параметр конфигурируемым через переменные окружения или файл конфигурации.
--   **Управление состоянием**: Класс `EventHandler` не управляет состоянием стриминга. Добавление логики для управления состоянием (например, завершение стриминга) может быть полезным.
+**Цепочка взаимосвязей с другими частями проекта:**
 
-### Цепочка взаимосвязей
+1.  **`src.ai.openai.model`**: `event_handler.py` является частью модуля `model`, который, вероятно, занимается управлением и взаимодействием с моделями OpenAI.
+2.  **`openai` SDK**: Этот код является частью потока работы с  `openai` SDK, который предоставляет функции для взаимодействия с API OpenAI.
+3.  **Пользовательский интерфейс**: Вывод в консоль, который производится классом `EventHandler`, вероятно, предназначен для отображения в пользовательском интерфейсе или используется для отладки.
 
-1.  **`hypotez/src/ai/openai/model/event_handler.py`** используется для обработки событий стриминга ответов от OpenAI Assistant.
-2.  Он использует классы и типы данных из пакета **`openai`**, который предоставляет интерфейс для работы с OpenAI API.
-3.  Класс `EventHandler` будет использован при создании `Run` в коде, взаимодействующем с OpenAI API для ассистентов.
-4.  `MODE` может использоваться в других частях проекта для определения режима работы приложения.
-
-Этот файл является важным компонентом для обеспечения стриминга и обработки ответов от OpenAI Assistant с инструментами, такими как code interpreter.
+Этот код является важной частью системы для взаимодействия с OpenAI API и обработки потоковых ответов, обеспечивая асинхронный вывод текста и вызовов инструментов, что позволяет динамически отображать результат работы ассистента OpenAI.

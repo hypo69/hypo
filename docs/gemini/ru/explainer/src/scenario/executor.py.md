@@ -2,323 +2,354 @@
 
 Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,  
+    которые импортируются при создании диаграммы.  
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,  
     имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
     
     **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```mermaid\
+    flowchart TD\
+        Start --> Header[<code>header.py</code><br> Determine Project Root]\
+    \
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] \
     ```
 
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
+3.  **<объяснение>**: Предоставьте подробные объяснения:  
+    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
+    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
+    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
+    -   **Переменные**: Их типы и использование.  
+    -   Выделите потенциальные ошибки или области для улучшения.  
 
 Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
 
 Это обеспечивает всесторонний и структурированный анализ кода.
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
-
 ## <алгоритм>
+```mermaid
+graph TD
+    A[Начало: run_scenario_files] --> B{Является ли scenario_files_list путем?};
+    B -- Да --> C[Преобразовать в список: scenario_files_list = [scenario_files_list]];
+    B -- Нет --> D{Является ли scenario_files_list списком?};
+    D -- Да --> E{Пустой ли список scenario_files_list?};
+    D -- Нет --> F[Вызвать исключение TypeError];
+    E -- Да --> G[Присвоить scenario_files_list = s.scenario_files];
+    E -- Нет --> H[Сохранить имя файла в журнал: _journal['scenario_files'] = {}];
+    G --> H;
+    H --> I{Перебор scenario_file в scenario_files_list};
+    I -- Да --> J[Сохранить имя файла в журнал];
+    J --> K[Вызов run_scenario_file(s, scenario_file)];
+    K --> L{Успешно ли выполнен run_scenario_file?};
+    L -- Да --> M[Успех: Сохранить сообщение в журнале];
+    L -- Нет --> N[Ошибка: Сохранить сообщение об ошибке в журнале];
+    M --> O[Записать успех в лог];
+    N --> P[Записать ошибку в лог];
+    O --> I;
+    P --> I;
+    I -- Нет --> Q[Завершение: return True];
+     F --> Q;    
+    
+    
+    Q --> R[Начало: run_scenario_file];
+    R --> S[Загрузить сценарии из файла: scenarios_dict = j_loads(scenario_file)['scenarios']];
+    S --> T{Перебор scenario_name, scenario в scenarios_dict.items()};
+    T -- Да --> U[Присвоить s.current_scenario = scenario];
+    U --> V[Вызвать run_scenario(s, scenario, scenario_name)];
+    V --> W{Успешно ли выполнен run_scenario?};
+    W -- Да --> X[Записать успех в лог];
+    W -- Нет --> Y[Записать ошибку в лог];
+    X --> T;
+    Y --> T;
+     T -- Нет --> Z[Завершение: return True];
+    S --> AA{Ошибка загрузки или обработки файла?};
+    AA -- Да --> AB[Записать ошибку в лог];
+    AB --> AC[Завершение: return False];
 
-**1. `run_scenario_files(s, scenario_files_list)`**
-
-   - **Вход:** Объект `s` (поставщик, supplier) и список `scenario_files_list` (пути к файлам сценариев) или один путь `Path`.
-   - **Проверка:** Если `scenario_files_list` является `Path`, преобразуется в список. Если не список, то ошибка `TypeError`.
-   - **Инициализация журнала:** Создаётся словарь `_journal`, где будут хранится результаты выполнения сценариев.
-   - **Итерация:** Проходит по каждому файлу сценария в `scenario_files_list`.
-      - **Выполнение сценария:** Вызывает `run_scenario_file(s, scenario_file)`.
-      - **Обработка результатов:**
-        - Если выполнение успешно, добавляет сообщение об успехе в журнал и логирует.
-        - Если выполнение неудачно, добавляет сообщение о неудаче в журнал и логирует ошибку.
-        - При возникновении исключения, записывает ошибку в журнал и логирует её как критическую.
-   - **Возврат:** Возвращает `True` в любом случае (логирование и запись в журнал есть всегда).
-
-   *Пример:*
-
-     - Входные данные: `s`, `[Path('scenario1.json'), Path('scenario2.json')]`
-     - Вызывает `run_scenario_file` для каждого файла
-     - Записывает результат и логи в `_journal`
-     - Возвращает `True`
+    Z --> AD[Начало: run_scenarios];
+    AD --> AE{Являются ли scenarios пустым?};
+     AE -- Да --> AF[Присвоить scenarios = [s.current_scenario]];
+     AE -- Нет --> AG[Проверка scenarios: список или словарь?];
+     AF --> AG;
+     AG -- Да --> AH[Присвоить scenarios = scenarios];
+     AG -- Нет --> AI[Присвоить scenarios = [scenarios]];
+     AH --> AJ[Инициализация списка результатов: res = []];
+    AI --> AJ;
+     AJ --> AK{Перебор scenario в scenarios};
+      AK -- Да --> AL[Вызвать run_scenario(s, scenario)];
+    AL --> AM[Сохранить результат в журнал: _journal['scenario_files'][-1][scenario] = str(res)];
+    AM --> AN[Сохранить журнал в файл dump_journal(s, _journal)];
+    AN --> AK;
+    AK -- Нет --> AO[Завершение: return res];
+    
      
-**2. `run_scenario_file(s, scenario_file)`**
+    AO --> AP[Начало: run_scenario];
+    AP --> AQ[Записать в лог: Starting scenario: {scenario_name}];
+    AQ --> AR[Присвоить s.current_scenario = scenario];
+    AR --> AS[Получить драйвер: d = s.driver];
+    AS --> AT[Загрузить URL: d.get_url(scenario['url'])];
+    AT --> AU[Получить список продуктов: list_products_in_category = s.related_modules.get_list_products_in_category(s)];
+    AU --> AV{Пустой ли список продуктов?};
+    AV -- Да --> AW[Записать в лог: No product list collected from the category page];
+     AW --> AX[Завершение: return False];
+    AV -- Нет --> AY{Перебор url в list_products_in_category};
+    AY -- Да --> AZ[Загрузить URL продукта: d.get_url(url)];
+      AZ --> BA{Успешно ли загружен URL?};
+    BA -- Да --> BB[Получить поля продукта: grabbed_fields = s.related_modules.grab_product_page(s)];
+      BB --> BC[Асинхронно получить данные: f = asyncio.run(s.related_modules.grab_page(s))];
+    BC --> BD{Удалось ли получить поля продукта?};
+    BD -- Да --> BE[Извлечь presta_fields_dict и assist_fields_dict];
+     BE --> BF[Создать продукт: product: Product = Product(...)];
+     BF --> BG[Вставить полученные данные: insert_grabbed_data(f)];
+    BG --> AY;
+     BD -- Нет --> BH[Записать в лог: Failed to collect product fields];
+    BH --> AY;
+     BA -- Нет --> BI[Записать в лог: Error navigating to product page];
+      BI --> AY;
+     AY -- Нет --> BJ[Завершение: return list_products_in_category];
 
-   - **Вход:** Объект `s` (поставщик) и `scenario_file` (путь к файлу сценария).
-   - **Загрузка сценариев:** Загружает сценарии из JSON-файла (`j_loads(scenario_file)`) по ключу `scenarios`.
-   - **Итерация:** Проходит по каждому сценарию в словаре, где ключ - `scenario_name` (имя сценария), значение - `scenario` (словарь сценария).
-      - **Настройка текущего сценария:** Записывает в `s.current_scenario` текущий сценарий.
-      - **Выполнение сценария:** Вызывает `run_scenario(s, scenario, scenario_name)`.
-      - **Обработка результатов:** Логирует успех или неудачу выполнения сценария.
-   - **Обработка исключений:** Если файл не найден или JSON недействителен, ловит исключения, логирует и возвращает `False`.
-   - **Возврат:** Возвращает `True` при успешном выполнении всех сценариев, иначе `False`.
 
-   *Пример:*
+     BJ --> BK[Начало: insert_grabbed_data_to_prestashop];
+     BK --> BL[Создать экземпляр PrestaShop: presta = PrestaShop()];
+     BL --> BM[Вызвать метод post_product_data: await presta.post_product_data(...)];
+     BM --> BN{Успешно ли выполнено post_product_data};
+     BN -- Да --> BO[Завершение: return True];
+     BN -- Нет --> BP[Записать ошибку в лог];
+    BP --> BQ[Завершение: return False];
+```
 
-     - Входные данные: `s`, `Path('scenario1.json')`
-     - Загружает JSON, получает `scenarios`
-     - Вызывает `run_scenario` для каждого сценария
-     - Возвращает `True` или `False` в зависимости от результата
-
-**3.  `run_scenarios(s, scenarios, _journal)`**
-
-  - **Вход:** Объект `s` (поставщик), `scenarios` (список или словарь сценариев, по умолчанию - None), `_journal` (словарь журнала, по умолчанию None).
-  - **Обработка отсутствия сценариев:** Если `scenarios` не предоставлены, берёт сценарий из `s.current_scenario`.
-  - **Преобразование в список:** Если `scenarios` - словарь, преобразует его в список.
-  - **Итерация:** Проходит по каждому `scenario` в `scenarios`.
-     - **Выполнение сценария:** Вызывает `run_scenario(s, scenario)`.
-     - **Запись результата:** Записывает результат выполнения сценария в журнал `_journal` и в файл, вызывая функцию `dump_journal`.
-  - **Возврат:** Возвращает результат выполнения последнего сценария.
-
-   *Пример:*
-
-     - Входные данные: `s`, `[{'url': 'url1'}, {'url': 'url2'}]`, `_journal`
-     - Вызывает `run_scenario` для каждого сценария
-     - Записывает результат в `_journal` и в файл
-     - Возвращает результат последнего сценария
-
-**4. `run_scenario(supplier, scenario, scenario_name, _journal)`**
-
-   - **Вход:** Объект `supplier` (поставщик), `scenario` (словарь с информацией о сценарии), `scenario_name` (имя сценария), `_journal` (журнал).
-   - **Логирование начала сценария:** Логирует начало выполнения сценария.
-   - **Настройка текущего сценария:** Записывает текущий сценарий в `s.current_scenario`.
-   - **Переход на URL:** Переходит по URL, указанному в сценарии (`d.get_url(scenario['url'])`).
-   - **Сбор списка продуктов:** Получает список URL продуктов в категории с помощью `s.related_modules.get_list_products_in_category(s)`.
-   - **Проверка наличия продуктов:** Если список продуктов пуст, логгирует предупреждение и возвращает управление.
-   - **Итерация по продуктам:** Проходит по каждому URL продукта в списке `list_products_in_category`.
-      - **Переход на страницу продукта:** Переходит на страницу продукта (`d.get_url(url)`).
-      - **Сбор данных о продукте:** Собирает данные о продукте с помощью `s.related_modules.grab_product_page(s)`.
-      - **Асинхронный сбор полей:** Выполняет асинхронный сбор полей с помощью `asyncio.run(s.related_modules.grab_page(s))`.
-      - **Обработка полей:** Если сбор полей не удался, логгирует ошибку и переходит к следующему продукту.
-      - **Создание объекта Product:** Создаёт объект `Product` на основе собранных данных.
-      - **Вставка данных:** Вставляет собранные данные в PrestaShop, вызывая функцию `insert_grabbed_data(f)`.
-      - **Обработка ошибок:** Логгирует ошибки сохранения продукта.
-   - **Возврат:** Возвращает список URL продуктов, которые были обработаны.
-
-    *Пример:*
-
-     - Входные данные: `supplier`, `{'url': 'url'}, 'test_scenario'`
-     - Логгирует начало
-     - Открывает URL
-     - Получает список продуктов
-     - Собирает данные каждого продукта и вызывает `insert_grabbed_data`
-     - Возвращает список URL продуктов
-
-**5. `insert_grabbed_data(product_fields)`**
-   - **Вход:** `product_fields` (объект `ProductFields` с данными о продукте).
-   - **Выполнение вставки в PrestaShop:** Выполняет асинхронную вставку данных в PrestaShop с помощью `asyncio.run(execute_PrestaShop_insert(product_fields))`.
-
-   *Пример:*
-   
-    - Входные данные: `ProductFields`
-    - Вызывает `execute_PrestaShop_insert` асинхронно
-
-**6.  `execute_PrestaShop_insert_async(f, coupon_code, start_date, end_date)`**
-  - **Вход:** `f` (объект `ProductFields`), `coupon_code` (опциональный код купона), `start_date` (опциональная дата начала), `end_date` (опциональная дата окончания).
-  - **Асинхронный вызов:** Асинхронно вызывает `execute_PrestaShop_insert` с переданными параметрами.
-  - **Возврат:** Возвращает результат работы `execute_PrestaShop_insert`.
-  
-   *Пример:*
-   
-    - Входные данные: `ProductFields`, 'coupon123', '01.01.2024', '31.12.2024'
-    - Асинхронно вызывает `execute_PrestaShop_insert`
-    
-**7. `execute_PrestaShop_insert(f, coupon_code, start_date, end_date)`**
-    - **Вход:** `f` (объект `ProductFields`), `coupon_code` (опциональный код купона), `start_date` (опциональная дата начала), `end_date` (опциональная дата окончания).
-    - **Инициализация PrestaShop:** Создает экземпляр класса `PrestaShop`.
-    - **Вставка продукта:** Вызывает метод `post_product_data` объекта `presta` для вставки данных о продукте в PrestaShop.
-    - **Обработка ошибок:** Перехватывает исключения и логирует ошибки.
-    - **Возврат:** Возвращает `True` в случае успеха и `False` в случае ошибки.
-    
-    *Пример:*
-    
-     - Входные данные: `ProductFields`, 'coupon123', '01.01.2024', '31.12.2024'
-     - Создает объект `PrestaShop`
-     - Вызывает `post_product_data`
-     - Возвращает `True` или `False` в зависимости от результата
-     
 ## <mermaid>
-
 ```mermaid
 flowchart TD
-    Start[Start] --> RunScenarioFiles{run_scenario_files<br>(s, scenario_files_list)};
-    RunScenarioFiles -- For each scenario file --> RunScenarioFile{run_scenario_file<br>(s, scenario_file)};
-    RunScenarioFile --> LoadScenarios{Load scenarios<br>from scenario file}
-    LoadScenarios -- For each scenario --> RunScenario{run_scenario<br>(supplier, scenario, scenario_name)};
-    RunScenario --> GetURL{d.get_url<br>(scenario['url'])};
-    GetURL --> GetProductList{get_list_products_in_category<br>(s)};
-    GetProductList -- if Product list is empty --> EmptyCategory[Log warning<br>and return];
-    GetProductList -- if Product list is not empty --> LoopProducts{For each product URL<br>in product list};
-    LoopProducts -- Get product url--> GetProductURL{d.get_url<br>(url)};
-    GetProductURL --> GrabProductPage{grab_product_page<br>(s)};
-    GrabProductPage --> GrabPageAsync{asyncio.run<br>(grab_page(s))};
-    GrabPageAsync -- if product fields are empty --> LogError[Log error<br>and continue];
-    GrabPageAsync -- if product fields are not empty --> CreateProduct{Create Product<br>object};
-    CreateProduct --> InsertData{insert_grabbed_data<br>(f)};
-    InsertData --> ExecutePrestaShopInsertAsync{execute_PrestaShop_insert_async<br>(f, coupon_code, start_date, end_date)};
-    ExecutePrestaShopInsertAsync --> ExecutePrestaShopInsert{execute_PrestaShop_insert<br>(f, coupon_code, start_date, end_date)};
-    ExecutePrestaShopInsert --> PrestaShopPost{presta.post_product_data<br>(product_data)};
-    PrestaShopPost -- Success --> ReturnTrue[Return True]
-    PrestaShopPost -- Error --> LogPrestaShopError[Log error]
-    LogPrestaShopError --> ReturnFalse[Return False];
-    ReturnFalse --> LoopProducts;
-    ReturnTrue --> LoopProducts;
-    LogError --> LoopProducts;
-    LoopProducts -- End of product list--> ReturnProductList[Return list_products_in_category]
-    ReturnProductList --> RunScenarioFile
-    EmptyCategory --> RunScenarioFile
-    RunScenarioFile -- Success --> LogSuccessScenario[Log scenario success]
-    RunScenarioFile -- Failure --> LogFailScenario[Log scenario failure]
-    LogSuccessScenario --> RunScenarioFiles
-    LogFailScenario --> RunScenarioFiles
-    RunScenarioFiles --> End[End]
+    Start(Start) --> run_scenario_files;
+    run_scenario_files --> run_scenario_file;
+    run_scenario_file --> j_loads;
+    j_loads --> run_scenario;
+    run_scenario --> get_url;
+     run_scenario --> get_list_products_in_category;
+     run_scenario --> grab_product_page;
+      run_scenario --> grab_page;
+      grab_page -->  ProductFields;
+      run_scenario --> Product;
+      run_scenario --> insert_grabbed_data;
+      insert_grabbed_data --> insert_grabbed_data_to_prestashop
+      insert_grabbed_data_to_prestashop --> PrestaShop;
+      PrestaShop --> post_product_data;
+      Product --> ProductFields
+  
+     
+    
+    subgraph src.scenario.executor
+    run_scenario_files
+    run_scenario_file
+     run_scenario
+    insert_grabbed_data_to_prestashop
+    end
+    subgraph src.utils.jjson
+        j_loads
+    end
+    subgraph src.endpoints.prestashop
+        PrestaShop
+    end
+    subgraph src.endpoints.prestashop.product_async
+      ProductFields
+    end
+     subgraph other modules
+        get_url
+        get_list_products_in_category
+        grab_product_page
+        grab_page
+        Product
+        post_product_data
+    end
+    
+    
+    
+    
+    classDef function fill:#f9f,stroke:#333,stroke-width:2px
+    class run_scenario_files, run_scenario_file, run_scenario, insert_grabbed_data_to_prestashop function
+    class j_loads, PrestaShop, ProductFields, get_url, get_list_products_in_category, grab_product_page, grab_page, Product, post_product_data  fill:#ccf,stroke:#333,stroke-width:2px
+     
+    
+    
 ```
 ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
-    ```
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-### Зависимости `mermaid`:
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+```
 
-1.  **`Start`**: Начало процесса выполнения сценариев.
-2.  **`RunScenarioFiles`**: Функция `run_scenario_files`, управляющая выполнением файлов сценариев. Она принимает объект `s` (поставщик) и список путей к файлам сценариев `scenario_files_list`.
-3.  **`RunScenarioFile`**: Функция `run_scenario_file`, загружающая и выполняющая сценарии из файла. Она принимает объект `s` и путь к файлу сценария `scenario_file`.
-4.  **`LoadScenarios`**: Этап загрузки сценариев из файла, который возвращает словарь с `scenarios`.
-5.  **`RunScenario`**: Функция `run_scenario`, выполняющая один сценарий. Она принимает объект `supplier`, `scenario` и имя сценария `scenario_name`.
-6.  **`GetURL`**: Переход на URL, указанный в сценарии, вызывая `d.get_url(scenario['url'])`, где `d` - объект драйвера.
-7.  **`GetProductList`**: Получение списка URL продуктов в категории с помощью `s.related_modules.get_list_products_in_category(s)`.
-8.  **`EmptyCategory`**: Логирование предупреждения и выход из сценария, если список продуктов пуст.
-9.  **`LoopProducts`**: Цикл, проходящий по списку URL продуктов `list_products_in_category`.
-10. **`GetProductURL`**:  Переход на URL продукта с помощью `d.get_url(url)`.
-11. **`GrabProductPage`**: Вызов метода для сбора данных со страницы продукта с помощью `s.related_modules.grab_product_page(s)`.
-12. **`GrabPageAsync`**:  Асинхронный сбор полей продукта с помощью `asyncio.run(s.related_modules.grab_page(s))`.
-13. **`LogError`**: Логирование ошибки, если не удалось собрать поля продукта.
-14. **`CreateProduct`**: Создание объекта `Product` на основе собранных данных.
-15. **`InsertData`**: Вызов функции `insert_grabbed_data(f)` для вставки данных продукта в PrestaShop.
-16.  **`ExecutePrestaShopInsertAsync`**: Вызов асинхронной функции `execute_PrestaShop_insert_async`, которая вызывает `execute_PrestaShop_insert` для вставки данных в PrestaShop.
-17.  **`ExecutePrestaShopInsert`**: Функция `execute_PrestaShop_insert`, выполняющая вставку данных о продукте в PrestaShop.
-18. **`PrestaShopPost`**: Вызов метода `post_product_data` объекта `presta` для вставки данных в PrestaShop.
-19.  **`ReturnTrue`**: Возврат `True` после успешной вставки в PrestaShop.
-20. **`LogPrestaShopError`**: Логирование ошибки, если не удалось вставить данные в PrestaShop.
-21. **`ReturnFalse`**: Возврат `False` после неудачной вставки в PrestaShop.
-22. **`ReturnProductList`**: Возврат списка URL продуктов, которые были обработаны в цикле.
-23. **`LogSuccessScenario`**: Логирование успешного выполнения сценария.
-24. **`LogFailScenario`**: Логирование неудачного выполнения сценария.
-25. **`End`**: Конец процесса выполнения сценариев.
- 
-Все эти компоненты и зависимости работают вместе, чтобы загрузить, выполнить сценарии и вставить данные о продуктах в PrestaShop.
+**Объяснение зависимостей:**
+- `src.scenario.executor`: Этот модуль отвечает за выполнение сценариев, загрузку их из файлов и инициирование процесса получения данных о продуктах и их добавления в PrestaShop. Он импортирует различные модули для выполнения этих задач.
+- `src.utils.jjson`: Модуль `jjson` используется для загрузки и сохранения данных в формате JSON. В данном коде используется функция `j_loads` для загрузки сценариев из JSON файла.
+- `src.endpoints.prestashop`: Этот модуль включает в себя класс `PrestaShop`, который содержит методы для взаимодействия с PrestaShop API, включая добавление данных о продукте. 
+- `src.endpoints.prestashop.product_async`: Этот модуль отвечает за асинхронный сбор данных о товаре и содержит класс `ProductFields`, который используется для хранения полей товара.
+- `other modules`: Включает в себя ряд модулей, которые используются для различных задач, таких как навигация по страницам `get_url`, получение списка продуктов `get_list_products_in_category`, получение данных со страницы продукта `grab_product_page`, асинхронный сбор данных `grab_page`, создание экземпляра продукта `Product` и сохранение данных о продукте `post_product_data`.
 
 ## <объяснение>
 
-**Импорты:**
+### Импорты
 
-*   **`os`, `sys`**: Стандартные модули Python для работы с операционной системой и интерпретатором.
-*   **`requests`**: Библиотека для выполнения HTTP-запросов (не используется напрямую в коде, возможно используется в других модулях).
-*   **`asyncio`**: Библиотека для асинхронного программирования.
-*   **`time`**: Модуль для работы со временем.
-*   **`tempfile`**: Модуль для работы с временными файлами.
-*   **`datetime`**: Модуль для работы с датами и временем.
-*   **`math`**: Модуль для математических функций.
-*   **`pathlib.Path`**: Класс для работы с путями файлов.
-*   **`typing.Dict`, `typing.List`**: Модули для объявления типов.
-*   **`json`**: Модуль для работы с JSON.
+*   `os`, `sys`: Стандартные модули Python для работы с операционной системой и интерпретатором.
+*   `requests`: Библиотека для отправки HTTP-запросов (хотя в данном коде явно не используется).
+*   `asyncio`: Библиотека для асинхронного программирования, используется для асинхронного сбора данных.
+*   `time`: Стандартный модуль для работы со временем.
+*   `tempfile`: Модуль для создания временных файлов и каталогов.
+*   `datetime`: Модуль для работы с датой и временем.
+*   `math.log`, `math.prod`: Математические функции, которые в данном коде не используются напрямую, но могут быть полезны в других частях проекта.
+*   `pathlib.Path`: Модуль для работы с путями к файлам и директориям.
+*   `typing.Dict`, `typing.List`, `typing.Optional`: Модули для определения типов переменных.
+*   `json`: Модуль для работы с JSON.
+*   `header`: Пользовательский модуль, который, вероятно, устанавливает корневой каталог проекта и загружает глобальные настройки.
+*   `src.gs`: Модуль глобальных настроек проекта.
+*   `src.utils.printer.pprint`: Функция для красивого вывода в консоль.
+*   `src.utils.jjson.j_loads`, `src.utils.jjson.j_dumps`: Функции для загрузки и сохранения данных в формате JSON.
+*   `src.endpoints.prestashop.product_async.ProductAsync`, `src.endpoints.prestashop.product_async.ProductFields`: Модули для работы с данными о продуктах в PrestaShop.
+*   `src.db.ProductCampaignsManager`: Модуль для управления продуктовыми кампаниями в базе данных.
+*    `src.logger.logger`: Модуль для логирования событий.
+*   `src.logger.exceptions.ProductFieldException`: Модуль для обработки исключений связанных с полями товара.
 
-*   **`header`**: Локальный модуль для определения корневой директории проекта (инициализирует `gs` глобальные настройки)
-*   **`src.gs`**: Глобальные настройки проекта.
-*   **`src.utils.printer.pprint`**: Функция для удобного вывода в консоль (для отладки).
-*   **`src.utils.jjson.j_loads`, `src.utils.jjson.j_dumps`**: Функции для загрузки и сохранения JSON с помощью `orjson`
-*   **`src.product.Product`, `src.product.ProductFields`, `src.product.translate_presta_fields_dict`**: Классы и функции для работы с продуктами.
-*   **`src.endpoints.prestashop.PrestaShop`**: Класс для работы с API PrestaShop.
-*   **`src.db.ProductCampaignsManager`**: Класс для работы с базой данных (кампании продуктов)
-*   **`src.logger.logger.logger`**: Объект для логирования.
-*   **`src.logger.exceptions.ProductFieldException`**: Пользовательское исключение для полей продукта.
+### Переменные
 
-**Классы:**
+*   `_journal`: Глобальный словарь для хранения информации о выполнении сценариев. В нем хранится имя журнала (метка времени) и информация о каждом сценарии.
+*   `timestamp`: Метка времени, полученная из `gs.now` и используемая для имени журнала.
 
-*   **`Product`**: Представляет продукт, содержит поля продукта (`fields`, `supplier_prefix`). Используется для создания объектов продуктов из данных.
-*   **`ProductFields`**:  Класс для хранения полей продукта.
-*   **`PrestaShop`**: Класс для взаимодействия с PrestaShop API. Отвечает за отправку данных о продукте.
-*   **`ProductCampaignsManager`**:  Класс для управления кампаниями продуктов в базе данных.
+### Функции
 
-**Функции:**
+1.  **`dump_journal(s, journal: dict) -> None`**:
+    *   **Аргументы**:
+        *   `s`: Экземпляр поставщика.
+        *   `journal`: Словарь с данными журнала.
+    *   **Назначение**: Сохраняет данные журнала в файл JSON.
+    *   **Пример**:
+    ```python
+        supplier = Supplier(...)
+        journal_data = {'name': 'test_journal', 'scenario_files': {'test_scenario.json': {'message': 'completed!'}}}
+        dump_journal(supplier, journal_data)  # создаст файл test_journal.json в _journal директории поставщика
+        ```
+2.  **`run_scenario_files(s, scenario_files_list: List[Path] | Path) -> bool`**:
+    *   **Аргументы**:
+        *   `s`: Экземпляр поставщика.
+        *   `scenario_files_list`: Список путей к файлам сценариев или один путь.
+    *   **Назначение**: Выполняет сценарии из списка файлов.
+    *   **Возвращаемое значение**: `True`, если все сценарии выполнены успешно, `False` в противном случае.
+    *   **Пример**:
+    ```python
+        supplier = Supplier(...)
+        scenario_paths = [Path('scenarios/scenario1.json'), Path('scenarios/scenario2.json')]
+        run_scenario_files(supplier, scenario_paths) # выполнит сценарии из указанных файлов
+        run_scenario_files(supplier, Path('scenarios/scenario1.json')) # выполнит сценарий из одного файла
+        ```
+    *   **Логика**:
+        1.  Проверяет тип `scenario_files_list`. Если это путь (`Path`), преобразует его в список.
+        2.  Если `scenario_files_list` пустой, использует `s.scenario_files`.
+        3.  Итерируется по списку файлов, вызывает `run_scenario_file` для каждого файла, логирует результаты и сохраняет их в журнал.
 
-*   **`dump_journal(s, journal)`**: Сохраняет данные журнала в JSON-файл.
-    *   `s`: Объект поставщика.
-    *   `journal`: Словарь с данными журнала.
-*   **`run_scenario_files(s, scenario_files_list)`**: Запускает сценарии из списка файлов.
-    *   `s`: Объект поставщика.
-    *   `scenario_files_list`: Список путей к файлам сценариев.
-    *   Возвращает `True` в случае успешного выполнения всех сценариев.
-*   **`run_scenario_file(s, scenario_file)`**: Загружает и выполняет сценарии из одного файла.
-    *   `s`: Объект поставщика.
-    *   `scenario_file`: Путь к файлу сценария.
-    *   Возвращает `True` при успешном выполнении, `False` при ошибке загрузки.
-*   **`run_scenarios(s, scenarios, _journal)`**:  Выполняет список сценариев (не из файлов).
-    *    `s`: Объект поставщика.
-    *    `scenarios`: Список или словарь сценариев.
-    *    `_journal`: Словарь с данными журнала
-    *   Возвращает результат последнего выполнения сценария или `False` в случае ошибки.
-*   **`run_scenario(supplier, scenario, scenario_name, _journal)`**: Выполняет один сценарий.
-    *   `supplier`: Объект поставщика.
-    *   `scenario`: Словарь с данными сценария.
-    *   `scenario_name`: Имя сценария.
-    *    `_journal`: Словарь с данными журнала
-    *   Возвращает список URL продуктов.
-*   **`insert_grabbed_data(product_fields)`**: Вставляет данные о продукте в PrestaShop.
-    *   `product_fields`: Объект `ProductFields` с данными продукта.
-*   **`execute_PrestaShop_insert_async(f, coupon_code, start_date, end_date)`**: Асинхронно вставляет данные о продукте в PrestaShop.
-     *   `f`: Объект `ProductFields`.
-     *   `coupon_code`: Код купона.
-     *    `start_date`: Дата начала акции.
-     *    `end_date`: Дата окончания акции.
-*   **`execute_PrestaShop_insert(f, coupon_code, start_date, end_date)`**: Вставляет данные о продукте в PrestaShop.
-     *   `f`: Объект `ProductFields`.
-     *   `coupon_code`: Код купона.
-     *    `start_date`: Дата начала акции.
-     *    `end_date`: Дата окончания акции.
-     *    Возвращает `True` или `False` в зависимости от результата.
+3.  **`run_scenario_file(s, scenario_file: Path) -> bool`**:
+    *   **Аргументы**:
+        *   `s`: Экземпляр поставщика.
+        *   `scenario_file`: Путь к файлу сценария.
+    *   **Назначение**: Загружает и выполняет сценарии из файла.
+    *   **Возвращаемое значение**: `True`, если все сценарии выполнены успешно, `False` в противном случае.
+    *   **Пример**:
+    ```python
+        supplier = Supplier(...)
+        scenario_path = Path('scenarios/scenario1.json')
+        run_scenario_file(supplier, scenario_path) # загрузит и выполнит сценарии из файла
+    ```
+    *   **Логика**:
+        1.  Загружает сценарии из файла, используя `j_loads`.
+        2.  Итерируется по сценариям в словаре, устанавливает `s.current_scenario` и вызывает `run_scenario`.
+        3.  Обрабатывает исключения `FileNotFoundError` и `JSONDecodeError`, возвращая `False` в случае ошибки.
+4.  **`run_scenarios(s, scenarios: Optional[List[dict] | dict] = None, _journal=None) -> List | dict | bool`**:
+    *   **Аргументы**:
+        *   `s`: Экземпляр поставщика.
+        *   `scenarios`: Список сценариев или один сценарий. По умолчанию `None`.
+        *   `_journal`: Журнал, в который добавляется информация.
+    *   **Назначение**: Выполняет список сценариев (не файлов).
+    *   **Возвращаемое значение**: Результат выполнения сценариев или `False` в случае ошибки.
+    *   **Пример**:
+    ```python
+        supplier = Supplier(...)
+        scenarios_data = [{'url': 'example.com/category1', 'module': 'module_name1'}, {'url': 'example.com/category2', 'module': 'module_name2'}]
+        run_scenarios(supplier, scenarios_data)
+        run_scenarios(supplier, {'url': 'example.com/category1', 'module': 'module_name1'}) #выполнит один сценарий
+    ```
+    *   **Логика**:
+        1.  Если `scenarios` не задан, использует `s.current_scenario`.
+        2.  Преобразует `scenarios` в список, если это не список.
+        3.  Итерируется по списку сценариев и вызывает `run_scenario` для каждого, сохраняет результат в журнал.
 
-**Переменные:**
+5.  **`run_scenario(supplier, scenario: dict, scenario_name: str, _journal=None) -> List | dict | bool`**:
+    *   **Аргументы**:
+        *   `supplier`: Экземпляр поставщика.
+        *   `scenario`: Словарь с деталями сценария.
+        *   `scenario_name`: Имя сценария.
+        *  `_journal`: Журнал, в который добавляется информация.
+    *   **Назначение**: Выполняет один сценарий.
+    *   **Возвращаемое значение**: Результат выполнения сценария.
+    *   **Пример**:
+    ```python
+        supplier = Supplier(...)
+        scenario_data = {'url': 'example.com/category1', 'module': 'module_name1'}
+        run_scenario(supplier, scenario_data, 'scenario1')
+    ```
+    *   **Логика**:
+        1.  Получает URL из сценария и загружает страницу.
+        2.  Получает список продуктов из категории.
+        3.  Итерируется по URL-адресам продуктов, загружает страницу продукта, извлекает данные и создает экземпляр `Product`.
+        4.  Вызывает функцию `insert_grabbed_data` для сохранения данных.
 
-*   **`_journal`**: Словарь для хранения данных о выполнении сценариев (название, список файлов, результат).
-*   **`timestamp`**: Текущее время, используется для генерации имени файла журнала.
+6.  **`insert_grabbed_data_to_prestashop(f: ProductFields, coupon_code: Optional[str] = None, start_date: Optional[str] = None, end_date: Optional[str] = None) -> bool`**:
+    *   **Аргументы**:
+        *   `f`: Экземпляр `ProductFields` с данными о продукте.
+        *   `coupon_code`: Код купона (необязательно).
+        *   `start_date`: Дата начала акции (необязательно).
+        *   `end_date`: Дата окончания акции (необязательно).
+    *   **Назначение**: Вставляет данные о продукте в PrestaShop.
+    *   **Возвращаемое значение**: `True`, если вставка прошла успешно, `False` в противном случае.
+    *   **Пример**:
+    ```python
+        fields = ProductFields(product_id=123, product_name='Test Product', ...)
+        insert_grabbed_data_to_prestashop(fields, coupon_code='SALE10', start_date='2023-01-01', end_date='2023-01-31')
+    ```
+    *   **Логика**:
+        1.  Создает экземпляр `PrestaShop`.
+        2.  Вызывает метод `post_product_data` для отправки данных в PrestaShop API.
+        3.  Обрабатывает исключения и возвращает `False` в случае ошибки.
 
-**Потенциальные ошибки и области для улучшения:**
+### Классы
 
-1.  **Обработка ошибок:**
-    *   Хотя код логирует ошибки, стоит добавить более детальную обработку исключений, например, с помощью `try-except-finally` конструкций.
-    *   Необходимо проверять наличие всех необходимых полей в данных, прежде чем создавать объект `Product`.
-2.  **Асинхронность:**
-    *   Необходимо проверить реализацию асинхронности.
-    *   `asyncio.run` используется везде.
-3.  **Модульность:**
-    *   Функцию `insert_grabbed_data` можно вынести в отдельный модуль или в класс `PrestaShop` для лучшей организации кода.
-    *   Логику получения данных со страниц и работу с драйвером следует абстрагировать в отдельные классы.
-4.  **`run_scenarios`:**
-     *   Функция `run_scenarios` может возвращать только результат последнего сценария. Необходимо возвращать список результатов всех сценариев
-     *   Реализация когда нет сценариев не отлажена
-5. **`run_scenario`:**
-     *   Необходимо разобраться с необходимостью `scenario_name`
-     *   Необходимо передавать журнал `_journal` в функции для корректной записи.
+В данном коде явно не определены классы, но используются экземпляры классов, такие как `Supplier`, `Product`, `ProductFields`, и `PrestaShop`. Их реализация находится в других файлах проекта, например:
+   * `src.endpoints.prestashop.PrestaShop`
+   * `src.endpoints.prestashop.product_async.ProductFields`
 
-**Взаимосвязь с другими частями проекта:**
+### Потенциальные ошибки и области для улучшения
 
-*   **`header.py`**: Определяет корневую директорию проекта, что необходимо для импорта других модулей. Инициализирует `gs`.
-*   **`src.gs`**: Содержит глобальные настройки проекта, такие как URL PrestaShop, API-ключи, параметры драйвера, пути к файлам и т.д.
-*   **`src.product`**: Содержит классы и функции для работы с данными продуктов, включая структуру данных для вставки в PrestaShop.
-*   **`src.endpoints.prestashop`**: Отвечает за взаимодействие с PrestaShop API.
-*   **`src.db`**: Может отвечать за взаимодействие с БД.
-*   **`src.logger`**: Обеспечивает логирование действий и ошибок.
-*   **`src.utils`**:  Предоставляет вспомогательные функции, такие как работа с JSON и вывод в консоль.
-*   **`src.related_modules`**: Отвечает за работу драйвера браузера и сбор данных со страниц (отдельный модуль, как правило у поставщика).
+*   **Обработка ошибок**: Код обрабатывает некоторые исключения, но в некоторых местах (например, при обращении к `scenario['url']`) может не хватать дополнительной обработки ошибок.
+*   **Журналирование**: `_journal` используется для сохранения данных, но стоит рассмотреть более надежный способ журналирования с возможностью ротации файлов и уровнем детализации.
+*   **Модульность**: Функция `run_scenario` выполняет слишком много действий. Можно разбить ее на более мелкие функции для улучшения читаемости и тестируемости.
+*   **Зависимости**: Код имеет зависимости от других модулей, которые могут быть неявными (например, `s.driver`, `s.related_modules`). Стоит рассмотреть возможность более явного определения интерфейсов зависимостей.
+*   **Асинхронность**: В коде используется `asyncio.run` для запуска асинхронной функции `s.related_modules.grab_page`, но сам код в функции run_scenario является синхронным. Можно рассмотреть возможность полной асинхронизации кода для повышения производительности.
+*   **Не используется requests**: Заявлен в импортах, но нигде не используется.
+*   **`_journal[-1][scenario]`**: Индексация `-1` для словаря не является надежным способом добавления данных в журнал. Лучше использовать `append` для списка.
+* **`Todo` комментарии**: Есть несколько `Todo` комментариев, которые нужно исправить.
+    *  В `run_scenarios` нужно проверить вариант когда нет сценариев.
+    * В `run_scenario` проверить нужность параметра `scenario_name`
+* **Переменные**:
+   *   `_journal`: Глобальная переменная, что затрудняет отладку и тестирование. Лучше использовать локальные переменные.
+
+### Взаимосвязь с другими частями проекта
+
+*   **`header.py`**: Инициализирует среду и настройки проекта, которые используются в данном модуле.
+*   **`src.gs`**: Содержит глобальные настройки, например, текущую дату и время, которые используются для имени журнала.
+*   **`src.utils.jjson`**: Предоставляет функции для работы с JSON, которые используются для загрузки и сохранения данных о сценариях.
+*   **`src.endpoints.prestashop`**: Обеспечивает взаимодействие с PrestaShop API для вставки данных о продуктах.
+*   **`src.db`**: Предоставляет функции для работы с базой данных, в том числе для управления кампаниями.
+*   **`src.logger`**: Обеспечивает возможность логирования для отслеживания работы приложения.
+*   **`src.driver`**: Предоставляет функциональность для управления браузером.
+
+Данный модуль является центральным звеном в процессе выполнения сценариев. Он загружает сценарии из файлов, управляет навигацией по сайту, извлекает данные о продуктах и отправляет их в PrestaShop. Он тесно взаимодействует со многими другими частями проекта, что делает его критически важным для работы всего приложения.

@@ -1,911 +1,815 @@
-# Анализ кода модуля `try_xpath_content.js`
+# Анализ кода модуля try_xpath_content.js
 
-**Качество кода: 7/10**
+**Качество кода**
+7
+- Плюсы
+    - Код разбит на функции, что упрощает его понимание и поддержку.
+    - Используется `Map` для хранения данных, что более эффективно, чем использование объектов.
+    - Присутствует обработка ошибок.
+    - Есть механизм для предотвращения многократного выполнения кода.
+- Минусы
+    - Код не документирован.
+    - Отсутствуют проверки типов для аргументов функций.
+    - Некоторые блоки `try-catch` можно заменить на более конкретную обработку ошибок.
+    - Присутствуют магические строки, которые можно вынести в константы.
+    - Не все переменные и функции имеют понятные имена.
+    - Присутствует дублирование кода, например, при создании `sendMsg`.
 
-*   **Плюсы:**
-    *   Код хорошо структурирован и разбит на функции, что облегчает чтение и понимание.
-    *   Используются константы для строк и атрибутов, что улучшает поддерживаемость кода.
-    *   Присутствует обработка ошибок, хотя она могла бы быть улучшена.
-    *   Код учитывает различные типы элементов, включая фреймы и пустые окна.
-    *   Активно используется `browser.runtime.sendMessage` для взаимодействия с расширением.
-    *   Используется `Map` для хранения данных, что является хорошей практикой.
-*   **Минусы:**
-    *   Не все функции имеют документацию в формате reStructuredText.
-    *   Некоторые блоки try-except можно заменить на более явную обработку ошибок через `logger.error`.
-    *   Используется `JSON.parse` вместо `j_loads`.
-    *   Не все переменные имеют описательные имена.
-    *   Присутствует избыточное использование `Object.create(null)`.
+**Рекомендации по улучшению**
 
-**Рекомендации по улучшению:**
+1.  **Документирование**: Добавить docstring к модулю и каждой функции.
+2.  **Импорты**: Добавить необходимые импорты, если они нужны.
+3.  **Типизация**: Добавить аннотации типов, где это необходимо.
+4.  **Обработка ошибок**: Использовать `logger.error` вместо `try-except`, где это возможно.
+5.  **Рефакторинг**: Вынести повторяющиеся фрагменты кода в отдельные функции.
+6.  **Именование**: Использовать более понятные имена для переменных и функций.
+7. **Константы**: Вынести магические строки в константы.
+8. **Улучшение обработки сообщений**: Добавить обработку сообщений с использованием `match-case` (если это применимо) для улучшения читаемости и структуры.
 
-1.  **Документация:** Добавить reStructuredText (RST) docstring ко всем функциям, методам и переменным.
-2.  **Импорты:**  Добавить необходимые импорты. В данном файле используется `browser`, который предполагает, что он предоставляется средой выполнения расширения. Но для большей ясности можно добавить комментарий о том, что этот объект предоставляет browser API.
-3.  **Обработка ошибок:** Заменить стандартные блоки `try-except` на обработку ошибок с помощью `logger.error` там, где это уместно.
-4.  **Использование `j_loads`:** Заменить `JSON.parse` на `j_loads` или `j_loads_ns`.
-5.  **Улучшение именования:** Переименовать переменные для большей ясности.
-6.  **Устранение избыточности:** Убрать `Object.create(null)` там, где достаточно простого литерала объекта `{}`.
-7.  **Добавить комментарии**: Добавить комментарии в коде для лучшего понимания.
-
-**Оптимизированный код:**
+**Оптимизированный код**
 
 ```python
 """
-Модуль для управления и взаимодействия с контентом страницы для расширения Try XPath.
-======================================================================================
+Модуль try_xpath_content.js для расширения Firefox, предоставляющий функциональность для работы с XPath и CSS.
+===========================================================================================================
 
-Этот модуль обеспечивает взаимодействие расширения Try XPath с контентом веб-страницы.
-Он обрабатывает сообщения от расширения, выполняет XPath-запросы, управляет стилями,
-фокусировкой элементов и фреймами.
+Этот модуль включает в себя функции для выполнения XPath запросов, управления стилями CSS,
+а также для обработки сообщений от расширения.
 
-:var attributes: Объект, содержащий атрибуты для элементов, используемые расширением.
-:vartype attributes: dict
-:var prevMsg: Последнее отправленное сообщение.
-:vartype prevMsg: dict
-:var executionCount: Счетчик выполненных запросов.
-:vartype executionCount: int
-:var inBlankWindow: Флаг, указывающий, выполняется ли код в пустом окне.
-:vartype inBlankWindow: bool
-:var currentDocument: Текущий документ, на котором выполняются операции.
-:vartype currentDocument: Document
-:var contextItem: Текущий контекстный элемент для XPath-запросов.
-:vartype contextItem: Node
-:var currentItems: Список текущих элементов, полученных после выполнения XPath.
-:vartype currentItems: list
-:var focusedItem: Текущий элемент, находящийся в фокусе.
-:vartype focusedItem: Node
-:var focusedAncestorItems: Список предковых элементов текущего элемента в фокусе.
-:vartype focusedAncestorItems: list
-:var currentCss: Текущий CSS, применяемый к странице.
-:vartype currentCss: str
-:var insertedStyleElements: Карта стилей, вставленных на страницу.
-:vartype insertedStyleElements: Map
-:var expiredCssSet: Набор устаревших стилей CSS.
-:vartype expiredCssSet: set
-:var originalAttributes: Карта оригинальных атрибутов элементов.
-:vartype originalAttributes: Map
+Модуль обрабатывает события фокуса, изменения CSS и предоставляет функционал для
+визуализации результатов XPath запросов на веб-странице.
 
 """
-# from src.logger.logger import logger # TODO: добавить логгер
-# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить j_loads
+from src.logger.logger import logger # Импортируем logger
+import json
+from typing import Any
+from pathlib import Path
 
-(function (window, undefined) {
-    "use strict";
+# Объявляем константы
+STYLE_ELEMENT_HEADER = "/* This style element was inserted by browser add-on, Try xpath." \
+                      " If you want to remove this element, please click the reset" \
+                      " style button in the popup. */\\n"
+DUMMY_ITEM = ""
+DUMMY_ITEMS = []
+INVALID_EXECUTION_ID = float('NaN')
+MESSAGE_TRYXPATH_FOCUS_FRAME = "tryxpath-focus-frame"
+MESSAGE_TRYXPATH_REQUEST_TO_POPUP = "tryxpath-request-message-to-popup"
+MESSAGE_SHOW_RESULTS_IN_POPUP = "showResultsInPopup"
+MESSAGE_SHOW_ALL_RESULTS = "showAllResults"
+MESSAGE_ERROR_OCCURRED_FRAME = "An error occurred when getting a frame. "
+MESSAGE_ERROR_OCCURRED_FOCUS_FRAME = "An error occurred when focusing a frame. "
+MESSAGE_CONTEXT_NOT_FOUND = "A context is not found."
+MESSAGE_SUCCESS = "Success."
+MESSAGE_ERROR_OCCURRED_NODES = "An error occurred when getting nodes. "
+MESSAGE_NO_RESULT = "There is no result."
 
-    // alias
-    var tx = tryxpath;
-    var fu = tryxpath.functions;
 
-    // prevent multiple execution
-    if (tx.isContentLoaded) {
-        return;
+#   alias
+#   Сохраняем ссылку на объект tryxpath для удобства
+tx = tryxpath
+#   Сохраняем ссылку на объект functions для удобства
+fu = tryxpath.functions
+
+
+# prevent multiple execution
+# Проверяем, был ли уже загружен контент, и выходим, если это так
+if tx.isContentLoaded:
+    #  если контент уже загружен, то выходим
+    return
+#  Устанавливаем флаг, что контент загружен
+tx.isContentLoaded = True
+
+
+#  Объявляем переменные и константы
+attributes = {
+    "element": "data-tryxpath-element",
+    "context": "data-tryxpath-context",
+    "focused": "data-tryxpath-focused",
+    "focusedAncestor": "data-tryxpath-focused-ancestor",
+    "frame": "data-tryxpath-frame",
+    "frameAncestor": "data-tryxpath-frame-ancestor"
+}
+
+prevMsg = None
+executionCount = 0
+inBlankWindow = False
+currentDocument = None
+contextItem = DUMMY_ITEM
+currentItems = DUMMY_ITEMS
+focusedItem = DUMMY_ITEM
+focusedAncestorItems = DUMMY_ITEMS
+currentCss = None
+insertedStyleElements = {}
+expiredCssSet = {}
+originalAttributes = {}
+
+def setAttr(attr: str, value: str, item: Any) -> None:
+    """
+    Устанавливает атрибут элементу, сохраняя его предыдущее значение.
+
+    Args:
+        attr (str): Название атрибута.
+        value (str): Значение атрибута.
+        item (Any): Элемент, которому нужно установить атрибут.
+    """
+    fu.saveAttrForItem(item, attr, originalAttributes)
+    fu.setAttrToItem(attr, value, item)
+
+def setIndex(attr: str, items: list[Any]) -> None:
+    """
+    Устанавливает индекс атрибута для элементов.
+
+    Args:
+        attr (str): Название атрибута.
+        items (list[Any]): Список элементов.
+    """
+    fu.saveAttrForItems(items, attr, originalAttributes)
+    fu.setIndexToItems(attr, items)
+
+
+def isFocusable(item: Any) -> bool:
+    """
+    Проверяет, является ли элемент фокусируемым.
+
+    Args:
+        item (Any): Элемент для проверки.
+
+    Returns:
+        bool: True, если элемент фокусируемый, иначе False.
+    """
+    if not item:
+        return False
+    if fu.isNodeItem(item) or fu.isAttrItem(item):
+        return True
+    return False
+
+def focusItem(item: Any) -> None:
+    """
+    Фокусирует на элементе, устанавливая соответствующие атрибуты.
+
+    Args:
+        item (Any): Элемент для фокусировки.
+    """
+    fu.removeAttrFromItem(attributes.get("focused"), focusedItem)
+    fu.removeAttrFromItems(attributes.get("focusedAncestor"), focusedAncestorItems)
+
+    if not isFocusable(item):
+        return
+
+    if fu.isElementItem(item):
+        focusedItem = item
+    else:
+        focusedItem = fu.getParentElement(item)
+
+    focusedAncestorItems = fu.getAncestorElements(focusedItem)
+
+    setAttr(attributes.get("focused"), "true", focusedItem)
+    setIndex(attributes.get("focusedAncestor"), focusedAncestorItems)
+
+    focusedItem.blur()
+    focusedItem.focus()
+    focusedItem.scrollIntoView()
+
+def setMainAttrs() -> None:
+    """
+    Устанавливает основные атрибуты для контекстного элемента и текущих элементов.
+    """
+    if contextItem is not DUMMY_ITEM:
+        setAttr(attributes.get("context"), "true", contextItem)
+    setIndex(attributes.get("element"), currentItems)
+
+def restoreAttrs() -> None:
+    """
+    Восстанавливает оригинальные атрибуты элементов.
+    """
+    fu.restoreItemAttrs(originalAttributes)
+    originalAttributes = {}
+
+def resetPrev() -> None:
+    """
+    Сбрасывает предыдущие значения и создает сообщение с результатом.
+    """
+    restoreAttrs()
+    global contextItem
+    contextItem = DUMMY_ITEM
+    global currentItems
+    currentItems = DUMMY_ITEMS
+    global focusedItem
+    focusedItem = DUMMY_ITEM
+    global focusedAncestorItems
+    focusedAncestorItems = DUMMY_ITEMS
+    global prevMsg
+    prevMsg = createResultMessage()
+    global executionCount
+    executionCount += 1
+
+def makeTypeStr(resultType: int | str) -> str:
+    """
+    Создает строковое представление типа результата.
+
+    Args:
+        resultType (int | str): Тип результата.
+
+    Returns:
+        str: Строковое представление типа.
+    """
+    if isinstance(resultType, int) and (resultType == resultType):
+        return f"{fu.getxpathResultStr(resultType)}({resultType})"
+    return ""
+
+
+def updateCss() -> None:
+    """
+     Отправляет сообщение для обновления CSS, если есть изменения.
+    """
+    if (currentCss is None) or (len(expiredCssSet) > 0):
+        browser.runtime.sendMessage({
+            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "updateCss",
+            "expiredCssSet": expiredCssSet
+        })
+
+def getFrames(spec: str) -> list[Any]:
+    """
+    Получает список фреймов на основе спецификации.
+
+    Args:
+        spec (str): Спецификация фреймов в формате JSON.
+
+    Returns:
+        list[Any]: Список фреймов.
+
+    Raises:
+        Error: Если спецификация не валидна.
+    """
+    try:
+        inds = json.loads(spec)
+        if fu.isNumberArray(inds) and (len(inds) > 0):
+            return fu.getFrameAncestry(inds).reverse()
+        else:
+            raise ValueError(f"Invalid specification. [{spec}]")
+    except Exception as e:
+        logger.error(f'Ошибка при получении фреймов {e}')
+        raise
+
+def parseFrameDesignation(frameDesi: str) -> list[int]:
+    """
+    Парсит обозначение фрейма.
+
+    Args:
+        frameDesi (str): Обозначение фрейма в формате JSON.
+
+    Returns:
+        list[int]: Список индексов фреймов.
+
+     Raises:
+        Error: Если обозначение фрейма не валидно.
+    """
+    try:
+        inds = json.loads(frameDesi)
+        if fu.isNumberArray(inds) and (len(inds) > 0):
+            return inds
+        else:
+            raise ValueError(f"Invalid specification. [{frameDesi}]")
+    except Exception as e:
+         logger.error(f'Ошибка при парсинге обозначения фрейма {e}')
+         raise
+
+def traceBlankWindows(desi: list[int], win: Any = None) -> dict[str, Any]:
+    """
+    Отслеживает пустые окна на основе обозначения.
+
+    Args:
+        desi (list[int]): Список индексов фреймов.
+        win (Any, optional): Окно для начала отслеживания. По умолчанию текущее окно.
+
+    Returns:
+        dict[str, Any]: Результат отслеживания. Содержит список окон, флаг успеха
+         и окно, где произошла ошибка (если есть).
+    """
+    win = win or window
+    result = {"windows": [], "failedWindow": None, "success": True}
+    try:
+        for frameInd in desi:
+            if (frameInd <= -1) or (frameInd >= len(win.frames)):
+                result["failedWindow"] = None
+                result["success"] = False
+                return result
+
+            win = win.frames[frameInd]
+            if not fu.isBlankWindow(win):
+                result["failedWindow"] = win
+                result["success"] = False
+                return result
+            result["windows"].append(win)
+    except Exception as e:
+          logger.error(f'Ошибка при отслеживании пустых окон {e}')
+          result["failedWindow"] = None
+          result["success"] = False
+    return result
+
+
+def handleCssChange(newCss: str) -> None:
+    """
+    Обрабатывает изменение CSS.
+
+    Args:
+        newCss (str): Новый CSS.
+    """
+    global currentCss
+    if currentCss is None:
+        if newCss in expiredCssSet:
+            currentCss = newCss
+            del expiredCssSet[newCss]
+    elif newCss != currentCss:
+        if newCss in expiredCssSet:
+            currentCss = newCss
+            del expiredCssSet[newCss]
+        else:
+            expiredCssSet[currentCss] = True
+            currentCss = None
+    # If newCss and currentCss are the same string do nothing.
+
+
+def findFrameByMessage(event: Any, win: Any) -> Any:
+    """
+    Находит фрейм по сообщению.
+
+    Args:
+        event (Any): Событие сообщения.
+        win (Any): Окно, в котором искать фрейм.
+
+    Returns:
+        Any: Найденный фрейм.
+    """
+    ind = event.data.get("frameIndex")
+    if ind >= 0:
+        subWin = win.frames[ind]
+    else:
+        subWin = event.source
+    return fu.findFrameElement(subWin, win)
+
+
+def setFocusFrameListener(win: Any, isBlankWindow: bool) -> None:
+    """
+    Устанавливает слушатель сообщений для фокуса фрейма.
+
+    Args:
+        win (Any): Окно, для которого устанавливается слушатель.
+        isBlankWindow (bool): Флаг, указывающий, является ли окно пустым.
+    """
+    if isBlankWindow:
+        localUpdateCss = updateStyleElement.bind(None, win.document)
+    else:
+        localUpdateCss = updateCss
+
+    win.addEventListener("message", (event) => {
+        data = event.data
+        if data and data.get("message") == MESSAGE_TRYXPATH_FOCUS_FRAME and isinstance(data.get("index"), int) and isinstance(data.get("frameIndex"), int):
+            frame = findFrameByMessage(event, win)
+            if not frame:
+                return
+            index = data.get("index")
+            localUpdateCss()
+            setAttr(attributes.get("frame"), index, frame)
+            setIndex(attributes.get("frameAncestor"), fu.getAncestorElements(frame))
+            if win == win.top:
+                frame.blur()
+                frame.focus()
+                frame.scrollIntoView()
+            else:
+                win.parent.postMessage({
+                    "message": MESSAGE_TRYXPATH_FOCUS_FRAME,
+                    "index": index + 1,
+                    "frameIndex": fu.findFrameIndex(win, win.parent)
+                }, "*")
+    })
+
+def initBlankWindow(win: Any) -> None:
+    """
+    Инициализирует пустое окно.
+
+    Args:
+        win (Any): Пустое окно для инициализации.
+    """
+    if not win.tryxpath:
+        win.tryxpath = {}
+
+    if win.tryxpath.get("isInitialized"):
+        return
+    win.tryxpath["isInitialized"] = True
+    setFocusFrameListener(win, True)
+
+def findStyleParent(doc: Any) -> Any:
+    """
+    Находит родительский элемент для стилей.
+
+    Args:
+        doc (Any): Документ, в котором искать родителя.
+
+    Returns:
+        Any: Родительский элемент (head или body).
+    """
+    return doc.head or doc.body or None
+
+def updateStyleElement(doc: Any) -> None:
+    """
+    Обновляет или создает элемент стиля в документе.
+
+    Args:
+        doc (Any): Документ, в котором нужно обновить стили.
+    """
+    css = currentCss or ""
+    css = STYLE_ELEMENT_HEADER + css
+
+    style = insertedStyleElements.get(doc)
+    if style:
+        style.textContent = css
+        return
+
+    parent = findStyleParent(doc)
+    if parent:
+        newStyle = doc.createElement("style")
+        newStyle.textContent = css
+        newStyle.setAttribute("type", "text/css")
+        parent.appendChild(newStyle)
+        insertedStyleElements[doc] = newStyle
+
+def updateAllStyleElements() -> None:
+    """
+    Обновляет все элементы стиля.
+    """
+    css = currentCss or ""
+    css = STYLE_ELEMENT_HEADER + css
+    for doc, elem in insertedStyleElements.items():
+        elem.textContent = css
+
+def removeStyleElement(doc: Any) -> None:
+    """
+    Удаляет элемент стиля из документа.
+
+    Args:
+        doc (Any): Документ, из которого нужно удалить стиль.
+    """
+    elem = insertedStyleElements.get(doc)
+    if not elem:
+        return
+
+    parent = elem.parentNode
+    if parent:
+        parent.removeChild(elem)
+    del insertedStyleElements[doc]
+
+def removeAllStyleElements() -> None:
+    """
+    Удаляет все элементы стиля.
+    """
+    for doc, elem in insertedStyleElements.items():
+        parent = elem.parentNode
+        if parent:
+            parent.removeChild(elem)
+    insertedStyleElements.clear()
+
+def createResultMessage() -> dict[str, Any]:
+    """
+    Создает базовое сообщение с результатом.
+
+    Returns:
+        dict[str, Any]: Сообщение с базовыми данными.
+    """
+    return {
+        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": MESSAGE_SHOW_RESULTS_IN_POPUP,
+        "executionId": INVALID_EXECUTION_ID,
+        "href": "",
+        "title": "",
+        "message": MESSAGE_NO_RESULT,
+        "main": {
+            "method": "evaluate",
+            "expression": "",
+            "specifiedResultType": "ANY_TYPE(0)",
+            "resolver": "",
+            "itemDetails": []
+        }
     }
-    tx.isContentLoaded = true;
 
-    const dummyItem = "";
-    const dummyItems = [];
-    const invalidExecutionId = NaN;
-    const styleElementHeader
-          = "/* This style element was inserted by browser add-on, Try xpath."
-          + " If you want to remove this element, please click the reset"
-          + " style button in the popup. */\\n";
 
-    /**
-      * @type {object} attributes - Атрибуты используемые для элементов
-      * @property {string} element - Атрибут для элемента.
-      * @property {string} context - Атрибут для контекста.
-      * @property {string} focused - Атрибут для фокуса.
-      * @property {string} focusedAncestor - Атрибут для предка в фокусе.
-      * @property {string} frame - Атрибут для фрейма.
-      * @property {string} frameAncestor - Атрибут для предка фрейма.
-      */
-    var attributes = {
-        "element": "data-tryxpath-element",
-        "context": "data-tryxpath-context",
-        "focused": "data-tryxpath-focused",
-        "focusedAncestor": "data-tryxpath-focused-ancestor",
-        "frame": "data-tryxpath-frame",
-        "frameAncestor": "data-tryxpath-frame-ancestor"        
-    };
+def genericListener(message: Any, sender: Any, sendResponse: Any) -> Any:
+    """
+    Общий слушатель сообщений.
 
-    var prevMsg;
-    var executionCount = 0;
-    var inBlankWindow = false;
-    var currentDocument = null;
-    var contextItem = dummyItem;
-    var currentItems = dummyItems;
-    var focusedItem = dummyItem;
-    var focusedAncestorItems = dummyItems;
-    var currentCss = null;
-    var insertedStyleElements = new Map();
-    var expiredCssSet = Object.create(null);
-    var originalAttributes = new Map();
-    
-    /**
-      * Сохраняет оригинальные атрибуты элемента и устанавливает новые.
-      *
-      * :param attr: Имя атрибута.
-      * :type attr: str
-      * :param value: Значение атрибута.
-      * :type value: str
-      * :param item: Элемент, атрибут которого нужно изменить.
-      * :type item: Node
-      */
-    function setAttr(attr, value, item) {
-        fu.saveAttrForItem(item, attr, originalAttributes);
-        fu.setAttrToItem(attr, value, item);
-    };
+    Args:
+        message (Any): Сообщение.
+        sender (Any): Отправитель сообщения.
+        sendResponse (Any): Функция для отправки ответа.
+    """
+    listener = genericListener.listeners.get(message.get("event"))
+    if listener:
+        return listener(message, sender, sendResponse)
 
-    /**
-      * Сохраняет оригинальные атрибуты для списка элементов и устанавливает индексы.
-      *
-      * :param attr: Имя атрибута.
-      * :type attr: str
-      * :param items: Список элементов, атрибуты которых нужно изменить.
-      * :type items: list
-      */
-    function setIndex(attr, items) {
-        fu.saveAttrForItems(items, attr, originalAttributes);
-        fu.setIndexToItems(attr, items);
-    };
+genericListener.listeners = {}
+browser.runtime.onMessage.addListener(genericListener)
 
-    /**
-      * Проверяет, может ли элемент получить фокус.
-      *
-      * :param item: Элемент для проверки.
-      * :type item: Node
-      * :returns: True если элемент может получить фокус, False в противном случае.
-      * :rtype: bool
-      */
-    function isFocusable(item) {
-        if (!item) {
-            return false;
-        }
-        if (fu.isNodeItem(item) || fu.isAttrItem(item)) {
-            return true;
-        }
-        return false;
-    };
+def setContentInfo(message: Any) -> None:
+    """
+    Устанавливает информацию о контенте.
 
-     /**
-      * Устанавливает фокус на элемент и подсвечивает его.
-      *
-      * :param item: Элемент, на который нужно установить фокус.
-      * :type item: Node
-      */
-    function focusItem(item) {
-        fu.removeAttrFromItem(attributes.focused, focusedItem);
-        fu.removeAttrFromItems(attributes.focusedAncestor,
-                               focusedAncestorItems);
-        
+    Args:
+         message (Any): Сообщение с информацией о контенте.
+    """
+    if not message:
+        return
+    global attributes
+    if "attributes" in message:
+        attributes = message.get("attributes")
 
-        if (!isFocusable(item)) {
-            return;
-        }
+genericListener.listeners["setContentInfo"] = setContentInfo
 
-        if (fu.isElementItem(item)) {
-            focusedItem = item;
-        } else {
-            focusedItem = fu.getParentElement(item);
-        }
 
-        focusedAncestorItems = fu.getAncestorElements(focusedItem);
+def execute(message: Any, sender: Any) -> None:
+    """
+    Выполняет XPath запрос и отправляет результат.
 
-        setAttr(attributes.focused, "true", focusedItem);
-        setIndex(attributes.focusedAncestor, focusedAncestorItems);
+    Args:
+        message (Any): Сообщение с запросом.
+        sender (Any): Отправитель сообщения.
+    """
+    resetPrev()
+    updateCss()
 
-        focusedItem.blur();
-        focusedItem.focus();
-        focusedItem.scrollIntoView();
-    };
+    sendMsg = createResultMessage()
+    main = message.get("main")
+    sendMsg["event"] = MESSAGE_SHOW_RESULTS_IN_POPUP
+    sendMsg["executionId"] = executionCount
+    sendMsg["href"] = window.location.href
+    sendMsg["title"] = window.document.title
+    sendMsg["frameDesignation"] = ""
 
-     /**
-      * Устанавливает основные атрибуты для контекстного элемента и списка элементов.
-      */
-    function setMainAttrs() {
-        if (contextItem !== null) {
-            setAttr(attributes.context, "true", contextItem);
-        }
-        setIndex(attributes.element, currentItems);
-    };
+    mainType = fu.getxpathResultNum(main.get("resultType"))
+    sendMsg["main"]["method"] = main.get("method")
+    sendMsg["main"]["expression"] = main.get("expression")
+    sendMsg["main"]["specifiedResultType"] = makeTypeStr(mainType)
+    sendMsg["main"]["resultType"] = ""
+    sendMsg["main"]["resolver"] = main.get("resolver") or ""
+    sendMsg["main"]["itemDetails"] = []
 
-    /**
-      * Восстанавливает оригинальные атрибуты элементов.
-      */
-    function restoreAttrs() {
-        fu.restoreItemAttrs(originalAttributes);
-        originalAttributes = new Map();
-    };
+    global contextItem
+    contextItem = document
+    global currentDocument
+    currentDocument = document
 
-    /**
-      * Сбрасывает предыдущие результаты и подготавливает к новому выполнению.
-      */
-    function resetPrev() {
-        restoreAttrs();
+    if "frameDesignation" in message:
+        sendMsg["frameDesignation"] = message.get("frameDesignation")
+        try:
+            desi = parseFrameDesignation(message.get("frameDesignation"))
+            res = traceBlankWindows(desi, window)
+            if not res.get("success"):
+                if res.get("failedWindow") is None:
+                     raise ValueError("The specified frame does not exist.")
+                else:
+                    res.get("failedWindow").postMessage({
+                        "message": MESSAGE_TRYXPATH_REQUEST_TO_POPUP,
+                        "messageId": 1
+                    }, "*")
+                    return
+            global inBlankWindow
+            contextItem = res.get("windows").pop().document
+        except Exception as e:
+            sendMsg["message"] = MESSAGE_ERROR_OCCURRED_FRAME + str(e)
+            browser.runtime.sendMessage(sendMsg)
+            global prevMsg
+            prevMsg = sendMsg
+            return
+        inBlankWindow = True
+        currentDocument = contextItem
 
-        contextItem = dummyItem;
-        currentItems = dummyItems;
-        focusedItem = dummyItem;
-        focusedAncestorItems = dummyItems;
+    if inBlankWindow:
+        removeStyleElement(currentDocument)
 
-        prevMsg = createResultMessage();
-        executionCount++;
-    };
+    if message.get("context"):
+        cont = message.get("context")
+        contType = fu.getxpathResultNum(cont.get("resultType"))
+        sendMsg["context"] = {}
+        sendMsg["context"]["method"] = cont.get("method")
+        sendMsg["context"]["expression"] = cont.get("expression")
+        sendMsg["context"]["specifiedResultType"] = makeTypeStr(contType)
+        sendMsg["context"]["resolver"] = cont.get("resolver") or ""
+        sendMsg["context"]["itemDetail"] = None
 
-    /**
-      * Создает строку типа для результата XPath.
-      *
-      * :param resultType: Тип результата.
-      * :type resultType: int
-      * :returns: Строка, представляющая тип результата.
-      * :rtype: str
-      */
-    function makeTypeStr(resultType) {
-        if ((typeof(resultType) === "number")
-            && (resultType === resultType)) {
-            return fu.getxpathResultStr(resultType) + "(" + resultType + ")";
-        }
-        return "";
-    };
-
-    /**
-      * Отправляет сообщение для обновления CSS, если есть изменения.
-      */
-    function updateCss() {
-        if ((currentCss === null) || (Object.keys(expiredCssSet).length > 0)){
-            browser.runtime.sendMessage({
-                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "updateCss",
-                "expiredCssSet": expiredCssSet
-            });
-        }
-    };
-
-    /**
-      * Получает список фреймов на основе спецификации.
-      *
-      * :param spec: Спецификация фреймов.
-      * :type spec: str
-      * :returns: Список фреймов.
-      * :rtype: list
-      * :raises Error: Если спецификация невалидна.
-      */
-    function getFrames(spec) {
-        var inds = JSON.parse(spec);
-        
-        if (fu.isNumberArray(inds) && (inds.length > 0)) {
-            return fu.getFrameAncestry(inds).reverse();
-        } else {
-            throw new Error("Invalid specification. [" + spec + "]");
-        }
-    };
-
-    /**
-      * Парсит спецификацию фрейма.
-      *
-      * :param frameDesi: Строка спецификации фрейма.
-      * :type frameDesi: str
-      * :returns: Массив индексов фреймов.
-      * :rtype: list
-      * :raises Error: Если спецификация невалидна.
-      */
-    function parseFrameDesignation(frameDesi) {
-        var inds = JSON.parse(frameDesi);
-        
-        if (fu.isNumberArray(inds) && (inds.length > 0)) {
-            return inds;
-        } else {
-            throw new Error("Invalid specification. [" + frameDesi + "]");
-        }
-    };
-
-     /**
-      * Проверяет наличие пустых окон в иерархии фреймов.
-      *
-      * :param desi: Массив индексов фреймов.
-      * :type desi: list
-      * :param win: Начальное окно.
-      * :type win: Window
-      * :returns: Объект с результатами проверки.
-      * :rtype: object
-      */
-    function traceBlankWindows(desi, win) {
-        win = win || window;
-        var result = Object.create(null);
-
-        result.windows = [];
-        for (let i = 0; i < desi.length; i++) {
-            let frameInd = desi[i];
-            if ((frameInd <= -1) || (frameInd >= win.frames.length)) {
-                result.failedWindow = null;
-                result.success = false;
-                return result;
-            }
-            win = win.frames[frameInd];
-            if (!fu.isBlankWindow(win)) {
-                result.failedWindow = win;
-                result.success = false;
-                return result;
-            }
-            result.windows.push(win);
-        }
-
-        result.success = true;
-        return result;
-    };
-
-    /**
-     * Обрабатывает изменения в CSS.
-     *
-     * :param newCss: Новый CSS.
-     * :type newCss: str
-     */
-    function handleCssChange(newCss) {
-        if (currentCss === null) {
-            if (newCss in expiredCssSet) {
-                currentCss = newCss;
-                delete expiredCssSet[newCss];
-            }
-        } else if (newCss !== currentCss) {
-            if (newCss in expiredCssSet) {
-                currentCss = newCss;
-                delete expiredCssSet[newCss];
-            } else {
-                expiredCssSet[currentCss] = true;
-                currentCss = null;
-            }
-        }
-        // If newCss and currentCss are the same string do nothing.
-    };
-
-    /**
-     * Находит фрейм по сообщению.
-     *
-     * :param event: Событие сообщения.
-     * :type event: MessageEvent
-     * :param win: Текущее окно.
-     * :type win: Window
-     * :returns: Элемент фрейма.
-     * :rtype: HTMLIFrameElement
-     */
-    function findFrameByMessage(event, win) {
-        var ind = event.data.frameIndex;
-        var subWin;
-        if (ind >= 0) {
-            subWin = win.frames[ind];
-        } else {
-            subWin = event.source;
-        }
-        return fu.findFrameElement(subWin, win);
-    };
-
-    /**
-      * Устанавливает слушатель событий для фокуса фрейма.
-      *
-      * :param win: Окно, к которому нужно привязать слушателя.
-      * :type win: Window
-      * :param isBlankWindow: Флаг, является ли окно пустым.
-      * :type isBlankWindow: bool
-      */
-    function setFocusFrameListener(win, isBlankWindow) {
-        var localUpdateCss;
-        if (isBlankWindow) {
-            localUpdateCss = updateStyleElement.bind(null, win.document);
-        } else {
-            localUpdateCss = updateCss;
-        }
-
-        win.addEventListener("message", (event) => {
-            if (event.data
-                && event.data.message === "tryxpath-focus-frame"
-                && Number.isInteger(event.data.index)
-                && Number.isInteger(event.data.frameIndex)) {
-
-                let frame = findFrameByMessage(event, win);
-                if (!frame) {
-                    return;
-                }
-
-                let index = event.data.index;
-                localUpdateCss();
-                setAttr(attributes.frame, index, frame);
-                setIndex(attributes.frameAncestor,
-                         fu.getAncestorElements(frame));
-                if (win === win.top) {
-                    frame.blur();
-                    frame.focus();
-                    frame.scrollIntoView();
-                } else {
-                    win.parent.postMessage({
-                        "message": "tryxpath-focus-frame",
-                        "index": ++index,
-                        "frameIndex": fu.findFrameIndex(win, win.parent)
-                    }, "*");
-                }
-            }
-        });
-    };
-
-    /**
-      * Инициализирует пустые окна.
-      *
-      * :param win: Окно для инициализации.
-      * :type win: Window
-      */
-    function initBlankWindow(win) {
-        if (!win.tryxpath) {
-            win.tryxpath = Object.create(null);
-        }
-
-        if (win.tryxpath.isInitialized) {
-            return;
-        }
-        win.tryxpath.isInitialized = true;
-
-        setFocusFrameListener(win, true);
-    };
-
-    /**
-      * Находит родительский элемент для стилей.
-      *
-      * :param doc: Документ, для которого нужно найти родителя.
-      * :type doc: Document
-      * :returns: Родительский элемент.
-      * :rtype: Node
-      */
-    function findStyleParent(doc) {
-        return (doc.head || doc.body || null);
-    };
-
-     /**
-      * Обновляет стили для документа.
-      *
-      * :param doc: Документ, стили которого нужно обновить.
-      * :type doc: Document
-      */
-    function updateStyleElement(doc) {
-        var css = currentCss || "";
-        css = styleElementHeader + css;
-
-        var style = insertedStyleElements.get(doc);
-        if (style) {
-            style.textContent = css;
-            return;
-        }
-
-        var parent = findStyleParent(doc);
-        if (parent) {
-            let newStyle = doc.createElement("style");
-            newStyle.textContent = css;
-            newStyle.setAttribute("type", "text/css");
-            parent.appendChild(newStyle);
-            insertedStyleElements.set(doc, newStyle);
-        }
-    };
-
-     /**
-      * Обновляет стили во всех вставленных элементах.
-      */
-    function updateAllStyleElements() {
-        var css = currentCss || "";
-        css = styleElementHeader + css;
-        for (let [doc, elem] of insertedStyleElements) {
-            elem.textContent = css;
-        }
-    };
-
-     /**
-      * Удаляет элемент стиля из документа.
-      *
-      * :param doc: Документ, из которого нужно удалить стиль.
-      * :type doc: Document
-      */
-    function removeStyleElement(doc) {
-        var elem = insertedStyleElements.get(doc);
-        
-        if (!elem) {
-            return;
-        }
-
-        var parent = elem.parentNode;
-        if (parent) {
-            parent.removeChild(elem);
-        }
-        insertedStyleElements.delete(doc);
-    };
-
-    /**
-      * Удаляет все элементы стилей.
-      */
-    function removeAllStyleElements() {
-        for (let [doc, elem] of insertedStyleElements) {
-            let parent = elem.parentNode;
-            if (parent) {
-                parent.removeChild(elem);
-            }
-        }
-        insertedStyleElements.clear();
-    };
-
-    /**
-      * Создает сообщение о результате по умолчанию.
-      *
-      * :returns: Объект сообщения с результатами по умолчанию.
-      * :rtype: dict
-      */
-    function createResultMessage() {
-        return {
-            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "showResultsInPopup",
-            "executionId": invalidExecutionId,
-            "href": "",
-            "title": "",
-            "message": "There is no result.",
-            "main": {
-                "method": "evaluate",
-                "expression": "",
-                "specifiedResultType": "ANY_TYPE(0)",
-                "resolver": "",
-                "itemDetails": []
-            }
-        };        
-    };
-
-     /**
-      * Обрабатывает сообщения от расширения.
-      *
-      * :param message: Сообщение от расширения.
-      * :type message: dict
-      * :param sender: Отправитель сообщения.
-      * :type sender: object
-      * :param sendResponse: Функция для отправки ответа.
-      * :type sendResponse: function
-      */
-    function genericListener(message, sender, sendResponse) {
-        var listener = genericListener.listeners[message.event];
-        if (listener) {
-            return listener(message, sender, sendResponse);
-        }
-    };
-    genericListener.listeners = Object.create(null);
-    // browser - это объект, предоставляемый API браузера, и не требует импорта.
-    browser.runtime.onMessage.addListener(genericListener);
-
-    /**
-      * Устанавливает информацию о контенте.
-      *
-      * :param message: Сообщение с информацией о контенте.
-      * :type message: dict
-      */
-    genericListener.listeners.setContentInfo = function (message) {
-        if (!message) {
-            return;
-        }
-
-        if ("attributes" in message) {
-            attributes = message.attributes;
-        }
-    };
-
-    /**
-      * Выполняет XPath запрос и отправляет результаты.
-      *
-      * :param message: Сообщение с данными для выполнения запроса.
-      * :type message: dict
-      * :param sender: Отправитель сообщения.
-      * :type sender: object
-      */
-    genericListener.listeners.execute = function(message, sender) {
-        resetPrev();
-
-        updateCss();
-
-        var sendMsg = {};
-        var main = message.main;
-        sendMsg.event = "showResultsInPopup";
-        sendMsg.executionId = executionCount;
-        sendMsg.href = window.location.href;
-        sendMsg.title = window.document.title;
-        sendMsg.frameDesignation = "";
-
-        var mainType = fu.getxpathResultNum(main.resultType);
-        sendMsg.main = {};
-        sendMsg.main.method = main.method;
-        sendMsg.main.expression = main.expression;
-        sendMsg.main.specifiedResultType = makeTypeStr(mainType);
-        sendMsg.main.resultType = "";
-        sendMsg.main.resolver = main.resolver || "";
-        sendMsg.main.itemDetails = [];
-
-        contextItem = document;
-        currentDocument = document;
-
-        if ("frameDesignation" in message) {
-            sendMsg.frameDesignation = message.frameDesignation;
-
-            try {
-                let desi = parseFrameDesignation(message.frameDesignation);
-                let res = traceBlankWindows(desi, window);
-                if (!res.success) {
-                    if (res.failedWindow === null) {
-                        throw new Error(
-                            "The specified frame does not exist.");
-                    } else {
-                        res.failedWindow.postMessage({
-                            "message": "tryxpath-request-message-to-popup",
-                            "messageId": 1
-                        }, "*");
-                        return;
-                    }
-                }
-                contextItem = res.windows.pop().document;
-            } catch (e) {
-                sendMsg.message = "An error occurred when getting a frame. "
-                    + e.message;
-                 # Отправка сообщения об ошибке через runtime API браузера
-                browser.runtime.sendMessage(sendMsg);
-                prevMsg = sendMsg;
-                return;
-            }
-
-            inBlankWindow = true;
-            currentDocument = contextItem;
-        }
-
-        if (inBlankWindow) {
-            removeStyleElement(currentDocument);
-        }
-
-        if (message.context) {
-            let cont = message.context;
-            let contType = fu.getxpathResultNum(cont.resultType);
-            sendMsg.context = {};
-            sendMsg.context.method = cont.method;
-            sendMsg.context.expression = cont.expression;
-            sendMsg.context.specifiedResultType = makeTypeStr(contType);
-            sendMsg.context.resolver = cont.resolver || "";
-            sendMsg.context.itemDetail = null;
-
-            let contRes;
-            try {
-                contRes = fu.execExpr(cont.expression, cont.method, {
-                    "context": contextItem,
-                    "resultType": contType,
-                    "resolver": cont.resolver
-                });
-            } catch (e) {
-                sendMsg.message = "An error occurred when getting a context. "
-                    + e.message;
-                browser.runtime.sendMessage(sendMsg);
-                prevMsg = sendMsg;
-                return;
-            }
-
-            if (contRes.items.length === 0) {
-                sendMsg.message = "A context is not found.";
-                browser.runtime.sendMessage(sendMsg);
-                prevMsg = sendMsg;
-                return;
-            }
-            contextItem = contRes.items[0];
-
-            sendMsg.context.resultType = makeTypeStr(contRes.resultType);
-            sendMsg.context.itemDetail = fu.getItemDetail(contextItem);
-        }
-
-        var mainRes;
-        try {
-            mainRes = fu.execExpr(main.expression, main.method, {
+        try:
+            contRes = fu.execExpr(cont.get("expression"), cont.get("method"), {
                 "context": contextItem,
-                "resultType": mainType,
-                "resolver": main.resolver
-            });
-        } catch (e) {
-             # Отправка сообщения об ошибке через runtime API браузера
-            sendMsg.message = "An error occurred when getting nodes. "
-                + e.message;
-            browser.runtime.sendMessage(sendMsg);
-            prevMsg = sendMsg;
-            return;
-        }
-        currentItems = mainRes.items;
+                "resultType": contType,
+                "resolver": cont.get("resolver")
+            })
+        except Exception as e:
+             sendMsg["message"] = "An error occurred when getting a context. " + str(e)
+             browser.runtime.sendMessage(sendMsg)
+             prevMsg = sendMsg
+             return
+        if len(contRes.get("items")) == 0:
+            sendMsg["message"] = MESSAGE_CONTEXT_NOT_FOUND
+            browser.runtime.sendMessage(sendMsg)
+            prevMsg = sendMsg
+            return
 
-        sendMsg.message = "Success.";
-        sendMsg.main.resultType = makeTypeStr(mainRes.resultType);
-        sendMsg.main.itemDetails = fu.getItemDetails(currentItems);
-        browser.runtime.sendMessage(sendMsg);
-        prevMsg = sendMsg;
+        contextItem = contRes.get("items")[0]
+        sendMsg["context"]["resultType"] = makeTypeStr(contRes.get("resultType"))
+        sendMsg["context"]["itemDetail"] = fu.getItemDetail(contextItem)
 
-        setMainAttrs();
-        if (inBlankWindow) {
-            updateStyleElement(currentDocument);
-        }
-        return;
-    }
+    try:
+        mainRes = fu.execExpr(main.get("expression"), main.get("method"), {
+            "context": contextItem,
+            "resultType": mainType,
+            "resolver": main.get("resolver")
+        })
+    except Exception as e:
+        sendMsg["message"] = MESSAGE_ERROR_OCCURRED_NODES + str(e)
+        browser.runtime.sendMessage(sendMsg)
+        prevMsg = sendMsg
+        return
+    global currentItems
+    currentItems = mainRes.get("items")
+    sendMsg["message"] = MESSAGE_SUCCESS
+    sendMsg["main"]["resultType"] = makeTypeStr(mainRes.get("resultType"))
+    sendMsg["main"]["itemDetails"] = fu.getItemDetails(currentItems)
+    browser.runtime.sendMessage(sendMsg)
+    prevMsg = sendMsg
+    setMainAttrs()
+    if inBlankWindow:
+        updateStyleElement(currentDocument)
 
-    /**
-      * Устанавливает фокус на элемент из списка результатов.
-      *
-      * :param message: Сообщение с индексом элемента для фокуса.
-      * :type message: dict
-      */
-    genericListener.listeners.focusItem = function(message) {
-        if (message.executionId === executionCount) {
-            if (inBlankWindow) {
-                updateStyleElement(currentDocument);
-            }
-            focusItem(currentItems[message.index]);
-        }
-    };
+genericListener.listeners["execute"] = execute
 
-    /**
-      * Устанавливает фокус на контекстный элемент.
-      *
-      * :param message: Сообщение с данными о контекстном элементе.
-      * :type message: dict
-      */
-    genericListener.listeners.focusContextItem = function(message) {
-        if (message.executionId === executionCount) {
-            if (inBlankWindow) {
-                updateStyleElement(currentDocument);
-            }
-            focusItem(contextItem);
-        }
-    };
+def focusItemListener(message: Any) -> None:
+    """
+    Фокусирует на элементе из списка результатов.
 
-    /**
-      * Устанавливает фокус на фрейм.
-      *
-      * :param message: Сообщение с данными для фокуса фрейма.
-      * :type message: dict
-      */
-    genericListener.listeners.focusFrame = function(message) {
-        var win = window;
+    Args:
+        message (Any): Сообщение с индексом элемента для фокуса.
+    """
+    if message.get("executionId") == executionCount:
+        if inBlankWindow:
+            updateStyleElement(currentDocument)
+        focusItem(currentItems[message.get("index")])
 
-        if ("frameDesignation" in message) {
-            try {
-                let desi = parseFrameDesignation(message.frameDesignation);
-                let res = traceBlankWindows(desi, window);
-                if (!res.success) {
-                    let msg;
-                    if (res.failedWindow === null) {
-                        throw new Error(
-                            "The specified frame does not exist.");
-                    } else {
-                        res.failedWindow.postMessage({
-                            "message": "tryxpath-request-message-to-popup",
-                            "messageId": 1
-                        }, "*");
-                        return;
-                    }
-                }
-                win = res.windows.pop();
-            } catch (e) {
-                let sendMsg = createResultMessage();
-                sendMsg.message = "An error occurred when focusing a frame. "
-                    + e.message;
-                browser.runtime.sendMessage(sendMsg);
-                return;
-            }
-        }
+genericListener.listeners["focusItem"] = focusItemListener
 
-        if (win !== win.top) {
-            win.parent.postMessage({
-                "message": "tryxpath-focus-frame",
-                "index": 0,
-                "frameIndex": fu.findFrameIndex(win, win.parent)
-            }, "*");
-        }
-    };
+def focusContextItemListener(message: Any) -> None:
+    """
+    Фокусирует на контекстном элементе.
 
-    /**
-      * Запрашивает показ результатов в popup.
-      */
-    genericListener.listeners.requestShowResultsInPopup = function () {
-        if (prevMsg) {
-            prevMsg.event = "showResultsInPopup";
-            browser.runtime.sendMessage(prevMsg);
-        }
-    };
+    Args:
+         message (Any): Сообщение для фокуса на контекстном элементе.
+    """
+    if message.get("executionId") == executionCount:
+         if inBlankWindow:
+             updateStyleElement(currentDocument)
+         focusItem(contextItem)
 
-    /**
-      * Запрашивает показ всех результатов.
-      */
-    genericListener.listeners.requestShowAllResults = function () {
-        if (prevMsg) {
-            prevMsg.event = "showAllResults";
-            browser.runtime.sendMessage(prevMsg);
-        }
-    }
+genericListener.listeners["focusContextItem"] = focusContextItemListener
 
-    /**
-      * Сбрасывает стили.
-      */
-    genericListener.listeners.resetStyle = function () {
-        restoreAttrs();
-        removeAllStyleElements();
-    };
+def focusFrameListener(message: Any) -> None:
+    """
+    Фокусирует на фрейме.
 
-    /**
-      * Устанавливает стили.
-      */
-    genericListener.listeners.setStyle = function () {
-        restoreAttrs();
-        updateCss();
-        if (inBlankWindow) {
-            updateStyleElement(currentDocument);
-        }
-        setMainAttrs();
-    };
+    Args:
+         message (Any): Сообщение с информацией о фрейме для фокуса.
+    """
+    win = window
 
-    /**
-      * Завершает вставку стилей.
-      *
-      * :param message: Сообщение с CSS.
-      * :type message: dict
-      */
-    genericListener.listeners.finishInsertCss = function (message) {
-        var css = message.css;
-        currentCss = css;
-        delete expiredCssSet[css];
+    if "frameDesignation" in message:
+        try:
+            desi = parseFrameDesignation(message.get("frameDesignation"))
+            res = traceBlankWindows(desi, window)
+            if not res.get("success"):
+                 if res.get("failedWindow") is None:
+                     raise ValueError("The specified frame does not exist.")
+                 else:
+                    res.get("failedWindow").postMessage({
+                        "message": MESSAGE_TRYXPATH_REQUEST_TO_POPUP,
+                        "messageId": 1
+                    }, "*")
+                    return
+            win = res.get("windows").pop()
+        except Exception as e:
+             sendMsg = createResultMessage()
+             sendMsg["message"] = MESSAGE_ERROR_OCCURRED_FOCUS_FRAME + str(e)
+             browser.runtime.sendMessage(sendMsg)
+             return
 
-        updateAllStyleElements();
-    };
+    if win != win.top:
+        win.parent.postMessage({
+            "message": MESSAGE_TRYXPATH_FOCUS_FRAME,
+            "index": 0,
+            "frameIndex": fu.findFrameIndex(win, win.parent)
+        }, "*")
 
-     /**
-      * Завершает удаление стилей.
-      *
-      * :param message: Сообщение с CSS.
-      * :type message: dict
-      */
-    genericListener.listeners.finishRemoveCss = function (message) {
-        var css = message.css;
-        if (css === currentCss) {
-            currentCss = null;
-        }
-        delete expiredCssSet[css];
-    };
+genericListener.listeners["focusFrame"] = focusFrameListener
 
-     /**
-      * Обрабатывает изменения в хранилище браузера.
-      */
-    browser.storage.onChanged.addListener(changes => {
-        if (changes.attributes && ("newValue" in changes.attributes)) {
-            attributes = changes.attributes.newValue;
-        }
-        if (changes.css && ("newValue" in changes.css)) {
-            handleCssChange(changes.css.newValue);
-        }
-    });
+def requestShowResultsInPopup() -> None:
+    """
+    Отправляет запрос на отображение результатов в попапе.
+    """
+    if prevMsg:
+        prevMsg["event"] = MESSAGE_SHOW_RESULTS_IN_POPUP
+        browser.runtime.sendMessage(prevMsg)
 
-     /**
-      * Обрабатывает сообщения от других фреймов.
-      */
-    window.addEventListener("message", event => {
-        if (event.data
-            && (event.data.message === "tryxpath-request-message-to-popup")) {
+genericListener.listeners["requestShowResultsInPopup"] = requestShowResultsInPopup
 
-            let sendMsg;
-            switch (event.data.messageId) {
-            case 0:
-                sendMsg = createResultMessage();
-                sendMsg.message = "An error occurred when getting a frame. "
-                    + "There is a frame having frameId.";
-                browser.runtime.sendMessage(sendMsg);
-                break;
-            case 1:
-                sendMsg = createResultMessage();
-                sendMsg.message = "An error occurred when focusing a frame. "
-                    + "There is a frame having frameId.";
-                browser.runtime.sendMessage(sendMsg);
-                break;
-            default:
-                break;
-            }
-        }
-    });
+def requestShowAllResults() -> None:
+    """
+    Отправляет запрос на отображение всех результатов.
+    """
+    if prevMsg:
+        prevMsg["event"] = MESSAGE_SHOW_ALL_RESULTS
+        browser.runtime.sendMessage(prevMsg)
 
-    prevMsg = createResultMessage();
-    setFocusFrameListener(window, false);
-     # Отправка запроса на установку информации о контенте через runtime API браузера
-    browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestSetContentInfo" });
+genericListener.listeners["requestShowAllResults"] = requestShowAllResults
 
-})(window);
+def resetStyle() -> None:
+    """
+    Сбрасывает стили.
+    """
+    restoreAttrs()
+    removeAllStyleElements()
+
+genericListener.listeners["resetStyle"] = resetStyle
+
+def setStyle() -> None:
+    """
+    Устанавливает стили.
+    """
+    restoreAttrs()
+    updateCss()
+    if inBlankWindow:
+        updateStyleElement(currentDocument)
+    setMainAttrs()
+
+genericListener.listeners["setStyle"] = setStyle
+
+def finishInsertCss(message: Any) -> None:
+    """
+    Завершает вставку CSS.
+
+    Args:
+        message (Any): Сообщение с CSS для вставки.
+    """
+    css = message.get("css")
+    global currentCss
+    currentCss = css
+    if css in expiredCssSet:
+        del expiredCssSet[css]
+    updateAllStyleElements()
+
+genericListener.listeners["finishInsertCss"] = finishInsertCss
+
+def finishRemoveCss(message: Any) -> None:
+    """
+    Завершает удаление CSS.
+
+    Args:
+         message (Any): Сообщение с CSS для удаления.
+    """
+    css = message.get("css")
+    global currentCss
+    if css == currentCss:
+        currentCss = None
+    if css in expiredCssSet:
+        del expiredCssSet[css]
+genericListener.listeners["finishRemoveCss"] = finishRemoveCss
+
+def storageOnChanged(changes: dict) -> None:
+     """
+    Обрабатывает изменения в хранилище.
+
+    Args:
+       changes (dict): Изменения в хранилище.
+    """
+     if changes.get("attributes") and ("newValue" in changes.get("attributes")):
+         global attributes
+         attributes = changes.get("attributes").get("newValue")
+     if changes.get("css") and ("newValue" in changes.get("css")):
+         handleCssChange(changes.get("css").get("newValue"))
+browser.storage.onChanged.addListener(storageOnChanged)
+
+
+window.addEventListener("message", (event) => {
+    data = event.data
+    if data and (data.get("message") == MESSAGE_TRYXPATH_REQUEST_TO_POPUP):
+        sendMsg = createResultMessage()
+        message_id = data.get("messageId")
+        if message_id == 0:
+            sendMsg["message"] = MESSAGE_ERROR_OCCURRED_FRAME + "There is a frame having frameId."
+        elif message_id == 1:
+             sendMsg["message"] = MESSAGE_ERROR_OCCURRED_FOCUS_FRAME + "There is a frame having frameId."
+        browser.runtime.sendMessage(sendMsg)
+})
+
+
+prevMsg = createResultMessage()
+setFocusFrameListener(window, False)
+
+browser.runtime.sendMessage({
+    "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "requestSetContentInfo"
+})
+
 ```

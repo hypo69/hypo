@@ -2,110 +2,122 @@
 
 **Качество кода**
 9
-- Плюсы
-    - Код хорошо структурирован и читаем.
-    - Используются параметризованные тесты pytest для перебора всех ноутбуков.
-    - Есть обработка ошибок при выполнении ноутбуков.
-    - Сохраняется копия исполненного ноутбука.
-- Минусы
-    - Не используются константы для magic strings (`.ipynb`, `.executed.local.ipynb`).
-    - Нет документации в формате RST для функций.
-    - Не используется `from src.logger import logger` для логирования.
-    - Пути к файлам заданы строками, лучше использовать `pathlib.Path`.
-    - Есть несколько `sys.path.insert(0, ...)` что может запутать при отладке
+-  Плюсы
+    - Код хорошо структурирован и читабелен.
+    - Используются параметризованные тесты pytest для проверки нескольких ноутбуков.
+    - Присутствует логирование начала и завершения выполнения ноутбука.
+    - Сохраняется копия выполненного ноутбука.
+ -  Минусы
+    - Отсутствует обработка ошибок с использованием `logger.error`.
+    - Присутствуют избыточные импорты sys.path.
+    - Нет документации в формате RST.
+    - Жестко заданы пути.
+    - Присутствует использование `print` вместо `logger`.
+    - Не используются константы для путей.
 
 **Рекомендации по улучшению**
-1. Добавить описание модуля в начале файла.
-2. Добавить документацию в формате RST для функций `get_notebooks` и `test_notebook_execution`.
-3. Использовать `pathlib.Path` для работы с путями.
-4. Использовать константы для расширений файлов (`.ipynb`, `.executed.local.ipynb`).
-5. Использовать `from src.logger.logger import logger` для логирования ошибок.
-6. Избегать избыточного использования `try-except`, перенаправляя ошибки в `logger.error`.
-7. Переименовать `NOTEBOOK_FOLDER` в `NOTEBOOKS_DIR` для единообразия.
-8. Заменить `sys.path.insert(0, ...)` на `PYTHONPATH`
-9. Убрать `print` заменив на `logger.info` и `logger.error`
+
+1.  Добавить описание модуля в формате RST.
+2.  Использовать `from src.logger.logger import logger` для логирования.
+3.  Заменить `print` на `logger.info` и `logger.error`.
+4.  Добавить документацию для функций в формате RST.
+5.  Удалить лишние `sys.path.insert(0, ...)` так как это дублирует пути.
+6.  Добавить константы для путей.
+7.  Использовать константу для расширений файлов.
+8.  Заменить `Exception as e` на конкретный тип исключения при обработке.
+9.  Вынести константу KERNEL_NAME из глобальной области видимости в функцию.
+10. Улучшить читаемость и форматирование кода.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для тестирования Jupyter Notebooks.
-=========================================================================================
+Модуль для тестирования выполнения Jupyter Notebook.
+=====================================================
 
-Этот модуль содержит функции для автоматического выполнения Jupyter Notebooks
-и проверки на наличие ошибок.
+Этот модуль содержит функции для автоматического тестирования выполнения примеров Jupyter Notebook.
+Он использует pytest для параметризации тестов и nbconvert для выполнения кода в ноутбуках.
 
 Пример использования
 --------------------
 
-Запуск тестов:
+Для запуска тестов необходимо установить pytest и nbconvert, а затем выполнить:
 
 .. code-block:: bash
 
-    pytest tests/scenarios/test_jupyter_examples.py
+   pytest tests/scenarios/test_jupyter_examples.py
+
 """
 import os
 from pathlib import Path
+
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import pytest
-# from src.logger import logger  # перенесено в начало
-from src.logger.logger import logger  # импорт logger
-import sys
-# sys.path.insert(0, '../../tinytroupe/') # ensures that the package is imported from the parent directory, not the Python installation #TODO перенести в PYTHONPATH
-# sys.path.insert(0, '../../') # ensures that the package is imported from the parent directory, not the Python installation #TODO перенести в PYTHONPATH
-# sys.path.insert(0, '../') # ensures that the package is imported from the parent directory, not the Python installation #TODO перенести в PYTHONPATH
 
-# Set the folder containing the notebooks
-NOTEBOOKS_DIR = Path("../examples/")  # Update this path
-NOTEBOOK_EXTENSION = ".ipynb" # константа для расширения файлов
-EXECUTED_NOTEBOOK_EXTENSION = ".executed.local.ipynb" # константа для расширения исполненных файлов
+from src.logger.logger import logger  #  Импорт logger
 
-# Set a timeout for long-running notebooks
-TIMEOUT = 600
 
-KERNEL_NAME = "python3" # "py310"
+# Определение констант для путей и расширений файлов
+NOTEBOOK_FOLDER = Path("../examples/")
+EXECUTED_NOTEBOOK_SUFFIX = ".executed.local.ipynb"
+NOTEBOOK_EXTENSION = ".ipynb"
 
 
 def get_notebooks(folder: Path) -> list[str]:
     """
-    Получает список всех Jupyter notebook файлов из указанной папки.
+    Извлекает все файлы Jupyter Notebook из указанной папки, исключая уже выполненные и локальные копии.
 
     Args:
         folder (Path): Путь к папке с ноутбуками.
 
     Returns:
-        list[str]: Список путей к файлам ноутбуков.
+        list[str]: Список путей к найденным файлам ноутбуков.
     """
+    # код возвращает список всех файлов в указанной папке, которые имеют расширение .ipynb, но не содержат ".executed." или ".local." в своем имени.
     return [
         str(folder / f)
         for f in os.listdir(folder)
-        if f.endswith(NOTEBOOK_EXTENSION) and not ".executed." in f and not ".local." in f
+        if f.endswith(NOTEBOOK_EXTENSION)
+        and not ".executed." in f
+        and not ".local." in f
     ]
 
 
-@pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOKS_DIR))
+@pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
 def test_notebook_execution(notebook_path: str):
     """
-    Исполняет Jupyter notebook и проверяет, что не возникает исключений.
+    Выполняет Jupyter Notebook и проверяет отсутствие ошибок.
 
     Args:
         notebook_path (str): Путь к файлу ноутбука.
+
+    Raises:
+        pytest.fail: Если во время выполнения ноутбука возникает исключение.
     """
-    notebook_path = Path(notebook_path)
-    try:
-        with open(notebook_path, "r", encoding="utf-8") as nb_file:
-            notebook = nbformat.read(nb_file, as_version=4)
-            logger.info(f"Executing notebook: {notebook_path} with kernel: {KERNEL_NAME}")
-            ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
-            ep.preprocess(notebook, {'metadata': {'path': str(NOTEBOOKS_DIR)}})
-            logger.info(f"Notebook {notebook_path} executed successfully.")
-    except Exception as e:
-        logger.error(f"Notebook {notebook_path} raised an exception: {e}")
-        pytest.fail(f"Notebook {notebook_path} raised an exception: {e}")
-    finally:
-        # save a copy of the executed notebook
-        output_path = notebook_path.with_suffix(EXECUTED_NOTEBOOK_EXTENSION)
-        with open(output_path, "w", encoding="utf-8") as out_file:
-            nbformat.write(notebook, out_file)
-        logger.info(f"Executed notebook saved as: {output_path}")
+    kernel_name = "python3" #  Определение переменной kernel_name
+    # код открывает файл ноутбука для чтения, используя кодировку utf-8.
+    with open(notebook_path, "r", encoding="utf-8") as nb_file:
+        notebook = nbformat.read(nb_file, as_version=4)
+        logger.info(f"Выполнение ноутбука: {notebook_path} с ядром: {kernel_name}") #  Логирование начала выполнения ноутбука.
+        ep = ExecutePreprocessor(timeout=600, kernel_name=kernel_name) #  Инициализация препроцессора для выполнения ячеек ноутбука.
+
+        try:
+            #  Код выполняет предобработку ноутбука
+            ep.preprocess(notebook, {"metadata": {"path": str(NOTEBOOK_FOLDER)}})
+            logger.info(f"Ноутбук {notebook_path} успешно выполнен.") #  Логирование успешного выполнения.
+
+        except Exception as e:
+            #  Код логирует ошибку при выполнении и вызывает pytest.fail
+            logger.error(f"Ноутбук {notebook_path} вызвал исключение: {e}") #  Логирование ошибки.
+            pytest.fail(f"Ноутбук {notebook_path} вызвал исключение: {e}")
+
+        finally:
+             #  Код сохраняет копию выполненного ноутбука
+            output_path = notebook_path.replace(
+                NOTEBOOK_EXTENSION, EXECUTED_NOTEBOOK_SUFFIX
+            )
+            with open(output_path, "w", encoding="utf-8") as out_file:
+                nbformat.write(notebook, out_file)
+            logger.info(f"Выполненный ноутбук сохранен как: {output_path}")  #  Логирование сохранения.
 ```

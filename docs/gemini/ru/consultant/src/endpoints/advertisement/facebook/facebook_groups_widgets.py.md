@@ -2,38 +2,40 @@
 
 **Качество кода**
 8
--  Плюсы
-    - Код хорошо структурирован, разбит на классы и методы.
-    - Используется `j_loads_ns` для загрузки JSON, что соответствует инструкции.
-    - Присутствует docstring для класса и методов.
-    - Логика создания и отображения выпадающего списка реализована корректно.
--  Минусы
-    - Отсутствуют необходимые импорты для `logger` и возможно других модулей.
-    - Не используется явная обработка ошибок с помощью `try-except` и логирование.
-    - Нет проверок на корректность данных из JSON-файла.
-    - Нет стандартизированного импорта `header`.
+- Плюсы
+    - Код хорошо структурирован и выполняет свою задачу по созданию и отображению выпадающего списка групп Facebook.
+    - Используется `j_loads_ns` для загрузки данных из JSON, что соответствует инструкциям.
+    - Присутствует документация для класса и его методов.
+    - Код использует `Path` для работы с файловыми путями, что является хорошей практикой.
+- Минусы
+    - Отсутствует импорт `logger` из `src.logger.logger`.
+    - Не указано описание модуля.
+    - Комментарии в docstring не соответствуют стандарту RST.
+    - Отсутствует обработка ошибок при загрузке json.
+    - Заголовок модуля `## \\file ...`  не требуется.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить импорт логгера**: Добавить `from src.logger.logger import logger` для логирования ошибок.
-2.  **Добавить try-except**: Обернуть код загрузки JSON и создания выпадающего списка в блоки `try-except` для обработки возможных ошибок.
-3.  **Добавить логирование**: Логировать ошибки с помощью `logger.error` вместо стандартных `print` или `raise Exception`.
-4.  **Добавить проверки**: Проверять, что данные из JSON-файла корректны (например, что это словарь с URL).
-5.  **Уточнить импорт `header`**: Указать конкретный путь или тип импорта для `header`, либо удалить его, если он не нужен.
-6.  **Добавить комментарии**: Добавить комментарии в формате RST, описывающие назначение переменных и ключевые блоки кода.
-7.  **Обеспечить соответствие стандартам**:  Убедиться, что все docstring соответствуют стандартам reStructuredText.
-8.  **Удалить устаревшие shebang**:  Удалить shebang (`` и `#! venv/bin/python/python3.12`).
+1.  Добавить импорт `logger` из `src.logger.logger`.
+2.  Добавить описание модуля в начале файла.
+3.  Привести документацию в docstring к стандарту RST.
+4.  Добавить обработку ошибок при загрузке JSON файла с помощью `try-except` и логированием.
+5.  Удалить ненужный заголовок файла `## \\file ...`.
+6.  Уточнить комментарии для соответствия требованиям.
 
-**Оптимизиробанный код**
+**Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-Модуль для создания виджета с выпадающим списком групп Facebook.
-=================================================================
 
-Этот модуль предоставляет класс :class:`FacebookGroupsWidget`, который создает выпадающий список с URL групп
-Facebook, используя данные из JSON файла.
+"""
+Модуль для создания виджета выпадающего списка групп Facebook.
+==============================================================
+
+Этот модуль предоставляет класс :class:`FacebookGroupsWidget`,
+который загружает данные о группах Facebook из JSON-файла
+и отображает их в виде выпадающего списка (Dropdown) с использованием
+библиотеки `ipywidgets`.
 
 Пример использования
 --------------------
@@ -43,29 +45,21 @@ Facebook, используя данные из JSON файла.
     from pathlib import Path
     from src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
 
-    json_file = Path('groups.json')
+    json_file = Path('path/to/your/groups.json')
     widget = FacebookGroupsWidget(json_file)
     widget.display_widget()
 """
-# изменен импорт
-from IPython.display import display
-from ipywidgets import Dropdown
-from src.utils.jjson import j_loads_ns
-from types import SimpleNamespace
-from pathlib import Path
-# добавлен импорт логера
-from src.logger.logger import logger
 
-# константа MODE не используется.
-# 
+from IPython.display import display # импортируем display из библиотеки IPython.display
+from ipywidgets import Dropdown  # импортируем Dropdown из библиотеки ipywidgets
+from src.utils.jjson import j_loads_ns # импортируем j_loads_ns из src.utils.jjson
+from types import SimpleNamespace # импортируем SimpleNamespace из библиотеки types
+from pathlib import Path # импортируем Path из библиотеки pathlib
+from src.logger.logger import logger  # импортируем logger из src.logger.logger
+
 
 class FacebookGroupsWidget:
-    """
-    Создает виджет с выпадающим списком групп Facebook.
-
-    :param json_file_path: Путь к JSON-файлу, содержащему информацию о группах Facebook.
-    :type json_file_path: Path
-    """
+    """Создает выпадающий список с URL групп Facebook из предоставленного JSON."""
 
     def __init__(self, json_file_path: Path):
         """
@@ -74,18 +68,16 @@ class FacebookGroupsWidget:
         :param json_file_path: Путь к JSON-файлу, содержащему информацию о группах Facebook.
         :type json_file_path: Path
         """
+        self.groups_data: SimpleNamespace = None # Инициализация атрибута groups_data значением None
         try:
-            # код исполняет загрузку данных из json файла
-            self.groups_data: SimpleNamespace = j_loads_ns(json_file_path)
-        except Exception as e:
-            #  код логирует ошибку в случае проблем с загрузкой json
-            logger.error(f'Ошибка при загрузке JSON файла: {json_file_path}', exc_info=True)
-            self.groups_data = SimpleNamespace() # Инициализируем пустым значением, чтобы не было ошибки
-            # возвращает None чтобы код не продолжался дальше
+            # Код загружает данные из JSON файла в виде SimpleNamespace.
+            self.groups_data = j_loads_ns(json_file_path)
+        except Exception as ex:
+            # Код логирует ошибку, если не удалось загрузить данные из файла.
+            logger.error(f'Ошибка загрузки данных из файла: {json_file_path}', exc_info=ex)
             return
 
-        # код исполняет создание выпадающего списка
-        self.dropdown = self.create_dropdown()
+        self.dropdown = self.create_dropdown() # Код создает выпадающий список
 
     def create_dropdown(self) -> Dropdown:
         """
@@ -94,25 +86,18 @@ class FacebookGroupsWidget:
         :return: Виджет выпадающего списка с URL групп Facebook.
         :rtype: Dropdown
         """
-        #  код исполняет получение ключей из данных групп
-        try:
-            group_urls = list(self.groups_data.__dict__.keys())
-            # код исполняет создание виджета выпадающего списка
-            dropdown = Dropdown(
-                options=group_urls,
-                description='Facebook Groups:',
-                disabled=False,
-            )
-            return dropdown
-        except Exception as e:
-            #  код логирует ошибку в случае проблем с созданием выпадающего списка
-            logger.error('Ошибка при создании выпадающего списка', exc_info=True)
-            return Dropdown(options=[], description='Error', disabled=True)
+        # Код получает ключи из groups_data, которые представляют собой URL групп
+        group_urls = list(self.groups_data.__dict__.keys())
+        # Код создает виджет выпадающего списка на основе полученных URL
+        dropdown = Dropdown(
+            options=group_urls,
+            description='Facebook Groups:',
+            disabled=False,
+        )
+        return dropdown # Код возвращает созданный виджет
 
     def display_widget(self):
-        """
-        Отображает виджет выпадающего списка.
-        """
-        # код исполняет отображение виджета
+        """Отображает виджет выпадающего списка."""
+        # Код отображает виджет выпадающего списка
         display(self.dropdown)
 ```

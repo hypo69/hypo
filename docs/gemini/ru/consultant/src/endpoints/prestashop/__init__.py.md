@@ -1,58 +1,59 @@
-# Анализ кода модуля `src.endpoints.prestashop`
+# Анализ кода модуля `__init__.py`
 
 **Качество кода**
-8
- - Плюсы
-    - Код имеет базовую структуру модуля Python.
-    - Импортирует необходимые классы из других модулей.
-    - Присутствует docstring модуля, хоть и требует доработки.
- - Минусы
-    - Отсутствует подробная документация в формате reStructuredText.
-    - Не используются логирование ошибок.
-    - Присутствует определение `MODE`, но его использование не очевидно.
+9
+- Плюсы
+    - Присутствует описание модуля в начале файла.
+    - Код соответствует PEP8.
+    - Используется правильное форматирование, включая отступы.
+- Минусы
+    - Отсутствуют импорты, что делает модуль нефункциональным.
+    - Нет документации в формате RST.
+    - Нет блока `if __name__ == '__main__':` для запуска примера кода или тестов.
 
 **Рекомендации по улучшению**
-1.  Добавить подробное описание модуля в формате reStructuredText.
-2.  Добавить документацию для переменных.
-3.  Удалить неиспользуемые shebang.
-4.  Внедрить логирование ошибок.
+1. **Добавить импорты**: Необходимо добавить импорты для классов, которые закомментированы, чтобы модуль был функциональным.
+2. **Добавить документацию**: Добавить описание модуля в формате RST,  также описать все классы, переменные и методы.
+3. **Улучшить структуру**:  Добавить блок `if __name__ == '__main__':` для демонстрации использования модуля.
+4. **Форматирование**: Привести все строки импорта к одному виду.
 
 **Оптимизированный код**
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для работы с API PrestaShop
-===========================================================
+Модуль для работы с API PrestaShop.
+=========================================================================================
 
-Этот модуль предоставляет классы для взаимодействия с API PrestaShop,
-включая работу с продуктами, поставщиками, категориями, складами, языками,
-магазинами, прайс-листами и клиентами.
+Этот модуль содержит классы для взаимодействия с API PrestaShop,
+включая работу с продуктами, поставщиками, категориями, складами, языками, магазинами,
+прайс-листами и клиентами.
 
 Пример использования
 --------------------
 
-.. code-block:: python
+Пример импорта классов::
 
-    from src.endpoints.prestashop import PrestaShop, PrestaProduct
-
-    # Пример создания экземпляра класса PrestaShop
-    api = PrestaShop(api_url='your_api_url', api_key='your_api_key')
-
-    # Пример создания экземпляра класса PrestaProduct
-    product = PrestaProduct(api=api)
+    from src.endpoints.prestashop import PrestaShop, ProductAsync, PrestaCategory
 """
+#! venv/bin/python/python3.12
 
-from src.logger.logger import logger  # импорт для логирования
-from .api import PrestaShop
-from .product import PrestaProduct
-from .supplier import PrestaSupplier
-from .category import PrestaCategory
-from .warehouse import PrestaWarehouse
-from .language import PrestaLanguage
-from .shop import PrestaShopShop
-from .pricelist import PriceListRequester
-from .customer import PrestaCustomer
+# Добавляем импорты необходимых классов
+from src.endpoints.prestashop.product_fields import ProductFields # Импорт класса ProductFields
+from src.endpoints.prestashop.api import PrestaShop, PrestaShopAsync # Импорт классов PrestaShop и PrestaShopAsync
+from src.endpoints.prestashop.product_async import ProductAsync # Импорт класса ProductAsync
+from src.endpoints.prestashop.supplier import PrestaSupplier # Импорт класса PrestaSupplier
+from src.endpoints.prestashop.category import PrestaCategory, PrestaCategoryAsync # Импорт классов PrestaCategory и PrestaCategoryAsync
+from src.endpoints.prestashop.warehouse import PrestaWarehouse # Импорт класса PrestaWarehouse
+from src.endpoints.prestashop.language import PrestaLanguage # Импорт класса PrestaLanguage
+from src.endpoints.prestashop.shop import PrestaShopShop # Импорт класса PrestaShopShop
+from src.endpoints.prestashop.pricelist import PriceListRequester # Импорт класса PriceListRequester
+from src.endpoints.prestashop.customer import PrestaCustomer # Импорт класса PrestaCustomer
 
-#: Режим работы приложения (`dev` или `prod`).
 
+if __name__ == '__main__':
+    # Пример использования (TODO: Добавить пример использования классов)
+    # from src.logger.logger import logger
+    # logger.debug('Модуль src.endpoints.prestashop запущен как скрипт.')
+    print('Модуль src.endpoints.prestashop запущен как скрипт.')
+    ...
 ```

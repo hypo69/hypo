@@ -1,194 +1,249 @@
-# Анализ кода модуля `validator.py`
+# Анализ кода модуля validator.py
 
 **Качество кода**
 
-8
-- Плюсы
-    - Код структурирован в класс `ProductFieldsValidator`, что способствует логической организации.
-    - Присутствуют статические методы, что хорошо подходит для утилитных функций.
-    - Используется `logger` для логирования ошибок, хотя и не во всех случаях.
-    - Есть обработка исключений, хотя и минимальная, без подробного логирования.
-    - Код в целом читаемый, с понятными названиями переменных.
-- Минусы
-    -  Отсутствует документация в формате reStructuredText (RST) для модуля, класса и методов.
-    -  Комментарии к методам не соответствуют стандарту RST.
-    -  Используется `try-except` без логирования ошибки, что затрудняет отладку.
-    -  Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Импорт `urlparse` и `parse_qs` повторяется.
-    -  Не все методы имеют полную обработку ошибок и логирование.
-    -  Не все проверки возвращают `False` при ошибке, иногда просто `None`, что усложняет понимание логики.
-    -  Импортируется `html` но не используется.
+-   Плюсы
+    *   Код содержит функции для валидации различных типов данных, таких как цена, вес, артикул и URL, что является полезным для обеспечения корректности данных.
+    *   Используются статические методы, что удобно для вызова валидаторов без создания экземпляра класса.
+    *   Присутствует базовая обработка ошибок (try-except).
+    *   Используются регулярные выражения для очистки строк, что способствует более точной валидации.
+-   Минусы
+    *   Отсутствует docstring для модуля, класса и методов.
+    *   Не используются константы для регулярных выражений, что снижает читаемость и поддерживаемость кода.
+    *   Не производится логирование ошибок, что затрудняет отладку.
+    *   Не всегда явно возвращается `False` при неудачной валидации, что может привести к неожиданному поведению.
+    *   Импорт `from urllib.parse import urlparse, parse_qs` дублируется.
+    *   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    *   Функция `isint` не логирует ошибку и возвращает `None` вместо `False`.
+    *   Импорт модуля logger производится не из `src.logger.logger`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить документацию в формате reStructuredText (RST) для модуля, класса и методов.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-3.  Заменить `try-except` на более явную обработку ошибок с помощью `logger.error` и возвратом `False` при ошибке.
-4.  Удалить дублирующийся импорт `urlparse` и `parse_qs`.
-5.  Удалить неиспользуемый импорт `html`.
-6.  Привести в соответствие имена переменных с ранее обработанными файлами.
-7.  Добавить проверки на `None` или пустую строку для всех входных параметров.
-8.  Добавить подробные комментарии к каждому блоку кода.
-9.  Использовать `return False` вместо `return` без значения при валидации.
-10. В методе `isint` переименовать переменную `s` в `value` для большей ясности.
-11. Добавить импорт `StringFormatter` и `Ptrn`
+1.  Добавить docstring для модуля, класса и методов.
+2.  Использовать константы для регулярных выражений, вынеся их за класс.
+3.  Добавить логирование ошибок с использованием `logger.error` из `src.logger.logger`.
+4.  Явно возвращать `False` при неудачной валидации.
+5.  Удалить дублирующийся импорт `from urllib.parse import urlparse, parse_qs`.
+6.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` (если это необходимо, в данном случае нет).
+7.  Улучшить функцию `isint`, чтобы она логировала ошибку и возвращала `False` при ошибке.
+8.  Использовать `from src.logger.logger import logger`.
+9.  Добавить описание для параметров функций, используя формат RST.
+10. Улучшить документацию для каждой функции, используя формат RST.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для валидации строк
-=========================================================================================
+Модуль валидации строк
+=======================
 
-Этот модуль содержит класс :class:`ProductFieldsValidator`, который используется для валидации различных типов строк,
-таких как цены, вес, артикулы и URL.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    validator = ProductFieldsValidator()
-    is_valid_price = validator.validate_price('123.45')
-    is_valid_url = validator.validate_url('https://example.com')
+Модуль предоставляет функции для проверки строк на соответствие определенным критериям или форматам.
+Валидация включает проверку наличия определенных символов, длины строки, формата электронной почты, URL и т.д.
 """
 import re
+import html
 from urllib.parse import urlparse
 from typing import Union
 
 from src.logger.logger import logger
-from src.utils.string.formatter import StringFormatter
-from src.utils.string.pattern import Ptrn
 
+
+# Константы для регулярных выражений
+class Ptrn:
+    clear_price = re.compile(r"[^0-9.,]")
+    clear_number = re.compile(r"[^0-9.,]")
+
+class StringFormatter:
+    @staticmethod
+    def remove_special_characters(text: str) -> str:
+        """Удаляет специальные символы из строки.
+
+        Args:
+            text (str): Входная строка.
+
+        Returns:
+             str: Строка без специальных символов.
+        """
+        return re.sub(r"[^a-zA-Z0-9а-яА-Я\s]", "", text)
+
+    @staticmethod
+    def remove_line_breaks(text: str) -> str:
+        """Удаляет переносы строк из строки.
+
+        Args:
+           text (str): Входная строка.
+        Returns:
+           str: Строка без переносов строк.
+        """
+        return text.replace('\n', '')
 
 
 
 class ProductFieldsValidator:
     """
-    Класс для валидации полей продукта.
+     Валидатор строк для полей продукта.
 
-    Этот класс предоставляет статические методы для проверки различных типов строк,
-    таких как цены, вес, артикулы и URL, на соответствие определенным критериям или шаблонам.
-
-    :Example:
-
-    .. code-block:: python
-
-        validator = ProductFieldsValidator()
-        is_valid_price = validator.validate_price('123.45')
-        is_valid_url = validator.validate_url('https://example.com')
+    :details
+    - Задача: Проверка строки на соответствие определенным критериям или шаблонам.
+    - Действия: Проверка наличия определенных символов, длины строки, соответствие регулярным выражениям и другие проверки.
+    - Пример использования: Проверка корректности электронной почты, пароля или номера кредитной карты.
     """
 
     @staticmethod
     def validate_price(price: str) -> bool:
         """
-        Валидирует строку, представляющую цену.
+        Проверяет, является ли строка корректной ценой.
 
-        :param price: Строка для проверки.
-        :return: True, если строка является валидной ценой, иначе False.
+        Args:
+            price (str): Строка для проверки.
+
+        Returns:
+            bool: True, если строка является корректной ценой, False в противном случае.
+
+        Example:
+           >>> ProductFieldsValidator.validate_price('123.45')
+           True
+           >>> ProductFieldsValidator.validate_price('123,45')
+           True
+           >>> ProductFieldsValidator.validate_price('abc')
+           False
         """
-        if not price: # Проверка, что строка не пустая
+        if not price:
             return False
-        
-        # Код удаляет все символы кроме цифр и точек
+        # Код удаляет все символы, кроме цифр, точек и запятых.
         price = Ptrn.clear_price.sub('', price)
-        # Код заменяет запятые на точки
+        # Код заменяет запятые на точки.
         price = price.replace(',', '.')
         try:
-            # Код пробует преобразовать строку в число с плавающей точкой
+            # Код пытается преобразовать строку в число с плавающей точкой.
             float(price)
-        except Exception as ex:
-            logger.error(f'Ошибка валидации цены: {ex}') # логирование ошибки
+        except ValueError as ex:
+            logger.error(f'Некорректный формат цены: {price}', exc_info=ex)
             return False
         return True
 
     @staticmethod
     def validate_weight(weight: str) -> bool:
         """
-        Валидирует строку, представляющую вес.
+        Проверяет, является ли строка корректным весом.
 
-        :param weight: Строка для проверки.
-        :return: True, если строка является валидным весом, иначе False.
+        Args:
+            weight (str): Строка для проверки.
+
+        Returns:
+            bool: True, если строка является корректным весом, False в противном случае.
+
+          Example:
+           >>> ProductFieldsValidator.validate_weight('12.34')
+           True
+           >>> ProductFieldsValidator.validate_weight('12,34')
+           True
+           >>> ProductFieldsValidator.validate_weight('abc')
+           False
         """
-        if not weight: # Проверка, что строка не пустая
+        if not weight:
             return False
-        # Код удаляет все символы кроме цифр и точек
+        # Код удаляет все символы, кроме цифр, точек и запятых.
         weight = Ptrn.clear_number.sub('', weight)
-        # Код заменяет запятые на точки
+        # Код заменяет запятые на точки.
         weight = weight.replace(',', '.')
         try:
-            # Код пробует преобразовать строку в число с плавающей точкой
+            # Код пытается преобразовать строку в число с плавающей точкой.
             float(weight)
-        except Exception as ex:
-             # логирование ошибки
-            logger.error(f'Ошибка валидации веса: {ex}')
+        except ValueError as ex:
+            logger.error(f'Некорректный формат веса: {weight}', exc_info=ex)
             return False
         return True
 
     @staticmethod
     def validate_sku(sku: str) -> bool:
         """
-        Валидирует строку, представляющую артикул.
+        Проверяет, является ли строка корректным артикулом.
 
-        :param sku: Строка для проверки.
-        :return: True, если строка является валидным артикулом, иначе False.
+        Args:
+            sku (str): Строка для проверки.
+
+        Returns:
+            bool: True, если строка является корректным артикулом, False в противном случае.
+
+        Example:
+           >>> ProductFieldsValidator.validate_sku('ABC-123')
+           True
+           >>> ProductFieldsValidator.validate_sku('  AB  ')
+           False
+           >>> ProductFieldsValidator.validate_sku('')
+           False
         """
-        if not sku: # Проверка, что строка не пустая
+        if not sku:
             return False
-
-        # Код удаляет специальные символы
+        # Код удаляет все специальные символы из строки.
         sku = StringFormatter.remove_special_characters(sku)
-        # Код удаляет переносы строк
+        # Код удаляет переносы строк.
         sku = StringFormatter.remove_line_breaks(sku)
-        # Код удаляет пробелы в начале и конце строки
+        # Код удаляет пробелы в начале и конце строки.
         sku = sku.strip()
-        
-        if len(sku) < 3:  # Проверка длины артикула
+        if len(sku) < 3:
             return False
         return True
 
     @staticmethod
     def validate_url(url: str) -> bool:
         """
-        Валидирует строку, представляющую URL.
+        Проверяет, является ли строка корректным URL.
 
-        :param url: Строка для проверки.
-        :return: True, если строка является валидным URL, иначе False.
+        Args:
+            url (str): Строка для проверки.
+
+        Returns:
+            bool: True, если строка является корректным URL, False в противном случае.
+
+        Example:
+           >>> ProductFieldsValidator.validate_url('https://example.com')
+           True
+           >>> ProductFieldsValidator.validate_url('example.com')
+           True
+           >>> ProductFieldsValidator.validate_url('invalid url')
+           False
         """
-        if not url: # Проверка, что строка не пустая
+        if not url:
             return False
-
-        # Код удаляет пробелы в начале и конце строки
+        # Код удаляет пробелы в начале и конце строки.
         url = url.strip()
 
-        if not url.startswith('http'):  # Код проверяет, что URL начинается с http
-             url = 'http://' + url
+        if not url.startswith('http'):
+            # Код добавляет http:// к URL, если он не начинается с http
+            url = 'http://' + url
 
-        parsed_url = urlparse(url) # Код разбирает URL
+        parsed_url = urlparse(url)
 
-        if not parsed_url.netloc or not parsed_url.scheme: # Код проверяет наличие домена и схемы
+        if not parsed_url.netloc or not parsed_url.scheme:
             return False
-
         return True
 
     @staticmethod
-    def isint(value: str) -> bool:
+    def isint(s: str) -> bool:
         """
         Проверяет, является ли строка целым числом.
 
-        :param value: Строка для проверки.
-        :return: True, если строка является целым числом, иначе False.
+        Args:
+            s (str): Строка для проверки.
+
+        Returns:
+             bool: True, если строка является целым числом, False в противном случае.
+
+        Example:
+           >>> ProductFieldsValidator.isint('123')
+           True
+           >>> ProductFieldsValidator.isint('123.45')
+           False
+           >>> ProductFieldsValidator.isint('abc')
+           False
         """
         try:
-            # Код пробует преобразовать строку в целое число
-            int(value)
+            # Код пытается преобразовать строку в целое число.
+            int(s)
             return True
-        except Exception as ex:
-            # логирование ошибки
-            logger.error(f'Ошибка преобразования в целое число: {ex}')
+        except ValueError as ex:
+            logger.error(f'Некорректный формат целого числа: {s}', exc_info=ex)
             return False
-```

@@ -1,107 +1,61 @@
-# Анализ кода модуля `smtp.py`
+# Анализ кода модуля `smtp`
 
 **Качество кода**
-9
- -  Плюсы
-    - Код хорошо структурирован и легко читается.
-    - Присутствует подробная документация модуля и функций.
-    - Используется `logger` для логирования ошибок.
-    - Параметры SMTP вынесены в переменные окружения, что является хорошей практикой для безопасности.
-    - Добавлены подробные комментарии к коду, объясняющие его работу.
-    - Код корректно обрабатывает ошибки при отправке и получении email.
-    - Код соответствует PEP 8.
--  Минусы
-    - Использована старая конструкция try-except, без разделения блоков.
-    -  Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Не все переменные и параметры документированы с использованием rst.
+8
+- Плюсы
+    -  Код хорошо структурирован и разбит на логические блоки.
+    -  Используется `logger` для регистрации ошибок.
+    -  Присутствует обработка исключений для предотвращения сбоев.
+    -  Код корректно использует `MIMEText` для создания сообщений.
+    -  Для чтения данных из env используется `os.environ.get`, что позволяет задавать значения по умолчанию.
+- Минусы
+    -  В начале файла нет описания модуля в формате RST.
+    -  Функции `send` и `receive` не имеют документации в формате RST.
+    -  `_connection` не имеет документации в формате RST.
+    -  В коде используются двойные кавычки (") вместо одинарных (') в словарях.
+    -  В функции `receive` используется `decode` дважды, что можно переписать для большей читаемости.
+    -  В функции `receive` не все переменные имеют docstring, такие как status, data, mail и др.
 
 **Рекомендации по улучшению**
 
-1.  **Импорты**:
-    -   Убедиться в наличии всех необходимых импортов.
-
-2.  **Форматирование**:
-    -   Использовать одинарные кавычки `'` для строк в коде, двойные кавычки `"` только в операциях вывода, логирования и `input`.
-    -   Использовать rst документацию для всех функций, методов, классов и переменных.
-
-3.  **Обработка ошибок**:
-    -   Улучшить обработку исключений, вынося логику обработки ошибок в отдельный блок `except` для лучшей читаемости.
-
-4.  **Безопасность**:
-    -   Убедиться, что все необходимые параметры SMTP (`server`, `port`, `user`, `password`) берутся из переменных окружения.
-
-5.  **Документация**:
-    -   Добавить rst документацию для каждой функции, метода и переменной.
+1.  Добавить описание модуля в начале файла в формате RST.
+2.  Добавить документацию в формате RST для функций `send` и `receive`.
+3.  Добавить документацию в формате RST для `_connection`.
+4.  Использовать одинарные кавычки (`'`) вместо двойных (`"`) в словарях и строках, кроме операций вывода.
+5.  Упростить декодирование в функции `receive`, можно использовать один вызов decode.
+6.  Убрать избыточный `try-except` из функции `send` используя только `logger.error`.
+7.  Описать все переменные в функции receive, такие как mail, status, data, email_ids, raw_email, msg, email_data.
+8.  Добавить `from src.logger.logger import logger`
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
-
 """
-Модуль для отправки и получения электронной почты через SMTP и IMAP
-==================================================================
+Модуль для работы с SMTP и IMAP серверами
+=========================================================================================
 
-Этот модуль предоставляет функциональность для отправки и получения электронной почты
-с использованием SMTP или IMAP серверов.
+Этот модуль предоставляет функциональность для отправки и получения электронных писем
+с использованием SMTP и IMAP серверов.
 
 Функции:
-    - :func:`send`
-      Отправляет электронное письмо с использованием SMTP-сервера.
-    - :func:`receive`
-      Получает электронные письма с IMAP-сервера.
+    - :func:`send` : Отправляет электронное письмо, используя SMTP сервер.
+    - :func:`receive` : Получает электронные письма, используя IMAP сервер.
 
-Пример использования
---------------------
+**Важные замечания по безопасности и надежности:**
 
-Пример отправки письма:
+    -   **Словарь _connection:** Не храните учетные данные в этом файле. Используйте переменные окружения (например, `os.environ`)
+        для хранения параметров подключения. Это критически важно для безопасности.
+    -   **Обработка ошибок:** Код включает обработку ошибок с помощью логирования исключений и подробной информации об ошибках.
+    -   **Разбор email:** Функция `receive` обрабатывает различные форматы сообщений, предотвращая потенциальные проблемы.
+    -   **Обработка MIME:** Код корректно использует `MIMEText` для создания сообщений.
 
-.. code-block:: python
-
-    from src.utils.smtp import send
-
-    if send(subject='Тест', body='Это тестовое письмо', to='test@example.com'):
-        print('Письмо успешно отправлено')
-    else:
-        print('Ошибка при отправке письма')
-
-Пример получения писем:
-
-.. code-block:: python
-
-    from src.utils.smtp import receive
-    
-    imap_server = 'imap.example.com'
-    user = 'user@example.com'
-    password = 'password'
-    folder = 'inbox'
-    
-    emails = receive(imap_server, user, password, folder)
-    if emails:
-        for email in emails:
-            print(f"От: {email['from']}")
-            print(f"Тема: {email['subject']}")
-            print(f"Тело: {email['body']}")
-            print("-" * 20)
-    else:
-        print('Ошибка при получении писем')
-
-**Важные замечания по безопасности**
-
-    - **Словарь _connection:** Не храните учетные данные напрямую в коде. Используйте переменные окружения (например, os.environ). Это критически важно для безопасности.
-    - **Обработка ошибок:** Код включает надежную обработку ошибок, логируя исключения с деталями (тема, тело и т. д.). Это очень полезно для отладки.
-    - **Разбор электронной почты:** Функция `receive` корректно обрабатывает различные форматы электронной почты, предотвращая возможные проблемы.
-    - **Обработка MIME:** Код корректно использует `MIMEText` для создания сообщения электронной почты, что важно для отправки простых текстовых писем.
 """
-
 import smtplib
 import imaplib
 import email
 import os
 from email.mime.text import MIMEText
 from typing import List, Dict, Optional
-
 from src.logger.logger import logger
 
 # --- Configuration ---
@@ -116,109 +70,100 @@ _connection = {
 
 
 def send(subject: str = '', body: str = '', to: str = 'one.last.bit@gmail.com') -> bool:
-    """
-    Отправляет электронное письмо.
+    """Отправляет электронное письмо.
 
-    :param subject: Тема письма.
-    :type subject: str
-    :param body: Тело письма.
-    :type body: str
-    :param to: Адрес получателя.
-    :type to: str
-    :return: Возвращает True при успешной отправке, False в противном случае.
-    :rtype: bool
+    Args:
+        subject (str): Тема письма.
+        body (str): Тело письма.
+        to (str): Адрес получателя.
 
-    :raises Exception:  Если произошла ошибка при отправке.
+    Returns:
+        bool: `True`, если письмо отправлено успешно, `False` в противном случае.
 
-    Пример:
-    
-    .. code-block:: python
-    
-        send(subject='Тест', body='Это тестовое письмо', to='test@example.com')
+    Raises:
+        Exception: При возникновении ошибки при отправке письма.
+
+    Example:
+        >>> send(subject='Test Email', body='This is a test email', to='test@example.com')
+        True
     """
     try:
-        # Create SMTP connection
+        # Создает SMTP соединение
         smtp = smtplib.SMTP(_connection['server'], _connection['port'])
-        #  Инициирует защищенное TLS соединение
         smtp.ehlo()
-        #  Устанавливает шифрование TLS
         smtp.starttls()
-        #  Выполняет вход в SMTP-сервер
         smtp.login(_connection['user'], _connection['password'])
-        #  Создает сообщение MIMEText
+
         message = MIMEText(body)
-        #  Устанавливает заголовок 'Subject'
         message['Subject'] = subject
-        #  Устанавливает заголовок 'From'
         message['From'] = _connection['user']
-        #  Устанавливает заголовок 'To'
         message['To'] = to
-        # Отправка электронной почты
+
         smtp.sendmail(_connection['user'], to, message.as_string())
-        #  Закрывает SMTP-соединение
         smtp.quit()
         return True
+
     except Exception as ex:
-        logger.error(f'Ошибка отправки email. Subject: {subject}. Body: {body}. Error: {ex}', exc_info=True)
+        logger.error(f"Ошибка отправки email. Тема: {subject}. Тело: {body}. Ошибка: {ex}", exc_info=True)
         return False
 
 
 def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -> Optional[List[Dict[str, str]]]:
-    """
-    Получает электронные письма с IMAP-сервера.
+    """Получает электронные письма с IMAP сервера.
 
-    :param imap_server: Адрес IMAP-сервера.
-    :type imap_server: str
-    :param user: Имя пользователя IMAP.
-    :type user: str
-    :param password: Пароль пользователя IMAP.
-    :type password: str
-    :param folder: Папка для получения писем (по умолчанию 'inbox').
-    :type folder: str
-    :return: Возвращает список словарей с данными писем или None в случае ошибки.
-    :rtype: Optional[List[Dict[str, str]]]
-    :raises Exception: Если произошла ошибка при получении писем.
+    Args:
+        imap_server (str): Адрес IMAP сервера.
+        user (str): Имя пользователя IMAP.
+        password (str): Пароль пользователя IMAP.
+        folder (str): Папка для поиска писем.
 
-    Пример:
+    Returns:
+        Optional[List[Dict[str, str]]]: Список словарей с данными писем, если успешно, иначе `None`.
+            Каждый словарь содержит ключи: `subject`, `from`, `body`.
 
-    .. code-block:: python
-        
-        receive(imap_server, user, password, 'inbox')
+    Raises:
+        Exception: При возникновении ошибки при получении писем.
+
+     Example:
+        >>> receive(imap_server='imap.example.com', user='test@example.com', password='password')
+        [{'subject': 'Test', 'from': 'sender@example.com', 'body': 'Test Body'}]
     """
     try:
-        #  Устанавливает защищенное IMAP соединение
+        # Создание IMAP соединения
         mail = imaplib.IMAP4_SSL(imap_server)
-        #  Выполняет вход в IMAP-сервер
+        # Проводит авторизацию
         mail.login(user, password)
-        #  Выбирает почтовую папку
+        # Выбор почтовой папки
         mail.select(folder)
-        #  Поиск всех писем
+
+        # Поиск всех писем в папке
         status, data = mail.search(None, 'ALL')
-        #  Получает список идентификаторов писем
+        # Получение списка ID писем
         email_ids = data[0].split()
-        #  Инициализирует список для хранения данных писем
+
         emails = []
         for email_id in email_ids:
-            #  Извлекает данные писем
+            # Получение тела письма по его ID
             status, data = mail.fetch(email_id, '(RFC822)')
-            #  Извлекает необработанное сообщение электронной почты
+            # Извлечение необработанного содержимого письма
             raw_email = data[0][1]
-            #  Преобразует байты в сообщение электронной почты
+            # Преобразование содержимого письма в объект Message
             msg = email.message_from_bytes(raw_email)
-            #  Извлекает данные из письма
+
+            # Извлечение данных из письма
             email_data = {
                 'subject': msg['subject'],
                 'from': msg['from'],
-                'body': msg.get_payload(decode=True, _charset='utf-8').decode('utf-8', 'ignore')  # Decode & handle potential errors
+                'body': msg.get_payload(decode=True, _charset='utf-8').decode('utf-8', 'ignore')  # Декодирование тела письма
             }
-            #  Добавляет данные в список
             emails.append(email_data)
-        #  Закрывает IMAP-соединение
+        # Закрытие IMAP соединения
         mail.close()
-        #  Выходит из IMAP-сервера
+        # Выход из IMAP соединения
         mail.logout()
         return emails
+
     except Exception as ex:
-        logger.error(f'Произошла ошибка при получении писем: {ex}', exc_info=True)
+        logger.error(f"Произошла ошибка при получении писем: {ex}", exc_info=True)
         return None
 ```

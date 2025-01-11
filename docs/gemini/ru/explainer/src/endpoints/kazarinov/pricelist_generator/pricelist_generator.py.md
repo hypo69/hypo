@@ -1,184 +1,179 @@
-## АНАЛИЗ КОДА: `hypotez/src/endpoints/kazarinov/react/pricelist_generator.py`
+## АНАЛИЗ КОДА:
 
-### 1. <алгоритм>
+### 1. **<алгоритм>**
 
-**Блок-схема:**
+**Блок-схема работы кода:**
 
-```mermaid
-graph LR
-    A[Start] --> B{Запуск `main`};
-    B --> C{Определение путей и загрузка данных};
-    C --> D{Создание экземпляра `ReportGenerator`};
-    D --> E{Вызов `create_report`};
-    E --> F{Добавление данных о сервисе};
-    F --> G{Вызов `generate_html`};
-    G --> H{Сохранение HTML в файл};
-    H --> I{Создание экземпляра `PDFUtils`};
-     I --> J{Сохранение PDF файла};
-    J -- PDF сохранен --> K[Return True];
-    J -- Ошибка PDF  --> L{Логирование ошибки};
-    L --> M[Return False];
-    K --> N[End]
-    M --> N
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style N fill:#f9f,stroke:#333,stroke-width:2px
-```
+1.  **`main(mexiron:str, lang:str)`**:
+    *   Принимает `mexiron` (имя файла данных) и `lang` (язык отчёта) в качестве входных параметров.
+    *   Формирует `base_path` к каталогу с данными, используя `gs.path.external_storage / 'kazarinov' / 'mexironim' / mexiron`.
+        *   *Пример*: `gs.path.external_storage/kazarinov/mexironim/24_12_01_03_18_24_269`
+    *   Загружает данные из JSON-файла: `data = j_loads(base_path / f'{lang}.json')`.
+        *   *Пример*: Загружает `ru.json` если `lang` = 'ru'.
+    *   Определяет пути к HTML и PDF файлам:
+        *   `html_file` = `base_path / f'{mexiron}_{lang}.html'`
+            *   *Пример*: `gs.path.external_storage/kazarinov/mexironim/24_12_01_03_18_24_269/24_12_01_03_18_24_269_ru.html`
+        *   `pdf_file` = `base_path / f'{mexiron}_{lang}.pdf'`
+            *   *Пример*: `gs.path.external_storage/kazarinov/mexironim/24_12_01_03_18_24_269/24_12_01_03_18_24_269_ru.pdf`
+    *   Создаёт экземпляр `ReportGenerator`: `r = ReportGenerator()`.
+    *   Запускает асинхронный метод `r.create_report(data, lang, html_file, pdf_file)` с помощью `asyncio.run()`.
+2.  **`ReportGenerator.__init__`**:
+    *   Инициализирует окружение Jinja2 для работы с шаблонами.
 
-**Примеры для каждого логического блока:**
+3.  **`ReportGenerator.create_report(data: dict, lang: str, html_file: str | Path, pdf_file: str | Path)`**:
+    *   Создаёт словарь `service_dict` с данными о сервисе.
+        *   Заполняет  ключ `product_title`: "Сервис" если `lang` = 'ru' или "שירות" если `lang` = 'he'.
+        *   Заполняет  ключ `specification` : читает и подготавливает HTML контент из файла `service_as_product_{lang}.html` с заменой `\n` на `<br>`.
+        *   Заполняет  ключ `image_local_saved_path`:  случайное изображение из каталога `gs.path.external_storage/kazarinov/converted_images`.
+    *   Добавляет `service_dict` в список продуктов `data['products']`.
+    *   Вызывает `self.generate_html(data, lang)` для генерации HTML-контента.
+    *   Сохраняет полученный HTML-контент в файл `html_file`.
+    *   Создаёт экземпляр класса `PDFUtils`.
+    *   Конвертирует HTML в PDF и сохраняет в `pdf_file` с помощью  `pdf.save_pdf_pdfkit(html_content,pdf_file)`.
+    *   Возвращает `True`, если PDF создан успешно, иначе `False`.
+4.  **`ReportGenerator.generate_html(data: dict, lang: str) -> str`**:
+    *   Определяет имя шаблона в зависимости от языка (`template_table_he.html` для `he` и `template_table_ru.html` для `ru`).
+    *   Формирует полный путь к шаблону, используя `gs.path.endpoints/kazarinov/pricelist_generator/templates/{template}`.
+        *   *Пример*: `gs.path.endpoints/kazarinov/pricelist_generator/templates/template_table_ru.html`
+    *   Читает содержимое шаблона из файла.
+    *   Создаёт шаблон Jinja2 из содержимого.
+    *   Рендерит HTML, подставляя `data` в шаблон.
+    *   Возвращает сгенерированный HTML.
 
-*   **A. Start**: Начало выполнения скрипта.
-*   **B. Запуск `main`**: Функция `main` вызывается с аргументами `mexiron` (например, '24\_12\_01\_03\_18\_24\_269') и `lang` (например, 'ru').
-*   **C. Определение путей и загрузка данных**:
-    *   `base_path` формируется как путь к директории данных для конкретного мехирона. Пример: `.../external_storage/kazarinov/mexironim/24_12_01_03_18_24_269`.
-    *   `data` загружается из JSON-файла. Например, `.../external_storage/kazarinov/mexironim/24_12_01_03_18_24_269/ru.json`.
-    *   `html_file` формируется как путь к HTML файлу. Пример: `.../external_storage/kazarinov/mexironim/24_12_01_03_18_24_269/24_12_01_03_18_24_269_ru.html`.
-    *   `pdf_file` формируется как путь к PDF файлу. Пример: `.../external_storage/kazarinov/mexironim/24_12_01_03_18_24_269/24_12_01_03_18_24_269_ru.pdf`.
-*   **D. Создание экземпляра `ReportGenerator`**: Создается объект класса `ReportGenerator`.
-*   **E. Вызов `create_report`**: Метод `create_report` вызывается с данными, языком и путями к HTML и PDF файлам.
-*   **F. Добавление данных о сервисе**:
-    *   Создается словарь `service_dict`, содержащий данные о сервисе на выбранном языке (русском или иврите).
-    *   Изображение для сервиса выбирается случайным образом из заданной директории.
-    *   Словарь `service_dict` добавляется в список `products` в `data`.
-*   **G. Вызов `generate_html`**: Метод `generate_html` создает HTML контент, используя шаблон и данные. Выбор шаблона зависит от языка (русский или иврит).
-*   **H. Сохранение HTML в файл**: HTML контент сохраняется в указанный файл.
-*   **I. Создание экземпляра `PDFUtils`**: Создаётся объект класса `PDFUtils`.
-*   **J. Сохранение PDF файла**:
-    *   Метод `save_pdf_pdfkit` конвертирует HTML в PDF и сохраняет его в указанный файл.
-    *   Если PDF не сгенерировался, возвращается `False` и логируется ошибка.
-*  **K. Return True**: PDF успешно сгенерирован.
-*   **L. Логирование ошибки**: Выводится сообщение об ошибке, если PDF не скомпилировался.
-*   **M. Return False**: PDF не был сгенерирован.
-*   **N. End**: Завершение выполнения скрипта.
-
-### 2. <mermaid>
+### 2. **<mermaid>**
 
 ```mermaid
 flowchart TD
-    Start(Start) --> MainFunctionCall{Вызов функции <code>main(mexiron, lang)</code>}
-     MainFunctionCall --> PathAndDataSetup{Установка путей и загрузка JSON данных}
-    PathAndDataSetup --> ReportGeneratorInstance{Создание экземпляра класса <code>ReportGenerator</code>}
-    ReportGeneratorInstance --> CreateReportCall{Вызов метода <code>create_report(data, lang, html_file, pdf_file)</code>}
-     CreateReportCall --> ServiceDataPreparation{Подготовка данных о сервисе}
-     ServiceDataPreparation --> GenerateHTMLCall{Вызов метода <code>generate_html(data,lang)</code>}
-    GenerateHTMLCall --> SaveHTMLToFile{Сохранение HTML контента в файл}
-    SaveHTMLToFile --> PDFUtilsInstance{Создание экземпляра класса <code>PDFUtils</code>}
-    PDFUtilsInstance --> SavePDFCall{Вызов метода <code>save_pdf_pdfkit(html_content, pdf_file)</code>}
-    SavePDFCall -- PDF Success --> ReturnTrue{Возврат <code>True</code>}
-    SavePDFCall -- PDF Fail --> LogError{Логирование ошибки}
-    LogError --> ReturnFalse{Возврат <code>False</code>}
-    ReturnTrue --> End(End)
-    ReturnFalse --> End
-    
+    Start(Начало) --> MainFunc[<code>main(mexiron, lang)</code><br>Установка параметров отчета]
+    MainFunc --> LoadData[Загрузка JSON данных <br><code>j_loads(base_path / f'{lang}.json')</code>]
+    LoadData --> CreateReportGenerator[Создание экземпляра<br><code>ReportGenerator()</code>]
+    CreateReportGenerator --> CreateReport[<code>r.create_report(data, lang, html_file, pdf_file)</code><br>Генерация отчета]
+
+    CreateReport --> ServiceDict[Создание словаря `service_dict`<br>с данными о сервисе]
+    ServiceDict --> AppendService[Добавление сервиса в `data['products']`]
+    AppendService --> GenerateHTML[Вызов `self.generate_html(data, lang)`<br>Генерация HTML контента]
+    GenerateHTML --> SaveHTML[Сохранение HTML файла<br><code>Path(html_file).write_text(...)</code>]
+    SaveHTML --> CreatePDFUtils[Создание экземпляра `PDFUtils`]
+    CreatePDFUtils --> GeneratePDF[Конвертация HTML в PDF<br><code>pdf.save_pdf_pdfkit(html_content, pdf_file)</code>]
+
+    GeneratePDF --> CheckPDF[Проверка результата создания PDF]
+    CheckPDF -- PDF OK --> End(Конец: Успех)
+    CheckPDF -- PDF Error --> LogError[Логирование ошибки <br><code>logger.error(...)</code>]
+    LogError --> EndError(Конец: Ошибка)
+
     style Start fill:#f9f,stroke:#333,stroke-width:2px
-    style End fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#ccf,stroke:#333,stroke-width:2px
+    style EndError fill:#fcc,stroke:#333,stroke-width:2px
+
 ```
 
-**Анализ зависимостей:**
+**Разбор диаграммы:**
 
-*   **`header`**: (Предположительно) Модуль для определения корневого пути проекта.
-*   **`asyncio`**: Используется для асинхронного запуска метода `create_report`.
-*   **`dataclasses`**: Используется для создания класса `ReportGenerator` с автоматическим созданием методов `__init__`, `__repr__` и т. д.
-*   **`src.gs`**: Модуль `gs` из `src`, предположительно, содержит глобальные настройки и константы, в частности пути к различным директориям.
-*   **`json`**: Модуль для работы с JSON-форматом.
-*   **`pathlib.Path`**: Используется для представления путей к файлам и директориям, обеспечивает кроссплатформенность.
-*   **`jinja2`**: Используется для шаблонизации HTML-кода.
-*   **`pdfkit`**: Модуль для конвертации HTML в PDF.
-*   **`src.utils.jjson.j_loads`**: Функция для загрузки данных из JSON-файла.
-*   **`src.utils.file.read_text_file` и `save_text_file`**: Функции для работы с файлами.
-*  **`src.utils.pdf.PDFUtils`**: Класс для работы с PDF файлами.
-*   **`src.utils.convertors.html.html2pdf`**: Функция для конвертации HTML в PDF.
-*   **`src.utils.image.random_image`**: Функция для выбора случайного изображения.
-*   **`src.utils.printer.pprint`**: Функция для форматированного вывода (не используется напрямую в текущем коде).
-*   **`src.logger.logger`**: Модуль для логирования.
+*   **`Start`**: Начало выполнения программы.
+*   **`MainFunc`**: Функция `main(mexiron, lang)`: устанавливает основные параметры отчёта, включая имя файла данных и язык.
+*    **`LoadData`**: Загрузка данных из JSON файла, используя функцию `j_loads`.
+*   **`CreateReportGenerator`**: Создание экземпляра класса `ReportGenerator`.
+*    **`CreateReport`**: Вызов метода `create_report` класса `ReportGenerator`, который выполняет основной процесс генерации отчёта.
+*   **`ServiceDict`**: Создание словаря `service_dict` с данными о сервисе, которые будут добавлены к данным для отчета.
+*   **`AppendService`**: Добавление словаря `service_dict` к списку продуктов, содержащихся в данных для отчета `data['products']`.
+*   **`GenerateHTML`**: Вызов метода `generate_html` для генерации HTML-контента на основе данных и шаблона Jinja2.
+*   **`SaveHTML`**: Сохранение сгенерированного HTML-контента в файл.
+*   **`CreatePDFUtils`**: Создание экземпляра класса `PDFUtils`, который используется для конвертации HTML в PDF.
+*    **`GeneratePDF`**: Конвертация HTML-контента в PDF-файл.
+*   **`CheckPDF`**: Проверка результата создания PDF, успешное или неудачное.
+*   **`End`**: Конец программы при успешном создании PDF.
+*   **`LogError`**: Логирование ошибки, если не удалось создать PDF файл.
+*   **`EndError`**: Конец программы при ошибке создания PDF.
 
 ```mermaid
-flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
 ```
 
-### 3. <объяснение>
+**Разбор диаграммы:**
+
+*   **`Start`**: Начало процесса.
+*   **`Header`**: `header.py`  определяет корневой каталог проекта.
+*   **`import`**: Импорт глобальных настроек `gs` из пакета `src`. Это позволяет использовать общие параметры и пути проекта.
+
+### 3. **<объяснение>**
 
 **Импорты:**
 
-*   `header`: Определяет корневой каталог проекта, используется для определения путей к другим модулям и файлам.
-*   `asyncio`: Библиотека для асинхронного программирования, необходима для запуска `create_report` асинхронно.
-*   `dataclasses`: Библиотека для создания классов данных, используется для определения класса `ReportGenerator`.
-*   `src.gs`: Модуль глобальных настроек, предоставляет доступ к конфигурационным данным (пути, константы и т.д.).
-*   `json`: Стандартная библиотека для работы с JSON-данными.
-*   `pathlib`: Стандартная библиотека для работы с путями к файлам и директориям.
-*   `jinja2`: Шаблонизатор для генерации HTML из шаблонов.
-*   `pdfkit`: Библиотека для конвертации HTML в PDF (использует wkhtmltopdf).
-*    `src.utils.jjson`: Содержит функцию `j_loads` для безопасной загрузки JSON-файлов, обеспечивая корректную обработку ошибок и корректную загрузку данных.
-*   `src.utils.file`: Содержит функции `read_text_file` для чтения текстовых файлов и `save_text_file` для их сохранения.
-*  `src.utils.pdf.PDFUtils`: Предоставляет инструменты для работы с PDF, включая создание PDF из HTML.
-*   `src.utils.convertors.html`: Содержит функцию `html2pdf` для конвертации HTML в PDF.
-*   `src.utils.image`: Содержит функцию `random_image` для выбора случайного изображения.
-*   `src.utils.printer`: Содержит функцию `pprint` для форматированного вывода.
-*   `src.logger.logger`: Модуль для логирования событий и ошибок.
+*   `import header`: Импортирует модуль `header.py`, который, вероятно, определяет корневую директорию проекта и настраивает пути.
+*   `import asyncio`: Импортирует асинхронную библиотеку для выполнения асинхронных операций.
+*   `from dataclasses import dataclass, field`: Импортирует декоратор `@dataclass` и функцию `field` для создания классов данных.
+*   `from src import gs`: Импортирует глобальные настройки проекта, включая пути и другие конфигурационные параметры. `gs` вероятно инициализируется в `header.py`.
+*   `import json`: Импортирует библиотеку `json` для работы с JSON-данными.
+*   `from pathlib import Path`: Импортирует класс `Path` для работы с путями файловой системы.
+*   `from jinja2 import Environment, FileSystemLoader`: Импортирует классы для работы с шаблонизатором Jinja2.
+*   `import pdfkit`: Импортирует библиотеку `pdfkit` для конвертации HTML в PDF.
+*   `from src.utils.jjson import j_loads`: Импортирует функцию `j_loads` для загрузки JSON-данных.
+*   `from src.utils.file import read_text_file, save_text_file`: Импортирует функции для чтения и записи текстовых файлов.
+*   `from src.utils.pdf import PDFUtils`: Импортирует класс `PDFUtils` для работы с PDF.
+*   `from src.utils.convertors.html import html2pdf`: Импортирует функцию `html2pdf` для конвертации HTML в PDF.
+*  `from src.utils.image import random_image`:  Импортирует функцию `random_image` для выбора случайного изображения.
+*   `from src.utils.printer import pprint`: Импортирует функцию `pprint` для красивой печати данных.
+*   `from src.logger.logger import logger`: Импортирует логгер для записи ошибок и другой информации.
 
 **Классы:**
 
 *   **`ReportGenerator`**:
-    *   **Роль**: Класс для генерации HTML и PDF отчетов.
-    *   **Атрибуты**:
-        *   `env`: Экземпляр `jinja2.Environment` для работы с шаблонами. Инициализируется с `FileSystemLoader`, который указывает, что шаблоны будут загружаться из текущей директории.
-    *   **Методы**:
-        *   `__init__`: Конструктор класса, инициализирует окружение Jinja2.
-        *   `generate_html(self, data: dict, lang: str) -> str`: Метод для генерации HTML из шаблона. Выбирает шаблон в зависимости от языка. Принимает словарь данных и код языка. Возвращает HTML в виде строки.
-        *    `create_report(self, data: dict, lang:str, html_file:str | Path, pdf_file:str | Path) -> bool`:  Метод для генерации полного отчета (HTML и PDF). Принимает данные, язык, пути к файлам HTML и PDF. Добавляет данные о сервисе, генерирует HTML, сохраняет его в файл, затем генерирует PDF. Возвращает `True`, если PDF успешно сгенерирован, иначе `False`.
-
+    *   **`__init__(self)`**:
+        *   Инициализирует атрибут `env`, как окружение Jinja2, загружающее шаблоны из текущей директории.
+    *   **`generate_html(self, data: dict, lang: str) -> str`**:
+        *   Принимает `data` (словарь с данными) и `lang` (язык отчёта).
+        *   Определяет имя шаблона (`template_table_he.html` или `template_table_ru.html`) в зависимости от языка.
+        *   Формирует полный путь к файлу шаблона.
+        *   Читает содержимое шаблона, создаёт из него шаблон Jinja2 и рендерит его с переданными данными, возвращая готовый HTML.
+    *   **`create_report(self, data: dict, lang: str, html_file: str | Path, pdf_file: str | Path) -> bool`**:
+        *   Принимает данные отчёта `data`, язык `lang`, путь к HTML-файлу `html_file` и путь к PDF-файлу `pdf_file`.
+        *   Создает словарь `service_dict` с данными о сервисе.
+        *   Добавляет словарь `service_dict` в список продуктов `data['products']`.
+        *   Генерирует HTML, сохраняет его в файл, конвертирует в PDF и возвращает `True` при успешном выполнении. В случае ошибки возвращает `False` и логирует её.
+    
 **Функции:**
-
 *   **`main(mexiron: str, lang: str) -> bool`**:
-    *   **Аргументы**:
-        *   `mexiron`: Строка с идентификатором мехирона.
-        *   `lang`: Строка с языком отчета ('ru' или 'he').
-    *   **Возвращаемое значение**: `bool` результат выполнения отчета.
-    *   **Назначение**: Главная функция, которая загружает данные, создает экземпляр `ReportGenerator` и запускает процесс генерации отчета.
-    *   **Пример**: `main('24_12_01_03_18_24_269', 'ru')` сгенерирует отчет для мехирона '24\_12\_01\_03\_18\_24\_269' на русском языке.
+    *   Принимает `mexiron` и `lang` в качестве входных параметров.
+    *   Определяет `base_path` к директории с данными.
+    *   Загружает данные из JSON-файла.
+    *   Формирует пути к HTML и PDF файлам.
+    *   Создаёт экземпляр `ReportGenerator`.
+    *   Вызывает метод `create_report` для генерации отчёта.
+*   **`if __name__ == "__main__":`**:
+    *   Устанавливает значения для `mexiron` и `lang`  (эти переменные могут быть переданы через командную строку)
+    *   Вызывает функцию `main` для запуска отчета.
 
 **Переменные:**
+*   `mexiron: str`: Имя файла данных для отчета.
+*   `lang: str`: Язык отчета ('ru' или 'he').
+*   `base_path: Path`:  путь к каталогу с данными.
+*   `data: dict`: Данные, загруженные из JSON-файла.
+*   `html_file: Path`: путь к HTML-файлу.
+*   `pdf_file: Path`: путь к PDF-файлу.
+*  `r: ReportGenerator`: Экземпляр класса `ReportGenerator`.
+*  `service_dict: dict`: Словарь с данными о сервисе.
+*  `html_content:str` : Сгенерированный HTML.
+*  `pdf: PDFUtils` : экземпляр класса `PDFUtils`.
+* `template:str` : имя файла шаблона, например `template_table_he.html`.
+* `template_path:str` : полный путь к файлу шаблона, например `gs.path.endpoints/kazarinov/pricelist_generator/templates/template_table_he.html`.
+* `template_string:str` : контент файла шаблона.
 
-*   `base_path`:  `pathlib.Path`, путь к каталогу мехирона, где находятся данные и будут сгенерированы отчеты.
-*   `data`:  `dict`, словарь, содержащий данные, загруженные из JSON-файла.
-*   `html_file`: `pathlib.Path`, путь к HTML-файлу, который будет сгенерирован.
-*   `pdf_file`: `pathlib.Path`, путь к PDF-файлу, который будет сгенерирован.
-*  `r`: Экземпляр класса `ReportGenerator`
-*  `service_dict`: Словарь с данными о сервисе, который добавляется к данным отчёта.
+**Потенциальные ошибки и улучшения:**
+*   **Обработка ошибок:** В коде есть простая проверка на успешность конвертации PDF, но можно добавить более подробную обработку исключений, например, при загрузке файла, генерации HTML или PDF.
+*   **Конфигурация `pdfkit`:**  параметры `pdfkit`, такие как путь к `wkhtmltopdf`, прописанны в комментариях, возможно стоит хранить их в конфигурационном файле или в `gs`.
+*   **Расширение функционала:** Можно добавить возможность настраивать шаблоны, стили и форматирование отчётов через конфигурационный файл.
+* **Параметризация main:** Переменные `mexiron` и `lang` можно вынести за пределы функции `if __name__ == "__main__"` например в `argparse`.
 
-**Потенциальные ошибки и области для улучшения:**
+**Взаимосвязь с другими частями проекта:**
 
-1.  **Обработка ошибок:**
-    *   В коде есть только логирование ошибки при неудачной генерации PDF.
-    *   Не хватает общей обработки ошибок при загрузке данных или чтении файлов.
-    *   Стоит добавить обработку исключений, например, `FileNotFoundError`, `json.JSONDecodeError`.
+*   **`header.py`**: Определяет корневой каталог проекта, который используется для формирования путей к шаблонам и данным.
+*   **`src.gs`**:  Содержит глобальные настройки и пути к каталогам проекта.
+*   **`src.utils.jjson.j_loads`**: Загружает данные из JSON-файла.
+*   **`src.utils.pdf.PDFUtils`**: Преобразует HTML в PDF.
+*   **`src.utils.image.random_image`**: Выбирает случайное изображение для добавления в отчет.
+*    **`src.logger.logger`**: Используется для логирования ошибок.
 
-2.  **Конфигурация `wkhtmltopdf`:**
-    *   Конфигурация `pdfkit` закомментирована, что означает, что `pdfkit` будет использовать системную установку `wkhtmltopdf`.
-    *   Лучше явно указывать путь к исполняемому файлу `wkhtmltopdf`, чтобы гарантировать корректную работу в разных средах.
-    *   Путь к `wkhtmltopdf` можно получить из `gs`.
-
-3. **Читаемость:**
-    *  Следует использовать константы для часто используемых строк.
-
-4.  **Асинхронность:**
-    *  Функция `main` вызывает асинхронный метод `create_report` синхронно, что может быть неэффективно.
-    *  Следует реализовать полную асинхронную цепочку или использовать `await` при вызове `create_report`.
-
-5. **Шаблоны:**
-   *    Следует использовать более гибкую систему шаблонов.
-
-**Цепочка взаимосвязей с другими частями проекта:**
-
-*   Использует `src.gs` для получения путей и настроек.
-*   Зависит от модулей `src.utils.jjson`, `src.utils.file`, `src.utils.pdf`, `src.utils.convertors.html` и `src.utils.image`.
-*   Логирует ошибки через `src.logger.logger`.
-*   Предполагается, что загружает JSON данные из директории, заданной в `gs.path.external_storage`.
-*   Сохраняет HTML и PDF отчеты в ту же директорию.
-
-**Заключение:**
-
-Этот код представляет собой генератор отчетов на основе HTML-шаблонов и данных JSON, с возможностью конвертации в PDF. Он использует несколько библиотек и модулей для выполнения своих задач, включая `jinja2` для шаблонизации, `pdfkit` для генерации PDF и `asyncio` для асинхронности. Несмотря на свою функциональность, код нуждается в улучшении обработки ошибок, конфигурации `wkhtmltopdf`, читаемости и правильном использовании асинхронности.
+Этот код предназначен для автоматической генерации HTML и PDF-отчётов на основе данных из JSON-файлов и шаблонов Jinja2. Он имеет модульную структуру, использующую функции и классы для каждой части процесса.

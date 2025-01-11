@@ -114,7 +114,7 @@ class PrestaShopAsync:
     client: ClientSession = None
     debug = True
     lang_index: Optional[int] = 1
-    data_format = 'JSON'
+    data_format:str = 'JSON'
     ps_version = ''
     API_DOMAIN:str = None
     API_KEY:str = None
@@ -367,7 +367,7 @@ class PrestaShopAsync:
         Returns:
             dict: Response from the API.
         """
-        return await self._exec(resource=resource, resource_id=resource_id, method='GET', io_format=self.data_format, **kwargs)
+        return await self._exec(resource=resource, resource_id=resource_id, method='GET', io_format= self.data_format)
 
     async def write(self, resource: str, data: dict) -> Optional[dict]:
         """! Update an existing resource in the PrestaShop API asynchronously.

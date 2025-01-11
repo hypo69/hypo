@@ -1,66 +1,35 @@
 # Анализ кода модуля `locator.md`
 
 **Качество кода**
-8
--   Плюсы
-    -   Документ содержит подробное описание структуры и назначения локаторов.
-    -   Приведены примеры использования локаторов в различных сценариях.
-    -   Присутствует описание каждого ключа в локаторе.
-    -   Документация структурирована и легко читаема.
-    -   Рассмотрены сложные локаторы с использованием списков и словарей.
--   Минусы
-    -   Нет явного указания на использование `j_loads` или `j_loads_ns` для загрузки JSON.
-    -   Отсутствуют комментарии в формате RST.
-    -   Не используется `logger` для логирования ошибок, хотя это не код, а документация.
+7
+- Плюсы
+    - Документ содержит подробное описание структуры локаторов для веб-элементов.
+    - Приведены примеры использования различных параметров локаторов, включая `attribute`, `by`, `selector`, `if_list`, `use_mouse`, `event`, `mandatory`, `locator_description`, `timeout` и `timeout_for_event`.
+    - Описаны примеры сложных локаторов с использованием списков и словарей.
+    - Есть описание последовательности выполнения действий: `действие -> атрибут`.
+    - Присутствует описание обработки событий, таких как `click()`, `screenshot()`, `send_message()`.
+    - Указаны рекомендации по поддержанию отдельных файлов локаторов для разных версий страниц (например, для десктопной и мобильной версий).
+- Минусы
+    - Документ не является кодом Python, а представляет собой описание в формате Markdown.
+    - Отсутствуют doctring для описания модуля, а также комментарии в формате RST.
+    - Не используются `j_loads` или `j_loads_ns` для чтения файлов, так как это не код на Python.
+    - Не производится импорт `logger` из `src.logger.logger`.
+    - Нет обработки ошибок, поскольку это не код, а документация.
 
 **Рекомендации по улучшению**
-
-1.  **Добавить документацию в формате RST:** Добавить примеры использования кода, чтобы продемонстрировать, как загружать и использовать эти локаторы, в формате RST.
-
-2.  **Логирование:** Описать важность использования `logger` при работе с локаторами и в процессе отладки.
-
-3.  **Примеры кода:**  Добавить примеры кода на Python, демонстрирующие, как использовать описанные локаторы.
-
-4.  **Уточнения:** В разделе о `timeout` и `timeout_for_event` добавить пояснение, что именно происходит, если элемент не найден за отведенное время.
-
-5.  **Структура:** Добавить в начало документа краткое описание модуля.
+    - Документ `locator.md` описывает структуру JSON-объектов для локаторов, а не является исполняемым кодом. Поэтому нет необходимости вносить изменения, связанные с импортами, форматом кавычек или обработкой ошибок.
+    - Можно добавить раздел с примерами использования локаторов в коде Python для наглядности.
+    - Включить примеры использования `j_loads` и `j_loads_ns` при работе с файлами локаторов в Python.
+    - Можно рассмотреть возможность создания класса для работы с локаторами, который будет включать методы для чтения, обработки и использования этих локаторов, а также добавить соответствующую документацию в формате RST и примеры использования.
+    - Добавить информацию о том, как можно динамически изменять локаторы, например, передавая параметры в селектор или используя переменные окружения.
 
 **Оптимизированный код**
-
 ```markdown
 # Field Locators on an `HTML` Page
-=========================================================================================
-
-Этот документ содержит описание структуры локаторов элементов на веб-странице.
-Локаторы используются для поиска элементов на странице и взаимодействия с ними.
-Описание структуры и примеры локаторов, используемых для работы с веб-страницами.
-
-Пример использования
---------------------
-
-Пример загрузки и использования локаторов из `JSON` файла.
-
-.. code-block:: python
-
-    from src.utils.jjson import j_loads
-    from src.logger import logger
-
-    try:
-        with open('locator.json', 'r', encoding='utf-8') as f:
-            locators = j_loads(f)
-    except Exception as e:
-        logger.error(f'Ошибка при загрузке локаторов: {e}')
-        ... # Обработка ошибки
-
-    # Пример использования локатора
-    close_banner_locator = locators.get('close_banner')
-    if close_banner_locator:
-        print(f'Локатор "close_banner": {close_banner_locator}')
-    else:
-        logger.error('Локатор "close_banner" не найден')
-
+    
+    
 ### Example Locator:
-
+    
 ```json
 {
   "close_banner": {
@@ -113,14 +82,14 @@
   }
 }
 ```
-
+    
 ### Details:
-
+    
 The dictionary name corresponds to the name of the field in the `ProductFields` class ([more about `ProductFields`](../product/product_fields)).
-
+    
 - **`attribute`**: The attribute to get from the web element. Examples: `innerText`, `src`, `id`, `href`, etc.
   If `attribute` is set to `none/false`, the WebDriver will return the entire web element (`WebElement`).
-
+    
 - **`by`**: The strategy to find the element:
   - `ID` corresponds to `By.ID`
   - `NAME` corresponds to `By.NAME`
@@ -130,25 +99,25 @@ The dictionary name corresponds to the name of the field in the `ProductFields` 
   - `PARTIAL_LINK_TEXT` corresponds to `By.PARTIAL_LINK_TEXT`
   - `CSS_SELECTOR` corresponds to `By.CSS_SELECTOR`
   - `XPATH` corresponds to `By.XPATH`
-
+    
 - **`selector`**: The selector that determines how to find the web element. Examples:
   `(//li[@class = 'slide selected previous'])[1]//img`,
   `//a[@id = 'mainpic']//img`,
   `//span[@class = 'ltr sku-copy']`.
-
+    
 - **`if_list`**: Specifies what to do with a list of found web elements (`web_element`). Possible values:
   - `first`: return the first element from the list.
   - `all`: return all elements.
   - `last`: return the last element.
   - `even`, `odd`: return even/odd elements.
   - Specific numbers, e.g., `1,2,...` or `[1,3,5]`: return elements with the specified numbers.
-
+    
   Alternatively, you can specify the element number directly in the selector, for example:
   `(//div[contains(@class, 'description')])[2]//p`
-
+    
 - **`use_mouse`**: `true` | `false`
   Determines whether to use the mouse to interact with the element.
-
+    
 - **`event`**: The WebDriver can perform an action on the web element, such as `click()`, `screenshot()`, `scroll()`, etc.
   **Important**: If `event` is specified, it will be performed **before** getting the value from `attribute`.
   Example:
@@ -157,7 +126,7 @@ The dictionary name corresponds to the name of the field in the `ProductFields` 
       ...,
       "attribute": "href",
       ...,
-      "timeout": 0,
+       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
       "event": "click()",
       ...
@@ -165,7 +134,7 @@ The dictionary name corresponds to the name of the field in the `ProductFields` 
   ```
   In this case, the driver will first perform `click()` on the web element and then get its `href` attribute.
   The sequence works like: **action -> attribute**.
-  Other examples of events:
+    Other examples of events:
    - `screenshot()` returns the web element as a screenshot. Useful when the `CDN` server does not return the image via `URL`.
    - `send_message()` sends a message to the web element.
      I recommend sending the message through the `%EXTERNAL_MESSAGE%` variable, as shown below:
@@ -176,20 +145,20 @@ The dictionary name corresponds to the name of the field in the `ProductFields` 
          <li><code>backspace(10)</code> - moves the caret 10 characters to the left (clears the text in the input field).</li>
          <li><code>%EXTERNAL_MESSAGE%</code> - sends the message to the input field.</li>
        </ol>
-
+    
 - **`mandatory`**: Whether the locator is mandatory.
   If `{mandatory: true}` and interaction with the element is not possible, an error will be thrown. If `mandatory: false`, the element will be skipped.
-
+    
 - **`locator_description`**: A description of the locator.
-
+    
 ---
-
+    
 ### Complex Locators:
-
+    
 You can pass lists, tuples, or dictionaries in the locator keys.
-
+    
 #### Example Locator with Lists:
-
+    
 ```json
 {
   "sample_locator": {
@@ -205,8 +174,8 @@ You can pass lists, tuples, or dictionaries in the locator keys.
       "//a[contains(@href, '#tab-description')]",
       "//div[@id = 'tab-description']//p"
     ],
-    "timeout": 0,
-    "timeout_for_event": "presence_of_element_located",
+      "timeout": 0,
+      "timeout_for_event": "presence_of_element_located",
     "event": [
       "click()",
       null
@@ -229,52 +198,53 @@ You can pass lists, tuples, or dictionaries in the locator keys.
 ```
 In this example, the first element `//a[contains(@href, '#tab-description')]` will be found.
 The driver will perform `click()` and then get the attribute `href` of the element `//a[contains(@href, '#tab-description')]`.
-
+    
 #### Example Locator with a Dictionary:
-
+    
 ```json
 {
   "sample_locator": {
     "attribute": {"href": "name"},
-    ...
-  }
+      ...
+    }
 }
 ```
-
+    
 ---
-
+    
 ### Key Descriptions for Locators:
-
-1.  **`attribute`**:
-    This key indicates the attribute that will be used to retrieve data from the element. `null` means the attribute is not used for finding the element.
-
-2.  **`by`**:
-    Specifies the method for locating the element on the page. In this case, it's `\'XPATH\'`, which means using XPath to locate the element.
-
-3.  **`selector`**:
-    The locator string that will be used to find the web element. In this case, it is an XPath expression `"//a[@id = 'mainpic']//img"`, which locates an image inside an `a` tag with `id='mainpic'`.
-
-4.  **`if_list`**:
-    Specifies the rule for handling a list of elements. In this case, `'first'` means returning the first element from the list.
-
-5.  **`use_mouse`**:
-    A boolean value indicating whether to use the mouse for interaction with the element. Set to `false`, meaning no mouse interaction is needed.
+    
+1. **`attribute`**:
+   This key indicates the attribute that will be used to retrieve data from the element. `null` means the attribute is not used for finding the element.
+    
+2. **`by`**:
+   Specifies the method for locating the element on the page. In this case, it's `'XPATH'`, which means using XPath to locate the element.
+    
+3. **`selector`**:
+   The locator string that will be used to find the web element. In this case, it is an XPath expression `"//a[@id = 'mainpic']//img"`, which locates an image inside an `a` tag with `id='mainpic'`.
+    
+4. **`if_list`**:
+   Specifies the rule for handling a list of elements. In this case, `'first'` means returning the first element from the list.
+    
+5. **`use_mouse`**:
+   A boolean value indicating whether to use the mouse for interaction with the element. Set to `false`, meaning no mouse interaction is needed.
 
 6.  **`timeout`**:
-     The timeout (in seconds) for finding the element. A value of `0` means no wait; the element will be found immediately.
+    The timeout (in seconds) for finding the element. A value of `0` means no wait; the element will be found immediately.
 
 7.  **`timeout_for_event`**:
-     The timeout (in seconds) for the event. `"presence_of_element_located"` means the WebDriver will wait for the element to be present before performing the event.
+    The timeout (in seconds) for the event. `"presence_of_element_located"` means the WebDriver will wait for the element to be present before performing the event.
 
-8. **`event`**:
-     The action that will be performed on the web element, such as `click()`, `screenshot()`, `scroll()`, etc. The event will be executed before getting the value from `attribute`.
-
+8.  **`event`**:
+    The action that will be performed on the web element, such as `click()`, `screenshot()`, `scroll()`, etc. The event will be executed before getting the value from `attribute`.
+    
 9.  **`mandatory`**:
-      Indicates whether the locator is mandatory. If set to `true`, an error will be raised if the element cannot be found or interacted with.
-
+     Indicates whether the locator
+    
+    is mandatory. If set to `true`, an error will be raised if the element cannot be found or interacted with.
+    
 10. **`locator_description`**:
     A description of the locator, providing more context about what it does.
-
 ---------------
 - The page layout may vary, for example, between desktop and mobile versions. In such cases, I recommend maintaining separate locator files for each version.
 Еxample: `product.json`, `product_mobile_site.json`.

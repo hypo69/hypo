@@ -1,73 +1,100 @@
-# Анализ кода модуля `html_generators.py`
+# Анализ кода модуля `html_generators`
 
 **Качество кода**
-10
+7
 - Плюсы
-    - Код хорошо структурирован и разбит на классы для генерации HTML, что соответствует принципам объектно-ориентированного программирования.
-    - Используются статические методы, что уместно для генераторов HTML, так как они не зависят от состояния экземпляра класса.
-    - Код читабельный, с понятными именами переменных и функций.
-    - Применяется экранирование HTML-спецсимволов, что важно для предотвращения XSS-атак.
-    - Используются f-строки для форматирования, что повышает читаемость и эффективность.
+    - Код хорошо структурирован и разбит на классы, каждый из которых отвечает за генерацию HTML для определенного уровня (продукт, категория, кампания).
+    - Используются f-строки для формирования HTML, что делает код более читаемым и удобным в сопровождении.
+    - Присутствует экранирование HTML-спецсимволов, что помогает избежать проблем с отображением и XSS-атак.
+    - Код использует `pathlib` для работы с путями, что является хорошей практикой.
 - Минусы
-    - Отсутствуют docstring для модулей, классов и методов.
-    - Не используется логирование, что затрудняет отладку и анализ ошибок.
-    -  Не добавлен импорт `from src.logger.logger import logger`.
+    - Отсутствует описание модуля в начале файла.
+    - Нет документации в формате RST для классов и методов.
+    - В коде используется `save_text_file` без обработки возможных исключений.
+    - В HTML коде используется абсолютный путь до `styles.css`, что может вызвать проблемы.
+    - Отсутствует импорт `logger` из `src.logger.logger`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля, классов и методов в формате RST.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок и отладки.
-3.  Удалить лишние shebang.
-4.  Добавить проверку на существование директории перед созданием файлов.
+1.  Добавить описание модуля в начале файла.
+2.  Добавить документацию в формате RST для классов и методов.
+3.  Импортировать `logger` из `src.logger.logger`.
+4.  Обработать исключения при сохранении файлов через `try-except` и логировать ошибки через `logger.error`.
+5.  Заменить абсолютный путь до `styles.css` на относительный.
+6.  Для большей гибкости можно рассмотреть вынесение HTML шаблонов в отдельные файлы.
+7.  Убедиться, что все необходимые импорты присутствуют, а неиспользуемые удалены.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
+
+#! venv/bin/python/python3.12
+
 """
 Модуль для генерации HTML контента рекламной кампании.
-======================================================
+=========================================================================================
 
-Этот модуль предоставляет классы для генерации HTML-страниц
-для отдельных товаров, категорий товаров и всей рекламной кампании.
+Этот модуль содержит классы для генерации HTML-страниц для отдельных продуктов, категорий продуктов и
+целых рекламных кампаний. Используется для создания статических HTML-страниц на основе данных о товарах.
 
-Классы:
-    - ProductHTMLGenerator: Генерирует HTML для отдельных товаров.
-    - CategoryHTMLGenerator: Генерирует HTML для категорий товаров.
-    - CampaignHTMLGenerator: Генерирует HTML для всей кампании.
+Пример использования
+--------------------
 
+Пример использования классов `ProductHTMLGenerator`, `CategoryHTMLGenerator`, `CampaignHTMLGenerator`:
+
+.. code-block:: python
+
+    from pathlib import Path
+    from types import SimpleNamespace
+    
+    product_data = SimpleNamespace(
+        product_id='12345',
+        product_title='Sample Product',
+        local_image_path='images/product.jpg',
+        target_sale_price=100.00,
+        target_sale_price_currency='$',
+        target_original_price=120.00,
+        target_original_price_currency='$',
+        second_level_category_name='Electronics',
+        promotion_link='http://example.com/product'
+    )
+    
+    category_path = Path('./test_category')
+    
+    ProductHTMLGenerator.set_product_html(product_data, category_path)
+    CategoryHTMLGenerator.set_category_html([product_data], category_path)
+    CampaignHTMLGenerator.set_campaign_html(['test_category'], './test_campaign')
 """
 
 import html
 from pathlib import Path
 from types import SimpleNamespace
-# Добавлен импорт logger
+# from src.utils.file import save_text_file  # Исправлено в соответствии с инструкцией
 from src.logger.logger import logger
-# Добавлен импорт save_text_file
-from src.utils.file import save_text_file
-
-# Константа для режима работы
-
+from src.utils.file import save_text_file # Исправлен импорт
 
 class ProductHTMLGenerator:
     """
-    Класс для генерации HTML для отдельных товаров.
+    Класс для генерации HTML для отдельных продуктов.
+    
+    Используется для создания HTML-страниц с описанием и ссылкой на покупку одного товара.
     """
     @staticmethod
-    def set_product_html(product: SimpleNamespace, category_path: str | Path):
+    def set_product_html(product: SimpleNamespace, category_path: str | Path) -> None:
         """
-        Создает HTML-файл для отдельного товара.
+        Создает HTML-файл для отдельного продукта.
 
-        :param product: Детали товара для включения в HTML.
-        :type product: SimpleNamespace
-        :param category_path: Путь для сохранения HTML-файла.
-        :type category_path: str | Path
+        Args:
+            product (SimpleNamespace): Детали продукта для включения в HTML.
+            category_path (str | Path): Путь для сохранения HTML-файла.
         """
-        # получаем имя категории из пути
+        #  Определение имени категории
         category_name = Path(category_path).name
-        # формируем путь к html файлу
-        html_path = Path(category_path) / 'html' / f"{product.product_id}.html"
-
-        # формируем html контент
+        #  Формирование пути к HTML файлу
+        html_path = Path(category_path) / 'html' / f'{product.product_id}.html'
+        
+        #  Формирование HTML контента
         html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,31 +122,36 @@ class ProductHTMLGenerator:
 </body>
 </html>
 """
-        # Код сохраняет HTML-контент в файл
-        save_text_file(html_content, html_path)
+        #  Сохранение HTML контента в файл
+        try:
+            save_text_file(html_path, html_content)
+        except Exception as e:
+            logger.error(f'Ошибка при сохранении HTML файла продукта: {html_path}', exc_info=True)
+            # raise  # Можно раскомментировать для проброса исключения дальше, если это необходимо
 
 class CategoryHTMLGenerator:
     """
-    Класс для генерации HTML для категорий товаров.
+    Класс для генерации HTML для категорий продуктов.
+
+    Создает HTML-страницу, содержащую список товаров в данной категории.
     """
+
     @staticmethod
-    def set_category_html(products_list: list[SimpleNamespace] | SimpleNamespace, category_path: str | Path):
+    def set_category_html(products_list: list[SimpleNamespace] | SimpleNamespace, category_path: str | Path) -> None:
         """
-        Создает HTML-файл для категории товаров.
+        Создает HTML-файл для категории продуктов.
 
-        :param products_list: Список товаров для включения в HTML.
-        :type products_list: list[SimpleNamespace] | SimpleNamespace
-        :param category_path: Путь для сохранения HTML-файла.
-        :type category_path: str | Path
+        Args:
+            products_list (list[SimpleNamespace] | SimpleNamespace): Список продуктов для включения в HTML.
+            category_path (str | Path): Путь для сохранения HTML-файла.
         """
-        # Проверяем тип products_list и приводим к списку
+        #  Преобразование в список, если передан один продукт
         products_list = products_list if isinstance(products_list, list) else [products_list]
-        # получаем имя категории из пути
+        #  Определение имени категории
         category_name = Path(category_path).name
-        # формируем путь к html файлу
+        #  Формирование пути к HTML файлу
         html_path = Path(category_path) / 'html' / 'index.html'
-
-        # формируем html контент
+        #  Формирование HTML контента
         html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,11 +166,10 @@ class CategoryHTMLGenerator:
         <h1 class="my-4">{html.escape(category_name)} Products</h1>
         <div class="row product-grid">
     """
-        # Цикл по всем продуктам в списке
+        
+        #  Добавление HTML для каждого продукта
         for product in products_list:
-            # получаем путь к изображению продукта
             image_url = Path(product.local_image_path).as_posix()
-            # добавляем html разметку продукта в общий html контент
             html_content += f"""
                 <div class="col-md-4 mb-4">
                     <div class="card">
@@ -153,7 +184,7 @@ class CategoryHTMLGenerator:
                     </div>
                 </div>
             """
-        # добавляем завершающие теги html
+        
         html_content += """ 
         </div>
     </div>
@@ -162,26 +193,33 @@ class CategoryHTMLGenerator:
 </body>
 </html>
 """
-        # Код сохраняет HTML-контент в файл
-        save_text_file(html_content, html_path)
+        #  Сохранение HTML контента в файл
+        try:
+            save_text_file(html_path, html_content)
+        except Exception as e:
+            logger.error(f'Ошибка при сохранении HTML файла категории: {html_path}', exc_info=True)
+            # raise  # Можно раскомментировать для проброса исключения дальше, если это необходимо
+
 
 class CampaignHTMLGenerator:
     """
-    Класс для генерации HTML для всей кампании.
-    """
-    @staticmethod
-    def set_campaign_html(categories: list[str], campaign_path: str | Path):
-        """
-        Создает HTML-файл для всей рекламной кампании, перечисляя все категории.
+    Класс для генерации HTML для рекламной кампании.
 
-        :param categories: Список имен категорий.
-        :type categories: list[str]
-        :param campaign_path: Путь для сохранения HTML-файла.
-        :type campaign_path: str | Path
+    Создает HTML-страницу, содержащую список категорий товаров, участвующих в кампании.
+    """
+
+    @staticmethod
+    def set_campaign_html(categories: list[str], campaign_path: str | Path) -> None:
         """
-        # формируем путь к html файлу
+        Создает HTML-файл для рекламной кампании, перечисляя все категории.
+
+        Args:
+            categories (list[str]): Список имен категорий.
+            campaign_path (str | Path): Путь для сохранения HTML-файла.
+        """
+        #  Формирование пути к HTML файлу
         html_path = Path(campaign_path) / 'index.html'
-        # формируем html контент
+        #  Формирование HTML контента
         html_content = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -196,15 +234,14 @@ class CampaignHTMLGenerator:
         <h1 class="my-4">Campaign Overview</h1>
         <ul class="list-group">
     """
-        # Цикл по всем категориям
+        #  Добавление HTML для каждой категории
         for category in categories:
-            # добавляем html разметку категории в общий html контент
             html_content += f"""
                 <li class="list-group-item">
                     <a href="{category}/index.html">{html.escape(category)}</a>
                 </li>
             """
-        # добавляем завершающие теги html
+        
         html_content += """ 
         </ul>
     </div>
@@ -213,5 +250,9 @@ class CampaignHTMLGenerator:
 </body>
 </html>
 """
-        # Код сохраняет HTML-контент в файл
-        save_text_file(html_content, html_path)
+        #  Сохранение HTML контента в файл
+        try:
+            save_text_file(html_path, html_content)
+        except Exception as e:
+            logger.error(f'Ошибка при сохранении HTML файла кампании: {html_path}', exc_info=True)
+            # raise  # Можно раскомментировать для проброса исключения дальше, если это необходимо

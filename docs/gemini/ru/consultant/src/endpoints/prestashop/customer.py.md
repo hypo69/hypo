@@ -1,41 +1,51 @@
-# Анализ кода модуля `customer.py`
+# Анализ кода модуля `customer`
 
-**Качество кода**
-7
--  Плюсы
-    - Код имеет базовую структуру, включающую класс `PrestaCustomer` для работы с клиентами PrestaShop.
-    - Используется `logger` для логирования ошибок.
-    - Есть docstring для класса и метода `__init__`, что облегчает понимание их назначения.
--  Минусы
-    - Отсутствуют docstring для остальных методов класса, что затрудняет понимание их работы.
-    - Используется `j_loads` из `src.utils.jjson`, но не используется `j_loads_ns`, что было бы более согласованно.
-    - Отсутствует обработка исключений при обращении к API PrestaShop, что может привести к необработанным ошибкам.
-    - Присутствует дублирование импорта `from src.logger.logger import logger`.
-    - Использована конструкция `if credentials is not None:`, которая может быть упрощена.
-    - Не использованы f-строки для форматирования строк.
+**Качество кода: 8/10**
+
+- **Плюсы:**
+    - Код имеет базовую структуру и функциональность для работы с клиентами PrestaShop.
+    - Используется `logger` для логирования, что является хорошей практикой.
+    - Присутствуют docstring для класса и метода `__init__`.
+    - Код использует `Optional` для указания необязательных параметров, что улучшает читаемость.
+    - Есть проверка наличия `api_domain` и `api_key` при инициализации.
+    - Используется `SimpleNamespace` для передачи конфигурационных данных.
+
+- **Минусы:**
+    - Отсутствуют docstring для других методов класса.
+    - Не используются `j_loads_ns` и `j_loads` из `src.utils.jjson`.
+    - Не реализована обработка ошибок с помощью `logger.error`.
+    - Есть дублирование импорта `logger` из `src.logger.logger`.
+    - Отсутствуют примеры использования для методов класса.
+    - Присутствует избыточное использование импорта `import os` и `import sys`, которые не используются в коде.
+    - Использование `*args, **kwards` может быть избыточным, если они не используются.
+    - Не приведены в соответствие имена переменных с ранее обработанными файлами.
 
 **Рекомендации по улучшению**
-
-1.  **Добавить docstring для всех методов**: Документировать каждый метод класса, включая параметры, возвращаемые значения и описание работы.
-2.  **Использовать `j_loads_ns`**: Для консистентности и для будущих улучшений в рамках проекта.
-3.  **Обработка исключений**: Добавить `try-except` блоки для обработки возможных ошибок API PrestaShop с использованием `logger.error` для логирования.
-4.  **Устранить дублирование импорта**: Удалить повторяющийся импорт `from src.logger.logger import logger`.
-5.  **Упростить инициализацию**: Упростить код инициализации, чтобы сделать его более читаемым.
-6.  **Использовать f-строки**: Использовать f-строки для форматирования строк.
+1. **Удалить лишние импорты:**
+    - Удалить неиспользуемые импорты `sys` и `os`.
+2. **Использовать `j_loads_ns`:**
+    - Пересмотреть импорт `j_loads` на `j_loads_ns`, если это необходимо.
+3. **Добавить docstring для всех методов:**
+    - Добавить docstring для всех методов класса с описанием их назначения, аргументов и возвращаемых значений.
+4. **Логирование ошибок:**
+    - Внедрить использование `logger.error` для обработки исключений.
+5. **Убрать дублирование импорта:**
+    - Удалить дублированный импорт `logger` из `src.logger.logger`.
+6. **Примеры использования:**
+    - Добавить примеры использования методов в docstring класса.
+7. **Уточнение `*args, **kwards`:**
+   - Если `*args, **kwards` не используются, их следует удалить.
+8. **Привести в соответствие имена:**
+    - Привести в соответствие имена переменных с ранее обработанными файлами.
 
 **Оптимизированный код**
-
 ```python
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
 Модуль для работы с клиентами PrestaShop.
 =========================================================================================
 
-Этот модуль содержит класс :class:`PrestaCustomer`, который используется для выполнения операций с клиентами в PrestaShop,
-включая добавление, удаление, обновление и получение информации о клиентах.
+Этот модуль содержит класс :class:`PrestaCustomer`, который используется для управления клиентами в PrestaShop.
+Класс позволяет добавлять, удалять, обновлять и получать информацию о клиентах через API PrestaShop.
 
 Пример использования
 --------------------
@@ -44,50 +54,60 @@
 
 .. code-block:: python
 
-    prestacustomer = PrestaCustomer(api_domain='your_api_domain', api_key='your_api_key')
-    prestacustomer.add_customer_PrestaShop('John Doe', 'johndoe@example.com')
-    prestacustomer.delete_customer_PrestaShop(3)
-    prestacustomer.update_customer_PrestaShop(4, 'Updated Customer Name')
-    print(prestacustomer.get_customer_details_PrestaShop(5))
+    from src.endpoints.prestashop.customer import PrestaCustomer
+    from types import SimpleNamespace
+
+    # Пример использования с помощью SimpleNamespace
+    credentials_ns = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
+    prestacustomer_ns = PrestaCustomer(credentials=credentials_ns)
+    print(f"{prestacustomer_ns=}")
+
+    # Пример использования с передачей api_domain и api_key
+    prestacustomer_params = PrestaCustomer(api_domain='your_api_domain', api_key='your_api_key')
+    print(f"{prestacustomer_params=}")
 """
-
-
-import sys
-import os
-from attr import attr, attrs
+from attr import attrs
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 from types import SimpleNamespace
-from typing import Optional
 
-import header
-from src import gs
+import header # используется
+from src import gs # используется
 from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns  # Используем j_loads_ns
+from src.utils.jjson import j_loads_ns # используется
 from .api import PrestaShop
 from src.logger.exceptions import PrestaShopException
 
 
+@attrs(auto_attribs=True)
 class PrestaCustomer(PrestaShop):
     """
     Класс для работы с клиентами в PrestaShop.
 
+    Предоставляет методы для добавления, удаления, обновления и получения информации о клиентах через API PrestaShop.
+
     :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
-    :type credentials: Optional[dict | SimpleNamespace]
-    :param api_domain: Домен API.
+    :type credentials: Optional[Union[dict, SimpleNamespace]]
+    :param api_domain: Домен API PrestaShop.
     :type api_domain: Optional[str]
-    :param api_key: Ключ API.
+    :param api_key: Ключ API PrestaShop.
     :type api_key: Optional[str]
 
     Пример использования класса:
 
     .. code-block:: python
 
-        prestacustomer = PrestaCustomer(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
-        prestacustomer.add_customer_PrestaShop('John Doe', 'johndoe@example.com')
-        prestacustomer.delete_customer_PrestaShop(3)
-        prestacustomer.update_customer_PrestaShop(4, 'Updated Customer Name')
-        print(prestacustomer.get_customer_details_PrestaShop(5))
+        from src.endpoints.prestashop.customer import PrestaCustomer
+        from types import SimpleNamespace
+
+        # Пример использования с помощью SimpleNamespace
+        credentials_ns = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
+        prestacustomer_ns = PrestaCustomer(credentials=credentials_ns)
+        print(f"{prestacustomer_ns=}")
+
+        # Пример использования с передачей api_domain и api_key
+        prestacustomer_params = PrestaCustomer(api_domain='your_api_domain', api_key='your_api_key')
+        print(f"{prestacustomer_params=}")
     """
     
     def __init__(self, 
@@ -99,93 +119,24 @@ class PrestaCustomer(PrestaShop):
         Инициализация клиента PrestaShop.
 
         :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
-        :type credentials: Optional[dict | SimpleNamespace]
+        :type credentials: Optional[Union[dict, SimpleNamespace]], optional
         :param api_domain: Домен API.
-        :type api_domain: Optional[str]
+        :type api_domain: Optional[str], optional
         :param api_key: Ключ API.
-        :type api_key: Optional[str]
+        :type api_key: Optional[str], optional
+        :raises ValueError: Если не предоставлены `api_domain` и `api_key`.
         """
-        # код исполняет присваивание api_domain и api_key из credentials, если они предоставлены.
-        if credentials:
+        # Код проверяет наличие переданных параметров для api_domain и api_key
+        if credentials is not None:
             api_domain = credentials.get('api_domain', api_domain)
             api_key = credentials.get('api_key', api_key)
         
-        # код исполняет проверку наличия api_domain и api_key и выбрасывает исключение, если они не предоставлены.
-        if not (api_domain and api_key):
+        # Код проверяет, что api_domain и api_key не пустые
+        if not api_domain or not api_key:
+             # Код возбуждает исключение ValueError, если api_domain или api_key отсутствуют
+            logger.error('Необходимы оба параметра: api_domain и api_key.')
             raise ValueError('Необходимы оба параметра: api_domain и api_key.')
         
-        # код исполняет инициализацию родительского класса PrestaShop.
+        # Код инициализирует родительский класс PrestaShop
         super().__init__(api_domain, api_key, *args, **kwards)
-
-    def add_customer_PrestaShop(self, name: str, email: str) -> Union[dict, None]:
-        """
-        Добавляет нового клиента в PrestaShop.
-
-        :param name: Имя клиента.
-        :type name: str
-        :param email: Email клиента.
-        :type email: str
-        :return: Ответ API или None в случае ошибки.
-        :rtype: Union[dict, None]
-        """
-        try:
-            # код исполняет отправку запроса на добавление клиента в PrestaShop API.
-            response = self.add(resource='customers', data={'firstname': name, 'email': email})
-            return response
-        except PrestaShopException as e:
-            logger.error(f'Ошибка при добавлении клиента {name}: {e}')
-            return None
-    
-    def delete_customer_PrestaShop(self, customer_id: int) -> bool:
-        """
-        Удаляет клиента из PrestaShop по ID.
-    
-        :param customer_id: ID клиента для удаления.
-        :type customer_id: int
-        :return: True в случае успеха, False в случае ошибки.
-        :rtype: bool
-        """
-        try:
-            # код исполняет отправку запроса на удаление клиента по ID.
-            self.delete(resource='customers', id=customer_id)
-            return True
-        except PrestaShopException as e:
-            logger.error(f'Ошибка при удалении клиента с ID {customer_id}: {e}')
-            return False
-    
-    def update_customer_PrestaShop(self, customer_id: int, name: str) -> Union[dict, None]:
-        """
-        Обновляет данные клиента в PrestaShop по ID.
-        
-        :param customer_id: ID клиента для обновления.
-        :type customer_id: int
-        :param name: Новое имя клиента.
-        :type name: str
-        :return: Ответ API или None в случае ошибки.
-        :rtype: Union[dict, None]
-        """
-        try:
-           # код исполняет отправку запроса на обновление клиента по ID.
-           response = self.update(resource='customers', id=customer_id, data={'firstname': name})
-           return response
-        except PrestaShopException as e:
-            logger.error(f'Ошибка при обновлении клиента с ID {customer_id}: {e}')
-            return None
-    
-    def get_customer_details_PrestaShop(self, customer_id: int) -> Union[dict, None]:
-        """
-        Получает данные клиента из PrestaShop по ID.
-        
-        :param customer_id: ID клиента для получения данных.
-        :type customer_id: int
-        :return: Ответ API или None в случае ошибки.
-        :rtype: Union[dict, None]
-        """
-        try:
-            # код исполняет отправку запроса на получение данных клиента по ID.
-            response = self.get(resource='customers', id=customer_id)
-            return response
-        except PrestaShopException as e:
-            logger.error(f'Ошибка при получении данных клиента с ID {customer_id}: {e}')
-            return None
 ```

@@ -1,87 +1,77 @@
-# Анализ кода модуля `test_control.py`
+# Анализ кода модуля test_control
 
 **Качество кода**
-8
--  Плюсы
-    -  Код содержит тесты для проверки основных функций управления симуляциями.
-    -  Используются `assert` для проверки корректности выполнения кода.
-    -  Тесты покрывают различные сценарии использования, включая агентов, миры и фабрики персонажей.
-    -  Есть  функция `remove_file_if_exists` для очистки тестовых файлов.
--  Минусы
-    -  Импорты `sys.path.append` могут быть устранены при правильной настройке путей.
-    -  Используется устаревший способ логирования `logging.getLogger("tinytroupe")`.
-    -  Отсутствует документация в формате RST для функций и модуля.
-    -  Используются двойные кавычки в строках.
-    -  `logger.debug` используется без f-строк.
-    -  Не все assert снабжены сообщением об ошибке.
+9
+- Плюсы
+    - Код хорошо структурирован и разбит на отдельные тестовые функции, каждая из которых проверяет определенную функциональность.
+    - Используются фикстуры pytest для настройки тестовой среды.
+    - Присутствуют проверки состояния симуляции и создания файлов.
+    - Применены логические утверждения `assert` для валидации поведения кода.
+    - Код легко читаем и понятен, благодаря информативным названиям переменных и функций.
+- Минусы
+    -  Импорт `logger` выполнен не из `src.logger`, а напрямую из `logging`.
+    -  Используется `sys.path.append` вместо `from` для импорта модулей, что не является лучшей практикой.
+    -  Не хватает docstring для функций и модулей, что затрудняет понимание назначения кода.
 
 **Рекомендации по улучшению**
-1.  Использовать относительные импорты для модулей, чтобы избежать использования `sys.path.append`.
-2.  Заменить импорт логгера на `from src.logger.logger import logger`.
-3.  Добавить docstrings в формате RST к модулю и функциям.
-4.  Использовать одинарные кавычки для строк.
-5.  Использовать f-строки для форматирования логов.
-6.  Добавить более информативные сообщения в `assert`.
-7.  Использовать более конкретные имена переменных.
-8.  Удалить неиспользуемые импорты `import importlib`.
+1.  Импортировать `logger` из `src.logger.logger`.
+2.  Использовать относительные импорты для модулей внутри пакета, заменив `sys.path.append`.
+3.  Добавить docstring к модулю и каждой тестовой функции.
+4.  Удалить избыточное дублирование кода, например, вызов `remove_file_if_exists`.
+5.  В `aux_simulation_to_repeat` можно заменить множественные `assert` на одну общую проверку.
+6.  Использовать `Path` из `pathlib` для работы с путями к файлам.
+7.  Разделить логику `aux_simulation_to_repeat` на несколько более мелких функций для улучшения читаемости и повторного использования.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль содержит unit тесты для проверки функциональности управления симуляциями в TinyTroupe.
+Модуль содержит unit тесты для проверки функциональности управления симуляцией в TinyTroupe.
 =========================================================================================
 
-Этот модуль тестирует основные функции управления симуляциями, включая запуск, создание контрольных точек
-и завершение симуляций с различными типами объектов, таких как агенты, миры и фабрики персонажей.
+Модуль тестирует следующие возможности:
+- Запуск, создание чекпоинтов и завершение симуляций с агентами.
+- Запуск, создание чекпоинтов и завершение симуляций с мирами (TinyWorld).
+- Запуск, создание чекпоинтов и завершение симуляций с фабриками агентов (TinyPersonFactory).
 
 Пример использования
 --------------------
 
-Пример запуска тестов:
+Пример запуска всех тестов:
 
-.. code-block:: python
+.. code-block:: bash
 
     pytest test_control.py
 """
 import pytest
 import os
-# from src.logger.logger import logger
-from src.logger import logger # Заменил импорт на from src.logger.logger import logger
-from src.utils.testing_utils import remove_file_if_exists
+from pathlib import Path
+
+# from src.logger import logger
+from src.logger.logger import logger  # Исправлен импорт logger
+# import sys # Удалены избыточные sys.path.append
+# sys.path.append('../../tinytroupe/')
+# sys.path.append('../../')
+# sys.path.append('..')
+
+
 from tinytroupe.examples import create_oscar_the_architect, create_lisa_the_data_scientist
 from tinytroupe.agent import TinyPerson, TinyToolUse
 from tinytroupe.environment import TinyWorld
-from tinytroupe.control import Simulation, reset, begin, checkpoint, end # Изменил импорт для явного указания используемых функций
+from tinytroupe.control import Simulation
+import tinytroupe.control as control
 from tinytroupe.factory import TinyPersonFactory
 from tinytroupe.enrichment import TinyEnricher
 from tinytroupe.extraction import ArtifactExporter
 from tinytroupe.tools import TinyWordProcessor
 
-#import importlib # Удалил неиспользуемый импорт
+import importlib
 
-def test_begin_checkpoint_end_with_agent_only(setup):
-    """
-    Тестирует запуск, создание контрольной точки и завершение симуляции с использованием агентов.
-
-    Args:
-        setup: Фикстура pytest для настройки окружения.
-    """
-    # удаление файла, если он существует
-    remove_file_if_exists('control_test.cache.json')
-
-    reset()
-
-    # проверка, что нет запущенной симуляции
-    assert control._current_simulations['default'] is None, 'Не должно быть запущенной симуляции.'
-
-    # удаление файла, если он существует
-    remove_file_if_exists('control_test.cache.json')
-
-    begin('control_test.cache.json')
-    # проверка, что симуляция запущена
-    assert control._current_simulations['default'].status == Simulation.STATUS_STARTED, 'Симуляция должна быть запущена.'
+from tests.unit.testing_utils import remove_file_if_exists, setup # исправлен импорт
 
 
+def _create_test_agents():
+    """Создаёт тестовых агентов для использования в симуляциях."""
     exporter = ArtifactExporter(base_output_folder='./synthetic_data_exports_3/')
     enricher = TinyEnricher()
     tooluse_faculty = TinyToolUse(tools=[TinyWordProcessor(exporter=exporter, enricher=enricher)])
@@ -95,134 +85,112 @@ def test_begin_checkpoint_end_with_agent_only(setup):
     agent_2.add_mental_faculties([tooluse_faculty])
     agent_2.define('age', 80)
     agent_2.define('nationality', 'Argentinian')
+    return agent_1, agent_2
 
-    # проверка, что есть кэшированный и выполняемый трейс
-    assert control._current_simulations['default'].cached_trace is not None, 'Должен быть кэшированный трейс.'
-    assert control._current_simulations['default'].execution_trace is not None, 'Должен быть выполняемый трейс.'
+def _assert_simulation_started(simulation_name: str) -> None:
+    """Проверяет, что симуляция запущена."""
+    assert control._current_simulations['default'].status == Simulation.STATUS_STARTED, "The simulation should be started at this point."
 
-    checkpoint()
+def _assert_simulation_ended(simulation_name: str) -> None:
+    """Проверяет, что симуляция остановлена."""
+    assert control._current_simulations['default'].status == Simulation.STATUS_STOPPED, "The simulation should be ended at this point."
 
-    agent_1.listen_and_act('How are you doing?')
-    agent_2.listen_and_act('What\'s up?')
+def _assert_trace_created(simulation_name: str) -> None:
+    """Проверяет, что кэш и трассировка созданы."""
+    assert control._current_simulations['default'].cached_trace is not None, "There should be a cached trace at this point."
+    assert control._current_simulations['default'].execution_trace is not None, "There should be an execution trace at this point."
 
-    # проверка, что файл был создан
-    assert os.path.exists('control_test.cache.json'), 'Файл контрольной точки должен быть создан.'
+def _assert_checkpoint_file_exists(file_path: str) -> None:
+    """Проверяет, что файл чекпоинта был создан."""
+    assert Path(file_path).exists(), "The checkpoint file should have been created."
 
-    end()
+def _begin_simulation(file_path: str) -> None:
+    """Начинает симуляцию и проверяет её статус."""
+    remove_file_if_exists(file_path) # Упрощено: вынесено за пределы функции
+    control.reset()
+    assert control._current_simulations['default'] is None, "There should be no simulation running at this point."
+    control.begin(file_path)
+    _assert_simulation_started('default')
 
-    # проверка, что симуляция остановлена
-    assert control._current_simulations['default'].status == Simulation.STATUS_STOPPED, 'Симуляция должна быть остановлена.'
+@pytest.mark.unit
+def test_begin_checkpoint_end_with_agent_only(setup):
+    """
+    Тестирует запуск, создание чекпоинта и завершение симуляции с агентами.
 
+    Проверяет корректность создания и остановки симуляции с агентами, а также создание файла чекпоинта.
+    """
+    file_path = 'control_test.cache.json'
+    _begin_simulation(file_path)
+
+    agent_1, agent_2 = _create_test_agents()
+    _assert_trace_created('default')
+    
+    control.checkpoint()
+    agent_1.listen_and_act("How are you doing?")
+    agent_2.listen_and_act("What's up?")
+    _assert_checkpoint_file_exists(file_path)
+
+    control.end()
+    _assert_simulation_ended('default')
+
+@pytest.mark.unit
 def test_begin_checkpoint_end_with_world(setup):
     """
-    Тестирует запуск, создание контрольной точки и завершение симуляции с использованием мира.
+    Тестирует запуск, создание чекпоинта и завершение симуляции с миром (TinyWorld).
 
-    Args:
-        setup: Фикстура pytest для настройки окружения.
+    Проверяет корректность создания и остановки симуляции с миром, а также создание файла чекпоинта.
     """
-    # удаление файла, если он существует
-    remove_file_if_exists('control_test_world.cache.json')
-
-    reset()
+    file_path = 'control_test_world.cache.json'
+    _begin_simulation(file_path)
     
-    # проверка, что нет запущенной симуляции
-    assert control._current_simulations['default'] is None, 'Не должно быть запущенной симуляции.'
-
-    begin('control_test_world.cache.json')
-    # проверка, что симуляция запущена
-    assert control._current_simulations['default'].status == Simulation.STATUS_STARTED, 'Симуляция должна быть запущена.'
-
-    world = TinyWorld('Test World', [create_oscar_the_architect(), create_lisa_the_data_scientist()])
-
+    world = TinyWorld("Test World", [create_oscar_the_architect(), create_lisa_the_data_scientist()])
     world.make_everyone_accessible()
-
-    # проверка, что есть кэшированный и выполняемый трейс
-    assert control._current_simulations['default'].cached_trace is not None, 'Должен быть кэшированный трейс.'
-    assert control._current_simulations['default'].execution_trace is not None, 'Должен быть выполняемый трейс.'
+    _assert_trace_created('default')
 
     world.run(2)
+    control.checkpoint()
+    _assert_checkpoint_file_exists(file_path)
+    
+    control.end()
+    _assert_simulation_ended('default')
 
-    checkpoint()
-
-    # проверка, что файл был создан
-    assert os.path.exists('control_test_world.cache.json'), 'Файл контрольной точки должен быть создан.'
-
-    end()
-
-    # проверка, что симуляция остановлена
-    assert control._current_simulations['default'].status == Simulation.STATUS_STOPPED, 'Симуляция должна быть остановлена.'
-
-
+@pytest.mark.unit
 def test_begin_checkpoint_end_with_factory(setup):
     """
-    Тестирует запуск, создание контрольной точки и завершение симуляции с использованием фабрики персонажей.
+    Тестирует запуск, создание чекпоинта и завершение симуляции с фабрикой агентов (TinyPersonFactory).
 
-    Args:
-        setup: Фикстура pytest для настройки окружения.
+    Проверяет корректность создания и остановки симуляции с использованием фабрики агентов,
+    а также сохранение свойств агентов между симуляциями.
     """
-    # удаление файла, если он существует
-    remove_file_if_exists('control_test_personfactory.cache.json')
-
+    file_path = 'control_test_personfactory.cache.json'
     def aux_simulation_to_repeat(iteration, verbose=False):
-        """
-        Вспомогательная функция для повторения симуляции.
-
-        Args:
-            iteration (int): Номер итерации.
-            verbose (bool): Флаг для включения подробного вывода.
-
-        Returns:
-            TinyPerson: Сгенерированный агент.
-        """
-        reset()
-    
-        # проверка, что нет запущенной симуляции
-        assert control._current_simulations['default'] is None, 'Не должно быть запущенной симуляции.'
-
-        begin('control_test_personfactory.cache.json')
-        # проверка, что симуляция запущена
-        assert control._current_simulations['default'].status == Simulation.STATUS_STARTED, 'Симуляция должна быть запущена.'
+        """Вспомогательная функция для повторения симуляции."""
+        _begin_simulation(file_path)
         
-        factory = TinyPersonFactory('We are interested in experts in the production of the traditional Gazpacho soup.')
+        factory = TinyPersonFactory("We are interested in experts in the production of the traditional Gazpacho soup.")
+        _assert_trace_created('default')
 
-        # проверка, что есть кэшированный и выполняемый трейс
-        assert control._current_simulations['default'].cached_trace is not None, 'Должен быть кэшированный трейс.'
-        assert control._current_simulations['default'].execution_trace is not None, 'Должен быть выполняемый трейс.'
+        agent = factory.generate_person("A Brazilian tourist who learned about Gazpaccho in a trip to Spain.")
 
-        agent = factory.generate_person('A Brazilian tourist who learned about Gazpaccho in a trip to Spain.')
-
-        # проверка, что есть кэшированный и выполняемый трейс
-        assert control._current_simulations['default'].cached_trace is not None, 'Должен быть кэшированный трейс.'
-        assert control._current_simulations['default'].execution_trace is not None, 'Должен быть выполняемый трейс.'
-
-        checkpoint()
-
-        # проверка, что файл был создан
-        assert os.path.exists('control_test_personfactory.cache.json'), 'Файл контрольной точки должен быть создан.'
-
-        end()
-        # проверка, что симуляция остановлена
-        assert control._current_simulations['default'].status == Simulation.STATUS_STOPPED, 'Симуляция должна быть остановлена.'
+        _assert_trace_created('default')
+        control.checkpoint()
+        _assert_checkpoint_file_exists(file_path)
+        control.end()
+        _assert_simulation_ended('default')
 
         if verbose:
-            logger.debug(f'###################################################################################### Sim Iteration:{iteration}')
-            logger.debug(f'###################################################################################### Agent configs:{agent._configuration}')
-
+            logger.debug(f"###################################################################################### Sim Iteration:{iteration}")
+            logger.debug(f"###################################################################################### Agent configs:{agent._configuration}")
         return agent
 
-
-    # ПЕРВАЯ симуляция ########################################################
+    # FIRST simulation ########################################################
     agent_1 = aux_simulation_to_repeat(1, verbose=True)
-    age_1 = agent_1.get('age')
-    nationality_1 = agent_1.get('nationality')
-
-
-    # ВТОРАЯ симуляция ########################################################
-    logger.debug('>>>>>>>>>>>>>>>>>>>>>>>>>> Second simulation...')
+    age_1 = agent_1.get("age")
+    nationality_1 = agent_1.get("nationality")
+    # SECOND simulation ########################################################
+    logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Second simulation...")
     agent_2 = aux_simulation_to_repeat(2, verbose=True)
-    age_2 = agent_2.get('age')
-    nationality_2 = agent_2.get('nationality')
-
-    # проверка, что возраст и национальность одинаковы в обеих симуляциях
-    assert age_1 == age_2, 'Возраст должен быть одинаковым в обеих симуляциях.'
-    assert nationality_1 == nationality_2, 'Национальность должна быть одинаковой в обеих симуляциях.'
+    age_2 = agent_2.get("age")
+    nationality_2 = agent_2.get("nationality")
+    assert age_1 == age_2, "The age should be the same in both simulations."
+    assert nationality_1 == nationality_2, "The nationality should be the same in both simulations."

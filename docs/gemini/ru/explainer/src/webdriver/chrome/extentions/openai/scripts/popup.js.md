@@ -1,147 +1,160 @@
-## <алгоритм>
+## АНАЛИЗ КОДА:
 
-1. **Инициализация Angular приложения:**
-   - Создается Angular модуль `openaiApp`.
-   - Пример: `const app = angular.module('openaiApp', []);`
-2. **Создание контроллера `MainController`:**
-   - Контроллер управляет данными и логикой представления.
-   - Инициализируются переменные `$scope.message`, `$scope.response`, `$scope.assistants`, `$scope.selectedAssistant`.
-   - Пример:
-     ```javascript
-     app.controller('MainController', function ($scope, $http) {
-        $scope.message = '';
-        $scope.response = '';
-        $scope.assistants = [];
-        $scope.selectedAssistant = null;
-     });
-     ```
+### 1. <алгоритм>
+
+**Блок-схема:**
+
+1. **Инициализация приложения:**
+   - `angular.module('openaiApp', [])`: Создание Angular приложения с именем `openaiApp`.
+   - **Пример:** Приложение готово к работе.
+
+2.  **Инициализация контроллера `MainController`:**
+   -  `app.controller('MainController', function ($scope, $http) { ... })`: Создание контроллера с зависимостями `$scope` и `$http`.
+        - **Пример**: Контроллер устанавливает начальные значения для  `$scope.message = '';`, `$scope.response = '';`, `$scope.assistants = [];`, `$scope.selectedAssistant = null;`
+
 3. **Функция `loadAssistants`:**
-   - Выполняет GET-запрос к `/assistants` на сервере `http://localhost:8000` для получения списка ассистентов.
-   - В случае успеха, список ассистентов сохраняется в `$scope.assistants`.
-   - В случае ошибки, сообщение об ошибке выводится в консоль.
-   - Пример:
-     - Запрос: `GET http://localhost:8000/assistants`
-     - Успешный ответ: `response.data` содержит список ассистентов. `$scope.assistants = response.data;`
-     - Неуспешный ответ: Вывод ошибки в консоль.
-4. **Вызов `loadAssistants` при инициализации:**
-    -  Автоматически загружает список ассистентов при запуске контроллера.
-5. **Функция `$scope.sendMessage`:**
-   - Отправляет POST-запрос на сервер `/ask` с сообщением пользователя, системными инструкциями и ID выбранного ассистента.
-   - Данные для отправки:
-        - `message`: Сообщение пользователя (`$scope.message`).
-        - `system_instruction`:  "You are a helpful assistant.".
-        - `assistant_id`: ID выбранного ассистента (`$scope.selectedAssistant.id`).
-   - При успешном ответе, ответ от сервера сохраняется в `$scope.response`.
-   - При ошибке, сообщение об ошибке выводится в консоль, и `$scope.response` получает значение "Произошла ошибка. Попробуйте позже.".
-   - Пример:
-     - Запрос: `POST http://localhost:8000/ask`, payload: `{message: "Hello", system_instruction: "...", assistant_id: "asst_123"}`
-     - Успешный ответ: `response.data.response` содержит ответ ассистента. `$scope.response = response.data.response;`
-     - Неуспешный ответ: Вывод ошибки в консоль, `$scope.response` = "Произошла ошибка. Попробуйте позже.".
+   -  `function loadAssistants()`:
+     -  `url = 'http://localhost:8000/assistants'`: Формируется URL для запроса списка ассистентов.
+        -   **Пример:** URL  `'http://localhost:8000/assistants'`
+     - `alert("ASST")`: Выводится сообщение `ASST`
+     - `$http.get(url)`: Отправляется GET-запрос на сервер.
+        -   **Пример:** Сервер возвращает JSON с данными ассистентов: `[{id: 1, name: "Assistant 1"}, {id: 2, name: "Assistant 2"}]`.
+     -   `.then(function (response) { ... })`: В случае успешного запроса:
+         -   `$scope.assistants = response.data`:  Данные об ассистентах сохраняются в `$scope.assistants`.
+           -   **Пример:** `$scope.assistants`  становится `[{id: 1, name: "Assistant 1"}, {id: 2, name: "Assistant 2"}]`.
+     -   `.catch(function (error) { ... })`: В случае ошибки:
+        -   `console.error('Ошибка загрузки ассистентов:', error)`: Выводится сообщение об ошибке в консоль.
+           -   **Пример:** Выводится сообщение об ошибке `Network error` в консоль.
 
-## <mermaid>
+4. **Вызов `loadAssistants` при инициализации контроллера:**
+   -  `loadAssistants()`: Функция вызывается для загрузки ассистентов при загрузке страницы.
+        -  **Пример:** Список ассистентов автоматически загружается при инициализации приложения.
+
+5. **Функция `sendMessage`:**
+   -  `$scope.sendMessage = function () { ... }`:
+     -  `url = 'http://localhost:8000/ask'`: URL для отправки сообщения.
+        -   **Пример:** URL  `'http://localhost:8000/ask'`
+     -  `data = { message: $scope.message, system_instruction: "You are a helpful assistant.", assistant_id: $scope.selectedAssistant.id }`:  Формируются данные для отправки на сервер.
+         -   **Пример:**  `$scope.message = "Hello", $scope.selectedAssistant.id = 1`,  `data` становится `{ message: "Hello", system_instruction: "You are a helpful assistant.", assistant_id: 1 }`.
+     -  `$http.post(url, data)`: Отправляется POST-запрос с данными на сервер.
+        -   **Пример:** Сервер возвращает JSON с ответом: `{response: "Hi there!"}`.
+     -   `.then(function (response) { ... })`: В случае успешного запроса:
+         -   `$scope.response = response.data.response`:  Ответ сервера сохраняется в `$scope.response`.
+           -   **Пример:**  `$scope.response` становится  `"Hi there!"`.
+     -  `.catch(function (error) { ... })`: В случае ошибки:
+        -   `console.error('Ошибка:', error)`: Выводится сообщение об ошибке в консоль.
+        -   `$scope.response = 'Произошла ошибка. Попробуйте позже.'`: В `$scope.response` записывается сообщение об ошибке.
+           -   **Пример:**  Выводится сообщение об ошибке `Network error` в консоль и `$scope.response` становится `"Произошла ошибка. Попробуйте позже."`.
+
+**Поток данных:**
+
+- Пользователь вводит сообщение в поле ввода.
+- Пользователь выбирает ассистента из списка.
+- По нажатию на кнопку `sendMessage` сообщение, системные инструкции и ID выбранного ассистента отправляются на сервер (`http://localhost:8000/ask`).
+- Сервер обрабатывает сообщение и возвращает ответ.
+- Ответ отображается в области ответа на странице.
+- Список ассистентов загружается с сервера при инициализации контроллера.
+- Ошибки отображаются в консоли и в поле ответа.
+
+### 2. <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Начало работы скрипта popup.js] --> InitAngular[Инициализация Angular app: <br><code>angular.module('openaiApp', [])</code>]
-    InitAngular --> MainController[Создание контроллера: <br><code>app.controller('MainController', ...)</code>]
-    MainController --> ScopeVars[Инициализация переменных scope: <br><code>$scope.message, $scope.response, <br> $scope.assistants, $scope.selectedAssistant</code>]
-    ScopeVars --> LoadAssistantsFunc[Объявление функции loadAssistants]
-    LoadAssistantsFunc --> HttpGetAssistants[GET запрос: <br><code>$http.get('http://localhost:8000/assistants')</code>]
-    HttpGetAssistants --> SuccessAssistants[Успешный ответ: <br><code>$scope.assistants = response.data</code>]
-    HttpGetAssistants --> ErrorAssistants[Неуспешный ответ: <br><code>console.error('Ошибка загрузки ассистентов:', error)</code>]
-     ErrorAssistants --> LoadAssistantsFunc
-    SuccessAssistants --> LoadAssistantsCall[Вызов <code>loadAssistants()</code> при инициализации]
-    LoadAssistantsCall --> SendMessageFunc[Объявление функции sendMessage]
-    SendMessageFunc --> HttpRequest[POST запрос: <br><code>$http.post('http://localhost:8000/ask', data)</code>]
-    HttpRequest --> SuccessMessage[Успешный ответ: <br><code>$scope.response = response.data.response</code>]
-    HttpRequest --> ErrorMessage[Неуспешный ответ: <br><code>console.error('Ошибка:', error)</code> <br><code>$scope.response = 'Произошла ошибка. Попробуйте позже.'</code>]
-    ErrorMessage --> SendMessageFunc
-    SuccessMessage --> End[Конец работы скрипта]
-    SuccessAssistants --> End
+    subgraph Angular App
+        A[Start: Initialize Angular App] --> B(MainController);
+        B --> C{loadAssistants()};
+        C -- GET /assistants --> D[Server: Get Assistants];
+        D -- Response: Assistants Data --> E(Update $scope.assistants);
+        B --> F{sendMessage()};
+        F -- POST /ask --> G[Server: Send Message];
+        G -- Response: Message Response --> H(Update $scope.response);
+    end
+    E --> I[Render: Update View]
+    H --> I
 ```
 
-## <объяснение>
+**Объяснение:**
 
-### Импорты:
--   В данном коде отсутствуют явные импорты, так как он написан на JavaScript и использует глобальный объект `angular` и `http`. Тем не менее, неявно используется библиотека Angular, которая предоставляет `angular.module` и контроллер `app.controller`, а также сервис `$http` для выполнения HTTP-запросов.
--   `angular` является фреймворком для создания веб-приложений. `angular.module` создает новое приложение и возвращает модуль.
--   `$http` — это Angular-сервис для выполнения HTTP-запросов к серверу.
--   Использование этих библиотек обеспечивает взаимодействие с бэкендом.
+*   **`flowchart TD`**:  Определяет тип диаграммы как направленный граф (flowchart) с направлением слева направо (TD).
+*   **`subgraph Angular App`**:  Группирует все элементы, связанные с Angular приложением, в один блок.
+    *   **`A[Start: Initialize Angular App]`**: Начальный узел, представляющий инициализацию Angular приложения.
+    *   **`B(MainController)`**: Контроллер `MainController`, где происходит основная логика.
+    *   **`C{loadAssistants()}`**: Вызов функции `loadAssistants` для загрузки ассистентов.
+    *   **`D[Server: Get Assistants]`**: Серверная часть, обрабатывающая GET-запрос на получение списка ассистентов.
+    *   **`E(Update $scope.assistants)`**: Обновление списка ассистентов в области видимости `$scope.assistants`.
+    *   **`F{sendMessage()}`**:  Вызов функции `sendMessage` для отправки сообщения.
+    *   **`G[Server: Send Message]`**:  Серверная часть, обрабатывающая POST-запрос с сообщением пользователя.
+    *   **`H(Update $scope.response)`**: Обновление ответа сервера в области видимости `$scope.response`.
+*  **`E --> I[Render: Update View]`**: После обновления данных, вызывается механизм рендеринга `Render: Update View` для обновления отображения пользовательского интерфейса.
+*  **`H --> I`**: Также после обновления `scope.response`, вызывается рендеринг для отображения ответа на странице.
+*   **`-->`**:  Обозначает поток данных между узлами.
+*   **`-- GET /assistants -->`**:  Обозначает тип HTTP-запроса (GET) и URL `/assistants`.
+*  **`-- POST /ask -->`**:  Обозначает тип HTTP-запроса (POST) и URL `/ask`.
+*   **`Response: Assistants Data`**:  Метка для данных, которые передаются между узлами.
+*   **`Response: Message Response`**:  Метка для данных, которые передаются между узлами.
 
-### Классы:
--   В этом коде нет классов, используется функциональный подход для определения контроллера.
+### 3. <объяснение>
 
-### Функции:
--   `loadAssistants()`:
+**Импорты:**
+-  `angular`:  Фреймворк AngularJS, используемый для создания веб-приложения. Этот код не содержит явных импортов, а использует `angular` как глобальный объект, предполагается что библиотека AngularJS подключена к HTML странице через `<script>`.
+- `$scope`: сервис AngularJS, предоставляемый фреймворком для управления данными в контроллере и их отображением в шаблоне.
+- `$http`: сервис AngularJS, который используется для выполнения HTTP запросов (GET, POST и т.д.) на сервер.
+
+**Классы:**
+-  В коде не используются классы,  вся логика реализована в контроллере Angular  `MainController`.
+
+**Функции:**
+
+1.  `loadAssistants()`:
     -   **Аргументы:** Нет.
     -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Выполняет GET-запрос к серверу для получения списка доступных ассистентов. Заполняет `$scope.assistants` полученными данными.
+    -   **Назначение:** Выполняет GET-запрос на сервер по адресу `http://localhost:8000/assistants`, чтобы получить список ассистентов.
+        -   В случае успеха, сохраняет полученные данные в `$scope.assistants`.
+        -   В случае ошибки, выводит сообщение об ошибке в консоль.
     -   **Пример:**
-        ```javascript
-        function loadAssistants() {
-            const url = 'http://localhost:8000/assistants';
-            $http.get(url)
-                .then(function (response) {
-                    $scope.assistants = response.data;
-                })
-                .catch(function (error) {
-                    console.error('Ошибка загрузки ассистентов:', error);
-                });
-        }
-        ```
--   `$scope.sendMessage()`:
+        -   Вызов функции: `loadAssistants()`.
+        -   Результат: `$scope.assistants`  обновляется массивом объектов, где каждый объект содержит информацию об ассистенте (например, `[{id: 1, name: "Assistant 1"}, {id: 2, name: "Assistant 2"}]`).
+
+2.  `$scope.sendMessage()`:
     -   **Аргументы:** Нет.
     -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Отправляет POST-запрос на сервер с сообщением пользователя, системными инструкциями и ID выбранного ассистента. Заполняет `$scope.response` ответом от сервера.
+    -   **Назначение:** Отправляет POST-запрос на сервер по адресу `http://localhost:8000/ask` с сообщением пользователя, системными инструкциями и ID выбранного ассистента.
+        -   В случае успеха, сохраняет ответ от сервера в `$scope.response`.
+        -   В случае ошибки, выводит сообщение об ошибке в консоль и устанавливает `$scope.response` на сообщение об ошибке.
     -   **Пример:**
-        ```javascript
-        $scope.sendMessage = function () {
-            const url = 'http://localhost:8000/ask';
-            const data = {
-                message: $scope.message,
-                system_instruction: "You are a helpful assistant.",
-                assistant_id: $scope.selectedAssistant.id
-            };
-            $http.post(url, data)
-                .then(function (response) {
-                    $scope.response = response.data.response;
-                })
-                .catch(function (error) {
-                    console.error('Ошибка:', error);
-                    $scope.response = 'Произошла ошибка. Попробуйте позже.';
-                });
-        };
-        ```
+        -   Вызов функции: `$scope.sendMessage()`.
+        -   Исходные данные: `$scope.message = "Hello", $scope.selectedAssistant = { id: 1 }`.
+        -   Результат: `$scope.response` обновляется ответом от сервера (например, `"Hi there!"`)
 
-### Переменные:
--   `app`: Объект Angular, представляющий приложение `openaiApp`.
--   `$scope`: Angular-объект, который обеспечивает двустороннюю привязку данных между представлением и контроллером.
-    -   `$scope.message`:  Текст сообщения, введенный пользователем (строка).
-    -   `$scope.response`: Ответ от сервера (строка).
-    -   `$scope.assistants`: Массив объектов, представляющих ассистентов (массив объектов).
-    -   `$scope.selectedAssistant`: Выбранный ассистент (объект).
--   `$http`: Angular-сервис для выполнения HTTP-запросов.
--   `url`: URL-адрес для отправки HTTP-запроса (строка).
--   `data`: Объект, содержащий данные для POST-запроса (объект).
--   `response`: Объект, представляющий HTTP-ответ от сервера (объект).
--   `error`: Объект, содержащий информацию об ошибке (объект).
+**Переменные:**
+-  `app`:  Переменная, представляющая Angular приложение. Тип - объект.
+- `$scope.message`:  Строка, содержащая сообщение пользователя.
+- `$scope.response`:  Строка, содержащая ответ от сервера.
+- `$scope.assistants`: Массив объектов, содержащий список доступных ассистентов.
+- `$scope.selectedAssistant`: Объект, содержащий информацию о выбранном ассистенте.
+- `url`: Строка, содержащая URL для запроса к серверу.
+- `data`: Объект, содержащий данные для отправки на сервер (сообщение, системные инструкции, ID ассистента).
+- `response`: Объект, содержащий ответ от сервера.
+- `error`: Объект, содержащий информацию об ошибке, если она произошла.
 
-### Потенциальные ошибки и области для улучшения:
--   **Обработка ошибок:** Обработка ошибок ограничена выводом в консоль и отображением общего сообщения об ошибке. Следует добавить более детальную обработку ошибок, включая отображение конкретных сообщений для пользователя.
--   **Валидация данных:** Отсутствует валидация данных, отправляемых на сервер, что может привести к нежелательным результатам. Следует добавить валидацию `$scope.message` и `$scope.selectedAssistant`.
--   **Управление состоянием загрузки:** При загрузке данных (ассистентов и ответов) не отображается индикатор загрузки, что может сбить пользователя с толку. Следует добавить индикаторы загрузки.
--   **Улучшение UX:** Интерфейс пользователя может быть улучшен с использованием Angular-компонентов и директив.
--   **Безопасность**: В коде используется `http`, а не `https` для запросов, что делает его небезопасным. Рекомендуется использовать `https`.
+**Потенциальные ошибки и области для улучшения:**
 
-### Взаимосвязь с другими частями проекта:
--   Данный код предназначен для взаимодействия с бэкенд-сервером, который обрабатывает запросы к моделям OpenAI. Он отправляет запросы на эндпоинты `/assistants` и `/ask` на сервере `http://localhost:8000`.
--   Предполагается, что на сервере реализована логика для работы с API OpenAI и обработки запросов.
--   Этот скрипт является частью интерфейса пользователя (popup) и является клиентом для бэкенд-сервиса.
+*   **Обработка ошибок:**
+    *  Ошибка  `alert("ASST")` - нужно убрать.
+    *  Обработка ошибок `$http` выполняется минимально.  Нужно улучшить логику обработки ошибок с помощью `try...catch` или других механизмов.
+*   **Безопасность:**
+    *   URL сервера (`http://localhost:8000`) жестко задан. Необходимо вынести в конфигурацию.
+    *   Нет проверки ввода от пользователя.
+*   **Улучшение:**
+    *   Логику запросов вынести в отдельные сервисы.
+    *   Добавить индикатор загрузки во время отправки запроса.
+    *   Улучшить пользовательский интерфейс с использованием шаблонов и CSS.
+    *  Обработка ситуации, когда ассистент не выбран.
 
-```mermaid
-flowchart TD
-    Start[popup.js] --> API[API Endpoints <br><code>http://localhost:8000/assistants</code> <br><code>http://localhost:8000/ask</code>]
-    API --> Backend[Backend Сервер<br>(FastAPI/Python)]
-    Backend --> OpenAI[OpenAI API]
-    OpenAI --> Backend
-    Backend --> Start
+**Цепочка взаимосвязей с другими частями проекта:**
+
+*   **`src/webdriver/chrome/extentions/openai/scripts/popup.html`**: HTML файл, использующий  данный `popup.js`  для отображения пользовательского интерфейса и управления им.
+*   **`src/api/main.py`** FastAPI  сервер, к которому отправляются запросы ( `http://localhost:8000/ask` и  `http://localhost:8000/assistants` ).
+*  **`src/api/openai_request.py`** Python модуль, взаимодействующий с OpenAI API.
+
+Этот код является частью веб-расширения для браузера, который взаимодействует с FastAPI-сервером и OpenAI API. `popup.js`  содержит логику для отображения списка ассистентов, отправки сообщений и отображения ответов.

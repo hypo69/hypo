@@ -1,255 +1,192 @@
 ## <алгоритм>
 
 1.  **`get_list_products_in_category(s)`**:
-    *   Принимает экземпляр поставщика `s`.
-    *   Вызывает `get_prod_urls_from_pagination(s)` для получения списка URL товаров.
+    *   Принимает объект поставщика `s`.
+    *   Вызывает `get_prod_urls_from_pagination(s)` для сбора URL товаров.
     *   Возвращает список URL товаров.
-
-    Пример:
-    `s` = экземпляр `Supplier`
-    `get_list_products_in_category(s)`  ->  `get_prod_urls_from_pagination(s)` -> `['url1', 'url2', 'url3']`
-
+    *   **Пример**: Если поставщик `s` настроен на категорию "Электроника", то функция вернет список URL товаров, найденных на страницах этой категории.
 2.  **`get_prod_urls_from_pagination(s)`**:
-    *   Принимает экземпляр поставщика `s`.
-    *   Извлекает драйвер `_d` и локаторы `_l` из `s`.
-    *   Использует `_d.execute_locator(_l)` для получения списка URL товаров со страницы.
-    *   Если список пуст, возвращает пустой список.
-    *   В цикле:
-        *   Проверяет наличие кнопки "следующая страница" с помощью `_d.execute_locator(s.locators['category']['pagination']['->'])`.
+    *   Принимает объект поставщика `s`.
+    *   Инициализирует драйвер браузера (`_d`) и локатор ссылок на товары (`_l`) из `s`.
+    *   Выполняет локатор `_l` для получения начального списка товаров (`list_products_in_category`).
+    *   Если список товаров пуст, возвращает пустой список.
+    *   Запускает цикл `while True`, пока находит кнопку пагинации "следующая страница":
+        *   Проверяет, есть ли кнопка "следующая страница", используя локатор `s.locators['category']['pagination']['->']`.
         *   Если кнопки нет, выходит из цикла.
-        *   Если кнопка есть, добавляет URL товаров со следующей страницы в общий список.
+        *   Если есть, добавляет новые URL товаров со страницы в `list_products_in_category`.
     *   Возвращает список URL товаров.
-
-    Пример:
-    `s` = экземпляр `Supplier`
-    Начальная страница: `['url1', 'url2']`
-    Кнопка "следующая страница" есть
-    Следующая страница: `['url3', 'url4']`
-    Результат: `['url1', 'url2', 'url3', 'url4']`
-
+    *   **Пример**: Для категории "Одежда" собирает ссылки на товары, переходя по страницам пагинации, пока не достигнет последней страницы.
 3.  **`update_categories_in_scenario_file(s, scenario_filename)`**:
-    *   Принимает экземпляр поставщика `s` и имя файла сценария `scenario_filename`.
-    *   Загружает JSON из файла сценария.
+    *   Принимает объект поставщика `s` и имя файла сценария `scenario_filename`.
+    *   Загружает JSON-файл сценария из `gs.dir_scenarios`.
     *   Извлекает список категорий из файла сценария (`scenarios_in_file`).
-    *   Получает список категорий с сайта (`categoris_on_site`).
-    *   Обновляет `all_ids_in_file` из сценария:
-        *   Извлекает 'category ID on site' или генерирует его из URL, если отсутствует.
-    *   Загружает JSON категорий магазина с сайта.
-    *   Сравнивает идентификаторы категорий из файла и с сайта:
-        *   Создает `all_ids_on_site` и `all_categories_on_site` из JSON с сайта.
-        *   Находит `removed_categories` (категории из файла, которых нет на сайте).
-        *   Находит `added_categories` (категории с сайта, которых нет в файле).
-    *   Если есть `added_categories`:
-        *   Добавляет новые категории в файл сценария.
-        *   Отправляет уведомление о добавлении категорий.
-    *   Если есть `removed_categories`:
-        *   Отключает удаленные категории в файле сценария.
-        *   Отправляет уведомление об отключении категорий.
-    *   Возвращает `True`.
-
-    Пример:
-    `scenario_filename` = "example.json"
-    Файл: `{'scenarios': {'cat1': {'category ID on site': 101}, 'cat2': {'category ID on site': 102}}, 'store': {'shop categories json file': 'url'}}`
-    С сайта: `{'groups': [{'groupId': 101, 'subGroupList': []}, {'groupId': 103, 'subGroupList': []}]}`
-    Результат: `removed_categories = [102], added_categories = [103]`
-
-4.  **`get_list_categories_from_site(s, scenario_file, brand)`**:
-    *   Принимает экземпляр поставщика `s`, имя файла сценария `scenario_file` и бренд `brand`.
-    *   Загружает JSON из файла сценария.
-    *   Переходит на страницу категорий магазина.
-    *   Возвращает список категорий
-
-    Пример:
-    `s` = экземпляр `Supplier`,
-    `scenario_file` = `example.json`,
-    `brand` = ""
-    Загружает `example.json`
-    Переходит на `scenario_json['store']['shop categories page']`
-
+    *   Вызывает `get_list_categories_from_site()` для получения списка категорий с сайта (`categoris_on_site`).
+    *   Определяет все `all_ids_in_file` из `scenario_json`
+    *   Получает `categories_from_aliexpress_shop_json` с сайта.
+    *   Формирует списки `all_ids_on_site` и `all_categories_on_site` из JSON категорий сайта.
+    *   Определяет `removed_categories` (категории, удаленные с сайта) и `added_categories` (категории, добавленные на сайт) на основе сравнения списков.
+    *   Если есть добавленные категории (`added_categories`):
+        *   Добавляет информацию о новых категориях в `scenario_json`.
+        *   Сохраняет обновленный `scenario_json` в файл.
+        *   Отправляет уведомление об этом.
+    *   Если есть удаленные категории (`removed_categories`):
+        *   Помечает категории как неактивные в `scenario_json`.
+        *   Сохраняет обновленный `scenario_json` в файл.
+        *   Отправляет уведомление об этом.
+    *   Возвращает `True` по завершении.
+    *   **Пример**: Для сценария "Электроника.json" проверяет, какие категории изменились на сайте, и обновляет файл, отправляя уведомления.
+4. **`get_list_categories_from_site(s,scenario_file,brand='')`**:
+    *   Принимает объект поставщика `s`, имя файла сценария `scenario_file` и необязательный параметр `brand`.
+    *   Загружает JSON-файл сценария из `gs.dir_scenarios`.
+    *   Инициализирует драйвер браузера `_d`.
+    *   Переходит на страницу категорий магазина, указанную в файле сценария.
+    *   Дальнейшая реализация не представлена (`...`).
+    *   **Пример**: Для сценария "Одежда.json" открывает страницу с категориями сайта в браузере.
 5.  **`DBAdaptor`**:
-    *   Содержит методы для взаимодействия с базой данных через `CategoryManager`.
-    *   `select()`: Пример запроса на выборку записей.
-    *   `insert()`: Пример вставки новой записи.
-    *   `update()`: Пример обновления записи.
-    *   `delete()`: Пример удаления записи.
-
-    Пример:
-    `DBAdaptor.insert()` -> `manager.insert_record(AliexpressCategory, fields)`
+    *   Предоставляет методы для работы с базой данных, используя `CategoryManager` и модель `AliexpressCategory`.
+    *   `select()`: Выбирает записи из таблицы `AliexpressCategory`.
+    *   `insert()`: Вставляет новую запись в таблицу `AliexpressCategory`.
+    *   `update()`: Обновляет запись в таблице `AliexpressCategory`.
+    *   `delete()`: Удаляет запись из таблицы `AliexpressCategory`.
+    *   **Пример**: `DBAdaptor.insert()` добавит новую категорию "New Category" в базу данных.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph get_list_products_in_category
-        A[Start: get_list_products_in_category(s)] --> B{Call get_prod_urls_from_pagination(s)};
-        B --> C[Return product URLs];
-        C --> D[End: Return list of product URLs];
-    end
-
-    subgraph get_prod_urls_from_pagination
-    
-        E[Start: get_prod_urls_from_pagination(s)] --> F[Extract driver(_d) and locators(_l) from s];
-        F --> G{Execute locator (_d.execute_locator(_l))};
-        G --> H{Is result empty?};
-        H -- Yes --> I[Return empty list];
-        H -- No --> J[While loop: pagination check];
-        J --> K{Check for next page button: _d.execute_locator(s.locators['category']['pagination']['->'])};
-        K -- No --> L[Break loop];
-        K -- Yes --> M{Extend product URL list:  list_products_in_category.extend(_d.execute_locator(_l))};
-        M --> J;
-        L --> N[Return product URLs];
-        N --> O[End: Return list of product URLs];
-    end
-
-     subgraph update_categories_in_scenario_file
-        P[Start: update_categories_in_scenario_file(s, scenario_filename)] --> Q[Load scenario JSON];
-        Q --> R[Get categories from file];
-        R --> S[Get categories from site];
-        S --> T[Update IDs in file];
-         T --> U[Load shop categories JSON from site];
-         U --> V{Compare file IDs and site IDs};
-         V --> W{Find added categories};
-         W --> X{Find removed categories};
-         X --> Y{If Added categories: Update File and send msg};
-         Y --> Z{If Removed categories: Update File and send msg};
-         Z --> AA[Return True];
-        AA --> BB[End: Function execution complete];
-
-     end
-
-    subgraph get_list_categories_from_site
-        CC[Start: get_list_categories_from_site(s,scenario_file,brand)] --> DD[Load scenario JSON]
-        DD --> EE[Go to shop categories page]
-        EE --> FF[Return list of categories]
-        FF --> GG[End: Return list categories];
-    end
-
- subgraph DBAdaptor
-    HH[Start: DBAdaptor operations] --> II[select()]
-    II --> JJ[manager.select_record()]
-     HH --> KK[insert()]
-    KK --> LL[manager.insert_record()]
-     HH --> MM[update()]
-    MM --> NN[manager.update_record()]
-     HH --> OO[delete()]
-    OO --> PP[manager.delete_record()]
-   PP --> QQ[End: DB operations complete];
-
-end
-
-
-    classDef green fill:#90EE90,stroke:#333,stroke-width:2px
-    class A,E,P,CC,HH green
-     class D,O,BB,GG,QQ green
+    Start[Start] --> get_products[<code>get_list_products_in_category(s)</code><br>Get Products]
+    get_products --> get_urls[<code>get_prod_urls_from_pagination(s)</code><br>Get Product URLs with Pagination]
+    get_urls --> Check_empty_list{Is List Empty?}
+    Check_empty_list -- Yes --> Return_empty_list[Return Empty List]
+    Check_empty_list -- No --> While_loop{While Pagination Exists}
+    While_loop -- Yes --> Execute_locator[<code>_d.execute_locator(_l)</code><br>Execute Locator to collect new URLs]
+    Execute_locator --> While_loop
+    While_loop -- No --> Return_list[Return List of URLs]
+    Return_list --> End_get_products[End]
+    Return_empty_list --> End_get_products
+    End_get_products --> update_categories[<code>update_categories_in_scenario_file(s, scenario_filename)</code><br>Update Categories in Scenario File]
+    update_categories --> load_scenario[Load Scenario JSON]
+    load_scenario --> get_categories_site[<code>get_list_categories_from_site()</code><br>Get Categories From Site]
+    get_categories_site --> get_categories_json[Get JSON from site]
+    get_categories_json -->  extract_ids_from_scenario_file[Extract IDs from scenario file]
+    extract_ids_from_scenario_file -->  compare_categories[Compare categories between site and file]
+    compare_categories --> check_added{Check Added Categories}
+    check_added -- Yes --> update_file_added[Update JSON with added categories and send message]
+    update_file_added --> check_removed{Check Removed Categories}
+    check_added -- No --> check_removed
+    check_removed -- Yes --> update_file_removed[Update JSON with removed categories and send message]
+    update_file_removed --> return_true[Return True]
+    check_removed -- No --> return_true
+    return_true --> End_update_categories[End]
+    End_update_categories --> DB_Adaptor_Start[Start DBAdaptor]
+    DB_Adaptor_Start --> select_op[<code>select()</code><br>Select Operation]
+     DB_Adaptor_Start --> insert_op[<code>insert()</code><br>Insert Operation]
+    DB_Adaptor_Start --> update_op[<code>update()</code><br>Update Operation]
+    DB_Adaptor_Start --> delete_op[<code>delete()</code><br>Delete Operation]
 ```
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-**Анализ зависимостей `mermaid`:**
-
-*   `get_list_products_in_category`: Вызывает `get_prod_urls_from_pagination`.
-*   `get_prod_urls_from_pagination`: Использует `_d.execute_locator` для навигации по страницам и сбора URL.
-*   `update_categories_in_scenario_file`: Загружает JSON, сравнивает данные, обновляет файл и отправляет уведомления.
-*    `get_list_categories_from_site`: Загружает JSON и переходит по ссылке.
-*   `DBAdaptor`: Использует `CategoryManager` для взаимодействия с базой данных.
-
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+```
 ## <объяснение>
 
 ### Импорты:
 
-*   `from typing import Union`: Используется для аннотации типов, позволяя указывать, что переменная может принимать значение одного из нескольких типов. В данном коде не используется.
-*   `from pathlib import Path`:  Предоставляет класс `Path` для работы с путями к файлам и директориям.
-*   `from src import gs`: Импортирует глобальные настройки из модуля `src.gs`. `gs` содержит общие настройки проекта, такие как пути к директориям и учетные данные для базы данных.
-*   `from src.utils.jjson import j_dumps, j_loads`: Импортирует функции для работы с JSON: `j_dumps` для сериализации объектов в JSON, `j_loads` для десериализации JSON в объекты.
-*   `from src.logger.logger import logger`: Импортирует объект `logger` для записи сообщений в лог.
-*   `from src.db.manager_categories.suppliers_categories import CategoryManager, AliexpressCategory`: Импортирует `CategoryManager` для работы с категориями в базе данных и `AliexpressCategory` как модель для таблицы категорий aliexpress.
-*   `import requests`: Импортирует библиотеку requests для выполнения HTTP-запросов.
+*   `from typing import Union`: Импортирует `Union` для определения типов, допускающих несколько вариантов.
+*   `from pathlib import Path`: Импортирует `Path` для работы с путями к файлам в разных ОС.
+*   `from src import gs`: Импортирует глобальные настройки проекта из модуля `src.gs`.
+*   `from src.utils.jjson import j_dumps, j_loads`: Импортирует функции `j_dumps` и `j_loads` для работы с JSON, разработанные внутри проекта.
+*   `from src.logger.logger import logger`: Импортирует объект `logger` для логирования событий.
+*   `from src.db.manager_categories.suppliers_categories import CategoryManager, AliexpressCategory`: Импортирует `CategoryManager` и `AliexpressCategory` для управления категориями в БД.
+*   `credentials = gs.db_translations_credentials`: Получает учетные данные для подключения к БД из глобальных настроек.
 
 ### Классы:
 
-*   **`DBAdaptor`**:
-    *   **Роль**: Адаптер для работы с базой данных. Предоставляет абстрактный интерфейс для выполнения CRUD-операций (Create, Read, Update, Delete) с таблицей `AliexpressCategory` через `CategoryManager`.
-    *   **Методы**:
-        *   `select(cat_id, parent_id, project_cat_id)`:  Пример метода выборки записей из базы данных.
-        *   `insert()`: Пример метода вставки записей в базу данных.
-        *   `update()`: Пример метода обновления записей в базе данных.
-        *   `delete()`: Пример метода удаления записей из базы данных.
-    *   **Взаимодействие**: Взаимодействует с классом `CategoryManager` для выполнения операций с БД.
-    *   **Атрибуты**: Нет.
+*   `CategoryManager`:
+    *   **Роль**: Управляет операциями с категориями в базе данных.
+    *   **Атрибуты**: Не показаны в данном коде.
+    *   **Методы**: `select_record`, `insert_record`, `update_record`, `delete_record`.
+    *   **Взаимодействие**: Используется для выполнения операций с категориями в таблице `AliexpressCategory`.
+*   `AliexpressCategory`:
+    *   **Роль**: Модель данных для представления категории Aliexpress в базе данных.
+    *   **Атрибуты**: Не показаны в данном коде (предполагается наличие полей, таких как `category_name`, `parent_category_id` и т.д.).
+    *   **Методы**: Отсутствуют. Это модель данных, используемая для отображения таблицы.
+    *   **Взаимодействие**: Используется в методах класса `CategoryManager` для операций с БД.
+* `DBAdaptor`:
+    * **Роль**: Адаптирует операции с БД, используя `CategoryManager`.
+    * **Атрибуты**: Нет.
+    * **Методы**: `select()`, `insert()`, `update()`, `delete()` - служат для демонстрации применения `CategoryManager` для операций с БД.
+    * **Взаимодействие**: Использует `CategoryManager` и модель `AliexpressCategory` для работы с БД.
 
 ### Функции:
 
-*   **`get_list_products_in_category(s) -> list[str, str]`**:
+*   `get_list_products_in_category(s) -> list[str, str]`:
     *   **Аргументы**:
-        *   `s`: Экземпляр класса `Supplier`, содержащий данные поставщика, включая веб-драйвер и локаторы.
-    *   **Возвращаемое значение**:
-        *   `list[str, str]`: Список URL-адресов товаров в категории.
-    *   **Назначение**: Получает список URL товаров из текущей категории, делегируя работу функции `get_prod_urls_from_pagination`.
-    *   **Пример**: `get_list_products_in_category(supplier_instance)`
-*   **`get_prod_urls_from_pagination(s) -> list[str]`**:
+        *   `s`: Объект поставщика (предположительно содержит драйвер браузера и локаторы).
+    *   **Возвращаемое значение**: Список URL товаров (`list`).
+    *   **Назначение**: Собирает URL товаров со страницы категории, используя пагинацию, если она есть.
+    *   **Пример**: `get_list_products_in_category(supplier_obj)` вернет список URL товаров, найденных в категории, связанной с `supplier_obj`.
+*   `get_prod_urls_from_pagination(s) -> list[str]`:
     *   **Аргументы**:
-        *   `s`: Экземпляр класса `Supplier`, содержащий данные поставщика, включая веб-драйвер и локаторы.
-    *   **Возвращаемое значение**:
-        *   `list[str]`: Список URL-адресов товаров, найденных на страницах категории.
-    *   **Назначение**: Собирает все URL товаров со страниц категории, переходя по страницам с пагинацией.
-    *   **Пример**: `get_prod_urls_from_pagination(supplier_instance)`
-*   **`update_categories_in_scenario_file(s, scenario_filename) -> bool`**:
+        *   `s`: Объект поставщика.
+    *   **Возвращаемое значение**: Список URL товаров (`list`).
+    *   **Назначение**: Собирает URL товаров со страниц категории с пагинацией.
+    *   **Пример**: `get_prod_urls_from_pagination(supplier_obj)` возвращает список URL товаров, собранных с разных страниц категории.
+*   `update_categories_in_scenario_file(s, scenario_filename: str) -> bool`:
     *   **Аргументы**:
-        *   `s`: Экземпляр класса `Supplier`.
+        *   `s`: Объект поставщика.
         *   `scenario_filename`: Имя файла сценария.
-    *   **Возвращаемое значение**:
-        *   `bool`: Возвращает `True` после завершения процесса.
-    *   **Назначение**: Сверяет категории в файле сценария с категориями на сайте, добавляет новые и отключает удаленные, отправляя уведомления об изменениях.
-    *   **Пример**: `update_categories_in_scenario_file(supplier_instance, "scenario1.json")`
-*   **`get_list_categories_from_site(s, scenario_file, brand='')`**:
+    *   **Возвращаемое значение**: `True` после завершения.
+    *   **Назначение**: Проверяет и обновляет категории в файле сценария на основе данных с сайта, а также отправляет сообщения об изменениях.
+    *   **Пример**: `update_categories_in_scenario_file(supplier_obj, "electronics.json")` обновит файл `electronics.json` с учетом изменений на сайте.
+*   `get_list_categories_from_site(s, scenario_file, brand='')`:
     *   **Аргументы**:
-        *   `s`: Экземпляр класса `Supplier`.
-        *    `scenario_file`: Имя файла сценария.
-        *   `brand`: Бренд(не используется).
-    *   **Возвращаемое значение**:
-         *  `None`
-    *   **Назначение**: Загружает файл сценария, переходит на страницу категорий магазина.
-    *   **Пример**: `get_list_categories_from_site(supplier_instance, "scenario1.json")`
+        *   `s`: Объект поставщика.
+        *   `scenario_file`: Имя файла сценария.
+        *    `brand`: Бренд
+    *   **Возвращаемое значение**: Не определено (пока что `...`).
+    *   **Назначение**: Загружает категории с сайта.
+    *   **Пример**: `get_list_categories_from_site(supplier_obj, "electronics.json")` загрузит список категорий с сайта.
 
 ### Переменные:
 
-*   `credentials`: Глобальные учетные данные для базы данных, взятые из `gs`.
-*   `manager`: Экземпляр класса `CategoryManager`, используемый для работы с категориями в БД.
-*   `_d`:  Вебдрайвер.
-*   `_l`: Локаторы.
-*   `list_products_in_category`: Список URL товаров.
-*    `scenario_json`: JSON данные из файла сценария.
-*   `scenarios_in_file`: Список категорий из файла сценария.
-*   `categoris_on_site`: Список категорий, полученных с сайта.
-*   `all_ids_in_file`: Список ID категорий из файла сценария.
-*   `categories_from_aliexpress_shop_json`: JSON данные категорий из магазина aliexpress.
-*   `groups`: Список групп категорий с сайта.
-*   `all_ids_on_site`: Список ID категорий с сайта.
-*   `all_categories_on_site`: Список категорий с сайта в виде словаря.
-*   `removed_categories`: Список категорий, удаленных с сайта, но присутствующих в файле.
-*   `added_categories`: Список категорий, добавленных на сайт, но отсутствующих в файле.
-*    `category_id`: ID категории.
-*   `category`: Информация о категории.
-*   `category_name`: Название категории.
-*   `category_url`: URL категории.
-*   `categories_in_file`: Список категорий в файле.
-*   `post_subject`: Тема сообщения.
-*   `post_message`: Текст сообщения.
+*   `credentials`: Содержит учетные данные для подключения к базе данных. Тип: dict.
+*   `manager`: Экземпляр `CategoryManager`, используемый для управления категориями. Тип: `CategoryManager`.
+*   `_d`: Драйвер браузера, полученный из объекта поставщика `s`. Тип: driver (предположительно selenium).
+*   `_l`: Локатор для поиска ссылок на товары. Тип: dict.
+*   `list_products_in_category`: Список URL товаров. Тип: `list`.
+*   `scenario_json`: Загруженный JSON-файл сценария. Тип: `dict`.
+*   `scenarios_in_file`: Список категорий из файла сценария. Тип: `dict`.
+*   `categoris_on_site`: Список категорий с сайта (результат `get_list_categories_from_site()`). Тип: `list`.
+*   `all_ids_in_file`: Список идентификаторов категорий из файла сценария. Тип: `list`.
+*   `categories_from_aliexpress_shop_json`: JSON категорий магазина с сайта. Тип: `dict`.
+*   `groups`: Список групп категорий с сайта. Тип: `list`.
+*   `all_ids_on_site`: Список идентификаторов категорий с сайта. Тип: `list`.
+*   `all_categories_on_site`: Список категорий с сайта в формате словаря. Тип: `list`.
+*   `removed_categories`: Список идентификаторов удаленных с сайта категорий. Тип: `list`.
+*   `added_categories`: Список идентификаторов добавленных на сайт категорий. Тип: `list`.
+*   `post_subject`: Тема уведомления. Тип: `str`.
+*   `post_message`: Текст уведомления. Тип: `str`.
+*   `category`: временная переменная для хранения информации о категории. Тип: `list`
 
 ### Потенциальные ошибки и области для улучшения:
 
-*   **Бесконечный цикл в `get_prod_urls_from_pagination`**:  В цикле `while True` есть комментарий `@todo Опасная ситуация здесь/ Могу уйти в бесконечный цикл`. Необходимо добавить условие или счетчик для предотвращения бесконечного цикла, если кнопка "следующая страница" перестанет быть доступной, или при возникновении другой ошибки.
-*   **Обработка ошибок**: В функции `update_categories_in_scenario_file` существует баг, когда не происходит корректная обработка ошибки чтения json файла категорий магазина.
-*   **Исключения при доступе к элементам JSON**: Код предполагает наличие определенных ключей в JSON-объектах. Нужно добавить проверку на существование ключей, прежде чем к ним обращаться, чтобы избежать `KeyError` исключений.
-*   **`get_list_categories_from_site` не возвращает значение:** Функция `get_list_categories_from_site` не возвращает никакого значения, только переходит по ссылке.
-*    **Типы данных**: В `DBAdaptor`  необходимо устанавливать типы для передаваемых параметров.
-*   **Логирование**: Использовать логгер для отладки и мониторинга.
+*   **Бесконечный цикл:** В `get_prod_urls_from_pagination` есть комментарий `@todo Опасная ситуация здесь/ Могу уйти в бесконечный цикл`. Необходимо добавить механизм защиты от бесконечного цикла, например, ограничить количество итераций или добавить проверку на отсутствие изменений на странице.
+*   **`get_list_categories_from_site`:** Функция не доделана.
+*   **Обработка ошибок:** Необходимо добавить более надежную обработку ошибок при работе с сетью, файлами и базой данных.
+*   **Логирование:** Можно добавить более подробное логирование для отслеживания работы программы.
+*   **Использование `CategoryManager`:** Методы класса `DBAdaptor` показывают пример использования `CategoryManager`. Они могут быть более конкретными и расширенными, в зависимости от реальных потребностей приложения.
+*   **Неопределенный тип**:  В функции `get_list_products_in_category` указан тип возвращаемого значения `list[str, str]`, который является некорректным. Вероятнее всего это должен быть `list[str]`.
 
 ### Взаимосвязи с другими частями проекта:
 
-*   Использует глобальные настройки из `src.gs`.
-*   Использует JSON-парсер `j_loads` и `j_dumps` из `src.utils.jjson`.
-*   Использует логгер из `src.logger.logger`.
-*   Работает с категориями через `CategoryManager` и модель `AliexpressCategory` из `src.db.manager_categories.suppliers_categories`.
-*   Взаимодействует с веб-драйвером через экземпляр `Supplier` (предполагается, что этот класс определен в другом месте проекта).
-*   Отправка сообщений `send` предполагает наличие функции send вне текущего файла.
-*   Использует  библиотеку `requests` для загрузки json с сайта.
-*   Использует `Path` из библиотеки `pathlib` для работы с путями к файлам.
+*   **`src.gs`:** Используется для получения глобальных настроек, таких как путь к директории сценариев и учетные данные для БД.
+*   **`src.utils.jjson`:** Используется для работы с JSON-файлами (загрузка и сохранение).
+*   **`src.logger.logger`:** Используется для логирования событий в процессе работы программы.
+*   **`src.db.manager_categories.suppliers_categories`:** Используется для управления категориями в базе данных.
+*   **Вебдрайвер:** `s.driver` используется для навигации по сайту и сбора данных. Предполагается использование selenium или другого похожего решения.
+*   **Файлы сценариев:** JSON-файлы используются для хранения данных о категориях и конфигурации.
+
+Таким образом, данный код отвечает за сбор и обновление информации о категориях товаров на сайте Aliexpress, взаимодействуя с базой данных, файлами сценариев и браузером через вебдрайвер.

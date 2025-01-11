@@ -2,8 +2,8 @@
 
 Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
     которые импортируются при создании диаграммы.
     **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
     имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
@@ -16,12 +16,12 @@
         Header --> import[Import Global Settings: <br><code>from src import gs</code>]
     ```
 
-3. **<объяснение>**: Предоставьте подробные объяснения:
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
-   - **Переменные**: Их типы и использование.
-   - Выделите потенциальные ошибки или области для улучшения.
+3.  **<объяснение>**: Предоставьте подробные объяснения:
+    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    -   **Переменные**: Их типы и использование.
+    -   Выделите потенциальные ошибки или области для улучшения.
 
 Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
 
@@ -29,407 +29,385 @@
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
 
-```markdown
 ## <алгоритм>
 
-1. **Инициализация:**
-   - Создается `Router` для обработки админских команд.
-   - Определяется класс `AddProduct` (наследник `StatesGroup`) для управления состояниями при добавлении товара.
-   - Определяется набор состояний `name`, `description`, `price`, `file_id`, `category_id`, `hidden_content`, `confirm_add`
+### Пошаговая блок-схема:
 
-2. **Обработка команды `/admin`:**
-    - **Пример:** Пользователь нажимает кнопку `admin_panel`.
-   - Проверяется, является ли пользователь администратором.
-   - Отправляется приветственное сообщение с админской клавиатурой.
-   - Если произошла ошибка при редактировании сообщения, пытается удалить старое и отправить новое. Если и это не получается, то отправляется сообщение об ошибке.
+1.  **`start_admin`**:
+    -   **Вход:** `CallbackQuery` с `data == "admin_panel"` от администратора.
+    -   **Действие:** Проверяет, является ли пользователь администратором (по `settings.ADMIN_IDS`). Отправляет подтверждение доступа и главное меню администратора.
+    -   **Пример:** Пользователь нажимает кнопку "Админ-панель" в боте.
+    -   **Выход:** Сообщение с меню администратора.
 
-3. **Обработка команды `statistic`:**
-   - **Пример:** Пользователь нажимает кнопку `statistic`.
-   - Проверяется, является ли пользователь администратором.
-   - Получает статистику по пользователям и платежам через `UserDAO` и `PurchaseDao`.
-   - Формирует текстовое сообщение со статистикой и отправляет его пользователю.
+2.  **`admin_statistic`**:
+    -   **Вход:** `CallbackQuery` с `data == "statistic"` от администратора и `AsyncSession`.
+    -   **Действие:** Запрашивает статистику пользователей и заказов из базы данных. Формирует текстовое сообщение со статистикой.
+    -   **Пример:** Администратор нажимает кнопку "Статистика".
+    -   **Выход:** Сообщение со статистикой в чате.
 
-4. **Обработка команды `cancel`:**
-    - **Пример:** Пользователь нажимает кнопку `cancel` во время добавления товара.
-   - Очищает состояние FSM (Finite State Machine).
-   - Отправляет сообщение об отмене операции и возвращается к главному меню админ-панели.
+3.  **`admin_process_cancel`**:
+    -   **Вход:** `CallbackQuery` с `data == "cancel"` от администратора и `FSMContext`.
+    -   **Действие:** Очищает состояние FSM, удаляет последнее сообщение, отправляет подтверждение отмены добавления товара.
+    -   **Пример:** Во время добавления товара администратор нажимает кнопку "Отмена".
+    -   **Выход:** Подтверждение отмены и возврат в меню администратора.
 
-5. **Обработка команды `delete_product`:**
-   - **Пример:** Пользователь нажимает кнопку `delete_product`.
-   - Проверяется, является ли пользователь администратором.
-   - Получает список всех товаров из базы данных через `ProductDao`.
-   - Отображает каждый товар с кнопкой для удаления.
-   - Кнопка содержит `product.id`, который используется для удаления.
-   - Отправляется сообщение со списком всех продуктов для удаления.
-   - Если у продукта есть файл, отправляет его, в противном случае отправляет только текстовое описание.
+4.  **`admin_process_start_dell`**:
+    -   **Вход:** `CallbackQuery` с `data == "delete_product"` от администратора и `AsyncSession`.
+    -   **Действие:** Получает список всех товаров из базы данных и формирует сообщения с информацией о каждом товаре. К каждому сообщению добавляет кнопку для удаления товара.
+    -   **Пример:** Администратор нажимает кнопку "Удалить товар".
+    -   **Выход:** Сообщения со списком товаров и кнопками удаления.
 
-6. **Обработка нажатия кнопки удаления товара:**
-    - **Пример:** Пользователь нажимает кнопку `dell_123`, где `123` - ID товара.
-    - Извлекается ID товара из `callback_data`.
-    - Удаляет товар из базы данных через `ProductDao`.
-    - Отправляет подтверждение об удалении.
+5.  **`admin_process_start_dell` (обработчик удаления товара)**:
+    -   **Вход:** `CallbackQuery` с `data`, начинающимся с `dell_` от администратора и `AsyncSession`.
+    -   **Действие:** Извлекает `product_id` из `data`, удаляет товар из базы данных, отправляет подтверждение.
+    -   **Пример:** Администратор нажимает кнопку "Удалить" под одним из товаров.
+    -   **Выход:** Уведомление об удалении и удаление сообщения с товаром.
 
-7. **Обработка команды `process_products`:**
-   - **Пример:** Пользователь нажимает кнопку `process_products`.
-   - Проверяется, является ли пользователь администратором.
-   - Получает общее количество товаров из базы данных через `ProductDao`.
-   - Отправляет сообщение с количеством товаров и клавиатурой для управления товарами (добавить, удалить и тд)
+6.  **`admin_process_products`**:
+    -   **Вход:** `CallbackQuery` с `data == "process_products"` от администратора и `AsyncSession`.
+    -   **Действие:** Получает количество товаров из базы данных, отправляет сообщение с меню управления товарами.
+    -   **Пример:** Администратор нажимает кнопку "Управление товарами".
+    -   **Выход:** Сообщение с меню управления товарами.
 
-8.  **Обработка команды `add_product`:**
-    - **Пример:** Пользователь нажимает кнопку `add_product`.
-   -  Переходит в состояние `AddProduct.name`.
-   - Отправляет сообщение с запросом имени товара.
+7.  **`admin_process_add_product`**:
+    -   **Вход:** `CallbackQuery` с `data == "add_product"` от администратора и `FSMContext`.
+    -   **Действие:** Начинает процесс добавления товара, запрашивая имя товара. Устанавливает состояние FSM на `AddProduct.name`.
+    -   **Пример:** Администратор нажимает кнопку "Добавить товар".
+    -   **Выход:** Запрос имени товара и переход в состояние `AddProduct.name`.
 
-9.  **Обработка ввода имени товара:**
-    - **Пример:** Пользователь вводит "Новый товар 123".
-   - Сохраняет имя товара в состоянии `FSM`.
-   - Переходит в состояние `AddProduct.description`.
-   - Отправляет сообщение с запросом описания товара.
+8.  **`admin_process_name`**:
+    -   **Вход:** `Message` с текстом от администратора в состоянии `AddProduct.name` и `FSMContext`.
+    -   **Действие:** Сохраняет имя товара, запрашивает описание товара, устанавливает состояние FSM на `AddProduct.description`.
+    -   **Пример:** Администратор вводит имя товара "Новый товар".
+    -   **Выход:** Запрос описания товара и переход в состояние `AddProduct.description`.
 
-10. **Обработка ввода описания товара:**
-     - **Пример:** Пользователь вводит "Описание нового товара 123".
-    - Сохраняет описание товара в состоянии `FSM`.
-    - Получает список категорий товаров через `CategoryDao`.
-    - Переходит в состояние `AddProduct.category_id`.
-    - Отправляет сообщение с клавиатурой для выбора категории.
+9.  **`admin_process_description`**:
+    -   **Вход:** `Message` с текстом от администратора в состоянии `AddProduct.description` и `FSMContext`, `AsyncSession`.
+    -   **Действие:** Сохраняет описание товара, получает список категорий, запрашивает категорию товара. Устанавливает состояние FSM на `AddProduct.category_id`.
+    -   **Пример:** Администратор вводит описание товара "Описание нового товара".
+    -   **Выход:** Запрос категории товара и переход в состояние `AddProduct.category_id`.
 
-11. **Обработка выбора категории товара:**
-     - **Пример:** Пользователь выбирает категорию с `callback_data="add_category_456"`.
-    - Извлекает ID категории из `callback_data`.
-    - Сохраняет ID категории в состоянии `FSM`.
-    - Переходит в состояние `AddProduct.price`.
-    - Отправляет сообщение с запросом цены товара.
+10. **`admin_process_category`**:
+    -   **Вход:** `CallbackQuery` с `data`, начинающимся с `add_category_` от администратора в состоянии `AddProduct.category_id` и `FSMContext`.
+    -   **Действие:** Сохраняет выбранную категорию, запрашивает цену товара, устанавливает состояние FSM на `AddProduct.price`.
+    -   **Пример:** Администратор нажимает кнопку с категорией "Электроника".
+    -   **Выход:** Запрос цены товара и переход в состояние `AddProduct.price`.
 
-12. **Обработка ввода цены товара:**
-     - **Пример:** Пользователь вводит "100".
-    - Сохраняет цену товара в состоянии `FSM`.
-    - Переходит в состояние `AddProduct.file_id`.
-    - Отправляет сообщение с запросом файла товара или кнопкой "БЕЗ ФАЙЛА".
-    - Если введено не число, то отправляет сообщение об ошибке.
+11. **`admin_process_price`**:
+    -   **Вход:** `Message` с текстом от администратора в состоянии `AddProduct.price` и `FSMContext`.
+    -   **Действие:** Сохраняет цену товара, запрашивает файл товара или подтверждение отсутствия файла, устанавливает состояние FSM на `AddProduct.file_id`.
+    -   **Пример:** Администратор вводит цену "100".
+    -   **Выход:** Запрос файла или подтверждения его отсутствия и переход в состояние `AddProduct.file_id`.
 
-13. **Обработка выбора "без файла":**
-     - **Пример:** Пользователь нажимает кнопку `without_file`.
-    - Сохраняет `file_id = None` в состояние `FSM`.
-    - Переходит в состояние `AddProduct.hidden_content`.
-    - Отправляет сообщение с запросом скрытого контента товара.
+12. **`admin_process_without_file` (без файла)**:
+    -   **Вход:** `CallbackQuery` с `data == "without_file"` от администратора в состоянии `AddProduct.file_id` и `FSMContext`.
+    -   **Действие:** Сохраняет отсутствие файла (`file_id = None`), запрашивает скрытый контент, устанавливает состояние FSM на `AddProduct.hidden_content`.
+    -   **Пример:** Администратор нажимает кнопку "БЕЗ ФАЙЛА".
+    -   **Выход:** Запрос скрытого контента и переход в состояние `AddProduct.hidden_content`.
 
-14. **Обработка отправки файла:**
-    - **Пример:** Пользователь отправляет файл.
-    - Сохраняет `file_id` в состояние `FSM`.
-    - Переходит в состояние `AddProduct.hidden_content`.
-    - Отправляет сообщение с запросом скрытого контента товара.
+13. **`admin_process_without_file` (с файлом)**:
+    -   **Вход:** `Message` с документом от администратора в состоянии `AddProduct.file_id` и `FSMContext`.
+    -   **Действие:** Сохраняет `file_id` документа, запрашивает скрытый контент, устанавливает состояние FSM на `AddProduct.hidden_content`.
+    -   **Пример:** Администратор отправляет файл.
+    -   **Выход:** Запрос скрытого контента и переход в состояние `AddProduct.hidden_content`.
 
-15. **Обработка ввода скрытого контента товара:**
-    - **Пример:** Пользователь вводит "Скрытый контент товара 123".
-    - Сохраняет скрытый контент товара в состояние `FSM`.
-    - Формирует текстовое сообщение со всеми данными товара.
-    - Отправляет сообщение с данными товара и кнопкой подтверждения.
-    - Переходит в состояние `AddProduct.confirm_add`.
+14. **`admin_process_hidden_content`**:
+    -   **Вход:** `Message` с текстом от администратора в состоянии `AddProduct.hidden_content` и `FSMContext`, `AsyncSession`.
+    -   **Действие:** Сохраняет скрытый контент, формирует сообщение с информацией о товаре для подтверждения, запрашивает подтверждение добавления товара. Устанавливает состояние FSM на `AddProduct.confirm_add`.
+    -   **Пример:** Администратор вводит скрытый контент.
+    -   **Выход:** Сообщение с информацией о товаре для подтверждения и переход в состояние `AddProduct.confirm_add`.
 
-16. **Обработка подтверждения добавления товара:**
-     - **Пример:** Пользователь нажимает кнопку `confirm_add`.
-    - Удаляет последнее сообщение с превью товара.
-    - Сохраняет все данные о товаре в базу данных через `ProductDao`.
-    - Отправляет сообщение об успешном добавлении товара.
+15. **`admin_process_confirm_add`**:
+    -   **Вход:** `CallbackQuery` с `data == "confirm_add"` от администратора в состоянии `AddProduct.confirm_add` и `FSMContext`, `AsyncSession`.
+    -   **Действие:** Сохраняет товар в базе данных, отправляет подтверждение успешного добавления.
+    -   **Пример:** Администратор нажимает кнопку "Подтвердить".
+    -   **Выход:** Сообщение об успешном добавлении товара.
+
+### Поток данных:
+
+-   **`start_admin`:** `CallbackQuery` -> Сообщение с меню администратора
+-   **`admin_statistic`:** `CallbackQuery` -> `UserDAO`, `PurchaseDao` -> Статистика -> Сообщение со статистикой
+-   **`admin_process_cancel`:** `CallbackQuery` -> `FSMContext` -> Сообщение с отменой
+-   **`admin_process_start_dell`:** `CallbackQuery` -> `ProductDao` -> Список товаров -> Сообщения с товарами и кнопками удаления
+-   **`admin_process_start_dell` (удаление товара):** `CallbackQuery` -> `ProductDao` -> Уведомление об удалении
+-   **`admin_process_products`:** `CallbackQuery` -> `ProductDao` -> Количество товаров -> Сообщение с меню управления товарами
+-   **`admin_process_add_product`:** `CallbackQuery` -> `FSMContext` -> Запрос имени товара
+-   **`admin_process_name`:** `Message` -> `FSMContext` -> Запрос описания
+-   **`admin_process_description`:** `Message` -> `FSMContext`, `CategoryDao` -> Список категорий -> Запрос категории
+-   **`admin_process_category`:** `CallbackQuery` -> `FSMContext` -> Запрос цены
+-   **`admin_process_price`:** `Message` -> `FSMContext` -> Запрос файла
+-   **`admin_process_without_file` (без файла):** `CallbackQuery` -> `FSMContext` -> Запрос скрытого контента
+-   **`admin_process_without_file` (с файлом):** `Message` -> `FSMContext` -> Запрос скрытого контента
+-   **`admin_process_hidden_content`:** `Message` -> `FSMContext`, `CategoryDao` -> Информация о товаре -> Запрос подтверждения
+-   **`admin_process_confirm_add`:** `CallbackQuery` -> `FSMContext`, `ProductDao` -> Сообщение об успешном добавлении
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    StartAdmin[Начало: /admin] --> CheckAdmin[Проверка: Является ли пользователь администратором?]
-    CheckAdmin -- Да --> AdminPanel[Отправка админ-панели]
-    CheckAdmin -- Нет --> AccessDenied[Отказать в доступе]
+    subgraph Admin Panel
+        StartAdmin[start_admin]
+        Statistic[admin_statistic]
+        CancelAdd[admin_process_cancel]
+        StartDelete[admin_process_start_dell (delete_product)]
+        DeleteProduct[admin_process_start_dell (обработчик удаления товара)]
+        ProcessProducts[admin_process_products]
+        AddProductStart[admin_process_add_product]
+        AddProductName[admin_process_name]
+        AddProductDescription[admin_process_description]
+         AddProductCategory[admin_process_category]
+        AddProductPrice[admin_process_price]
+        AddProductWithoutFile[admin_process_without_file (без файла)]
+        AddProductWithFile[admin_process_without_file (с файлом)]
+        AddProductHiddenContent[admin_process_hidden_content]
+        AddProductConfirmAdd[admin_process_confirm_add]
+    end
 
-    AdminPanel --> StatisticBtn[Кнопка: statistic]
-    AdminPanel --> CancelBtn[Кнопка: cancel]
-    AdminPanel --> DeleteProductBtn[Кнопка: delete_product]
-    AdminPanel --> ProcessProductsBtn[Кнопка: process_products]
+    StartAdmin -- CallbackQuery (admin_panel) --> AdminPanelMenu
     
-    StatisticBtn --> GetStatistics[Получение статистики: UserDAO, PurchaseDao]
-    GetStatistics --> ShowStatistics[Отображение статистики]
-    ShowStatistics --> AdminPanel
-
-    CancelBtn --> ClearState[Очистка FSM State]
-    ClearState --> CancelMessage[Отправка сообщения об отмене]
-    CancelMessage --> AdminPanel
-
-    DeleteProductBtn --> GetProducts[Получение списка товаров: ProductDao]
-    GetProducts --> ShowProducts[Отображение списка товаров с кнопками удаления]
-    ShowProducts --> DeleteProductAction[Кнопка: Удаление товара]
-
-    DeleteProductAction --> DeleteProduct[Удаление товара: ProductDao]
-    DeleteProduct --> DeleteConfirm[Подтверждение удаления]
-    DeleteConfirm --> AdminPanel
+     AdminPanelMenu --  (statistic) --> Statistic
+     AdminPanelMenu -- (delete_product) --> StartDelete
+     StartDelete --  (отображение списка товаров) --> DeleteProduct
+     DeleteProduct -- CallbackQuery (dell_...) --> ProductDeletion
+     ProductDeletion --> AdminPanelMenu
+     AdminPanelMenu -- (process_products) --> ProcessProducts
+     ProcessProducts --> ProductManagementMenu
+      ProductManagementMenu -- (add_product) --> AddProductStart
+    AdminPanelMenu -- (отмена) --> CancelAdd
     
-    ProcessProductsBtn --> GetProductCount[Получение кол-ва товаров]
-    GetProductCount --> ShowProductManagement[Отображение панели управления товарами]
-    ShowProductManagement --> AddProductBtn[Кнопка: add_product]
+    AddProductStart -- CallbackQuery (add_product) --> AddProductName
+    AddProductName -- Message (text) --> AddProductDescription
+    AddProductDescription -- Message (text) --> AddProductCategory
+    AddProductCategory -- CallbackQuery (add_category_...) --> AddProductPrice
+    AddProductPrice -- Message (text) --> AddProductFileCheck
     
-    AddProductBtn --> SetStateName[Установка State: AddProduct.name]
-    SetStateName --> GetProductName[Запрос имени товара]
-    GetProductName --> SaveProductName[Сохранение имени товара]
-    SaveProductName --> SetStateDescription[Установка State: AddProduct.description]
-    SetStateDescription --> GetProductDescription[Запрос описания товара]
-    GetProductDescription --> SaveProductDescription[Сохранение описания товара]
-    SaveProductDescription --> SetStateCategory[Установка State: AddProduct.category_id]
-    SetStateCategory --> GetCategoryList[Получение списка категорий]
-    GetCategoryList --> ShowCategoryList[Отображение списка категорий]
-    ShowCategoryList --> SelectCategory[Выбор категории]
-    SelectCategory --> SaveCategoryId[Сохранение ID категории]
-    SaveCategoryId --> SetStatePrice[Установка State: AddProduct.price]
-    SetStatePrice --> GetProductPrice[Запрос цены товара]
-    GetProductPrice --> ValidatePrice[Валидация цены]
-    ValidatePrice -- Ошибка --> GetProductPrice
-    ValidatePrice -- Успех --> SaveProductPrice[Сохранение цены товара]
-    SaveProductPrice --> SetStateFile[Установка State: AddProduct.file_id]
-    SetStateFile --> GetFileOrNot[Запрос файла товара или "Без файла"]
-    GetFileOrNot --> WithoutFile[Кнопка: without_file]
-    GetFileOrNot --> GetFile[Запрос файла]
-    WithoutFile --> SaveFileNone[Сохранение file_id = None]
-    SaveFileNone --> SetStateHidden[Установка State: AddProduct.hidden_content]
-    GetFile --> SaveFileId[Сохранение file_id]
-    SaveFileId --> SetStateHidden
-    SetStateHidden --> GetHiddenContent[Запрос скрытого контента товара]
-    GetHiddenContent --> SaveHiddenContent[Сохранение скрытого контента]
-    SaveHiddenContent --> PreviewProduct[Предпросмотр товара]
-    PreviewProduct --> ConfirmAddBtn[Кнопка: confirm_add]
-    ConfirmAddBtn --> SaveProductDB[Сохранение товара в БД: ProductDao]
-    SaveProductDB --> ProductAddSuccess[Сообщение об успешном добавлении]
-    ProductAddSuccess --> AdminPanel
-    AccessDenied --> EndAdmin[Конец]
-    EndAdmin
+    subgraph AddProductFileCheck
+        AddProductFileCheck -- CallbackQuery (without_file) --> AddProductWithoutFile
+        AddProductFileCheck -- Message (document) --> AddProductWithFile
+    end
+    
+     AddProductWithoutFile -- CallbackQuery (without_file) -->  AddProductHiddenContent
+     AddProductWithFile  -- Message (document) -->  AddProductHiddenContent
+    AddProductHiddenContent -- Message (text) --> AddProductConfirmAdd
+    AddProductConfirmAdd -- CallbackQuery (confirm_add) --> ProductAddition
+    ProductAddition --> AdminPanelMenu
+
+    
+    classDef adminFill fill:#f9f,stroke:#333,stroke-width:2px
+    class StartAdmin, Statistic, CancelAdd, StartDelete, DeleteProduct, ProcessProducts, AddProductStart, AddProductName, AddProductDescription,AddProductCategory, AddProductPrice,AddProductWithoutFile, AddProductWithFile, AddProductHiddenContent, AddProductConfirmAdd adminFill
+    
+    AdminPanelMenu(Админ-панель)
+    ProductManagementMenu(Управление товарами)
+    ProductDeletion(Удаление товара)
+    ProductAddition(Добавление товара)
 ```
-### Анализ зависимостей в `mermaid` диаграмме:
-- **`StartAdmin`**: Начало процесса обработки административных команд.
-- **`CheckAdmin`**: Проверка, является ли пользователь администратором. Зависит от `settings.ADMIN_IDS`.
-- **`AdminPanel`**: Отправка админской клавиатуры. Зависит от `admin_kb()`.
-- **`StatisticBtn`**: Кнопка для получения статистики.
-- **`CancelBtn`**: Кнопка отмены текущей операции.
-- **`DeleteProductBtn`**: Кнопка для удаления товара.
-- **`ProcessProductsBtn`**: Кнопка для управления товарами.
-- **`GetStatistics`**: Получение статистики пользователей и платежей. Зависит от `UserDAO.get_statistics` и `PurchaseDao.get_payment_stats`.
-- **`ShowStatistics`**: Отображение полученной статистики.
-- **`ClearState`**: Очистка FSM State. Зависит от `state.clear()`.
-- **`CancelMessage`**: Отправка сообщения об отмене. Зависит от `admin_kb_back()`.
-- **`GetProducts`**: Получение списка товаров. Зависит от `ProductDao.find_all`.
-- **`ShowProducts`**: Отображение списка товаров с кнопками для удаления. Зависит от `dell_product_kb(product_data.id)`.
-- **`DeleteProductAction`**: Кнопка для удаления конкретного товара.
-- **`DeleteProduct`**: Удаление товара. Зависит от `ProductDao.delete`.
-- **`DeleteConfirm`**: Отправка подтверждения об удалении товара.
-- **`GetProductCount`**: Получение общего количества товаров. Зависит от `ProductDao.count`.
-- **`ShowProductManagement`**: Отображение панели управления товарами. Зависит от `product_management_kb()`.
-- **`AddProductBtn`**: Кнопка добавления товара.
-- **`SetStateName`**: Установка состояния для ввода имени товара. Зависит от `AddProduct.name`.
-- **`GetProductName`**: Запрос имени товара.
-- **`SaveProductName`**: Сохранение введенного имени. Зависит от `state.update_data(name=message.text)`.
-- **`SetStateDescription`**: Установка состояния для ввода описания товара. Зависит от `AddProduct.description`.
-- **`GetProductDescription`**: Запрос описания товара.
-- **`SaveProductDescription`**: Сохранение введенного описания. Зависит от `state.update_data(description=message.html_text)`.
-- **`SetStateCategory`**: Установка состояния для выбора категории товара. Зависит от `AddProduct.category_id`.
-- **`GetCategoryList`**: Получение списка категорий товаров. Зависит от `CategoryDao.find_all`.
-- **`ShowCategoryList`**: Отображение списка категорий для выбора. Зависит от `catalog_admin_kb(catalog_data)`.
-- **`SelectCategory`**: Выбор категории товара.
-- **`SaveCategoryId`**: Сохранение ID выбранной категории. Зависит от `state.update_data(category_id=category_id)`.
-- **`SetStatePrice`**: Установка состояния для ввода цены товара. Зависит от `AddProduct.price`.
-- **`GetProductPrice`**: Запрос цены товара.
-- **`ValidatePrice`**: Валидация введенной цены.
-- **`SaveProductPrice`**: Сохранение введенной цены. Зависит от `state.update_data(price=price)`.
-- **`SetStateFile`**: Установка состояния для выбора файла товара. Зависит от `AddProduct.file_id`.
-- **`GetFileOrNot`**: Запрос файла товара или варианта "без файла".
-- **`WithoutFile`**: Выбор варианта "без файла".
-- **`SaveFileNone`**: Сохранение значения `None` для file_id. Зависит от `state.update_data(file_id=None)`.
-- **`GetFile`**: Отправка файла товара.
-- **`SaveFileId`**: Сохранение file_id. Зависит от `state.update_data(file_id=message.document.file_id)`.
--  **`SetStateHidden`**: Установка состояния для ввода скрытого контента. Зависит от `AddProduct.hidden_content`.
-- **`GetHiddenContent`**: Запрос скрытого контента.
-- **`SaveHiddenContent`**: Сохранение скрытого контента. Зависит от `state.update_data(hidden_content=message.html_text)`.
-- **`PreviewProduct`**: Предпросмотр товара перед сохранением. Зависит от `admin_confirm_kb()`.
-- **`ConfirmAddBtn`**: Кнопка подтверждения добавления товара.
-- **`SaveProductDB`**: Сохранение товара в базу данных. Зависит от `ProductDao.add`.
-- **`ProductAddSuccess`**: Сообщение об успешном добавлении товара.
-- **`AccessDenied`**: Сообщение об отказе в доступе.
-- **`EndAdmin`**: Конец процесса.
-### Дополнительно:
 
-```mermaid
-flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
+**Анализ зависимостей:**
 
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-```
+1.  **`aiogram`**:
+    *   `Router`: Используется для создания роутера (`admin_router`), который обрабатывает входящие обновления от Telegram.
+    *   `F`: Используется для фильтрации входящих обновлений на основе данных, например, `F.data` для callback-запросов или `F.from_user.id` для проверки администратора.
+    *   `FSMContext`: Используется для управления состоянием Finite State Machine (FSM), что позволяет отслеживать этапы процесса добавления товара.
+    *   `StatesGroup`, `State`: Используются для создания состояний FSM (класс `AddProduct`) для управления процессом добавления товара.
+    *   `CallbackQuery`: Тип данных для обработки входящих callback-запросов от inline-кнопок.
+    *   `Message`: Тип данных для обработки входящих текстовых и файловых сообщений от пользователей.
+
+2.  **`sqlalchemy`**:
+    *   `AsyncSession`: Используется для работы с асинхронными сессиями базы данных.
+
+3.  **`bot.config`**:
+    *   `settings`: Содержит настройки бота, включая список ID администраторов (`settings.ADMIN_IDS`).
+    *   `bot`: Экземпляр бота `aiogram.Bot`.
+
+4.  **`bot.dao.dao`**:
+    *   `UserDAO`, `ProductDao`, `CategoryDao`, `PurchaseDao`: Используются для доступа к данным в базе данных для пользователей, товаров, категорий и покупок.
+
+5.  **`bot.admin.kbs`**:
+    *   Содержит различные клавиатуры (reply- и inline-) для административной панели (например, `admin_kb`, `admin_kb_back`, `product_management_kb`).
+
+6.  **`bot.admin.schemas`**:
+    *   `ProductModel`, `ProductIDModel`: Используются для валидации и передачи данных товаров между приложением и базой данных.
+
+7.  **`bot.admin.utils`**:
+    *   `process_dell_text_msg`: Утилита для удаления предыдущего сообщения с текстом.
 
 ## <объяснение>
 
 ### Импорты:
 
-- `asyncio`: Библиотека для асинхронного программирования. Используется для работы с асинхронными операциями, такими как взаимодействие с Telegram API и базой данных.
-- `aiogram`: Фреймворк для создания Telegram-ботов.
-  - `Router`: Используется для маршрутизации входящих обновлений от Telegram (сообщений, callback-запросов) к соответствующим обработчикам.
-  - `F`: Фабрика фильтров для обработки обновлений. Например, `F.data == 'admin_panel'` фильтрует callback-запросы с `data` равным `admin_panel`. `F.from_user.id.in_(settings.ADMIN_IDS)` - фильтрует id пользователей.
-  - `FSMContext`: Контекст для управления состояниями конечного автомата (FSM). Позволяет хранить данные между обработчиками.
-  - `StatesGroup`, `State`: Используются для создания конечного автомата.
-  - `CallbackQuery`, `Message`: Типы объектов, представляющие callback-запросы и сообщения.
-- `sqlalchemy.ext.asyncio`: Асинхронная версия SQLAlchemy для работы с базами данных.
-  - `AsyncSession`: Асинхронная сессия для работы с базой данных.
-- `bot.config`: Модуль, содержащий настройки бота.
-  - `settings`: Объект, содержащий настройки бота, включая ID администраторов.
-  - `bot`: Экземпляр бота, созданный с помощью `aiogram`.
-- `bot.dao.dao`: Модуль, содержащий классы для доступа к данным (DAO - Data Access Object).
-  - `UserDAO`: DAO для работы с пользователями.
-  - `ProductDao`: DAO для работы с товарами.
-  - `CategoryDao`: DAO для работы с категориями.
-  - `PurchaseDao`: DAO для работы с покупками.
-- `bot.admin.kbs`: Модуль, содержащий клавиатуры для административной панели.
-- `bot.admin.schemas`: Модуль, содержащий схемы для работы с данными.
-- `bot.admin.utils`: Модуль, содержащий утилиты для админской панели.
-  - `process_dell_text_msg`: Функция для удаления предыдущего сообщения с текстом.
+-   `asyncio`: Используется для асинхронного программирования.
+-   `aiogram`: Библиотека для работы с Telegram Bot API.
+-   `sqlalchemy.ext.asyncio`: Библиотека для асинхронной работы с базами данных через SQLAlchemy.
+-   `bot.config`: Модуль для конфигурации бота.
+    -   `settings`: Содержит настройки, включая `ADMIN_IDS`.
+    -   `bot`: Экземпляр бота.
+-   `bot.dao.dao`: Модуль для работы с базой данных.
+    -   `UserDAO`, `ProductDao`, `CategoryDao`, `PurchaseDao`: Классы для взаимодействия с соответствующими таблицами.
+-   `bot.admin.kbs`: Модуль с клавиатурами для админ-панели.
+-   `bot.admin.schemas`: Модуль со схемами для валидации данных.
+-   `bot.admin.utils`: Модуль с утилитами для админ-панели.
 
 ### Классы:
 
-- `AddProduct(StatesGroup)`:
-    -  Класс-наследник `StatesGroup`, используется для описания состояний при добавлении нового товара.
+-   **`AddProduct(StatesGroup)`**:
+    -   Роль: Класс, определяющий состояния FSM для процесса добавления товара.
     -   Атрибуты:
-         -   `name`: Состояние для ввода имени товара.
-         -   `description`: Состояние для ввода описания товара.
-         -   `price`: Состояние для ввода цены товара.
-         -   `file_id`: Состояние для отправки файла товара.
-         -   `category_id`: Состояние для выбора категории товара.
-         -   `hidden_content`: Состояние для ввода скрытого контента.
-         -   `confirm_add`: Состояние для подтверждения добавления товара.
+        -   `name`: Состояние для ввода имени товара.
+        -   `description`: Состояние для ввода описания товара.
+        -   `price`: Состояние для ввода цены товара.
+        -   `file_id`: Состояние для отправки файла товара.
+        -   `category_id`: Состояние для выбора категории товара.
+        -   `hidden_content`: Состояние для ввода скрытого контента.
+        -   `confirm_add`: Состояние для подтверждения добавления товара.
+    -   Взаимодействие: Используется с `FSMContext` для управления переходом между состояниями и хранения данных.
 
 ### Функции:
 
-- `@admin_router.callback_query(F.data == "admin_panel", F.from_user.id.in_(settings.ADMIN_IDS))`
-  - `start_admin(call: CallbackQuery)`:
-    -   Обрабатывает нажатие кнопки `admin_panel`.
-    -   `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-    -   Проверяет, является ли пользователь администратором.
-    -   Отправляет сообщение с админ-панелью и клавиатурой.
-- `@admin_router.callback_query(F.data == 'statistic', F.from_user.id.in_(settings.ADMIN_IDS))`
-    - `admin_statistic(call: CallbackQuery, session_without_commit: AsyncSession)`:
-        - Обрабатывает нажатие кнопки `statistic`.
-        - `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-        - `session_without_commit`: Сессия SQLAlchemy для работы с базой данных (без автоматического коммита).
-        -  Получает статистику по пользователям и платежам из БД.
-        -  Формирует и отправляет текстовое сообщение со статистикой.
-- `@admin_router.callback_query(F.data == "cancel", F.from_user.id.in_(settings.ADMIN_IDS))`
-    - `admin_process_cancel(call: CallbackQuery, state: FSMContext)`:
-       - Обрабатывает нажатие кнопки `cancel`.
-       - `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-       - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-       - Очищает состояние FSM и отправляет сообщение об отмене.
-- `@admin_router.callback_query(F.data == 'delete_product', F.from_user.id.in_(settings.ADMIN_IDS))`
-    - `admin_process_start_dell(call: CallbackQuery, session_without_commit: AsyncSession)`:
-      -  Обрабатывает нажатие кнопки `delete_product`.
-      -   `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-      -   `session_without_commit`: Сессия SQLAlchemy для работы с базой данных (без автоматического коммита).
-      -  Получает список всех товаров из базы данных.
-      -   Отправляет сообщение со списком всех товаров для удаления.
--  `@admin_router.callback_query(F.data.startswith('dell_'), F.from_user.id.in_(settings.ADMIN_IDS))`
-   - `admin_process_start_dell(call: CallbackQuery, session_with_commit: AsyncSession)`:
-        - Обрабатывает нажатие кнопки удаления товара (например, `dell_123`).
-        -  `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-        -  `session_with_commit`: Сессия SQLAlchemy для работы с базой данных (с автоматическим коммитом).
-        - Извлекает ID товара из `callback_data`.
-        - Удаляет товар из базы данных.
-- `@admin_router.callback_query(F.data == 'process_products', F.from_user.id.in_(settings.ADMIN_IDS))`
-   - `admin_process_products(call: CallbackQuery, session_without_commit: AsyncSession)`:
-      -  Обрабатывает нажатие кнопки `process_products`.
-      -   `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-      -   `session_without_commit`: Сессия SQLAlchemy для работы с базой данных (без автоматического коммита).
-      - Получает общее количество товаров из базы данных.
-      - Отправляет сообщение с количеством товаров и клавиатурой для управления товарами.
-- `@admin_router.callback_query(F.data == 'add_product', F.from_user.id.in_(settings.ADMIN_IDS))`
-    - `admin_process_add_product(call: CallbackQuery, state: FSMContext)`:
-        - Обрабатывает нажатие кнопки `add_product`.
-        - `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-        - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-        -  Переходит в состояние добавления товара, запрашивая имя товара.
-- `@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.name)`
-    -  `admin_process_name(message: Message, state: FSMContext)`:
-       - Обрабатывает сообщение с именем товара.
-       - `message`: Объект `Message`, содержащий данные о сообщении.
-       - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-       - Сохраняет имя товара в FSM и переходит к запросу описания.
-- `@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.description)`
-   - `admin_process_description(message: Message, state: FSMContext, session_without_commit: AsyncSession)`:
-      -  Обрабатывает сообщение с описанием товара.
-      -  `message`: Объект `Message`, содержащий данные о сообщении.
-      - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-      -   `session_without_commit`: Сессия SQLAlchemy для работы с базой данных (без автоматического коммита).
-      - Сохраняет описание товара в FSM и запрашивает категорию.
--  `@admin_router.callback_query(F.data.startswith("add_category_"), F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.category_id)`
-  - `admin_process_category(call: CallbackQuery, state: FSMContext)`:
-       -  Обрабатывает выбор категории товара.
-       -  `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-       -  `state`: Контекст FSM, содержащий текущее состояние пользователя.
-       - Сохраняет ID категории в FSM и запрашивает цену товара.
-- `@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.price)`
-    -  `admin_process_price(message: Message, state: FSMContext)`:
-        - Обрабатывает сообщение с ценой товара.
-        -  `message`: Объект `Message`, содержащий данные о сообщении.
-        -  `state`: Контекст FSM, содержащий текущее состояние пользователя.
-        - Сохраняет цену товара в FSM и запрашивает файл (или кнопку "БЕЗ ФАЙЛА").
-- `@admin_router.callback_query(F.data == "without_file", F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.file_id)`
-  - `admin_process_without_file(call: CallbackQuery, state: FSMContext)`:
-        -  Обрабатывает нажатие кнопки "БЕЗ ФАЙЛА".
-        - `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-        - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-        - Сохраняет `file_id = None` в FSM и переходит к запросу скрытого контента.
-- `@admin_router.message(F.document, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.file_id)`
-   -  `admin_process_without_file(message: Message, state: FSMContext)`:
-      - Обрабатывает отправку документа (файла).
-      - `message`: Объект `Message`, содержащий данные о сообщении.
-      - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-      - Сохраняет `file_id` в FSM и переходит к запросу скрытого контента.
-- `@admin_router.message(F.text, F.from_user.id.in_(settings.ADMIN_IDS), AddProduct.hidden_content)`
-   -  `admin_process_hidden_content(message: Message, state: FSMContext, session_without_commit: AsyncSession)`:
-        - Обрабатывает сообщение со скрытым контентом.
-        -  `message`: Объект `Message`, содержащий данные о сообщении.
-        - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-        - `session_without_commit`: Сессия SQLAlchemy для работы с базой данных (без автоматического коммита).
-        -  Сохраняет скрытый контент товара в FSM, формирует текст с данными о товаре и отправляет его на подтверждение.
-- `@admin_router.callback_query(F.data == "confirm_add", F.from_user.id.in_(settings.ADMIN_IDS))`
-  -  `admin_process_confirm_add(call: CallbackQuery, state: FSMContext, session_with_commit: AsyncSession)`:
-        - Обрабатывает подтверждение добавления товара.
-        - `call`: Объект `CallbackQuery`, содержащий данные о callback-запросе.
-        - `state`: Контекст FSM, содержащий текущее состояние пользователя.
-        -  `session_with_commit`: Сессия SQLAlchemy для работы с базой данных (с автоматическим коммитом).
-        - Сохраняет данные о товаре в базу данных.
-        - Отправляет сообщение об успешном добавлении товара.
+-   **`start_admin(call: CallbackQuery)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery` (запрос от inline-кнопки).
+    -   Возвращает: `None`.
+    -   Назначение: Обрабатывает запрос на вход в админ-панель, проверяет права доступа. Отправляет пользователю главное меню администратора.
+    -   Пример: Пользователь нажимает кнопку "Админ-панель".
+
+-   **`admin_statistic(call: CallbackQuery, session_without_commit: AsyncSession)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `session_without_commit`: Объект `AsyncSession` для работы с базой данных.
+    -   Возвращает: `None`.
+    -   Назначение: Получает статистику пользователей и заказов из базы данных и отправляет ее администратору.
+    -   Пример: Администратор нажимает кнопку "Статистика".
+
+-   **`admin_process_cancel(call: CallbackQuery, state: FSMContext)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `state`: Объект `FSMContext`.
+    -   Возвращает: `None`.
+    -   Назначение: Отменяет текущий сценарий добавления товара, очищая состояние FSM.
+    -   Пример: Во время добавления товара администратор нажимает кнопку "Отмена".
+
+-   **`admin_process_start_dell(call: CallbackQuery, session_without_commit: AsyncSession)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `session_without_commit`: Объект `AsyncSession`.
+    -   Возвращает: `None`.
+    -   Назначение: Запускает процесс удаления товара, отправляет список товаров администратору.
+    -   Пример: Администратор нажимает кнопку "Удалить товар".
+
+-   **`admin_process_start_dell(call: CallbackQuery, session_with_commit: AsyncSession)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `session_with_commit`: Объект `AsyncSession` с поддержкой транзакций.
+    -   Возвращает: `None`.
+    -   Назначение: Удаляет выбранный товар из базы данных.
+    -   Пример: Администратор нажимает кнопку "Удалить" под определенным товаром.
+
+-   **`admin_process_products(call: CallbackQuery, session_without_commit: AsyncSession)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `session_without_commit`: Объект `AsyncSession`.
+    -   Возвращает: `None`.
+    -   Назначение: Запускает меню управления товарами.
+    -   Пример: Администратор нажимает кнопку "Управление товарами".
+
+-   **`admin_process_add_product(call: CallbackQuery, state: FSMContext)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `state`: Объект `FSMContext`.
+    -   Возвращает: `None`.
+    -   Назначение: Запускает процесс добавления нового товара, устанавливает начальное состояние FSM `AddProduct.name`.
+    -   Пример: Администратор нажимает кнопку "Добавить товар".
+
+-   **`admin_process_name(message: Message, state: FSMContext)`**:
+    -   Аргументы:
+        -   `message`: Объект `Message` с текстом.
+        -   `state`: Объект `FSMContext`.
+    -   Возвращает: `None`.
+    -   Назначение: Сохраняет имя товара в FSM, запрашивает описание товара.
+    -   Пример: Администратор вводит имя товара "Новый товар".
+
+-  **`admin_process_description(message: Message, state: FSMContext, session_without_commit: AsyncSession)`**:
+    -   Аргументы:
+        -   `message`: Объект `Message` с текстом.
+        -   `state`: Объект `FSMContext`.
+        -    `session_without_commit`: Объект `AsyncSession`.
+    -   Возвращает: `None`.
+    -    Назначение: Сохраняет описание товара в FSM, запрашивает категорию товара.
+    -   Пример: Администратор вводит описание товара.
+
+-   **`admin_process_category(call: CallbackQuery, state: FSMContext)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `state`: Объект `FSMContext`.
+    -   Возвращает: `None`.
+    -   Назначение: Сохраняет выбранную категорию товара в FSM, запрашивает цену товара.
+    -   Пример: Администратор выбирает категорию товара из списка.
+
+-   **`admin_process_price(message: Message, state: FSMContext)`**:
+    -   Аргументы:
+        -   `message`: Объект `Message` с текстом.
+        -   `state`: Объект `FSMContext`.
+    -   Возвращает: `None`.
+    -   Назначение: Сохраняет цену товара в FSM, запрашивает файл или подтверждение его отсутствия.
+    -    Пример: Администратор вводит цену товара.
+
+-   **`admin_process_without_file(call: CallbackQuery, state: FSMContext)` (без файла)**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `state`: Объект `FSMContext`.
+    -   Возвращает: `None`.
+    -   Назначение: Устанавливает `file_id` в `None`, запрашивает скрытый контент.
+    -   Пример: Администратор нажимает кнопку "БЕЗ ФАЙЛА".
+
+-    **`admin_process_without_file(message: Message, state: FSMContext)` (с файлом)**:
+    -   Аргументы:
+        -   `message`: Объект `Message` с файлом.
+        -   `state`: Объект `FSMContext`.
+    -    Возвращает: `None`.
+    -   Назначение: Сохраняет `file_id` документа, запрашивает скрытый контент.
+    -   Пример: Администратор отправляет файл.
+
+-   **`admin_process_hidden_content(message: Message, state: FSMContext, session_without_commit: AsyncSession)`**:
+    -   Аргументы:
+        -   `message`: Объект `Message` с текстом.
+        -   `state`: Объект `FSMContext`.
+        -    `session_without_commit`: Объект `AsyncSession`.
+    -   Возвращает: `None`.
+    -   Назначение: Сохраняет скрытый контент товара, формирует сообщение для подтверждения, переходит в состояние подтверждения добавления.
+    -   Пример: Администратор вводит скрытый контент.
+
+-   **`admin_process_confirm_add(call: CallbackQuery, state: FSMContext, session_with_commit: AsyncSession)`**:
+    -   Аргументы:
+        -   `call`: Объект `CallbackQuery`.
+        -   `state`: Объект `FSMContext`.
+        -   `session_with_commit`: Объект `AsyncSession`.
+    -   Возвращает: `None`.
+    -   Назначение: Добавляет товар в базу данных, отправляет подтверждение.
+    -   Пример: Администратор нажимает кнопку "Подтвердить".
 
 ### Переменные:
 
--   `admin_router`: Экземпляр `Router` для обработки административных команд.
--   `settings`: Объект настроек (из `bot.config`)
--   `product_data`: Словарь, содержащий данные о товаре, получаемые из `FSMContext`.
--   `category_info`: Данные о категории товара, получаемые из БД.
--   `file_id`: ID файла, прикрепленного к товару.
--   `file_text`: Текст, указывающий наличие файла у товара (либо "📦 Товар с файлом", либо "📄 Товар без файла").
--  `product_text`: Текст, содержащий описание товара.
--   `stats`: Данные статистики по пользователям, полученные из `UserDAO`.
--   `payment_stats`: Данные статистики по платежам, полученные из `PurchaseDao`.
--   `stats_message`: Форматированная строка со статистикой.
--   `all_products`: Список всех товаров, полученных из `ProductDao`.
--   `all_products_count`: Общее количество товаров, полученное из `ProductDao`.
--   `msg`: Сообщение, которое отправляет бот пользователю.
--   `price`: Цена товара, введенная пользователем.
--   `category_id`: ID категории товара.
+-   `admin_router`: Экземпляр `Router` для обработки обновлений, связанных с админ-панелью.
+-   `settings.ADMIN_IDS`: Список ID администраторов, используется для проверки доступа.
 
 ### Потенциальные ошибки и области для улучшения:
 
-- Обработка ошибок: В коде есть общая обработка исключений при старте админ-панели, но стоит добавить более детальную обработку ошибок в других частях кода, например при работе с базой данных или при парсинге данных от пользователя.
-- Валидация данных: В коде выполняется только простая проверка на число при вводе цены. Стоит добавить более строгую валидацию данных (например, проверка на минимальную и максимальную цену, на допустимые символы в имени и описании товара).
-- Коммит транзакций: В коде используется `session_with_commit` и `session_without_commit`. Важно убедиться, что коммиты происходят в нужных местах (например, после успешного добавления/удаления данных).
-- Повторное использование кода: Некоторые части кода (например, отправка сообщения с кнопкой отмены) повторяются. Стоит выделить их в отдельные функции.
+1.  **Обработка ошибок:** В коде есть общие блоки `try...except Exception as e:`, которые могут скрывать конкретные проблемы. Желательно обрабатывать более специфические исключения (например, `sqlalchemy.exc.SQLAlchemyError`) для более точной диагностики.
+2.  **Валидация данных:** Перед сохранением данных в базу желательно проводить дополнительную валидацию, например, проверку длины текста, формата цены и т.д.
+3.  **Рефакторинг:** Некоторые блоки кода можно рефакторить, выделив повторяющиеся части в отдельные функции. Например, код отправки сообщения с `reply_markup` или удаления предыдущего сообщения.
+4.  **Безопасность:** Хранение ID администраторов в коде (хоть и в settings) не является лучшей практикой. Можно рассмотреть использование переменных окружения или конфигурационных файлов.
+5.  **Улучшение UX:** Можно добавить промежуточные сообщения, информирующие администратора о текущем процессе (например, "Идет загрузка файла...", "Сохранение товара...").
+6.  **Недостаток комментариев:** Код мог бы быть более читаемым, если добавить комментарии к логически важным частям.
 
 ### Взаимосвязь с другими частями проекта:
 
-- `bot.config`: Используется для получения настроек бота, таких как ID администраторов.
-- `bot.dao.dao`: Используется для доступа к данным о пользователях, товарах, категориях и покупках.
-- `bot.admin.kbs`: Используется для создания клавиатур для админ-панели.
-- `bot.admin.schemas`: Используется для определения схем данных, с которыми работают DAO.
-- `bot.admin.utils`: Используется для выполнения общих задач, например, удаление предыдущих сообщений.
+-   Данный модуль тесно связан с модулями `bot.config`, `bot.dao.dao`, `bot.admin.kbs`, `bot.admin.schemas` и `bot.admin.utils`.
+    -   `bot.config` предоставляет общую конфигурацию проекта, включая настройки админ-панели.
+    -   `bot.dao.dao` обеспечивает доступ к базе данных, взаимодействуя с таблицами пользователей, товаров, категорий и покупок.
+    -   `bot.admin.kbs` содержит клавиатуры для управления админ-панелью.
+    -   `bot.admin.schemas` содержит схемы для работы с данными товаров.
+    -   `bot.admin.utils` содержит утилиты, используемые в админ-панели.
+-   Этот модуль также зависит от `aiogram` для обработки входящих обновлений от Telegram и `sqlalchemy` для работы с базой данных.
+-   Код является частью логики административной панели Telegram-бота. Он обеспечивает функциональность для просмотра статистики, управления товарами (добавление, удаление).
 
-Этот код представляет собой модуль для управления админ-панелью Telegram-бота, позволяющий администраторам просматривать статистику, добавлять, удалять и изменять товары в базе данных. Он использует асинхронное программирование и FSM для обеспечения корректной работы.
-```
+Этот анализ предоставляет подробное представление о функциональности и структуре кода, а также о его взаимосвязях с другими частями проекта.

@@ -1,38 +1,37 @@
 # Анализ кода модуля `get_product_id.py`
 
 **Качество кода**
-7
+
+8
 - Плюсы
-    - Код выполняет поставленную задачу: извлекает ID продукта из входной строки.
-    - Используется вызов функции `extract_prod_ids` для извлечения ID.
-    - Присутствует кастомное исключение `ProductIdNotFoundException`.
+    - Код выполняет свою задачу по извлечению идентификатора продукта.
+    - Используется функция `extract_prod_ids` для извлечения идентификатора, что способствует модульности.
+    - Присутствует обработка исключения `ProductIdNotFoundException`.
 - Минусы
-    - Отсутствует описание модуля в формате RST.
-    - Отсутствует описание функции в формате RST.
-    - Не используется логирование ошибок.
-    - Закомментированный код, который дублирует функционал `extract_prod_ids`.
-    - Не добавлены все необходимые импорты, например `logger`.
-    - Используется блок try-except, которого можно избежать.
+    - Отсутствует документация модуля.
+    - Не используются константы для магических строк и регулярных выражений.
+    - Комментарии избыточны и не соответствуют стандарту.
+    - `re.search` можно убрать так как есть `extract_prod_ids`
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание модуля в формате RST в начале файла.
-2.  Добавить документацию для функции `get_product_id` в формате RST.
-3.  Использовать `logger.error` для логирования ошибок вместо `raise`.
-4.  Удалить закомментированный код, который не используется.
-5.  Добавить импорт `logger` из `src.logger.logger`.
-6.  Избегать избыточного использования try-except, используя `logger.error`.
+1.  Добавить описание модуля в начале файла.
+2.  Добавить документацию в формате RST для функции `get_product_id`.
+3.  Удалить закомментированный код и лишние комментарии.
+4.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+5.  Обработку исключения перенести в вызывающий код.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
+# <- venv win
 """
-Модуль для извлечения ID продукта из различных источников.
-==========================================================
+Модуль для извлечения идентификатора продукта AliExpress.
+=========================================================
 
-Этот модуль предоставляет функции для извлечения ID продукта из заданного текста.
-Он использует регулярные выражения и другие методы для поиска ID в различных форматах,
-таких как URL-адреса или простые числовые строки.
+Этот модуль предоставляет функцию `get_product_id`, которая извлекает идентификатор продукта
+из предоставленной строки.
 
 Пример использования
 --------------------
@@ -41,45 +40,33 @@
 
     from src.suppliers.aliexpress.api.tools.get_product_id import get_product_id
 
-    product_id = get_product_id('https://example.com/item/123456789.html')
+    product_id = get_product_id("https://www.aliexpress.com/item/123456789.html")
     print(product_id)
-
+    # Output: 123456789
 """
-# -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~
 
-from src.suppliers.aliexpress.errors import ProductIdNotFoundException
+from ..errors import ProductIdNotFoundException
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
-from src.logger.logger import logger # Добавлен импорт logger
-# import re # Удален импорт re, так как не используется
 
 
 def get_product_id(raw_product_id: str) -> str:
-    """
-    Извлекает и возвращает ID продукта из заданного текста.
+    """Извлекает идентификатор продукта из предоставленной строки.
 
-    :param raw_product_id: Текст, содержащий ID продукта.
-    :type raw_product_id: str
-    :raises ProductIdNotFoundException: Если ID продукта не найден.
-    :return: ID продукта.
-    :rtype: str
+    Args:
+        raw_product_id (str): Строка, содержащая идентификатор продукта или URL.
+
+    Returns:
+        str: Идентификатор продукта.
+
+    Raises:
+        ProductIdNotFoundException: Если идентификатор продукта не найден.
+
+    Example:
+        >>> get_product_id('https://www.aliexpress.com/item/123456789.html')
+        '123456789'
+        >>> get_product_id('123456789')
+        '123456789'
     """
-    try:
-        # Код вызывает функцию extract_prod_ids для извлечения ID продукта
-        product_id = extract_prod_ids(raw_product_id)
-        return product_id
-    except ProductIdNotFoundException as e:
-        # Код логирует ошибку, если ID продукта не найден
-        logger.error(f'Ошибка при извлечении ID продукта: {e}')
-        raise # Пробрасываем исключение выше
-    # #    if re.search(r'^[0-9]*$', text):
-    # #        return text
-    # #
-    # #    # Extract product ID from URL
-    # #    asin = re.search(r'(\\/)([0-9]*)(\\.)', text)
-    # #    if asin:
-    # #        return asin.group(2)
-    # #    else:
-    # #        raise ProductIdNotFoundException('Product id not found: ' + text)
+    # Код вызывает функцию `extract_prod_ids` для извлечения идентификатора продукта
+    return extract_prod_ids(raw_product_id)
 ```

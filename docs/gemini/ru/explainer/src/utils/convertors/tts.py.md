@@ -29,227 +29,212 @@
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
 
-```md
 ## <алгоритм>
 
-**1. `speech_recognizer` (Распознавание речи):**
+**Функция `speech_recognizer` (Распознавание речи):**
 
-   *   **Начало:** Функция принимает URL аудиофайла (`audio_url`), путь к локальному аудиофайлу (`audio_file_path`), и язык (`language`, по умолчанию 'ru-RU').
-    ```
-        Пример:
-            speech_recognizer(audio_url='https://example.com/audio.ogg')
-            speech_recognizer(audio_file_path=Path('/path/to/audio.ogg'), language='en-US')
-    ```
+1.  **Начало**: Функция принимает `audio_url` (URL аудио), `audio_file_path` (путь к локальному файлу) или их отсутствие, а также `language` (язык распознавания, по умолчанию `ru-RU`).
+    *   Пример: `speech_recognizer(audio_url='https://example.com/audio.ogg', language='en-US')`
 
-   *   **Загрузка аудио (если `audio_url` предоставлен):**
-       *   Отправляется GET-запрос на `audio_url`.
-       *   Содержимое ответа сохраняется во временный файл в формате OGG (`recognized_audio.ogg`).
-       ```
-        Пример:
-             response = requests.get('https://example.com/audio.ogg')
-             audio_file_path = Path('/tmp/recognized_audio.ogg')
-             with open(audio_file_path, 'wb') as f:
-                 f.write(response.content)
-       ```
+2.  **Загрузка аудио (если `audio_url` предоставлен)**:
+    *   Делает `GET` запрос к `audio_url`
+    *   Сохраняет скачанный контент в файл с именем `recognized_audio.ogg` в директории временных файлов.
+    *   Пример: Загружает `https://example.com/audio.ogg` в `/tmp/recognized_audio.ogg` (путь зависит от ОС).
 
-   *   **Конвертация OGG в WAV:**
-       *   Из файла OGG создается объект `AudioSegment`.
-       *   Аудио экспортируется в формат WAV (`.wav`).
-       ```
-       Пример:
-           audio = AudioSegment.from_file('/tmp/recognized_audio.ogg')
-           wav_file_path = Path('/tmp/recognized_audio.wav')
-           audio.export(wav_file_path, format='wav')
-       ```
+3.  **Конвертация OGG в WAV**:
+    *   Создает путь `wav_file_path` путем замены расширения файла с `.ogg` на `.wav`
+    *   Загружает аудиофайл OGG с помощью `AudioSegment.from_file()`
+    *   Экспортирует аудио в формат WAV с помощью `audio.export(wav_file_path, format='wav')`.
+    *   Пример: Конвертирует `/tmp/recognized_audio.ogg` в `/tmp/recognized_audio.wav`.
 
-   *   **Распознавание речи:**
-       *   Создается объект `sr.Recognizer`.
-       *   WAV файл загружается как источник аудио.
-       *   Аудио записывается.
-       *   Используется `recognizer.recognize_google` для распознавания речи.
-       *   Результат (текст) возвращается.
-       ```
-         Пример:
-            recognizer = sr.Recognizer()
-            with sr.AudioFile('/tmp/recognized_audio.wav') as source:
-                 audio_data = recognizer.record(source)
-                 text = recognizer.recognize_google(audio_data, language='ru-RU')
-                 return text
-       ```
+4.  **Распознавание речи**:
+    *   Инициализирует `sr.Recognizer()`.
+    *   Открывает `wav_file_path` как `sr.AudioFile` и считывает аудио данные в переменную `audio_data`
+    *   Пытается распознать речь с помощью `recognizer.recognize_google()`, передавая `audio_data` и `language`.
+    *   Пример: `recognizer.recognize_google(audio_data, language='ru-RU')`
 
-   *   **Обработка ошибок:**
-       *   Если распознавание не удалось, возвращается сообщение об ошибке.
-       *   Ошибки распознавания речи, сетевые ошибки или другие исключения логируются.
+5.  **Обработка результатов**:
+    *   Если распознавание успешно, возвращает распознанный текст.
+        *   Пример: Возвращает `"Привет мир"`.
+    *   Если распознавание не удалось (неизвестное значение): возвращает `"Sorry, I could not understand the audio."`
+    *   Если произошла ошибка запроса: возвращает `"Could not request results from the speech recognition service."`
 
-**2. `text2speech` (Синтез речи):**
-   *   **Начало:** Функция принимает текст (`text`) и язык (`lang`, по умолчанию 'ru').
-     ```
-       Пример:
-          await text2speech(text='Привет мир', lang='ru')
-     ```
-   *   **Генерация речи:**
-       *   Используется `gTTS` для создания аудио из текста.
-       *   Аудио сохраняется во временный файл в формате MP3.
-       ```
-        Пример:
-            tts = gTTS(text='Привет мир', lang='ru')
-            audio_file_path = '/tmp/response.mp3'
-            tts.save(audio_file_path)
-       ```
+6.  **Обработка общих ошибок**:
+    *   Если в процессе распознавания произошла ошибка: возвращает `"Error during speech recognition."`.
 
-   *   **Конвертация MP3 в WAV:**
-       *   MP3 файл загружается с помощью `AudioSegment`.
-       *   Аудио экспортируется в формат WAV.
-        ```
-          Пример:
-            audio = AudioSegment.from_file('/tmp/response.mp3', format='mp3')
-            wav_file_path = '/tmp/response.wav'
-            audio.export(wav_file_path, format='wav')
-       ```
+**Функция `text2speech` (Текст в речь):**
 
-   *   **Возврат пути к файлу:**
-       *   Функция возвращает путь к созданному WAV файлу.
-       ```
-        Пример:
-           return '/tmp/response.wav'
-       ```
-   *   **Обработка ошибок:**
-       *   Если возникает ошибка в процессе преобразования текста в речь, логируется ошибка и возвращается сообщение об ошибке.
+1.  **Начало**: Функция принимает `text` (текст для преобразования) и `lang` (язык, по умолчанию `ru`).
+    *   Пример: `text2speech(text="Привет", lang='ru')`
+
+2.  **Генерация речи**:
+    *   Создает объект `gTTS` с заданным текстом и языком.
+    *   Сохраняет сгенерированный аудиофайл в формате MP3 во временной директории под именем `response.mp3`.
+    *   Пример: Создает MP3 файл `/tmp/response.mp3` содержащий аудиозапись произнесенного слова `"Привет"`.
+
+3.  **Конвертация MP3 в WAV**:
+    *   Загружает сгенерированный MP3 файл с помощью `AudioSegment.from_file()`
+    *   Создает путь `wav_file_path`, заменяя `.mp3` на `.wav` в пути MP3 файла.
+    *   Экспортирует аудио в формат WAV.
+    *   Пример: Конвертирует `/tmp/response.mp3` в `/tmp/response.wav`
+
+4.  **Завершение**:
+    *   Возвращает путь к сохраненному WAV файлу.
+    *   Пример: Возвращает `/tmp/response.wav`.
+
+5.  **Обработка ошибок**:
+    *   Если произошла ошибка: возвращает `"Error during text-to-speech conversion."`.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
     subgraph speech_recognizer
-        Start_speech_recognizer[Начало]
-        Check_audio_url{audio_url?}
-        Download_audio[Скачать аудио]
-        Save_audio[Сохранить аудио]
-        Convert_ogg_to_wav[Конвертировать OGG в WAV]
-        Init_recognizer[Инициализировать распознаватель]
-        Record_audio[Записать аудио]
-        Recognize_speech[Распознать речь]
-        Return_text[Возврат распознанного текста]
-        Error_speech[Обработка ошибок]
+        A[Start: speech_recognizer<br>audio_url, audio_file_path, language]
+        
+        B{audio_url?}
+        
+        C[Download Audio<br>requests.get(audio_url)<br>save to recognized_audio.ogg]
+        
+        D[Convert OGG to WAV<br>AudioSegment.from_file(audio_file_path)<br>audio.export(wav_file_path, format='wav')]
+
+        E[Initialize Speech Recognizer<br>sr.Recognizer()]
+        
+        F[Recognize Speech<br>recognizer.recognize_google(audio_data, language=language)]
+        
+        G{Recognition Success?}
+        
+        H[Return Recognized Text]
+        
+        I[Return: Could not understand audio.]
+        
+        J[Return: Could not request results.]
+        
+        K[Log Error: Exception ex <br> Return: Error during speech recognition.]
+
     end
-    
+
     subgraph text2speech
-        Start_text2speech[Начало]
-        Generate_speech[Сгенерировать речь]
-        Save_speech[Сохранить аудио MP3]
-        Convert_mp3_to_wav[Конвертировать MP3 в WAV]
-        Return_audio_path[Возврат пути к WAV]
-         Error_text[Обработка ошибок]
+        L[Start: text2speech <br> text, lang]
+        
+        M[Generate Speech<br>gTTS(text=text, lang=lang)<br>save to response.mp3]
+        
+        N[Convert MP3 to WAV<br>AudioSegment.from_file(audio_file_path)<br>audio.export(wav_file_path, format='wav')]
+        
+        O[Return WAV File Path]
+        
+        P[Log Error: Exception ex <br> Return: Error during text-to-speech conversion.]
+
     end
     
-    Start_speech_recognizer --> Check_audio_url
-    Check_audio_url -- Yes --> Download_audio
-     Check_audio_url -- No -->  Convert_ogg_to_wav
-    Download_audio --> Save_audio
-    Save_audio --> Convert_ogg_to_wav
-    Convert_ogg_to_wav --> Init_recognizer
-    Init_recognizer --> Record_audio
-    Record_audio --> Recognize_speech
-    Recognize_speech --> Return_text
-    Recognize_speech -- Error --> Error_speech
-    Error_speech --> Return_text
-   
-   
-    Start_text2speech --> Generate_speech
-    Generate_speech --> Save_speech
-    Save_speech --> Convert_mp3_to_wav
-    Convert_mp3_to_wav --> Return_audio_path
-     Convert_mp3_to_wav -- Error --> Error_text
-    Error_text --> Return_audio_path
+    A --> B
+    B -- Yes --> C
+    B -- No --> D
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G -- Yes --> H
+    G -- No UnknownValueError --> I
+    G -- No RequestError --> J
+    G -- No Exception --> K
+    
+    
+    L --> M
+    M --> N
+    N --> O
+    N --> P
+    
+    
+    H -->|Success| text2speech
+    J -->|Error| text2speech
+    I -->|Error| text2speech
+    K -->|Error| text2speech
+    P -->|Error| speech_recognizer
 ```
-
-### **Объяснение `mermaid` диаграммы:**
-Диаграмма состоит из двух подграфов, представляющих функции `speech_recognizer` и `text2speech`.
-
-*   **`speech_recognizer`**:
-    *   **`Start_speech_recognizer`**: Начальная точка функции.
-    *   **`Check_audio_url`**: Проверка, был ли предоставлен `audio_url`.
-    *   **`Download_audio`**: Загрузка аудиофайла по URL.
-    *   **`Save_audio`**: Сохранение загруженного аудио в файл.
-    *   **`Convert_ogg_to_wav`**: Конвертация аудио из OGG в WAV.
-    *   **`Init_recognizer`**: Инициализация объекта распознавания речи `sr.Recognizer`.
-    *   **`Record_audio`**: Запись аудио из WAV-файла.
-    *   **`Recognize_speech`**: Распознавание речи с помощью Google Speech Recognition.
-    *   **`Return_text`**: Возврат распознанного текста или сообщения об ошибке.
-    *    **`Error_speech`**: Обработка ошибок, возникших в процессе распознавания.
-*   **`text2speech`**:
-    *   **`Start_text2speech`**: Начальная точка функции.
-    *   **`Generate_speech`**: Генерация речи из текста с помощью `gTTS`.
-    *   **`Save_speech`**: Сохранение сгенерированной речи в MP3 файл.
-    *    **`Convert_mp3_to_wav`**: Конвертация аудио из MP3 в WAV.
-    *   **`Return_audio_path`**: Возврат пути к созданному WAV-файлу.
-    *   **`Error_text`**: Обработка ошибок, возникших в процессе синтеза.
-Стрелки показывают поток выполнения и передачи данных между блоками.
 
 ## <объяснение>
 
-### **Импорты:**
+### Импорты:
 
-*   **`pathlib.Path`**: Используется для работы с путями к файлам и каталогам. Позволяет создавать, проверять и манипулировать путями к файлам независимо от операционной системы.
-*   **`tempfile`**: Модуль для создания временных файлов и каталогов. Используется для хранения временных аудиофайлов во время обработки.
-*   **`asyncio`**: Библиотека для асинхронного программирования. Функция `text2speech` объявлена асинхронной (`async def`), что позволяет выполнять операции ввода-вывода неблокирующим образом.
-*   **`requests`**: Библиотека для отправки HTTP запросов. Используется для загрузки аудиофайлов по URL.
-*   **`speech_recognition as sr`**: Библиотека для распознавания речи. Содержит классы и методы для распознавания речи из аудио.
-*   **`pydub.AudioSegment`**: Библиотека для работы с аудиофайлами, например, конвертации форматов.
-*   **`gtts.gTTS`**: Библиотека для преобразования текста в речь.
-*   **`src.utils.jjson.j_loads, src.utils.jjson.j_loads_ns, src.utils.jjson.j_dumps`**: Модуль для работы с json.
-*   **`src.logger.logger`**: Модуль для логирования событий.
-### **Функции:**
+*   `pathlib.Path`: Используется для работы с путями к файлам и директориям в объектно-ориентированном стиле, что делает код более читаемым и переносимым.
+*   `tempfile`: Используется для создания временных файлов и директорий.
+*   `asyncio`: Используется для асинхронного программирования, в частности для `text2speech`
+*   `requests`: Используется для отправки HTTP запросов, например, для загрузки аудиофайлов по URL.
+*   `speech_recognition as sr`: Библиотека для распознавания речи. Позволяет распознавать речь из аудиофайлов.
+*   `pydub.AudioSegment`: Библиотека для работы с аудио, включая конвертацию форматов.
+*   `gtts.gTTS`: Библиотека для преобразования текста в речь.
+*   `src.utils.jjson`: Используется для обработки JSON, но в данном файле не используется.
+*   `src.logger.logger`: Используется для логирования событий, ошибок и важной информации.
+
+**Взаимосвязи с другими пакетами `src`:**
+
+*   `src.utils.jjson`: Данный модуль импортируется, но не используется.
+*   `src.logger.logger`: Используется для логирования, обеспечивая возможность отслеживания работы функций и отладки.
+
+### Классы:
+
+В данном коде нет пользовательских классов, используются классы из импортированных библиотек:
+* `speech_recognition.Recognizer`: Используется для распознавания речи.
+* `speech_recognition.AudioFile`: Используется для загрузки аудио данных из файла.
+* `pydub.AudioSegment`: Используется для загрузки аудио файлов и их конвертации.
+* `gtts.gTTS`: Используется для генерации речи из текста.
+
+### Функции:
 
 *   **`speech_recognizer(audio_url: str = None, audio_file_path: Path = None, language: str = 'ru-RU') -> str`**:
-    *   **Аргументы:**
-        *   `audio_url` (str, optional): URL аудиофайла.
-        *   `audio_file_path` (Path, optional): Путь к локальному аудиофайлу.
-        *   `language` (str): Язык для распознавания (например, 'ru-RU').
-    *   **Возвращаемое значение:**
-        *   str: Распознанный текст или сообщение об ошибке.
-    *   **Назначение:** Загружает или принимает аудиофайл и пытается распознать в нём речь, используя Google Speech Recognition.
-    *   **Примеры:**
-        *   `speech_recognizer(audio_url='https://example.com/audio.ogg')`
-        *   `speech_recognizer(audio_file_path=Path('/path/to/audio.ogg'), language='en-US')`
 
-*   **`async def text2speech(text: str, lang: str = 'ru') -> str`**:
+    *   **Аргументы:**
+        *   `audio_url` (str, optional): URL аудио файла для скачивания. По умолчанию `None`.
+        *   `audio_file_path` (Path, optional): Путь к локальному аудио файлу. По умолчанию `None`.
+        *   `language` (str, optional): Язык для распознавания речи (например, `ru-RU`). По умолчанию `'ru-RU'`.
+    *   **Возвращаемое значение**:
+        *   (str): Распознанный текст или сообщение об ошибке.
+    *   **Назначение**:
+        *   Загружает аудиофайл (при необходимости), конвертирует его в формат WAV и распознает речь.
+    *   **Пример**:
+        `recognized_text = speech_recognizer(audio_url='https://example.com/audio.ogg', language='en-US')`
+        `recognized_text = speech_recognizer(audio_file_path=Path('/path/to/audio.ogg'), language='ru-RU')`
+
+*   **`text2speech(text: str, lang: str = 'ru') -> str`**:
+
     *   **Аргументы:**
         *   `text` (str): Текст для преобразования в речь.
-        *   `lang` (str): Язык для синтеза речи (например, 'ru').
-    *   **Возвращаемое значение:**
-        *    str: Путь к созданному WAV-файлу или сообщение об ошибке.
-    *   **Назначение:** Преобразует текст в речь и сохраняет результат в виде аудиофайла в формате WAV.
-    *   **Примеры:**
-        *   `await text2speech(text='Привет мир', lang='ru')`
-        *   `await text2speech(text='Hello world', lang='en')`
-### **Переменные:**
-*   **`audio_url`** (str): URL для загрузки аудиофайла.
-*   **`audio_file_path`** (Path): Путь к локальному аудиофайлу.
-*   **`language`** (str): Языковой код для распознавания речи.
-*   **`response`** (requests.Response): Ответ от HTTP-запроса.
-*   **`text`** (str): Текст, который нужно преобразовать в речь.
-*   **`lang`** (str): Языковой код для синтеза речи.
-*   **`tts`** (gtts.gTTS): Объект для генерации речи из текста.
-*   **`recognizer`** (sr.Recognizer): Объект распознавания речи.
-*   **`audio`** (AudioSegment): Объекты для обработки аудио.
-*   **`wav_file_path`** (str): Путь к WAV файлу.
+        *   `lang` (str, optional): Язык для синтеза речи (например, `ru`). По умолчанию `'ru'`.
+    *   **Возвращаемое значение**:
+        *   (str): Путь к созданному WAV аудиофайлу.
+    *   **Назначение**:
+        *   Преобразует текст в речь и сохраняет ее в WAV файл.
+    *   **Пример**:
+        `audio_path = await text2speech(text="Привет", lang='ru')`
 
-### **Взаимосвязь с другими частями проекта:**
+### Переменные:
 
-*   **`src.utils.jjson`**: Используется для загрузки и сохранения конфигурационных файлов в формате json.
-*   **`src.logger.logger`**: Используется для записи логов в процессе выполнения функций, что помогает при отладке и мониторинге работы программы.
+*   `audio_url`: URL аудиофайла (строка).
+*   `audio_file_path`: Путь к аудиофайлу (объект `pathlib.Path`).
+*   `language`: Язык для распознавания (строка).
+*   `wav_file_path`: Путь к WAV файлу (объект `pathlib.Path`).
+*   `recognizer`: Объект класса `speech_recognition.Recognizer`.
+*   `audio_data`: Данные аудио для распознавания (объект, зависящий от `speech_recognition`).
+*   `text`: Распознанный текст или текст для синтеза (строка).
+*   `lang`: Язык для синтеза речи (строка).
+*   `tts`: Объект класса `gtts.gTTS`.
+*   `audio`: Объект класса `pydub.AudioSegment`.
+* `response`: объект ответа из `requests.get()`.
 
-### **Потенциальные ошибки и области для улучшения:**
+### Потенциальные ошибки и области для улучшения:
 
-*   **Зависимость от Google Speech Recognition:** Функция `speech_recognizer` полностью зависит от Google Speech Recognition, что делает её уязвимой в случае сбоев сервиса или ограничений.
-*   **Обработка ошибок:**  Обработка ошибок выполняется, но в некоторых случаях, ошибки могут быть более информативными для пользователя.
-*   **Формат файлов:** Код конвертирует OGG в WAV и MP3 в WAV, но не проверяет исходный формат и не поддерживает другие форматы.
-*  **Временные файлы:** Код создает временные файлы, но не предусмотрена их очистка, что может привести к переполнению диска.
+*   **Обработка ошибок**: Код содержит общую обработку исключений, но можно добавить более специфичные обработчики для каждой ошибки (например, `requests.exceptions.RequestException`).
+*   **Форматы аудио**: Поддерживаются только OGG и MP3 для преобразования, можно расширить список поддерживаемых форматов.
+*   **Зависимость от Google**: Используется Google Speech Recognition, можно добавить альтернативные сервисы распознавания.
+*   **Управление временными файлами**: Временные файлы создаются в `/tmp` (или аналоге), можно добавить более гибкое управление временными файлами (например, удалять их после использования).
+*   **Асинхронность**: Функция `speech_recognizer` не асинхронная, но загрузка аудио по URL и распознавание могут быть асинхронными для увеличения производительности.
+*   **j_loads and j_dumps**: Хотя эти импорты присутствуют, они не используются в данном файле, их можно удалить или использовать для будущих целей.
+* **Улучшение логирования:** Добавить возможность логирования уровня ошибок и предупреждений.
 
-**Общие замечания:**
+**Цепочка взаимосвязей с другими частями проекта:**
 
-*   Функции `speech_recognizer` и `text2speech` инкапсулируют логику преобразования речи в текст и наоборот. Это делает код модульным и удобным для использования в других частях проекта.
-*   Код использует библиотеки, которые необходимо устанавливать отдельно (`speech_recognition`, `pydub`, `gtts`, `requests`).
-*   В коде используется асинхронный подход для `text2speech`, что позволяет более эффективно обрабатывать операции ввода-вывода.
-```
+1.  **`src.logger.logger`**: Этот модуль используется для записи событий (например, распознанного текста, ошибок).
+2.  **`src.utils.jjson`**:  Хотя в текущем файле он не используется, в других частях проекта он может применяться для работы с JSON, например при получении настроек или отправке данных.
+
+Этот код обеспечивает базовую функциональность для распознавания речи из аудиофайлов и преобразования текста в речь.

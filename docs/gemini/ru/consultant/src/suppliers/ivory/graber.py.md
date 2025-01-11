@@ -1,115 +1,98 @@
-# Анализ кода модуля `graber.py`
+# Анализ кода модуля `graber`
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован и использует классы для организации функциональности.
-    - Применяется наследование от `src.suppliers.graber.Graber`.
-    - Есть базовая структура для обработки полей товара и использования декораторов.
-    - Используются type hints.
-- Минусы
-    - Отсутствует документация в формате reStructuredText (RST).
-    - Повторяющийся код с декораторами.
-    - Не используется `from src.logger.logger import logger` для логирования ошибок.
-    - Не используются `j_loads` или `j_loads_ns` для чтения файлов.
-    - Не все импорты в начале модуля, есть импорт header.
+9
+-  Плюсы
+     -  Код хорошо структурирован и организован в классы.
+     -  Используется наследование для переиспользования логики.
+     -  Используются аннотации типов.
+     -  Присутствует базовая документация модуля.
+
+-  Минусы
+    -  Не все функции и методы имеют docstring.
+    -  Используется `#` для отключения кода, лучше удалять неиспользуемый код.
+    -  Присутствует дублирование кода декоратора `close_pop_up`.
+    -  Отсутствует обработка ошибок в `__init__`.
+    -  Не используется `j_loads` или `j_loads_ns` для чтения файлов (в данном случае не применимо, но все же).
+    -  Не везде используются f-строки для форматирования.
+    -  Не используется `from src.logger.logger import logger` для логирования.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    - Добавить docstring в формате RST для модуля, класса и методов.
-    - Добавить описания параметров и возвращаемых значений для функций.
-2.  **Логирование**:
-    - Использовать `from src.logger.logger import logger` для вывода ошибок.
-    - Заменить `print` на `logger.debug` или `logger.error` в зависимости от ситуации.
-    - Избегать общих `try-except`, использовать `logger.error` для логирования исключений.
-3.  **Импорты**:
-    - Исправить импорты и использовать `from src.utils.jjson import j_loads` или `j_loads_ns` если это необходимо.
-4. **Декораторы**:
-    - Устранить дублирование кода с декораторами.
-5.  **Обработка данных**:
-    - Заменить `json.load` на `j_loads` или `j_loads_ns` если используется чтение файлов.
-6.  **Общая структура**:
-    - Имена переменных и функций должны соответствовать кодстайлу.
-    - Удалить лишние комментарии.
+1.  Удалить дублирование кода декоратора `close_pop_up`.
+2.  Добавить docstring для класса `Graber`, метода `__init__` и других методов, если они будут добавлены.
+3.  Использовать `from src.logger.logger import logger` для импорта логгера.
+4.  Переписать обработку ошибок с использованием `logger.error` для более информативного логирования.
+5.  Удалить закомментированный код.
+6.  В `__init__` добавить трассировку.
+7.  Использовать f-строки.
+8.  Реализовать декоратор в родительском классе, чтобы не дублировать.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для сбора данных о товарах с сайта ivory.co.il
-=====================================================
-
-Этот модуль содержит класс :class:`Graber`, который наследуется от базового класса :class:`src.suppliers.graber.Graber`.
-Он предназначен для сбора значений полей со страниц товаров на сайте `ivory.co.il`.
-Каждое поле товара обрабатывается отдельной функцией, которую можно переопределить для нестандартной обработки.
-
-Перед отправкой запроса к веб-драйверу могут быть выполнены предварительные действия через декоратор.
-Декоратор по умолчанию находится в родительском классе.
-Для того чтобы декоратор сработал, необходимо передать значение в `Context.locator`.
-Если требуется реализовать свой декоратор, раскомментируйте строки с декоратором и переопределите его поведение.
-
+.. module:: src.suppliers.ivory
+	:platform: Windows, Unix
+	:synopsis: Класс собирает значение полей на странице товара `ivory.co.il`.
+    Для каждого поля страницы товара сделана функция обработки поля в родительском классе.
+    Если нужна нестандертная обработка, функция перегружается в этом классе.
+    ------------------
+    Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор.
+    Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал надо передать значение
+    в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 """
-from typing import Any, Callable
-from functools import wraps
-from src.suppliers.graber import Graber as Grbr, Context
+
+from typing import Any
+# from src.webdriver.exceptions import ExecuteLocatorException  #  не используется
+# from functools import wraps # не используется
+from src.suppliers.graber import Graber as Grbr, Context # close_pop_up # импорт close_pop_up из родительского класса
 from src.webdriver.driver import Driver
-from src.logger.logger import logger
-from src.webdriver.exceptions import ExecuteLocatorException
-
-
-
-
-
-
-def close_pop_up(value: Any = None) -> Callable:
-    """
-    Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
-
-    :param value: Дополнительное значение для декоратора.
-    :type value: Any
-    :return: Декоратор, оборачивающий функцию.
-    :rtype: Callable
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                # код исполняет закрытие всплывающего окна, если это необходимо
-                # await Context.driver.execute_locator(Context.locator_for_decorator)
-                ...
-            except ExecuteLocatorException as e:
-                logger.debug(f'Ошибка выполнения локатора: {e}')
-            # код исполняет основную функцию
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
-
+from src.logger.logger import logger # импорт логера из src.logger
 
 class Graber(Grbr):
     """
-    Класс для сбора данных о товарах с сайта ivory.co.il.
+    Класс для операций сбора данных о товарах с сайта ivory.co.il.
 
-    :cvar supplier_prefix: Префикс поставщика.
-    :vartype supplier_prefix: str
+    :param driver: Экземпляр веб-драйвера для взаимодействия с браузером.
+    :type driver: Driver
+
     """
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
         """
-        Инициализация класса сбора полей товара.
+        Инициализирует класс Graber.
 
         :param driver: Экземпляр веб-драйвера.
         :type driver: Driver
         """
-        # код устанавливает префикс поставщика
-        self.supplier_prefix = 'ivory'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        # Устанавливаем глобальные настройки через Context
-        Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
+        try: # оборачиваем в try-except для трассировки
+            self.supplier_prefix = 'ivory'
+            super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
 
+            # Устанавливаем глобальные настройки через Context
+            Context.locator_for_decorator = None # если будет установлено значение, то оно выполнится в декораторе `@close_pop_up`
+        except Exception as ex: # Логируем ошибку
+            logger.error(f'Ошибка инициализации класса Graber: {ex}')
+
+#  удален дублирующий код декоратора
+# def close_pop_up(value: Any = None) -> Callable:
+#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+#     Args:
+#         value (Any): Дополнительное значение для декоратора.
+#     Returns:
+#         Callable: Декоратор, оборачивающий функцию.
+#     """
+#     def decorator(func: Callable) -> Callable:
+#         @wraps(func)
+#         async def wrapper(*args, **kwargs):
+#             try:
+#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close
+#                 ...
+#             except ExecuteLocatorException as e:
+#                 logger.debug(f'Ошибка выполнения локатора: {e}')
+#             return await func(*args, **kwargs)  # Await the main function
+#         return wrapper
+#     return decorator
 ```

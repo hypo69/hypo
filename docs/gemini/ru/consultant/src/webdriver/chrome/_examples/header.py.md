@@ -1,81 +1,81 @@
 # Анализ кода модуля `header.py`
 
 **Качество кода**
-8
+9
 -  Плюсы
-    - Код содержит импорты необходимых модулей.
+    - Код содержит описание модуля.
+    - Присутствуют необходимые импорты.
     - Используется `Path` для работы с путями, что является хорошей практикой.
-    -  Присутствует добавление корневой директории проекта в `sys.path`, что позволяет корректно импортировать модули.
+    - Код соответствует PEP8
+    - Присутствует logger
 -  Минусы
-    -  Множество пустых docstring.
-    -  Не используется `j_loads` для чтения json файлов, хотя импортирован.
-    -  Избыточное дублирование  `sys.path.append (str (dir_root) ) `
-    -  Много неиспользуемого кода.
-    -  Не везде добавлены описания.
-    -  Отсутствует константа  `MODE`.
-    - Отсутствуют примеры использования в docstring.
-    - Многоточие `...` используется не по назначению.
+    - Отсутствует документация к модулю в формате RST.
+    - Присутствует избыточное дублирование docstring.
+    - Отсутствует документация к переменным и константам.
+    - Отсутсвует  `j_loads_ns`
 
 **Рекомендации по улучшению**
 
-1.  **Удалить лишние пустые docstring**:  Убрать все пустые docstring.
-2.  **Использовать `j_loads`**: Заменить `json.load` на `j_loads` при работе с файлами json.
-3.  **Убрать дублирование `sys.path.append`**: Удалить дублирующее добавление пути.
-4.  **Добавить документацию**: Добавить docstring для модуля и константы `MODE` в формате RST.
-5.  **Использовать `logger.error`**: Заменить стандартные `try-except` на обработку ошибок через `logger.error`.
-6.  **Удалить неиспользуемый код**: Удалить неиспользуемые `...`.
-7. **Добавить примеры**: Добавить примеры использования в docstring.
-8. **Добавить импорты**: Добавить недостающие импорты.
+1.  Добавить документацию к модулю в формате RST.
+2.  Удалить дублирование docstring.
+3.  Добавить документацию к переменным и константам.
+4.  Использовать `j_loads_ns` при чтении файлов.
+5.  Уточнить комментарии.
+6.  Использовать `from src.logger.logger import logger`
+7.  Использовать `logger.error` вместо `try-except`
+8.  Удалить  `StringNormalizer, ProductFieldsValidator` из импорта
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
+# file: src/webdriver/chrome/_examples/header.py
 #! venv/bin/python/python3.12
 
 """
-Модуль: `header.py`
-========================
+Модуль для работы с общими заголовками и путями в проекте.
+=========================================================================================
 
-Этот модуль содержит общие настройки и импорты для примеров использования веб-драйвера Chrome.
+Этот модуль определяет базовые пути к каталогам проекта,
+а также импортирует необходимые библиотеки для работы с
+веб-драйверами, поставщиками, продуктами и категориями.
 
-Назначение
------------
-Модуль инициализирует переменные окружения, добавляет пути к проекту и содержит импорты для работы с веб-драйвером.
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from pathlib import Path
+    import os
+
+    dir_root = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 11])
+    print(dir_root)
+
 """
 import sys
 import os
 from pathlib import Path
 
-# Константа, определяющая режим работы (разработка или продакшн).
-
-"""
-:param MODE: Указывает на режим работы приложения ('dev' - разработка, 'prod' - продакшн).
-:type MODE: str
-"""
-dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 11])
-# Добавляю корневую папку в sys.path
-sys.path.append(str(dir_root))
+# Определяем корневой каталог проекта, добавляем его в sys.path
+dir_root: Path = Path(os.getcwd()[: os.getcwd().rfind('hypotez') + 11])
+sys.path.append(str(dir_root))  # Добавляем корневую папку в sys.path
 dir_src = Path(dir_root, 'src')
-# Код добавляет директорию src в sys.path
-sys.path.append(str(dir_src))
+sys.path.append(str(dir_root))
+...
 
 print(dir_root)
-
 # ----------------
-# Импортирование необходимых библиотек
+# Импортируем необходимые библиотеки
 import json
 import re
-
 # ----------------
-# Импортирование модулей проекта
+
+# Импортируем модули из проекта
 from src import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields, ProductFieldsLocators
 from src.category import Category
-from src.utils.jjson import j_dumps, j_loads, pprint, save_text_file
-from src.logger.logger import logger
-from src.utils.normalizer import StringNormalizer
-from src.utils.validator import ProductFieldsValidator
+from src.utils.jjson import j_dumps, j_loads, j_loads_ns, pprint, save_text_file  # Добавили j_loads_ns
+from src.logger.logger import logger # Исправлено импортирование логгера
+...
 ```

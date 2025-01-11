@@ -1,6 +1,5 @@
 ## \file /src/utils/convertors/csv.py
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
 
 """

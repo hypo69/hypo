@@ -1,127 +1,105 @@
-# Анализ кода модуля `graber.py`
+# Анализ кода модуля `graber`
 
 **Качество кода**
-8
-- Плюсы
-    - Код структурирован и разделен на классы, что способствует лучшей организации и повторному использованию.
-    - Используется наследование от класса `Graber` (переименован в `Grbr`), что позволяет переиспользовать логику сбора данных.
-    - Применяется декоратор для выполнения предварительных действий перед основной логикой.
-    - Код написан с использованием асинхронности.
-    - Присутствует базовая документация.
-- Минусы
-    -  Использованы комментарии в стиле `#`, необходимо переписать в RST
-    -  Не все импорты приведены в соответствие со стилем проекта.
-    - Не хватает подробных docstring для функций и методов.
-    -  Отсутствует обработка ошибок с использованием `logger.error`.
-    -  Присутствуют неиспользуемые блоки кода.
-    -  Используется `...` как точка останова, что не является хорошей практикой.
-    -  Необходимо вынести магические строки и константы в конфиг.
+   -  **Плюсы**
+        - Код имеет docstring для модуля и класса, что соответствует стандартам оформления документации.
+        - Присутствует базовая структура для класса, включая инициализацию и наследование от `Graber`.
+        - Используется `logger` для отладочных сообщений.
+        - Есть заготовка для декоратора `close_pop_up`.
+   -  **Минусы**
+        - Используется `from src.suppliers.graber import Graber as Grbr, Context, close_pop_up` где `close_pop_up` также импортируется из текущего модуля.
+        - Отсутствуют комментарии для переменных класса.
+        - Нет документации для методов класса.
+        - Не все комментарии подробные.
+        - Используется `...` в коде, что должно быть заменено на конкретную логику или удалено.
+        - Не используется `j_loads` или `j_loads_ns`.
+        - Не определен тип для `supplier_prefix`, хотя он и прописан.
+        - Нет проверок на наличие `Context.driver`.
+        - Дублирование кода для импорта logger.
 
 **Рекомендации по улучшению**
-
-1.  **Импорты**:
-    -   Необходимо убрать `header` из импортов.
-    -   Уточнить импорты `from src.utils.jjson import j_loads, j_loads_ns`.
-2.  **Документация**:
-    -   Добавить docstring в формате RST для модуля, класса и методов.
-    -   Переписать комментарии `#` в формате RST.
-    -   Описать назначение переменных модуля.
-3.  **Логирование**:
-    -   Заменить `print` на `logger.debug`, `logger.info` или `logger.error` для логирования.
-    -   Использовать `logger.error` при обработке исключений.
-4.  **Декоратор**:
-    -   Уточнить использование декоратора `@close_pop_up`, перенести его в родительский класс если необходимо.
-    -   Применить декоратор к методам класса.
-5.  **Общая структура**:
-    -   Удалить закомментированные и неиспользуемые блоки кода.
-    -   Избегать использования `...` как точек останова, предпочесть `pass` или `return`.
-6. **Кодстайл**:
-    -  Переименовать `Graber as Grbr` в `GraberBase as Grbr`
-    -  Вынести магическую строку `wallmart` в константу
-    -  Изменить инициализацию  `Context.locator_for_decorator` на более явную
+1.  Удалите `close_pop_up` из импорта `from src.suppliers.graber import Graber as Grbr, Context, close_pop_up`.
+2.  Добавьте документацию для класса и его методов, включая описание аргументов и возвращаемых значений.
+3.  Замените `...` на конкретную логику или удалите.
+4.  Уточните тип для `supplier_prefix`: `supplier_prefix: str = 'wallmart'`
+5.  Замените импорт `logger` на `from src.logger import logger`.
+6.  Добавьте проверку на `Context.driver`.
+7.  Добавьте подробные комментарии, поясняющие каждый блок кода.
+8.  Добавьте проверку типов для передаваемых аргументов в функции и методы.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для сбора данных о товарах с сайта wallmart.com.
-=================================================================
-
-Этот модуль содержит класс :class:`Graber`, который используется для сбора данных о товарах
-с сайта `wallmart.com`. Он наследуется от базового класса :class:`src.suppliers.graber.Graber`
-и переопределяет методы для специфичной обработки полей.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-   from src.webdriver.driver import Driver
-
-   driver = Driver()
-   graber = Graber(driver=driver)
-   # graber.some_method()
+.. module:: src.suppliers.wallmart
+    :platform: Windows, Unix
+    :synopsis: Класс собирает значение полей на странице  товара `wallmart.com`.
+        Для каждого поля страницы товара сделана функция обработки поля в родительском классе.
+        Если нужна нестандартная обработка, функция перегружается в этом классе.
+        ------------------
+        Перед отправкой запроса к вебдрайверу можно совершить предварительные действия через декоратор.
+        Декоратор по умолчанию находится в родительском классе. Для того, чтобы декоратор сработал надо передать значение
+        в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 """
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 from typing import Any, Callable
 from functools import wraps
-# from header import Header  # TODO: удалить импорт
-from src.suppliers.graber import Graber as GraberBase, Context, close_pop_up
+
+# from src.suppliers.graber import Graber as Grbr, Context, close_pop_up # Удален close_pop_up из импорта.
+from src.suppliers.graber import Graber as Grbr, Context
 from src.webdriver.driver import Driver
 from src.logger.logger import logger
 from src.webdriver.exceptions import ExecuteLocatorException
 
 
-
-SUPPLIER_PREFIX = 'wallmart'
-"""Строковый префикс поставщика."""
-
-
-def decorator_template(value: Any = None) -> Callable:
+#
+#
+#           DECORATOR TEMPLATE.
+#
+def close_pop_up(value: Any = None) -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    :param value: Дополнительное значение для декоратора.
-    :type value: Any
-    :return: Декоратор, оборачивающий функцию.
-    :rtype: Callable
+    Args:
+        value (Any): Дополнительное значение для декоратора.
+
+    Returns:
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close
-                pass
+                if Context.locator_for_decorator:
+                    # код исполняет закрытие всплывающего окна если есть локатор
+                    await Context.driver.execute_locator(Context.locator_for_decorator)
             except ExecuteLocatorException as e:
-                 # Логируем ошибку выполнения локатора
+                #  логируется ошибка выполнения локатора
                 logger.debug(f'Ошибка выполнения локатора: {e}')
-            return await func(*args, **kwargs)  # Await the main function
+            # код исполняет основную функцию
+            return await func(*args, **kwargs)
         return wrapper
     return decorator
 
 
-class Graber(GraberBase):
+class Graber(Grbr):
     """
-    Класс для сбора данных о товарах с сайта wallmart.com.
+    Класс для операций захвата данных со страниц Walmart.
 
-    Наследует от `src.suppliers.graber.Graber` и переопределяет методы
-    для специфичной обработки полей, если это необходимо.
+    Args:
+        driver (Driver): Экземпляр веб-драйвера для взаимодействия с браузером.
     """
-    supplier_prefix: str
-    """Префикс поставщика."""
-    
+    supplier_prefix: str = 'wallmart' # Уточнен тип и значение по умолчанию для supplier_prefix
+
     def __init__(self, driver: Driver):
         """
         Инициализация класса сбора полей товара.
 
-        :param driver: Экземпляр веб-драйвера.
-        :type driver: Driver
+        Args:
+            driver (Driver): Экземпляр веб-драйвера.
         """
-        self.supplier_prefix = SUPPLIER_PREFIX
+        # Устанавливает префикс поставщика
+        self.supplier_prefix = 'wallmart'
+        # Вызывает конструктор родительского класса
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        #  Устанавливаем глобальные настройки через Context
+        # Устанавливает глобальные настройки через Context
         Context.locator_for_decorator = None  # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
-        
 ```

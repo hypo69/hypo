@@ -2,13 +2,13 @@
 
 Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
     которые импортируются при создании диаграммы. 
     **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
     имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
     
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
@@ -16,7 +16,7 @@
         Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
     ```
 
-3. **<объяснение>**: Предоставьте подробные объяснения:  
+3.  **<объяснение>**: Предоставьте подробные объяснения:  
    - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
    - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
    - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
@@ -30,189 +30,211 @@
 **КОНЕЦ ИНСТРУКЦИИ**
 ## <алгоритм>
 
-1.  **Инициализация `Playwrid`**:
-    *   При создании экземпляра класса `Playwrid` вызывается метод `__init__`.
-    *   Метод `__init__` вызывает `_load_settings` для загрузки настроек из JSON-файла.
-    *   Метод `__init__` вызывает `_set_launch_options` для подготовки параметров запуска браузера Playwright.
-    *   `__init__` вызывает конструктор родительского класса `PlaywrightCrawler` с подготовленными параметрами.
-        *   *Пример:* `browser = Playwrid(options=["--headless"], settings_name="custom")`
-
-2.  **Загрузка настроек `_load_settings`**:
-    *   Определяется путь к файлу настроек по умолчанию (`playwrid.json`).
-    *   Файл настроек по умолчанию загружается в объект `SimpleNamespace` с помощью функции `j_loads_ns`.
-    *   Если указано имя файла пользовательских настроек `settings_name`, то проверяется наличие этого файла.
-    *   Если файл пользовательских настроек существует, то он загружается и перезаписывает настройки по умолчанию.
-        *   *Пример:*
-            *   Файл `playwrid.json` содержит `{"browser_type": "chromium", "headless": false}`
-            *   Файл `custom.json` содержит `{"headless": true, "options": ["--disable-gpu"]}`
-            *   После загрузки настроек будет объект `SimpleNamespace` с параметрами `{"browser_type": "chromium", "headless": true, "options": ["--disable-gpu"]}`.
-
-3.  **Установка параметров запуска `_set_launch_options`**:
-    *   Создается словарь `launch_options` для передачи в Playwright.
-    *   Устанавливаются значения для `headless` (из настроек или `True` по умолчанию) и `args` (из настроек или пустой список по умолчанию).
-    *   Если передан `user_agent`, он добавляется в `launch_options`.
-    *   Если переданы дополнительные параметры в `options`, то они добавляются в список `args`.
-        *   *Пример:*
-            *   `settings = SimpleNamespace(headless=True, options=["--disable-gpu"])` , `user_agent="MyUserAgent"`, `options=["--window-size=1920,1080"]`
-            *   Результат `launch_options` = `{"headless": True, "args": ["--disable-gpu", "--window-size=1920,1080"], "user_agent": "MyUserAgent"}`
-
-4.  **Запуск браузера `start`**:
-    *   Метод `start` принимает URL для навигации.
-    *   Выводится информационное сообщение в лог.
-    *   Вызывается метод `run` родительского класса `PlaywrightCrawler` для запуска процесса краулинга.
-    *   Обрабатывается возможное исключение при запуске и выводится критическое сообщение в лог.
-        *   *Пример:*  `browser.start("https://www.example.com")`
-
-5.  **Получение текущего URL `current_url`**:
-    *   Метод `current_url` возвращает текущий URL открытой страницы в браузере.
-    *   Проверяется, инициализирован ли контекст (`self.context`).
-    *   Если контекст инициализирован, возвращается `self.context.page.url`.
-    *   В противном случае возвращается `None`.
-        *   *Пример:*
-            *   После перехода на `https://www.example.com` через `browser.start()`, `browser.current_url` вернёт `https://www.example.com`.
-
-## <mermaid>
 ```mermaid
-flowchart TD
-    Start[Start Playwrid Initialization] --> LoadSettings[_load_settings]
-    LoadSettings --> SetLaunchOptions[_set_launch_options]
-    SetLaunchOptions --> SuperInit[PlaywrightCrawler.__init__]
-    SuperInit --> StartCrawler[start(url)]
-    StartCrawler --> RunCrawler[PlaywrightCrawler.run()]
-    RunCrawler --> GetCurrentUrl[current_url]
-
+graph TD
+    A[Начало] --> B{Инициализация Playwrid};
+    B --> C{Загрузка конфигурации из playwrid.json};
+    C --> D{Установка параметров запуска браузера};
+    D --> E{Инициализация PlaywrightCrawler};
+    E --> F{Запуск браузера и переход по URL};
+    F --> G{Получение текущего URL};
+    G --> H{Получение HTML-содержимого страницы};
+    H --> I{Получение содержимого элемента по CSS селектору};
+    I --> J[Завершение];
     
-    subgraph _load_settings
-        LoadSettingsStart[Start _load_settings] --> DefaultSettingsPath[Determine Default Settings Path]
-         DefaultSettingsPath --> LoadDefaultSettings[Load Default Settings from JSON]
-         LoadDefaultSettings --> CheckCustomSettings[Check for Custom Settings File]
-         CheckCustomSettings -- "Custom Settings Exists" --> LoadCustomSettings[Load Custom Settings from JSON]
-         LoadCustomSettings --> ReturnSettings[Return Settings]
-         CheckCustomSettings -- "No Custom Settings" --> ReturnSettings
-         ReturnSettings --> LoadSettingsEnd[End _load_settings]
-     end
-     
-    subgraph _set_launch_options
-         SetLaunchOptionsStart[Start _set_launch_options] --> CreateOptions[Create base launch_options dict]
-         CreateOptions --> SetHeadless[Set headless option from settings or True]
-         SetHeadless --> SetArgs[Set args from settings or empty list]
-         SetArgs --> CheckUserAgent[Check if user_agent is provided]
-         CheckUserAgent -- "User Agent Provided" --> AddUserAgent[Add user_agent to launch_options]
-         AddUserAgent --> CheckCustomOptions[Check if custom options are provided]
-         CheckUserAgent -- "No User Agent" --> CheckCustomOptions
-         CheckCustomOptions -- "Custom Options Provided" --> AddCustomOptions[Extend args list with custom options]
-         AddCustomOptions --> ReturnLaunchOptions[Return launch_options]
-         CheckCustomOptions -- "No Custom Options" --> ReturnLaunchOptions
-         ReturnLaunchOptions --> SetLaunchOptionsEnd[End _set_launch_options]
-     end
-
-     
-    GetCurrentUrl --> CheckContext[Check if context exists]
-    CheckContext -- "Context Exists" --> ReturnCurrentUrl[Return current page url]
-    CheckContext -- "No Context" --> ReturnNone[Return None]
-    
-    
-     subgraph Playwrid class
-        SuperInit
-        LoadSettings
-        SetLaunchOptions
-        StartCrawler
-        GetCurrentUrl
+    subgraph "Инициализация Playwrid"
+        style B fill:#f9f,stroke:#333,stroke-width:2px
+        B --> C
+        C --> D
+        D --> E
     end
     
+    subgraph "Работа с браузером"
+        style F fill:#ccf,stroke:#333,stroke-width:2px
+         F --> G
+         G --> H
+         H --> I
+    end
+   
+    style A fill:#afa,stroke:#333,stroke-width:2px
+    style J fill:#afa,stroke:#333,stroke-width:2px
+    
+   
+    
+    C -.-> config[playwrid.json]
+    
+    
+    %% Примеры:
+    %% B: browser = Playwrid(options=["--headless"])
+    %% C: config = { "headless": true, "browser_type": "chromium", "options": ["--no-sandbox"] }
+    %% D: launch_options = { "headless": true, "args": ["--no-sandbox", "--headless"] }
+    %% F: browser.start("https://www.example.com")
+    %% G: current_url = "https://www.example.com"
+    %% H: page_content = "<!DOCTYPE html><html>...</html>"
+    %% I: element_content = "<h1>Example Domain</h1>"
 
-    classDef classStyle fill:#f9f,stroke:#333,stroke-width:2px
-    class Playwrid classStyle
 ```
+
+1.  **Начало:** Программа начинает выполнение с блока `if __name__ == "__main__":`.
+2.  **Инициализация `Playwrid`:** Создается экземпляр класса `Playwrid` с передачей списка опций браузера.
+3.  **Загрузка конфигурации:** Из файла `playwrid.json` загружается конфигурация в виде `SimpleNamespace` и сохраняется в атрибуте `config`.
+4.  **Установка параметров запуска браузера:**  Метод `_set_launch_options` формирует словарь с параметрами запуска браузера, включая `headless` и `args`. Если переданы `user_agent` или `options`  при создании экземпляра класса, они добавляются к параметрам запуска.
+5.  **Инициализация `PlaywrightCrawler`:** Вызывается конструктор родительского класса `PlaywrightCrawler` с установленными параметрами.
+6.  **Запуск браузера и переход по URL:** Метод `start` запускает браузер и переходит по заданному URL. Сохраняет контекст  crawling_context в self.context.
+7.  **Получение текущего URL:** Метод `current_url` возвращает текущий URL открытой страницы.
+8.  **Получение HTML-содержимого страницы:** Метод `get_page_content` возвращает HTML-содержимое текущей страницы.
+9.  **Получение содержимого элемента по CSS селектору:** Метод `get_element_content` возвращает HTML-содержимое элемента, найденного по CSS-селектору.
+10. **Завершение:** Программа заканчивает выполнение после обработки полученных данных (вывод в консоль).
+
+## <mermaid>
+
 ```mermaid
 flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
+    Start --> PlaywridInitialization[<code>Playwrid</code> Class Initialization];
     
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    PlaywridInitialization --> LoadConfig[Load Config: <code>playwrid.json</code>];
+    LoadConfig --> SetLaunchOptions[Set Launch Options: <code>_set_launch_options</code>];
+    SetLaunchOptions --> InitializeCrawler[Initialize <code>PlaywrightCrawler</code>];
+    InitializeCrawler --> StartNavigation[Start Navigation: <code>start(url)</code>];
+    
+    StartNavigation --> GetCurrentUrl[Get Current URL: <code>current_url</code>];
+    GetCurrentUrl --> GetPageContent[Get Page Content: <code>get_page_content</code>];
+    GetPageContent --> GetElementContent[Get Element Content: <code>get_element_content(selector)</code>];
+     GetElementContent --> End[End];
+
+    
+    classDef configStyle fill:#f0f0f0,stroke:#333,stroke-width:1px;
+    class LoadConfig, SetLaunchOptions, InitializeCrawler configStyle;
+    
+     
+    style Start fill:#afa,stroke:#333,stroke-width:2px
+    style End fill:#afa,stroke:#333,stroke-width:2px
+    
+    linkStyle 0,4,5,6,7,8, stroke:#333,stroke-width:2px;
+    
 ```
 
-### **<объяснение>**
+```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```
 
-#### **Импорты:**
-*   **`pathlib.Path`**: Используется для работы с путями к файлам и каталогам в операционной системе. В данном коде используется для определения путей к файлам настроек (`playwrid.json` и пользовательских настроек).
-*   **`typing.Optional, typing.Dict, typing.Any, typing.List`**: Используются для аннотации типов, что улучшает читаемость и отладку кода.
-    *   `Optional` указывает, что переменная может быть либо указанного типа, либо `None`.
-    *   `Dict` указывает на словарь, `Any` - на любой тип данных, `List` - на список.
-*  **`types.SimpleNamespace`**:  Предоставляет простой способ создания объекта, у которого можно устанавливать атрибуты как свойства. В коде используется для хранения настроек.
-*   **`crawlee.playwright_crawler.PlaywrightCrawler, crawlee.playwright_crawler.PlaywrightCrawlingContext`**: Импортирует класс `PlaywrightCrawler` и `PlaywrightCrawlingContext` из библиотеки `crawlee`. `PlaywrightCrawler` является базовым классом для данного модуля, обеспечивающим функциональность веб-краулинга с использованием Playwright. `PlaywrightCrawlingContext` отвечает за контекст краулинга, содержащий информацию о текущей странице.
-*   **`src.gs`**: Импортирует модуль глобальных настроек проекта, используемый для получения пути к директории `src`. Это обеспечивает доступ к переменным, используемым во всём проекте.
-*   **`src.utils.jjson.j_loads_ns`**: Импортирует функцию `j_loads_ns` из модуля `src.utils.jjson`. Данная функция используется для загрузки данных из JSON-файла и преобразования их в объект `SimpleNamespace`.
-*   **`src.logger.logger.logger`**: Импортирует логгер из модуля `src.logger.logger`, используется для записи информации о работе программы в логи.
+**Описание зависимостей:**
 
-#### **Класс `Playwrid`:**
+*   **`Start`:**  Начало выполнения программы.
+*   **`PlaywridInitialization`:** Инициализация класса `Playwrid` при создании его экземпляра.
+*   **`LoadConfig`:** Загружает настройки из файла `playwrid.json` с помощью `j_loads_ns`.
+*   **`SetLaunchOptions`:**  Формирует словарь с параметрами для запуска Playwright браузера, включая возможность добавления `user_agent` и дополнительных опций.
+*    **`InitializeCrawler`:** Инициализирует экземпляр класса `PlaywrightCrawler`, используя  сформированные параметры запуска браузера.
+*    **`StartNavigation`:** Запускает браузер, переходит по переданному URL и сохраняет контекст.
+*    **`GetCurrentUrl`:** Возвращает текущий URL браузера.
+*   **`GetPageContent`:** Возвращает HTML-содержимое текущей страницы.
+*   **`GetElementContent`:** Возвращает HTML-содержимое элемента, найденного по CSS-селектору.
+*   **`End`:** Завершение выполнения программы.
 
-*   **Роль**: Класс `Playwrid` является расширением `PlaywrightCrawler` и предназначен для упрощения настройки и запуска веб-краулера с помощью Playwright. Он инкапсулирует логику загрузки настроек, установки опций запуска и предоставляет методы для запуска краулера и получения текущего URL.
-*   **Атрибуты**:
-    *   `driver_name` (str): Имя драйвера, по умолчанию `'playwrid'`.
-    *   `context`: Объект контекста `PlaywrightCrawlingContext`, который будет инициализирован во время выполнения `PlaywrightCrawler`.
-*   **Методы:**
-    *   `__init__(self, settings_name: Optional[str] = None, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs) -> None`:
-        *   Конструктор класса. Принимает опциональные параметры: `settings_name` (имя файла настроек), `user_agent` (строка user-agent), `options` (список опций Playwright) и дополнительные параметры `args` и `kwargs` для передачи в родительский класс `PlaywrightCrawler`.
-        *   Загружает настройки с помощью метода `_load_settings`.
-        *   Устанавливает параметры запуска браузера Playwright с помощью метода `_set_launch_options`.
-        *   Инициализирует родительский класс `PlaywrightCrawler` с полученными настройками и опциями.
-    *   `_load_settings(self, settings_name: Optional[str] = None) -> SimpleNamespace`:
-        *   Загружает настройки из JSON-файла.
-        *   Сначала пытается загрузить настройки по умолчанию из `playwrid.json`.
-        *   Если передано имя файла пользовательских настроек, то пытается загрузить настройки из этого файла, перезаписывая настройки по умолчанию, если файл существует.
-        *   Возвращает объект `SimpleNamespace`, содержащий загруженные настройки.
-    *   `_set_launch_options(self, settings: SimpleNamespace, user_agent: Optional[str] = None, options: Optional[List[str]] = None) -> Dict[str, Any]`:
-        *   Формирует словарь с параметрами запуска Playwright.
-        *   Устанавливает `headless` из настроек, если он есть, иначе `True` по умолчанию.
-        *   Устанавливает `args` из настроек, если они есть, иначе пустой список по умолчанию.
-        *   Добавляет user-agent, если он передан.
-        *   Добавляет дополнительные опции, если они переданы.
-        *   Возвращает словарь `launch_options` с параметрами запуска.
-    *   `start(self, url: str) -> None`:
-        *   Принимает URL для навигации.
-        *   Запускает процесс краулинга, вызывая метод `run` родительского класса `PlaywrightCrawler`.
-        *   Перехватывает исключения и регистрирует критическую ошибку в лог.
-    *   `current_url(self) -> Optional[str]`:
-        *   Возвращает текущий URL страницы.
-        *   Возвращает `None`, если контекст еще не инициализирован.
+## <объяснение>
 
-#### **Функции:**
-*   `__init__`: (см. описание в разделе "Классы").
-*   `_load_settings`: (см. описание в разделе "Классы").
-*   `_set_launch_options`: (см. описание в разделе "Классы").
-*    `start`: (см. описание в разделе "Классы").
-*   `current_url`: (см. описание в разделе "Классы").
+**Импорты:**
 
-#### **Переменные:**
-*   `settings_path`: (`pathlib.Path`):  Путь к файлу настроек `playwrid.json`.
-*   `settings`: (`SimpleNamespace`): Объект, хранящий загруженные настройки.
-*   `custom_settings_path`: (`pathlib.Path`): Путь к файлу пользовательских настроек.
-*   `launch_options`: (`Dict[str, Any]`): Словарь с параметрами запуска Playwright.
-*   `url`: (`str`): URL, на который необходимо перейти при запуске краулера.
+*   `pathlib.Path`: Используется для работы с путями к файлам и директориям, обеспечивает кроссплатформенность.
+*   `typing.Optional, Dict, Any, List`: Используются для статической типизации, что повышает читаемость и обнаруживает ошибки на ранних этапах.
+    *   `Optional` указывает, что переменная может иметь значение `None`.
+    *   `Dict`  словарь (ключ-значение).
+    *   `Any` позволяет использовать переменные любого типа.
+    *   `List` список значений.
+*   `types.SimpleNamespace`: Позволяет создавать объекты с произвольными атрибутами, что удобно для хранения настроек.
+*   `crawlee.playwright_crawler.PlaywrightCrawler, PlaywrightCrawlingContext`: Импортирует базовый класс PlaywrightCrawler из библиотеки Crawlee для сбора данных с веб-страниц и контекст для работы с текущим сеансом браузера.
+*   `header`: Импортирует модуль `header`, вероятно, для определения корневого каталога проекта. (см. `mermaid` flowchart)
+*   `src.gs`: Импортирует глобальные настройки из модуля `gs` в пакете `src`, которые могут включать общие пути и параметры конфигурации.
+*   `src.utils.jjson.j_loads_ns`: Импортирует функцию `j_loads_ns` из модуля `jjson` для загрузки JSON-конфигурации в объект SimpleNamespace.
+*   `src.logger.logger`: Импортирует логгер из модуля `logger` для ведения журнала событий.
 
-#### **Взаимосвязи с другими частями проекта:**
+**Классы:**
 
-*   Модуль `playwrid.py` зависит от модуля `crawlee` для основной функциональности краулера.
-*   Использует модуль `src.gs` для получения пути к файлам проекта.
-*   Использует модуль `src.utils.jjson` для загрузки настроек из JSON-файлов.
-*   Использует модуль `src.logger` для ведения логов.
-*   Может использоваться в других частях проекта для создания и запуска веб-краулеров.
+*   **`Playwrid(PlaywrightCrawler)`:**
+    *   **Роль:** Это подкласс `PlaywrightCrawler`, который предоставляет дополнительные методы для взаимодействия с браузером. Он инкапсулирует логику для запуска Playwright с кастомными настройками.
+    *   **Атрибуты:**
+        *   `driver_name` (str): Имя драйвера (по умолчанию 'playwrid').
+        *   `base_path` (Path):  Путь к директории `playwright`.
+        *   `config` (SimpleNamespace): Объект, содержащий конфигурацию, загруженную из `playwrid.json`.
+        *    `context` (Optional[PlaywrightCrawlingContext]):  Контекст текущей сессии браузера.
+    *   **Методы:**
+        *   `__init__(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs)`: Конструктор класса. Принимает настройки, а также опции запуска браузера.
+        *   `_set_launch_options(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None) -> Dict[str, Any]`: Формирует словарь с параметрами запуска Playwright.
+        *   `start(self, url: str) -> None`: Запускает браузер и переходит по указанному URL.
+        *    `current_url(self) -> Optional[str]`: Возвращает текущий URL открытой страницы.
+        *   `get_page_content(self) -> Optional[str]`: Возвращает HTML-содержимое текущей страницы.
+        *   `get_element_content(self, selector: str) -> Optional[str]`: Возвращает HTML-содержимое элемента, найденного по CSS-селектору.
 
-#### **Потенциальные ошибки и области для улучшения:**
-*   **Отсутствие обработки ошибок при загрузке настроек**: В `_load_settings` не обрабатывается случай, когда файл настроек не может быть загружен или имеет неправильный формат.
-*   **Жестко заданные пути**: Путь к файлу настроек `playwrid.json` жестко задан и не является достаточно гибким. Желательно использовать более гибкую конфигурацию путей.
-*   **Отсутствие явной обработки ошибок `PlaywrightCrawler`**: Метод `start` перехватывает любые исключения, но не предоставляет более подробной информации о них.
-*   **Не используется `PlaywrightCrawlingContext`**: Класс `Playwrid` не использует объект `PlaywrightCrawlingContext`.
-*   **Не используется асинхронность** Код не использует асинхронную функциональность Playwright.
+**Функции:**
 
-#### **Пример использования:**
-```python
-    if __name__ == "__main__":
-        # Создание экземпляра Playwrid с пользовательскими опциями и именем файла настроек
-        browser = Playwrid(options=["--headless", "--disable-gpu"], settings_name="custom_settings", user_agent="CustomUserAgent")
-        # Запуск краулера на указанном URL
-        browser.start("https://www.example.com")
-        # Вывод текущего URL
-        print(f"Current URL: {browser.current_url}")
-```
-В этом примере создается экземпляр класса `Playwrid` с пользовательскими опциями, именем файла настроек и пользовательским user-agent. Затем запускается краулер на указанном URL, а также выводится текущий URL открытой страницы.
+*   `__init__`:
+    *   **Аргументы:**
+        *   `user_agent` (Optional[str]):  Строка user-agent для браузера.
+        *   `options` (Optional[List[str]]): Список дополнительных опций запуска браузера.
+        *   `*args`, `**kwargs`: Переменное число позиционных и именованных аргументов для родительского класса.
+    *   **Назначение:** Инициализирует класс, загружает настройки, задает параметры запуска браузера и вызывает конструктор родительского класса `PlaywrightCrawler`.
+    *   **Пример:** `browser = Playwrid(user_agent="CustomUserAgent", options=["--no-sandbox"])`
+*   `_set_launch_options`:
+    *   **Аргументы:**
+        *   `user_agent` (Optional[str]): Строка user-agent.
+        *    `options` (Optional[List[str]]): Дополнительные опции запуска браузера.
+    *   **Возвращает:** `Dict[str, Any]`: Словарь с параметрами запуска Playwright.
+    *   **Назначение:** Формирует словарь с параметрами запуска, включая `headless`, `args` и `user_agent`.
+    *   **Пример:** `launch_options = self._set_launch_options(user_agent="MyUserAgent", options=["--disable-gpu"])`
+*   `start`:
+    *   **Аргументы:**
+        *   `url` (str): URL для перехода.
+    *   **Возвращает:** `None`.
+    *   **Назначение:** Запускает браузер и переходит по заданному URL, сохраняет контекст.
+    *   **Пример:** `browser.start("https://www.example.com")`
+*    `current_url`:
+    *  **Аргументы:** нет
+    *  **Возвращает:** `Optional[str]`: Текущий URL открытой страницы или `None`.
+    *   **Назначение:** Возвращает текущий URL страницы, если браузер был запущен и страница загружена.
+    *   **Пример:** `url = browser.current_url`
+*    `get_page_content`:
+    *  **Аргументы:** нет
+    *   **Возвращает:** `Optional[str]`: HTML-содержимое текущей страницы или `None`.
+    *   **Назначение:** Возвращает HTML-код текущей страницы.
+    *   **Пример:** `html = browser.get_page_content()`
+*   `get_element_content`:
+    *   **Аргументы:**
+        *   `selector` (str): CSS-селектор элемента.
+    *   **Возвращает:** `Optional[str]`: HTML-содержимое элемента или `None`.
+    *   **Назначение:** Возвращает HTML-содержимое элемента по CSS-селектору.
+    *   **Пример:** `content = browser.get_element_content("h1")`
+
+**Переменные:**
+
+*   `driver_name` (str): Имя драйвера.
+*   `base_path` (Path):  Базовый путь к директории `playwright`.
+*   `config` (SimpleNamespace): Объект с настройками, загруженными из `playwrid.json`.
+*   `launch_options` (Dict[str, Any]): Словарь с параметрами запуска браузера.
+*   `user_agent` (Optional[str]): Строка user-agent.
+*   `options` (Optional[List[str]]): Список дополнительных опций запуска браузера.
+*   `url` (str): URL для навигации.
+*    `context` (Optional[PlaywrightCrawlingContext]): Контекст текущего сеанса браузера.
+*    `html_content` (Optional[str]): HTML контент веб-страницы.
+*    `element_content` (Optional[str]): HTML контент элемента веб-страницы.
+*    `element` (Any): Найденный элемент на странице.
+
+**Потенциальные ошибки и улучшения:**
+
+*   **Обработка ошибок:** В методе `start` есть общая обработка исключений (`except Exception as ex:`). Стоит добавить более конкретную обработку исключений для разных типов ошибок.
+*   **Конфигурация:** В коде есть проверка наличия атрибутов в `self.config` через `hasattr`. Это может быть улучшено, если использовать более явную структуру конфигурации с валидацией.
+*    **Типизация:** Добавить аннотации типов для всех переменных, где это возможно.
+*   **Логирование:**  Улучшить логирование, добавив уровни логгирования для разных типов событий (например, дебаг, предупреждение, ошибка).
+*  **Неявные зависимости:** Зависимость от существования файла `playwrid.json`. Необходимо добавить обработку случая отсутствия файла.
+
+**Взаимосвязи с другими частями проекта:**
+
+*   **`src.gs`:** Используется для получения базового пути к директории `webdriver/playwright`.
+*   **`src.utils.jjson`:** Используется для загрузки конфигурации из `playwrid.json`.
+*   **`src.logger`:** Используется для логирования событий.
+*   **`header`:** Используется для определения корневого каталога проекта.
+*  **`crawlee`:** `Playwrid` является подклассом `PlaywrightCrawler` и расширяет его функциональность, добавляя специфические методы для получения контента.
+
+Этот код является частью системы веб-скрапинга, которая использует Playwright. Он инкапсулирует логику запуска браузера с кастомными настройками и предоставляет методы для извлечения данных с веб-страниц.

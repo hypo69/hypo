@@ -66,10 +66,10 @@ class PrestaCategoryAsync(PrestaShopAsync):
             logger.error("Issue with retrieving categories.")
             return
 
-        _parent_category = int(category['category']['id_parent'])
+        _parent_category = int(category['categories'][0]['id_parent'])
         parent_categories_list.append(_parent_category)
 
-        if _parent_category <= 2:
+        if _parent_category <= 2: # <- корневая директория
             return parent_categories_list
         else:
             return await self.get_parent_categories_list(_parent_category, parent_categories_list)

@@ -1,209 +1,246 @@
 ## ИНСТРУКЦИЯ:
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+    которые импортируются при создании диаграммы.
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
     ```
 
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
+3.  **<объяснение>**: Предоставьте подробные объяснения:
+    *   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    *   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    *   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    *   **Переменные**: Их типы и использование.
+    *   Выделите потенциальные ошибки или области для улучшения.
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
 
 Это обеспечивает всесторонний и структурированный анализ кода.
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
-```
-## <алгоритм>
+## Анализ кода `hypotez/src/endpoints/prestashop/category.py`
 
-**1. Инициализация `PrestaCategory`:**
+### 1. <алгоритм>
 
-   - При создании экземпляра `PrestaCategory` (например, `prestacategory = PrestaCategory(credentials={'api_domain': 'example.com', 'api_key': '123'})`) вызывается метод `__init__`.
-   - Проверяется наличие `credentials`, `api_domain` и `api_key`.
-     - Если `credentials` предоставлены, `api_domain` и `api_key` берутся из них. 
-     - Если `api_domain` или `api_key` отсутствуют (или оба), выбрасывается исключение `ValueError`.
-     - Вызывается конструктор родительского класса `PrestaShop` с полученными параметрами.
-   
-    **Пример:**
-   ```python
-   prestacategory = PrestaCategory(credentials={'api_domain': 'my_shop.com', 'api_key': 'my_key'})
-   ```
-   
-    **Логика:**
-    -   Проверка наличия необходимых параметров для доступа к API PrestaShop.
-    -   Инициализация родительского класса для базовой работы с API.
+**Класс `PrestaCategory` (синхронный):**
 
-**2. Получение списка родительских категорий (`get_parent_categories_list`):**
-   -   Метод принимает `id_category` (идентификатор категории) и `parent_categories_list` (список для накопления id родительских категорий).
-   -   Если `id_category` пуст, возвращает текущий `parent_categories_list` (с ошибкой в логе).
-    
-    **Пример:**
+1.  **`__init__`**:
+    *   Инициализация: Принимает `credentials` (опционально словарь или `SimpleNamespace`), `api_domain` (опционально строка) и `api_key` (опционально строка).
+    *   Извлечение данных из `credentials`, если они есть.
+    *   Проверка наличия `api_domain` и `api_key`. Если отсутствуют, выбрасывается `ValueError`.
+    *   Вызов конструктора родительского класса `PrestaShop` для инициализации API-клиента.
+
+2.  **`get_parent_categories_list`**:
+    *   Принимает `id_category` (строка или число) и `parent_categories_list` (список чисел, по умолчанию пустой).
+    *   Проверяет, что `id_category` не пустой, в случае ошибки возвращает текущий `parent_categories_list`
+    *   Получает данные категории из PrestaShop API с помощью метода `super().get()`, используя `id_category`, формат JSON, с ключом `display='full'`.
+    *   Если категория не найдена, логируется ошибка и метод завершается.
+    *   Извлекает `id_parent` из полученных данных и преобразует его в `int`.
+    *   Добавляет `_parent_category` в `parent_categories_list`.
+    *   Если `_parent_category` меньше или равно 2 (корневая категория), возвращает `parent_categories_list`.
+    *   Иначе рекурсивно вызывает `get_parent_categories_list` с `_parent_category` в качестве `id_category` и текущим `parent_categories_list`.
+
+**Класс `PrestaCategoryAsync` (асинхронный):**
+
+1.  **`__init__`**:
+    *   Инициализация: Принимает `credentials` (опционально словарь или `SimpleNamespace`), `api_domain` (опционально строка) и `api_key` (опционально строка).
+    *   Извлечение данных из `credentials`, если они есть.
+    *   Проверка наличия `api_domain` и `api_key`. Если отсутствуют, выбрасывается `ValueError`.
+    *   Вызов конструктора родительского класса `PrestaShopAsync` для инициализации асинхронного API-клиента.
+
+2.  **`get_parent_categories_list`**:
+    *   Принимает `id_category` (строка или число) и `parent_categories_list` (список чисел, по умолчанию пустой).
+    *   Проверяет, что `id_category` не пустой, в случае ошибки возвращает текущий `parent_categories_list`.
+    *   Получает данные категории из PrestaShop API асинхронно с помощью метода `await super().read()`, используя `id_category`, формат JSON, с ключом `display='full'`.
+    *   Если категория не найдена, логируется ошибка и метод завершается.
+    *    Извлекает `id_parent` из полученных данных (обратите внимание на `category['categories'][0]['id_parent']`) и преобразует его в `int`.
+    *   Добавляет `_parent_category` в `parent_categories_list`.
+    *   Если `_parent_category` меньше или равно 2 (корневая категория), возвращает `parent_categories_list`.
+    *   Иначе рекурсивно вызывает `get_parent_categories_list` с `_parent_category` в качестве `id_category` и текущим `parent_categories_list`.
+
+**Примеры:**
+
+*   **Синхронный вызов:**
     ```python
-    parent_categories = prestacategory.get_parent_categories_list(11259)
+    category_api = PrestaCategory(api_domain='your_domain', api_key='your_key')
+    parent_list = category_api.get_parent_categories_list(id_category=10) # где 10 - id категории
+    print(parent_list) # Вывод: [5, 2], если 10->5->2
     ```
-    
-    **Логика:**
-    -   Проверка на валидный id категории.
-    -   Обработка случая некорректного ввода.
-   
-   - Запрос к PrestaShop API для получения информации о категории по `id_category`. Используется метод `get` родительского класса `PrestaShop`, который вызывает запрос к API PrestaShop.
-        - Если запрос вернул пустой ответ, выводится сообщение об ошибке и функция завершается.
-    **Пример ответа API (JSON):**
-        ```json
-        {
-            "category": {
-                "id": 11259,
-                "id_parent": "11248",
-                "level_depth": "5",
-                "nb_products_recursive": -1,
-                "active": "1",
-                "id_shop_default": "1",
-                "is_root_category": "0",
-                "position": "0",
-                "date_add": "2023-07-25 11:58:08",
-                ...
-           }
-        }
-        ```
-    -   Из ответа извлекается `id_parent` (идентификатор родительской категории) и добавляется в `parent_categories_list`.
-   
-   - Проверка условия выхода рекурсии: если `_parent_category` <= 2, то возвращает накопленный список родительских категорий (`parent_categories_list`). 
-   - В противном случае (если `_parent_category` > 2), метод рекурсивно вызывает сам себя с новым `_parent_category` и обновленным `parent_categories_list`.
-   
-    **Логика:**
-    -   Получение родительской категории текущей категории.
-    -   Добавление id родительской категории в список.
-    -   Условие остановки рекурсии, когда достигнута корневая категория или её предок.
 
-## <mermaid>
+*   **Асинхронный вызов:**
+    ```python
+    async def main():
+        category_api = PrestaCategoryAsync(api_domain='your_domain', api_key='your_key')
+        parent_list = await category_api.get_parent_categories_list(id_category=10)
+        print(parent_list) # Вывод: [5, 2], если 10->5->2
+    asyncio.run(main())
+    ```
+
+**Поток данных:**
+
+1.  `PrestaCategory` или `PrestaCategoryAsync` инициализируются с параметрами API.
+2.  Вызывается метод `get_parent_categories_list` с `id_category`.
+3.  API запрос к PrestaShop для получения информации о категории.
+4.  Из ответа извлекается `id_parent`.
+5.  `id_parent` добавляется в `parent_categories_list`.
+6.  Если `id_parent` является корневой категорией, `parent_categories_list` возвращается.
+7.  Иначе рекурсивный вызов `get_parent_categories_list`.
+
+### 2. <mermaid>
+
 ```mermaid
 flowchart TD
-    Start[Start] --> InitClass[Инициализация PrestaCategory];
-    InitClass --> CheckCredentials{Проверка credentials};
-    CheckCredentials -- Credentials provided --> GetApiParamsFromCredentials[Извлечение api_domain и api_key из credentials];
-    CheckCredentials -- Credentials not provided --> CheckApiParams{Проверка api_domain и api_key};
-    GetApiParamsFromCredentials --> CheckApiParams;
-    CheckApiParams -- api_domain или api_key отсутствуют --> ValueErrorException[Выброс ValueError];
-    CheckApiParams -- api_domain и api_key присутствуют --> InitParentClass[Инициализация PrestaShop];
-    InitParentClass --> StartGetParentCategories[Вызов get_parent_categories_list];
-    StartGetParentCategories --> CheckCategoryId{Проверка id_category};
-    CheckCategoryId -- id_category пустой --> ReturnList[Возврат parent_categories_list с ошибкой в логе];
-    CheckCategoryId -- id_category не пустой --> GetCategoryDataFromApi[Получение данных о категории через API PrestaShop];
-    GetCategoryDataFromApi -- API вернул пустой ответ --> ErrorMessage[Ошибка при получении данных, завершение функции];
-    GetCategoryDataFromApi -- API вернул данные --> ExtractParentId[Извлечение id_parent];
-    ExtractParentId --> AddParentIdToList[Добавление id_parent в parent_categories_list];
-    AddParentIdToList --> CheckParentId{Проверка id_parent <= 2};
-    CheckParentId -- id_parent <= 2 --> ReturnParentList[Возврат parent_categories_list];
-    CheckParentId -- id_parent > 2 --> RecursiveCall[Рекурсивный вызов get_parent_categories_list с _parent_category];
-    RecursiveCall --> StartGetParentCategories;
-    ValueErrorException --> End[End];
-    ReturnList --> End;
-    ErrorMessage --> End;
-    ReturnParentList --> End;
-```
-```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    subgraph PrestaCategory
+        InitCategory[<code>__init__</code><br>Initialize with API credentials]
+        GetParentCategoriesList[<code>get_parent_categories_list</code><br>Retrieve parent categories]
+
+        InitCategory --> GetParentCategoriesList
+        GetParentCategoriesList --> GetCategoryDataSync[<code>super().get()</code> <br>Sync API call to retrieve category data]
+        GetCategoryDataSync --> CheckCategoryData[Check if category data is valid]
+        CheckCategoryData -- No data --> LogErrorSync[Log error message]
+        CheckCategoryData -- Data valid --> ExtractParentIdSync[Extract <code>id_parent</code> from category data]
+        ExtractParentIdSync --> AddParentIdToSyncList[Add <code>id_parent</code> to list]
+        AddParentIdToSyncList --> CheckIfParentCategoryIsRootSync[Check if <code>id_parent</code> <= 2]
+        CheckIfParentCategoryIsRootSync -- Is Root Category --> ReturnSyncList[Return list of parent categories]
+        CheckIfParentCategoryIsRootSync -- Not Root Category --> GetParentCategoriesList
+    end
     
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    subgraph PrestaCategoryAsync
+        InitAsyncCategory[<code>__init__</code><br>Initialize with API credentials]
+        GetParentCategoriesListAsync[<code>get_parent_categories_list</code><br>Retrieve parent categories (Async)]
+
+        InitAsyncCategory --> GetParentCategoriesListAsync
+        GetParentCategoriesListAsync --> GetCategoryDataAsync[<code>await super().read()</code> <br>Async API call to retrieve category data]
+        GetCategoryDataAsync --> CheckCategoryDataAsync[Check if category data is valid]
+        CheckCategoryDataAsync -- No data --> LogErrorAsync[Log error message]
+        CheckCategoryDataAsync -- Data valid --> ExtractParentIdAsync[Extract <code>id_parent</code> from category data]
+         ExtractParentIdAsync --> AddParentIdToListAsync[Add <code>id_parent</code> to list]
+        AddParentIdToListAsync --> CheckIfParentCategoryIsRootAsync[Check if <code>id_parent</code> <= 2]
+        CheckIfParentCategoryIsRootAsync -- Is Root Category --> ReturnAsyncList[Return list of parent categories]
+        CheckIfParentCategoryIsRootAsync -- Not Root Category --> GetParentCategoriesListAsync
+    end
 ```
 
-**Зависимости (импорты) в коде и диаграмме:**
+**Объяснение `mermaid` диаграммы:**
 
-- `requests`: Используется для выполнения HTTP-запросов к API PrestaShop.
-- `attr`, `attrs`: Используется для создания классов с атрибутами.
-- `pathlib.Path`: Используется для работы с путями файловой системы.
-- `typing.List`, `typing.Dict`, `typing.Optional`: Используются для аннотации типов.
-- `types.SimpleNamespace`: Используется для создания простых объектов с атрибутами (в `__init__`).
-- `header`: Содержит код для определения корневой директории проекта и инициализации глобальных настроек.
-- `src.gs`: Глобальные настройки проекта (полученные после обработки `header`).
-- `src.utils.jjson.j_loads`: Функция для загрузки JSON.
-- `.api.PrestaShop`: Базовый класс для работы с API PrestaShop (родительский класс для `PrestaCategory`).
-- `src.logger.logger.logger`: Логгер для записи сообщений.
+*   **`PrestaCategory`**:
+    *   `InitCategory`: Представляет инициализацию класса `PrestaCategory`, включая установку учетных данных API.
+    *   `GetParentCategoriesList`: Представляет метод, который запускает процесс получения списка родительских категорий.
+    *   `GetCategoryDataSync`: Представляет синхронный вызов API (`super().get()`) для получения данных о категории.
+    *   `CheckCategoryData`: Проверяет, что данные о категории были получены успешно.
+    *   `LogErrorSync`: Обрабатывает ошибку, если данные о категории не были получены.
+    *   `ExtractParentIdSync`: Извлекает `id_parent` из полученных данных.
+    *   `AddParentIdToSyncList`: Добавляет `id_parent` в список.
+     *   `CheckIfParentCategoryIsRootSync`: Проверяет, является ли родительская категория корневой категорией.
+    *   `ReturnSyncList`: Возвращает список родительских категорий.
+*   **`PrestaCategoryAsync`**:
+    *   `InitAsyncCategory`: Представляет инициализацию класса `PrestaCategoryAsync`, включая установку учетных данных API.
+    *   `GetParentCategoriesListAsync`: Представляет асинхронный метод, который запускает процесс получения списка родительских категорий.
+    *   `GetCategoryDataAsync`: Представляет асинхронный вызов API (`await super().read()`) для получения данных о категории.
+    *   `CheckCategoryDataAsync`: Проверяет, что данные о категории были получены успешно.
+    *   `LogErrorAsync`: Обрабатывает ошибку, если данные о категории не были получены.
+    *   `ExtractParentIdAsync`: Извлекает `id_parent` из полученных данных.
+    *   `AddParentIdToListAsync`: Добавляет `id_parent` в список.
+     *   `CheckIfParentCategoryIsRootAsync`: Проверяет, является ли родительская категория корневой категорией.
+    *   `ReturnAsyncList`: Возвращает список родительских категорий.
 
-**Объяснение `header.py`**
+**Зависимости (импорты):**
 
-- `header.py` отвечает за определение корневой директории проекта. Это нужно для того, чтобы другие модули внутри `src` могли правильно получать доступ к общим ресурсам, таким как конфигурационные файлы и т.д.
-- После определения корневой директории `header.py` импортирует глобальные настройки из `src.gs`, что позволяет другим частям проекта использовать общую конфигурацию.
+*   `typing`: Используется для аннотации типов, делая код более читаемым и помогая инструментам статического анализа. Импортируются `List`, `Dict`, `Optional`, `Union` для обозначения типов переменных и возвращаемых значений.
+*    `types`: Импортируется `SimpleNamespace` для использования в качестве альтернативы словарю для передачи настроек.
+*   `asyncio`: Используется для асинхронного программирования в `PrestaCategoryAsync`.
+*   `src.logger.logger`: Используется для логирования ошибок.
+*   `src.utils.jjson`: Используется для сериализации и десериализации JSON.
+*   `src.endpoints.prestashop.api`:  Импортируются классы `PrestaShop` и `PrestaShopAsync`, реализующие взаимодействие с API PrestaShop.
 
-## <объяснение>
+### 3. <объяснение>
 
 **Импорты:**
 
-- `requests`: Используется для отправки HTTP-запросов к PrestaShop API.
-- `attr` и `attrs` из `attr`: Используются для создания классов с атрибутами, но в данном коде не применяются.
-- `Path` из `pathlib`: Работа с путями к файлам. В данном коде не используется.
-- `List`, `Dict`, `Optional` из `typing`: Используются для аннотации типов переменных.
-- `SimpleNamespace` из `types`: Создание простых объектов, для передачи конфигурации в конструктор.
-- `header`: Модуль, отвечающий за инициализацию проекта, определяет корневую директорию и загружает глобальные настройки.
-- `gs` из `src`: Объект с глобальными настройками проекта.
-- `j_loads` из `src.utils.jjson`: Функция для загрузки JSON.
-- `PrestaShop` из `.api`: Базовый класс для работы с PrestaShop API.
-- `logger` из `src.logger.logger`: Объект для логирования событий.
+*   `from typing import List, Dict, Optional, Union`:
+    *   `List`: Используется для обозначения списков, например, `List[int]`.
+    *   `Dict`: Используется для обозначения словарей, например, `Dict[str, str]`.
+    *   `Optional`: Используется для обозначения опциональных параметров, которые могут быть `None`.
+    *   `Union`: Используется для обозначения параметров, которые могут иметь один из нескольких типов, например, `Union[str, int]`.
+*   `from types import SimpleNamespace`:
+    *   `SimpleNamespace`: Используется для создания простых объектов с атрибутами, которые можно передавать как параметры.
+*    `import asyncio`:
+    *   `asyncio`: Модуль для написания асинхронного кода, используемый в `PrestaCategoryAsync` для выполнения асинхронных запросов к API.
+*   `from src.logger.logger import logger`:
+    *   `logger`: Объект для логирования ошибок и сообщений.
+*   `from src.utils.jjson import j_loads, j_dumps`:
+    *   `j_loads`: Используется для десериализации JSON-строк.
+    *   `j_dumps`: Используется для сериализации Python объектов в JSON-строки.
+*   `from src.endpoints.prestashop.api import PrestaShop, PrestaShopAsync`:
+    *   `PrestaShop`: Синхронный класс для взаимодействия с PrestaShop API.
+    *   `PrestaShopAsync`: Асинхронный класс для взаимодействия с PrestaShop API.
 
 **Классы:**
 
-- `PrestaCategory`:
-  - **Роль:** Предназначен для работы с категориями PrestaShop.
-  - **Атрибуты:** Отсутствуют (кроме унаследованных от `PrestaShop`).
-  - **Методы:**
-    - `__init__(self, credentials: Optional[dict | SimpleNamespace] = None, api_domain: Optional[str] = None, api_key: Optional[str] = None, *args, **kwards)`: Конструктор класса. Принимает либо словарь `credentials`, либо отдельные `api_domain` и `api_key`, которые используются для инициализации родительского класса `PrestaShop`.
-    - `get_parent_categories_list(self, id_category: str | int, parent_categories_list: List[int] = []) -> list`: Рекурсивный метод для получения списка родительских категорий.
+*   **`PrestaCategory(PrestaShop)`:**
+    *   **Роль:** Управляет категориями в PrestaShop, наследуется от `PrestaShop`.
+    *   **Атрибуты:** Не имеет явных атрибутов (кроме унаследованных).
+    *   **Методы:**
+        *   `__init__(self, credentials=None, api_domain=None, api_key=None)`: Конструктор класса, принимает учетные данные API, инициализирует родительский класс. Если credentials переданы как словарь или SimpleNamespace, то из них извлекаются api_domain и api_key. Если api_domain или api_key отсутствуют, выбрасывается `ValueError`.
+        *   `get_parent_categories_list(self, id_category, parent_categories_list=[])`: Метод для получения списка родительских категорий рекурсивно. Принимает `id_category` и `parent_categories_list`, возвращает `List[int]`. Делает запрос к PrestaShop API для получения данных категории, извлекает id родительской категории, добавляет его в список. Если родительская категория является корневой (<=2), возвращает список, иначе - вызывает себя рекурсивно.
+*   **`PrestaCategoryAsync(PrestaShopAsync)`:**
+    *   **Роль:** Асинхронно управляет категориями в PrestaShop, наследуется от `PrestaShopAsync`.
+    *   **Атрибуты:** Не имеет явных атрибутов (кроме унаследованных).
+    *   **Методы:**
+        *   `__init__(self, credentials=None, api_domain=None, api_key=None)`: Конструктор класса, аналогично `PrestaCategory`, но наследуется от `PrestaShopAsync`.
+        *   `async get_parent_categories_list(self, id_category, parent_categories_list=[])`: Асинхронный метод для получения списка родительских категорий рекурсивно. Аналогично синхронному методу, но использует `await` для асинхронных вызовов.
 
 **Функции:**
 
-- `__init__`:
-  - **Аргументы:** `credentials` (словарь или `SimpleNamespace`), `api_domain` (строка), `api_key` (строка), `*args`, `**kwards`
-  - **Возвращает:** Ничего.
-  - **Назначение:** Инициализирует экземпляр класса `PrestaCategory`, проверяя наличие необходимых учетных данных для подключения к API PrestaShop и вызывая конструктор родительского класса `PrestaShop`.
-
-- `get_parent_categories_list`:
-  - **Аргументы:** `id_category` (идентификатор категории), `parent_categories_list` (список).
-  - **Возвращает:** `list` (список родительских категорий).
-  - **Назначение:** Рекурсивно получает список родительских категорий для заданной категории.
+*   **`__init__` (конструкторы классов):**
+    *   **Аргументы:** `credentials`, `api_domain`, `api_key`.
+    *   **Возвращаемое значение:** `None`.
+    *   **Назначение:** Инициализирует класс с учетными данными API. Если данные переданы в `credentials`, извлекает их оттуда.
+*   **`get_parent_categories_list` (синхронный и асинхронный):**
+    *   **Аргументы:** `id_category` (строка или число), `parent_categories_list` (список чисел, по умолчанию пустой).
+    *   **Возвращаемое значение:** `List[int]` (список ID родительских категорий).
+    *   **Назначение:** Рекурсивно получает список родительских категорий для заданной категории.
+    *   **Примеры:**
+        *   Синхронный вызов: `category_api.get_parent_categories_list(10)`
+        *   Асинхронный вызов: `await category_api.get_parent_categories_list(10)`
 
 **Переменные:**
-- ``: Определяет режим работы приложения (в данном случае, режим разработки).
-- `id_category` (в `get_parent_categories_list`): Идентификатор категории, для которой нужно найти родительские категории.
-- `parent_categories_list` (в `get_parent_categories_list`): Список, в котором накапливаются идентификаторы родительских категорий.
-- `category` (в `get_parent_categories_list`): Словарь, содержащий информацию о категории, полученную из API PrestaShop.
-- `_parent_category` (в `get_parent_categories_list`): Идентификатор родительской категории.
+
+*   `credentials`:  Словарь или `SimpleNamespace`, содержащий `api_domain` и `api_key` (или оба).
+*   `api_domain`: Строка, представляющая домен PrestaShop API.
+*   `api_key`: Строка, представляющая ключ PrestaShop API.
+*   `id_category`: Строка или целое число, представляющее ID категории.
+*   `parent_categories_list`: Список целых чисел, представляющий список ID родительских категорий.
+*   `category`: Словарь, содержащий данные о категории, полученные из PrestaShop API.
+*    `_parent_category`: Целое число, представляющее ID родительской категории.
 
 **Потенциальные ошибки и области для улучшения:**
 
-- **Обработка ошибок:** В коде есть базовая обработка ошибок, но можно добавить более детальную обработку исключений, специфичных для API PrestaShop. Например, обработка ошибок при неверном `api_key` или отсутствующей категории.
-- **Кэширование:** Для оптимизации можно добавить кэширование результатов запросов к API PrestaShop, особенно при частом вызове `get_parent_categories_list`.
-- **Валидация данных:** Добавить валидацию входных данных (например, проверка типа `id_category`).
-- **Условие выхода из рекурсии:** Условие `if _parent_category <= 2:` предполагает, что `2` является корневой категорией. Это может быть не всегда верно и должно быть вынесено в конфигурацию или проверку.
-- **Логирование:** Необходимо добавить больше информативного логирования.
+1.  **Обработка ошибок:**
+    *   Методы `get_parent_categories_list` логируют ошибку, но не выбрасывают исключение. Это может затруднить обработку ошибок в вызывающем коде. Рекомендуется вызывать исключение (например, `Exception` или пользовательское) для более явной обработки ошибок.
+    *   В асинхронном методе `get_parent_categories_list` при неудачном запросе возвращается None, нужно добавить обработку этого случая.
+2. **Обработка ответа API:**
+    *   Асинхронный метод извлекает `id_parent` из `category['categories'][0]['id_parent']`. Зависимость от структуры ответа API, может привести к ошибкам, если ответ изменится. Необходимо предусмотреть проверку на существование ключей.
+3.  **Рекурсия:**
+    *   Использование рекурсии может привести к переполнению стека при большом количестве уровней вложенности категорий. Можно рассмотреть использование итеративного подхода для обхода иерархии категорий.
+4.  **Валидация входных данных:**
+    *   Не хватает валидации типа данных для `id_category` и других входных параметров. Нужно добавить явную проверку типов.
 
-**Взаимосвязи с другими частями проекта:**
+**Цепочка взаимосвязей с другими частями проекта:**
 
-- **`header.py`**: Зависимость от `header` для получения глобальных настроек (например, для доступа к API PrestaShop).
-- **`src.gs`**: Зависимость от глобальных настроек, полученных от `header.py`.
-- **`src.utils.jjson`**: Используется `j_loads` для парсинга JSON-ответов от API.
-- **`.api.PrestaShop`**: Класс `PrestaCategory` наследуется от `PrestaShop`, который отвечает за базовую работу с API PrestaShop.
-- **`src.logger.logger`**: Используется для логирования событий и ошибок.
+*   `src.endpoints.prestashop.api`: Этот модуль является основой для работы с API PrestaShop.  `PrestaCategory` и `PrestaCategoryAsync` используют классы из этого модуля для отправки запросов.
+*   `src.logger.logger`: Модуль используется для логирования ошибок, обеспечивая трассировку выполнения кода.
+*   `src.utils.jjson`: Используется для работы с JSON-данными, получаемыми от API, а также, возможно, для сохранения конфигураций.
 
-**Цепочка взаимосвязей:**
-
-1.  `header.py` определяет корень проекта и загружает глобальные настройки (`gs`).
-2.  `PrestaCategory` импортирует `gs` и использует его настройки для доступа к API PrestaShop.
-3.  `PrestaCategory` наследуется от `PrestaShop`, который выполняет низкоуровневые HTTP-запросы.
-4.  `PrestaCategory` использует `j_loads` для обработки JSON-ответов.
-5.  `PrestaCategory` использует `logger` для записи событий.
+**Дополнительно:**
+* В асинхронном методе `get_parent_categories_list` извлечение `id_parent` происходит из `category['categories'][0]['id_parent']`. Это предполагает, что PrestaShop API всегда возвращает список категорий, даже если запрашивается только одна, и id родительской категории всегда находится на нулевом индексе. Если API вернет другой формат, метод сломается. Это необходимо учитывать при доработке.

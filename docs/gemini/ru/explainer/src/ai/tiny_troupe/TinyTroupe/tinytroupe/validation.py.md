@@ -1,185 +1,187 @@
 ## <алгоритм>
 
-1. **Инициализация**:
-   - Устанавливается максимальная длина контента для отображения `max_content_length` (по умолчанию 1024, из `config`).
-   - Создается пустой список `current_messages` для хранения истории сообщений.
-   - Загружается шаблон промпта из файла `prompts/check_person.mustache` для проверки персонажа.
-   - Рендерится системный промпт из шаблона, подставляя в него ожидаемые качества персонажа (`expectations`).
+1. **Начало валидации:**
+   - Функция `validate_person` принимает на вход объект `TinyPerson`, опциональные ожидания `expectations`, флаг `include_agent_spec` и максимальную длину контента `max_content_length`.
+   - Инициализируется пустой список `current_messages` для хранения сообщений диалога с LLM.
+   - Определяется путь к шаблону промпта `check_person.mustache` и читается его содержимое.
+   - Шаблон промпта заполняется, используя `chevron.render`, с учетом переданных `expectations`, если они есть.
 
-   _Пример:_
-   ```python
-   current_messages = []
-   check_agent_prompt_template = "You are an AI that interviews other AI agents to check their specifications. {expectations}"
-   system_prompt = chevron.render(check_agent_prompt_template, {"expectations": "The agent should be creative."})
-   # system_prompt = "You are an AI that interviews other AI agents to check their specifications. The agent should be creative."
-   ```
+2. **Формирование начального промпта:**
+   - Создается пользовательский промпт с инструкцией для LLM начать интервью.
+   - В зависимости от значения `include_agent_spec`, в промпт добавляется спецификация агента (`person.generate_agent_specification()`) или краткая биография (`person.minibio()`).
 
-2. **Формирование пользовательского промпта**:
-   - Создается начальный пользовательский промпт, который просит LLM начать интервью.
-   - Если `include_agent_spec` истинно, добавляется спецификация агента (`person.generate_agent_specification()`).
-   - Иначе добавляется мини-биография персонажа (`person.minibio()`).
+3. **Инициация диалога с LLM:**
+   - Создается логгер.
+   - Системный промпт и пользовательский промпт добавляются в `current_messages`.
+   - Отправляется первый запрос LLM (`openai_utils.client().send_message(current_messages)`)
 
-   _Пример:_
-   ```python
-   user_prompt = "Now, based on the following characteristics of the person being interviewed, and following the rules given previously, create your questions and interview the person. Good luck!\n\nMini-biography of the person being interviewed: This is a test person."
-   ```
-
-3. **Отправка начальных сообщений**:
-   - Добавляется системное сообщение (`system_prompt`) в `current_messages`.
-   - Добавляется пользовательское сообщение (`user_prompt`) в `current_messages`.
-   - Отправляются начальные сообщения в LLM с помощью `openai_utils.client().send_message()`.
-
-   _Пример:_
-    ```python
-   current_messages = [
-    {"role": "system", "content": "You are an AI that interviews other AI agents to check their specifications. The agent should be creative."},
-    {"role": "user", "content": "Now, based on the following characteristics of the person being interviewed, and following the rules given previously, create your questions and interview the person. Good luck!\n\nMini-biography of the person being interviewed: This is a test person."}
-    ]
-    message = openai_utils.client().send_message(current_messages)
-   ```
-    
-4. **Цикл валидации**:
-   - Пока есть ответ от LLM (`message`) и пока не найден маркер завершения (`termination_mark` - "```json"):
-     - Извлекаются вопросы из ответа LLM (`message["content"]`).
-     - Вопросы добавляются в `current_messages`.
-     - Вопросы отправляются персонажу (`person.listen_and_act(questions)`).
-     - Получаются ответы персонажа (`responses`).
+4. **Цикл диалога с LLM и TinyPerson:**
+   - Запускается цикл `while`, который продолжается, пока LLM возвращает сообщения и пока в сообщении нет маркера завершения `termination_mark` ("```json").
+   - **Внутри цикла:**
+     - Ответ LLM (вопросы) добавляются в `current_messages`.
+     - Вопросы логируются.
+     - `TinyPerson` "слушает" вопросы и "действует" (`person.listen_and_act()`).
+     - Получаются ответы `TinyPerson` на вопросы.
+     - Ответы `TinyPerson` логируются.
      - Ответы добавляются в `current_messages`.
-     - Отправляются все сообщения в LLM, чтобы получить следующее сообщение.
-    _Пример:_
-   ```python
-    # First iteration
-    message = {"role": "assistant", "content": "What is your name?\n"}
-    current_messages.append({"role": "assistant", "content": "What is your name?\n"})
-    person.listen_and_act("What is your name?", max_content_length = 1024)
-    responses = "My name is Test Person."
-    current_messages.append({"role": "user", "content": "My name is Test Person."})
-    message = openai_utils.client().send_message(current_messages)
+     - Отправляется следующий запрос LLM.
 
-   ```
+5. **Извлечение результатов валидации:**
+   - После завершения цикла, если получено сообщение от LLM:
+     - Извлекается JSON из ответа LLM (`utils.extract_json`).
+     - Извлекаются score и обоснование (justification).
+     - Выводится лог с результатами валидации.
+     - Функция возвращает `score` и `justification`.
+   - Если сообщение не получено от LLM (диалог не завершен):
+     - Функция возвращает `None, None`.
 
-5. **Обработка результатов**:
-   - Если получен ответ от LLM (`message` не `None`):
-     - Извлекается JSON из ответа (`utils.extract_json(message['content'])`).
-     - Извлекается оценка (`score`) и обоснование (`justification`) из JSON.
-     - Возвращается оценка и обоснование.
-   - Иначе:
-     - Возвращается `None, None`.
-
-   _Пример:_
-   ```python
-   # Assuming the message is:
-   # message = {"content": "```json\n{\"score\": 0.8, \"justification\": \"The person was creative and insightful.\"}\n```"}
-   json_content = {"score": 0.8, "justification": "The person was creative and insightful."}
-   score = 0.8
-   justification = "The person was creative and insightful."
-   return score, justification
-   ```
+**Примеры:**
+- **Начало валидации:** `person` - объект `TinyPerson`, `expectations` - "ожидается, что персонаж будет дружелюбным", `include_agent_spec` - True, `max_content_length` - 512.
+- **Формирование промпта:** `user_prompt` содержит инструкции для LLM и спецификацию агента, сгенерированную `person.generate_agent_specification()`.
+- **Цикл диалога:**
+    - LLM задает вопрос: "Как ваше настроение?"
+    - `TinyPerson` отвечает: "У меня все хорошо, спасибо за вопрос!"
+    - LLM задает следующий вопрос.
+- **Извлечение результатов:** LLM возвращает JSON: `{"score": 0.9, "justification": "Персонаж хорошо отвечает на вопросы и соответствует ожиданиям"}`. Функция возвращает (0.9, "Персонаж хорошо отвечает на вопросы и соответствует ожиданиям").
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Start Validation] --> Initialize[Initialize: Load prompt template,  prepare messages];
-    Initialize --> CreateUserPrompt[Create User Prompt];
-    CreateUserPrompt --> SendInitialMessages[Send Initial Messages to LLM];
-    SendInitialMessages --> LoopStart{While message is not None AND termination mark not in message};
-    LoopStart -- Yes --> ExtractQuestions[Extract questions from LLM message];
-    ExtractQuestions --> AddQuestionsToMessages[Add questions to current messages];
-    AddQuestionsToMessages --> SendQuestionsToPerson[Send questions to person using listen_and_act method];
-    SendQuestionsToPerson --> GetResponses[Get responses from person];
-    GetResponses --> AddResponsesToMessages[Add responses to current messages];
-    AddResponsesToMessages --> SendMessagesToLLM[Send all current messages to LLM];
-    SendMessagesToLLM --> LoopStart;
-    LoopStart -- No --> CheckMessage[Check if message is not None];
-    CheckMessage -- Yes --> ExtractJson[Extract JSON from LLM message];
-    ExtractJson --> ExtractScoreAndJustification[Extract score and justification];
-    ExtractScoreAndJustification --> ReturnScoreAndJustification[Return score and justification];
-    CheckMessage -- No --> ReturnNone[Return None, None];
-    ReturnScoreAndJustification --> End[End Validation];
+    Start[Start Validation] --> Init[Initialize Messages, Load Prompt Template];
+    Init --> RenderPrompt[Render System Prompt with Expectations];
+    RenderPrompt --> CreateUserPrompt[Create User Prompt with Agent Spec or Mini-bio];
+    CreateUserPrompt --> SendInitialLLMRequest[Send Initial System & User Messages to LLM];
+    SendInitialLLMRequest --> LoopStart{Check for LLM Message and Termination Mark?};
+    LoopStart -- Yes --> GetLLMResponse[Get LLM Response (Questions)];
+    GetLLMResponse --> AddQuestionsToMessages[Add LLM Questions to Messages];
+    AddQuestionsToMessages --> LogQuestions[Log Questions];
+    LogQuestions --> PersonListenAndAct[Person Listens to Questions and Acts];
+    PersonListenAndAct --> GetPersonResponses[Get Person Responses];
+    GetPersonResponses --> LogPersonResponses[Log Person Responses];
+    LogPersonResponses --> AddResponsesToMessages[Add Person Responses to Messages];
+    AddResponsesToMessages --> SendNextLLMRequest[Send Updated Messages to LLM];
+    SendNextLLMRequest --> LoopStart;
+    LoopStart -- No --> CheckMessage[Check if Message is Not None?];
+     CheckMessage -- Yes --> ExtractJSON[Extract JSON from LLM Response];
+     ExtractJSON --> ExtractScoreAndJustification[Extract Score and Justification];
+     ExtractScoreAndJustification --> LogResults[Log Validation Score and Justification];
+     LogResults --> ReturnResults[Return Score and Justification];
+     CheckMessage -- No --> ReturnNone[Return None, None];
+    ReturnResults --> End[End Validation];
     ReturnNone --> End;
-
-  classDef box stroke:#333,fill:#fff,stroke-width:1px;
-  class Start,End box;
+    
+    classDef message fill:#f9f,stroke:#333,stroke-width:2px
+    class GetLLMResponse, SendInitialLLMRequest, SendNextLLMRequest, LogQuestions, LogPersonResponses, AddQuestionsToMessages, AddResponsesToMessages, PersonListenAndAct, GetPersonResponses, ExtractJSON, ExtractScoreAndJustification, LogResults message
+    
+    linkStyle default stroke:#333,stroke-width:2px
 ```
 
-```mermaid
-flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
-
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-```
+**Разбор импортов для диаграммы:**
+- **os**: Используется для работы с путями к файлам, в частности для определения пути к файлу шаблона промпта (`check_person.mustache`).
+- **json**: Используется для обработки JSON-ответа от LLM, для извлечения score и justification.
+- **chevron**: Используется для заполнения шаблонов (шаблон промпта `check_person.mustache`).
+- **logging**: Используется для логирования процесса валидации.
+- **tinytroupe.openai_utils**: Содержит утилиты для отправки запросов к OpenAI API (`openai_utils.client().send_message`).
+- **tinytroupe.agent.TinyPerson**: Класс `TinyPerson`, экземпляр которого валидируется.
+- **tinytroupe.config**: Используется для загрузки конфигурации.
+- **tinytroupe.utils**: Содержит утилиты, в частности для извлечения JSON из текста (`utils.extract_json`).
+- **textwrap**: Используется для удаления лишних отступов в многострочных строках (используется для подготовки user prompt).
 
 ## <объяснение>
 
-### Импорты
+**Импорты:**
 
-- `os`: Используется для работы с файловой системой, в частности, для построения путей к файлам (`os.path.join`, `os.path.dirname`).
-- `json`: Используется для работы с JSON-данными, которые возвращает LLM в конце валидации.
-- `chevron`: Используется для рендеринга шаблонов строк, в данном случае - для формирования промптов из mustache шаблонов.
-- `logging`: Используется для ведения логов, отслеживания процесса валидации.
-- `tinytroupe.openai_utils`: Модуль, содержащий утилиты для взаимодействия с OpenAI API, такие как отправка сообщений.
-- `tinytroupe.agent`: Содержит класс `TinyPerson`, представляющий агента, которого нужно валидировать.
-- `tinytroupe.config`: Модуль для загрузки и работы с конфигурационными данными.
-- `tinytroupe.utils`: Содержит утилиты, используемые в проекте, включая функцию `extract_json` для извлечения JSON из строки.
+-   `os`: Модуль для работы с операционной системой, используется для работы с путями к файлам.
+-   `json`: Модуль для работы с данными в формате JSON. Используется для парсинга ответа от LLM.
+-   `chevron`: Модуль для работы с шаблонами, используется для заполнения шаблона промпта `check_person.mustache`.
+-   `logging`: Модуль для логирования действий и событий в программе.
+-   `tinytroupe.openai_utils`: Модуль, содержащий утилиты для взаимодействия с OpenAI API, в частности функция `client().send_message` для отправки запросов к LLM. Это часть пакета `tinytroupe`, предоставляющая функциональность для работы с OpenAI.
+-   `tinytroupe.agent.TinyPerson`: Модуль, содержащий класс `TinyPerson`, представляющий собой валидируемого агента. Это также часть пакета `tinytroupe`.
+-   `tinytroupe.config`: Модуль для загрузки и управления конфигурациями приложения, где определяются параметры, такие как `MAX_CONTENT_DISPLAY_LENGTH`.
+-  `tinytroupe.utils`: Модуль с вспомогательными функциями, включая `extract_json`, которая используется для извлечения JSON-данных из текстовых строк.
+-   `textwrap`: Модуль для работы с текстом, используется `dedent` для форматирования многострочных промптов.
 
-Все импорты, начинающиеся с `tinytroupe.`, указывают на использование модулей внутри проекта `tinytroupe`.
+**Классы:**
 
-### Классы
+-   `TinyPersonValidator`:
+    -   Это класс, который содержит статический метод `validate_person`, предназначенный для валидации экземпляра класса `TinyPerson`.
+    -   Атрибутов у класса нет, так как он используется для группировки статических методов.
+    -   Метод `validate_person` является статическим, что позволяет вызывать его без создания экземпляра класса `TinyPersonValidator`.
+    -   Взаимодействует с `openai_utils` для отправки запросов к LLM и с `TinyPerson` для получения ответов на вопросы LLM.
 
-- `TinyPersonValidator`:
-  - Это класс, который содержит статический метод `validate_person`, предназначенный для проверки экземпляра `TinyPerson`.
-  - **Атрибуты:** Не имеет атрибутов экземпляра, так как метод `validate_person` статический.
-  - **Методы:**
-    - `validate_person(person, expectations=None, include_agent_spec=True, max_content_length=default_max_content_display_length)`:
-        - Принимает экземпляр `TinyPerson`, а также ожидаемые характеристики (`expectations`), флаг включения спецификации агента (`include_agent_spec`), и максимальную длину контента (`max_content_length`).
-        - Отправляет ряд вопросов LLM для проверки персонажа, используя его ответы, а также ожидаемые характеристики и спецификации агента.
-        - Возвращает `float` (оценку валидации от 0.0 до 1.0) и `str` (обоснование оценки), либо `None, None`, если валидация не удалась.
+**Функции:**
 
-### Функции
+-   `validate_person(person, expectations=None, include_agent_spec=True, max_content_length=default_max_content_display_length)`:
+    -   **Аргументы**:
+        -   `person` (`TinyPerson`): Объект агента для валидации.
+        -   `expectations` (`str`, опционально): Ожидания от агента, используемые в промпте.
+        -   `include_agent_spec` (`bool`, опционально): Флаг, определяющий, следует ли включать спецификацию агента в промпт.
+        -   `max_content_length` (`int`, опционально): Максимальная длина отображаемого контента.
+    -   **Возвращает**:
+        -   `float`: Оценка валидации (от 0.0 до 1.0) или `None`, если валидация не удалась.
+        -   `str`: Обоснование оценки или `None`, если валидация не удалась.
+    -   **Назначение**: Валидирует объект `TinyPerson`, взаимодействуя с LLM и получая от него вопросы и оценки. По сути, это основной метод класса `TinyPersonValidator`.
+    -   **Примеры**:
+       -   `TinyPersonValidator.validate_person(my_tiny_person, "ожидается, что персонаж будет вежливым", include_agent_spec=False, max_content_length=1000)`
+       -   `TinyPersonValidator.validate_person(my_tiny_person)`
 
-- Отсутствуют, кроме статического метода `validate_person`.
+**Переменные:**
 
-### Переменные
+-   `default_max_content_display_length`:
+    -   Тип: `int`.
+    -   Используется: Указывает максимальную длину контента, который будет выведен в логах. Значение берется из конфигурации приложения.
+-   `check_agent_prompt_template`:
+    -   Тип: `str`.
+    -   Используется: Содержит шаблон промпта для проверки агента, загруженный из файла `prompts/check_person.mustache`.
+-   `system_prompt`:
+    -   Тип: `str`.
+    -   Используется: Содержит текст системного промпта, сгенерированного на основе шаблона `check_agent_prompt_template`.
+-    `user_prompt`:
+    -    Тип: `str`.
+    -    Используется: Содержит текст промпта пользователя, сгенерированного на основе  спецификации агента,  биографии, или другой информации.
+-   `current_messages`:
+    -   Тип: `list`.
+    -   Используется: Хранит сообщения в диалоге между программой и LLM.
+-   `termination_mark`:
+    -   Тип: `str`.
+    -   Используется: Маркер завершения диалога с LLM ("```json").
+-   `message`:
+    -   Тип: `dict` или `None`.
+    -   Используется:  Хранит текущее сообщение от LLM.
+-  `json_content`:
+    -   Тип: `dict`.
+    -   Используется:  Хранит извлеченный JSON контент из сообщения LLM.
+-   `score`:
+    -   Тип: `float`.
+    -   Используется: Оценка, полученная от LLM после валидации.
+-   `justification`:
+    -   Тип: `str`.
+    -   Используется: Обоснование оценки от LLM после валидации.
+-   `logger`:
+    -   Тип: `logging.Logger`.
+    -   Используется: Объект логгера для записи сообщений о ходе валидации.
+-    `questions`:
+    -   Тип: `str`.
+    -   Используется:  Хранит вопросы, сгенерированные LLM в процессе валидации.
+- `responses`:
+    -   Тип: `str`.
+    -   Используется: Хранит ответы `TinyPerson` на вопросы, сгенерированные LLM в процессе валидации.
 
-- `default_max_content_display_length`:  Глобальная переменная, которая устанавливает максимальную длину текста для отображения контента, значение берется из конфигурации `config["OpenAI"].getint("MAX_CONTENT_DISPLAY_LENGTH", 1024)`.
-- `current_messages`: Список, в котором хранятся сообщения (словарь с ключами "role" и "content") в формате, необходимом для взаимодействия с OpenAI API.
-- `check_person_prompt_template_path`: Путь к файлу mustache-шаблона промпта.
-- `check_agent_prompt_template`: Содержит шаблон промпта, прочитанный из файла.
-- `system_prompt`: Системный промпт, который используется для установки контекста для LLM.
-- `user_prompt`: Пользовательский промпт, содержащий инструкцию для LLM начать интервью.
-- `termination_mark`:  Строка-маркер ("```json"), указывающая на то, что LLM завершил интервью и предоставил JSON с результатами.
-- `message`: Переменная, которая хранит ответ от LLM в виде словаря.
-- `questions`: Строка, содержащая вопросы, которые LLM задает персонажу.
-- `responses`: Строка, содержащая ответы персонажа на вопросы.
-- `json_content`: Словарь, полученный путем парсинга JSON из ответа LLM.
-- `score`: Оценка, извлеченная из JSON (число с плавающей точкой от 0 до 1).
-- `justification`: Обоснование оценки, извлеченное из JSON (строка).
+**Взаимосвязи с другими частями проекта:**
 
-### Ошибки и улучшения
+-   Зависит от `tinytroupe.openai_utils` для связи с OpenAI API.
+-   Использует `tinytroupe.agent.TinyPerson` для представления валидируемого агента.
+-   Использует `tinytroupe.config` для загрузки конфигурационных параметров.
+-  Использует `tinytroupe.utils` для вспомогательных операций.
+-   Использует `prompts/check_person.mustache` для определения шаблона промпта.
+- Взаимодействует с модулем `logging` для записи логов в ходе работы программы.
+- Взаимодействует с модулем `textwrap` для форматирования промптов.
 
-- **Обработка ошибок:** Код не обрабатывает возможные исключения, например:
-    -  `FileNotFoundError` при открытии файла шаблона.
-    -  `KeyError` при попытке доступа к ключу в JSON-ответе LLM.
-    -  Ошибки, связанные с OpenAI API (например, таймауты, ошибки аутентификации).
-- **Улучшение:**
-  - Добавить обработку исключений с использованием `try...except`.
-  - Реализовать таймауты или ограничение на количество итераций в цикле валидации.
-  - Реализовать кеширование или использование предварительных шаблонов сообщений для повышения производительности.
-  - Добавить более гибкую конфигурацию маркера завершения (`termination_mark`).
-  - Проверить и обработать возможные ошибки, которые могут возникнуть при вызове `person.listen_and_act()`.
-  - Добавить возможность валидации несколькими способами (например, по разным аспектам).
-  - Добавить возможность отслеживания валидации в реальном времени (например, с помощью веб-сокетов).
-  - Обеспечить большую гибкость в формировании промптов и шаблонов сообщений.
-  - Пересмотреть логику обработки и извлечения JSON (добавить проверки).
+**Потенциальные ошибки и улучшения:**
 
-### Взаимосвязь с другими частями проекта
-
--   Использует `tinytroupe.openai_utils` для взаимодействия с OpenAI API.
--   Использует `tinytroupe.agent.TinyPerson` для представления персонажа, который нужно валидировать, и для взаимодействия с этим персонажем.
--   Использует `tinytroupe.config` для получения конфигурационных параметров, таких как `MAX_CONTENT_DISPLAY_LENGTH`.
--   Использует `tinytroupe.utils` для извлечения JSON из строки ответа.
--   Использует шаблоны Mustache для генерации промптов, что помогает отделить код от текста промптов.
--   Использует логирование для отслеживания хода выполнения.
-
-Таким образом, `TinyPersonValidator` является важной частью проекта, поскольку он обеспечивает функциональность проверки и оценки поведения агентов. Он интегрируется с другими модулями, чтобы эффективно использовать их возможности.
+-   **Обработка ошибок**: Отсутствует обработка ошибок при работе с файлами, JSON, OpenAI API.
+-   **Более гибкая настройка промпта**: Можно сделать шаблон промпта настраиваемым.
+-   **Более сложные критерии валидации**: Можно добавить более сложные проверки и критерии оценки.
+-  **Асинхронное выполнение**: Можно перевести взаимодействие с OpenAI API в асинхронный режим, для более быстрой работы программы.
+- **Повышение гибкости извлечения результатов валидации**: Можно добавить другие форматы результатов от LLM и возможность их парсинга.

@@ -1,216 +1,222 @@
-# Анализ кода модуля testing_utils
+## Анализ кода модуля testing_utils
 
 **Качество кода**
 8
--  Плюсы
-    - Код хорошо структурирован и разбит на логические блоки (функции, фикстуры).
+- Плюсы
+    - Код хорошо структурирован и разбит на логические блоки (функции проверок, утилиты ввода/вывода, фикстуры).
     - Присутствуют docstring для большинства функций, что облегчает понимание их назначения и использования.
-    - Используются осмысленные имена переменных и функций, что способствует читаемости кода.
-    - Наличие фикстур для тестирования упрощает создание тестовых окружений.
--  Минусы
-    - Отсутствует описание модуля в начале файла.
-    - Некоторые docstring требуют доработки (например, отсутствует описание возвращаемых значений или аргументов в некоторых функциях).
-    - Используется прямой вызов `openai_utils.client().send_message` вместо использования общего интерфейса.
-    - Не хватает обработки ошибок и логирования для отладки.
-    - Не все функции имеют примеры использования в docstring.
-    - Отсутствует импорт `from src.logger.logger import logger`.
-    - Использование `sys.path.append` для добавления путей может усложнить сопровождение проекта.
-    - В некоторых функциях отсутствуют явные типы аргументов.
+    - Используются импорты для вызова внешних функций.
+    - Есть общие функции для упрощения тестирования.
+- Минусы
+    - Не все функции имеют docstring в формате RST.
+    - Есть использование `sys.path.append` для добавления путей, что может быть нежелательно.
+    - Отсутствует единая точка для логирования.
 
 **Рекомендации по улучшению**
-
-1.  Добавить описание модуля в начале файла.
-2.  Дополнить docstring для всех функций, включая описание аргументов, возвращаемых значений и примеры использования.
-3.  Использовать общий интерфейс для вызова LLM (если есть) вместо прямого вызова `openai_utils.client().send_message`.
-4.  Добавить обработку ошибок с использованием `logger.error` и логирование для отладки.
-5.  Добавить явные типы для аргументов функций.
-6.  Импортировать `logger` из `src.logger.logger`.
-7.  Упростить добавление путей, используя относительные пути, если это возможно.
-8.  Использовать более точные проверки в функциях `proposition_holds` (например, проверять не только начало строки).
-9.  Рассмотреть возможность использования `Path` из `pathlib` для работы с путями.
-10. Добавить комментарии с подробным объяснением каждого блока кода.
+1.  Добавить недостающие docstring в формате RST.
+2.  Использовать `from src.logger.logger import logger` для логирования.
+3.  Избегать `sys.path.append` путем использования относительных путей или настройки `PYTHONPATH`.
+4.  Улучшить docstring, добавив примеры использования.
+5.  Унифицировать использование одинарных кавычек (`'`) в коде и двойных (`"`) в операциях вывода.
+6.  Добавить docstring для модуля.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль, предоставляющий набор утилит для тестирования TinyTroupe.
-=================================================================
+Модуль содержит набор утилит для тестирования агентов TinyTroupe.
+=========================================================================================
 
-Этот модуль содержит функции и фикстуры, которые помогают в создании и проведении тестов для агентов, окружений и других
-компонентов TinyTroupe. Он включает в себя проверки различных аспектов поведения агентов и мира,
-а также утилиты для работы с файлами и путями.
+Этот модуль предоставляет набор функций и фикстур для облегчения тестирования
+поведения агентов и их взаимодействия в среде TinyTroupe.
+Он включает в себя функции для проверки действий и стимулов, создания тестовых сообщений,
+сравнения конфигураций агентов, а также для работы с файловой системой.
 
-Пример использования
---------------------
+Примеры:
+    
+    Использование фикстуры `focus_group_world`:
+    
+    .. code-block:: python
+        
+        def test_something(focus_group_world):
+            assert isinstance(focus_group_world, TinyWorld)
+            # выполнение тестов с использованием `focus_group_world`
 
-Пример использования фикстуры `focus_group_world`:
+    Использование функции `contains_action_type`:
 
-.. code-block:: python
-
-    def test_focus_group_world(focus_group_world):
-        assert len(focus_group_world.agents) == 3
-
+    .. code-block:: python
+    
+        actions = [{"action": {"type": "speak", "content": "hello"}}]
+        assert contains_action_type(actions, "speak") == True
 """
 import os
 import sys
-from pathlib import Path
 from time import sleep
-from typing import Any, List, Dict
-sys.path.append('../../tinytroupe/')
-sys.path.append('../../')
-sys.path.append('../')
-from src.logger.logger import logger # импортируем logger
+# sys.path.append('../../tinytroupe/') # использование sys.path.append не рекомендуется
+# sys.path.append('../../') # использование sys.path.append не рекомендуется
+# sys.path.append('..')  # использование sys.path.append не рекомендуется
+from src.logger.logger import logger
 import tinytroupe.openai_utils as openai_utils
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld, TinySocialNetwork
 import pytest
 import importlib
+from src.utils.jjson import j_loads, j_loads_ns
 
 
 # force caching, in order to save on API usage
 openai_utils.force_api_cache(True, 'tests_cache.pickle')
 
-def contains_action_type(actions: List[Dict], action_type: str) -> bool:
+def contains_action_type(actions, action_type) -> bool:
     """
     Проверяет, содержит ли список действий действие заданного типа.
 
     Args:
-        actions (List[Dict]): Список действий для проверки.
-        action_type (str): Тип действия для поиска.
+        actions (list): Список действий.
+        action_type (str): Тип действия для проверки.
 
     Returns:
-        bool: `True`, если действие заданного типа найдено, иначе `False`.
+        bool: True, если действие заданного типа найдено, False в противном случае.
     
     Example:
-        >>> actions = [{'action': {'type': 'write', 'content': 'hello'}}]
-        >>> contains_action_type(actions, 'write')
+        >>> actions = [{"action": {"type": "speak", "content": "hello"}}]
+        >>> contains_action_type(actions, "speak")
         True
+        >>> contains_action_type(actions, "move")
+        False
     """
-    # Проход по всем действиям в списке
+    
     for action in actions:
-        # Проверка типа текущего действия
         if action['action']['type'] == action_type:
             return True
     
     return False
 
-def contains_action_content(actions: List[Dict], action_content: str) -> bool:
+def contains_action_content(actions: list, action_content: str) -> bool:
     """
     Проверяет, содержит ли список действий действие с заданным содержимым.
 
     Args:
-        actions (List[Dict]): Список действий для проверки.
-        action_content (str): Содержимое действия для поиска.
+        actions (list): Список действий.
+        action_content (str): Содержимое действия для проверки.
 
     Returns:
-        bool: `True`, если действие с заданным содержимым найдено, иначе `False`.
+        bool: True, если действие с заданным содержимым найдено, False в противном случае.
     
     Example:
-        >>> actions = [{'action': {'type': 'write', 'content': 'hello world'}}]
-        >>> contains_action_content(actions, 'hello')
+        >>> actions = [{"action": {"type": "speak", "content": "hello world"}}]
+        >>> contains_action_content(actions, "world")
         True
+        >>> contains_action_content(actions, "bye")
+        False
     """
-    # Проход по всем действиям в списке
+    
     for action in actions:
-        # Проверка, содержит ли действие заданное содержимое (без учета регистра)
+        # проверка, содержится ли желаемое содержимое в содержимом действия
         if action_content.lower() in action['action']['content'].lower():
             return True
     
     return False
 
-def contains_stimulus_type(stimuli: List[Dict], stimulus_type: str) -> bool:
+def contains_stimulus_type(stimuli, stimulus_type) -> bool:
     """
     Проверяет, содержит ли список стимулов стимул заданного типа.
-
+    
     Args:
-        stimuli (List[Dict]): Список стимулов для проверки.
-        stimulus_type (str): Тип стимула для поиска.
-
+        stimuli (list): Список стимулов.
+        stimulus_type (str): Тип стимула для проверки.
+    
     Returns:
-        bool: `True`, если стимул заданного типа найден, иначе `False`.
+        bool: True, если стимул заданного типа найден, False в противном случае.
     
     Example:
-        >>> stimuli = [{'type': 'perception', 'content': 'sound'}]
-        >>> contains_stimulus_type(stimuli, 'perception')
+        >>> stimuli = [{"type": "visual", "content": "image"}]
+        >>> contains_stimulus_type(stimuli, "visual")
         True
+        >>> contains_stimulus_type(stimuli, "audio")
+        False
     """
-    # Проход по всем стимулам в списке
+    
     for stimulus in stimuli:
-        # Проверка типа текущего стимула
         if stimulus['type'] == stimulus_type:
             return True
     
     return False
 
-def contains_stimulus_content(stimuli: List[Dict], stimulus_content: str) -> bool:
+def contains_stimulus_content(stimuli, stimulus_content) -> bool:
     """
     Проверяет, содержит ли список стимулов стимул с заданным содержимым.
-
-    Args:
-        stimuli (List[Dict]): Список стимулов для проверки.
-        stimulus_content (str): Содержимое стимула для поиска.
-
-    Returns:
-        bool: `True`, если стимул с заданным содержимым найден, иначе `False`.
     
-     Example:
-        >>> stimuli = [{'type': 'perception', 'content': 'loud sound'}]
-        >>> contains_stimulus_content(stimuli, 'sound')
+    Args:
+        stimuli (list): Список стимулов.
+        stimulus_content (str): Содержимое стимула для проверки.
+    
+    Returns:
+        bool: True, если стимул с заданным содержимым найден, False в противном случае.
+        
+    Example:
+        >>> stimuli = [{"type": "visual", "content": "image of a cat"}]
+        >>> contains_stimulus_content(stimuli, "cat")
         True
+        >>> contains_stimulus_content(stimuli, "dog")
+        False
     """
-    # Проход по всем стимулам в списке
+    
     for stimulus in stimuli:
-        # Проверка, содержит ли стимул заданное содержимое (без учета регистра)
+        # проверка, содержится ли желаемое содержимое в содержимом стимула
         if stimulus_content.lower() in stimulus['content'].lower():
             return True
     
     return False
 
-def terminates_with_action_type(actions: List[Dict], action_type: str) -> bool:
+def terminates_with_action_type(actions, action_type) -> bool:
     """
     Проверяет, заканчивается ли список действий действием заданного типа.
-
+    
     Args:
-        actions (List[Dict]): Список действий для проверки.
-        action_type (str): Тип действия для поиска.
+        actions (list): Список действий.
+        action_type (str): Тип действия для проверки.
 
     Returns:
-        bool: `True`, если список заканчивается действием заданного типа, иначе `False`.
+        bool: True, если последнее действие в списке имеет заданный тип, False в противном случае.
     
     Example:
-        >>> actions = [{'action': {'type': 'read', 'content': 'book'}}, {'action': {'type': 'write', 'content': 'diary'}}]
-        >>> terminates_with_action_type(actions, 'write')
+        >>> actions = [{"action": {"type": "move"}}, {"action": {"type": "speak"}}]
+        >>> terminates_with_action_type(actions, "speak")
         True
+        >>> terminates_with_action_type(actions, "move")
+        False
+        >>> terminates_with_action_type([], "speak")
+        False
     """
-    # Проверка, не пустой ли список
-    if not actions:
+    
+    if len(actions) == 0:
         return False
     
-    # Проверка типа последнего действия в списке
     return actions[-1]['action']['type'] == action_type
 
 
 def proposition_holds(proposition: str) -> bool:
     """
-    Проверяет истинность заданного утверждения с использованием LLM.
+    Проверяет, является ли данное утверждение истинным согласно вызову LLM.
+    Используется для проверки текстовых свойств, которые сложно проверить механически.
+    Например, "текст содержит идеи для продукта".
     
-    Эта функция использует LLM для проверки текстовых свойств, которые сложно проверить механически.
-    Например, можно проверить, содержит ли текст какие-либо идеи для продукта.
-
     Args:
         proposition (str): Утверждение для проверки.
-
+    
     Returns:
-        bool: `True`, если утверждение истинно, `False`, если ложно.
-
+        bool: True, если утверждение истинно, False в противном случае.
+    
     Raises:
         Exception: Если LLM возвращает неожиданный результат.
     
     Example:
-        >>> proposition_holds('The text contains some ideas for a product')
-        True
+        # Предположим, что LLM может определить, является ли утверждение "текст содержит идеи" истинным.
+        # result = proposition_holds("текст содержит идеи")
+        # print(result)  #  выведет True или False в зависимости от ответа LLM.
+        ...
     """
+
     system_prompt = f"""
     Check whether the following proposition is true or false. If it is
     true, write "true", otherwise write "false". Don't write anything else!
@@ -219,98 +225,92 @@ def proposition_holds(proposition: str) -> bool:
     user_prompt = f"""
     Proposition: {proposition}
     """
-    # Формирование сообщений для LLM
+
     messages = [{'role': 'system', 'content': system_prompt},
                 {'role': 'user', 'content': user_prompt}]
     
-    try:
-        # Отправка сообщения LLM
-        next_message = openai_utils.client().send_message(messages)
-        # Очистка ответа LLM от не буквенно-цифровых символов
-        cleaned_message = only_alphanumeric(next_message['content'])
-        # Проверка ответа LLM на истинность
-        if cleaned_message.lower().startswith('true'):
-            return True
-        # Проверка ответа LLM на ложность
-        elif cleaned_message.lower().startswith('false'):
-            return False
-        else:
-            # Если ответ LLM не соответствует ожидаемому формату, генерируется исключение
-            raise Exception(f'LLM returned unexpected result: {cleaned_message}')
-    except Exception as ex:
-        logger.error(f'Ошибка при проверке пропозиции: {proposition}', exc_info=ex)
+    # вызов LLM
+    next_message = openai_utils.client().send_message(messages)
+
+    # проверка результата
+    cleaned_message = only_alphanumeric(next_message['content'])
+    if cleaned_message.lower().startswith('true'):
+        return True
+    elif cleaned_message.lower().startswith('false'):
         return False
+    else:
+        raise Exception(f'LLM returned unexpected result: {cleaned_message}')
 
 def only_alphanumeric(string: str) -> str:
     """
     Возвращает строку, содержащую только буквенно-цифровые символы.
-
+    
     Args:
-        string (str): Входная строка.
+        string (str): Исходная строка.
 
     Returns:
         str: Строка, содержащая только буквенно-цифровые символы.
     
     Example:
-        >>> only_alphanumeric('Hello, 123!')
-        'Hello123'
+        >>> only_alphanumeric("hello world 123!")
+        'helloworld123'
     """
-    # Возвращает строку, содержащую только буквенно-цифровые символы
     return ''.join(c for c in string if c.isalnum())
 
-def create_test_system_user_message(user_prompt: str, system_prompt: str = 'You are a helpful AI assistant.') -> List[Dict]:
+def create_test_system_user_message(user_prompt, system_prompt='You are a helpful AI assistant.') -> list:
     """
-    Создает список сообщений, содержащий системное и пользовательское сообщение.
-
+    Создает список, содержащий одно системное сообщение и одно пользовательское сообщение.
+    
     Args:
         user_prompt (str): Пользовательское сообщение.
-        system_prompt (str, optional): Системное сообщение. Defaults to 'You are a helpful AI assistant.'.
+        system_prompt (str, optional): Системное сообщение. По умолчанию 'You are a helpful AI assistant.'.
 
     Returns:
-        List[Dict]: Список сообщений для отправки в LLM.
+        list: Список сообщений, где первое сообщение - системное, а второе - пользовательское.
     
     Example:
-        >>> create_test_system_user_message('Hello, how are you?', 'You are a test bot.')
-        [{'role': 'system', 'content': 'You are a test bot.'}, {'role': 'user', 'content': 'Hello, how are you?'}]
+        >>> create_test_system_user_message("What is the capital of France?")
+        [{'role': 'system', 'content': 'You are a helpful AI assistant.'}, {'role': 'user', 'content': 'What is the capital of France?'}]
     """
-    # Создание списка с системным сообщением
+    
     messages = [{'role': 'system', 'content': system_prompt}]
-    # Если пользовательское сообщение не None, добавляем его в список
+    
     if user_prompt is not None:
         messages.append({'role': 'user', 'content': user_prompt})
     
     return messages
 
-def agents_configs_are_equal(agent1: TinyPerson, agent2: TinyPerson, ignore_name: bool = False) -> bool:
+def agents_configs_are_equal(agent1, agent2, ignore_name=False) -> bool:
     """
     Проверяет, равны ли конфигурации двух агентов.
-    
+
     Args:
-        agent1 (TinyPerson): Первый агент для сравнения.
-        agent2 (TinyPerson): Второй агент для сравнения.
-        ignore_name (bool, optional): Игнорировать ли имя агента при сравнении. Defaults to False.
+        agent1: Первый агент.
+        agent2: Второй агент.
+        ignore_name (bool, optional): Игнорировать ли поле 'name' при сравнении. По умолчанию False.
 
     Returns:
-        bool: `True`, если конфигурации агентов равны, иначе `False`.
-    
+        bool: True, если конфигурации агентов равны, False в противном случае.
+
     Example:
         >>> from tinytroupe.agent import TinyPerson
-        >>> agent1 = TinyPerson(name='Agent1', role='tester', persona='test persona')
-        >>> agent2 = TinyPerson(name='Agent2', role='tester', persona='test persona')
+        >>> agent1 = TinyPerson(name='Agent1', role='tester')
+        >>> agent2 = TinyPerson(name='Agent2', role='tester')
         >>> agents_configs_are_equal(agent1, agent2, ignore_name=True)
         True
+        >>> agent3 = TinyPerson(name='Agent3', role='developer')
+        >>> agents_configs_are_equal(agent1, agent3, ignore_name=True)
+        False
     """
+
     ignore_keys = []
-    # Если имя надо игнорировать, добавляем ключ "name" в список игнорируемых ключей
     if ignore_name:
         ignore_keys.append('name')
     
-    # Итерация по ключам конфигурации первого агента
     for key in agent1._configuration.keys():
-        # Если ключ находится в списке игнорируемых, пропускаем его
         if key in ignore_keys:
             continue
-        # Если значения по ключу у двух агентов не равны, возвращаем False
+        
         if agent1._configuration[key] != agent2._configuration[key]:
             return False
     
@@ -319,42 +319,40 @@ def agents_configs_are_equal(agent1: TinyPerson, agent2: TinyPerson, ignore_name
 # I/O utilities
 ############################################################################################################
 
-def remove_file_if_exists(file_path: str | Path):
+def remove_file_if_exists(file_path):
     """
     Удаляет файл по заданному пути, если он существует.
-
+    
     Args:
-        file_path (str | Path): Путь к файлу, который необходимо удалить.
+        file_path (str): Путь к файлу.
     
     Example:
         >>> file_path = 'test_file.txt'
         >>> with open(file_path, 'w') as f:
-        ...     f.write('test')
+        ...     f.write('some content')
         >>> remove_file_if_exists(file_path)
-        >>> os.path.exists(file_path)
-        False
+        # После выполнения, файл 'test_file.txt' будет удален, если он существовал.
     """
-    # Проверка существования файла
+    
     if os.path.exists(file_path):
-        # Удаление файла
         os.remove(file_path)
 
-def get_relative_to_test_path(path_suffix: str) -> str:
+def get_relative_to_test_path(path_suffix) -> str:
     """
-    Возвращает путь к файлу относительно директории тестового файла.
-
+    Возвращает путь к тестовому файлу с заданным суффиксом.
+    
     Args:
-        path_suffix (str): Суффикс пути файла.
-
+        path_suffix (str): Суффикс пути к файлу.
+    
     Returns:
         str: Полный путь к файлу.
     
     Example:
-         >>> get_relative_to_test_path('test_file.txt')
-         '/absolute/path/to/tests/test_file.txt'
+        >>> get_relative_to_test_path('data/test.txt')
+        '/path/to/your/testing_utils_directory/data/test.txt' # Зависит от текущей директории.
     """
-    # Возвращает путь к файлу, объединенный с путем директории этого файла
-    return str(Path(os.path.dirname(__file__)) / path_suffix)
+    
+    return os.path.join(os.path.dirname(__file__), path_suffix)
 
 
 ############################################################################################################
@@ -362,28 +360,34 @@ def get_relative_to_test_path(path_suffix: str) -> str:
 ############################################################################################################
 
 @pytest.fixture(scope='function')
-def focus_group_world() -> TinyWorld:
+def focus_group_world():
     """
-    Создает и возвращает тестовый мир с тремя агентами.
-
-    Returns:
-        TinyWorld: Мир с агентами Lisa, Oscar и Marcos.
-    """
-    import tinytroupe.examples as examples
+    Фикстура для создания мира с несколькими агентами для тестирования.
     
-    # Создание тестового мира с тремя агентами
+    Returns:
+        TinyWorld: Экземпляр TinyWorld с тремя агентами.
+    
+    Example:
+        def test_something(focus_group_world):
+            assert isinstance(focus_group_world, TinyWorld)
+            # Проверка наличия агентов в мире
+            assert len(focus_group_world.agents) == 3
+    """
+    import tinytroupe.examples as examples   
+    
     world = TinyWorld('Focus group', [examples.create_lisa_the_data_scientist(), examples.create_oscar_the_architect(), examples.create_marcos_the_physician()])
     return world
 
 @pytest.fixture(scope='function')
 def setup():
     """
-    Очищает агентов и окружения перед каждым тестом.
-
-    Yields:
-         None:
+    Фикстура для настройки тестов, очищает агентов и окружения перед выполнением каждого теста.
+    
+    Example:
+        def test_something(setup):
+            # Тест, который начинается с чистого состояния TinyPerson и TinyWorld
+            ...
     """
-    # Очистка агентов и окружений перед каждым тестом
     TinyPerson.clear_agents()
     TinyWorld.clear_environments()
 

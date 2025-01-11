@@ -2,42 +2,44 @@
 
 **Качество кода**
 8
--   Плюсы
-    -   Код предоставляет наглядные примеры использования класса `Driver` с разными веб-браузерами.
-    -   В коде демонстрируется работа с основными функциями драйвера, такими как навигация, скроллинг и сохранение куки.
-    -   Присутствуют базовые проверки на успешность выполнения операций.
--   Минусы
-    -   Отсутствует необходимая документация в формате reStructuredText (RST).
-    -   Используются стандартные блоки `try-except` вместо `logger.error` для обработки ошибок.
-    -   Дублирование кода при создании экземпляров `Driver` для разных браузеров.
-    -   Используются `print` для логирования, вместо `logger`.
-    -   Отсутствуют импорты `src.logger.logger` и `typing`.
+ -  Плюсы
+    - Код демонстрирует использование класса `Driver` с различными веб-драйверами (Chrome, Firefox, Edge).
+    - Присутствуют основные операции, такие как навигация по URL, извлечение домена, скроллинг и сохранение куки.
+    - Код читаем и хорошо структурирован.
+    - Используются `try-finally` блоки для гарантированного закрытия браузеров.
+ -  Минусы
+    - Отсутствует импорт `logger` из `src.logger.logger`.
+    - В комментариях не используется формат `RST`.
+    - Нет подробной документации к функциям и модулю.
+    - Использование `print` вместо `logger` для вывода сообщений.
+    - Название метода `_save_cookies_localy`  не соответствует соглашениям об именовании  приватных методов.
+    - Отсутствуют проверки  возвращаемых значений.
+    - Необходима более детальная обработка ошибок.
+    - Необходимо добавить описание модуля.
 
 **Рекомендации по улучшению**
 
-1.  Добавить RST-документацию для модуля, функций и переменных.
-2.  Использовать `logger` для логирования ошибок и информационных сообщений.
-3.  Избавиться от дублирования кода путем создания функций для инициализации и обработки драйверов.
-4.  Удалить избыточные комментарии и привести их в соответствие с reStructuredText.
-5.  Использовать `from src.logger.logger import logger` для логирования.
-6.  Заменить `print` на `logger` для логирования.
-7.  Добавить импорты `src.logger.logger` и `typing`
-8.  Избавиться от блоков `try-except-finally` с использованием `logger.error`.
-9.  Все проверки `if chrome_driver.get_url(url):` обернуть в `if chrome_driver.get_url(url) is True:`
+1.  Добавить описание модуля в начале файла в формате `RST`.
+2.  Импортировать `logger` из `src.logger.logger`.
+3.  Заменить `print` на `logger` для вывода информационных и отладочных сообщений.
+4.  Переименовать метод `_save_cookies_localy` в `save_cookies_locally`.
+5.  Добавить документацию в формате `RST` для функции `main`.
+6.  Проверить необходимость использования `try-finally` блоков.
+7.  Добавить проверку возвращаемых значений.
+8.  Улучшить обработку ошибок, используя `logger.error`.
+9.  Использовать одинарные кавычки для строк в Python коде.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль содержит примеры использования класса `Driver` для управления браузерами.
-=================================================================================
+Модуль для демонстрации работы с веб-драйверами
+==================================================
 
-Этот модуль демонстрирует, как создавать экземпляры драйверов для Chrome, Firefox и Edge,
-а также как использовать их основные функции, такие как навигация, скроллинг и сохранение куки.
+Этот модуль содержит пример использования класса :class:`Driver` с различными
+веб-браузерами (Chrome, Firefox, Edge) для выполнения основных операций, таких как
+навигация по URL, извлечение домена, скроллинг и сохранение куки.
 
 Пример использования
 --------------------
@@ -49,78 +51,128 @@
     if __name__ == "__main__":
         main()
 """
+# file: /src/webdriver/_examples/_example_driver.py
+
+#! venv/bin/python/python3.12
+
 from src.webdriver.driver import Driver, Chrome, Firefox, Edge
-from src.logger.logger import logger
-from typing import  Any
+from src.logger.logger import logger # Импорт logger из src.logger.logger
 
 
-
-def _process_driver(driver_type: Any, url: str, cookies_file: str, scrolls_forward: int, scrolls_backward: int) -> None:
+def main():
     """
-    Создает экземпляр драйвера, выполняет навигацию, скроллинг и сохранение куки.
+    Основная функция для демонстрации использования класса `Driver`
+    с различными веб-браузерами.
 
-    :param driver_type: Тип драйвера (Chrome, Firefox, Edge).
-    :type driver_type: Any
-    :param url: URL для навигации.
-    :type url: str
-    :param cookies_file: Имя файла для сохранения куки.
-    :type cookies_file: str
-    :param scrolls_forward: Количество прокруток вперед.
-    :type scrolls_forward: int
-    :param scrolls_backward: Количество прокруток назад.
-    :type scrolls_backward: int
-    :raises Exception: Если возникает ошибка при навигации, скроллинге или сохранении куки.
+    Эта функция создает экземпляры класса `Driver` для Chrome, Firefox и Edge,
+    выполняет навигацию по URL, извлекает домен, прокручивает страницу, сохраняет
+    куки и закрывает браузеры.
     """
+    # Создание экземпляра класса Driver с веб-драйвером Chrome
+    logger.info("Создание экземпляра браузера Chrome...") #  Использование logger.info
+    chrome_driver = Driver(Chrome)
+
     try:
-        logger.info(f"Creating a {driver_type.__name__} browser instance...")
-        driver = Driver(driver_type)
-        if driver.get_url(url) is True:
-           logger.info(f"Successfully navigated to {url}")
+        # Навигация по URL и проверка успешности
+        url = 'https://www.example.com'
+        if chrome_driver.get_url(url):
+            logger.info(f"Успешная навигация по {url}") #  Использование logger.info
         else:
-           logger.error(f"Failed to navigate to {url}")
-           return
+            logger.error(f"Не удалось перейти по {url}") #  Использование logger.error
 
-        domain = driver.extract_domain(url)
-        logger.info(f"Extracted domain: {domain}")
+        # Извлечение домена из URL
+        domain = chrome_driver.extract_domain(url)
+        logger.info(f"Извлеченный домен: {domain}")  #  Использование logger.info
 
-        if scrolls_forward > 0 and driver.scroll(scrolls=scrolls_forward, direction='forward') is True:
-            logger.info("Successfully scrolled down the page")
+        # Прокрутка страницы вниз
+        if chrome_driver.scroll(scrolls=3, direction='forward'):
+            logger.info("Успешная прокрутка страницы вниз") #  Использование logger.info
         else:
-             logger.info("Failed to scroll down the page")
+            logger.error("Не удалось прокрутить страницу вниз") #  Использование logger.error
 
-        if scrolls_backward > 0 and driver.scroll(scrolls=scrolls_backward, direction='backward') is True:
-            logger.info("Successfully scrolled up the page")
+        # Сохранение куки в файл
+        if chrome_driver.save_cookies_locally(to_file='cookies_chrome.pkl'): #  Исправлено название метода
+            logger.info("Куки успешно сохранены") #  Использование logger.info
         else:
-             logger.info("Failed to scroll up the page")
+             logger.error("Не удалось сохранить куки") #  Использование logger.error
 
-        if scrolls_forward > 0 and scrolls_backward > 0 and driver.scroll(scrolls=scrolls_forward, direction='both') is True:
-             logger.info("Successfully scrolled the page in both directions")
-        else:
-             logger.info("Failed to scroll the page in both directions")
-
-        if driver._save_cookies_localy(to_file=cookies_file) is True:
-            logger.info("Cookies saved successfully")
-        else:
-            logger.error("Failed to save cookies")
-    except Exception as ex:
-        logger.error(f"An error occurred while processing {driver_type.__name__} browser", exc_info=ex)
+    except Exception as ex: # обработка исключений через try/except
+         logger.error(f"Произошла ошибка при работе с Chrome: {ex}", exc_info=True) #  Использование logger.error
     finally:
-        if 'driver' in locals() and driver:
-           driver.quit()
-           logger.info(f"{driver_type.__name__} browser closed.")
+        #  Гарантированное закрытие драйвера
+        chrome_driver.quit()
+        logger.info("Браузер Chrome закрыт.") #  Использование logger.info
 
+    # Создание экземпляра класса Driver с веб-драйвером Firefox
+    logger.info("Создание экземпляра браузера Firefox...")  #  Использование logger.info
+    firefox_driver = Driver(Firefox)
 
+    try:
+        # Навигация по URL и проверка успешности
+        url = 'https://www.example.com'
+        if firefox_driver.get_url(url):
+             logger.info(f"Успешная навигация по {url}")  #  Использование logger.info
+        else:
+            logger.error(f"Не удалось перейти по {url}") #  Использование logger.error
 
-def main() -> None:
-    """
-    Основная функция для демонстрации использования класса `Driver` с разными браузерами.
-    """
-    url = "https://www.example.com"
-    _process_driver(Chrome, url, 'cookies_chrome.pkl', 3, 0)
-    _process_driver(Firefox, url, 'cookies_firefox.pkl', 0, 2)
-    _process_driver(Edge, url, 'cookies_edge.pkl', 2, 2)
+        # Извлечение домена из URL
+        domain = firefox_driver.extract_domain(url)
+        logger.info(f"Извлеченный домен: {domain}")  #  Использование logger.info
 
+        # Прокрутка страницы вверх
+        if firefox_driver.scroll(scrolls=2, direction='backward'):
+            logger.info("Успешная прокрутка страницы вверх") #  Использование logger.info
+        else:
+            logger.error("Не удалось прокрутить страницу вверх") #  Использование logger.error
 
+        # Сохранение куки в файл
+        if firefox_driver.save_cookies_locally(to_file='cookies_firefox.pkl'): #  Исправлено название метода
+            logger.info("Куки успешно сохранены") #  Использование logger.info
+        else:
+            logger.error("Не удалось сохранить куки")  #  Использование logger.error
+
+    except Exception as ex: # обработка исключений через try/except
+         logger.error(f"Произошла ошибка при работе с Firefox: {ex}", exc_info=True) #  Использование logger.error
+    finally:
+        # Гарантированное закрытие драйвера
+        firefox_driver.quit()
+        logger.info("Браузер Firefox закрыт.") #  Использование logger.info
+
+    # Создание экземпляра класса Driver с веб-драйвером Edge
+    logger.info("Создание экземпляра браузера Edge...") #  Использование logger.info
+    edge_driver = Driver(Edge)
+
+    try:
+        # Навигация по URL и проверка успешности
+        url = 'https://www.example.com'
+        if edge_driver.get_url(url):
+           logger.info(f"Успешная навигация по {url}") #  Использование logger.info
+        else:
+            logger.error(f"Не удалось перейти по {url}") #  Использование logger.error
+
+        # Извлечение домена из URL
+        domain = edge_driver.extract_domain(url)
+        logger.info(f"Извлеченный домен: {domain}") #  Использование logger.info
+
+        # Прокрутка страницы в обоих направлениях
+        if edge_driver.scroll(scrolls=2, direction='both'):
+            logger.info("Успешная прокрутка страницы в обоих направлениях") #  Использование logger.info
+        else:
+            logger.error("Не удалось прокрутить страницу в обоих направлениях") #  Использование logger.error
+
+        # Сохранение куки в файл
+        if edge_driver.save_cookies_locally(to_file='cookies_edge.pkl'): #  Исправлено название метода
+            logger.info("Куки успешно сохранены") #  Использование logger.info
+        else:
+            logger.error("Не удалось сохранить куки") #  Использование logger.error
+
+    except Exception as ex: # обработка исключений через try/except
+         logger.error(f"Произошла ошибка при работе с Edge: {ex}", exc_info=True) #  Использование logger.error
+
+    finally:
+        # Гарантированное закрытие драйвера
+        edge_driver.quit()
+        logger.info("Браузер Edge закрыт.") #  Использование logger.info
 
 if __name__ == "__main__":
     main()

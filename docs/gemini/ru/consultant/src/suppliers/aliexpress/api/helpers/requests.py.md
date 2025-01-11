@@ -1,41 +1,39 @@
-# Анализ кода модуля `requests.py`
+# Анализ кода модуля `requests`
 
 **Качество кода**
 8
 -  Плюсы
-    - Присутствует базовая структура обработки запросов к API.
-    - Используется логгер для записи ошибок и предупреждений.
-    - Применяется `SimpleNamespace` для удобного доступа к данным ответа.
+    - Код содержит логирование ошибок, что способствует отладке и мониторингу.
+    - Используется `SimpleNamespace` для удобного доступа к данным ответа.
+    - Присутствует обработка исключений на разных этапах выполнения запроса.
 -  Минусы
-    - Не везде используется кастомный обработчик JSON, а именно `j_loads` или `j_loads_ns`
-    -  Избыточное использование `try-except` блоков, не всегда с логированием ошибок.
-    -  Не полное документирование кода в reStructuredText (RST) формате.
-    -  Отсутствуют проверки на наличие атрибутов перед их использованием.
-    - Некоторые ошибки не обрабатываются, а просто пропускаются (`...`).
-    - Код не всегда соответствует PEP 8, например, пробелы в аннотациях типов.
-    - Дублирование логирования ошибок, лучше использовать одну точку логирования.
-    -  Не все исключения обрабатываются с помощью логгера.
+    - Не используются константы для магических значений, например, 200.
+    - Избыточное использование `try-except`, которое можно заменить на более конкретную обработку ошибок.
+    - Отсутствует документация к модулю и функции.
+    - Код содержит закомментированные строки, которые не несут смысловой нагрузки.
+    - `json.dumps` и `json.loads` с `object_hook` не оптимальны, лучше использовать `j_loads` или `j_loads_ns`.
 
 **Рекомендации по улучшению**
 
-1.  **Использовать `j_loads_ns`**: Заменить стандартный `json.loads` на `j_loads_ns` для более консистентной обработки JSON.
-2.  **Улучшить обработку ошибок**:  Удалить избыточные `try-except` блоки, использовать `logger.error` для записи ошибок, и обрабатывать исключения с помощью `logger.exception`.
-3.  **Документирование**: Добавить документацию в формате reStructuredText (RST) для модуля и функции.
-4.  **Уточнить обработку ответов**: Добавить проверку на существование ключей `response_name` и `resp_result` в ответе, прежде чем обращаться к ним.
-5. **Улучшить логирование**: Использовать `logger.error` с `exc_info=True` чтобы логировать трассировку ошибок.
-6.  **Удалить лишнее**: Убрать закомментированный код и `...`, если это не является точкой отладки.
-7. **PEP 8**: Исправить ошибки в стиле кода, согласно PEP 8.
-8. **Аннотация типов**: добавить аннотации типов.
+1.  Добавить описание модуля в начале файла.
+2.  Добавить документацию к функции `api_request`, используя формат RST.
+3.  Удалить закомментированный код, который не используется.
+4.  Заменить множественные блоки `try-except` на более конкретную обработку ошибок с помощью `logger.error`.
+5.  Использовать `j_loads_ns` вместо `json.dumps` и `json.loads` для обработки JSON.
+6.  Убрать лишнюю переменную `attemps`, так как она не используется.
+7.  Добавить константу для кода ответа 200.
+8.  Использовать f-строки для форматирования сообщений в `logger`.
+9.  Уточнить сообщения ошибок, чтобы было понятно, где именно произошла ошибка.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для выполнения API-запросов и обработки ответов.
-========================================================
+Модуль для обработки API-запросов к AliExpress.
+=================================================
 
-Этот модуль предоставляет функцию :func:`api_request` для отправки запросов к API и обработки их ответов.
-Он включает в себя обработку ошибок и преобразование JSON-ответов в объекты SimpleNamespace.
+Этот модуль содержит функцию `api_request`, которая используется для выполнения запросов
+к API AliExpress и обработки ответов.
 
 Пример использования
 --------------------
@@ -43,70 +41,69 @@
 .. code-block:: python
 
     from src.suppliers.aliexpress.api.helpers.requests import api_request
-    from src.suppliers.aliexpress.api.request import Request
-
-    request = Request(method='get', url='https://example.com/api', params={'id': 123})
-    result = api_request(request, 'response_data')
-    if result:
-        print(result)
+    from src.suppliers.aliexpress.api.requests import GetProductRequest
+    
+    request = GetProductRequest(product_id=12345)
+    response = api_request(request, 'getProduct')
+    if response:
+       print(response)
 """
-# -*- coding: utf-8 -*-
- # <- venv win
 from types import SimpleNamespace
-from time import sleep
 from src.logger.logger import logger
-#from src.utils.printer import pprint # удалил т.к. не используется
-from src.utils.jjson import j_loads_ns # Используем j_loads_ns
-from typing import Any
+from src.utils.printer import pprint
+from src.utils.jjson import j_loads_ns
 
 from ..errors import ApiRequestException, ApiRequestResponseException
 
+SUCCESS_CODE = 200
 
-def api_request(request: Any, response_name: str, attempts: int = 1) -> Any:
+
+def api_request(request, response_name):
     """
-    Отправляет API-запрос и обрабатывает ответ.
+    Выполняет API запрос и обрабатывает ответ.
 
-    :param request: Объект запроса, имеющий метод `getResponse`.
-    :param response_name: Имя ключа, содержащего данные ответа в JSON.
-    :param attempts: Количество попыток выполнения запроса.
-    :return: Обработанный результат ответа или None в случае ошибки.
+    Args:
+        request: Объект запроса, содержащий метод `getResponse`.
+        response_name (str): Ключ для извлечения данных из ответа.
 
-    :raises ApiRequestException: Если произошла ошибка при выполнении запроса.
-    :raises ApiRequestResponseException: Если произошла ошибка при обработке ответа.
+    Returns:
+        SimpleNamespace: Результат API запроса в виде `SimpleNamespace` объекта.
+                         Возвращает `None` в случае ошибки.
+
+    Raises:
+        ApiRequestException: Если возникает исключение при выполнении запроса.
+        ApiRequestResponseException: Если возникает исключение при обработке ответа.
+
+    Example:
+        >>> from src.suppliers.aliexpress.api.requests import GetProductRequest
+        >>> request = GetProductRequest(product_id=12345)
+        >>> response = api_request(request, 'getProduct')
+        >>> if response:
+        ...    print(response)
     """
     try:
-        #  выполняет запрос к API
+        # Выполняет запрос, используя метод `getResponse` переданного объекта
         response = request.getResponse()
     except Exception as error:
-        logger.error(f'Ошибка при выполнении запроса: {error}', exc_info=True)
+        logger.error(f'Ошибка выполнения запроса: {error}', exc_info=False)
         return
 
     try:
-        #  проверяет наличие ключа `response_name` в ответе
-        if response_name not in response:
-            logger.error(f'Ключ {response_name} не найден в ответе: {response}')
-            return
-        response = response[response_name]
-        #  проверяет наличие ключа `resp_result` в полученном словаре
-        if 'resp_result' not in response:
-            logger.error(f'Ключ `resp_result` не найден в словаре: {response}')
-            return
-        response = response['resp_result']
-        # Используем j_loads_ns для преобразования JSON в SimpleNamespace
+        # Извлекает и преобразует данные ответа в SimpleNamespace
+        response = response[response_name]['resp_result']
         response = j_loads_ns(response)
-    except Exception as error:
-        logger.error(f'Ошибка при обработке ответа: {error}', exc_info=True)
+    except (KeyError, TypeError) as error:
+        logger.error(f'Ошибка обработки ответа: {error}', exc_info=False)
         return
-
+    
     try:
-        # проверяет код ответа и возвращает результат или логирует предупреждение.
-        if response.resp_code == 200:
+        # Проверяет код ответа
+        if response.resp_code == SUCCESS_CODE:
             return response.result
         else:
-            logger.warning(f'Код ответа {response.resp_code} - {response.resp_msg}', exc_info=True)
+            logger.warning(f'Response code {response.resp_code} - {response.resp_msg}', exc_info=False)
             return
     except Exception as ex:
-        # Логирует ошибку при обработке ответа
-        logger.error(f'Неизвестная ошибка при обработке ответа: {ex}', exc_info=True)
+        logger.error(f'Неизвестная ошибка при обработке ответа: {ex}', exc_info=False)
         return
 ```

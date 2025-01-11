@@ -1,372 +1,386 @@
-## АНАЛИЗ КОДА: `hypotez/src/webdriver/executor.py`
+## АНАЛИЗ КОДА: `src/webdriver/executor.py`
 
 ### 1. <алгоритм>
 
-**Основная цель модуля:**  `executor.py` предназначен для выполнения действий с веб-элементами на основе заданных локаторов. Локатор представляет собой словарь или `SimpleNamespace` объект, содержащий информацию о том, как найти и взаимодействовать с элементами на веб-странице.
+**Общая схема работы:**
 
-**Блок-схема основных функций:**
+1.  **Инициализация `ExecuteLocator`**:
+    *   Создается экземпляр класса `ExecuteLocator`, который инициализирует `ActionChains` и `by_mapping`.
+2.  **`execute_locator`**:
+    *   Принимает `locator` (словарь или `SimpleNamespace`), `timeout`, `timeout_for_event`, `message`, `typing_speed`, `continue_on_error`.
+    *   Преобразует `locator` в `SimpleNamespace` при необходимости.
+    *   Вызывает асинхронную функцию `_parse_locator`.
+3.  **`_parse_locator`**:
+    *   Получает `locator` и `message`.
+    *   Преобразует `locator` в `SimpleNamespace`, если это необходимо.
+    *   Проверяет, есть ли `event`, `attribute`, `mandatory` в `locator`. Если нет, возвращает `None`.
+    *   Определяет тип локатора (например, `By.XPATH`, `By.ID`).
+    *   Вызывает `evaluate_locator`, чтобы обработать значения атрибутов, если они есть.
+    *   В зависимости от наличия `event` или `attribute` вызывает соответствующие методы: `execute_event`, `get_attribute_by_locator` или `get_webelement_by_locator`.
+4.  **`evaluate_locator`**:
+    *   Принимает `attribute` (строка, список строк или словарь).
+    *   Если `attribute` является списком, итерируется по нему и вызывает `_evaluate` для каждого элемента.
+    *   В противном случае вызывает `_evaluate` для единичного атрибута.
+5.  **`_evaluate`**:
+    *   Проверяет, является ли атрибут константой (например, `%ENTER%`).
+    *   Возвращает константу или исходный атрибут.
+6. **`get_attribute_by_locator`**:
+   *  Принимает `locator`, `timeout`, `timeout_for_event`, `message`, `typing_speed`, `continue_on_error`.
+   *   Получает `web_element` через `get_webelement_by_locator`.
+   *   Если `web_element` не найден, возвращает `None`.
+   *   Если `locator.attribute` это строка, похожая на словарь (`{key:value}`), то парсит ее.
+   *  Получает атрибуты в зависимости от того, является ли `web_element` списком или единичным элементом.
+7.  **`get_webelement_by_locator`**:
+    *   Принимает `locator`, `timeout`, `timeout_for_event`.
+    *   Преобразует `locator` в `SimpleNamespace`, если это необходимо.
+    *   Использует `WebDriverWait` для ожидания элемента(ов) на странице.
+    *   Возвращает `WebElement` или `List[WebElement]`, применяя фильтрацию `_parse_elements_list` по правилу `if_list`.
+8.  **`_parse_elements_list`**:
+   *   Фильтрует список веб-элементов на основе параметра `if_list`.
+   *   Возвращает отфильтрованный список или одиночный элемент.
+9.  **`get_webelement_as_screenshot`**:
+    *   Принимает `locator`, `timeout`, `timeout_for_event`, `message`, `typing_speed`, `continue_on_error`, `webelement`.
+    *   Получает `webelement`, если он не передан явно.
+    *   Делает скриншот и возвращает `screenshot_stream`.
+10. **`execute_event`**:
+    *   Принимает `locator`, `timeout`, `timeout_for_event`, `message`, `typing_speed`, `continue_on_error`.
+    *   Получает `web_element` через `get_webelement_by_locator`.
+    *   Разбивает `locator.event` на список событий.
+    *   Выполняет действия в цикле: `click`, `pause`, `upload_media`, `screenshot`, `clear`, `send_keys`, `type`.
+11. **`send_message`**:
+    *   Принимает `locator`, `timeout`, `timeout_for_event`, `message`, `typing_speed`, `continue_on_error`.
+    *   Получает `web_element` через `get_webelement_by_locator`.
+    *   Вызывает `type_message`.
+12. **`type_message`**:
+    *   Разбивает сообщение на слова и буквы, обрабатывает их посимвольно.
+    *   Использует `ActionChains` для ввода букв с учетом скорости набора и замены символов.
 
-1. **`execute_locator`**:
-    -   **Пример входа**: `locator = {'by': 'ID', 'selector': 'myElement', 'event': 'click()'}`.
-    -   Преобразует входной `locator` в `SimpleNamespace` (если это словарь).
-    -   Вызывает `_parse_locator` для обработки.
-    -   Возвращает результат из `_parse_locator` (веб-элемент, атрибут или результат события).
-    -   Если  `locator` не имеет ни `attribute`, ни `selector`, то возвращает `None`.
+**Примеры:**
 
-2.  **`_parse_locator`**:
-    -   **Пример входа:** `locator = SimpleNamespace(by='ID', selector='myElement', event='click()', timeout=10)`
-    -   Преобразует `locator` в `SimpleNamespace`
-    -   Проверяет, есть ли в `locator` поля  `event`, `attribute`, или `mandatory`
-    -   Если нет - возвращает `None`.
-    -   Пытается определить `locator.by` , приводя его к верхнему регистру.
-    -   Если есть `locator.attribute` - вызывает `evaluate_locator` и присваивает результат `locator.attribute`.
-    -   Если `locator.by` == \'VALUE\' то возвращает `locator.attribute`.
-    -   Ловит и логирует исключения.
-    -   Проверяет наличие `event` -> вызывает `execute_event`.
-    -   Проверяет наличие `attribute` -> вызывает `get_attribute_by_locator`.
-    -   Вызывает `get_webelement_by_locator`
-    -   Возвращает результат (веб-элемент, атрибут, результат события).
-
-3. **`evaluate_locator`**:
-    -   **Пример входа:** `attribute = '%ENTER%'` или `attribute = ['%ENTER%', '%TAB%']`
-    -   Принимает атрибут (строку или список строк).
-    -   Если атрибут - список - вызывает `_evaluate` для каждого элемента.
-    -   Если атрибут строка - вызывает `_evaluate`
-    -   `_evaluate`: проверяет, если атрибут начинается с `%`, то ищет соответствующий атрибут в `Keys` и возвращает его. Если не находит, то возвращает сам атрибут.
-    -   Возвращает строку или список строк.
-
-4. **`get_attribute_by_locator`**:
-    -   **Пример входа:** `locator = {'by': 'ID', 'selector': 'myElement', 'attribute': 'value'}`
-    -   Преобразует `locator` в `SimpleNamespace`.
-    -   Вызывает `get_webelement_by_locator` для получения веб-элемента.
-    -   Если веб-элемент не найден, возвращает `None`.
-    -   Если `locator.attribute` строка, начинающаяся с `{`, то пытается распарсить строку как словарь.
-    -   Если `web_element` список - вызывает  `_get_attributes_from_dict` для каждого элемента.
-    -   Если `web_element` не список -  вызывает  `_get_attributes_from_dict` для одного элемента.
-    -   Если `web_element` - список, то возвращает список атрибутов каждого элемента.
-    -   Если  `web_element` - не список, то возвращает атрибут одного элемента.
-    -  `_get_attributes_from_dict`:
-          - Принимает элемент `WebElement` и словарь с атрибутами.
-          - Возвращает словарь, где ключи и значения извлекаются из атрибутов элемента.
-    -  `_parse_dict_string`:
-          - Пытается распарсить входную строку в виде словаря
-          - В случае успеха возвращает словарь
-          - Возвращает `None` если парсинг не удался.
-
-5.  **`get_webelement_by_locator`**:
-    -   **Пример входа:** `locator = {'by': 'ID', 'selector': 'myElement', 'timeout': 10}`.
-    -   Преобразует `locator` в `SimpleNamespace`.
-    -   Если `timeout == 0` - находит элементы без ожидания.
-    -   Если `timeout` > 0  - ждет пока элементы появятся на странице.
-        - Выбирает условия ожидания: `presence_of_all_elements_located` или `visibility_of_all_elements_located`.
-    -   Вызывает `_parse_elements_list` для фильтрации найденных элементов.
-    -   Возвращает `WebElement` или список `WebElement` или `None`.
-    -   `_parse_elements_list`:
-        - Фильтрует список элементов на основе `locator.if_list`.
-        - Поддерживает фильтры: `all`, `first`, `last`, `even`, `odd`, integer, list.
-        - Возвращает отфильтрованный список элементов или один элемент
-
-6. **`get_webelement_as_screenshot`**:
-    -   **Пример входа:** `locator = {'by': 'ID', 'selector': 'myElement'}`
-    -   Преобразует `locator` в `SimpleNamespace`.
-    -   Вызывает `get_webelement_by_locator` для получения веб-элемента.
-    -   Делает скриншот элемента и возвращает его в виде бинарного потока.
-
-7.  **`execute_event`**:
-    -   **Пример входа:** `locator = {'by': 'ID', 'selector': 'myElement', 'event': 'click()'}` или `locator = {'by': 'ID', 'selector': 'myElement', 'event': 'type(Hello)'}`.
-    -   Преобразует `locator` в `SimpleNamespace`.
-    -   Разделяет строку `locator.event` на список событий.
-    -   Вызывает `get_webelement_by_locator` для получения элемента.
-    -   Перебирает события и выполняет их.
-      -   `click()`: кликает на элемент.
-      -   `pause(N)`: делает паузу на N секунд.
-      -   `upload_media()`: отправляет сообщение в элемент (используется для загрузки файлов).
-      -   `screenshot()`: делает скриншот элемента и возвращает.
-      -   `clear()`: очищает элемент.
-      -   `send_keys()`: отправляет клавиши на элемент.
-      -   `type()`: имитирует ввод текста в элемент (с задержкой или без).
-    -   Возвращает результат (список или `True` / `False`).
-
-8. **`send_message`**:
-    -   **Пример входа:** `locator = {'by': 'ID', 'selector': 'myElement'}, message = 'Hello'`
-    -   Преобразует `locator` в `SimpleNamespace`.
-    -   Вызывает `get_webelement_by_locator` для получения элемента.
-    -   Вызывает функцию `type_message`, которая имитирует ввод текста в элемент.
-    -   `type_message`:
-        - Разделяет сообщение на слова
-        - Перебирает буквы в слове
-        - Если буква в `replace_dict` - заменяет её комбинацией клавиш
-        - Иначе - печатает букву и ставит паузу.
-    -   Возвращает `True` в случае успеха.
+*   **`execute_locator(locator={"by": "ID", "selector": "myButton", "event": "click()"})`**: Находит элемент с `ID="myButton"` и кликает по нему.
+*   **`execute_locator(locator={"by": "XPATH", "selector": "//input[@id='myInput']", "attribute": "value"})`**: Находит элемент с `XPATH="//input[@id='myInput']"` и возвращает его значение.
+*   **`execute_locator(locator={"by": "CSS_SELECTOR", "selector": ".items", "if_list": "first"})`**: Находит все элементы с `CSS_SELECTOR=".items"` и возвращает первый элемент.
+*    **`execute_locator(locator={"by":"ID","selector":"message_box", "event": "type(Привет мир!)", "typing_speed":0.1})`** -  находит элемент с `ID="message_box"` и печатает текст "Привет мир!" с задержкой 0.1 сек на символ.
+*    **`execute_locator(locator={"by":"ID","selector":"upload", "event": "upload_media()", "message": "test.jpg"})`** - находит элемент с `ID="upload"` и имитирует загрузку файла `test.jpg`.
+*   **`execute_locator(locator={"by":"ID","selector":"input_field","event":"send_keys(SHIFT+ENTER)"})`** - находит элемент с `ID="input_field"` и эмулирует нажатие клавиш SHIFT+ENTER.
+*    **`execute_locator(locator={"by":"ID","selector":"element_id", "event": "screenshot()"})`** - находит элемент с `ID="element_id"` и делает его скриншот.
+*    **`send_message(locator={"id": "messageBox"}, message="Hello World", typing_speed=0.1)`** - находит элемент с `ID="messageBox"` и печатает текст "Hello World" с задержкой 0.1 сек на символ, имитируя ввод текста.
 
 ### 2. <mermaid>
 
 ```mermaid
 flowchart TD
-    Start(Start) --> CheckLocatorType{Check if locator is SimpleNamespace or dict};
-    CheckLocatorType -- Yes --> UseLocatorAsIs[Use locator as is];
-    CheckLocatorType -- No --> ConvertDictToSimpleNamespace[Convert dict to SimpleNamespace];
-    ConvertDictToSimpleNamespace --> UseLocatorAsIs;
-    UseLocatorAsIs --> DefineParseLocator[Define async function _parse_locator];
-    DefineParseLocator --> CheckLocatorFields{Check if locator has event, attribute, or mandatory};
-    CheckLocatorFields -- No --> ReturnNone[Return None];
-    CheckLocatorFields -- Yes --> TryToMapByAndEvaluateAttribute[Try to map by and evaluate attribute];
-    TryToMapByAndEvaluateAttribute --> CatchExceptionsAndLog[Catch exceptions and log if needed];
-    CatchExceptionsAndLog --> CheckForEvent{Does locator have event?};
-    CheckForEvent -- Yes --> ExecuteEvent[Execute event];
-    CheckForEvent -- No --> CheckForAttribute{Does locator have attribute?};
-    CheckForAttribute -- Yes --> GetAttributeByLocator[Get attribute by locator];
-    CheckForAttribute -- No --> GetWebElementByLocator[Get web element by locator];
-    ExecuteEvent --> ReturnResultOfEvent[Return result of event];
-    GetAttributeByLocator --> ReturnAttributeResult[Return attribute result];
-    GetWebElementByLocator --> ReturnWebElementResult[Return web element result];
-    ReturnResultOfEvent --> ReturnFinalResult[_parse_locator return];
-    ReturnAttributeResult --> ReturnFinalResult;
-    ReturnWebElementResult --> ReturnFinalResult;
-    ReturnFinalResult --> ReturnResultOfExecuteLocator[Return result of execute_locator];
-    ReturnResultOfExecuteLocator --> End(End);
+    A[Start: execute_locator] --> B{Is locator a SimpleNamespace or dict?}
+    B -- Yes --> C[Use locator as is]
+    B -- No --> D[Convert dict to SimpleNamespace]
+    D --> C
+    C --> E[Call _parse_locator]
+    E --> F{Has event, attribute or mandatory?}
+    F -- No --> G[Return None]
+    F -- Yes --> H[Map `by` and evaluate attribute]
+    H --> I{Has event?}
+    I -- Yes --> J[Call execute_event]
+    I -- No --> K{Has attribute?}
+    K -- Yes --> L[Call get_attribute_by_locator]
+    K -- No --> M[Call get_webelement_by_locator]
+    J --> N[Return event result]
+    L --> N
+    M --> N
+    N --> O[Return result of execute_locator]
+    O --> P[End]
+
+    subgraph "evaluate_locator"
+        S[Start: evaluate_locator] --> T{Is attribute a list?}
+        T -- Yes --> U[Iterate over attributes, call _evaluate]
+        U --> V[Return gathered results from asyncio.gather]
+        T -- No --> W[Call _evaluate for single attribute]
+        W --> V
+        V --> X[End]
+        subgraph "_evaluate"
+           Y[Start:_evaluate] --> Z{Is attribute a constant?}
+           Z -- Yes --> AA[Return constant]
+           Z -- No --> AB[Return original attribute]
+           AA --> AC[End]
+           AB --> AC
+        end
+        end
+    subgraph "get_attribute_by_locator"
+        AD[Start: get_attribute_by_locator] --> AE{Is locator SimpleNamespace or dict?}
+        AE -- Yes --> AF[Convert locator to SimpleNamespace]
+        AE -- No --> AF
+        AF --> AG[Call get_webelement_by_locator]
+        AG --> AH{Is web_element found?}
+        AH -- No --> AI[Return None]
+        AH -- Yes --> AJ{Is locator.attribute dictionary-like str?}
+        AJ -- Yes --> AK[Parse locator.attribute to dict]
+        AK --> AL{Is web_element a list?}
+        AL -- Yes --> AM[Retrieve attributes for each element in the list]
+        AL -- No --> AN[Retrieve attributes for a single web_element]
+        AJ -- No --> AO{Is web_element a list?}
+        AO -- Yes --> AP[Retrieve attributes for each element in list]
+        AO -- No --> AQ[Retrieve attribute for a single web_element]
+        AM --> AR[Return list of attributes]
+        AN --> AR
+        AP --> AR
+        AQ --> AR
+        AR --> AS[End]
+        end
+    subgraph "get_webelement_by_locator"
+        AT[Start: get_webelement_by_locator] --> AU{Is locator a dict?}
+        AU -- Yes --> AV[Convert to SimpleNamespace]
+        AU -- No --> AV
+        AV --> AW[Wait for web element(s)]
+         AW --> AX[Call _parse_elements_list]
+        AX --> AY[Return web element(s)]
+    end
+    subgraph "_parse_elements_list"
+        AZ[Start:_parse_elements_list] --> BA{Is web_elements a list?}
+        BA -- No --> BB[Return web_elements]
+        BA -- Yes --> BC{Apply filtering based on locator.if_list}
+        BC --> BD[Return filtered web elements]
+        BD --> BE[End]
+
+    end
+    subgraph "get_webelement_as_screenshot"
+        BF[Start: get_webelement_as_screenshot] --> BG{Is webelement passed?}
+        BG -- No --> BH[Call get_webelement_by_locator]
+        BG -- Yes --> BH
+        BH --> BI{Is webelement found?}
+        BI -- Yes --> BJ[Take screenshot]
+        BJ --> BK[Return screenshot]
+        BI -- No --> BK
+    end
+    subgraph "execute_event"
+        BL[Start: execute_event] --> BM[Get web element]
+         BM --> BN[Split events by ';']
+         BN --> BO[Loop through events]
+            BO --> BP{event = "click()"?}
+            BP -- Yes --> BQ[Execute click event]
+            BP -- No --> BR{event.startswith("pause(")?}
+            BR -- Yes --> BS[Pause]
+            BR -- No --> BT{event="upload_media()"?}
+            BT -- Yes --> BU[Upload media]
+            BT -- No --> BV{event="screenshot()"?}
+            BV -- Yes --> BW[Take screenshot]
+            BV -- No --> BX{event="clear()"?}
+            BX -- Yes --> BY[Clear element]
+            BX -- No --> BZ{event.startswith("send_keys(")?}
+            BZ -- Yes --> CA[Send Keys]
+            BZ -- No --> CB{event.startswith("type(")?}
+            CB -- Yes --> CC[Type message]
+            CC --> CD[next event]
+            CA --> CD
+            BY --> CD
+            BW --> CD
+            BU --> CD
+            BS --> CD
+            BQ --> CD
+        CD --> CE[Return result]
+
+    end
+     subgraph "send_message"
+        CF[Start:send_message] --> CG[Get web element]
+        CG --> CH[Call type_message]
+        CH --> CI[Return True]
+     end
+     subgraph "type_message"
+        CJ[Start:type_message] --> CK[Split message into words]
+        CK --> CL[Loop through each word]
+        CL --> CM[Loop through letters in the word]
+        CM --> CN{Is letter in replace_dict?}
+        CN -- Yes --> CO[Perform replace action]
+        CN -- No --> CP[Send letter and pause]
+        CO --> CQ[Next letter]
+        CP --> CQ
+        CQ --> CR[Next word]
+        CR --> CS[End]
+
+    end
 ```
 
-**Импорты и зависимости `mermaid`:**
+**Импортированные зависимости:**
 
-*   **`Start`**: Начало процесса.
-*   **`CheckLocatorType`**: Проверка типа локатора (является ли он `SimpleNamespace` или `dict`).
-*   **`UseLocatorAsIs`**: Использовать локатор как есть (если это `SimpleNamespace`).
-*   **`ConvertDictToSimpleNamespace`**: Преобразование словаря в `SimpleNamespace`.
-*    **`DefineParseLocator`**:  Объявление асинхронной функции `_parse_locator`.
-*   **`CheckLocatorFields`**: Проверка наличия полей `event`, `attribute`, или `mandatory` у локатора.
-*   **`ReturnNone`**: Возврат значения `None`.
-*   **`TryToMapByAndEvaluateAttribute`**: Попытка сопоставить `locator.by` и выполнить `evaluate_locator`.
-*   **`CatchExceptionsAndLog`**: Перехват и логирование ошибок.
-*   **`CheckForEvent`**: Проверка наличия события в локаторе.
-*   **`ExecuteEvent`**: Выполнение события, если оно есть в локаторе.
-*   **`CheckForAttribute`**: Проверка наличия атрибута в локаторе.
-*   **`GetAttributeByLocator`**: Получение атрибута элемента, если он есть в локаторе.
-*   **`GetWebElementByLocator`**: Получение веб-элемента по локатору.
-*    **`ReturnResultOfEvent`**: Возврат результата вызова `execute_event`.
-*    **`ReturnAttributeResult`**: Возврат результата вызова `get_attribute_by_locator`.
-*    **`ReturnWebElementResult`**: Возврат результата вызова `get_webelement_by_locator`.
-*   **`ReturnFinalResult`**: Возврат результата работы функции `_parse_locator`.
-*   **`ReturnResultOfExecuteLocator`**: Возврат результата работы функции `execute_locator`.
-*   **`End`**: Конец процесса.
+*   `asyncio`: Для асинхронного программирования.
+*   `re`: Для работы с регулярными выражениями (например, `pause(\d+)`).
+*   `sys`: Для доступа к системным переменным и функциям.
+*   `time`: Для работы со временем, в основном для задержек.
+*   `dataclasses`: Для создания классов данных.
+*   `enum`: Для создания перечислений.
+*   `pathlib`: Для работы с путями в файловой системе.
+*   `types`: Для работы с типами данных, здесь используется `SimpleNamespace`.
+*   `typing`: Для определения типов.
+*   `selenium.common.exceptions`: Для обработки исключений, возникающих при взаимодействии с Selenium.
+*   `selenium.webdriver.common.action_chains`: Для создания цепочек действий (например, `ActionChains`).
+*   `selenium.webdriver.common.by`: Для определения стратегий поиска элементов (например, `By.XPATH`, `By.ID`).
+*   `selenium.webdriver.common.keys`: Для эмуляции нажатий клавиш.
+*   `selenium.webdriver.remote.webelement`: Для представления веб-элементов.
+*   `selenium.webdriver.support.expected_conditions`: Для задания условий ожидания.
+*   `selenium.webdriver.support.ui`: Для ожидания элементов (например, `WebDriverWait`).
+*   `header`: Внутренний модуль проекта, обычно используемый для определения корневой директории проекта.
+*   `src`: Родительский пакет проекта.
+*   `src.logger.logger`: Для логирования.
+*   `src.logger.exceptions`: Для кастомных исключений.
+*   `src.utils.jjson`: Для работы с JSON.
+*   `src.utils.printer`: Для форматированного вывода.
+*   `src.utils.image`: Для сохранения изображений.
+*   `src.gs`: Для доступа к глобальным настройкам проекта
 
+**Зависимости `header.py`**:
 ```mermaid
-flowchart TD
-    Start[Start] --> IsAttributeList{Is attribute a list?};
-    IsAttributeList -- Yes --> IterateOverList[Iterate over each attribute in list];
-    IterateOverList --> CallEvaluate[Call _evaluate for each attribute];
-    CallEvaluate --> GatherResults[Gather results from asyncio.gather];
-    GatherResults --> End[End];
-    IsAttributeList -- No --> CallEvaluateSingle[Call _evaluate for single attribute];
-    CallEvaluateSingle --> ReturnResult[_evaluate return];
-    ReturnResult --> End;
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
 ```
-
-**Импорты и зависимости `mermaid`:**
-
-*   **`Start`**: Начало процесса.
-*   **`IsAttributeList`**: Проверка, является ли атрибут списком.
-*   **`IterateOverList`**: Итерация по каждому атрибуту в списке.
-*   **`CallEvaluate`**: Вызов функции `_evaluate` для каждого атрибута.
-*   **`GatherResults`**: Сбор результатов с помощью `asyncio.gather`.
-*   **`CallEvaluateSingle`**: Вызов функции `_evaluate` для одного атрибута.
-*   **`ReturnResult`**: Возврат результата работы функции `_evaluate`.
-*   **`End`**: Конец процесса.
-
-```mermaid
-flowchart TD
-    A[Start] --> B[Check if locator is SimpleNamespace or dict]
-    B -->|Yes| C[Convert locator to SimpleNamespace if needed]
-    C --> D[Call get_webelement_by_locator]
-    D --> E[Check if web_element is found]
-    E -->|No| F[Log debug message and return]
-    E -->|Yes| G[Check if locator.attribute is a dictionary-like string]
-    G -->|Yes| H[Parse locator.attribute string to dict]
-    H --> I[Check if web_element is a list]
-    I -->|Yes| J[Retrieve attributes for each element in list]
-    J --> K[Return list of attributes]
-    I -->|No| L[Retrieve attributes for a single web_element]
-    L --> K
-    G -->|No| M[Check if web_element is a list]
-    M -->|Yes| N[Retrieve attributes for each element in list]
-    N --> O[Return list of attributes or single attribute]
-    M -->|No| P[Retrieve attribute for a single web_element]
-    P --> O
-    O --> Q[End]
-    F --> Q
-```
-**Импорты и зависимости `mermaid`:**
-* `Start`: Начало функции.
-* `Check if locator is SimpleNamespace or dict`: Проверка типа данных локатора.
-* `Convert locator to SimpleNamespace if needed`: Преобразование локатора в объект SimpleNamespace, если необходимо.
-* `Call get_webelement_by_locator`: Вызов функции для получения веб-элемента.
-* `Check if web_element is found`: Проверка, был ли найден веб-элемент.
-* `Log debug message and return`: Логирование сообщения об ошибке и возврат `None`.
-* `Check if locator.attribute is a dictionary-like string`: Проверка, является ли атрибут локатора строкой, похожей на словарь.
-* `Parse locator.attribute string to dict`: Разбор строки атрибута в словарь.
-* `Check if web_element is a list`: Проверка, является ли полученный веб-элемент списком элементов.
-* `Retrieve attributes for each element in list`: Получение атрибутов для каждого элемента в списке.
-* `Return list of attributes`: Возврат списка атрибутов.
-* `Retrieve attributes for a single web_element`: Получение атрибутов для одиночного веб-элемента.
-* `Return list of attributes or single attribute`: Возврат списка атрибутов или одного атрибута в зависимости от типа полученного веб-элемента.
-* `End`: Конец функции.
-
-**Дополнительно `mermaid` для `header.py`**:
-
-```mermaid
-flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-```
-
-**Импорты и зависимости `mermaid`:**
-
-*   **`Start`**: Начало процесса.
-*   **`Header`**: Описание роли `header.py` - определение корневого каталога проекта.
-*   **`import`**: Указание на импорт глобальных настроек из `src.gs`.
-
 ### 3. <объяснение>
 
 **Импорты:**
 
-*   `asyncio`: Библиотека для асинхронного программирования.
-*   `re`: Библиотека для работы с регулярными выражениями.
-*   `sys`: Библиотека для работы с системными параметрами и функциями.
-*   `time`: Библиотека для работы со временем.
-*   `dataclasses`: Модуль для создания классов данных.
-*   `enum`: Модуль для создания перечислений (enum).
-*   `pathlib`: Модуль для работы с путями в файловой системе.
-*   `types`: Модуль для работы с типами данных, в частности, для `SimpleNamespace`.
-*   `typing`: Модуль для аннотации типов данных.
-*   `selenium.common.exceptions`: Исключения, возникающие при работе с Selenium.
-*   `selenium.webdriver.common.action_chains`: Модуль для создания цепочек действий (например, для имитации нажатий клавиш).
-*   `selenium.webdriver.common.by`: Модуль для определения методов поиска веб-элементов.
-*   `selenium.webdriver.common.keys`: Модуль для работы с клавишами.
-*   `selenium.webdriver.remote.webelement`: Модуль для работы с веб-элементами.
-*   `selenium.webdriver.support.expected_conditions`: Модуль для условий ожидания.
-*   `selenium.webdriver.support.ui`: Модуль для ожидания.
-*   `header`: Модуль для определения корневой директории проекта (из `src/__init__.py`).
-*   `src.gs`: Глобальные настройки проекта.
-*   `src.logger.logger`: Модуль для логирования.
-*   `src.logger.exceptions`: Пользовательские исключения для логирования.
-*   `src.utils.jjson`: Модуль для работы с JSON.
-*   `src.utils.printer`: Модуль для форматированного вывода в консоль.
-*   `src.utils.image`: Модуль для работы с изображениями.
+*   `asyncio`: Используется для поддержки асинхронного выполнения операций, что позволяет не блокировать основной поток при ожидании ответов от веб-драйвера или при выполнении задержек.
+*   `re`: Применяется для разбора строк с регулярными выражениями, например, для извлечения числового значения из строки `pause(1000)`.
+*   `sys`: Предоставляет доступ к системным переменным и функциям.
+*   `time`: Обеспечивает функции для работы со временем, используется для задержек в выполнении операций.
+*   `dataclasses`: Упрощает создание классов данных, предоставляя автоматическую генерацию методов, таких как `__init__`, `__repr__` и т.д.
+*   `enum`: Позволяет создавать перечисления, что делает код более читаемым и поддерживаемым.
+*   `pathlib`: Упрощает работу с путями к файлам и директориям.
+*   `types.SimpleNamespace`: Создает простые объекты, позволяющие обращаться к атрибутам через точку (например, `obj.attribute`), используется для динамического создания объектов с атрибутами из словаря.
+*   `typing`: Предоставляет инструменты для определения типов, включая `Optional`, `Union`, `List`, `Dict`, что улучшает читаемость и надежность кода.
+*   `selenium.*`: Набор библиотек для автоматизации веб-браузеров.
+*   `header`: Внутренний модуль проекта для определения корневой директории проекта, часто используется для загрузки настроек и определения местоположения ресурсов.
+*   `src.gs`: Глобальные настройки проекта, которые доступны в любом месте приложения.
+*   `src.logger.*`: Библиотеки для логирования и обработки исключений, которые используются для отладки и мониторинга работы приложения.
+*   `src.utils.*`: Утилиты для работы с JSON, форматированным выводом и изображениями.
 
 **Классы:**
 
-*   `ExecuteLocator`:
-    *   **Роль**: Основной класс, управляющий взаимодействием с веб-элементами.
+*   **`ExecuteLocator`**:
+    *   **Роль**: Основной класс для выполнения действий над веб-элементами. Он инкапсулирует логику взаимодействия с Selenium.
     *   **Атрибуты**:
-        *   `driver`: Драйвер Selenium (экземпляр браузера).
-        *   `actions`: Экземпляр `ActionChains` для выполнения действий.
-        *   `by_mapping`: Словарь для сопоставления строк с методами поиска веб-элементов (например, `XPATH`, `ID`).
-        *   `mode`: Режим работы (`dev`, `debug` или `prod`).
+        *   `driver`: Объект веб-драйвера Selenium.
+        *   `actions`: Объект `ActionChains` для выполнения сложных действий (например, наведение мыши, перетаскивание).
+        *   `by_mapping`: Словарь, связывающий строки с константами `By` (например, `XPATH` -> `By.XPATH`).
+        *   `mode`: Режим работы (например, `debug`).
     *   **Методы**:
-        *   `__post_init__`: Инициализирует `ActionChains` после создания объекта.
-        *   `execute_locator`: Выполняет действие над веб-элементом, основываясь на данных локатора.
-        *   `evaluate_locator`:  Обрабатывает атрибуты локатора, подставляя значения клавиш.
-        *  `get_attribute_by_locator`: Извлекает атрибуты элемента.
-        *   `get_webelement_by_locator`: Ищет веб-элемент на странице.
+        *   `__post_init__`: Инициализирует `ActionChains` после создания экземпляра класса.
+        *   `execute_locator`: Основной метод для выполнения действий над веб-элементом.
+        *    `evaluate_locator`:  Оценивает и обрабатывает атрибуты локатора.
+        *    `get_attribute_by_locator`: Получает атрибуты веб-элемента(ов).
+        *   `get_webelement_by_locator`: Получает веб-элемент(ы) по локатору.
+        *    `_parse_elements_list`: фильтрует полученный список элементов.
         *   `get_webelement_as_screenshot`: Делает скриншот элемента.
-        *   `execute_event`: Выполняет событие (клик, отправку текста и т.д.) над элементом.
-        *   `send_message`: Отправляет сообщение в элемент.
+        *   `execute_event`: Выполняет событие (например, клик, ввод текста).
+        *    `send_message`: Отправляет сообщение в веб-элемент.
+        *    `type_message`: Набирает текст в веб-элементе.
 
 **Функции:**
 
-*   `execute_locator`:
+*   **`execute_locator`**:
     *   **Аргументы**:
-        *   `locator`: Словарь или `SimpleNamespace` с данными для поиска элемента.
+        *   `locator`: Словарь или `SimpleNamespace`, содержащий информацию о локаторе.
         *   `timeout`: Время ожидания элемента.
-        *   `timeout_for_event`:  Тип ожидаемого события.
-        *   `message`: Сообщение для отправки.
-        *   `typing_speed`: Скорость ввода текста.
-        *   `continue_on_error`: Продолжать выполнение при ошибках.
-    *   **Возвращаемое значение**: Строка, список, словарь, веб-элемент или логическое значение.
-    *   **Назначение**:  Основная функция для обработки локатора и выполнения действий над элементом.
-*   `evaluate_locator`:
+        *   `timeout_for_event`: Событие ожидания элемента.
+        *   `message`: Сообщение для ввода.
+        *   `typing_speed`: Скорость печати.
+        *   `continue_on_error`: Флаг для продолжения выполнения при ошибке.
+    *   **Возвращаемое значение**: Результат выполнения операции (строка, список, элемент, `True`, `False` или `None`).
+    *   **Назначение**: Координирует выполнение действий над веб-элементами, делегируя задачи другим методам класса.
+*    **`evaluate_locator`**:
     *   **Аргументы**:
-        *   `attribute`: Строка или список строк, содержащие атрибуты локатора.
-    *   **Возвращаемое значение**: Строка или список строк, содержащие значения атрибутов после обработки.
-    *   **Назначение**: Извлекает значения из атрибутов локаторов.
-*   `get_attribute_by_locator`:
+          * `attribute` - атрибут локатора.
+    *   **Возвращаемое значение**: Обработанный атрибут.
+    *   **Назначение**: Оценивает и обрабатывает атрибуты локатора, заменяя константы (например, `%ENTER%`) на их значения.
+*    **`_evaluate`**:
+    *    **Аргументы**:
+        * `attr` - обрабатываемый атрибут.
+    *    **Возвращаемое значение**: Возвращает либо константу `Keys` либо исходный атрибут.
+    *    **Назначение**: Проверяет, является ли атрибут константой (например, `%ENTER%`) и, если да, возвращает значение константы, в противном случае возвращает исходный атрибут.
+*    **`get_attribute_by_locator`**:
+     *   **Аргументы**:
+        *    `locator` - Словарь или `SimpleNamespace`, содержащий информацию о локаторе.
+        *   `timeout` - время ожидания элемента.
+        *    `timeout_for_event` - событие ожидания элемента.
+     *   **Возвращаемое значение**: Атрибут или список атрибутов.
+     *   **Назначение**: Получает атрибуты элемента(ов) на основе локатора.
+*   **`get_webelement_by_locator`**:
     *   **Аргументы**:
-       *    `locator`:  Локатор элемента.
-        *   `timeout`: Время ожидания.
-        *    `timeout_for_event`: Тип ожидания события.
-    *   **Возвращаемое значение**: Значение атрибута(ов) или словарь атрибутов.
-    *   **Назначение**: Получение атрибутов из веб-элементов.
-*   `get_webelement_by_locator`:
+        *   `locator`: Словарь или `SimpleNamespace`, содержащий информацию о локаторе.
+        *   `timeout`: Время ожидания элемента.
+        *   `timeout_for_event`: Событие ожидания элемента.
+    *   **Возвращаемое значение**: `WebElement` или `List[WebElement]` или `None`.
+    *   **Назначение**: Получает веб-элемент(ы) по локатору, используя `WebDriverWait`.
+*  **`_parse_elements_list`**:
     *   **Аргументы**:
-        *   `locator`: Локатор элемента.
-        *   `timeout`: Время ожидания.
-        *   `timeout_for_event`: Тип ожидаемого события.
-    *   **Возвращаемое значение**: Веб-элемент или список веб-элементов или `None`.
-    *   **Назначение**: Получение веб-элемента(ов) по локатору.
-*   `get_webelement_as_screenshot`:
+        * `web_elements` - список элементов.
+        * `locator` - информация о локаторе, откуда берется правило фильтрации.
+    *   **Возвращаемое значение**: Отфильтрованный список элементов.
+    *   **Назначение**: Фильтрует список веб-элементов в соответствии с правилом, указанным в `locator.if_list`.
+*   **`get_webelement_as_screenshot`**:
     *   **Аргументы**:
-        *    `locator`:  Локатор элемента.
-        *    `timeout`: Время ожидания.
-        *    `timeout_for_event`: Тип ожидания события.
-        *   `webelement`: Pre-fetched web element
-    *   **Возвращаемое значение**: Бинарный поток с изображением или `None`.
-    *   **Назначение**: Получение скриншота веб-элемента.
-*   `execute_event`:
+        *   `locator`: Словарь или `SimpleNamespace`, содержащий информацию о локаторе.
+        *    `timeout` - время ожидания элемента.
+        *   `timeout_for_event`: Событие ожидания элемента.
+        *   `webelement`: Предварительно найденный элемент.
+    *   **Возвращаемое значение**: Бинарный поток изображения (`BinaryIO`) или `None`.
+    *   **Назначение**: Делает скриншот веб-элемента.
+*   **`execute_event`**:
     *   **Аргументы**:
-        *   `locator`: Локатор элемента.
-        *   `timeout`: Время ожидания.
-        *   `timeout_for_event`: Тип ожидания события.
-        *   `message`: Сообщение для отправки.
-        *   `typing_speed`: Скорость ввода текста.
-    *   **Возвращаемое значение**: Логическое значение (успех/неудача) или список результатов.
-    *   **Назначение**: Выполнение действий над элементом (клик, ввод текста и т.д.).
-*    `send_message`:
+        *   `locator`: Словарь или `SimpleNamespace`, содержащий информацию о локаторе.
+        *   `timeout`: Время ожидания элемента.
+        *   `timeout_for_event`: Событие ожидания элемента.
+        *   `message`: Сообщение для ввода.
+        *   `typing_speed`: Скорость печати.
+    *   **Возвращаемое значение**: `True` или `False` в зависимости от успешности выполнения события.
+    *   **Назначение**: Выполняет действия над элементом (например, клик, ввод текста).
+*   **`send_message`**:
     *   **Аргументы**:
-        *   `locator`:  Локатор элемента.
-        *   `timeout`: Время ожидания.
-        *   `timeout_for_event`: Тип ожидания события.
-        *   `message`: Сообщение для отправки.
-        *   `typing_speed`: Скорость ввода текста.
-    *   **Возвращаемое значение**: Логическое значение.
-    *   **Назначение**:  Отправляет сообщение в веб-элемент.
-* `_parse_dict_string`:
+        *   `locator`: Словарь или `SimpleNamespace`, содержащий информацию о локаторе.
+        *  `timeout` - время ожидания элемента.
+        *   `timeout_for_event`: Событие ожидания элемента.
+        *   `message`: Сообщение для ввода.
+        *   `typing_speed`: Скорость печати.
+    *   **Возвращаемое значение**: `True` или `False` в зависимости от успешности выполнения действия.
+    *    **Назначение**: Отправляет сообщение в веб-элемент, имитируя ввод текста.
+*  **`type_message`**:
     *   **Аргументы**:
-         *  `attr_string`: строка с атрибутами.
-    *   **Возвращаемое значение**: Словарь с атрибутами или `None`.
-    *   **Назначение**: Разбирает строку в словарь
-
+         *   `el` - веб-элемент, куда будет производиться ввод.
+        *   `message` - сообщение для ввода.
+        * `replace_dict` -  словарь замен, например `;` заменяется на `SHIFT+ENTER`.
+        *  `typing_speed` - скорость набора.
+    *   **Возвращаемое значение**: `True`
+    *   **Назначение**:  Набирает сообщение в веб-элементе с учетом скорости набора и замен.
 **Переменные:**
 
-*   `MODE`: Режим работы приложения (`dev`, `debug` или `prod`).
-*   `logger`: Экземпляр логгера для записи сообщений.
-
-**Взаимосвязи с другими частями проекта:**
-
-*   Импортирует `header.py` для определения корневого каталога проекта.
-*   Импортирует `src.gs` для получения глобальных настроек.
-*   Использует `src.logger` для логирования событий и ошибок.
-*   Использует `src.utils.jjson` для сериализации и десериализации JSON.
-*   Использует `src.utils.printer` для форматированного вывода в консоль.
-*   Использует `src.utils.image` для сохранения скриншотов.
+*   `locator`: Словарь или `SimpleNamespace`, представляющий локатор элемента.
+*   `timeout`: Время ожидания элемента (в секундах).
+*   `timeout_for_event`: Условие ожидания элемента.
+*   `message`: Строка сообщения для ввода.
+*   `typing_speed`: Скорость набора текста (в секундах).
+*   `continue_on_error`: Флаг, указывающий, следует ли продолжать выполнение при ошибке.
+*    `web_element`: Объект веб-элемента `WebElement`, полученный с помощью Selenium.
+*   `events`: Список событий, которые нужно выполнить.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   В функции  `get_attribute_by_locator`  проверка на `locator.attribute.startswith("{")` не обеспечивает надежный парсинг словаря.
-*   В функции  `get_attribute_by_locator` не обрабатываются ошибки при извлечении значений атрибутов, например, если атрибут не существует.
-*   В функции `send_message` при передаче символов из словаря подмен не хватает проверок.
-*   В функции `send_message` код не обрабатывает ошибки при передаче букв.
-*   Необходимо добавить документацию для каждого метода, описывающую его назначение, аргументы и возвращаемое значение.
-*   Функции `send_message` и `execute_event` можно улучшить для поддержки более сложных событий.
-*   Добавить возможность конфигурации timeout для отдельных локаторов
-*   Добавить возможность использования кастомных условий ожидания.
-*   Нужно более надежно обрабатывать исключения `StaleElementReferenceException`.
+1.  **Обработка ошибок**:
+    *   В коде присутствуют блоки `try...except`, но их можно дополнить, предоставив более конкретные сообщения об ошибках.
+    *   Не все возможные исключения обрабатываются, что может привести к неожиданному поведению.
+2.  **Рефакторинг**:
+    *   Можно вынести некоторые общие блоки кода в отдельные функции, чтобы избежать дублирования.
+    *   Код можно упростить, используя более современные подходы.
+3.  **Подробное логирование**:
+    *   Добавить больше логирования в разных точках выполнения кода, чтобы можно было более подробно отслеживать его работу.
+4.  **`type_message`**:
+   *   В функции `type_message` есть комментарий "TODO: делать проверку в словаре подмен", этот момент необходимо доработать.
+    *   В функции `type_message`  пока игнорируется ошибка при передаче буквы, этот момент необходимо доработать.
+    *   Реализовать  дополнительные обработки ошибок при вводе текста, чтобы обеспечить более надежную работу.
 
-**Цепочка взаимосвязей:**
+**Взаимосвязи с другими частями проекта:**
 
-1.  `executor.py` получает локаторы из других модулей проекта (например, из модулей, отвечающих за парсинг страниц).
-2.  Использует драйвер Selenium для взаимодействия с веб-страницей.
-3.  Использует `logger` для записи событий.
-4.  Результаты работы (элементы, атрибуты, скриншоты) передаются обратно в вызывающие модули для дальнейшей обработки.
-5.  Использует `gs` для получения конфигурационных настроек.
+*   **`header.py`**:  Определение корневой директории проекта и путей к файлам.
+*   **`src.gs`**: Доступ к глобальным настройкам проекта.
+*   **`src.logger`**: Логирование выполнения действий и ошибок.
+*   **`src.utils`**: Функции для работы с JSON, форматированным выводом, изображениями.
 
-Этот анализ предоставляет полное понимание кода `executor.py`, его функциональности, архитектуры и взаимодействия с другими частями проекта.
+**Заключение:**
+
+Модуль `executor.py` предоставляет мощный и гибкий инструмент для взаимодействия с веб-элементами, позволяя выполнять сложные сценарии автоматизации. Он использует асинхронность для эффективного выполнения операций и включает в себя механизмы обработки ошибок. Тем не менее, код имеет потенциал для улучшения в плане обработки ошибок, рефакторинга и расширения функциональности.

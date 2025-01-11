@@ -1,103 +1,123 @@
-# Анализ кода модуля traffic_light.py
+# Анализ кода модуля `traffic_light.py`
 
 **Качество кода**
-8
--  Плюсы
-    - Код содержит заголовочные комментарии, которые пытаются описать модуль.
-    - Используются комментарии для разделения частей кода.
--  Минусы
-    - Комментарии не соответствуют стандарту docstring.
-    - Присутствует большое количество пустых или повторяющихся комментариев.
-    - Отсутствуют необходимые импорты.
-    - Нет описания функциональности модуля.
-    - Не используется logger для вывода информации.
+7
+- Плюсы
+    - Присутствуют docstring для модуля.
+    - Присутствует заголовок файла.
+- Минусы
+    - Множество дублирующихся docstring и некорректное их использование.
+    - Отсутствует импорт `logger`.
+    - Нет описания модуля.
+    - Не используется `j_loads` или `j_loads_ns` для загрузки JSON. (отсутсвует в коде)
 
 **Рекомендации по улучшению**
-1.  Заменить множественные пустые комментарии на docstring с описанием модуля.
-2.  Добавить необходимые импорты, такие как `from src.logger.logger import logger`.
-3.  Избегать избыточного повторения комментариев.
-4.  Добавить более полное описание функциональности модуля.
-5.  Использовать logger для логирования ошибок и важной информации.
+
+1. **Удалить дублирующиеся docstring**: Убрать лишние docstring, оставив только описание модуля в начале файла.
+2. **Добавить импорт `logger`**: Импортировать `logger` из `src.logger.logger`.
+3. **Добавить описание модуля**: Вставить подробное описание назначения и функциональности модуля.
+4. **Корректное использование docstring**: Использовать docstring только для описания модуля, классов, функций и методов.
+5. **Проверить наличие j_loads**: В текущем коде нет операций с JSON, поэтому это не является проблемой. Если бы они были, то `json.load` необходимо было бы заменить на `j_loads` или `j_loads_ns`.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для управления трафиком светофора.
-=========================================================================================
+Модуль для управления светофором.
+=================================
 
-Этот модуль предоставляет функциональность для моделирования и управления трафиком светофора.
-Он может использоваться для тестирования логики переключения светофоров и интеграции с другими
-системами управления трафиком.
+Этот модуль предоставляет функциональность для эмуляции работы светофора.
+Он включает в себя логику переключения между различными состояниями светофора,
+такими как красный, желтый и зеленый, а также может включать логику мигания.
 
 Пример использования
 --------------------
-
-Пример инициализации класса TrafficLight и переключения сигнала:
-
 .. code-block:: python
-
+    
     traffic_light = TrafficLight()
-    traffic_light.switch_signal()
+    traffic_light.start()
+    ...
+    traffic_light.stop()
+
 """
+from src.logger.logger import logger
 
-from src.logger.logger import logger  # Импорт logger
-from typing import List
-
-
+# Описание класса TrafficLight
 class TrafficLight:
     """
-    Класс для моделирования светофора.
+    Управляет состоянием светофора.
 
-    Attributes:
-        signals (list[str]): Список сигналов светофора.
-        current_signal (str): Текущий сигнал светофора.
+    :param states: Список состояний светофора (например, ['red', 'yellow', 'green']).
+    :param current_state: Текущее состояние светофора.
+    :param interval: Интервал смены состояний (в секундах).
+    :ivar states: Список состояний светофора.
+    :vartype states: list
+    :ivar current_state: Текущее состояние светофора.
+    :vartype current_state: str
+    :ivar interval: Интервал смены состояний.
+    :vartype interval: int
     """
-    def __init__(self, signals: List[str] = ['red', 'yellow', 'green'], current_signal: str = 'red'):
+
+    def __init__(self, states: list = ['red', 'yellow', 'green'], current_state: str = 'red', interval: int = 1):
         """
-        Инициализирует светофор.
+        Инициализация объекта светофора.
 
         Args:
-            signals (list[str]): Список сигналов, которые может принимать светофор.
-            current_signal (str): Начальный сигнал светофора.
+            states (list): Список состояний светофора.
+            current_state (str): Начальное состояние светофора.
+            interval (int): Интервал смены состояний (в секундах).
         """
-        self.signals = signals
-        self.current_signal = current_signal
-        logger.debug(f'Светофор инициализирован с сигналами: {self.signals} и текущим сигналом: {self.current_signal}') # Вывод информации об инициализации
+        self.states = states
+        self.current_state = current_state
+        self.interval = interval
+        # logger.info(f'Светофор инициализирован с состояниями: {states}, начальное состояние: {current_state}, интервал: {interval}')
 
-    def switch_signal(self):
+    def next_state(self) -> str:
         """
-        Переключает светофор на следующий сигнал.
+        Переключает светофор на следующее состояние.
 
-        Пример:
-            >>> traffic_light = TrafficLight()
-            >>> traffic_light.current_signal
-            'red'
-            >>> traffic_light.switch_signal()
-            >>> traffic_light.current_signal
-            'yellow'
+        Returns:
+            str: Новое текущее состояние светофора.
         """
         try:
-            current_index = self.signals.index(self.current_signal)
-            next_index = (current_index + 1) % len(self.signals)
-            self.current_signal = self.signals[next_index]
-            logger.info(f'Светофор переключен на сигнал: {self.current_signal}')  # Вывод информации о переключении
+            # Код исполняет поиск индекса текущего состояния в списке состояний
+            current_index = self.states.index(self.current_state)
+            # Код исполняет расчет индекса следующего состояния
+            next_index = (current_index + 1) % len(self.states)
+            # Код устанавливает текущее состояние светофора
+            self.current_state = self.states[next_index]
+            # Код возвращает текущее состояние
+            return self.current_state
         except ValueError as e:
-            logger.error(f'Сигнал {self.current_signal} не найден в списке сигналов: {self.signals}', exc_info=True) # Обработка ошибки, если текущий сигнал не найден
-            return
-        except Exception as e:
-            logger.error(f'Произошла ошибка при переключении сигнала светофора: {e}', exc_info=True) # Обработка других ошибок
-            return
-        
-    def get_current_signal(self) -> str:
+            logger.error(f'Некорректное состояние светофора: {self.current_state}', exc_info=True)
+            return None
+    
+    def get_current_state(self) -> str:
         """
-        Возвращает текущий сигнал светофора.
+        Возвращает текущее состояние светофора.
         
         Returns:
-            str: Текущий сигнал светофора.
+            str: Текущее состояние светофора.
         """
-        return self.current_signal
+        # Код возвращает текущее состояние
+        return self.current_state
+
+    def start(self):
+        """
+         Запускает работу светофора.
+        
+         TODO: Добавить асинхронное переключение состояний.
+        """
+        # Код начинает работу светофора
+        print("Traffic light started!")
+
+    def stop(self):
+        """
+        Останавливает работу светофора.
+        
+        TODO: Добавить возможность корректной остановки.
+        """
+        # Код останавливает работу светофора
+        print("Traffic light stopped!")
 ```

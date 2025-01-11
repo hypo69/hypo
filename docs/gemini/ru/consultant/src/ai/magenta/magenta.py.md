@@ -1,37 +1,29 @@
-# Анализ кода модуля `magenta.py`
+# Анализ кода модуля `magenta`
 
 **Качество кода**
-    
-    - Соответствие требованиям: 8/10
-    - Плюсы:
-        - Код хорошо структурирован, разбит на классы и методы, что улучшает читаемость и повторное использование.
-        - Присутствует подробное описание модуля и класса в начале файла.
-        - Используются осмысленные имена переменных и функций.
-        - Есть пример использования в `if __name__ == '__main__':`
-    - Минусы:
-        - Не используется `from src.logger.logger import logger` для логирования ошибок.
-        - Отсутствуют docstring для методов класса.
-        - Используется `print` для вывода информации, что не является лучшей практикой для логирования.
-        - Жестко заданные значения для аккордов и барабанов.
-        - Отсутствуют проверки на валидность данных.
-        - Не используются  `j_loads` или `j_loads_ns` из `src.utils.jjson` 
-        - Комментарии не в стиле RST.
-        - Отсутствует обработка ошибок с использованием `try-except` и `logger.error`.
+9
+- Плюсы
+    - Код хорошо структурирован и разбит на логические блоки, что облегчает понимание и поддержку.
+    - Используются осмысленные имена переменных и функций.
+    - Параметры модели вынесены в конструктор, что обеспечивает гибкость настройки.
+    - Присутствует документация модуля и комментарии.
+- Минусы
+    - Отсутствует импорт `from src.logger.logger import logger`.
+    - Не все методы и переменные имеют docstring.
+    - Использованы двойные кавычки в print.
+    - Нет обработки исключений, например, при вызове функций `generate`, `sequence_proto_to_midi_file`.
+    - Нет обработки ошибок, связанных с некорректными данными (например, пустой `primer`).
 
 **Рекомендации по улучшению**
 
-1.  Импортировать `logger` из `src.logger.logger`:
-    ```python
-    from src.logger.logger import logger
-    ```
-2.  Добавить docstring к методам класса, используя формат RST.
-3.  Заменить `print` на `logger.info` для вывода информационных сообщений.
-4.  Добавить обработку ошибок с использованием `try-except` и `logger.error` в методах, где это необходимо.
-5.  Вынести аккорды и паттерны барабанов в переменные класса для большей гибкости.
-6.  Добавить валидацию данных (например, проверка типа аргументов).
-7.  Добавить обработку исключений при работе с MIDI файлами.
-8.  Добавить константы для magic values
-9.  Переименовать `music_sequence` в `note_sequence`
+1.  Добавить импорт `from src.logger.logger import logger` для логирования ошибок.
+2.  Заменить двойные кавычки на одинарные в коде, где это требуется.
+3.  Добавить docstring для каждого метода, включая аргументы, возвращаемые значения и возможные исключения.
+4.  Реализовать обработку исключений в ключевых методах с использованием `try-except` и логированием ошибок через `logger.error`.
+5.  Обеспечить проверку входных данных, таких как `primer_sequence`, и обработать ситуации с некорректными или отсутствующими данными.
+6.  Избегать избыточного использования `print` и перейти к использованию `logger.info` или `logger.debug`.
+7.  Документировать все переменные в конструкторе класса.
+8.  Добавить примеры использования в docstring.
 
 **Оптимизированный код**
 
@@ -41,10 +33,12 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для генерации музыки с использованием Magenta
+Модуль для работы с генерацией музыки с помощью Magenta.
 =========================================================================================
 
-Этот модуль содержит класс :class:`MagentaMusic`, который используется для генерации музыки с помощью Magenta.
+Этот модуль содержит класс :class:`MagentaMusic`, который использует Magenta для генерации музыкальных композиций.
+Он позволяет загружать MIDI-файлы в качестве затравки, генерировать мелодии, добавлять аккорды и ударные,
+а также устанавливать темп и сохранять результат в MIDI-файл.
 
 Пример использования
 --------------------
@@ -56,50 +50,42 @@
     music_generator = MagentaMusic(output_dir='my_music', model_name='attention_rnn',
                                     temperature=1.1, num_steps=200, primer_midi_file='primer.mid', tempo=110)
     music_generator.generate_full_music()
+
 """
+
 import os
+from pathlib import Path
 import magenta.music as mm
 from magenta.models.melody_rnn import melody_rnn_sequence_generator
 import tensorflow as tf  # Import TensorFlow
-from src.logger.logger import logger # импортируем logger
-from pathlib import Path
+from src.logger.logger import logger
 from typing import Any
 
-# TODO добавить костанты для magic values
-_DEFAULT_CHORDS = [
-    "C", "G", "Am", "F",
-    "Dm", "G", "C", "G",
-    "C", "F", "Dm", "G",
-    "Am", "G", "F", "E"
-]
-_DEFAULT_DRUM_PATTERN = [36, 0, 42, 0, 38, 0, 46, 0, 36, 0, 42, 0, 38, 0, 45, 0]
-_STEPS_PER_BAR = 8
-_STEPS_PER_QUARTER = 8
 
 class MagentaMusic:
     """
     Класс для генерации музыки с использованием Magenta.
 
     Args:
-        output_dir (str): Директория для сохранения сгенерированной музыки.
-        model_name (str): Название модели Magenta для генерации мелодии.
-        temperature (float): Температура для генерации мелодии.
+        output_dir (str): Папка для сохранения сгенерированных MIDI файлов.
+        model_name (str): Имя модели для генерации мелодии (например, 'attention_rnn' или 'basic_rnn').
+        temperature (float): Параметр температуры для контроля случайности генерации.
         num_steps (int): Количество шагов для генерации мелодии.
-        primer_midi_file (str): Путь к MIDI файлу затравки.
-        tempo (int): Темп композиции.
+        primer_midi_file (str): Путь к MIDI-файлу затравки.
+        tempo (int): Темп композиции в ударах в минуту.
     """
     def __init__(self, output_dir: str = 'generated_music_advanced', model_name: str = 'attention_rnn', temperature: float = 1.2,
-                 num_steps: int = 256, primer_midi_file: str = 'primer.mid', tempo: int = 100):
+                 num_steps: int = 256, primer_midi_file: str = 'primer.mid', tempo: int = 100) -> None:
         """
-        Инициализация класса MagentaMusic.
+        Инициализирует объект класса MagentaMusic.
 
         Args:
-            output_dir (str, optional): Директория для сохранения сгенерированной музыки. Defaults to 'generated_music_advanced'.
-            model_name (str, optional): Название модели Magenta для генерации мелодии. Defaults to 'attention_rnn'.
-            temperature (float, optional): Температура для генерации мелодии. Defaults to 1.2.
-            num_steps (int, optional): Количество шагов для генерации мелодии. Defaults to 256.
-            primer_midi_file (str, optional): Путь к MIDI файлу затравки. Defaults to 'primer.mid'.
-            tempo (int, optional): Темп композиции. Defaults to 100.
+            output_dir (str): Папка для сохранения сгенерированных MIDI файлов.
+            model_name (str): Имя модели для генерации мелодии (например, 'attention_rnn' или 'basic_rnn').
+            temperature (float): Параметр температуры для контроля случайности генерации.
+            num_steps (int): Количество шагов для генерации мелодии.
+            primer_midi_file (str): Путь к MIDI-файлу затравки.
+            tempo (int): Темп композиции в ударах в минуту.
         """
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
@@ -112,37 +98,32 @@ class MagentaMusic:
             model_name=self.model_name
         )
         self.primer_sequence = self._load_primer_sequence()
-        self.chords = _DEFAULT_CHORDS
-        self.drum_pattern = _DEFAULT_DRUM_PATTERN
-        self.steps_per_bar = _STEPS_PER_BAR
-        self.steps_per_quarter = _STEPS_PER_QUARTER
-
 
     def _load_primer_sequence(self) -> mm.NoteSequence:
         """
         Загружает MIDI-файл затравки или создает пустую NoteSequence, если файл не найден.
 
         Returns:
-            mm.NoteSequence: NoteSequence, загруженная из файла или пустая.
+             mm.NoteSequence: Загруженная NoteSequence или пустая NoteSequence.
         """
-        try:
-            if os.path.exists(self.primer_midi_file):
+        if os.path.exists(self.primer_midi_file):
+            try:
                 primer_sequence = mm.midi_file_to_sequence_proto(self.primer_midi_file)
-                logger.info(f"Используем primer из {self.primer_midi_file}")
+                logger.info(f'Используем primer из {self.primer_midi_file}')
                 return primer_sequence
-            else:
-                logger.info("Не найдена primer, начинаем с пустой мелодии")
+            except Exception as ex:
+                logger.error(f'Ошибка загрузки primer из файла {self.primer_midi_file}: {ex}')
                 return mm.NoteSequence(notes=[])
-        except Exception as ex:
-             logger.error(f'Ошибка загрузки primer файла {self.primer_midi_file}', exc_info=ex)
-             return mm.NoteSequence(notes=[])
+        else:
+            logger.info('Не найдена primer, начинаем с пустой мелодии')
+            return mm.NoteSequence(notes=[])
 
     def generate_melody(self) -> mm.NoteSequence:
         """
         Генерирует мелодию с заданными параметрами.
 
         Returns:
-            mm.NoteSequence: Сгенерированная мелодия.
+            mm.NoteSequence: Сгенерированная мелодия в виде NoteSequence.
         """
         try:
             melody_sequence = self.melody_rnn.generate(
@@ -152,8 +133,8 @@ class MagentaMusic:
             )
             return melody_sequence
         except Exception as ex:
-             logger.error(f'Ошибка генерации мелодии', exc_info=ex)
-             return mm.NoteSequence(notes=[])
+            logger.error(f'Ошибка при генерации мелодии: {ex}')
+            return mm.NoteSequence(notes=[])
 
     def add_chords(self, melody_sequence: mm.NoteSequence) -> mm.NoteSequence:
         """
@@ -163,85 +144,76 @@ class MagentaMusic:
             melody_sequence (mm.NoteSequence): Мелодия, к которой нужно добавить аккорды.
 
         Returns:
-            mm.NoteSequence: Мелодия с аккордами.
+            mm.NoteSequence: Мелодия с добавленными аккордами в виде NoteSequence.
         """
-        try:
-             chords = self.chords * (self.num_steps // 16)
-             chord_sequence = mm.ChordSequence(chords)
-             melody_with_chords_sequence = mm.sequences_lib.concatenate_sequences(melody_sequence, chord_sequence)
-             return melody_with_chords_sequence
-        except Exception as ex:
-            logger.error(f'Ошибка добавления аккордов', exc_info=ex)
-            return melody_sequence
+        chords = [
+            'C', 'G', 'Am', 'F',
+            'Dm', 'G', 'C', 'G',
+            'C', 'F', 'Dm', 'G',
+            'Am', 'G', 'F', 'E'
+        ] * (self.num_steps // 16)
+
+        chord_sequence = mm.ChordSequence(chords)
+        melody_with_chords_sequence = mm.sequences_lib.concatenate_sequences(melody_sequence, chord_sequence)
+        return melody_with_chords_sequence
 
     def add_drums(self, melody_with_chords_sequence: mm.NoteSequence) -> mm.NoteSequence:
         """
-         Добавляет барабаны к мелодии.
-
-         Args:
-            melody_with_chords_sequence (mm.NoteSequence): Мелодия с аккордами, к которой нужно добавить барабаны.
-
-         Returns:
-            mm.NoteSequence: Мелодия с аккордами и барабанами.
-        """
-        try:
-            drum_pattern = mm.DrumTrack(
-                self.drum_pattern,
-                start_step=0,
-                steps_per_bar=self.num_steps // self.steps_per_bar,
-                steps_per_quarter=self.steps_per_quarter,
-            )
-            note_sequence = mm.sequences_lib.concatenate_sequences(melody_with_chords_sequence, drum_pattern)
-            return note_sequence
-        except Exception as ex:
-            logger.error(f'Ошибка добавления барабанов', exc_info=ex)
-            return melody_with_chords_sequence
-
-    def set_tempo(self, note_sequence: mm.NoteSequence) -> mm.NoteSequence:
-        """
-        Устанавливает темп.
+        Добавляет барабаны к мелодии.
 
         Args:
-            note_sequence (mm.NoteSequence): Музыкальная последовательность, для которой нужно установить темп.
+            melody_with_chords_sequence (mm.NoteSequence): Мелодия с аккордами, к которой нужно добавить барабаны.
 
         Returns:
-            mm.NoteSequence: Музыкальная последовательность с установленным темпом.
+            mm.NoteSequence: Мелодия с аккордами и барабанами в виде NoteSequence.
         """
-        try:
-            note_sequence.tempos[0].qpm = self.tempo
-            return note_sequence
-        except Exception as ex:
-            logger.error(f'Ошибка установки темпа', exc_info=ex)
-            return note_sequence
+        drum_pattern = mm.DrumTrack(
+            [36, 0, 42, 0, 38, 0, 46, 0, 36, 0, 42, 0, 38, 0, 45, 0],
+            start_step=0,
+            steps_per_bar=self.num_steps // 8,
+            steps_per_quarter=8,
+        )
+        music_sequence = mm.sequences_lib.concatenate_sequences(melody_with_chords_sequence, drum_pattern)
+        return music_sequence
 
-    def save_midi(self, note_sequence: mm.NoteSequence, filename: str = 'full_music_advanced.mid') -> None:
+    def set_tempo(self, music_sequence: mm.NoteSequence) -> mm.NoteSequence:
+        """
+        Устанавливает темп композиции.
+
+        Args:
+            music_sequence (mm.NoteSequence): Композиция, для которой нужно установить темп.
+
+        Returns:
+            mm.NoteSequence: Композиция с установленным темпом в виде NoteSequence.
+        """
+        music_sequence.tempos[0].qpm = self.tempo
+        return music_sequence
+
+    def save_midi(self, music_sequence: mm.NoteSequence, filename: str = 'full_music_advanced.mid') -> None:
         """
         Сохраняет готовую композицию в MIDI-файл.
 
         Args:
-            note_sequence (mm.NoteSequence): Музыкальная последовательность для сохранения.
-            filename (str, optional): Имя файла для сохранения. Defaults to 'full_music_advanced.mid'.
+            music_sequence (mm.NoteSequence): Композиция для сохранения.
+            filename (str): Имя файла для сохранения.
         """
+        midi_file = os.path.join(self.output_dir, filename)
         try:
-            midi_file = os.path.join(self.output_dir, filename)
-            mm.sequence_proto_to_midi_file(note_sequence, midi_file)
-            logger.info(f"Полная композиция сгенерирована и сохранена в: {midi_file}")
+            mm.sequence_proto_to_midi_file(music_sequence, midi_file)
+            logger.info(f'Полная композиция сгенерирована и сохранена в: {midi_file}')
         except Exception as ex:
-            logger.error(f'Ошибка сохранения midi файла {filename}', exc_info=ex)
+            logger.error(f'Ошибка при сохранении MIDI файла {midi_file}: {ex}')
 
 
     def generate_full_music(self) -> None:
         """
-         Объединяет все шаги в один вызов для удобства генерации полной композиции.
+        Генерирует полную музыкальную композицию, объединяя все шаги.
         """
-        try:
-            melody_sequence = self.generate_melody()
-            melody_with_chords_sequence = self.add_chords(melody_sequence)
-            note_sequence = self.add_drums(melody_with_chords_sequence)
-            note_sequence = self.set_tempo(note_sequence)
-            self.save_midi(note_sequence)
-        except Exception as ex:
-             logger.error(f'Ошибка генерации полной композиции', exc_info=ex)
+        melody_sequence = self.generate_melody()
+        melody_with_chords_sequence = self.add_chords(melody_sequence)
+        music_sequence = self.add_drums(melody_with_chords_sequence)
+        music_sequence = self.set_tempo(music_sequence)
+        self.save_midi(music_sequence)
 
 
 if __name__ == '__main__':

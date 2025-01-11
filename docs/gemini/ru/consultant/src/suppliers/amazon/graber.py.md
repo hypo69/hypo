@@ -1,44 +1,46 @@
 # Анализ кода модуля `graber.py`
 
 **Качество кода**
-6/10
--  Плюсы
-    -  Присутствует базовая структура класса, наследующего от `Graber`.
-    -  Используется `logger` для логирования ошибок.
-    -  Есть заготовка для декоратора, хотя и закомментирована.
--  Минусы
-    -  Отсутствует reStructuredText (RST) документация для модуля, класса и методов.
-    -  Используются устаревшие shebang-строки.
-    -  Не используется `j_loads` или `j_loads_ns` для загрузки данных.
-    -  Не все импорты используются (например, `header`).
-    -  Присутствует закомментированный код.
-    -  Не реализован декоратор, а оставлен как шаблон.
-    -  Не все комментарии соответствуют стандарту.
+    
+**Соответствие требованиям по оформлению кода: 8/10**
+
+*   **Плюсы:**
+    *   Используются одинарные кавычки в коде, за исключением операций вывода.
+    *   Комментарии после `#` сохранены без изменений.
+    *   Импорт `logger` выполнен из `src.logger.logger`.
+    *   Структура кода соответствует предыдущим файлам.
+    *   Добавлено описание модуля в начале файла.
+    *   Есть заготовки для документации функций
+*   **Минусы:**
+    *   Не все функции и методы документированы в формате RST.
+    *   Присутствуют закомментированные блоки кода (шаблон декоратора).
+    *   Необходимо унифицировать импорты и переменные с ранее обработанными файлами.
+    *   Отсутствуют docstring для некоторых методов.
 
 **Рекомендации по улучшению**
 
-1.  Добавить RST-документацию для модуля, класса и методов.
-2.  Удалить устаревшие shebang-строки.
-3.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для загрузки данных, если это необходимо.
-4.  Удалить неиспользуемые импорты (например, `header`).
-5.  Рассмотреть возможность реализации декоратора или удалить закомментированный код, если он не нужен.
-6.  Переписать комментарии в формате RST.
-7.  Избегать избыточных `try-except` блоков, где это возможно, и использовать `logger.error`.
-8.  Удалить `...`, если это не требуется для отладки или реализации.
-9.  Следовать соглашениям по именованию переменных и функций.
+1.  Дополнить документацию в формате RST для всех функций, методов и класса, особенно для метода `__init__`.
+2.  Удалить или раскомментировать и доработать закомментированный блок декоратора, если он необходим.
+3.  Унифицировать импорты, привести их в соответствие с остальными файлами.
+4.  Улучшить комментарии к коду, сделать их более информативными.
+5.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`, если это необходимо для чтения файлов. В текущем коде это не требуется.
+6.  Добавить пример использования класса в документацию модуля.
+7.  Удалить лишние пустые строки и пробелы.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
 """
 Модуль для сбора данных о товарах с сайта Amazon.
-=========================================================================================
+====================================================
 
-Этот модуль содержит класс :class:`Graber`, который наследуется от `src.suppliers.graber.Graber`
-и предназначен для сбора данных о товарах с сайта `amazon.com`.
+Этот модуль содержит класс :class:`Graber`, который наследуется от
+:class:`src.suppliers.graber.Graber` и предназначен для сбора информации
+о товарах с сайта `amazon.com`.
 
-Класс реализует специфические методы сбора данных для Amazon, переопределяя методы родительского класса
-если это необходимо.
+Модуль переопределяет методы родительского класса для специфической
+обработки полей товаров на Amazon.
 
 Пример использования
 --------------------
@@ -48,34 +50,35 @@
     from src.webdriver.driver import Driver
     from src.suppliers.amazon.graber import Graber
 
-    driver = Driver()
-    graber = Graber(driver=driver)
-    # graber.some_method()
-"""
+    async def main():
+        driver = Driver()
+        graber = Graber(driver=driver)
+        await graber.process_item('product_url')  # Замените 'product_url' на реальный URL товара
+        print(graber.fields)
 
+    if __name__ == "__main__":
+        import asyncio
+        asyncio.run(main())
+"""
 from typing import Any, Callable
-# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить если нужно
-from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
+from functools import wraps
+from src.suppliers.graber import Graber as Grbr, Context
 from src.webdriver.driver import Driver
 from src.logger.logger import logger
-from functools import wraps
-
-
-
-
+from src.webdriver.exceptions import ExecuteLocatorException
 
 #
 #
 #           DECORATOR TEMPLATE.
 #
 def close_pop_up(value: Any = None) -> Callable:
-    """
-    Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    :param value: Дополнительное значение для декоратора.
-    :type value: Any
-    :return: Декоратор, оборачивающий функцию.
-    :rtype: Callable
+    Args:
+        value (Any): Дополнительное значение для декоратора.
+
+    Returns:
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
@@ -83,7 +86,7 @@ def close_pop_up(value: Any = None) -> Callable:
             try:
                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close
                 ...
-            except Exception as e: # ExecuteLocatorException as e: # TODO:  исправить исключение
+            except ExecuteLocatorException as e:
                 logger.debug(f'Ошибка выполнения локатора: {e}')
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
@@ -92,23 +95,25 @@ def close_pop_up(value: Any = None) -> Callable:
 
 class Graber(Grbr):
     """
-    Класс для операций сбора данных о товарах с Amazon.
+    Класс для сбора данных о товарах с сайта Amazon.
 
-    :ivar supplier_prefix: Префикс поставщика.
-    :vartype supplier_prefix: str
+    Наследуется от :class:`src.suppliers.graber.Graber` и переопределяет его методы
+    для специфической обработки данных с сайта Amazon.
     """
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
         """
-        Инициализирует класс сбора данных о товарах Amazon.
+        Инициализирует класс Graber.
 
-        :param driver: Экземпляр веб-драйвера.
-        :type driver: Driver
+        Args:
+            driver (Driver): Экземпляр веб-драйвера для взаимодействия с браузером.
+
         """
+        # Устанавливает префикс поставщика 'amazon'
         self.supplier_prefix = 'amazon'
+        # Вызывает конструктор родительского класса
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        # Устанавливаем глобальные настройки через Context
-        # Код устанавливает значение атрибута `locator_for_decorator` контекста в `None`.
-        Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
+        # Устанавливает значение для локатора декоратора в None
+        Context.locator_for_decorator = None  # <- если будет установлено значение - то оно выполнится в декораторе `@close_pop_up`
 ```

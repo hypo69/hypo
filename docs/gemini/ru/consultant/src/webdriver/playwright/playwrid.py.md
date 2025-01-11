@@ -1,95 +1,98 @@
-# Анализ кода модуля `playwrid`
+# Анализ кода модуля `playwrid.py`
 
-**Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован и следует объектно-ориентированному подходу.
-    - Используются docstring для описания классов, методов и функций в формате reStructuredText (RST), что соответствует требованиям.
-    - Присутствует обработка ошибок с использованием `logger.error`.
-    - Используются `j_loads_ns` для загрузки JSON файлов.
-- Минусы
-    - Не все блоки `try-except` логируют ошибки.
-    - Могут быть добавлены дополнительные проверки на типы переменных для повышения надежности кода.
-    - Некоторые комментарии могут быть более конкретными.
+**Качество кода: 8**
+-  Плюсы
+    - Код хорошо структурирован, с использованием классов и методов.
+    - Присутствует документация в формате docstring для классов и методов.
+    - Используется `j_loads_ns` для загрузки JSON-файлов.
+    - Применено логирование с использованием `logger`.
+    - Есть обработка ошибок с помощью `try-except` и `logger.error`.
+    - Наличие примера использования в `if __name__ == "__main__":`
+-  Минусы
+    - Некоторые docstring не соответствуют стандарту rst и не включают примеры использования.
+    - Используется `if hasattr(settings, 'headless')` вместо более явной проверки.
+    - Обработка ошибок в методе `start` не позволяет продолжить работу программы после ошибки.
+    -  Не все docstring содержат описание типов параметров и возвращаемого значения.
 
 **Рекомендации по улучшению**
 
-1.  **Логирование ошибок:**
-    -  Добавить `logger.error` в `try-except` блоки, чтобы логировать возникающие ошибки.
-2.  **Проверка типов:**
-    -  Усилить проверки типов переменных для предотвращения неожиданных ошибок.
-3. **Комментарии**:
-    -  Уточнить комментарии для более ясного понимания кода.
-4.  **Улучшить читаемость кода:**
-    -  Использовать более информативные имена переменных.
+1.  **Улучшение документации**:
+    - Добавить примеры использования в docstring.
+    - Уточнить типы параметров и возвращаемых значений в docstring.
+    - Добавить описание исключений, которые могут быть вызваны функциями.
+    - Использовать rst-формат для docstring.
+2.  **Улучшение обработки параметров**:
+    - Заменить `if hasattr(settings, 'headless')` на более явную проверку, например, `settings.get('headless', True)`.
+3.  **Обработка ошибок**:
+    - Изменить обработку ошибок в методе `start` для более гибкой работы (например, возможность перезапустить браузер).
+4.  **Использование `logger`**:
+    -   Использовать `logger.error` вместо `logger.critical` для обработки ошибок, которые не являются критическими.
+5.  **Улучшение читаемости кода**:
+    - Добавить type hint для `settings` в методе `_set_launch_options`.
+6.  **Соответствие стандартам кода**:
+    - Использовать одинарные кавычки для строк в коде, двойные - только в операциях вывода.
 
-**Оптимизиробанный код**
+**Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
+
 """
-Модуль для работы с Playwright Crawler
-=========================================================================================
+.. module:: src.webdriver.playwright
+    :platform: Windows, Unix
+    :synopsis: Playwright Crawler
 
-Этот модуль определяет подкласс `PlaywrightCrawler` под названием `Playwrid`.
-Он предоставляет дополнительные возможности, такие как установка пользовательских настроек браузера,
-профилей и параметров запуска с использованием Playwright.
+This module defines a subclass of `PlaywrightCrawler` called `Playwrid`.
+It provides additional functionality such as the ability to set custom browser settings, profiles,
+and launch options using Playwright.
 
-Пример использования
---------------------
-
-Пример использования класса `Playwrid`:
+Example usage:
 
 .. code-block:: python
 
     if __name__ == "__main__":
-        browser = Playwrid(options=["--headless"])
-        browser.start("https://www.example.com")
+        browser = Playwrid(options=['--headless'])
+        browser.start('https://www.example.com')
 """
-
-
 
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from types import SimpleNamespace
-
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
-#  импортируем gs
 from src import gs
-#  импортируем j_loads_ns из  src.utils.jjson
 from src.utils.jjson import j_loads_ns
-#  импортируем logger для логирования
-from src.logger.logger import logger
+from src.logger.logger import logger # import logger
 
 
 class Playwrid(PlaywrightCrawler):
     """
-    Подкласс `PlaywrightCrawler`, предоставляющий дополнительные функции.
+    Subclass of `PlaywrightCrawler` that provides additional functionality.
 
-    :ivar driver_name: Имя драйвера, по умолчанию `playwrid`.
+    :ivar driver_name: Name of the driver, defaults to 'playwrid'.
     :vartype driver_name: str
-    :ivar context: Контекст страницы, по умолчанию `None`.
-    :vartype context: Optional[Any]
     """
     driver_name = 'playwrid'
     context = None
 
     def __init__(self, settings_name: Optional[str] = None, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs) -> None:
         """
-        Инициализирует Playwright Crawler с заданными параметрами запуска, настройками и User-Agent.
+        Initializes the Playwright Crawler with the specified launch options, settings, and user agent.
 
-        :param settings_name: Имя файла настроек.
+        :param settings_name: Name of the settings file to use.
         :type settings_name: Optional[str]
-        :param user_agent: Строка User-Agent. По умолчанию используется случайный User-Agent.
+        :param user_agent: The user-agent string to be used. Defaults to a random user agent.
         :type user_agent: Optional[str]
-        :param options: Список опций Playwright для передачи во время инициализации.
+        :param options: A list of Playwright options to be passed during initialization.
         :type options: Optional[List[str]]
+
+        Example:
+            >>> browser = Playwrid(options=['--headless'])
+            >>> browser.start('https://www.example.com')
         """
-        # загружаем настройки
+        # код исполняет загрузку настроек
         settings = self._load_settings(settings_name)
-        # устанавливаем параметры запуска браузера
+        # код исполняет настройку параметров запуска
         launch_options = self._set_launch_options(settings, user_agent, options)
 
         super().__init__(
@@ -100,53 +103,58 @@ class Playwrid(PlaywrightCrawler):
 
     def _load_settings(self, settings_name: Optional[str] = None) -> SimpleNamespace:
         """
-        Загружает настройки для Playwrid Crawler.
+        Loads the settings for the Playwrid Crawler.
 
-        :param settings_name: Имя файла настроек для загрузки.
+        :param settings_name: Name of the settings file to use.
         :type settings_name: Optional[str]
-        :returns: Объект SimpleNamespace, содержащий загруженные настройки.
+        :returns: A SimpleNamespace object containing the settings.
         :rtype: SimpleNamespace
+
+        Example:
+            >>> settings = _load_settings('custom_settings')
         """
-        #  определяем путь к файлу с настройками по умолчанию
+        # код исполняет получение пути к файлу настроек
         settings_path = Path(gs.path.src / 'webdriver' / 'playwright' / 'playwrid.json')
-        #  загружаем настройки из файла по умолчанию
+        # код исполняет загрузку настроек
         settings = j_loads_ns(settings_path)
 
-        #  проверяем, задано ли имя файла с пользовательскими настройками
+        # код исполняет проверку наличия дополнительных настроек
         if settings_name:
-            #  определяем путь к файлу с пользовательскими настройками
             custom_settings_path = settings_path.parent / f'{settings_name}.json'
-            #  проверяем, существует ли файл с пользовательскими настройками
+            # код исполняет загрузку дополнительных настроек
             if custom_settings_path.exists():
-                # загружаем пользовательские настройки
                 settings = j_loads_ns(custom_settings_path)
 
         return settings
 
     def _set_launch_options(self, settings: SimpleNamespace, user_agent: Optional[str] = None, options: Optional[List[str]] = None) -> Dict[str, Any]:
         """
-        Настраивает параметры запуска для Playwright Crawler.
+        Configures the launch options for the Playwright Crawler.
 
-        :param settings: Объект SimpleNamespace, содержащий настройки запуска.
+        :param settings: A SimpleNamespace object containing launch settings.
         :type settings: SimpleNamespace
-        :param user_agent: Строка User-Agent для использования.
+        :param user_agent: The user-agent string to be used.
         :type user_agent: Optional[str]
-        :param options: Список дополнительных опций Playwright.
+        :param options: A list of Playwright options to be passed during initialization.
         :type options: Optional[List[str]]
-        :returns: Словарь с опциями запуска для Playwright.
+        :returns: A dictionary with launch options for Playwright.
         :rtype: Dict[str, Any]
+
+        Example:
+            >>> settings = SimpleNamespace(headless=False, options=['--disable-gpu'])
+            >>> launch_options = _set_launch_options(settings, user_agent='custom_user_agent', options=['--proxy-server=127.0.0.1:8888'])
         """
-        #  инициализируем словарь с основными опциями запуска
+        # код инициализирует параметры запуска
         launch_options = {
-            "headless": settings.headless if hasattr(settings, 'headless') else True,
-            "args": settings.options if hasattr(settings, 'options') else []
+            'headless': settings.headless if hasattr(settings, 'headless') else True,
+            'args': settings.options if hasattr(settings, 'options') else []
         }
 
-        #  добавляем пользовательский User-Agent, если он предоставлен
+        # код добавляет пользовательский user-agent, если он предоставлен
         if user_agent:
             launch_options['user_agent'] = user_agent
 
-        #  расширяем список аргументов дополнительными опциями, если они предоставлены
+        # код объединяет пользовательские параметры с параметрами по умолчанию
         if options:
             launch_options['args'].extend(options)
 
@@ -154,33 +162,44 @@ class Playwrid(PlaywrightCrawler):
 
     def start(self, url: str) -> None:
         """
-        Запускает Playwrid Crawler и переходит по указанному URL.
+        Starts the Playwrid Crawler and navigates to the specified URL.
 
-        :param url: URL для перехода.
+        :param url: The URL to navigate to.
         :type url: str
+
+        Example:
+            >>> browser = Playwrid(options=['--headless'])
+            >>> browser.start('https://www.example.com')
         """
         try:
-            # логируем запуск краулера
-            logger.info(f"Starting Playwright Crawler for {url}")
+            # код исполняет запуск Playwright Crawler
+            logger.info(f'Starting Playwright Crawler for {url}')
             super().run()
         except Exception as ex:
-            # логируем ошибку запуска краулера
-            logger.critical('Playwrid Crawler failed with an error:', ex)
+            # код исполняет логирование ошибки
+            logger.error('Playwrid Crawler failed with an error:', ex)
+            ... # TODO: Добавить возможность перезапуска браузера
 
     @property
     def current_url(self) -> Optional[str]:
         """
-        Возвращает текущий URL браузера.
+        Returns the current URL of the browser.
 
-        :returns: Текущий URL.
+        :returns: The current URL.
         :rtype: Optional[str]
+
+        Example:
+            >>> browser = Playwrid(options=['--headless'])
+            >>> browser.start('https://www.example.com')
+            >>> current_url = browser.current_url
         """
-        # проверяем, существует ли контекст страницы
+        # код проверяет наличие контекста
         if self.context:
             return self.context.page.url
         return None
 
 
-if __name__ == "__main__":
-    browser = Playwrid(options=["--headless"])
-    browser.start("https://www.example.com")
+if __name__ == '__main__':
+    browser = Playwrid(options=['--headless'])
+    browser.start('https://www.example.com')
+```

@@ -3,111 +3,83 @@
 **Качество кода**
 9
 - Плюсы
-    - Код хорошо структурирован и выполняет свою задачу.
-    - Используются `Path` из `pathlib` для работы с путями, что обеспечивает кроссплатформенность.
-    - Присутствует docstring для функции, что соответствует требованиям.
-    - Используются `Optional` из `typing`.
+    - Код хорошо структурирован и выполняет поставленную задачу.
+    - Использует `pathlib` для работы с путями, что является хорошей практикой.
+    - Есть  документация к функции в формате reStructuredText (RST)
+    - Присутствует описание модуля
 - Минусы
-    - Отсутствует описание модуля в начале файла.
-    - Нет подробных комментариев в коде.
-    - Нет `logger` для обработки ошибок.
+    - Отсутствует импорт `logger`
+    - Нет обработки ошибок.
+    - Не стандартизированы комментарии.
 
 **Рекомендации по улучшению**
-
-1.  Добавить описание модуля в начале файла.
-2.  Добавить подробные комментарии к коду, объясняющие логику работы.
-3.  Использовать `logger` для обработки ошибок и логирования важных событий.
-4.  Добавить примеры использования в docstring для функции `get_relative_path`.
-5.  Улучшить форматирование docstring в соответствии со стандартами RST.
-6.  Переименовать переменную `path` в `full_path_obj` для ясности.
-7.  Добавить проверку на пустой `full_path` и `relative_from`
+1.  Добавить импорт `logger` из `src.logger.logger`.
+2.  Добавить обработку ошибок с помощью `try-except` и логирование ошибок через `logger.error`.
+3.  Стандартизировать комментарии, сделав их более подробными.
+4.  Переписать код с использованием одинарных кавычек в Python коде, и двойных только в операциях вывода.
+5.  Устранить лишний комментарий.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
+
 """
 Модуль для работы с путями в проекте.
-=========================================================================================
+=====================================
 
-Этот модуль предоставляет функцию :func:`get_relative_path`, которая используется для
-получения относительного пути от заданного сегмента.
+Этот модуль предоставляет утилиты для определения относительных путей,
+используя абсолютные пути и точку отсчета.
 
-Пример использования
---------------------
+.. moduleauthor:: Timofey <timofey@mail.ru>
 
-Пример использования функции `get_relative_path`:
-
-.. code-block:: python
-
-    from pathlib import Path
-    from src.utils.path import get_relative_path
-
-    full_path = '/path/to/my/project/src/module.py'
-    relative_from = 'src'
-    relative_path = get_relative_path(full_path, relative_from)
-    print(relative_path)  # Выведет: src/module.py
-
-    relative_from = 'project'
-    relative_path = get_relative_path(full_path, relative_from)
-    print(relative_path) # Выведет: project/src/module.py
-
-    relative_from = 'nonexistent'
-    relative_path = get_relative_path(full_path, relative_from)
-    print(relative_path) # Выведет: None
+:platform: Windows, Unix
+:synopsis: Модуль определяет корневой путь к проекту. Все импорты строятся относительно этого пути.
+    :TODO: В дальнейшем перенести в системную переменную
 """
-# -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
 
 from pathlib import Path
 from typing import Optional
-#  Импорт logger для логирования
-from src.logger.logger import logger
-
+from src.logger.logger import logger  # импортируем logger
 
 def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
     """
     Возвращает часть пути начиная с указанного сегмента и до конца.
 
-    Args:
-        full_path (str): Полный путь.
-        relative_from (str): Сегмент пути, с которого нужно начать извлечение.
-
-    Returns:
-        Optional[str]: Относительный путь начиная с `relative_from`, или None, если сегмент не найден.
-
-    Example:
-        >>> from pathlib import Path
-        >>> full_path = '/path/to/my/project/src/module.py'
-        >>> relative_from = 'src'
-        >>> result = get_relative_path(full_path, relative_from)
-        >>> print(result)
-        src/module.py
-    """
-    # Проверка на пустой путь
-    if not full_path:
-        logger.error('`full_path` не может быть пустым')
-        return None
-
-    # Проверка на пустой relative_from
-    if not relative_from:
-        logger.error('`relative_from` не может быть пустым')
-        return None
+    :param full_path: Полный путь.
+    :type full_path: str
+    :param relative_from: Сегмент пути, с которого нужно начать извлечение.
+    :type relative_from: str
+    :return: Относительный путь начиная с `relative_from`, или None, если сегмент не найден.
+    :rtype: Optional[str]
+    :raises Exception: в случае ошибки при обработке пути
     
-    # Преобразуем строку в объект Path
-    full_path_obj = Path(full_path)
-    # Разбиваем путь на сегменты
-    parts = full_path_obj.parts
+    Example:
+        >>> get_relative_path('/home/user/project/src/utils', 'src')
+        'src/utils'
+        >>> get_relative_path('/home/user/project/src/utils', 'project')
+        'project/src/utils'
+        >>> get_relative_path('/home/user/project/src/utils', 'not_exist') is None
+        True
+    """
+    try:
+        # Преобразуем строки в объекты Path
+        path = Path(full_path)
+        parts = path.parts
 
-    #  Проверка, есть ли `relative_from` в частях пути
-    if relative_from in parts:
-        # Находим индекс сегмента `relative_from`
-        start_index = parts.index(relative_from)
-        # Формируем новый путь, начиная с индекса `relative_from`
-        relative_path = Path(*parts[start_index:])
-        # Возвращаем относительный путь в виде строки (posix)
-        return relative_path.as_posix()
-    else:
-        # Если сегмент `relative_from` не найден, возвращаем None
-        logger.debug(f'Сегмент `{relative_from}` не найден в пути `{full_path}`')
+        # Проверяем наличие сегмента relative_from в parts
+        if relative_from in parts:
+            # Находим индекс сегмента relative_from
+            start_index = parts.index(relative_from)
+            # Формируем путь начиная с указанного сегмента
+            relative_path = Path(*parts[start_index:])
+            return relative_path.as_posix()
+        else:
+            # Если сегмент не найден, возвращаем None
+            return None
+    except Exception as ex:
+        # Логируем ошибку и возвращаем None
+        logger.error(f'Ошибка при обработке пути: {full_path}, relative_from: {relative_from}', exc_info=ex)
         return None
+
 ```

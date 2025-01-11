@@ -1,144 +1,116 @@
 ## <алгоритм>
 
-1. **Инициализация объекта `AliexpressAffiliateFeaturedpromoProductsGetRequest`**:
-   - Создается экземпляр класса `AliexpressAffiliateFeaturedpromoProductsGetRequest`.
-   - При инициализации вызывается конструктор базового класса `RestApi`, передавая домен и порт (по умолчанию `api-sg.aliexpress.com` и 80).
-   - Инициализируются атрибуты экземпляра, такие как `app_signature`, `category_id`, `country` и другие, устанавливая их в `None`.
+1.  **Инициализация объекта `AliexpressAffiliateFeaturedpromoProductsGetRequest`:**
+    *   Создается экземпляр класса `AliexpressAffiliateFeaturedpromoProductsGetRequest`.
+    *   При инициализации вызывается конструктор базового класса `RestApi` с параметрами `domain` (по умолчанию "api-sg.aliexpress.com") и `port` (по умолчанию 80).
+    *   Инициализируются атрибуты экземпляра:
+        *   `app_signature` (подпись приложения, по умолчанию `None`).
+        *   `category_id` (идентификатор категории, по умолчанию `None`).
+        *   `country` (страна, по умолчанию `None`).
+        *   `fields` (поля для возврата, по умолчанию `None`).
+        *   `page_no` (номер страницы, по умолчанию `None`).
+        *   `page_size` (размер страницы, по умолчанию `None`).
+        *   `promotion_end_time` (время окончания акции, по умолчанию `None`).
+        *   `promotion_name` (название акции, по умолчанию `None`).
+        *   `promotion_start_time` (время начала акции, по умолчанию `None`).
+        *   `sort` (параметр сортировки, по умолчанию `None`).
+        *   `target_currency` (валюта, по умолчанию `None`).
+        *   `target_language` (язык, по умолчанию `None`).
+        *   `tracking_id` (идентификатор отслеживания, по умолчанию `None`).
+2.  **Метод `getapiname()`:**
+    *   Вызывается метод `getapiname()` у экземпляра `AliexpressAffiliateFeaturedpromoProductsGetRequest`.
+    *   Метод возвращает строку `'aliexpress.affiliate.featuredpromo.products.get'`, которая является именем API-метода AliExpress.
 
-   **Пример**:
-   ```python
-   request = AliexpressAffiliateFeaturedpromoProductsGetRequest()
-   # request.domain == "api-sg.aliexpress.com"
-   # request.port == 80
-   # request.app_signature == None
-   ```
-
-2. **Вызов метода `getapiname()`**:
-   - Метод `getapiname()` вызывается у экземпляра `AliexpressAffiliateFeaturedpromoProductsGetRequest`.
-   - Метод возвращает строку `'aliexpress.affiliate.featuredpromo.products.get'`, представляющую имя API-запроса.
-
-   **Пример**:
-   ```python
-   api_name = request.getapiname()
-   # api_name == 'aliexpress.affiliate.featuredpromo.products.get'
-   ```
+**Пример использования:**
+```python
+request = AliexpressAffiliateFeaturedpromoProductsGetRequest()
+request.category_id = 123
+request.country = "US"
+api_name = request.getapiname()
+print(api_name) # Вывод: aliexpress.affiliate.featuredpromo.products.get
+```
 
 ## <mermaid>
 
 ```mermaid
-classDiagram
-    class RestApi {
-        +domain: str
-        +port: int
-        __init__(domain: str, port: int)
-    }
-    class AliexpressAffiliateFeaturedpromoProductsGetRequest {
-        +app_signature: str
-        +category_id: int
-        +country: str
-        +fields: str
-        +page_no: int
-        +page_size: int
-        +promotion_end_time: str
-        +promotion_name: str
-        +promotion_start_time: str
-        +sort: str
-        +target_currency: str
-        +target_language: str
-        +tracking_id: str
-        __init__(domain: str, port: int)
-        +getapiname(): str
-    }
-    RestApi <|-- AliexpressAffiliateFeaturedpromoProductsGetRequest
-    AliexpressAffiliateFeaturedpromoProductsGetRequest --|> RestApi : inherits from
+flowchart TD
+    Start[Start] --> CreateRequest[Create AliexpressAffiliateFeaturedpromoProductsGetRequest Object]
+    CreateRequest --> InitRestApi[Call RestApi.__init__()]
+    InitRestApi --> SetAttributes[Set Request Attributes to None]
+    SetAttributes --> GetApiName[Call getapiname()]
+    GetApiName --> ReturnApiName["Return API method name: <br>'aliexpress.affiliate.featuredpromo.products.get'"]
+    ReturnApiName --> End[End]
+
+    classDef classFill fill:#f9f,stroke:#333,stroke-width:2px
+    class CreateRequest,InitRestApi,SetAttributes,GetApiName,ReturnApiName classFill
 ```
 
-**Объяснение `mermaid`:**
+**Объяснение `mermaid` диаграммы:**
 
-- **`class RestApi`**: Определяет базовый класс для API-запросов.
-  - `domain`: Строка, представляющая домен API.
-  - `port`: Целое число, представляющее порт API.
-  - `__init__(domain: str, port: int)`: Конструктор класса, принимающий домен и порт.
-- **`class AliexpressAffiliateFeaturedpromoProductsGetRequest`**: Определяет класс для конкретного API-запроса, который наследуется от `RestApi`.
-  -  `app_signature`: Строка, представляющая подпись приложения.
-  - `category_id`: Целое число, представляющее ID категории.
-  - `country`: Строка, представляющая страну.
-  - `fields`: Строка, представляющая поля.
-  - `page_no`: Целое число, представляющее номер страницы.
-  - `page_size`: Целое число, представляющее размер страницы.
-  - `promotion_end_time`: Строка, представляющая время окончания акции.
-  - `promotion_name`: Строка, представляющая название акции.
-  - `promotion_start_time`: Строка, представляющая время начала акции.
-  - `sort`: Строка, представляющая порядок сортировки.
-  - `target_currency`: Строка, представляющая целевую валюту.
-  - `target_language`: Строка, представляющая целевой язык.
-  - `tracking_id`: Строка, представляющая ID отслеживания.
-  - `__init__(domain: str, port: int)`: Конструктор класса, вызывающий конструктор родительского класса.
-  - `getapiname(): str`: Метод, возвращающий имя API-запроса.
-- **`RestApi <|-- AliexpressAffiliateFeaturedpromoProductsGetRequest`**: Обозначает, что класс `AliexpressAffiliateFeaturedpromoProductsGetRequest` наследуется от класса `RestApi`.
-- **`AliexpressAffiliateFeaturedpromoProductsGetRequest --|> RestApi : inherits from`**: Альтернативное обозначение наследования.
+1. **Start:** Начало процесса.
+2. **CreateRequest:** Создание экземпляра класса `AliexpressAffiliateFeaturedpromoProductsGetRequest`.
+3. **InitRestApi:** Вызов конструктора родительского класса `RestApi`, который отвечает за базовую инициализацию запроса.
+4. **SetAttributes:** Инициализация атрибутов запроса в `None`. Сюда входят параметры для формирования запроса к API, такие как идентификатор категории, страна, поля, нумерация страниц и т.д.
+5. **GetApiName:** Вызов метода `getapiname()`, который возвращает имя API-метода.
+6. **ReturnApiName:** Возврат строки, представляющей имя API метода - `aliexpress.affiliate.featuredpromo.products.get`.
+7. **End:** Конец процесса.
 
 ## <объяснение>
 
 **Импорты:**
-
-- `from ..base import RestApi`:
-  - Импортирует класс `RestApi` из модуля `base`, находящегося на уровень выше в иерархии пакетов.
-  - Класс `RestApi`, вероятно, предоставляет базовую функциональность для работы с REST API, такую как установка домена, порта, и возможно другие общие методы для отправки запросов.
-  - Таким образом, `AliexpressAffiliateFeaturedpromoProductsGetRequest` наследует функциональность `RestApi` и расширяет её специфичными для конкретного API-запроса методами и атрибутами.
+*   `from ..base import RestApi`: Импортирует класс `RestApi` из модуля `base`, находящегося в родительской директории. `RestApi`, вероятно, является базовым классом для всех REST API запросов к AliExpress и содержит общую логику для работы с API, такую как формирование URL, отправка запросов и обработка ответов.
 
 **Классы:**
-
-- **`AliexpressAffiliateFeaturedpromoProductsGetRequest(RestApi)`**:
-    - Это класс для формирования запроса к API Aliexpress для получения популярных товаров по акции.
-    - **Атрибуты**:
-        - `app_signature`: Подпись приложения, необходимая для авторизации. Тип: `str` или `None`.
-        - `category_id`: Идентификатор категории товаров. Тип: `int` или `None`.
-        - `country`: Код страны, для которой нужны товары. Тип: `str` или `None`.
-        - `fields`: Список полей, которые нужно вернуть в ответе. Тип: `str` или `None`.
-        - `page_no`: Номер страницы результатов. Тип: `int` или `None`.
-        - `page_size`: Количество элементов на странице. Тип: `int` или `None`.
-        - `promotion_end_time`: Дата и время окончания акции. Тип: `str` или `None`.
-        - `promotion_name`: Название акции. Тип: `str` или `None`.
-        - `promotion_start_time`: Дата и время начала акции. Тип: `str` или `None`.
-        - `sort`: Параметр сортировки результатов. Тип: `str` или `None`.
-        - `target_currency`: Целевая валюта. Тип: `str` или `None`.
-        - `target_language`: Целевой язык. Тип: `str` или `None`.
-        - `tracking_id`: ID отслеживания. Тип: `str` или `None`.
-    - **Методы**:
-        - `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса. Вызывает конструктор базового класса `RestApi` и инициализирует атрибуты запроса в `None`.
-        - `getapiname(self)`: Возвращает имя API-запроса, а именно `'aliexpress.affiliate.featuredpromo.products.get'`.
+*   `AliexpressAffiliateFeaturedpromoProductsGetRequest(RestApi)`: Класс, представляющий запрос для получения списка товаров по промоакции AliExpress.
+    *   **Роль**: Отвечает за формирование и отправку запроса на получение списка продуктов по промо-акции.
+    *   **Атрибуты**:
+        *   `app_signature`: Подпись приложения для аутентификации.
+        *   `category_id`: Идентификатор категории товаров.
+        *   `country`: Код страны, для которой запрашиваются товары.
+        *   `fields`: Список полей, которые должны быть возвращены в ответе.
+        *   `page_no`: Номер страницы результатов.
+        *   `page_size`: Количество элементов на странице.
+        *   `promotion_end_time`: Время окончания промоакции.
+        *   `promotion_name`: Название промоакции.
+        *   `promotion_start_time`: Время начала промоакции.
+        *   `sort`: Поле для сортировки результатов.
+        *   `target_currency`: Валюта, в которой должны быть представлены цены.
+        *   `target_language`: Язык, в котором должны быть представлены данные.
+        *   `tracking_id`: Идентификатор отслеживания.
+    *   **Методы**:
+        *   `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса, инициализирует объект, вызывая конструктор базового класса `RestApi` и устанавливая значения атрибутов по умолчанию.
+        *   `getapiname(self)`: Возвращает имя API-метода, к которому будет направлен запрос (в данном случае, `'aliexpress.affiliate.featuredpromo.products.get'`).
 
 **Функции:**
-
-- `__init__(self, domain="api-sg.aliexpress.com", port=80)`: Конструктор класса.
-  - **Аргументы**:
-      - `domain`: Домен API (по умолчанию `api-sg.aliexpress.com`).
-      - `port`: Порт API (по умолчанию 80).
-  - **Назначение**: Инициализирует объект класса `AliexpressAffiliateFeaturedpromoProductsGetRequest`, вызывая конструктор базового класса `RestApi` и инициализируя атрибуты запроса.
-  - **Возвращаемое значение**: None
-- `getapiname(self)`:
-  - **Аргументы**: `self` - ссылка на текущий экземпляр класса.
-  - **Назначение**: Возвращает строку, представляющую имя API-запроса.
-  - **Возвращаемое значение**: Строка `'aliexpress.affiliate.featuredpromo.products.get'`.
+*   `__init__(self, domain="api-sg.aliexpress.com", port=80)`:
+    *   **Аргументы**:
+        *   `self`: Ссылка на экземпляр класса.
+        *   `domain`: Доменное имя API сервера (по умолчанию "api-sg.aliexpress.com").
+        *   `port`: Порт API сервера (по умолчанию 80).
+    *   **Возвращаемое значение**: Нет.
+    *   **Назначение**: Инициализирует экземпляр класса, вызывая конструктор базового класса `RestApi` и устанавливая начальные значения атрибутов.
+    *   **Пример**: `request = AliexpressAffiliateFeaturedpromoProductsGetRequest(domain="myapi.aliexpress.com", port=443)` создаст объект запроса с кастомным доменом и портом.
+*   `getapiname(self)`:
+    *   **Аргументы**:
+        *   `self`: Ссылка на экземпляр класса.
+    *   **Возвращаемое значение**: Строка с именем API-метода.
+    *   **Назначение**: Возвращает имя API-метода, которое используется для построения URL запроса к API AliExpress.
+    *   **Пример**: `api_method_name = request.getapiname()` вернет `"aliexpress.affiliate.featuredpromo.products.get"`.
 
 **Переменные:**
+*   `domain`: Строка, представляющая доменное имя API-сервера.
+*   `port`: Целое число, представляющее порт API-сервера.
+*   Атрибуты класса `AliexpressAffiliateFeaturedpromoProductsGetRequest`, такие как `app_signature`, `category_id`, `country`, и др., являются строками, целыми числами или `None`, представляющие параметры запроса.
 
-- Все атрибуты класса (`app_signature`, `category_id`, `country` и т.д.) являются переменными экземпляра и могут хранить значения, специфичные для каждого экземпляра класса. Их начальное значение `None`, подразумевая, что значения будут заданы позже при использовании объекта.
+**Потенциальные ошибки и области для улучшения:**
+*   В текущей версии кода не реализована валидация параметров, которые устанавливаются. Можно было бы добавить проверки типов и диапазонов значений, чтобы избежать ошибок при выполнении запроса к API.
+*   Не реализована отправка самого запроса к API, т.к. код описывает только структуру запроса.
+*   Отсутствует обработка ошибок, возникающих при работе с API.
 
-**Потенциальные ошибки или области для улучшения:**
+**Взаимосвязи с другими частями проекта:**
+*   Зависит от базового класса `RestApi`, который, вероятно, содержит логику для работы с REST API.
+*   Предположительно используется в модулях, которые взаимодействуют с API AliExpress. Этот класс используется для запроса продуктов в рамках промоакций, предоставляемых AliExpress. Данные, полученные от API, могут использоваться для отображения на веб-сайте или в приложении, а также для других аналитических целей.
 
-- В текущем коде не предусмотрена валидация входных данных, например, проверка типов или допустимых значений для параметров запроса. Это может привести к ошибкам при отправке запроса на API.
-- Нет методов для установки значений атрибутов, что делает использование класса не удобным.
-- Не предусмотрена обработка исключений при вызове API.
-- Отсутствует реализация самой отправки запроса. Только формирование.
-
-**Цепочка взаимосвязей с другими частями проекта:**
-
-- Этот класс зависит от базового класса `RestApi`, который, вероятно, используется для общих операций API, таких как отправка запросов и обработка ответов.
-- Этот класс будет использоваться в других частях проекта, где необходимо получить популярные товары по акции через API Aliexpress.
-
-**Дополнительно**:
-
-- Для полноценного использования этого класса потребуется реализовать методы для установки значений атрибутов, а также метод для фактической отправки API-запроса.
-- Валидация данных перед отправкой запроса важна для предотвращения ошибок и обеспечения корректной работы программы.
+**Дополнительно:**
+*   Код представляет собой пример запроса к API AliExpress для получения продуктов по промоакциям.
+*   Этот класс служит основой для построения запроса, но для его использования требуется реализация отправки запроса и обработки ответов API в базовом классе `RestApi`.

@@ -1,35 +1,48 @@
-## Анализ кода модуля `translator.py`
+# Анализ кода модуля `translator.py`
 
-**Качество кода**
-8
--   Плюсы
-    -   Код имеет хорошую структуру, использует docstring для описания функций.
-    -   Присутствует логирование ошибок с помощью `logger`.
-    -   Используется `try-except` для обработки возможных исключений при обращении к OpenAI API.
--   Минусы
-    -   Не используются `f-строки` для форматирования запроса.
-    -   Не везде используются одинарные кавычки, как указано в требованиях.
-    -   Отсутствует подробное описание модуля в начале файла.
-    -   Используется устаревший метод `openai.Completion.create` вместо `openai.chat.completions.create`
+**Качество кода: 8/10**
+-  Плюсы:
+    - Код хорошо структурирован и понятен.
+    - Используются комментарии для пояснения логики кода.
+    - Присутствует docstring для функции `translate`.
+    - Используется `logger` для логирования ошибок.
+-  Минусы:
+    - Не используется `j_loads` или `j_loads_ns`.
+    - Не все импорты приведены в соответствие с ранее обработанными файлами.
+    - Текст docstring не соответствует стандарту RST.
+    - Следует избегать использования `try-except` в пользу `logger.error`.
+    - Не используется f-строки в `logger.error`.
+    - Не хватает обработки возможных ошибок при вызове `openai.Completion.create`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание модуля в начале файла, соответствующее формату RST.
-2.  Использовать `f-строки` для формирования запроса.
-3.  Заменить устаревший метод `openai.Completion.create` на `openai.chat.completions.create`.
-4.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов. (в данном коде нет чтения файлов, но правило соблюдается)
-5.  Привести все строки к одинарным кавычкам.
-6.  Уточнить формат docstring, в том числе для переменных
-7.  Избегать избыточного `try-except`, отдавая предпочтения обработке ошибок через `logger.error`.
+1.  **Импорты:**
+    -   Импортировать `from src.utils.jjson import j_loads_ns` (хотя в этом модуле он не используется).
+    -   Импортировать `from src.logger.logger import logger`.
+    -   Использовать относительные импорты.
+2.  **Обработка данных:**
+    -   Заменить стандартный `json.load` на `j_loads` или `j_loads_ns`. В данном случае это не требуется, так как не используется работа с json.
+3.  **Логирование:**
+    -   Использовать f-строки для логирования ошибок.
+    -   Удалить `return` без значения при ошибке.
+4.  **Документация:**
+    -   Привести docstring к стандарту RST.
+    -   Уточнить документацию, добавив пример обработки ошибок.
+5.  **Код:**
+    -   Упростить блок `try-except` с помощью `logger.error`.
+    -   Уточнить аргументы для вызова `openai.Completion.create`, добавив обработку исключений.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
+
 """
 Модуль для перевода текста с использованием OpenAI API.
 =========================================================================================
 
-Этот модуль предоставляет функцию :func:`translate`, которая использует OpenAI API для перевода текста с одного языка на другой.
+Этот модуль содержит функцию :func:`translate`, которая использует OpenAI API для
+перевода текста с одного языка на другой.
 
 Пример использования
 --------------------
@@ -38,27 +51,23 @@
 
 .. code-block:: python
 
-    translation = translate(text='Hello, world!', source_language='English', target_language='Russian')
-    print(f'Переведенный текст: {translation}')
+    from src.ai.openai.translator import translate
+
+    source_text = "Hello, how are you?"
+    source_language = "English"
+    target_language = "Russian"
+    translation = translate(source_text, source_language, target_language)
+    print(f"Translated text: {translation}")
 """
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 import openai
-#  Импортируем gs из src
 from src import gs
-#  Импортируем logger из src.logger.logger
 from src.logger.logger import logger
 
-#  Устанавливаем ключ API для OpenAI
 openai.api_key = gs.credentials.openai
 
 def translate(text: str, source_language: str, target_language: str) -> str | None:
     """
     Переводит текст с использованием OpenAI API.
-
-    Эта функция отправляет текст для перевода на указанный язык с помощью модели OpenAI и возвращает переведённый текст.
 
     :param text: Текст для перевода.
     :type text: str
@@ -69,36 +78,43 @@ def translate(text: str, source_language: str, target_language: str) -> str | No
     :return: Переведённый текст или None в случае ошибки.
     :rtype: str | None
 
-    :Example:
-        >>> source_text = 'Привет, как дела?'
-        >>> source_language = 'Russian'
-        >>> target_language = 'English'
+    :raises openai.error.OpenAIError: Если возникает ошибка при вызове OpenAI API.
+
+    Пример использования:
+        >>> from src.ai.openai.translator import translate
+        >>> source_text = "Привет, как дела?"
+        >>> source_language = "Russian"
+        >>> target_language = "English"
         >>> translation = translate(source_text, source_language, target_language)
-        >>> print(f'Translated text: {translation}')
+        >>> print(f"Translated text: {translation}")
+        Translated text: Hello, how are you?
+
     """
-    # Формируем запрос к OpenAI API с использованием f-строк
+    # Формируется запрос к OpenAI API
     prompt = (
-        f'Translate the following text from {source_language} to {target_language}:\n\n'
-        f'{text}\n\n'
+        f'Translate the following text from {source_language} to {target_language}:\\n\\n'
+        f'{text}\\n\\n'
         f'Translation:'
     )
     try:
-        #  Отправляем запрос к OpenAI API используя openai.chat.completions.create
-        response = openai.chat.completions.create(
-            model='gpt-3.5-turbo',  #  Укажите нужную модель
-            messages=[
-                {'role': 'user', 'content': prompt}
-            ],
+        # Отправляется запрос к OpenAI API
+        response = openai.Completion.create(
+            engine='text-davinci-003',  # Указывается нужная модель
+            prompt=prompt,
             max_tokens=1000,
             n=1,
             stop=None,
             temperature=0.3
         )
-        # Извлекаем перевод из ответа API
-        translation = response.choices[0].message.content.strip()
+        # Извлекается перевод из ответа API
+        translation = response.choices[0].text.strip()
         return translation
+    except openai.error.OpenAIError as ex:
+        # Логируется ошибка
+        logger.error(f'Error during translation: {ex}')
+        return None
     except Exception as ex:
-        # Логируем ошибку
-        logger.error('Error during translation', exc_info=ex)
+        # Логируется общая ошибка
+        logger.error(f'Unexpected error during translation: {ex}')
         return None
 ```

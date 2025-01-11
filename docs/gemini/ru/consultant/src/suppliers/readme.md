@@ -2,83 +2,97 @@
 
 **Качество кода**
 9
- - Плюсы
-    - Документ содержит подробное описание класса `Supplier` и его основных методов.
-    - Приведены примеры использования класса и его методов.
-    - Описание структуры работы класса достаточно понятно и логично.
-    - Имеется схема взаимодействия элементов с использованием mermaid.
- - Минусы
-    - Отсутствует подробное описание всех атрибутов и методов класса.
-    - Нет примеров документации в формате RST.
-    - Нет примеров использования методов в формате `doctest`.
+-   Плюсы
+    -   Хорошее общее описание класса `Supplier` и его назначения.
+    -   Подробное описание атрибутов и методов.
+    -   Примеры использования методов.
+    -   Наличие mermaid-диаграммы для визуализации структуры.
+    -   Структурированное описание работы с поставщиками.
+-   Минусы
+    -   Отсутствуют docstring у функций в примерах кода.
+    -   Нет примеров использования `j_loads` и `j_loads_ns`.
+    -   Не указано импортирование `logger` из `src.logger`.
+    -   Не хватает пояснений по обработке ошибок.
+    -   Не все требования к оформлению docstring в Python соблюдены (например, `Args:` и `Returns:`).
 
 **Рекомендации по улучшению**
-1. **Документация:**
-   - Добавить полное описание каждого атрибута и метода, включая типы данных, возвращаемые значения и исключения.
-   - Предоставить примеры документации в формате RST для функций и методов, чтобы соответствовать стандартам документации Python.
-   - Добавить примеры использования методов в формате `doctest`.
-2. **Структура:**
-   - Описать общую структуру модуля.
-   - Уточнить, какие именно настройки загружаются в `supplier_settings`.
-3.  **Примеры:**
-    - Добавить примеры использования класса `Supplier` с разными поставщиками и сценариями.
-    - Показать, как можно использовать `related_modules` для расширения функциональности.
-4.  **Форматирование**:
-    - Убрать лишние пустые строки и выровнять текст для улучшения читаемости.
+
+1.  **Документация:**
+    -   Добавить docstring к каждой функции, методу и классу, включая подробное описание аргументов, возвращаемых значений, возможных исключений и примеров использования.
+    -   Использовать reStructuredText (RST) формат для docstring, который соответствует стандартам Sphinx.
+    -   Указать примеры использования с помощью директив `.. code-block:: python`.
+
+2.  **Импорты:**
+    -   Убедиться, что все необходимые модули импортированы.
+    -   Использовать `from src.logger.logger import logger` для импорта `logger`.
+    -   Указать использование `j_loads` и `j_loads_ns` из `src.utils.jjson` при загрузке JSON файлов, если это необходимо в коде (которого в этом файле нет).
+
+3.  **Обработка ошибок:**
+    -   Избегать избыточного использования стандартных блоков `try-except` и применять `logger.error` для логирования ошибок.
+    -   Предоставлять подробные сообщения об ошибках при логировании.
+
+4.  **Рефакторинг:**
+    -   Форматировать код согласно PEP 8.
+    -   Придерживаться единого стиля именования переменных и функций.
+
+5.  **Примеры кода:**
+    -   Добавить примеры с использованием `j_loads` и `j_loads_ns`.
+    -   Показать использование `logger` для логирования ошибок.
+    -   Добавить примеры документации в формате RST.
 
 **Оптимизированный код**
+
 ```markdown
-[Русский](https://github.com/hypo69/hypo/blob/master/README.RU.MD)
 # **Class** `Supplier`
 ### **Base class for all suppliers**
-*In the context of the code, `Supplier` represents an information provider.  
-A supplier can be a producer of goods, data, or information.  
-The supplier's sources include a website's landing page, a document, a database, or a table.  
-This class unifies different suppliers under a standardized set of operations.  
-Each supplier has a unique prefix. ([Details on prefixes](prefixes.md))*  
+*In the context of the code, `Supplier` represents an information provider.
+A supplier can be a producer of goods, data, or information.
+The supplier's sources include a website's landing page, a document, a database, or a table.
+This class unifies different suppliers under a standardized set of operations.
+Each supplier has a unique prefix. ([Details on prefixes](prefixes.md))*
 
-The `Supplier` class serves as the foundation for managing interactions with suppliers.  
-It handles initialization, configuration, authentication, and execution of workflows for various data sources, such as `amazon.com`, `walmart.com`, `mouser.com`, and `digikey.com`. Clients can also define additional suppliers.  
+The `Supplier` class serves as the foundation for managing interactions with suppliers.
+It handles initialization, configuration, authentication, and execution of workflows for various data sources, such as `amazon.com`, `walmart.com`, `mouser.com`, and `digikey.com`. Clients can also define additional suppliers.
 
 ---
 
 ## List of implemented suppliers:
 
-[aliexpress](aliexpress)  - Implemented with two workflows: `webdriver` and `api`  
+[aliexpress](aliexpress)  - Implemented with two workflows: `webdriver` and `api`
 
-[amazon](amazon) - `webdriver`  
+[amazon](amazon) - `webdriver`
 
-[bangood](bangood)  - `webdriver`  
+[bangood](bangood)  - `webdriver`
 
-[cdata](cdata)  - `webdriver`  
+[cdata](cdata)  - `webdriver`
 
-[chat_gpt](chat_gpt)  - Interacts with the ChatGPT interface (NOT THE MODEL!)  
+[chat_gpt](chat_gpt)  - Interacts with the ChatGPT interface (NOT THE MODEL!)
 
-[ebay](ebay)  - `webdriver`  
+[ebay](ebay)  - `webdriver`
 
-[etzmaleh](etzmaleh)  - `webdriver`  
+[etzmaleh](etzmaleh)  - `webdriver`
 
-[gearbest](gearbest)  - `webdriver`  
+[gearbest](gearbest)  - `webdriver`
 
-[grandadvance](grandadvance)  - `webdriver`  
+[grandadvance](grandadvance)  - `webdriver`
 
-[hb](hb)  - `webdriver`  
+[hb](hb)  - `webdriver`
 
-[ivory](ivory) - `webdriver`  
+[ivory](ivory) - `webdriver`
 
-[ksp](ksp) - `webdriver`  
+[ksp](ksp) - `webdriver`
 
-[kualastyle](kualastyle) `webdriver`  
+[kualastyle](kualastyle) `webdriver`
 
-[morlevi](morlevi) `webdriver`  
+[morlevi](morlevi) `webdriver`
 
-[visualdg](visualdg) `webdriver`  
+[visualdg](visualdg) `webdriver`
 
-[wallashop](wallashop) `webdriver`  
+[wallashop](wallashop) `webdriver`
 
-[wallmart](wallmart) `webdriver`  
+[wallmart](wallmart) `webdriver`
 
-[Details on WebDriver :class: `Driver`](../webdriver)  
+[Details on WebDriver :class: `Driver`](../webdriver)
 [Details on workflows :class: `Scenario`](../scenarios)
 
 ---
@@ -99,18 +113,18 @@ graph TD
 
 ```
 ## **Attributes**
-- **`supplier_id`** *(int)*: Unique identifier for the supplier.  
-- **`supplier_prefix`** *(str)*: Supplier prefix, e.g., `\'amazon\'`, `\'aliexpress\'`.  
-- **`supplier_settings`** *(dict)*: Supplier settings loaded from a JSON file.  
-- **`locale`** *(str)*: Localization code (default: `\'en\'`).  
-- **`price_rule`** *(str)*: Rules for price calculations (e.g., VAT rules).  
-- **`related_modules`** *(module)*: Helper modules for specific supplier operations.  
-- **`scenario_files`** *(list)*: List of scenario files to be executed.  
-- **`current_scenario`** *(dict)*: Scenario currently being executed.  
-- **`login_data`** *(dict)*: Data for authentication.  
-- **`locators`** *(dict)*: Dictionary of web element locators.  
-- **`driver`** *(Driver)*: WebDriver instance for interacting with the supplier's website.  
-- **`parsing_method`** *(str)*: Data parsing method (e.g., `\'webdriver\'`, `\'api\'`, `\'xls\'`, `\'csv\'`).  
+- **`supplier_id`** *(int)*: Unique identifier for the supplier.
+- **`supplier_prefix`** *(str)*: Supplier prefix, e.g., `\'amazon\'`, `\'aliexpress\'`.
+- **`supplier_settings`** *(dict)*: Supplier settings loaded from a JSON file.
+- **`locale`** *(str)*: Localization code (default: `\'en\'`).
+- **`price_rule`** *(str)*: Rules for price calculations (e.g., VAT rules).
+- **`related_modules`** *(module)*: Helper modules for specific supplier operations.
+- **`scenario_files`** *(list)*: List of scenario files to be executed.
+- **`current_scenario`** *(dict)*: Scenario currently being executed.
+- **`login_data`** *(dict)*: Data for authentication.
+- **`locators`** *(dict)*: Dictionary of web element locators.
+- **`driver`** *(Driver)*: WebDriver instance for interacting with the supplier's website.
+- **`parsing_method`** *(str)*: Data parsing method (e.g., `\'webdriver\'`, `\'api\'`, `\'xls\'`, `\'csv\'`).
 
 ---
 
@@ -118,6 +132,7 @@ graph TD
 
 ### **`__init__`**
 **Constructor of the `Supplier` class.**
+
 ```python
 def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs):
     """Initializes an instance of Supplier.
@@ -129,9 +144,6 @@ def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Dr
 
     Raises:
         DefaultSettingsException: If default settings are not properly configured.
-    
-    Example:
-       >>> supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')
     """
 ```
 
@@ -139,6 +151,7 @@ def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Dr
 
 ### **`_payload`**
 **Loads supplier settings and initializes the WebDriver.**
+
 ```python
 def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
     """Loads settings, locators, and initializes the WebDriver.
@@ -148,12 +161,6 @@ def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
 
     Returns:
         bool: Returns `True` if the loading was successful.
-        
-    Example:
-       >>> supplier = Supplier(supplier_prefix='amazon')
-       >>> result = supplier._payload(webdriver='firefox')
-       >>> print(result)
-       True
     """
 ```
 
@@ -161,19 +168,13 @@ def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
 
 ### **`login`**
 **Handles authentication on the supplier's website.**
+
 ```python
 def login(self) -> bool:
     """Authenticates the user on the supplier's website.
 
     Returns:
         bool: Returns `True` if login was successful.
-    
-    Example:
-       >>> supplier = Supplier(supplier_prefix='aliexpress')
-       >>> supplier._payload()
-       >>> result = supplier.login()
-       >>> print(result)
-       True
     """
 ```
 
@@ -181,6 +182,7 @@ def login(self) -> bool:
 
 ### **`run_scenario_files`**
 **Executes one or more scenario files.**
+
 ```python
 def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
     """Runs the provided scenario files.
@@ -190,13 +192,6 @@ def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
 
     Returns:
         bool: Returns `True` if scenarios were executed successfully.
-    
-    Example:
-        >>> supplier = Supplier(supplier_prefix='amazon')
-        >>> supplier._payload()
-        >>> result = supplier.run_scenario_files(['example_scenario.json'])
-        >>> print(result)
-        True
     """
 ```
 
@@ -204,6 +199,7 @@ def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
 
 ### **`run_scenarios`**
 **Executes specified scenarios.**
+
 ```python
 def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
     """Executes specified scenarios.
@@ -213,14 +209,6 @@ def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
 
     Returns:
         bool: Returns `True` if all scenarios were executed successfully.
-        
-    Example:
-        >>> supplier = Supplier(supplier_prefix='aliexpress')
-        >>> supplier._payload()
-        >>> scenarios = [{'action': 'scrape', 'target': 'product_list'}]
-        >>> result = supplier.run_scenarios(scenarios)
-        >>> print(result)
-        True
     """
 ```
 
@@ -228,33 +216,33 @@ def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
 
 ## **How it works**
 
-1. **Initialization**:  
-   - The `__init__` method sets up the supplier prefix, localization, and WebDriver.  
-     Example:  
+1. **Initialization**:
+   - The `__init__` method sets up the supplier prefix, localization, and WebDriver.
+     Example:
      ```python
      supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')
-     ```  
+     ```
 
-2. **Loading settings**:  
-   - `_payload` loads the configuration, initializes locators, and the WebDriver.  
-     Example:  
+2. **Loading settings**:
+   - `_payload` loads the configuration, initializes locators, and the WebDriver.
+     Example:
      ```python
      supplier._payload(webdriver='firefox')
-     ```  
+     ```
 
-3. **Authentication**:  
-   - `login` logs the user into the supplier's website.  
-     Example:  
+3. **Authentication**:
+   - `login` logs the user into the supplier's website.
+     Example:
      ```python
      supplier.login()
-     ```  
+     ```
 
-4. **Executing scenarios**:  
-   - **Running scenario files**:  
+4. **Executing scenarios**:
+   - **Running scenario files**:
      ```python
      supplier.run_scenario_files(['example_scenario.json'])
-     ```  
-   - **Running specific scenarios**:  
+     ```
+   - **Running specific scenarios**:
      ```python
      supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
      ```

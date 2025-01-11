@@ -1,175 +1,188 @@
 # Анализ кода модуля `src.webdriver.playwright`
 
-**Качество кода**
-9
--  Плюсы
-    -   Хорошая и понятная структура документации.
-    -   Подробное описание конфигурации и параметров.
-    -   Указаны основные зависимости и инструкции по установке.
-    -   Документ включает примеры использования и конфигурации.
-    -   Присутствует описание логирования и отладки.
--  Минусы
-    -   Документ не соответствует формату reStructuredText (RST).
-    -   Нет четкого разделения на секции с помощью заголовков RST.
-    -   Отсутствует документация по коду в стиле docstring.
+**Качество кода: 7/10**
+
+*   **Плюсы:**
+    *   Хорошая общая структура документации.
+    *   Подробное описание конфигурационных параметров и их значений.
+    *   Ясные инструкции по установке и использованию модуля.
+    *   Предоставлены примеры конфигурации и использования.
+*   **Минусы:**
+    *   Не хватает подробного описания `Playwrid` класса и его методов в формате RST.
+    *   Отсутствует информация о том, как обрабатываются ошибки при запуске браузера.
+    *   Нет примеров обработки конкретных ошибок в коде, что затрудняет отладку.
+    *   Слишком мало деталей о том, как передавать дополнительные параметры Playwright при инициализации.
 
 **Рекомендации по улучшению**
 
-1.  **Форматирование RST:**
-    -   Переформатировать весь документ в соответствии с синтаксисом reStructuredText (RST).
-    -   Использовать заголовки RST для разделения секций (например, `====` для главных заголовков, `----` для второстепенных и т.д.).
-    -   Применять директивы RST для code-block, ссылок и других элементов.
-    -   Добавить описание модуля в начале файла в формате docstring.
-    -   Описать каждую функцию и класс в формате docstring.
-2.  **Улучшение документации:**
-    -   Переписать описание конфигурационных полей в виде списка с использованием RST.
-    -   Переписать примеры кода с использованием `.. code-block:: python`.
-    -   Добавить ссылки на внешние ресурсы, где это необходимо.
-3.  **Соответствие требованиям:**
-    -   Проверить и добавить недостающие импорты в код, если это необходимо.
-    -   Убедиться, что все комментарии соответствуют формату RST и включают подробные описания.
-    -   Избегать использования try-except, вместо этого использовать logger.error.
-    -   Убедиться, что все функции, методы и переменные соответствуют стилю именования, ранее используемого.
+1.  **Документация RST**:
+    *   Добавить подробное описание класса `Playwrid` и его методов в формате RST (с использованием `.. class::` и `.. method::`).
+    *   Включить примеры документации RST для функций.
+    *   Указать, как использовать класс `Playwrid` для решения конкретных задач (например, сбор данных).
+2.  **Обработка ошибок**:
+    *   Описать, как обрабатываются ошибки в процессе инициализации и работы с браузером (например, `try-except` блоки).
+    *   Добавить примеры того, как логировать различные типы ошибок (например, ошибки конфигурации, ошибки запуска браузера).
+3.  **Конфигурация**:
+    *   Разъяснить, как применять пользовательские настройки и дополнительные опции при инициализации `Playwright`.
+    *   Указать, как обновлять конфигурацию в процессе работы, если это необходимо.
+4.  **Примеры использования**:
+    *   Предоставить более разнообразные примеры использования, включая случаи с разными конфигурациями и задачами.
+    *   Добавить примеры того, как обрабатывать возвращаемые значения при навигации и взаимодействии с веб-страницами.
+5.  **Логирование**:
+    *   Указать, какие типы событий будут логироваться и на каком уровне (DEBUG, INFO, WARNING, ERROR).
+6.  **Обновление зависимостей**:
+    *   Сделать акцент на необходимости использования актуальных версий `playwright` и `crawlee`.
+7.  **Безопасность**:
+    *   Дать рекомендации по безопасному использованию параметров, особенно `--no-sandbox` и `--disable-gpu`.
 
 **Оптимизированный код**
+
 ```markdown
 .. module:: src.webdriver.playwright
 
-==================================================
-Playwright Crawler Module for Browser Automation
-==================================================
+# Playwright Crawler Module for Browser Automation
 
-Этот модуль предоставляет пользовательскую реализацию :class:`Playwrid` используя библиотеку Playwright.
-Он позволяет настроить параметры запуска браузера, такие как user-agent, настройки прокси, размер области просмотра и другие параметры,
-определенные в файле ``playwrid.json``.
+This module provides a custom implementation of `Playwrid` using the Playwright library. It allows you to configure browser launch parameters such as user-agent, proxy settings, viewport size, and other options defined in the `playwrid.json` file.
 
-Основные характеристики
---------------------
-- **Централизованная конфигурация**: Управление конфигурацией осуществляется через файл ``playwrid.json``.
-- **Поддержка пользовательских параметров**: Возможность передачи пользовательских параметров при инициализации.
-- **Улучшенное протоколирование и обработка ошибок**: Предоставляет подробные журналы для инициализации, проблем конфигурации и ошибок WebDriver.
-- **Поддержка прокси**: Настройка прокси-серверов для обхода ограничений.
-- **Гибкие настройки браузера**: Настройка размера области просмотра, user-agent и других параметров браузера.
+## Key Features
 
-Требования
-----------
-Перед использованием этого модуля убедитесь, что установлены следующие зависимости:
+- **Centralized Configuration**: Configuration is managed via the `playwrid.json` file.
+- **Custom Options Support**: Ability to pass custom options during initialization.
+- **Enhanced Logging and Error Handling**: Provides detailed logs for initialization, configuration issues, and WebDriver errors.
+- **Proxy Support**: Configure proxy servers to bypass restrictions.
+- **Flexible Browser Settings**: Customize viewport size, user-agent, and other browser parameters.
+
+## Requirements
+
+Before using this module, ensure the following dependencies are installed:
 
 - Python 3.x
 - Playwright
 - Crawlee
 
-Установите необходимые зависимости Python:
+Install the required Python dependencies:
 
-.. code-block:: bash
+```bash
+pip install playwright crawlee
+```
 
-    pip install playwright crawlee
+Additionally, ensure that Playwright is installed and configured to work with the browser. Install the browsers using the command:
 
-Кроме того, убедитесь, что Playwright установлен и настроен для работы с браузером. Установите браузеры с помощью команды:
+```bash
+playwright install
+```
 
-.. code-block:: bash
+## Configuration
 
-    playwright install
+The configuration for the Playwright Crawler is stored in the `playwrid.json` file. Below is an example structure of the configuration file and its description:
 
-Конфигурация
-------------
-Конфигурация для Playwright Crawler хранится в файле ``playwrid.json``. Ниже приведена примерная структура файла конфигурации и ее описание:
+### Example Configuration (`playwrid.json`)
 
-Пример конфигурации (``playwrid.json``)
-------------------------------------
-.. code-block:: json
+```json
+{
+  "browser_type": "chromium",
+  "headless": true,
+  "options": [
+    "--disable-dev-shm-usage",
+    "--no-sandbox",
+    "--disable-gpu"
+  ],
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+  "proxy": {
+    "enabled": false,
+    "server": "http://proxy.example.com:8080",
+    "username": "user",
+    "password": "password"
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "timeout": 30000,
+  "ignore_https_errors": false
+}
+```
 
-    {
-      "browser_type": "chromium",
-      "headless": true,
-      "options": [
-        "--disable-dev-shm-usage",
-        "--no-sandbox",
-        "--disable-gpu"
-      ],
-      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
-      "proxy": {
-        "enabled": false,
-        "server": "http://proxy.example.com:8080",
-        "username": "user",
-        "password": "password"
-      },
-      "viewport": {
-        "width": 1280,
-        "height": 720
-      },
-      "timeout": 30000,
-      "ignore_https_errors": false
-    }
+### Configuration Fields Description
 
-Описание полей конфигурации
----------------------------
-1. ``browser_type``
-   Тип используемого браузера. Возможные значения:
+#### 1. `browser_type`
 
-    - ``chromium`` (по умолчанию)
-    - ``firefox``
-    - ``webkit``
+The type of browser to be used. Possible values:
 
-2. ``headless``
-   Логическое значение, указывающее, должен ли браузер работать в режиме без графического интерфейса. По умолчанию ``true``.
+- `chromium` (default)
+- `firefox`
+- `webkit`
 
-3. ``options``
-   Список аргументов командной строки, передаваемых браузеру. Примеры:
+#### 2. `headless`
 
-    - ``--disable-dev-shm-usage``: Отключает использование ``/dev/shm`` в Docker контейнерах.
-    - ``--no-sandbox``: Отключает режим песочницы.
-    - ``--disable-gpu``: Отключает аппаратное ускорение GPU.
+A boolean value indicating whether the browser should run in headless mode. Default is `true`.
 
-4. ``user_agent``
-   Строка user-agent, используемая для запросов браузера.
+#### 3. `options`
 
-5. ``proxy``
-   Настройки прокси-сервера:
+A list of command-line arguments passed to the browser. Examples:
 
-    - ``enabled``: Логическое значение, указывающее, следует ли использовать прокси.
-    - ``server``: Адрес прокси-сервера.
-    - ``username``: Имя пользователя для аутентификации прокси.
-    - ``password``: Пароль для аутентификации прокси.
+- `--disable-dev-shm-usage`: Disables the use of `/dev/shm` in Docker containers.
+- `--no-sandbox`: Disables the sandbox mode. **Use with caution!**
+- `--disable-gpu`: Disables GPU hardware acceleration.
 
-6. ``viewport``
-   Размеры окна браузера:
+#### 4. `user_agent`
 
-    - ``width``: Ширина окна.
-    - ``height``: Высота окна.
+The user-agent string to be used for browser requests.
 
-7. ``timeout``
-   Максимальное время ожидания операций (в миллисекундах). По умолчанию ``30000`` (30 секунд).
+#### 5. `proxy`
 
-8. ``ignore_https_errors``
-   Логическое значение, указывающее, следует ли игнорировать ошибки HTTPS. По умолчанию ``false``.
+Proxy server settings:
 
-Использование
-------------
-Чтобы использовать :class:`Playwrid` в своем проекте, просто импортируйте и инициализируйте его:
+- **enabled**: A boolean value indicating whether to use a proxy.
+- **server**: The address of the proxy server.
+- **username**: The username for proxy authentication.
+- **password**: The password for proxy authentication.
 
-.. code-block:: python
+#### 6. `viewport`
 
-    from src.webdriver.playwright import Playwrid
+The dimensions of the browser window:
 
-    # Инициализация Playwright Crawler с пользовательскими параметрами
-    browser = Playwrid(options=["--headless"])
+- **width**: The width of the window.
+- **height**: The height of the window.
 
-    # Запуск браузера и переход на веб-сайт
-    browser.start("https://www.example.com")
+#### 7. `timeout`
 
-Класс :class:`Playwrid` автоматически загружает настройки из файла ``playwrid.json`` и использует их для настройки WebDriver. Вы также можете указать пользовательский user-agent и передать дополнительные параметры при инициализации WebDriver.
+The maximum waiting time for operations (in milliseconds). Default is `30000` (30 seconds).
 
-Протоколирование и отладка
--------------------------
-Класс WebDriver использует ``logger`` из ``src.logger`` для протоколирования ошибок, предупреждений и общей информации. Все проблемы, возникшие в процессе инициализации, конфигурации или выполнения, будут зарегистрированы для легкой отладки.
+#### 8. `ignore_https_errors`
 
-Примеры журналов
-----------------
-- **Ошибка при инициализации WebDriver**: ``Error initializing Playwright Crawler: <детали ошибки>``
-- **Проблемы конфигурации**: ``Error in playwrid.json file: <детали проблемы>``
+A boolean value indicating whether to ignore HTTPS errors. Default is `false`.
 
-Лицензия
---------
-Этот проект распространяется под лицензией MIT. См. файл `LICENSE` для получения подробной информации.
+## Usage
+
+To use `Playwrid` in your project, simply import and initialize it:
+
+```python
+from src.webdriver.playwright import Playwrid
+
+# Initialize Playwright Crawler with custom options
+browser = Playwrid(options=["--headless"])
+
+# Start the browser and navigate to a website
+browser.start("https://www.example.com")
+```
+
+The `Playwrid` class automatically loads settings from the `playwrid.json` file and uses them to configure the WebDriver. You can also specify a custom user-agent and pass additional options during WebDriver initialization.
+
+## Logging and Debugging
+
+The `Playwrid` class uses the `logger` from `src.logger` to log errors, warnings, and general information. All issues encountered during initialization, configuration, or execution will be logged for easy debugging.
+
+### Example Logs
+
+- **Error during WebDriver initialization**: `Error initializing Playwright Crawler: <error details>`
+- **Configuration issues**: `Error in playwrid.json file: <issue details>`
+- **Browser Launch Error**: `Error launching browser: <error details>`
+- **Navigation Error**: `Error during navigation to URL <url>: <error details>`
+- **Timeout Error**: `Timeout error during page loading for URL <url>: <error details>`
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](../../LICENSE) file for details.
+
 ```

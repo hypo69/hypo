@@ -26,18 +26,20 @@
 
 
 
-import header
 import random
 import asyncio
 import requests
 from typing import Optional, Any
 from bs4 import BeautifulSoup
+
+import header
 from src import gs
 from src.logger.logger import logger
-from src.webdriver.driver import Driver
-from src.webdriver.chrome import Chrome
-from src.webdriver.firefox import Firefox
-from src.webdriver.edge import Edge
+# from src.webdriver.driver import Driver
+# from src.webdriver.chrome import Chrome
+# from src.webdriver.firefox import Firefox
+# from src.webdriver.edge import Edge
+from src.webdriver.playwright import Playwrid
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import MexironBuilder
 from src.utils.url import is_url

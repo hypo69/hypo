@@ -1,191 +1,194 @@
-## Анализ кода `test_utils.py`
+## ИНСТРУКЦИЯ:
 
-### 1. <алгоритм>
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
 
-**`test_extract_json`**
-1.  **Вход**: Строка `text`, содержащая JSON-подобный текст.
-2.  **Извлечение JSON**: Функция `extract_json` пытается извлечь JSON объект из строки `text`.
-    *   Пример 1:  `text` = `'Some text before {"key": "value"} some text after'`. Ожидается `{"key": "value"}`.
-    *   Пример 2:  `text` = `'Some text before [{"key": "value"}, {"key2": "value2"}] some text after'`. Ожидается `[{"key": "value"}, {"key2": "value2"}]`.
-    *   Пример 3:  `text` = `'Some text before {"key": "\\\'value\\\'"} some text after'`. Ожидается `{"key": "'value'"}`.
-    *   Пример 4: `text` = `'Some text before {"key": "value",} some text after'`. Ожидается `{}`.
-    *   Пример 5: `text` = `'Some text with no JSON'`. Ожидается `{}`.
-3.  **Проверка результата**: `assert` проверяет, что результат соответствует ожидаемому значению.
-4. **Выход**: Функция выполняет проверку с помощью `assert`, вывод зависит от результатов тестов.
+1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
+    которые импортируются при создании диаграммы. 
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
+    
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```
 
-**`test_name_or_empty`**
-1.  **Вход**: Объект `entity` (экземпляр `MockEntity` или `None`).
-2.  **Получение имени**: Функция `name_or_empty` пытается получить атрибут `name` из `entity`.
-    *   Пример 1: `entity` - экземпляр `MockEntity` c `name` = `"Test"`. Ожидается `"Test"`.
-    *   Пример 2: `entity` = `None`. Ожидается `""`.
-3.  **Проверка результата**: `assert` проверяет, что результат соответствует ожидаемому значению.
-4. **Выход**: Функция выполняет проверку с помощью `assert`, вывод зависит от результатов тестов.
+3. **<объяснение>**: Предоставьте подробные объяснения:  
+   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
+   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
+   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
+   - **Переменные**: Их типы и использование.  
+   - Выделите потенциальные ошибки или области для улучшения.  
 
-**`test_repeat_on_error`**
-1.  **Вход**: Параметры декоратора `@repeat_on_error` (`retries` - количество попыток, `exceptions` - список обрабатываемых исключений) и функция `decorated_function`.
-2.  **Декорирование функции**: Функция `decorated_function` декорируется декоратором `repeat_on_error`, который обеспечивает повторное выполнение функции в случае возникновения исключения.
-3.  **Выполнение функции**: `decorated_function` выполняется.
-    *   Пример 1: `dummy_function` вызывает `DummyException` (включен в список исключений). `decorated_function` выполняется `retries` раз.
-    *   Пример 2: `dummy_function` не вызывает исключения. `decorated_function` выполняется один раз.
-    *   Пример 3: `dummy_function` вызывает `RuntimeError` (не включен в список исключений). `decorated_function` выполняется один раз и вызывает ошибку.
-4.  **Проверка результата**: `assert` проверяет количество вызовов `dummy_function` и, если необходимо, проверяет исключение, которое будет вызвано.
-5. **Выход**: Функция выполняет проверку с помощью `assert`, вывод зависит от результатов тестов.
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
 
-### 2. <mermaid>
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+```markdown
+## <алгоритм>
+
+### `test_extract_json`
+1. **Ввод**: Строка `text`, содержащая JSON (или не содержащая).
+2. **Вызов** `extract_json(text)`
+3. **Внутри `extract_json`**:
+    - Поиск JSON объекта в `text`.
+    - Если JSON найден:
+        - Пытаемся его распарсить.
+        - Если парсинг успешен, возвращаем JSON объект.
+        - Если парсинг не успешен (например, некорректный JSON), возвращаем пустой словарь.
+    - Если JSON не найден, возвращаем пустой словарь.
+4. **Вывод**: JSON объект (словарь или список) или пустой словарь.
+5. **Примеры**:
+   - Ввод: `'Some text before {"key": "value"} some text after'`  -> Вывод: `{"key": "value"}`
+   - Ввод: `'Some text before [{"key": "value"}, {"key2": "value2"}] some text after'`  -> Вывод: `[{"key": "value"}, {"key2": "value2"}]`
+   - Ввод: `'Some text before {"key": "\'value\'"} some text after'`  -> Вывод: `{"key": "'value'"}`
+   - Ввод: `'Some text before {"key": "value",} some text after'`  -> Вывод: `{}`
+   - Ввод: `'Some text with no JSON'`  -> Вывод: `{}`
+
+### `test_name_or_empty`
+1. **Ввод**: Объект `entity` (или `None`).
+2. **Вызов** `name_or_empty(entity)`
+3. **Внутри `name_or_empty`**:
+   - Проверяем, является ли `entity` экземпляром класса `MockEntity` или `None`.
+   - Если `entity` не `None` и имеет атрибут `name`, возвращаем значение `entity.name`.
+   - Иначе возвращаем пустую строку `""`.
+4. **Вывод**: Имя объекта (строка) или пустая строка.
+5. **Примеры**:
+   - Ввод: Объект `MockEntity` с именем `"Test"` -> Вывод: `"Test"`
+   - Ввод: `None` -> Вывод: `""`
+
+### `test_repeat_on_error`
+1. **Ввод**: Функция `decorated_function`, количество повторных попыток `retries`, список допустимых исключений `exceptions`.
+2. **Вызов**: `decorated_function()` (вызывается после применения декоратора `repeat_on_error`).
+3. **Внутри `repeat_on_error`**:
+    - Декоратор оборачивает `decorated_function` и обрабатывает исключения.
+    - Цикл повторных попыток (максимум `retries` раз).
+    - Внутри цикла вызываем `decorated_function`.
+    - Если возникает исключение из списка `exceptions`, повторяем попытку.
+    - Если возникло исключение не из `exceptions` или превышено количество `retries`, выкидываем исключение.
+    - Если функция отработала без ошибок, выходим из цикла.
+4. **Вывод**: Возвращает результат функции, если она отработала успешно. Если количество `retries` исчерпано, или функция вернула исключение, которое не входит в `exceptions`, то выкидывается исключение.
+5. **Примеры**:
+   - Ввод: `retries=3`, `exceptions=[DummyException]`, `dummy_function` выкидывает `DummyException` 3 раза -> `dummy_function` вызывается 3 раза, выкидывается `DummyException`.
+   - Ввод: `retries=3`, `exceptions=[DummyException]`, `dummy_function` не выкидывает исключение -> `dummy_function` вызывается 1 раз.
+   - Ввод: `retries=3`, `exceptions=[DummyException]`, `dummy_function` выкидывает `RuntimeError` -> `dummy_function` вызывается 1 раз, выкидывается `RuntimeError`.
+
+## <mermaid>
 
 ```mermaid
 flowchart TD
     subgraph test_extract_json
-        Start_extract_json[Start]
-        Input_text_1["text = '...{\"key\": \"value\"}...'"]
-        Call_extract_json_1[result = extract_json(text)]
-        Assert_result_1[assert result == {"key": "value"}]
-        Input_text_2["text = '...[{\"key\": \"value\"}, {\"key2\": \"value2\"}]...'"]
-         Call_extract_json_2[result = extract_json(text)]
-        Assert_result_2[assert result == [{"key": "value"}, {"key2": "value2"}]]
-        Input_text_3["text = '...{\"key\": \"\\\\\'value\\\\\'\"}...'"]
-         Call_extract_json_3[result = extract_json(text)]
-        Assert_result_3[assert result == {"key": "'value'"}]
-        Input_text_4["text = '...{\"key\": \"value\",}...'"]
-         Call_extract_json_4[result = extract_json(text)]
-        Assert_result_4[assert result == {}]
-         Input_text_5["text = '...no JSON...'"]
-         Call_extract_json_5[result = extract_json(text)]
-        Assert_result_5[assert result == {}]
-        End_extract_json[End]
-
-        Start_extract_json --> Input_text_1
-        Input_text_1 --> Call_extract_json_1
-        Call_extract_json_1 --> Assert_result_1
-        Assert_result_1 --> Input_text_2
-        Input_text_2 --> Call_extract_json_2
-        Call_extract_json_2 --> Assert_result_2
-        Assert_result_2 --> Input_text_3
-        Input_text_3 --> Call_extract_json_3
-         Call_extract_json_3 --> Assert_result_3
-         Assert_result_3 --> Input_text_4
-        Input_text_4 --> Call_extract_json_4
-        Call_extract_json_4 --> Assert_result_4
-        Assert_result_4 --> Input_text_5
-        Input_text_5 --> Call_extract_json_5
-         Call_extract_json_5 --> Assert_result_5
-          Assert_result_5 --> End_extract_json
+        A[Start: `test_extract_json()`] --> B{Has JSON in Text?};
+        B -- Yes --> C[Parse JSON];
+        C -- Success --> D[Return JSON];
+        C -- Fail --> E[Return Empty Dict];
+        B -- No --> E;
+        D --> F[End: Return JSON];
+        E --> F;
     end
-
+    
     subgraph test_name_or_empty
-        Start_name_or_empty[Start]
-        Create_MockEntity["entity = MockEntity('Test')"]
-        Call_name_or_empty_1[result = name_or_empty(entity)]
-        Assert_result_name_1[assert result == "Test"]
-        Set_entity_None["entity = None"]
-         Call_name_or_empty_2[result = name_or_empty(entity)]
-        Assert_result_name_2[assert result == ""]
-        End_name_or_empty[End]
-
-        Start_name_or_empty --> Create_MockEntity
-        Create_MockEntity --> Call_name_or_empty_1
-        Call_name_or_empty_1 --> Assert_result_name_1
-        Assert_result_name_1 --> Set_entity_None
-         Set_entity_None --> Call_name_or_empty_2
-        Call_name_or_empty_2 --> Assert_result_name_2
-         Assert_result_name_2 --> End_name_or_empty
+       G[Start: `test_name_or_empty()`] --> H{Is Entity None?};
+       H -- No --> I{Has Entity Attribute 'name'?};
+       I -- Yes --> J[Return Entity.name];
+       I -- No --> K[Return Empty String];
+       H -- Yes --> K;
+       J --> L[End: Return Name or Empty String];
+       K --> L;
     end
 
     subgraph test_repeat_on_error
-        Start_repeat_on_error[Start]
-        Set_retries_3["retries = 3"]
-        Create_MagicMock_error["dummy_function = MagicMock(side_effect=DummyException())"]
-        Call_repeat_on_error_with_error["@repeat_on_error(retries=retries, exceptions=[DummyException]) decorated_function()"]
-        Assert_call_count_error["assert dummy_function.call_count == retries"]
-        Set_retries_3_no_error["retries = 3"]
-        Create_MagicMock_no_error["dummy_function = MagicMock()"]
-        Call_repeat_on_error_no_error["@repeat_on_error(retries=retries, exceptions=[DummyException]) decorated_function()"]
-         Assert_call_count_no_error["assert dummy_function.call_count == 1"]
-        Set_retries_3_runtime_error["retries = 3"]
-         Create_MagicMock_runtime_error["dummy_function = MagicMock(side_effect=RuntimeError())"]
-         Call_repeat_on_error_runtime_error["@repeat_on_error(retries=retries, exceptions=[DummyException]) decorated_function()"]
-        Assert_call_count_runtime_error["assert dummy_function.call_count == 1"]
-        End_repeat_on_error[End]
-
-        Start_repeat_on_error --> Set_retries_3
-        Set_retries_3 --> Create_MagicMock_error
-        Create_MagicMock_error --> Call_repeat_on_error_with_error
-        Call_repeat_on_error_with_error --> Assert_call_count_error
-        Assert_call_count_error --> Set_retries_3_no_error
-        Set_retries_3_no_error --> Create_MagicMock_no_error
-        Create_MagicMock_no_error --> Call_repeat_on_error_no_error
-        Call_repeat_on_error_no_error --> Assert_call_count_no_error
-         Assert_call_count_no_error --> Set_retries_3_runtime_error
-          Set_retries_3_runtime_error --> Create_MagicMock_runtime_error
-         Create_MagicMock_runtime_error --> Call_repeat_on_error_runtime_error
-        Call_repeat_on_error_runtime_error --> Assert_call_count_runtime_error
-        Assert_call_count_runtime_error --> End_repeat_on_error
+        M[Start: `test_repeat_on_error()`] --> N[Call `decorated_function`];
+        N --> O{Exception Occurred?};
+        O -- Yes --> P{Exception in Allowed List?};
+        P -- Yes --> Q{Retries Exhausted?};
+        Q -- No --> N;
+        Q -- Yes --> R[Raise Exception];
+        P -- No --> R;
+        O -- No --> S[End: Return result];
+        R --> S;
     end
+
+    test_extract_json --> test_name_or_empty
+    test_name_or_empty --> test_repeat_on_error
 ```
 
-**Зависимости:**
+**Объяснение `mermaid`:**
 
-*   **`pytest`**: Используется для написания и запуска тестов.
-*   **`unittest.mock.MagicMock`**: Используется для создания фиктивных объектов, позволяющих имитировать поведение других компонентов.
-*  **`sys`**:  Используется для изменения путей поиска модулей (добавление директорий для импорта).
-*   **`tinytroupe.utils`**:  Содержит функции `name_or_empty`, `extract_json` и `repeat_on_error`, которые тестируются в этом файле.
-*   **`testing_utils`**: Содержит вспомогательные функции для тестов.
+- Диаграмма состоит из трех подграфов, соответствующих трем тестовым функциям: `test_extract_json`, `test_name_or_empty` и `test_repeat_on_error`.
+- В каждом подграфе показан поток выполнения тестовых функций.
+- **`test_extract_json`**: Начинается с проверки наличия JSON в тексте. Если JSON найден, то выполняется попытка его парсинга. В зависимости от результата парсинга, возвращается либо распарсенный JSON, либо пустой словарь. Если JSON не найден, возвращается пустой словарь.
+- **`test_name_or_empty`**: Проверяет, является ли переданный объект `None`. Если нет, то проверяется наличие атрибута `name`. Если атрибут есть, то его значение возвращается, иначе возвращается пустая строка. Если объект является `None`, то сразу возвращается пустая строка.
+- **`test_repeat_on_error`**: Вызывает декорированную функцию. Если возникает исключение, то проверяется, находится ли оно в списке разрешенных исключений. Если да, то проверяется, исчерпаны ли попытки повторения. Если попытки исчерпаны или исключение не в списке разрешенных, исключение перебрасывается. В случае успешного выполнения функции возвращается ее результат.
+- Направления стрелок указывают поток управления внутри каждой функции.
+- Существует связь между блоками: `test_extract_json` --> `test_name_or_empty` --> `test_repeat_on_error`, показывающая логическую последовательность тестовых функций.
 
-### 3. <объяснение>
+## <объяснение>
 
-**Импорты:**
+### Импорты
 
-*   `import pytest`: Импортирует библиотеку `pytest`, которая является фреймворком для тестирования. Она предоставляет инструменты для написания и выполнения тестовых функций, а также обеспечивает удобный способ проверки результатов.
-*   `from unittest.mock import MagicMock`: Импортирует класс `MagicMock` из модуля `unittest.mock`. `MagicMock` позволяет создавать мок-объекты (заглушки), которые имитируют поведение других объектов. Это полезно для тестирования, когда нужно изолировать тестируемый код от зависимостей.
-*   `import sys`: Импортирует модуль `sys`, который предоставляет доступ к некоторым переменным и функциям, взаимодействующим с интерпретатором Python. В данном случае, `sys.path.append()` используется для добавления путей к каталогам в список путей поиска модулей, что позволяет импортировать модули из указанных каталогов.
-*   `from tinytroupe.utils import name_or_empty, extract_json, repeat_on_error`: Импортирует три функции из модуля `utils` пакета `tinytroupe`.
-    *   `name_or_empty`: Функция, предназначенная для извлечения имени из объекта или возврата пустой строки, если объект равен `None`.
-    *   `extract_json`: Функция для извлечения JSON-объекта из строки.
-    *  `repeat_on_error`: Декоратор для повторного выполнения функции в случае возникновения определенных исключений.
-*   `from testing_utils import *`: Импортирует все имена из модуля `testing_utils`. Это может содержать вспомогательные функции или классы, используемые в тестах.
+-   `pytest`: Используется для написания и запуска тестов.
+-   `unittest.mock.MagicMock`: Используется для создания мок-объектов, которые могут эмулировать поведение других объектов в тестах.
+-   `sys`: Используется для добавления путей к модулям в `sys.path`, чтобы импортировать модули из других директорий. В данном случае добавляются пути `../../tinytroupe/`, `../../` и `..`, что позволяет импортировать `tinytroupe.utils` и `testing_utils`
+-   `tinytroupe.utils`: Содержит функции `name_or_empty`, `extract_json`, и `repeat_on_error`, которые тестируются.
+-   `testing_utils`: Содержит дополнительные утилиты, используемые в тестах.
 
-**Функции:**
+### Классы
 
-*   `test_extract_json()`: Тестовая функция, которая проверяет корректность работы функции `extract_json`.
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет.
-    *   **Назначение**: Проверяет различные сценарии извлечения JSON из текста, включая случаи с корректным JSON, массивом JSON, экранированными символами, некорректным JSON и отсутствием JSON.
-*   `test_name_or_empty()`: Тестовая функция, которая проверяет корректность работы функции `name_or_empty`.
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет.
-    *   **Назначение**: Проверяет, что функция возвращает имя объекта, если оно существует, или пустую строку, если объект `None`.
-    *   Использует внутренний класс `MockEntity` для создания мок-объекта с атрибутом `name`.
-*   `test_repeat_on_error()`: Тестовая функция, которая проверяет корректность работы декоратора `repeat_on_error`.
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет.
-    *   **Назначение**: Проверяет, что декоратор повторяет вызов функции в случае возникновения исключения, указанного в списке `exceptions`.
-        *   Создает класс-исключение `DummyException` для тестов.
-        *   Использует `MagicMock` для создания фиктивной функции `dummy_function`.
-        *   Проверяет, что функция вызывается заданное количество раз при возникновении исключения.
-        *   Проверяет, что функция вызывается только один раз, если исключение не возникает.
-        *   Проверяет, что исключение выбрасывается, если оно не включено в список `exceptions`.
+-   `MockEntity`: Вспомогательный класс, используемый для тестирования `name_or_empty`. Имеет атрибут `name`.
+    
+- `DummyException`: Вспомогательный класс исключения, используемый для тестирования `repeat_on_error`.
 
-**Переменные:**
+### Функции
 
-*   `text`: Строка, содержащая текст с JSON-подобной структурой. Используется в `test_extract_json`.
-*   `result`: Результат вызова тестируемых функций. Используется в функциях `test_extract_json` и `test_name_or_empty`.
-*   `entity`: Экземпляр класса `MockEntity` или `None`. Используется в `test_name_or_empty`.
-*    `retries`: Целое число, определяющее количество попыток повторения функции при использовании декоратора `repeat_on_error`.
-*   `dummy_function`: Экземпляр класса `MagicMock`, который используется для имитации функций, которые могут выбрасывать исключения.
+-   `test_extract_json()`:
+    -   **Назначение:** Тестирует функцию `extract_json`, которая извлекает JSON из строки.
+    -   **Аргументы:** Нет.
+    -   **Возвращаемое значение:** Нет. Проверяет результат с помощью `assert`.
+    -   **Примеры**:
+        -   Вызов `extract_json` с корректным JSON, возвращает этот JSON.
+        -   Вызов с JSON массивом, возвращает массив.
+        -   Вызов с escaped char в JSON, возвращает распарсенный JSON.
+        -   Вызов с некорректным JSON, возвращает пустой словарь.
+        -   Вызов без JSON, возвращает пустой словарь.
+-   `test_name_or_empty()`:
+    -   **Назначение:** Тестирует функцию `name_or_empty`, которая возвращает имя объекта, если оно есть, иначе пустую строку.
+    -   **Аргументы:** Нет.
+    -   **Возвращаемое значение:** Нет. Проверяет результат с помощью `assert`.
+    -   **Примеры**:
+        -   Вызов с объектом `MockEntity`, возвращает имя объекта.
+        -   Вызов с `None`, возвращает пустую строку.
+-   `test_repeat_on_error()`:
+    -   **Назначение:** Тестирует декоратор `repeat_on_error`, который позволяет повторять выполнение функции при возникновении определенных исключений.
+    -   **Аргументы:** Нет.
+    -   **Возвращаемое значение:** Нет. Проверяет результат с помощью `assert`.
+    -   **Примеры**:
+        -   Вызов с `dummy_function`, выбрасывающей исключение, и проверкой числа повторов.
+        -   Вызов с `dummy_function`, не выбрасывающей исключение, и проверкой, что функция выполнилась один раз.
+        -   Вызов с `dummy_function`, выбрасывающей исключение, не входящее в разрешенный список исключений, и проверкой, что исключение поднимается.
 
-**Потенциальные ошибки и области для улучшения:**
+### Переменные
 
-*   **Общий импорт**: Использование `from testing_utils import *` может привести к конфликтам имен и затруднить понимание кода. Лучше импортировать только необходимые имена.
-*   **Необработанные исключения**: В `extract_json`  не обрабатываются определенные исключения, которые могут возникнуть в процессе парсинга JSON. Стоит добавить обработку исключений для возврата пустого словаря `{}` в случае ошибки.
-*   **Разные подходы к проверкам:** В функции `test_repeat_on_error` для отслеживания ошибок используется pytest.raises, а в других функциях `assert`, стоит унифицировать данный подход.
-*   **TODO**: В коде есть комментарий `# TODO #def test_json_serializer():`, который указывает на необходимость реализации теста для `json_serializer`. Стоит реализовать этот тест для полноты покрытия функциональности.
-*   **Повторение кода**: Есть повторение логики (создание `dummy_function` и применение декоратора `repeat_on_error`) в тестах `test_repeat_on_error`, что можно было бы вынести в отдельную вспомогательную функцию для избежания повторения кода.
-*   **Отсутствие докстрингов:** Отсутствуют докстринги для функций, что затрудняет понимание их назначения и использования. Рекомендуется добавлять докстринги для всех функций.
-*   **Жестко заданные пути:** Использование `sys.path.append` для изменения путей поиска модулей может быть не переносимым. Стоит использовать более надежный способ, например, с помощью переменной окружения `PYTHONPATH` или утилит, вроде `poetry`.
+-   `text`: Строковая переменная, содержащая JSON или текст для `test_extract_json`.
+-   `result`: Переменная, хранящая результат выполнения тестируемых функций.
+-   `entity`: Объект `MockEntity`, передаваемый в `test_name_or_empty`.
+-   `retries`: Количество попыток повторения для `test_repeat_on_error`.
+-   `dummy_function`: `MagicMock` объект, используется для имитации вызова функции.
+-   `decorated_function`: Функция, декорированная с помощью `repeat_on_error` для `test_repeat_on_error`.
 
-**Взаимосвязи с другими частями проекта:**
+### Области для улучшения
 
-*   **`tinytroupe.utils`**: Тестируемый модуль, который предоставляет функции общего назначения.
-*   **`testing_utils`**: Вспомогательный модуль для тестов, который может содержать фиктивные данные или общие функции.
+-   В коде есть комментарий `TODO`, указывающий на отсутствие теста для функции `json_serializer`.
+-   Добавить более подробные проверки крайних случаев для каждой функции.
+-   Рассмотреть возможность параметризации тестов для увеличения покрытия кода.
 
-Данный анализ предоставляет подробное представление о функциональности кода, его архитектуре и потенциальных областях для улучшения.
+### Цепочка взаимосвязей с другими частями проекта
+
+-   Тестовый файл `test_utils.py` зависит от `tinytroupe.utils`, где реализованы тестируемые функции, и от `testing_utils`, где могут находиться вспомогательные функции для тестов.
+-   Тесты проверяют корректность работы функций, которые, в свою очередь, используются в других частях проекта, например, в модулях обработки данных или интеграции с внешними сервисами.
+-   Использование `sys.path.append` указывает, что этот файл находится в поддиректории и взаимодействует с другими модулями проекта.
+```

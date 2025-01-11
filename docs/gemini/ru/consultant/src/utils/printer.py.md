@@ -1,77 +1,50 @@
-# Анализ кода модуля `printer.py`
+## Анализ кода модуля `printer`
 
-**Качество кода: 7/10**
-- **Плюсы:**
-    -   Код хорошо структурирован и разбит на логические блоки.
-    -   Используются константы для ANSI escape-кодов, что делает код более читаемым и поддерживаемым.
-    -   Функция `_color_text` реализует базовую логику для применения стилей.
-    -   Функция `pprint` обрабатывает различные типы данных (словарь, список, строка, путь к файлу) и предоставляет возможность стилизации вывода.
-    -   Есть пример использования в `if __name__ == '__main__':`.
-- **Минусы:**
-    -   Отсутствует обработка ошибок с помощью `logger.error`, вместо этого используется `print`.
-    -   В функции `pprint` отсутствуют проверки на ошибки при работе с файлами.
-    -   Не все функции и переменные имеют документацию в формате RST.
-    -   Используется стандартный `json.dumps` вместо `j_dumps` (если он существует).
-    -   Импорты не сгруппированы по PEP8.
+**Качество кода**
+6/10
+-  Плюсы
+    - Код структурирован и разбит на функции.
+    - Используются константы для цветов и стилей.
+    - Наличие docstring для функций.
+-  Минусы
+    - Отсутствует импорт `logger` из `src.logger`.
+    - Используется стандартный `print` вместо `logger`.
+    - Не используется `j_loads` для чтения файлов.
+    - Неполная обработка ошибок.
+    - Не все комментарии соответствуют формату RST.
+    - Несоответствие использования кавычек
 
-**Рекомендации по улучшению:**
+**Рекомендации по улучшению**
+1.  Добавить импорт `logger` из `src.logger`.
+2.  Заменить стандартный `print` на `logger.info` для информационных сообщений и `logger.error` для ошибок.
+3.  Использовать `j_loads` для чтения файлов.
+4.  Улучшить обработку ошибок, используя `logger.error` вместо `print` для вывода ошибок.
+5.  Привести документацию в соответствие со стандартами RST.
+6.  Удалить избыточный блок `try except` в  `_color_text` , так как он не выполняет обработку ошибок.
+7.  Использовать одинарные кавычки для строк в Python коде и двойные кавычки только для вывода.
+8.  Переименовать `print_data` на `data` для соответствия ранее обработанным файлам.
+9.  Добавить type hints для `_color_text`
 
-1.  **Импорты:**
-    -   Сгруппировать импорты по PEP8 (сначала стандартные библиотеки, затем сторонние, затем локальные).
-2.  **Логирование:**
-    -   Заменить `print` на `logger.error` при обработке ошибок.
-    -   Добавить логирование в функцию `pprint` для отладки.
-3.  **Обработка файлов:**
-    -   Добавить более подробную обработку ошибок при работе с файлами (чтение, открытие).
-4.  **Форматирование кода:**
-    -   Использовать одинарные кавычки для строк в коде, двойные только при выводе.
-5.  **Документация:**
-    -   Добавить документацию в формате RST для всех функций и переменных.
-    -   Улучшить документацию к модулю.
-6.  **Использование `j_dumps`**:
-   - Заменить `json.dumps` на `j_dumps` (если он существует) для сериализации данных.
-7. **Проверка типа файла:**
-    -   В функции `pprint` добавить более детальную проверку типа файла и выводить более точное сообщение об ошибке.
-8. **Обработка `None`:**
-    - В функции `pprint` обработку `print_data is None` вынести в начало функции.
-
-**Оптимизированный код:**
-
+**Оптимизированный код**
 ```python
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
 
 """
-Модуль для стилизации и вывода текста в консоль.
-=========================================================================================
+.. module::  src.utils.printer
+    :platform: Windows, Unix
+    :synopsis: Utility functions for pretty printing and text styling.
 
-Этот модуль предоставляет функции для вывода данных в человекочитаемом формате с возможностью стилизации текста,
-включая цвет, фон и начертание.
-
-Пример использования
---------------------
-
-Пример использования функции `pprint`:
-
-.. code-block:: python
-
-    from src.utils.printer import pprint
-    pprint({'name': 'Alice', 'age': 30}, text_color='green')
-    pprint(['apple', 'banana', 'cherry'], text_color='blue', font_style='bold')
-    pprint('text example', text_color='yellow', bg_color='bg_red', font_style='underline')
+This module provides functions to print data in a human-readable format with optional text styling,
+including color, background, and font styles.
 """
-# стандартные библиотеки
 import json
 import csv
+import pandas as pd
 from pathlib import Path
 from typing import Any
-# сторонние библиотеки
-import pandas as pd
-# локальные библиотеки
-from src.logger.logger import logger
-from src.utils.jjson import j_dumps
-
+from pprint import pprint as pretty_print
+from src.logger.logger import logger  # импортируем logger
 # ANSI escape codes
 RESET = '\033[0m'
 
@@ -108,115 +81,93 @@ BG_COLORS = {
     'bg_light_yellow': '\033[103m',
 }
 
+
 FONT_STYLES = {
     'bold': '\033[1m',
     'underline': '\033[4m',
 }
-
-def _color_text(text: str, text_color: str = '', bg_color: str = '', font_style: str = '') -> str:
+def _color_text(text: str, text_color: str = "", bg_color: str = "", font_style: str = "") -> str:
     """
-    Применяет цвет, фон и стиль шрифта к тексту.
+    Apply color, background, and font styling to the text.
 
-    Эта вспомогательная функция применяет указанные цвет и стили шрифта к заданному тексту,
-    используя escape-последовательности ANSI.
+    This helper function applies the provided color and font styles to the given text using ANSI escape codes.
 
-    :param text: Текст для стилизации.
-    :type text: str
-    :param text_color: Цвет текста. По умолчанию пустая строка, что означает отсутствие цвета.
-    :type text_color: str
-    :param bg_color: Цвет фона. По умолчанию пустая строка, что означает отсутствие цвета фона.
-    :type bg_color: str
-    :param font_style: Стиль шрифта. По умолчанию пустая строка, что означает отсутствие стиля шрифта.
-    :type font_style: str
-    :return: Стилизованный текст.
-    :rtype: str
+    :param text: The text to be styled.
+    :param text_color: The color to apply to the text. Default is an empty string, meaning no color.
+    :param bg_color: The background color to apply. Default is an empty string, meaning no background color.
+    :param font_style: The font style to apply to the text. Default is an empty string, meaning no font style.
+    :return: The styled text as a string.
 
     :example:
-        >>> _color_text('Hello, World!', text_color='green', font_style='bold')
+        >>> _color_text("Hello, World!", text_color="green", font_style="bold")
         '\\033[1m\\033[32mHello, World!\\033[0m'
     """
+    # код применяет стили к тексту
     return f'{font_style}{text_color}{bg_color}{text}{RESET}'
 
-
-def pprint(print_data: Any = None, text_color: str = 'white', bg_color: str = '', font_style: str = '') -> None:
+def pprint(data: Any = None, text_color: str = 'white', bg_color: str = '', font_style: str = '') -> None:
     """
-    Выводит данные с возможностью стилизации.
+    Pretty prints the given data with optional color, background, and font style.
 
-    Эта функция форматирует входные данные в зависимости от их типа и выводит их в консоль.
-    Данные выводятся с возможностью стилизации текста, фона и шрифта, в зависимости от указанных параметров.
-    Функция обрабатывает словари, списки, строки и пути к файлам.
+    This function formats the input data based on its type and prints it to the console. The data is printed with optional
+    text color, background color, and font style based on the specified parameters. The function can handle dictionaries,
+    lists, strings, and file paths.
 
-    :param print_data: Данные для вывода. Может быть `None`, `dict`, `list`, `str` или `Path`.
-    :type print_data: Any
-    :param text_color: Цвет текста. По умолчанию 'white'. Смотри :ref:`TEXT_COLORS`.
-    :type text_color: str
-    :param bg_color: Цвет фона. По умолчанию '' (без фона). Смотри :ref:`BG_COLORS`.
-    :type bg_color: str
-    :param font_style: Стиль шрифта. По умолчанию '' (без стиля). Смотри :ref:`FONT_STYLES`.
-    :type font_style: str
+    :param data: The data to be printed. Can be of type ``None``, ``dict``, ``list``, ``str``, or ``Path``.
+    :param text_color: The color to apply to the text. Default is 'white'. See :ref:`TEXT_COLORS`.
+    :param bg_color: The background color to apply to the text. Default is '' (no background color). See :ref:`BG_COLORS`.
+    :param font_style: The font style to apply to the text. Default is '' (no font style). See :ref:`FONT_STYLES`.
     :return: None
-    :rtype: None
 
-    :raises: Exception - если тип данных не поддерживается или произошла ошибка во время вывода.
+    :raises: Exception if the data type is unsupported or an error occurs during printing.
 
     :example:
-        >>> pprint({'name': 'Alice', 'age': 30}, text_color='green')
+        >>> pprint({"name": "Alice", "age": 30}, text_color="green")
         \\033[32m{\n    "name": "Alice",\n    "age": 30\n}\\033[0m
 
-        >>> pprint(['apple', 'banana', 'cherry'], text_color='blue', font_style='bold')
+        >>> pprint(["apple", "banana", "cherry"], text_color="blue", font_style="bold")
         \\033[34m\\033[1mapple\\033[0m
         \\033[34m\\033[1mbanana\\033[0m
         \\033[34m\\033[1mcherry\\033[0m
 
-        >>> pprint('text example', text_color='yellow', bg_color='bg_red', font_style='underline')
+        >>> pprint("text example", text_color="yellow", bg_color="bg_red", font_style="underline")
         \\033[4m\\033[33m\\033[41mtext example\\033[0m
     """
-    # проверка если нет данных для вывода
-    if print_data is None:
-        print(_color_text('No data to print!', text_color=TEXT_COLORS['red']))
-        return
-    # устанавливаем цвет текста
+    # код получает цвет текста из словаря, если нет то устанавливает белый
     text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS['white'])
-    # устанавливаем цвет фона
+    # код получает цвет фона из словаря, если нет то устанавливает пустую строку
     bg_color = BG_COLORS.get(bg_color.lower(), '')
-    # устанавливаем стиль шрифта
+    # код получает стиль текста из словаря, если нет то устанавливает пустую строку
     font_style = FONT_STYLES.get(font_style.lower(), '')
 
+    if data is None:
+        # Код выводит сообщение об отсутствии данных в случае если данные не переданы
+        logger.info(_color_text('No data to print!', text_color=TEXT_COLORS['red']))
+        return
+    # код проверяет тип данных и выводит их на экран
     try:
-        # если данные - словарь
-        if isinstance(print_data, dict):
-            # код исполняет сериализацию данных в формат json и вывод
-            print(_color_text(j_dumps(print_data, indent=4), text_color=text_color))
-        # если данные - список
-        elif isinstance(print_data, list):
-            # код исполняет вывод каждого элемента списка
-            for item in print_data:
-                print(_color_text(str(item), text_color=text_color))
-        # если данные строка или путь к файлу
-        elif isinstance(print_data, (str, Path)):
-             # если путь к файлу
-            if Path(print_data).is_file():
-                # получаем расширение файла
-                ext = Path(print_data).suffix.lower()
-                # проверка расширения
-                if ext in ['.csv', '.xls']:
-                    # код выводит сообщение
-                    print(_color_text('File reading supported for .csv, .xls only.', text_color=text_color))
-                else:
-                    # код выводит сообщение о неподдерживаемом типе файла
-                    print(_color_text('Unsupported file type.', text_color=text_color))
+        if isinstance(data, dict):
+            # если данные - словарь то вывод в формате json
+            logger.info(_color_text(json.dumps(data, indent=4), text_color))
+        elif isinstance(data, list):
+            # если данные - список то вывод каждого элемента на новой строке
+            for item in data:
+                logger.info(_color_text(str(item), text_color))
+        elif isinstance(data, (str, Path)) and Path(data).is_file():
+            # код проверяет является ли путь файлом
+            ext = Path(data).suffix.lower()
+            if ext in ['.csv', '.xls']:
+                 # Код выводит предупреждение, если файл имеет расширение .csv или .xls
+                logger.info(_color_text('File reading supported for .csv, .xls only.', text_color))
             else:
-                # код выводит данные как строку
-                print(_color_text(str(print_data), text_color=text_color))
+                # Код выводит предупреждение о неподдерживаемом типе файла
+                logger.info(_color_text('Unsupported file type.', text_color))
         else:
-             # код выводит данные как строку
-            print(_color_text(str(print_data), text_color=text_color))
+             # Код выводит данные как строку, если тип данных не распознан
+            logger.info(_color_text(str(data), text_color))
     except Exception as ex:
-        # логируем ошибку
-        logger.error(f'Error during printing data: {ex}')
-        print(_color_text(f'Error: {ex}', text_color=TEXT_COLORS['red']))
-
-
+        # Код обрабатывает ошибку и выводит сообщение об ошибке
+        logger.error(f'Error: {ex}')
+# Код для тестирования модуля
 if __name__ == '__main__':
     pprint({'name': 'Alice', 'age': 30}, text_color='green')
-```

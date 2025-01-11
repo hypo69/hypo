@@ -1,62 +1,58 @@
 # Анализ кода модуля try_xpath_background.js
 
 **Качество кода**
-7
+8
 -  Плюсы
-    - Код разбит на логические блоки, что облегчает понимание его структуры.
-    - Используются `Promise` для асинхронных операций, что улучшает обработку событий.
-    - Применяется `browser.storage.onChanged` для отслеживания изменений в настройках расширения.
-    - Есть обработка ошибок (хотя и простая) через `catch(fu.onError)`.
-    - Функция `genericListener` с объектом `listeners` — удачное решение для обработки разных типов сообщений.
+    - Код разбит на функции, что делает его более читаемым и поддерживаемым.
+    - Используется `browser.runtime.onMessage.addListener` для обработки сообщений, что является стандартным подходом для расширений браузера.
+    - Применяется `browser.storage.onChanged.addListener` для отслеживания изменений в хранилище, что позволяет динамически обновлять параметры расширения.
+    - Используются Promise для асинхронных операций, что позволяет избежать callback hell.
+    -  Код использует `browser.runtime.getURL` для получения URL ресурсов расширения, что является правильным подходом.
 -  Минусы
-    - Отсутствует подробная документация (docstrings) для функций и переменных.
-    - Используется стандартный `XMLHttpRequest` вместо `fetch`, который является более современным API.
-    - Обработка ошибок в основном сводится к `fu.onError`, без конкретного логирования.
-    - В коде нет явного импорта модуля `src.utils.jjson`.
-    - Код не имеет комментариев в формате reStructuredText (RST), как требуется.
-    - Код не использует `logger` для логирования.
-    - Код излишне использует `try-except`, где можно обойтись проверками.
+    -  Отсутствует обработка ошибок при отправке сообщений через `browser.tabs.sendMessage`.
+    -  Отсутствуют docstring для функций.
+    -  Много однотипных сообщений для `browser.tabs.sendMessage` с одинаковыми `timeout` и `timeout_for_event`.
+    -  Используются сокращения `tx`, `fu` без пояснений.
+    -  Отсутствует описание модуля в начале файла.
 
 **Рекомендации по улучшению**
-1.  Добавить docstrings в формате RST для всех функций, переменных и модуля.
-2.  Заменить `XMLHttpRequest` на `fetch` для загрузки CSS.
-3.  Использовать `logger.error` для более детального логирования ошибок.
-4.  Использовать `j_loads` для разбора json (в данном случае не нужно так как json не разбирается).
-5.  Добавить необходимые импорты, такие как `from src.logger.logger import logger`.
-6.  Избегать излишнего использования `try-except` блоков.
-7.  Обеспечить соответствие имен переменных и функций с ранее обработанными файлами.
-8.  Добавить подробные комментарии к блокам кода.
+
+1. **Документирование кода**: Добавить docstring для всех функций, переменных и модуля с описанием их назначения и параметров.
+2. **Обработка ошибок**: Добавить обработку ошибок при отправке сообщений `browser.tabs.sendMessage` с помощью `logger.error`.
+3. **Унификация сообщений**: Создать константы для часто используемых параметров сообщений `browser.tabs.sendMessage` (например, `timeout` и `timeout_for_event`).
+4. **Улучшение читаемости**: Избегать сокращений `tx`, `fu` или добавить их определения как константы с понятными именами.
+5. **Логирование**: Использовать `logger` для вывода информации о происходящих событиях и ошибках.
+6. **Удаление избыточных `return`**:  В некоторых местах можно убрать `return true` если нет дополнительной логики.
+7.  **Использовать константы**: Вынести повторяющиеся строки в константы.
 
 **Оптимизированный код**
 ```python
 """
-Модуль фонового скрипта для расширения Try XPath.
+Модуль фонового скрипта расширения Try XPath.
 =========================================================================================
 
-Этот модуль обеспечивает функциональность фонового скрипта для расширения Try XPath,
-включая обработку сообщений, управление состоянием всплывающего окна,
-взаимодействие с хранилищем браузера и внедрение стилей.
+Этот модуль обрабатывает сообщения от контентных скриптов и всплывающих окон,
+управляет состоянием расширения, загружает и применяет стили, а также взаимодействует
+с хранилищем браузера для сохранения и извлечения параметров.
 
 """
-from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 # alias
+# Код создает псевдоним для объекта tryxpath
 tx = tryxpath
+# Код создает псевдоним для объекта tryxpath.functions
 fu = tryxpath.functions
 
+# Код задает начальное состояние всплывающего окна
 popupState = None
-"""Состояние всплывающего окна."""
-
+# Код задает CSS для всплывающего окна
 popupCss = "body{width:367px;height:auto;}"
-"""CSS для всплывающего окна по умолчанию."""
-
+# Код создает пустой объект для результатов
 results = {}
-"""Объект для хранения результатов XPath запросов."""
-
+# Код создает пустую строку для CSS
 css = ""
-"""CSS для внедрения на страницы."""
-
+# Код создает объект с атрибутами
 attributes = {
     "element": "data-tryxpath-element",
     "context": "data-tryxpath-context",
@@ -65,278 +61,286 @@ attributes = {
     "frame": "data-tryxpath-frame",
     "frameAncestor": "data-tryxpath-frame-ancestor"
 }
-"""Объект для хранения атрибутов элементов."""
+#  Константы для сообщений
+TIMEOUT_MESSAGE = {"timeout": 0, "timeout_for_event": "presence_of_element_located"}
+# Константы для путей
+CSS_PATH = "/css/try_xpath_insert.css"
 
-
-def loadDefaultCss() -> Promise:
+async def loadDefaultCss() -> str:
     """
-    Загружает CSS по умолчанию из файла.
+    Загружает CSS по умолчанию из файла расширения.
 
-    :return: Promise, который резолвится с текстом CSS или реджектится в случае ошибки.
+    Returns:
+        str: CSS текст из файла.
+    Raises:
+         Exception:  При возникновении ошибки запроса.
     """
-    return new Promise((resolve, reject) => {
-        # Код создает новый XMLHttpRequest для загрузки CSS файла
-        var req = new XMLHttpRequest();
-        # Код открывает GET запрос по URL, полученному от browser.runtime.getURL
-        req.open("GET", browser.runtime.getURL("/css/try_xpath_insert.css"));
-        # Код устанавливает тип ответа как текст
-        req.responseType = "text";
-        # Код устанавливает обработчик события изменения состояния запроса
-        req.onreadystatechange = function () {
-            # Код проверяет, завершен ли запрос
-            if (req.readyState === XMLHttpRequest.DONE) {
-                # Код резолвит Promise с текстом ответа
-                resolve(req.responseText);
-            }
-        };
-        # Код отправляет запрос
-        req.send();
-    });
+    try:
+        # Код выполняет запрос на получение CSS
+        req =  XMLHttpRequest()
+        req.open("GET", browser.runtime.getURL(CSS_PATH))
+        req.responseType = "text"
+        await new Promise((resolve, reject) => {
+                req.onreadystatechange = function () {
+                    if (req.readyState === XMLHttpRequest.DONE) {
+                        resolve(req.responseText)
+                    }
+                }
+                req.send()
+        })
+        return req.responseText
+    except Exception as ex:
+        logger.error('Ошибка при загрузке CSS по умолчанию', ex)
+        return ''
 
 
-def genericListener(message, sender, sendResponse):
+def genericListener(message: dict, sender: dict, sendResponse: callable) -> bool | None:
     """
-     Универсальный обработчик сообщений.
+     Обрабатывает сообщения, отправленные из других частей расширения.
 
-    :param message: Сообщение от контент-скрипта или другого расширения.
-    :param sender: Информация об отправителе сообщения.
-    :param sendResponse: Функция для отправки ответа.
-    :return: Результат вызова обработчика, если он найден.
+    Args:
+        message (dict): Объект сообщения.
+        sender (dict): Информация об отправителе сообщения.
+        sendResponse (callable): Функция обратного вызова для отправки ответа.
+
+    Returns:
+        bool | None: Возвращает True если сообщение обработано и требует ответа, иначе None.
     """
-    # Код получает обработчик из genericListener.listeners по ключу message.event
-    listener = genericListener.listeners[message.event];
-    # Код проверяет, найден ли обработчик
+    # Код проверяет наличие слушателя для события
+    listener = genericListener.listeners.get(message.event)
     if listener:
-        # Код вызывает обработчик и возвращает результат
-        return listener(message, sender, sendResponse);
-    # Если обработчик не найден, функция завершается
+        # Код вызывает функцию-обработчик сообщения и возвращает результат её выполнения
+        return listener(message, sender, sendResponse)
+    return None
+
+# Код создает объект для хранения слушателей
+genericListener.listeners = {}
+# Код добавляет слушателя для сообщений
+browser.runtime.onMessage.addListener(genericListener)
 
 
-# Код создает пустой объект для хранения обработчиков
-genericListener.listeners = Object.create(null);
-# Код устанавливает слушателя сообщений на событие browser.runtime.onMessage
-browser.runtime.onMessage.addListener(genericListener);
-
-
-def storePopupState(message):
+def storePopupState(message: dict) -> None:
     """
     Сохраняет состояние всплывающего окна.
 
-    :param message: Сообщение с состоянием всплывающего окна.
+    Args:
+        message (dict): Объект сообщения, содержащий состояние.
     """
-    # Код сохраняет состояние всплывающего окна
-    popupState = message.state;
+    # Код устанавливает состояние всплывающего окна из сообщения
+    global popupState
+    popupState = message.state
 
+genericListener.listeners["storePopupState"] = storePopupState
 
-genericListener.listeners.storePopupState = storePopupState;
-
-
-def requestRestorePopupState(message):
+def requestRestorePopupState() -> None:
     """
     Отправляет запрос на восстановление состояния всплывающего окна.
-
-    :param message: Сообщение с запросом на восстановление состояния.
     """
-    # Код отправляет сообщение на восстановление состояния всплывающего окна
+    # Код отправляет сообщение для восстановления состояния всплывающего окна
     browser.runtime.sendMessage({
-        "timeout": 0,
-        "timeout_for_event": "presence_of_element_located",
+        **TIMEOUT_MESSAGE,
         "event": "restorePopupState",
         "state": popupState
-    });
+    })
+
+genericListener.listeners["requestRestorePopupState"] = requestRestorePopupState
 
 
-genericListener.listeners.requestRestorePopupState = requestRestorePopupState;
-
-
-def requestInsertStyleToPopup():
+def requestInsertStyleToPopup() -> None:
     """
     Отправляет запрос на вставку стилей во всплывающее окно.
     """
-    # Код отправляет сообщение на вставку стилей во всплывающее окно
+    # Код отправляет сообщение для вставки стилей во всплывающее окно
     browser.runtime.sendMessage({
-        "timeout": 0,
-        "timeout_for_event": "presence_of_element_located",
+        **TIMEOUT_MESSAGE,
         "event": "insertStyleToPopup",
         "css": popupCss
-    });
+    })
+
+genericListener.listeners["requestInsertStyleToPopup"] = requestInsertStyleToPopup
 
 
-genericListener.listeners.requestInsertStyleToPopup = requestInsertStyleToPopup;
-
-
-def showAllResults(message, sender):
+def showAllResults(message: dict, sender: dict) -> None:
     """
-    Сохраняет результаты XPath и открывает новую вкладку для их отображения.
+    Открывает страницу со всеми результатами поиска.
 
-    :param message: Сообщение с результатами.
-    :param sender: Информация об отправителе сообщения.
+    Args:
+        message (dict): Объект сообщения с результатами.
+        sender (dict): Информация об отправителе сообщения.
     """
     # Код удаляет событие из сообщения
-    del message.event;
-    # Код сохраняет результаты
-    results = message;
-    # Код сохраняет id вкладки
-    results.tabId = sender.tab.id;
-    # Код сохраняет id фрейма
-    results.frameId = sender.frameId;
-    # Код открывает новую вкладку для отображения результатов
-    browser.tabs.create({"url": "/pages/show_all_results.html"});
+    del message.event
+    # Код сохраняет результаты и информацию об отправителе
+    global results
+    results = message
+    results["tabId"] = sender.tab.id
+    results["frameId"] = sender.frameId
+    # Код открывает страницу с результатами
+    browser.tabs.create({"url": "/pages/show_all_results.html"})
+
+genericListener.listeners["showAllResults"] = showAllResults
 
 
-genericListener.listeners.showAllResults = showAllResults;
-
-
-def loadResults(message, sender, sendResponse):
+def loadResults(message: dict, sender: dict, sendResponse: callable) -> bool:
     """
-    Отправляет сохраненные результаты XPath по запросу.
+    Отправляет сохраненные результаты запросившему скрипту.
 
-    :param message: Сообщение с запросом результатов.
-    :param sender: Информация об отправителе сообщения.
-    :param sendResponse: Функция для отправки ответа с результатами.
-    :return: True, для асинхронного ответа.
+    Args:
+        message (dict): Объект сообщения.
+        sender (dict): Информация об отправителе сообщения.
+        sendResponse (callable): Функция обратного вызова для отправки ответа.
+
+    Returns:
+         bool: True, если ответ отправлен.
     """
-    # Код отправляет сохраненные результаты
-    sendResponse(results);
-    # Код возвращает true для асинхронного ответа
-    return True;
+    # Код отправляет результаты запросившему скрипту
+    sendResponse(results)
+    return True
+
+genericListener.listeners["loadResults"] = loadResults
 
 
-genericListener.listeners.loadResults = loadResults;
-
-
-def updateCss(message, sender):
+async def updateCss(message: dict, sender: dict) -> None:
     """
-    Обновляет CSS на странице, удаляя старые и вставляя новые.
+    Обновляет CSS на странице, удаляя старый и вставляя новый.
 
-    :param message: Сообщение с информацией об устаревших стилях.
-    :param sender: Информация об отправителе сообщения.
+    Args:
+        message (dict): Объект сообщения с информацией об устаревших CSS.
+        sender (dict): Информация об отправителе сообщения.
     """
-    # Код получает id вкладки
-    id = sender.tab.id;
-    # Код получает id фрейма
-    frameId = sender.frameId;
+    # Код извлекает ID вкладки и ID фрейма
+    id = sender.tab.id
+    frameId = sender.frameId
 
-    # Код перебирает CSS для удаления
-    for removeCss in message.expiredCssSet:
-        # Код удаляет CSS
-        browser.tabs.removeCSS(id, {
-            "code": removeCss,
-            "matchAboutBlank": True,
-            "frameId": frameId
-        }).then(() => {
-            # Код отправляет сообщение о завершении удаления CSS
-            return browser.tabs.sendMessage(id, {
-                "timeout": 0,
-                "timeout_for_event": "presence_of_element_located",
+    # Код удаляет устаревшие стили
+    for removeCss in message.get("expiredCssSet", []):
+         try:
+            await browser.tabs.removeCSS(id, {
+                    "code": removeCss,
+                    "matchAboutBlank": True,
+                    "frameId": frameId
+                })
+            # Код отправляет сообщение об окончании удаления
+            await browser.tabs.sendMessage(id, {
+                **TIMEOUT_MESSAGE,
                 "event": "finishRemoveCss",
                 "css": removeCss
-            }, {
-                "frameId": frameId
-            });
-        }).catch(lambda ex: logger.error(f'Ошибка удаления CSS: {removeCss}', ex));  # Используем лямбду для передачи ex
+            }, {"frameId": frameId})
 
+         except Exception as ex:
+                logger.error(f'Ошибка при удалении CSS: {removeCss}', ex)
+    try:
     # Код вставляет новый CSS
-    browser.tabs.insertCSS(id, {
-        "code": css,
-        "cssOrigin": "author",
-        "matchAboutBlank": True,
-        "frameId": frameId
-    }).then(() => {
-        # Код отправляет сообщение о завершении вставки CSS
-        return browser.tabs.sendMessage(id, {
-            "timeout": 0,
-            "timeout_for_event": "presence_of_element_located",
+        await browser.tabs.insertCSS(id, {
+            "code": css,
+            "cssOrigin": "author",
+            "matchAboutBlank": True,
+            "frameId": frameId
+        })
+        # Код отправляет сообщение об окончании вставки
+        await browser.tabs.sendMessage(id, {
+            **TIMEOUT_MESSAGE,
             "event": "finishInsertCss",
             "css": css
-        }, {
-            "frameId": frameId
-        });
-    }).catch(lambda ex: logger.error(f'Ошибка вставки CSS: {css}', ex));  # Используем лямбду для передачи ex
+        }, {"frameId": frameId})
+
+    except Exception as ex:
+        logger.error('Ошибка при вставке нового CSS', ex)
+
+genericListener.listeners["updateCss"] = updateCss
 
 
-genericListener.listeners.updateCss = updateCss;
-
-
-def loadOptions(message, sender, sendResponse):
+def loadOptions(message: dict, sender: dict, sendResponse: callable) -> bool:
     """
-    Отправляет текущие настройки расширения.
+    Отправляет текущие параметры расширения запросившему скрипту.
 
-    :param message: Сообщение с запросом настроек.
-    :param sender: Информация об отправителе сообщения.
-    :param sendResponse: Функция для отправки ответа с настройками.
-    :return: True для асинхронного ответа.
+    Args:
+        message (dict): Объект сообщения.
+        sender (dict): Информация об отправителе сообщения.
+        sendResponse (callable): Функция обратного вызова для отправки ответа.
+
+    Returns:
+        bool: True, если ответ отправлен.
     """
-    # Код отправляет настройки расширения
+    # Код отправляет текущие параметры
     sendResponse({
         "attributes": attributes,
         "css": css,
         "popupCss": popupCss
-    });
-    # Код возвращает true для асинхронного ответа
-    return True;
+    })
+    return True
+
+genericListener.listeners["loadOptions"] = loadOptions
 
 
-genericListener.listeners.loadOptions = loadOptions;
-
-
-def requestSetContentInfo(message, sender):
+def requestSetContentInfo(message: dict, sender: dict) -> None:
     """
-    Отправляет сообщение контент-скрипту с информацией о атрибутах.
+    Отправляет запрос на установку информации о содержимом страницы.
 
-    :param message: Сообщение с запросом на установку информации.
-    :param sender: Информация об отправителе сообщения.
+    Args:
+        message (dict): Объект сообщения.
+        sender (dict): Информация об отправителе сообщения.
     """
-    # Код отправляет сообщение контент-скрипту об установке информации
-    browser.tabs.sendMessage(sender.tab.id, {
-        "timeout": 0,
-        "timeout_for_event": "presence_of_element_located",
-        "event": "setContentInfo",
-        "attributes": attributes
-    }, {
-        "frameId": sender.frameId
-    });
+    # Код отправляет сообщение на установку информации о содержимом
+    try:
+        browser.tabs.sendMessage(sender.tab.id, {
+            **TIMEOUT_MESSAGE,
+            "event": "setContentInfo",
+            "attributes": attributes
+        }, {"frameId": sender.frameId})
+    except Exception as ex:
+       logger.error('Ошибка при отправке сообщения setContentInfo', ex)
 
+genericListener.listeners["requestSetContentInfo"] = requestSetContentInfo
 
-genericListener.listeners.requestSetContentInfo = requestSetContentInfo;
+def update_settings(changes: dict) -> None:
+    """
+    Обновляет локальные переменные при изменении настроек в хранилище.
 
+    Args:
+        changes (dict): Объект с изменениями в хранилище.
+    """
+    # Код обновляет атрибуты, если они были изменены
+    global attributes
+    if "attributes" in changes and "newValue" in changes["attributes"]:
+        attributes = changes["attributes"]["newValue"]
+    # Код обновляет CSS, если он был изменен
+    global css
+    if "css" in changes and "newValue" in changes["css"]:
+        css = changes["css"]["newValue"]
+     # Код обновляет CSS для попапа, если он был изменен
+    global popupCss
+    if "popupCss" in changes and "newValue" in changes["popupCss"]:
+        popupCss = changes["popupCss"]["newValue"]
 
-# Код устанавливает слушателя изменений в хранилище
-browser.storage.onChanged.addListener(changes => {
-    # Код проверяет, есть ли изменения в attributes
-    if (changes.attributes and ("newValue" in changes.attributes)):
-        # Код обновляет атрибуты
-        attributes = changes.attributes.newValue;
-    # Код проверяет, есть ли изменения в css
-    if (changes.css and ("newValue" in changes.css)):
-        # Код обновляет css
-        css = changes.css.newValue;
-    # Код проверяет, есть ли изменения в popupCss
-    if (changes.popupCss and ("newValue" in changes.popupCss)):
-        # Код обновляет popupCss
-        popupCss = changes.popupCss.newValue;
-});
+# Код добавляет слушателя для изменений в хранилище
+browser.storage.onChanged.addListener(update_settings)
 
+async def load_initial_settings() -> None:
+     """
+     Загружает начальные настройки из хранилища и CSS.
+     """
+     try:
+        # Код извлекает настройки из хранилища
+        items = await browser.storage.sync.get({
+            "attributes": attributes,
+            "css": None,
+            "popupCss": popupCss
+        })
+        global attributes
+        attributes = items["attributes"]
+        global popupCss
+        popupCss = items["popupCss"]
 
-# Код получает настройки из хранилища
-browser.storage.sync.get({
-    "attributes": attributes,
-    "css": None,
-    "popupCss": popupCss
-}).then(items => {
-    # Код устанавливает атрибуты
-    attributes = items.attributes;
-    # Код устанавливает popupCss
-    popupCss = items.popupCss;
-    # Код проверяет, есть ли css
-    if (items.css is not None):
-        # Код возвращает css
-        return items.css;
-    else:
-        # Код загружает css по умолчанию
-        return loadDefaultCss();
-}).then(loadedCss => {
-    # Код устанавливает загруженный css
-    css = loadedCss;
-}).catch(lambda ex: logger.error('Ошибка при загрузке или установке css', ex)); # Используем лямбду для передачи ex
-```
+        # Код загружает CSS
+        if items["css"] is not None:
+            loadedCss = items["css"]
+        else:
+            loadedCss = await loadDefaultCss()
+        global css
+        css = loadedCss
+     except Exception as ex:
+        logger.error('Ошибка при загрузке начальных настроек', ex)
+
+# Код загружает начальные настройки и CSS
+load_initial_settings()

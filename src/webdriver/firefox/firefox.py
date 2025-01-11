@@ -65,8 +65,6 @@ from fake_useragent import UserAgent
 import header
 
 
-
-
 class Firefox(WebDriver):
     """
     Расширение для `webdriver.Firefox` с дополнительной функциональностью.
@@ -83,6 +81,8 @@ class Firefox(WebDriver):
     :type proxy_file_path: Optional[str]
     :param options: Список опций для Firefox.
     :type options: Optional[List[str]]
+    :param window_mode: Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.)
+    :type window_mode: Optional[str]
     """
     driver_name: str = 'firefox'
 
@@ -92,6 +92,7 @@ class Firefox(WebDriver):
                  user_agent: Optional[str] = None,
                  proxy_file_path: Optional[str] = None,
                  options: Optional[List[str]] = None,
+                 window_mode: Optional[str] = None,
                  *args, **kwargs) -> None:
         #  объявление переменных
         service = None
@@ -111,6 +112,16 @@ class Firefox(WebDriver):
         if hasattr(settings, 'options') and settings.options:
             for option in settings.options:
                 options_obj.add_argument(option)
+        
+        #  Установка режима окна из конфига
+        if hasattr(settings, 'window_mode') and settings.window_mode:
+            window_mode = window_mode or settings.window_mode
+        #  Установка режима окна из параметров
+        if window_mode:
+            if window_mode == 'kiosk':
+                options_obj.add_argument("--kiosk")
+            elif window_mode == 'windowless':
+               options_obj.add_argument("--headless")
 
         #  Добавление опций, переданных при инициализации
         if options:

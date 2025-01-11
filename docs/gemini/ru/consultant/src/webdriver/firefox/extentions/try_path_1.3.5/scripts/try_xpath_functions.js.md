@@ -1,141 +1,176 @@
-# Анализ кода модуля `try_xpath_functions.js`
+# Анализ кода модуля try_xpath_functions.js
 
 **Качество кода**
-9
+8
 -  Плюсы
-    - Код хорошо структурирован и разбит на логические функции.
-    - Используются namespace для предотвращения конфликтов имен.
-    - Присутствует проверка на множественное выполнение.
-    - Код содержит много полезных функций для работы с DOM и XPath.
-    - Активно используются Map для хранения данных.
-    - Есть функции для работы с фреймами.
-
+    - Код хорошо структурирован и разбит на функции, что облегчает его понимание и поддержку.
+    - Используется IIFE для инкапсуляции кода, что помогает избежать конфликтов имен.
+    - Есть проверка на множественное выполнение (`fu.done`), что предотвращает повторную инициализацию.
+    - Присутствуют проверки типов аргументов, что делает код более надежным.
+    - Код содержит много полезных функций для работы с DOM, таких как `execExpr`, `resToArr`, `getItemDetail`, `addClassToItem` и т.д.
 -  Минусы
-    - Не хватает docstring для функций и переменных.
-    - Используются `try-catch` без логирования ошибок.
-    - Есть места, где можно упростить код, например, использование `forEach` вместо циклов `for`.
-    - Использование `console.log` для отладки (закомментировано), лучше использовать `logger`.
-    - Не все функции возвращают значения явно.
-    - Использование `undefined` вместо `null` в некоторых местах.
+    - Отсутствует описание модуля в начале файла и документация для функций.
+    - Не используются константы для магических значений, таких как nodeType и xpathResult.
+    - Отсутствует обработка ошибок в некоторых функциях, таких как `makeResolver`.
+    - Есть потенциальные проблемы с безопасностью при использовании `JSON.parse` без предварительной проверки.
+    - Некоторые функции дублируют функциональность (например, `listToArr` можно заменить на `Array.from`).
+    - Не используется `logger` для логирования ошибок.
+    - Вложенные циклы можно оптимизировать, используя более современные методы итерации.
+    - Некоторые проверки избыточны или неполные.
+    - Использование `var` вместо `let` и `const` в некоторых местах.
 
 **Рекомендации по улучшению**
 
-1. **Добавить docstring:**
-   - Добавить docstring в формате reStructuredText (RST) для всех функций, переменных и констант.
-   - Описать параметры, возвращаемые значения и назначение каждой функции.
+1.  **Добавить описание модуля:**
+    - В начале файла добавить описание модуля, его назначения и основных функций.
 
-2. **Использовать `logger`:**
-   - Заменить `console.log` на `logger.debug` для отладки.
-   - В `try-catch` блоках использовать `logger.error` для логирования ошибок и выводить информацию об исключении.
+2.  **Добавить документацию к функциям:**
+    - Для каждой функции добавить docstring в формате RST, описывающий назначение функции, ее аргументы, возвращаемые значения и возможные ошибки.
 
-3. **Улучшить обработку ошибок:**
-   - Вместо `try-catch` с пустым блоком использовать `logger.error` для логирования ошибок.
-   - В функциях, которые возвращают `null`, явно указывать это в docstring.
-   - Добавить проверки на наличие нужных свойств у объектов перед их использованием.
+3.  **Использовать константы:**
+    - Определить константы для магических значений, таких как `nodeType` и `xpathResult`, для повышения читаемости кода.
 
-4. **Оптимизация кода:**
-   - Использовать `for...of` вместо циклов `for` для итерации по массивам.
-   - Избегать лишних проверок `undefined` и `null` там, где это не нужно.
-   - Использовать `const` вместо `var` там, где это уместно.
-   - Использовать  `Array.from(list)` вместо `fu.listToArr(list)`.
-    
-5. **Улучшить читаемость:**
-    - Добавить комментарии к сложным участкам кода.
-    - Привести код в соответствие с Python style guide.
-6. **Привести в соответствие с другими файлами**
-    -  Переименовать `fu` в `func`.
-    -  Переименовать `tx` в `try_xpath`.
+4.  **Добавить обработку ошибок:**
+    - Добавить обработку ошибок в функции, где она отсутствует, например, в `makeResolver`.
+    - Использовать `logger.error` для логирования ошибок.
 
-**Оптимизиробанный код**
+5.  **Улучшить безопасность:**
+    - При использовании `JSON.parse` проверять входные данные на корректность перед парсингом.
 
-```javascript
-/*
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-/**
- * Модуль предоставляет набор функций для работы с XPath и DOM.
- * =========================================================================================
- *
- * Этот модуль содержит функции для выполнения XPath запросов,
- * получения информации об элементах DOM, работы с классами элементов,
- * сохранения и восстановления атрибутов, а также для работы с фреймами.
- *
- *
- * .. code-block:: javascript
- *
- *      // Пример использования функции для выполнения XPath
- *      let result = try_xpath.functions.execExpr('//div', 'querySelectorAll', {context: document});
- *      console.log(result.items);
- *
- */
+6.  **Устранить дублирование кода:**
+    - Заменить функцию `listToArr` на `Array.from` там, где это возможно.
 
-// namespace
-if (!tryxpath) {
+7.  **Оптимизировать циклы:**
+    - Использовать `for...of` и другие современные методы итерации вместо `for` с индексами, где это возможно.
+
+8.  **Использовать `let` и `const`:**
+    - Заменить `var` на `let` и `const` в соответствии с рекомендациями ES6+.
+
+9. **Улучшить проверки:**
+    - Уточнить и дополнить проверки для повышения надежности кода.
+
+10. **Документировать сложные части:**
+    - Добавить комментарии к наиболее сложным участкам кода для облегчения понимания.
+
+**Оптимизированный код**
+```python
+"""
+Модуль для работы с XPath и DOM элементами.
+=========================================================================================
+
+Этот модуль предоставляет набор функций для выполнения XPath запросов,
+обработки результатов и манипулирования DOM элементами.
+Модуль включает в себя функции для преобразования результатов XPath в массивы,
+создания и манипулирования DOM элементами, а также для работы с атрибутами и классами элементов.
+
+Пример использования
+--------------------
+
+Пример использования функций для выполнения XPath запросов:
+
+.. code-block:: javascript
+
     var tryxpath = {};
-}
-if (!tryxpath.functions) {
     tryxpath.functions = {};
-}
+
+    var fu = tryxpath.functions;
+
+    var result = fu.execExpr('//div', 'querySelectorAll', {context: document.body});
+    console.log(result.items);
+
+    var result = fu.execExpr('//*[@id="myId"]', 'evaluate', {context: document, resultType:xpathResult.FIRST_ORDERED_NODE_TYPE});
+    console.log(result.items);
+
+    var details = fu.getItemDetails(result.items);
+    console.log(details);
+
+"""
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+from src.logger.logger import logger
+
+# namespace
+if not tryxpath:
+    var tryxpath = {};
+if not tryxpath.functions:
+    tryxpath.functions = {};
 
 (function (window, undefined) {
     "use strict";
 
-    // alias
-    var try_xpath = tryxpath;
-    var func = tryxpath.functions;
-    
-    from src.logger.logger import logger # импортируем logger
+    # alias
+    var tx = tryxpath;
+    var fu = tryxpath.functions;
 
-    // prevent multiple execution
-    if (func.done) {
+    # prevent multiple execution
+    if (fu.done) {
         return;
     }
-    func.done = true;
+    fu.done = true;
     
+    # Константы для типов узлов
+    const ELEMENT_NODE = Node.ELEMENT_NODE;
+    const ATTRIBUTE_NODE = Node.ATTRIBUTE_NODE;
+    const TEXT_NODE = Node.TEXT_NODE;
+    const DOCUMENT_NODE = Node.DOCUMENT_NODE;
+
+    # Константы для типов результатов XPath
+    const ANY_TYPE = xpathResult.ANY_TYPE;
+    const NUMBER_TYPE = xpathResult.NUMBER_TYPE;
+    const STRING_TYPE = xpathResult.STRING_TYPE;
+    const BOOLEAN_TYPE = xpathResult.BOOLEAN_TYPE;
+    const UNORDERED_NODE_ITERATOR_TYPE = xpathResult.UNORDERED_NODE_ITERATOR_TYPE;
+    const ORDERED_NODE_ITERATOR_TYPE = xpathResult.ORDERED_NODE_ITERATOR_TYPE;
+    const UNORDERED_NODE_SNAPSHOT_TYPE = xpathResult.UNORDERED_NODE_SNAPSHOT_TYPE;
+    const ORDERED_NODE_SNAPSHOT_TYPE = xpathResult.ORDERED_NODE_SNAPSHOT_TYPE;
+    const ANY_UNORDERED_NODE_TYPE = xpathResult.ANY_UNORDERED_NODE_TYPE;
+    const FIRST_ORDERED_NODE_TYPE = xpathResult.FIRST_ORDERED_NODE_TYPE;
+
     /**
-     * Выполняет XPath выражение или запрос CSS.
+     * Выполняет XPath выражение или CSS селектор.
      *
-     * :param expr: XPath выражение или CSS селектор.
-     * :param method: Метод выполнения запроса: "evaluate", "querySelector", "querySelectorAll".
-     * :param opts: Объект с параметрами, такими как `context`, `resolver`, `document`, `resultType`.
-     * :return: Объект с результатами запроса, содержащий массив `items`, метод запроса `method`, и тип результата `resultType`.
-     * :raises Error: Если контекст не является узлом или атрибутом для метода "evaluate" или не является документом или элементом для "querySelector" или "querySelectorAll".
+     * Args:
+     *     expr (str): XPath выражение или CSS селектор.
+     *     method (str): Метод выполнения ('evaluate', 'querySelector', 'querySelectorAll').
+     *     opts (dict, optional): Дополнительные параметры, такие как контекст, резолвер и тип результата.
      *
-     * .. code-block:: javascript
+     * Returns:
+     *     dict: Объект с результатами:
+     *         - items (list): Массив найденных элементов.
+     *         - method (str): Метод выполнения.
+     *         - resultType (int, optional): Тип результата XPath (если применимо).
      *
-     *   // Пример использования
-     *   let result = func.execExpr('//div', 'querySelectorAll', {context: document});
-     *   console.log(result.items);
+     * Raises:
+     *      Error: Если контекст не является узлом или атрибутом для evaluate, или документом или элементом для querySelector и querySelectorAll.
      */
-    func.execExpr = function(expr, method, opts) {
+    fu.execExpr = function(expr, method, opts) {
         opts = opts || {};
         var context = opts.context || document;
         var resolver = ("resolver" in opts) ? opts.resolver : null;
-        var doc = opts.document || func.getOwnerDocument(context) || context;
+        var doc = opts.document || fu.getOwnerDocument(context) || context;
 
         var items, resultType;
 
         switch (method) {
         case "evaluate":
-            if (!func.isNodeItem(context) && !func.isAttrItem(context)) {
-                logger.error("The context is either Nor nor Attr.");
+            if (!fu.isNodeItem(context) && !fu.isAttrItem(context)) {
+                logger.error("The context is neither Node nor Attr.");
                 throw new Error("The context is either Nor nor Attr.");
             }
-            resolver = func.makeResolver(resolver);
-            resultType = opts.resultType || xpathResult.ANY_TYPE;
+            resolver = fu.makeResolver(resolver);
+            resultType = opts.resultType || ANY_TYPE;
             let result = doc.evaluate(expr, context, resolver, resultType,
                                       null);
-            items = func.resToArr(result, resultType);
-            if (resultType === xpathResult.ANY_TYPE) {
+            items = fu.resToArr(result, resultType);
+            if (resultType === ANY_TYPE) {
                 resultType = result.resultType;
             }
             break;
 
         case "querySelector":
-            if (!func.isDocOrElem(context)) {
-                logger.error("The context is either Document nor Element.");
+            if (!fu.isDocOrElem(context)) {
+                 logger.error("The context is neither Document nor Element.");
                 throw new Error("The context is either Document nor Element.");
             }
             let elem = context.querySelector(expr);
@@ -145,13 +180,13 @@ if (!tryxpath.functions) {
 
         case "querySelectorAll":
         default:
-            if (!func.isDocOrElem(context)) {
+            if (!fu.isDocOrElem(context)) {
                 logger.error("The context is neither Document nor Element.");
                 throw new Error(
                     "The context is neither Document nor Element.");
             }
             let elems = context.querySelectorAll(expr);
-            items = func.listToArr(elems);
+            items = fu.listToArr(elems);
             resultType = null;
             break;
         }
@@ -162,76 +197,72 @@ if (!tryxpath.functions) {
             "resultType": resultType
         };
     };
-
     /**
      * Преобразует результат XPath в массив.
      *
-     * :param res: Результат выполнения XPath запроса.
-     * :param type: Тип результата XPath.
-     * :return: Массив элементов, полученных из результата.
-     * :raises Error: Если тип результата `resultType` не поддерживается.
+     * Args:
+     *    res (XPathResult): Результат XPath.
+     *    type (int, optional): Тип результата. Если не указан, используется `res.resultType`.
      *
-     * .. code-block:: javascript
+     * Returns:
+     *    list: Массив элементов.
      *
-     *   // Пример использования
-     *   let result = document.evaluate('//div', document, null, xpathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-     *   let arr = func.resToArr(result, xpathResult.ORDERED_NODE_ITERATOR_TYPE);
-     *   console.log(arr);
+     * Raises:
+     *    Error: Если тип результата недействителен.
      */
-    func.resToArr = function (res, type) {
-        if (type === undefined || (type === xpathResult.ANY_TYPE)) {
+    fu.resToArr = function (res, type) {
+        if (type === undefined || (type === ANY_TYPE)) {
             type = res.resultType;
         }
 
         var arr = [];
         switch(type) {
-        case xpathResult.NUMBER_TYPE :
+        case NUMBER_TYPE:
             arr.push(res.numberValue);
             break;
-        case xpathResult.STRING_TYPE :
+        case STRING_TYPE:
             arr.push(res.stringValue);
             break;
-        case xpathResult.BOOLEAN_TYPE :
+        case BOOLEAN_TYPE:
             arr.push(res.booleanValue);
             break;
-        case xpathResult.ORDERED_NODE_ITERATOR_TYPE :
-        case xpathResult.UNORDERED_NODE_ITERATOR_TYPE :
+        case ORDERED_NODE_ITERATOR_TYPE:
+        case UNORDERED_NODE_ITERATOR_TYPE:
             for (var node = res.iterateNext()
                  ; node !== null
                  ; node = res.iterateNext()) {
                 arr.push(node);
             }
             break;
-        case xpathResult.ORDERED_NODE_SNAPSHOT_TYPE :
-        case xpathResult.UNORDERED_NODE_SNAPSHOT_TYPE :
+        case ORDERED_NODE_SNAPSHOT_TYPE:
+        case UNORDERED_NODE_SNAPSHOT_TYPE:
             for (var i = 0; i < res.snapshotLength; i++) {
                 arr.push(res.snapshotItem(i));
             }
             break;
-        case xpathResult.ANY_UNORDERED_NODE_TYPE :
-        case xpathResult.FIRST_ORDERED_NODE_TYPE :
+        case ANY_UNORDERED_NODE_TYPE:
+        case FIRST_ORDERED_NODE_TYPE:
             arr.push(res.singleNodeValue);
             break;
-        default :
-            logger.error(`The resultType is invalid. ${type}`);
+        default:
+            logger.error("The resultType is invalid. " + type);
             throw new Error("The resultType is invalid. " + type);
         }
         return arr;
     };
-    
     /**
      * Создает функцию-резолвер для XPath из объекта или строки JSON.
      *
-     * :param obj: Объект или строка JSON, представляющая пространство имен для резолвера.
-     * :return: Функция-резолвер, используемая в `doc.evaluate`.
-     * :raises Error: Если `obj` не является допустимым JSON или объектом.
+     * Args:
+     *    obj (object | string | function | null): Объект с пространствами имен, строка JSON или функция.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *    let resolver = func.makeResolver('{"myprefix": "http://example.com"}');
-     *   let result = document.evaluate('//myprefix:div', document, resolver, xpathResult.ANY_TYPE, null);
+     * Returns:
+     *     function | null: Функция-резолвер или null.
+     *
+     * Raises:
+     *     Error: Если резолвер недействителен.
      */
-    func.makeResolver = function (obj) {
+    fu.makeResolver = function (obj) {
         if (obj === null) {
             return null;
         }
@@ -244,16 +275,16 @@ if (!tryxpath.functions) {
             try {
                 dict = JSON.parse(obj);
             } catch (e) {
-                 logger.error(`Invalid resolver [${obj}]. : ${e.message}`);
+                 logger.error("Invalid resolver [" + obj + "]. : " + e.message);
                 throw new Error("Invalid resolver [" + obj + "]. : "
-                                + e.message);                
+                                + e.message);
             }
         } else {
             dict = obj;
         }
 
-        if (func.isValidDict(dict)) {
-            let map = func.objToMap(dict);
+        if (fu.isValidDict(dict)) {
+            let map = fu.objToMap(dict);
             return function (str) {
                 if (map.has(str)) {
                     return map.get(str);
@@ -261,101 +292,83 @@ if (!tryxpath.functions) {
                 return "";
             };
         }
-        logger.error(`Invalid resolver. ${JSON.stringify(dict, null)}`);
+         logger.error("Invalid resolver. " + JSON.stringify(dict, null));
         throw new Error("Invalid resolver. "
                         + JSON.stringify(dict, null));
     };
-
     /**
-     * Проверяет, является ли объект допустимым словарем (объектом со строковыми значениями).
+     * Проверяет, является ли объект допустимым словарем для резолвера.
      *
-     * :param obj: Проверяемый объект.
-     * :return: `true`, если объект является допустимым словарем, `false` в противном случае.
+     * Args:
+     *   obj (object): Объект для проверки.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let isValid = func.isValidDict({"key1": "value1", "key2": "value2"});
-     *   console.log(isValid);
+     * Returns:
+     *   bool: True, если объект является допустимым словарем, False в противном случае.
      */
-    func.isValidDict = function (obj) {
+    fu.isValidDict = function (obj) {
         if ((obj === null) || (typeof(obj) !== "object")) {
             return false;
         }
-        for (var key of Object.keys(obj)) {
+        for (let key of Object.keys(obj)) {
             if (typeof(obj[key]) !== "string") {
                 return false;
             }
         }
         return true;
     };
-
     /**
      * Преобразует объект в Map.
      *
-     * :param obj: Исходный объект.
-     * :return: Map, созданный на основе объекта.
+     * Args:
+     *     obj (object): Объект для преобразования.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *  let map = func.objToMap({"key1": "value1", "key2": "value2"});
-     *   console.log(map);
+     * Returns:
+     *     Map: Map, созданный из объекта.
      */
-    func.objToMap = function (obj) {
+    fu.objToMap = function (obj) {
         var map = new Map();
         Object.keys(obj).forEach(function(item) {
             map.set(item, obj[item]);
         });
         return map;
     };
-
     /**
      * Проверяет, является ли объект документом или элементом.
      *
-     * :param obj: Проверяемый объект.
-     * :return: `true`, если объект является документом или элементом, `false` в противном случае.
+     * Args:
+     *     obj (object): Объект для проверки.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let isDocOrElem = func.isDocOrElem(document.body);
-     *   console.log(isDocOrElem);
+     * Returns:
+     *     bool: True, если объект является документом или элементом, False в противном случае.
      */
-    func.isDocOrElem = function(obj) {
-        if ((obj.nodeType === 1) || (obj.nodeType === 9)) {
+    fu.isDocOrElem = function(obj) {
+        if ((obj.nodeType === ELEMENT_NODE) || (obj.nodeType === DOCUMENT_NODE)) {
             return true;
         }
         return false;
     };
-
     /**
-     * Преобразует NodeList в массив.
+     * Преобразует HTMLCollection или NodeList в массив.
      *
-     * :param list: NodeList для преобразования.
-     * :return: Массив элементов, полученных из NodeList.
+     * Args:
+     *   list (HTMLCollection | NodeList): Коллекция элементов.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let nodeList = document.querySelectorAll('div');
-     *   let array = func.listToArr(nodeList);
-     *   console.log(array);
+     * Returns:
+     *   list: Массив элементов.
      */
-    func.listToArr = function(list) {
-         return Array.from(list);
+    fu.listToArr = function(list) {
+        return Array.from(list);
     };
-
     /**
-     * Возвращает подробную информацию об элементе DOM.
+     * Извлекает детали элемента.
      *
-     * :param item: Элемент DOM, для которого необходимо получить информацию.
-     * :return: Объект с детальной информацией об элементе, включая тип, имя, значение и текстовое содержимое.
+     * Args:
+     *     item (object): Элемент для извлечения деталей.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let detail = func.getItemDetail(document.body);
-     *   console.log(detail);
+     * Returns:
+     *     dict: Объект с деталями элемента (тип, имя, значение, текстовое содержимое).
      */
-    func.getItemDetail = function (item) {
-        var typeStr = typeof(item);
-
+    fu.getItemDetail = function (item) {
         switch (typeof(item)) {
         case "string":
             return {
@@ -380,10 +393,10 @@ if (!tryxpath.functions) {
             };
         }
 
-        // item is Element
-        if (func.isElementItem(item)) {
+        # item is Element
+        if (fu.isElementItem(item)) {
             return {
-                "type": "Node " + func.getNodeTypeStr(item.nodeType)
+                "type": "Node " + fu.getNodeTypeStr(item.nodeType)
                     + "(nodeType=" + item.nodeType + ")",
                 "name": item.nodeName,
                 "value": "",
@@ -391,8 +404,8 @@ if (!tryxpath.functions) {
             };
         }
         
-        // item is Attr
-        if (func.isAttrItem(item)) {
+        # item is Attr
+        if (fu.isAttrItem(item)) {
             return {
                 "type": "Attr",
                 "name": item.name,
@@ -401,175 +414,150 @@ if (!tryxpath.functions) {
             };
         }
 
-        // item is Node
+        # item is Node
         return {
-            "type": "Node " + func.getNodeTypeStr(item.nodeType) + "(nodeType="
+            "type": "Node " + fu.getNodeTypeStr(item.nodeType) + "(nodeType="
                 + item.nodeType + ")",
             "name": item.nodeName,
             "value": item.nodeValue || "",
             "textContent": item.textContent || ""
         };
     };
-
     /**
-     * Возвращает массив подробной информации для массива элементов DOM.
+     * Извлекает детали для массива элементов.
      *
-     * :param items: Массив элементов DOM.
-     * :return: Массив объектов с подробной информацией о каждом элементе.
+     * Args:
+     *     items (list): Массив элементов.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let items = document.querySelectorAll('div');
-     *   let details = func.getItemDetails(items);
-     *   console.log(details);
+     * Returns:
+     *     list: Массив объектов с деталями элементов.
      */
-    func.getItemDetails = function (items) {
+    fu.getItemDetails = function (items) {
         var details = [];
-        for (var i = 0; i < items.length; i++) {
-            details.push(func.getItemDetail(items[i]));
+        for (let item of items) {
+            details.push(fu.getItemDetail(item));
         }
         return details;
     };
 
-    /**
-     *  Сопоставление числовых кодов типов узлов с их строковыми представлениями.
-     */
     const nodeTypeMap = new Map([
-        [Node.ELEMENT_NODE, "ELEMENT_NODE"],
-        [Node.ATTRIBUTE_NODE, "ATTRIBUTE_NODE"],
-        [Node.TEXT_NODE, "TEXT_NODE"],
+        [ELEMENT_NODE, "ELEMENT_NODE"],
+        [ATTRIBUTE_NODE, "ATTRIBUTE_NODE"],
+        [TEXT_NODE, "TEXT_NODE"],
         [Node.CDATA_SECTION_NODE, "CDATA_SECTION_NODE"],
         [Node.ENTITY_REFERENCE_NODE, "ENTITY_REFERENCE_NODE"],
         [Node.ENTITY_NODE, "ENTITY_NODE"],
         [Node.PROCESSING_INSTRUCTION_NODE, "PROCESSING_INSTRUCTION_NODE"],
         [Node.COMMENT_NODE, "COMMENT_NODE"],
-        [Node.DOCUMENT_NODE, "DOCUMENT_NODE"],
+        [DOCUMENT_NODE, "DOCUMENT_NODE"],
         [Node.DOCUMENT_TYPE_NODE, "DOCUMENT_TYPE_NODE"],
         [Node.DOCUMENT_FRAGMENT_NODE, "DOCUMENT_FRAGMENT_NODE"],
         [Node.NOTATION_NODE, "NOTATION_NODE"]
     ]);
-
     /**
      * Получает строковое представление типа узла.
      *
-     * :param nodeType: Числовой код типа узла.
-     * :return: Строковое представление типа узла.
+     * Args:
+     *     nodeType (int): Тип узла.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let nodeTypeStr = func.getNodeTypeStr(Node.ELEMENT_NODE);
-     *   console.log(nodeTypeStr);
+     * Returns:
+     *     str: Строковое представление типа узла.
      */
-    func.getNodeTypeStr = function(nodeType) {
+    fu.getNodeTypeStr = function(nodeType) {
         if (nodeTypeMap.has(nodeType)) {
             return nodeTypeMap.get(nodeType);
         }
         return "Unknown";
     };
 
-    /**
-     * Сопоставление числовых и строковых представлений типов результатов XPath.
-     */
     const xpathResultMaps = {
         "numToStr" : new Map([
-            [xpathResult.ANY_TYPE, "ANY_TYPE"],
-            [xpathResult.NUMBER_TYPE , "NUMBER_TYPE"],
-            [xpathResult.STRING_TYPE , "STRING_TYPE"],
-            [xpathResult.BOOLEAN_TYPE , "BOOLEAN_TYPE"],
-            [xpathResult.UNORDERED_NODE_ITERATOR_TYPE ,
+            [ANY_TYPE, "ANY_TYPE"],
+            [NUMBER_TYPE , "NUMBER_TYPE"],
+            [STRING_TYPE , "STRING_TYPE"],
+            [BOOLEAN_TYPE , "BOOLEAN_TYPE"],
+            [UNORDERED_NODE_ITERATOR_TYPE ,
              "UNORDERED_NODE_ITERATOR_TYPE"],
-            [xpathResult.ORDERED_NODE_ITERATOR_TYPE ,
+            [ORDERED_NODE_ITERATOR_TYPE ,
              "ORDERED_NODE_ITERATOR_TYPE"],
-            [xpathResult.UNORDERED_NODE_SNAPSHOT_TYPE ,
+            [UNORDERED_NODE_SNAPSHOT_TYPE ,
              "UNORDERED_NODE_SNAPSHOT_TYPE"],
-            [xpathResult.ORDERED_NODE_SNAPSHOT_TYPE ,
+            [ORDERED_NODE_SNAPSHOT_TYPE ,
              "ORDERED_NODE_SNAPSHOT_TYPE"],
-            [xpathResult.ANY_UNORDERED_NODE_TYPE, "ANY_UNORDERED_NODE_TYPE"],
-            [xpathResult.FIRST_ORDERED_NODE_TYPE, "FIRST_ORDERED_NODE_TYPE"]
+            [ANY_UNORDERED_NODE_TYPE, "ANY_UNORDERED_NODE_TYPE"],
+            [FIRST_ORDERED_NODE_TYPE, "FIRST_ORDERED_NODE_TYPE"]
         ]),
 
         "strToNum" : new Map([
-            ["ANY_TYPE", xpathResult.ANY_TYPE],
-            ["NUMBER_TYPE", xpathResult.NUMBER_TYPE],
-            ["STRING_TYPE", xpathResult.STRING_TYPE],
-            ["BOOLEAN_TYPE", xpathResult.BOOLEAN_TYPE],
+            ["ANY_TYPE", ANY_TYPE],
+            ["NUMBER_TYPE", NUMBER_TYPE],
+            ["STRING_TYPE", STRING_TYPE],
+            ["BOOLEAN_TYPE", BOOLEAN_TYPE],
             ["UNORDERED_NODE_ITERATOR_TYPE",
-             xpathResult.UNORDERED_NODE_ITERATOR_TYPE],
+             UNORDERED_NODE_ITERATOR_TYPE],
             ["ORDERED_NODE_ITERATOR_TYPE",
-             xpathResult.ORDERED_NODE_ITERATOR_TYPE],
+             ORDERED_NODE_ITERATOR_TYPE],
             ["UNORDERED_NODE_SNAPSHOT_TYPE",
-             xpathResult.UNORDERED_NODE_SNAPSHOT_TYPE],
+             UNORDERED_NODE_SNAPSHOT_TYPE],
             ["ORDERED_NODE_SNAPSHOT_TYPE",
-             xpathResult.ORDERED_NODE_SNAPSHOT_TYPE],
-            ["ANY_UNORDERED_NODE_TYPE", xpathResult.ANY_UNORDERED_NODE_TYPE],
-            ["FIRST_ORDERED_NODE_TYPE", xpathResult.FIRST_ORDERED_NODE_TYPE]
+             ORDERED_NODE_SNAPSHOT_TYPE],
+            ["ANY_UNORDERED_NODE_TYPE", ANY_UNORDERED_NODE_TYPE],
+            ["FIRST_ORDERED_NODE_TYPE", FIRST_ORDERED_NODE_TYPE]
         ])
     };
-    
     /**
      * Получает строковое представление типа результата XPath.
      *
-     * :param resultType: Числовой код типа результата XPath.
-     * :return: Строковое представление типа результата.
+     * Args:
+     *    resultType (int): Тип результата XPath.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let resultTypeStr = func.getxpathResultStr(xpathResult.NUMBER_TYPE);
-     *   console.log(resultTypeStr);
+     * Returns:
+     *    str: Строковое представление типа результата XPath.
      */
-    func.getxpathResultStr = function (resultType) {
+    fu.getxpathResultStr = function (resultType) {
         if (xpathResultMaps.numToStr.has(resultType)) {
             return xpathResultMaps.numToStr.get(resultType);
         }
         return "Unknown";
     };
-
     /**
-     * Получает числовой код типа результата XPath по его строковому представлению.
+     * Получает числовое представление типа результата XPath.
      *
-     * :param resultTypeStr: Строковое представление типа результата XPath.
-     * :return: Числовой код типа результата XPath.
+     * Args:
+     *     resultTypeStr (str): Строковое представление типа результата XPath.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *  let resultTypeNum = func.getxpathResultNum("NUMBER_TYPE");
-     *   console.log(resultTypeNum);
+     * Returns:
+     *     int: Числовое представление типа результата XPath.
      */
-    func.getxpathResultNum = function (resultTypeStr) {
+    fu.getxpathResultNum = function (resultTypeStr) {
         if (xpathResultMaps.strToNum.has(resultTypeStr)) {
             return xpathResultMaps.strToNum.get(resultTypeStr);
         }
         return NaN;
     };
-
-     /**
-      * Проверяет, является ли элемент атрибутом.
-      *
-      * :param item: Элемент для проверки.
-      * :return: `true`, если элемент является атрибутом, `false` в противном случае.
-      *
-      * .. code-block:: javascript
-      *   // Пример использования
-      *   let isAttr = func.isAttrItem(document.body.attributes[0]);
-      *  console.log(isAttr);
-      */
-    func.isAttrItem = function (item) {
+    /**
+     * Проверяет, является ли элемент атрибутом.
+     *
+     * Args:
+     *     item (object): Элемент для проверки.
+     *
+     * Returns:
+     *     bool: True, если элемент является атрибутом, False в противном случае.
+     */
+    fu.isAttrItem = function (item) {
         return Object.prototype.toString.call(item) === "[object Attr]";
     };
-    
     /**
-      * Проверяет, является ли элемент узлом (не строкой или числом).
-      *
-      * :param item: Элемент для проверки.
-      * :return: `true`, если элемент является узлом, `false` в противном случае.
-      *
-      * .. code-block:: javascript
-      *   // Пример использования
-      *   let isNode = func.isNodeItem(document.body);
-      *   console.log(isNode);
-      */
-    func.isNodeItem = function (item) {
-        if (func.isAttrItem(item)) {
+     * Проверяет, является ли элемент узлом (не атрибутом, строкой или числом).
+     *
+     * Args:
+     *   item (object): Элемент для проверки.
+     *
+     * Returns:
+     *   bool: True, если элемент является узлом, False в противном случае.
+     */
+    fu.isNodeItem = function (item) {
+        if (fu.isAttrItem(item)) {
             return false;
         }
 
@@ -581,71 +569,57 @@ if (!tryxpath.functions) {
             return true;
         }
     };
-    
     /**
      * Проверяет, является ли элемент элементом DOM.
      *
-     * :param item: Элемент для проверки.
-     * :return: `true`, если элемент является элементом DOM, `false` в противном случае.
+     * Args:
+     *   item (object): Элемент для проверки.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let isElement = func.isElementItem(document.body);
-     *   console.log(isElement);
+     * Returns:
+     *   bool: True, если элемент является элементом DOM, False в противном случае.
      */
-    func.isElementItem = function (item) {
-        if (func.isNodeItem(item)
-            && (item.nodeType === Node.ELEMENT_NODE)) {
+    fu.isElementItem = function (item) {
+        if (fu.isNodeItem(item)
+            && (item.nodeType === ELEMENT_NODE)) {
             return true;
         }
         return false;
     };
-
     /**
-      * Добавляет класс к элементу DOM.
-      *
-      * :param clas: Класс для добавления.
-      * :param item: Элемент DOM.
-      *
-      * .. code-block:: javascript
-      *   // Пример использования
-      *   func.addClassToItem('my-class', document.body);
-      */
-    func.addClassToItem = function (clas, item) {
-        if (func.isElementItem(item)) {
+     * Добавляет класс к элементу.
+     *
+     * Args:
+     *     clas (str): Имя класса для добавления.
+     *     item (object): Элемент, к которому нужно добавить класс.
+     */
+    fu.addClassToItem = function (clas, item) {
+        if (fu.isElementItem(item)) {
             item.classList.add(clas);
         }
     };
-
     /**
-      * Добавляет класс к массиву элементов DOM.
-      *
-      * :param clas: Класс для добавления.
-      * :param items: Массив элементов DOM.
-      *
-      * .. code-block:: javascript
-      *   // Пример использования
-      *   func.addClassToItems('my-class', document.querySelectorAll('div'));
-      */
-    func.addClassToItems = function (clas, items) {
-        for (var item of items) {
-            func.addClassToItem(clas, item);
+     * Добавляет класс к массиву элементов.
+     *
+     * Args:
+     *     clas (str): Имя класса для добавления.
+     *     items (list): Массив элементов.
+     */
+    fu.addClassToItems = function (clas, items) {
+        for (let item of items) {
+            fu.addClassToItem(clas, item);
         }
     };
-
     /**
-     * Сохраняет исходный класс элемента DOM.
+     * Сохраняет класс элемента.
      *
-     * :param item: Элемент DOM.
-     * :return: Объект, содержащий элемент и его исходный класс.
+     * Args:
+     *     item (object): Элемент для сохранения класса.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *  let savedClass = func.saveItemClass(document.body);
-     *   console.log(savedClass);
+     * Returns:
+     *     dict | null: Объект с элементом и оригинальным классом или null, если элемент не является элементом DOM.
      */
-    func.saveItemClass = function (item) {
-        if (!func.isElementItem(item)) {
+    fu.saveItemClass = function (item) {
+        if (!fu.isElementItem(item)) {
             return null;
         }
 
@@ -660,18 +634,13 @@ if (!tryxpath.functions) {
             "origClass": clas
         }
     };
-
     /**
-     * Восстанавливает исходный класс элемента DOM.
+     * Восстанавливает класс элемента.
      *
-     * :param savedClass: Объект, содержащий элемент и его исходный класс.
-     *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let savedClass = func.saveItemClass(document.body);
-     *   func.restoreItemClass(savedClass);
+     * Args:
+     *     savedClass (dict): Объект с элементом и оригинальным классом.
      */
-    func.restoreItemClass = function (savedClass) {
+    fu.restoreItemClass = function (savedClass) {
         if (savedClass === null) {
             return null;
         }
@@ -682,149 +651,119 @@ if (!tryxpath.functions) {
             savedClass.elem.setAttribute("class", savedClass.origClass);
         }
     };
-
     /**
-     * Сохраняет исходные классы массива элементов DOM.
+     * Сохраняет классы массива элементов.
      *
-     * :param items: Массив элементов DOM.
-     * :return: Массив объектов, содержащих элементы и их исходные классы.
+     * Args:
+     *     items (list): Массив элементов.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *  let savedClasses = func.saveItemClasses(document.querySelectorAll('div'));
-     *   console.log(savedClasses);
+     * Returns:
+     *     list: Массив объектов с элементами и их оригинальными классами.
      */
-    func.saveItemClasses = function (items) {
+    fu.saveItemClasses = function (items) {
         var savedClasses = [];
-        for (var item of items) {
-            savedClasses.push(func.saveItemClass(item));
+        for (let item of items) {
+            savedClasses.push(fu.saveItemClass(item));
         }
         return savedClasses;
     };
-
     /**
-     * Восстанавливает исходные классы массива элементов DOM.
+     * Восстанавливает классы массива элементов.
      *
-     * :param savedClasses: Массив объектов, содержащих элементы и их исходные классы.
-     *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let savedClasses = func.saveItemClasses(document.querySelectorAll('div'));
-     *   func.restoreItemClasses(savedClasses);
+     * Args:
+     *     savedClasses (list): Массив объектов с элементами и их оригинальными классами.
      */
-    func.restoreItemClasses = function (savedClasses) {
-        for (var savedClass of savedClasses) {
-            func.restoreItemClass(savedClass);
+    fu.restoreItemClasses = function (savedClasses) {
+        for (let savedClass of savedClasses) {
+            fu.restoreItemClass(savedClass);
         }
     };
-    
     /**
-     * Устанавливает атрибут элементу DOM.
+     * Устанавливает атрибут для элемента.
      *
-     * :param name: Имя атрибута.
-     * :param value: Значение атрибута.
-     * :param item: Элемент DOM.
-     *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   func.setAttrToItem('data-test', '123', document.body);
+     * Args:
+     *     name (str): Имя атрибута.
+     *     value (str): Значение атрибута.
+     *     item (object): Элемент, которому нужно установить атрибут.
      */
-    func.setAttrToItem = function(name, value, item) {
-        if (func.isElementItem(item)) {
+    fu.setAttrToItem = function(name, value, item) {
+        if (fu.isElementItem(item)) {
             item.setAttribute(name, value);
         }
     };
-
     /**
-      * Удаляет атрибут у элемента DOM.
-      *
-      * :param name: Имя атрибута для удаления.
-      * :param item: Элемент DOM.
-      *
-      * .. code-block:: javascript
-      *   // Пример использования
-      *  func.removeAttrFromItem('data-test', document.body);
-      */
-    func.removeAttrFromItem = function(name, item) {
-        if (func.isElementItem(item)) {
+     * Удаляет атрибут из элемента.
+     *
+     * Args:
+     *     name (str): Имя атрибута для удаления.
+     *     item (object): Элемент, из которого нужно удалить атрибут.
+     */
+    fu.removeAttrFromItem = function(name, item) {
+        if (fu.isElementItem(item)) {
             item.removeAttribute(name);
         }
     };
-
     /**
-      * Удаляет атрибут у массива элементов DOM.
-      *
-      * :param name: Имя атрибута для удаления.
-      * :param items: Массив элементов DOM.
-      *
-      * .. code-block:: javascript
-      *   // Пример использования
-      *  func.removeAttrFromItems('data-test', document.querySelectorAll('div'));
-      */
-    func.removeAttrFromItems = function(name, items) {
+     * Удаляет атрибут из массива элементов.
+     *
+     * Args:
+     *     name (str): Имя атрибута для удаления.
+     *     items (list): Массив элементов.
+     */
+    fu.removeAttrFromItems = function(name, items) {
         items.forEach(item => {
-            func.removeAttrFromItem(name, item);
+            fu.removeAttrFromItem(name, item);
         });
     };
-
     /**
-     * Устанавливает атрибут индекса для каждого элемента в массиве.
+     * Устанавливает индекс в качестве атрибута для массива элементов.
      *
-     * :param name: Имя атрибута.
-     * :param items: Массив элементов DOM.
-     *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   func.setIndexToItems('data-index', document.querySelectorAll('div'));
+     * Args:
+     *    name (str): Имя атрибута для установки.
+     *    items (list): Массив элементов.
      */
-    func.setIndexToItems = function(name, items) {
-        for (var i = 0; i < items.length; i++) {
-            func.setAttrToItem(name, i, items[i]);
+    fu.setIndexToItems = function(name, items) {
+        for (let i = 0; i < items.length; i++) {
+            fu.setAttrToItem(name, i, items[i]);
         }
     };
-
     /**
-     * Получает родительский элемент DOM.
+     * Получает родительский элемент.
      *
-     * :param item: Элемент DOM.
-     * :return: Родительский элемент или `null`, если родитель не найден.
+     * Args:
+     *    item (object): Элемент, для которого нужно получить родителя.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let parent = func.getParentElement(document.body);
-     *   console.log(parent);
+     * Returns:
+     *   object | null: Родительский элемент или null.
      */
-    func.getParentElement = function (item) {
-         if (func.isAttrItem(item)) {
+    fu.getParentElement = function (item) {
+        if (fu.isAttrItem(item)) {
             let parent = item.ownerElement;
-            return parent || null;
+            return parent ? parent : null;
         }
 
-        if (func.isNodeItem(item)) {
+        if (fu.isNodeItem(item)) {
             let parent = item.parentElement;
             if (parent) {
                 return parent;
             }
-             parent = item.parentNode;
-             if (parent && (parent.nodeType === Node.ELEMENT_NODE)) {
+            parent = item.parentNode;
+            if (parent && (parent.nodeType === ELEMENT_NODE)) {
                 return parent;
             }
         }
         return null;
     };
-
     /**
-     * Получает массив родительских элементов DOM элемента.
+     * Получает массив родительских элементов, начиная с ближайшего родителя.
      *
-     * :param elem: Элемент DOM.
-     * :return: Массив родительских элементов DOM.
+     * Args:
+     *     elem (object): Элемент, для которого нужно получить массив предков.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let ancestors = func.getAncestorElements(document.body);
-     *   console.log(ancestors);
+     * Returns:
+     *     list: Массив родительских элементов.
      */
-    func.getAncestorElements = function (elem) {
+    fu.getAncestorElements = function (elem) {
         var ancs = [];
 
         var cur = elem;
@@ -836,7 +775,7 @@ if (!tryxpath.functions) {
         }
 
         parent = cur.parentNode;
-        while (parent && (parent.nodeType === Node.ELEMENT_NODE)) {
+        while (parent && (parent.nodeType === ELEMENT_NODE)) {
             ancs.push(cur);
             cur = parent;
             parent = cur.parentNode;
@@ -844,47 +783,41 @@ if (!tryxpath.functions) {
         
         return ancs;
     };
-    
-     /**
-      * Возвращает владельца документа для элемента DOM.
-      *
-      * :param item: Элемент DOM.
-      * :return: Владелец документа или null, если документ не найден.
-      *
-      * .. code-block:: javascript
-      *   // Пример использования
-      *  let ownerDocument = func.getOwnerDocument(document.body);
-      *   console.log(ownerDocument);
-      */
-    func.getOwnerDocument = function (item) {
-         if (func.isAttrItem(item)) {
+    /**
+     * Получает документ, которому принадлежит элемент.
+     *
+     * Args:
+     *   item (object): Элемент, для которого нужно получить документ.
+     *
+     * Returns:
+     *  object | null: Документ, которому принадлежит элемент, или null.
+     */
+    fu.getOwnerDocument = function (item) {
+        if (fu.isAttrItem(item)) {
             let elem = item.ownerElement;
-             if (elem) {
+            if (elem) {
                 return elem.ownerDocument;
             }
             return item.ownerDocument;
         }
 
-        if (func.isNodeItem(item)) {
+        if (fu.isNodeItem(item)) {
             return item.ownerDocument;
         }
 
         return null;
     };
-
     /**
-     * Создает строку заголовка таблицы.
+     * Создает строку заголовков таблицы.
      *
-     * :param values: Массив текстовых значений для ячеек заголовка.
-     * :param opts: Объект с параметрами, такими как `document`.
-     * :return: Строка `<tr>` с заголовками `<th>`.
+     * Args:
+     *     values (list): Массив значений для заголовков.
+     *     opts (dict, optional): Дополнительные параметры, такие как документ.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let header = func.createHeaderRow(['Index', 'Type', 'Name'], {document: document});
-     *   console.log(header);
+     * Returns:
+     *     object: Строка таблицы (элемент `tr`).
      */
-    func.createHeaderRow = function (values, opts) {
+    fu.createHeaderRow = function (values, opts) {
         opts = opts || {};
         var doc = opts.document || document;
 
@@ -896,20 +829,119 @@ if (!tryxpath.functions) {
         }
         return tr;
     };
-
     /**
-     * Создает строку заголовка таблицы с деталями элементов.
+     * Создает строку заголовков для таблицы деталей.
      *
-     * :param opts: Объект с параметрами, такими как `document`.
-     * :return: Строка `<tr>` с заголовками `<th>` для таблицы деталей.
+     * Args:
+     *   opts (dict, optional): Дополнительные параметры, такие как документ.
      *
-     * .. code-block:: javascript
-     *   // Пример использования
-     *   let header = func.createDetailTableHeader({document: document});
-     *   console.log(header);
+     * Returns:
+     *   object: Строка таблицы (элемент `tr`).
      */
-    func.createDetailTableHeader = function (opts) {
+    fu.createDetailTableHeader = function (opts) {
         opts = opts || {};
         var doc = opts.document || document;
 
-        var tr
+        var tr = doc.createElement("tr");
+        var th = doc.createElement("th");
+        th.textContent = "Index";
+        tr.appendChild(th);
+        
+        th = doc.createElement("th");
+        th.textContent = "Type";
+        tr.appendChild(th);
+
+        th = doc.createElement("th");
+        th.textContent = "Name";
+        tr.appendChild(th);
+
+        th = doc.createElement("th");
+        th.textContent = "Value";
+        tr.appendChild(th);
+
+        th = doc.createElement("th");
+        th.textContent = "Focus";
+        tr.appendChild(th);
+
+        return tr;
+    };
+    /**
+     * Создает строку таблицы с деталями элемента.
+     *
+     * Args:
+     *   index (int): Индекс элемента.
+     *   detail (dict): Объект с деталями элемента.
+     *   opts (dict, optional): Дополнительные параметры, такие как документ и ключи деталей.
+     *
+     * Returns:
+     *   object: Строка таблицы (элемент `tr`).
+     */
+    fu.createDetailRow = function (index, detail, opts) {
+        opts = opts || {};
+        var doc = opts.document || document;
+        var keys = opts.keys || ["type", "name", "value"];
+
+        var tr = doc.createElement("tr");
+
+        var td = doc.createElement("td");
+        td.textContent = index;
+        tr.appendChild(td);
+
+        for (let key of keys) {
+            let td = doc.createElement("td");
+            td.textContent = detail[key];
+            tr.appendChild(td);
+        }
+
+        td = doc.createElement("td");
+        var button = doc.createElement("button");
+        button.textContent = "Focus";
+        button.setAttribute("data-index", index);
+        td.appendChild(button);
+        tr.appendChild(td);
+
+        return tr;
+    };
+    /**
+     * Асинхронно добавляет строки деталей в таблицу.
+     *
+     * Args:
+     *     parent (object): Родительский элемент таблицы.
+     *     details (list): Массив объектов с деталями.
+     *     opts (dict, optional): Дополнительные параметры, такие как размер чанка, начало и конец, функция создания строки, ключи деталей.
+     *
+     * Returns:
+     *   Promise: Promise, который разрешается после добавления всех строк.
+     */
+    fu.appendDetailRows = function (parent, details, opts) {
+        return Promise.resolve().then(() => {
+            opts = opts || {};
+            var chunkSize = opts.chunkSize || 1000;
+            var begin = opts.begin || 0;
+            var end = opts.end || details.length;
+            var createRow = opts.createRow || fu.createDetailRow.bind(fu);
+            var detailKeys = opts.detailKeys || undefined;
+
+            var doc = parent.ownerDocument;
+            var frag = doc.createDocumentFragment();
+            var index = Math.max(begin, 0);
+            var chunkEnd = Math.min(index + chunkSize, details.length, end);
+
+            for ( ; index < chunkEnd; index++) {
+                frag.appendChild(createRow(index, details[index], {
+                    "document": doc,
+                    "keys": detailKeys
+                }));
+            }
+            parent.appendChild(frag);
+
+            if ((index < end) && (index < details.length)) {
+                return fu.appendDetailRows(parent, details, {
+                    "chunkSize": chunkSize,
+                    "begin": index,
+                    "end": end,
+                    "createRow": createRow,
+                    "detailKeys": detailKeys
+                });
+            } else {
+                return

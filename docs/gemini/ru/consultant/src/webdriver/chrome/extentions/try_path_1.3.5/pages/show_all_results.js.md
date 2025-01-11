@@ -1,234 +1,263 @@
-## Анализ кода модуля show_all_results.js
+# Анализ кода модуля `show_all_results.js`
 
 **Качество кода**
-    7
- -  Плюсы
-        - Код достаточно структурирован и понятен.
-        - Используются функции для создания URL скачивания и текстового представления данных.
-        - Присутствует обработка событий для элементов управления (кнопки).
-        - Код использует `browser.runtime.sendMessage` для взаимодействия с расширением.
- -  Минусы
-    -  Отсутствует обработка ошибок при взаимодействии с `browser.runtime.sendMessage`.
-    -  Не используются константы для ключей и заголовков, что снижает читаемость.
-    -  Не хватает docstring для функций, что усложняет понимание их назначения.
-    -  Код не использует `logger` для логирования ошибок.
-    -  Используется `var` вместо `let` и `const`.
-    -  Многократное использование `document.getElementById` может быть оптимизировано с помощью кеширования элементов.
+8
+-  Плюсы
+    - Код хорошо структурирован, используются функции для разделения логики.
+    - Присутствуют комментарии, объясняющие назначение переменных и блоков кода.
+    - Используются `addEventListener` для обработки событий.
+    - Код адаптирован для работы с расширениями браузера.
+-  Минусы
+    - Отсутствует документация в формате RST для функций и переменных.
+    - Используется устаревший синтаксис `var` вместо `let` и `const` (частично исправлено).
+    - Отсутствует обработка ошибок внутри функций, вместо этого используется `fu.onError`.
+    - Использование `JSON.stringify` для `value` и `textContent` в `makeConvertedInfoText` может быть не оптимальным, если данные уже являются строками.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить docstring:**
-    *   Добавить docstring к функциям `showAllResults`, `makeTextDownloadUrl`, `makeInfoText`, `makeConvertedInfoText`.
-
-2.  **Использовать `logger`:**
-    *   Заменить `console.error` на `logger.error` для логирования ошибок.
-    *   Добавить try-except блоки для обработки ошибок при вызове `browser.runtime.sendMessage` и `fu.updateDetailsTable`.
-
-3.  **Использовать константы:**
-    *   Определить константы для ключей, заголовков и других повторяющихся строк.
-
-4.  **Кешировать элементы:**
-    *   Кешировать результаты вызовов `document.getElementById` для повышения производительности.
-
-5.  **Использовать `let` и `const`:**
-    *   Заменить `var` на `let` и `const` в соответствии с современными стандартами JavaScript.
-
-6.  **Улучшить читаемость:**
-    *   Разбить длинные строки на несколько строк для улучшения читаемости кода.
-    *   Добавить комментарии к сложным частям кода.
-
-7.  **Обработка ошибок:**
-    *   Добавить обработку ошибок для асинхронных операций с использованием `async/await` и `try/catch`.
+1.  **Добавить документацию:**
+    - Добавить docstring в формате RST к каждой функции для описания её назначения, параметров и возвращаемых значений.
+2.  **Использовать `let` и `const`:**
+    - Заменить `var` на `let` для переменных, значения которых могут изменяться, и на `const` для констант.
+3.  **Обработка ошибок:**
+    - Заменить `fu.onError` на явную обработку ошибок с использованием `logger.error` для более точного логирования.
+4.  **Улучшить форматирование:**
+    - Сделать код более читаемым, добавив пробелы и пустые строки для разделения логических блоков.
+5.  **Оптимизация `makeConvertedInfoText`:**
+    - Проверить необходимость использования `JSON.stringify` для `value` и `textContent`, если они и так строки, то можно его убрать.
+6.  **Добавить импорт `logger`:**
+    -  Импортировать `logger` из `src.logger.logger`.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для отображения результатов XPath запросов в расширении.
-=================================================================
+Модуль для отображения результатов XPath запросов.
+=========================================================================================
 
-Этот модуль отвечает за отображение результатов XPath запросов,
-полученных от фонового скрипта расширения, на странице `show_all_results.html`.
-Он включает в себя функции для форматирования данных и создания интерактивных элементов.
+Этот модуль отвечает за отображение результатов выполнения XPath запросов, полученных из расширения браузера.
+Он обрабатывает данные, форматирует их и отображает в HTML-странице, а также предоставляет
+возможность экспорта результатов в текстовые файлы.
+
 """
-import json
-from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
-# Константы для ключей и заголовков
-DETAIL_KEYS = ["type", "name", "value", "textContent"]
-HEADER_VALUES = ["Type", "Name", "Value", "textContent"]
-INDEX_KEY = "index"
-
-# Кеширование элементов DOM
-document = window.document
-MESSAGE_ELEMENT = document.getElementById("message")
-TITLE_ELEMENT = document.getElementById("title")
-URL_ELEMENT = document.getElementById("url")
-FRAME_ID_ELEMENT = document.getElementById("frame-id")
-CONTEXT_METHOD_ELEMENT = document.getElementById("context-method")
-CONTEXT_EXPRESSION_ELEMENT = document.getElementById("context-expression")
-CONTEXT_SPECIFIED_RESULT_TYPE_ELEMENT = document.getElementById("context-specified-result-type")
-CONTEXT_RESULT_TYPE_ELEMENT = document.getElementById("context-result-type")
-CONTEXT_RESOLVER_ELEMENT = document.getElementById("context-resolver")
-CONTEXT_DETAIL_TBODY = document.getElementById("context-detail").getElementsByTagName("tbody")[0]
-CONTEXT_AREA = document.getElementById("context-area")
-MAIN_METHOD_ELEMENT = document.getElementById("main-method")
-MAIN_EXPRESSION_ELEMENT = document.getElementById("main-expression")
-MAIN_SPECIFIED_RESULT_TYPE_ELEMENT = document.getElementById("main-specified-result-type")
-MAIN_RESULT_TYPE_ELEMENT = document.getElementById("main-result-type")
-MAIN_RESOLVER_ELEMENT = document.getElementById("main-resolver")
-MAIN_COUNT_ELEMENT = document.getElementById("main-count")
-MAIN_DETAILS_TBODY = document.getElementById("main-details").getElementsByTagName("tbody")[0]
-EXPORT_TEXT_ELEMENT = document.getElementById("export-text")
-EXPORT_PARTLY_CONVERTED_ELEMENT = document.getElementById("export-partly-converted")
-CONTEXT_DETAIL_ELEMENT = document.getElementById("context-detail")
-MAIN_DETAILS_ELEMENT = document.getElementById("main-details")
-
-# alias
-tx = tryxpath
-fu = tryxpath.functions
+from src.logger.logger import logger # Импорт logger
 
 
-def showAllResults(results: dict) -> None:
-    """
-    Отображает результаты XPath запроса на странице.
+(function (window, undefined) {
+    "use strict";
 
-    :param results: Объект, содержащий результаты запроса.
-    :type results: dict
-    """
-    MESSAGE_ELEMENT.textContent = results.message
-    TITLE_ELEMENT.textContent = results.title
-    URL_ELEMENT.textContent = results.href
-    FRAME_ID_ELEMENT.textContent = results.frameId
+    # alias
+    const tx = tryxpath; # Используем const для неизменяемых переменных
+    const fu = tryxpath.functions; # Используем const для неизменяемых переменных
 
-    if results.context:
-        cont = results.context
-        CONTEXT_METHOD_ELEMENT.textContent = cont.method
-        CONTEXT_EXPRESSION_ELEMENT.textContent = cont.expression
-        CONTEXT_SPECIFIED_RESULT_TYPE_ELEMENT.textContent = cont.specifiedResultType
-        CONTEXT_RESULT_TYPE_ELEMENT.textContent = cont.resultType
-        CONTEXT_RESOLVER_ELEMENT.textContent = cont.resolver
+    const document = window.document; # Используем const для неизменяемых переменных
 
-        if cont.itemDetail:
-            fu.updateDetailsTable(CONTEXT_DETAIL_TBODY, [cont.itemDetail], {
-                "headerValues": HEADER_VALUES,
-                "detailKeys": DETAIL_KEYS
-            }).catch(lambda ex: logger.error(f"Ошибка при обновлении таблицы context detail: {ex}"))
-    else:
-        CONTEXT_AREA.parentNode.removeChild(CONTEXT_AREA)
+    const detailKeys = ["type", "name", "value", "textContent"]; # Используем const для неизменяемых переменных
+    const headerValues = ["Type", "Name", "Value", "textContent"]; # Используем const для неизменяемых переменных
+    let relatedTabId; # Используем let так как значение может меняться
+    let relatedFrameId; # Используем let так как значение может меняться
+    let executionId; # Используем let так как значение может меняться
 
-    main = results.main
-    MAIN_METHOD_ELEMENT.textContent = main.method
-    MAIN_EXPRESSION_ELEMENT.textContent = main.expression
-    MAIN_SPECIFIED_RESULT_TYPE_ELEMENT.textContent = main.specifiedResultType
-    MAIN_RESULT_TYPE_ELEMENT.textContent = main.resultType
-    MAIN_RESOLVER_ELEMENT.textContent = main.resolver
-    MAIN_COUNT_ELEMENT.textContent = main.itemDetails.length
+    /**
+     * Отображает результаты XPath запроса на странице.
+     *
+     * @param {object} results - Объект с результатами запроса.
+     * @param {string} results.message - Сообщение.
+     * @param {string} results.title - Заголовок.
+     * @param {string} results.href - URL.
+     * @param {number} results.frameId - ID фрейма.
+     * @param {object} results.context - Контекстные данные.
+     * @param {object} results.main - Основные данные.
+     *
+     */
+    function showAllResults(results) {
+        document.getElementById("message").textContent = results.message;
+        document.getElementById("title").textContent = results.title;
+        document.getElementById("url").textContent = results.href;
+        document.getElementById("frame-id").textContent = results.frameId;
 
-    fu.updateDetailsTable(MAIN_DETAILS_TBODY, main.itemDetails, {
-        "headerValues": HEADER_VALUES,
-        "detailKeys": DETAIL_KEYS
-    }).catch(lambda ex: logger.error(f"Ошибка при обновлении таблицы main detail: {ex}"))
+        if (results.context) {
+            const cont = results.context; # Используем const для неизменяемых переменных
+            document.getElementById("context-method").textContent = cont.method;
+            document.getElementById("context-expression").textContent = cont.expression;
+            document.getElementById("context-specified-result-type").textContent = cont.specifiedResultType;
+            document.getElementById("context-result-type").textContent = cont.resultType;
+            document.getElementById("context-resolver").textContent = cont.resolver;
+            const contTbody = document.getElementById("context-detail").getElementsByTagName("tbody")[0]; # Используем const для неизменяемых переменных
+            if (cont.itemDetail) {
+                fu.updateDetailsTable(contTbody, [cont.itemDetail], {
+                    "headerValues": headerValues,
+                    "detailKeys": detailKeys
+                }).catch(error => logger.error("Ошибка при обновлении таблицы деталей контекста", error)); # Используем стрелочную функцию и logger.error
+            }
+        } else {
+            const area = document.getElementById("context-area"); # Используем const для неизменяемых переменных
+            area.parentNode.removeChild(area);
+        }
 
+        const main = results.main; # Используем const для неизменяемых переменных
+        document.getElementById("main-method").textContent = main.method;
+        document.getElementById("main-expression").textContent = main.expression;
+        document.getElementById("main-specified-result-type").textContent = main.specifiedResultType;
+        document.getElementById("main-result-type").textContent = main.resultType;
+        document.getElementById("main-resolver").textContent = main.resolver;
+        document.getElementById("main-count").textContent = main.itemDetails.length;
+        const mainTbody = document.getElementById("main-details").getElementsByTagName("tbody")[0]; # Используем const для неизменяемых переменных
+        fu.updateDetailsTable(mainTbody, main.itemDetails, {
+            "headerValues": headerValues,
+            "detailKeys": detailKeys
+        }).catch(error => logger.error("Ошибка при обновлении таблицы основных деталей", error)); # Используем стрелочную функцию и logger.error
+    };
 
-def makeTextDownloadUrl(text: str) -> str:
-    """
-    Создает URL для скачивания текстового файла.
+    /**
+     * Создает URL для скачивания текстового файла.
+     *
+     * @param {string} text - Текст для скачивания.
+     * @returns {string} URL для скачивания файла.
+     */
+    function makeTextDownloadUrl(text) {
+        return URL.createObjectURL(new Blob([text], { "type": "text/plain"}));
+    };
 
-    :param text: Текст для скачивания.
-    :type text: str
-    :return: URL для скачивания.
-    :rtype: str
-    """
-    return URL.createObjectURL(new Blob([text], { "type": "text/plain"}))
+    /**
+     * Создает текстовое представление результатов запроса.
+     *
+     * @param {object} results - Объект с результатами запроса.
+     * @returns {string} Текстовое представление результатов.
+     */
+    function makeInfoText(results) {
+        const cont = results.context; # Используем const для неизменяемых переменных
+        const main = results.main; # Используем const для неизменяемых переменных
+        return `[Information]
+Message:     ${results.message}
+Title:       ${results.title}
+URL:         ${results.href}
+frameId:     ${results.frameId}
 
+${!cont ? "" : `[Context information]
+Method:                  ${cont.method}
+Expression:              ${cont.expression}
+Specified resultType:    ${cont.specifiedResultType}
+resultType:              ${cont.resultType}
+Resolver:                ${cont.resolver}
 
-def makeInfoText(results: dict) -> str:
-    """
-    Создает текстовое представление результатов XPath запроса.
+[Context detail]
+${headerValues.join(", ")}
+${fu.makeDetailText(cont.itemDetail, detailKeys, ", ")}
+`}
+[Main information]
+Method:                  ${main.method}
+Expression:              ${main.expression}
+Specified resultType:    ${main.specifiedResultType}
+resultType:              ${main.resultType}
+Resolver:                ${main.resolver}
+Count:                   ${main.itemDetails.length}
 
-    :param results: Объект, содержащий результаты запроса.
-    :type results: dict
-    :return: Текстовое представление результатов.
-    :rtype: str
-    """
-    cont = results.context
-    main = results.main
-    text = f"[Information]\nMessage:     {results.message}\nTitle:       {results.title}\nURL:         {results.href}\nframeId:     {results.frameId}\n\n"
-    if cont:
-        text += f"[Context information]\nMethod:                  {cont.method}\nExpression:              {cont.expression}\nSpecified resultType:    {cont.specifiedResultType}\nresultType:              {cont.resultType}\nResolver:                {cont.resolver}\n\n[Context detail]\n{', '.join(HEADER_VALUES)}\n{fu.makeDetailText(cont.itemDetail, DETAIL_KEYS, ', ')}\n"
+[Main details]
+${["Index"].concat(headerValues).join(", ")}
+${main.itemDetails.map((detail, ind) => {
+      return fu.makeDetailText(detail, ["index"].concat(detailKeys), ", ", {
+          "index": val => { return ind; }
+      });
+  }).join("\\n")}
+`;
+    };
 
-    text += f"[Main information]\nMethod:                  {main.method}\nExpression:              {main.expression}\nSpecified resultType:    {main.specifiedResultType}\nresultType:              {main.resultType}\nResolver:                {main.resolver}\nCount:                   {main.itemDetails.length}\n\n[Main details]\n{['Index'] + HEADER_VALUES.join(', ')}\n"
-    text += "\n".join(
-        fu.makeDetailText(detail, [INDEX_KEY] + DETAIL_KEYS, ', ', {INDEX_KEY: lambda val: ind})
-            for ind, detail in enumerate(main.itemDetails)
-    )
-    return text
+    /**
+     * Создает текстовое представление результатов запроса с преобразованными данными в JSON.
+     *
+     * @param {object} results - Объект с результатами запроса.
+     * @returns {string} Текстовое представление результатов с JSON преобразованиями.
+     */
+    function makeConvertedInfoText(results) {
+        const cont = results.context; # Используем const для неизменяемых переменных
+        const main = results.main; # Используем const для неизменяемых переменных
+        return `[Information]
+Message:     ${results.message}
+Title:       ${results.title}
+URL:         ${results.href}
+frameId:     ${results.frameId}
 
+${!cont ? "" : `[Context information]
+Method:                  ${cont.method}
+Expression(JSON):        ${JSON.stringify(cont.expression)}
+Specified resultType:    ${cont.specifiedResultType}
+resultType:              ${cont.resultType}
+Resolver:                ${cont.resolver}
 
-def makeConvertedInfoText(results: dict) -> str:
-    """
-    Создает текстовое представление результатов XPath запроса с JSON-сериализацией.
+[Context detail]
+Type, Name, Value(JSON), textContent(JSON)
+${fu.makeDetailText(cont.itemDetail, detailKeys, ", ", {
+    "value": JSON.stringify,
+    "textContent": JSON.stringify
+})}
+`}
+[Main information]
+Method:                  ${main.method}
+Expression(JSON):        ${JSON.stringify(main.expression)}
+Specified resultType:    ${main.specifiedResultType}
+resultType:              ${main.resultType}
+Resolver:                ${main.resolver}
+Count:                   ${main.itemDetails.length}
 
-    :param results: Объект, содержащий результаты запроса.
-    :type results: dict
-    :return: Текстовое представление результатов с JSON-сериализацией.
-    :rtype: str
-    """
-    cont = results.context
-    main = results.main
-    text = f"[Information]\nMessage:     {results.message}\nTitle:       {results.title}\nURL:         {results.href}\nframeId:     {results.frameId}\n\n"
-    if cont:
-        text += f"[Context information]\nMethod:                  {cont.method}\nExpression(JSON):        {json.dumps(cont.expression)}\nSpecified resultType:    {cont.specifiedResultType}\nresultType:              {cont.resultType}\nResolver:                {cont.resolver}\n\n[Context detail]\nType, Name, Value(JSON), textContent(JSON)\n{fu.makeDetailText(cont.itemDetail, DETAIL_KEYS, ', ', {'value': json.dumps, 'textContent': json.dumps})}\n"
-    text += f"[Main information]\nMethod:                  {main.method}\nExpression(JSON):        {json.dumps(main.expression)}\nSpecified resultType:    {main.specifiedResultType}\nresultType:              {main.resultType}\nResolver:                {main.resolver}\nCount:                   {main.itemDetails.length}\n\n[Main details]\nIndex, Type, Name, Value(JSON), textContent(JSON)\n"
-    text += "\n".join(
-        fu.makeDetailText(detail, [INDEX_KEY] + DETAIL_KEYS, ', ',
-                       {INDEX_KEY: lambda val: ind, 'value': json.dumps, 'textContent': json.dumps})
-            for ind, detail in enumerate(main.itemDetails)
-    )
+[Main details]
+Index, Type, Name, Value(JSON), textContent(JSON)
+${main.itemDetails.map((detail, ind) => {
+      return fu.makeDetailText(detail, ["index"].concat(detailKeys), ", ", {
+          "index": val => { return ind; },
+          "value": JSON.stringify,
+          "textContent": JSON.stringify
+      });
+  }).join("\\n")}
+`;
+    };
 
-    return text
+    window.addEventListener("load", function() {
+        browser.runtime.sendMessage({"event":"loadResults"}).then(results => {
+            if (results) {
+                relatedTabId = results.tabId;
+                relatedFrameId = results.frameId;
+                executionId = results.executionId;
 
+                const expoText = document.getElementById("export-text"); # Используем const для неизменяемых переменных
+                expoText.setAttribute("download", `tryxpath-${results.title}.txt`);
+                expoText.href = makeTextDownloadUrl(makeInfoText(results));
+                const expoPartConv = document.getElementById("export-partly-converted"); # Используем const для неизменяемых переменных
+                expoPartConv.setAttribute("download", `tryxpath-converted-${results.title}.txt`);
+                expoPartConv.href = makeTextDownloadUrl(makeConvertedInfoText(results));
 
-window.addEventListener("load", lambda: (
-    browser.runtime.sendMessage({"event":"loadResults"})
-        .then(results => {
-            if results:
-                relatedTabId = results.tabId
-                relatedFrameId = results.frameId
-                executionId = results.executionId
+                showAllResults(results);
+            }
+        }).catch(error => logger.error("Ошибка при получении результатов", error)); # Используем стрелочную функцию и logger.error
 
-                EXPORT_TEXT_ELEMENT.setAttribute(
-                    "download", f"tryxpath-{results.title}.txt")
-                EXPORT_TEXT_ELEMENT.href = makeTextDownloadUrl(makeInfoText(results))
-                EXPORT_PARTLY_CONVERTED_ELEMENT.setAttribute(
-                    "download", f"tryxpath-converted-{results.title}.txt")
-                EXPORT_PARTLY_CONVERTED_ELEMENT.href = makeTextDownloadUrl(
-                    makeConvertedInfoText(results))
+        const contDetail = document.getElementById("context-detail"); # Используем const для неизменяемых переменных
+        contDetail.addEventListener("click", function(event) {
+            const target = event.target; # Используем const для неизменяемых переменных
+            if (target.tagName.toLowerCase() === "button") {
+                browser.tabs.sendMessage(relatedTabId, {
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
+                    "executionId": executionId
+                }, {
+                    "frameId": relatedFrameId
+                });
+            }
+        });
 
-                showAllResults(results)
-        })
-        .catch(lambda ex: logger.error(f"Ошибка при получении результатов: {ex}"))
-    )
-)
-# устанавливаем слушатель на контекст
-CONTEXT_DETAIL_ELEMENT.addEventListener("click", lambda event: (
-    (target := event.target) and
-    target.tagName.toLowerCase() == "button" and
-    browser.tabs.sendMessage(relatedTabId, {
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "focusContextItem",
-        "executionId": executionId
-    }, {"frameId": relatedFrameId})
-))
+        const mainDetails = document.getElementById("main-details"); # Используем const для неизменяемых переменных
+        mainDetails.addEventListener("click", function(event) {
+            const target = event.target; # Используем const для неизменяемых переменных
+            if (target.tagName.toLowerCase() === "button") {
+                const ind = parseInt(target.getAttribute("data-index"), 10); # Используем const для неизменяемых переменных
+                browser.tabs.sendMessage(relatedTabId, {
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
+                    "executionId": executionId,
+                    "index": ind
+                }, {
+                    "frameId": relatedFrameId
+                });
+            }
+        });
+    });
 
-# устанавливаем слушатель на главные детали
-MAIN_DETAILS_ELEMENT.addEventListener("click", lambda event: (
-    (target := event.target) and
-    target.tagName.toLowerCase() == "button" and
-    (ind := int(target.getAttribute("data-index"), 10)) and
-    browser.tabs.sendMessage(relatedTabId, {
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "focusItem",
-        "executionId": executionId,
-        "index": ind
-    }, {"frameId": relatedFrameId})
-))
+})(window);

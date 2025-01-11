@@ -1,65 +1,79 @@
 # Анализ кода модуля `main.py`
 
 **Качество кода**
-- 7
-    - Плюсы
-        - Код имеет базовую структуру приложения PyQt6.
-        - Реализовано переключение между основными браузерами (Chrome, Firefox, Edge) на уровне профиля.
-        - Присутствует системный трей.
-        - Добавлены основные действия для работы с окном (свернуть, развернуть, закрыть).
-        - Имеется возможность выбора предустановленных URL для Google сервисов и моделей ИИ.
-        - Используются `QMessageBox` для диалога выбора браузера.
-    - Минусы
-        - Не хватает документации в формате reStructuredText (RST).
-        - Отсутствует обработка ошибок.
-        - Имеется избыточное дублирование строк кода и комментариев.
-        - Не используется `logger` для логирования.
-        -  Не реализована обработка исключений при загрузке профиля браузера.
-        -  URL для моделей Gemini и Claude являются фиктивными и должны быть заменены реальными.
+7
+-  Плюсы
+    - Код структурирован, используются классы для организации GUI.
+    - Присутствует основная функциональность: загрузка URL, сворачивание в трей, контекстное меню.
+    - Используются layouts для организации элементов интерфейса.
+    - Есть меню для выбора предустановленных URL-ов и моделей.
+-  Минусы
+    - Отсутствует логирование ошибок.
+    - Жестко заданы пути к профилям браузеров, что не является кроссплатформенным решением.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Нет документации к функциям, методам и классам.
+    - Не используется `logger` из `src.logger.logger`.
+    - Одинарные кавычки не везде используются.
 
 **Рекомендации по улучшению**
 
-1.  Добавить документацию в формате RST для модуля, классов, функций и методов.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок и предупреждений.
-3.  Упростить логику выбора браузера, вынеся её в отдельную функцию, и добавить обработку ошибок.
-4.  Добавить проверку на существование профиля браузера, прежде чем его использовать.
-5.  Использовать константы для URL сервисов.
-6.  Переработать обработку событий от кнопок для повышения читаемости кода, избегая анонимных lambda-функций.
-7.  Улучшить обработку URL, добавив проверку на корректность ввода и обрабатывая ошибки.
-8.  Улучшить комментарии в коде, сделав их более конкретными и информативными.
-9.  Добавить обработку ошибок при загрузке URL.
-10. Добавить обработку ошибки при показе сообщения о выборе браузера.
+1.  **Добавить описание модуля:**
+    - Добавить в начало файла описание модуля в формате docstring.
+2.  **Добавить импорты:**
+    - Добавить `from src.logger.logger import logger`
+    - Добавить `from pathlib import Path`
+3.  **Использовать одинарные кавычки:**
+    - Исправить двойные кавычки на одинарные, где это требуется.
+4.  **Документировать код:**
+    - Добавить docstring для всех классов, методов и функций.
+5.  **Логирование ошибок:**
+    - Использовать `logger.error` для записи ошибок вместо `QMessageBox.warning`.
+    - Убрать `sys.exit()` и обработать ошибку с помощью `logger.error`.
+6.  **Пути к профилям:**
+    - Реализовать более гибкий способ определения путей к профилям браузеров, возможно через конфигурационный файл.
+7.  **Обработка URL:**
+    - Улучшить обработку URL, например, проверять корректность URL перед загрузкой.
+    - Вынести логику проверки URL в отдельную функцию.
+8.  **Улучшить взаимодействие с треем:**
+    - Добавить возможность восстановления окна из трея по двойному клику на иконку.
+    - Вынести логику работы с треем в отдельный метод.
+9.  **Использовать `j_loads`:**
+   - В данном коде нет чтения данных из файла, но если бы оно было, то нужно было бы использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+10. **Рефакторинг:**
+    - Разбить метод `__init__` на более мелкие и логически связанные методы.
+11. **Убрать избыточность кода:**
+    - Избавиться от дублирования кода при создании действий меню, например, вынести в отдельную функцию.
 
 **Оптимизированный код**
-
 ```python
+# -*- coding: utf-8 -*-
+
 """
-Модуль для создания основного окна приложения и управления браузером.
+Модуль для создания и управления главным окном ассистента.
 =========================================================================================
 
-Этот модуль содержит класс :class:`AssistantMainWindow`, который используется для создания
-основного окна приложения, управления браузером, системным треем и меню.
+Этот модуль содержит класс :class:`AssistantMainWindow`, который создает главное окно приложения с функционалом
+загрузки URL в QWebEngineView, сворачивания в трей, выбора предустановленных URL и моделей.
 
 Пример использования
 --------------------
 
-Пример использования класса `AssistantMainWindow`:
+Пример запуска приложения:
 
 .. code-block:: python
 
     if __name__ == "__main__":
         app = QApplication(sys.argv)
-        app.setQuitOnLastWindowClosed(False)
+        app.setQuitOnLastWindowClosed(False)  # Чтобы приложение оставалось в трее
+
         window = AssistantMainWindow()
         window.show()
+
         sys.exit(app.exec())
 """
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 import sys
 import os
+from pathlib import Path
 from PyQt6.QtCore import Qt, QUrl
 from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtWidgets import (
@@ -69,45 +83,31 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineProfile
 
-from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns
-
-
-
-#: URL-адреса сервисов Google
-GOOGLE_SERVICES = {
-    "Google Login": "https://accounts.google.com/",
-    "Gmail": "https://mail.google.com/",
-    "Google Docs": "https://docs.google.com/",
-    "Google Sheets": "https://sheets.google.com/",
-    "Google Drive": "https://drive.google.com/",
-    "Google Photos": "https://photos.google.com/"
-}
-
-#: URL-адреса моделей ИИ
-AI_MODELS = {
-    "ChatGPT": "https://chat.openai.com/",
-    "Gemini": "https://gemini.google.com/",  # TODO: Заменить на реальный URL
-    "Claude": "https://claude.ai/"  # TODO: Заменить на реальный URL
-}
+from src.logger.logger import logger #  Импорт logger
 
 class AssistantMainWindow(QMainWindow):
     """
-    Основное окно приложения.
+    Главное окно приложения.
 
-    Этот класс управляет основным окном приложения, включая браузер, системный трей и меню.
-
-    :param QMainWindow: Родительский класс.
+    Этот класс создает основное окно приложения, содержащее браузер, панель инструментов
+    и меню для выбора URL и моделей.
     """
     def __init__(self):
         """
-        Инициализация главного окна приложения.
+        Инициализация главного окна.
 
-        Устанавливает параметры окна, создает браузерный движок, верхнюю панель,
-        системный трей и меню.
+        Устанавливает размеры окна, создает браузер, панель инструментов,
+        меню и системный трей.
         """
         super().__init__()
-
+        self._setup_window()
+        self._create_browser_profile()
+        self._create_ui()
+        self._create_tray_icon()
+        self._create_menus()
+        
+    def _setup_window(self):
+        """Настраивает основные параметры окна."""
         # Убираем максимизацию, чтобы пользователь мог изменять размер окна
         self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.WindowCloseButtonHint)
 
@@ -118,60 +118,66 @@ class AssistantMainWindow(QMainWindow):
         self.setGeometry((screen_geometry.width() - width) // 2,
                          (screen_geometry.height() - height) // 2,
                          width, height)
-
+    
+    def _create_browser_profile(self):
+        """Создает профиль для выбранного браузера."""
         # Запрос браузера по умолчанию
-        browser_choice = self._ask_for_browser()
-        if not browser_choice:
-            logger.error("Браузер не выбран или произошла ошибка при выборе.")
-            QMessageBox.warning(self, "Ошибка", "Браузер не выбран или произошла ошибка при выборе.")
-            sys.exit()
+        browser_choice = self.ask_for_browser()
 
         # Создание профиля для выбранного браузера
-        profile_path = self._get_profile_path(browser_choice)
-        if not profile_path:
-            QMessageBox.warning(self, "Ошибка", "Браузер не поддерживается или путь к профилю не найден.")
-            sys.exit()
-        try:
-            self.profile = QWebEngineProfile(profile_path)
-            self.browser = QWebEngineView(self)
-            self.browser.setPage(self.profile.defaultProfile().createDefaultPage())
-        except Exception as ex:
-            logger.error(f"Ошибка при создании профиля браузера: {ex}")
-            QMessageBox.warning(self, "Ошибка", "Ошибка при создании профиля браузера.")
-            sys.exit()
+        if browser_choice == 'Chrome':
+            profile_path = os.path.expanduser('~\\AppData\\Local\\Google\\Chrome\\User Data\\Default')
+        elif browser_choice == 'Firefox':
+            profile_path = os.path.expanduser('~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles')
+        elif browser_choice == 'Edge':
+            profile_path = os.path.expanduser('~\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default')
+        else:
+            logger.error('Браузер не поддерживается')
+            return  # Завершаем функцию, если браузер не поддерживается
 
-        # Верхняя панель с кнопками
+        try:
+             self.profile = QWebEngineProfile(profile_path)
+             self.browser = QWebEngineView(self)
+             self.browser.setPage(self.profile.defaultProfile().createDefaultPage())
+        except Exception as ex:
+            logger.error(f'Ошибка создания профиля браузера', exc_info=ex)
+            # Вместо sys.exit() обрабатываем ошибку через logger
+            return
+    
+    def _create_ui(self):
+        """Создает пользовательский интерфейс."""
+         # Верхняя панель с кнопками
         self.title_bar = QWidget(self)
         self.title_bar.setFixedHeight(40)
-        self.title_bar.setStyleSheet("background-color: #333;")
+        self.title_bar.setStyleSheet('background-color: #333;')
 
         # Поле для ввода URL
         self.url_input = QLineEdit(self.title_bar)
-        self.url_input.setPlaceholderText("Введите URL")
+        self.url_input.setPlaceholderText('Введите URL')
         self.url_input.returnPressed.connect(self.load_url)
 
         # Кнопка для загрузки URL
-        self.load_button = QPushButton("Загрузить", self.title_bar)
+        self.load_button = QPushButton('Загрузить', self.title_bar)
         self.load_button.clicked.connect(self.load_url)
 
         # Кнопка для сворачивания в трей
         self.minimize_button = QPushButton(self.title_bar)
-        self.minimize_button.setIcon(QIcon.fromTheme("window-minimize"))
-        self.minimize_button.setToolTip("Свернуть в трей")
+        self.minimize_button.setIcon(QIcon.fromTheme('window-minimize'))
+        self.minimize_button.setToolTip('Свернуть в трей')
         self.minimize_button.setFixedSize(30, 30)
         self.minimize_button.clicked.connect(self.hide_to_tray)
 
         # Кнопка для открытия на весь экран
         self.fullscreen_button = QPushButton(self.title_bar)
-        self.fullscreen_button.setIcon(QIcon.fromTheme("view-fullscreen"))
-        self.fullscreen_button.setToolTip("Открыть на весь экран")
+        self.fullscreen_button.setIcon(QIcon.fromTheme('view-fullscreen'))
+        self.fullscreen_button.setToolTip('Открыть на весь экран')
         self.fullscreen_button.setFixedSize(30, 30)
         self.fullscreen_button.clicked.connect(self.showFullScreen)
 
         # Кнопка для закрытия окна
         self.close_button = QPushButton(self.title_bar)
-        self.close_button.setIcon(QIcon.fromTheme("window-close"))
-        self.close_button.setToolTip("Закрыть")
+        self.close_button.setIcon(QIcon.fromTheme('window-close'))
+        self.close_button.setToolTip('Закрыть')
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.hide_to_tray)
 
@@ -195,16 +201,18 @@ class AssistantMainWindow(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
-
+    
+    def _create_tray_icon(self):
+        """Создает и настраивает иконку в системном трее."""
         # Системный трей
         self.tray_icon = QSystemTrayIcon(self)
-        self.tray_icon.setIcon(QIcon.fromTheme("application-exit"))
+        self.tray_icon.setIcon(QIcon.fromTheme('application-exit'))
 
         # Контекстное меню для иконки в трее
         tray_menu = QMenu()
-        restore_action = QAction("Восстановить", self)
+        restore_action = QAction('Восстановить', self)
         restore_action.triggered.connect(self.showNormal)
-        quit_action = QAction("Выход", self)
+        quit_action = QAction('Выход', self)
         quit_action.triggered.connect(self.quit_app)
 
         tray_menu.addAction(restore_action)
@@ -213,87 +221,84 @@ class AssistantMainWindow(QMainWindow):
         # Установка меню для иконки в трее
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
-
-        # Меню для выбора URL
-        self.url_menu = QMenu("Сервисы Google", self)
-        for service_name, url in GOOGLE_SERVICES.items():
-            action = QAction(service_name, self)
-            action.triggered.connect(lambda url=url: self.load_url(url))
-            self.url_menu.addAction(action)
+        
+    def _create_menus(self):
+        """Создает меню для выбора URL и моделей."""
+         # Меню для выбора URL
+        self.url_menu = QMenu('Сервисы Google', self)
+        self._add_url_action(self.url_menu, 'Google Login', 'https://accounts.google.com/')
+        self._add_url_action(self.url_menu, 'Gmail', 'https://mail.google.com/')
+        self._add_url_action(self.url_menu, 'Google Docs', 'https://docs.google.com/')
+        self._add_url_action(self.url_menu, 'Google Sheets', 'https://sheets.google.com/')
+        self._add_url_action(self.url_menu, 'Google Drive', 'https://drive.google.com/')
+        self._add_url_action(self.url_menu, 'Google Photos', 'https://photos.google.com/')
 
         # Меню для выбора моделей
-        self.model_menu = QMenu("Выбор модели", self)
-        for model_name, url in AI_MODELS.items():
-            action = QAction(model_name, self)
-            action.triggered.connect(lambda url=url: self.load_url(url))
-            self.model_menu.addAction(action)
+        self.model_menu = QMenu('Выбор модели', self)
+        self._add_model_action(self.model_menu, 'ChatGPT', 'https://chat.openai.com/')
+        self._add_model_action(self.model_menu, 'Gemini', 'https://gemini.example.com/')  # Замените на реальный URL
+        self._add_model_action(self.model_menu, 'Claude', 'https://claude.example.com/')  # Замените на реальный URL
 
         # Кнопки для открытия меню
-        self.url_button = QPushButton("Сервисы Google", self.title_bar)
+        self.url_button = QPushButton('Сервисы Google', self.title_bar)
         self.url_button.setMenu(self.url_menu)
-
-        self.model_button = QPushButton("Выбор модели", self.title_bar)
+        
+        self.model_button = QPushButton('Выбор модели', self.title_bar)
         self.model_button.setMenu(self.model_menu)
 
+        title_bar_layout = self.title_bar.layout()
         title_bar_layout.addWidget(self.url_button)
         title_bar_layout.addWidget(self.model_button)
+    
+    def _add_url_action(self, menu: QMenu, text: str, url: str):
+        """Создает и добавляет действие URL в меню."""
+        action = QAction(text, self)
+        action.triggered.connect(lambda: self.load_url(url))
+        menu.addAction(action)
+    
+    def _add_model_action(self, menu: QMenu, text: str, url: str):
+       """Создает и добавляет действие модели в меню."""
+       action = QAction(text, self)
+       action.triggered.connect(lambda: self.load_url(url))
+       menu.addAction(action)
 
-    def _ask_for_browser(self) -> str | None:
+    def ask_for_browser(self) -> str | None:
         """
         Запрашивает у пользователя выбор браузера по умолчанию.
 
-        :return: Выбранный браузер или None, если выбор не был сделан.
+        Returns:
+            str: Выбранный браузер ('Chrome', 'Firefox', 'Edge') или None, если выбор не сделан.
         """
         choices = ['Chrome', 'Firefox', 'Edge']
-        choice, ok = QMessageBox.getItem(self, "Выберите браузер", "Какой браузер вы используете по умолчанию?", choices, 0, False)
+        choice, ok = QMessageBox.getItem(self, 'Выберите браузер', 'Какой браузер вы используете по умолчанию?', choices, 0, False)
 
         if ok and choice:
             return choice
         return None
 
-    def _get_profile_path(self, browser_choice: str) -> str | None:
-        """
-        Определяет путь к профилю браузера на основе выбора пользователя.
-
-        :param browser_choice: Выбранный браузер.
-        :return: Путь к профилю браузера или None, если браузер не поддерживается.
-        """
-        if browser_choice == 'Chrome':
-            return os.path.expanduser("~\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
-        elif browser_choice == 'Firefox':
-            return os.path.expanduser("~\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles")
-        elif browser_choice == 'Edge':
-            return os.path.expanduser("~\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default")
-        else:
-            return None
-
     def load_url(self, url: str = None):
         """
-        Загружает URL в браузере.
+        Загружает URL в QWebEngineView.
 
-        :param url: URL для загрузки, если None используется URL из поля ввода.
+        Args:
+            url (str, optional): URL для загрузки. Если не указан, используется текст из self.url_input.
         """
         url = self.url_input.text() if not url else url
 
         if url:
-            if not url.startswith("http"):
-                url = "http://" + url # Добавляем http, если не указано
+            if not url.startswith('http'):
+                url = 'http://' + url # Добавляем http, если не указано
             try:
-               self.browser.setUrl(QUrl(url))
+                self.browser.setUrl(QUrl(url))
             except Exception as ex:
-                logger.error(f"Ошибка при загрузке URL: {ex}")
-                QMessageBox.warning(self, "Ошибка", "Невозможно загрузить URL")
+                logger.error(f'Ошибка при загрузке URL: {url}', exc_info=ex)
 
     def hide_to_tray(self):
-        """
-        Скрывает окно в системный трей.
-        """
+        """Скрывает окно и помещает его в системный трей."""
         self.hide()
 
     def quit_app(self):
-        """
-        Завершает работу приложения.
-        """
+        """Закрывает приложение."""
         self.tray_icon.hide()
         QApplication.quit()
 
@@ -301,14 +306,14 @@ class AssistantMainWindow(QMainWindow):
         """
         Обработчик события закрытия окна.
 
-        :param event: Событие закрытия окна.
+        Переопределяет closeEvent для скрытия окна в трей при закрытии через "X".
         """
-        event.ignore() # Игнорируем закрытие окна
+        event.ignore()  # Игнорируем закрытие окна
         self.hide_to_tray()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(False) # Чтобы приложение оставалось в трее
+    app.setQuitOnLastWindowClosed(False)  # Чтобы приложение оставалось в трее
 
     window = AssistantMainWindow()
     window.show()

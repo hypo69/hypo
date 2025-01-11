@@ -17,7 +17,7 @@ import json
 from pathlib import Path
 from pydantic import BaseModel
 from src.logger.logger import logger
-from .bot import KazarinovTelegramBot
+from .kazarinov_bot import KazarinovTelegramBot
 
 
 def parse_args() -> dict:

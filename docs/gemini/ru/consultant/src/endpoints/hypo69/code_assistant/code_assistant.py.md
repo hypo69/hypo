@@ -1,35 +1,36 @@
 # Анализ кода модуля `assistant.py`
 
-**Качество кода: 7/10**
-
--   **Плюсы:**
-    *   Код разбит на логические блоки и функции, что облегчает чтение и понимание.
-    *   Используются `logger` для логирования ошибок, что помогает в отладке.
-    *   Применяется `j_loads_ns` для загрузки json файлов, что соответствует требованиям.
-    *   Есть обработка прерывания сигнала `SIGINT` для корректного завершения программы.
-    *   Код соответствует стандарту PEP8.
-    *   Есть docstring для класса, методов и функций.
--   **Минусы:**
-    *   Не все docstring соответствуют стандарту RST.
-    *   Используются `try-except` блоки в местах, где достаточно логирования.
-    *   Не везде есть подробные комментарии, объясняющие логику кода.
-    *   Смешение функций `async` и синхронных функций.
-    *   Дублирование кода в функции `main()` и `run()`, что ведет к избыточности.
-    *   Много `...` как точек остановки, которые нужно убрать или заменить на реальный код.
-    *   Не везде добавлены rst комментарии к переменным класса.
-    *   Отсутствуют type hints для параметров и возвращаемых значений.
-    *   Пропущена инициализация переменной `file_name` в функции `send_file`
+**Качество кода**
+7
+ -  Плюсы
+    - Код разбит на логические блоки, что облегчает понимание.
+    - Используются `Pathlib` для работы с путями, что является хорошей практикой.
+    - Присутствует логирование, что полезно для отладки.
+    -  Используются `asyncio` для асинхронных операций, что позволяет эффективно использовать ресурсы.
+ -  Минусы
+    -  Не везде используется `logger.error` для обработки ошибок, местами `try...except` и `...`
+    -  В некоторых местах используется `str(content_request)` для преобразования словаря в строку, что может быть неоптимальным.
+    -  Не все функции имеют docstring.
+    -  Дублирование функции `_remove_outer_quotes`.
+    - Не используется `j_loads_ns` в `_save_response` и `_remove_outer_quotes` для json файла, а также `\` в конце строк
 
 **Рекомендации по улучшению**
 
-1.  **Документация RST:** Необходимо переписать все docstring в формате reStructuredText (RST), включая описания параметров, возвращаемых значений и т.д.
-2.  **Логирование ошибок:** Избегать избыточного использования `try-except` блоков. Предпочтительнее использовать `logger.error` для логирования и возврата `False` или `None` при ошибках.
-3.  **Улучшение комментариев:** Добавить подробные комментарии к каждой строчке кода.
-4.  **Рефакторинг `send_file`:** Инициализировать `file_name` и улучшить обработку ошибок в `send_file`.
-5.  **Удаление `...`:** Заменить все `...` на логику кода или удалить.
-6.  **Улучшение `main`:** Убрать дублирование кода, вынести в отдельную функцию.
-7.  **Type Hints:** Добавить type hints для параметров и возвращаемых значений всех функций.
-8.  **Асинхронность:** Переписать все асинхронные функции или переделать на синхронные.
+1.  **Документация**:
+    - Добавить docstring к каждой функции, методу, классу. Использовать формат reStructuredText (RST) для документации.
+    - Описать назначение модуля в начале файла, добавить примеры использования.
+2.  **Обработка ошибок**:
+    - Заменить `try-except` блоки с `...` на `logger.error`.
+    - Использовать `logger.error(f"Сообщение", ex, False)` для детального логирования ошибок.
+3.  **Импорты**:
+    -  Импортировать `logger` из `src.logger.logger` явно.
+4.  **Код**:
+     - Использовать `j_loads_ns` для загрузки JSON файлов
+    - Убрать дублирование функции `_remove_outer_quotes`
+    -  Пересмотреть способ преобразования словаря в строку в функции `_create_request`.
+5.  **Стиль кода**:
+    - Использовать одинарные кавычки для строк в коде, двойные только в операциях вывода.
+    - Избегать использования `\` в конце строк, лучше использовать конкатенацию
 
 **Оптимизированный код**
 
@@ -41,13 +42,14 @@
 Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
 =========================================================================================
 
-Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ,
-такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
+:class:`CodeAssistant`, читает файлы кода, отдает код в модели, модель обрабатывет код и возвращает его в класс, класс сохраняет результат
+в директории `docs/gemini` В зависимости от роли файлы сохраняются в 
 
 Пример использования
 --------------------
 
 Пример использования класса `CodeAssistant`:
+# задайте роль исполнителя, язык 
 
 .. code-block:: python
 
@@ -62,8 +64,8 @@
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
-
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
     ```
 """
 
@@ -71,265 +73,219 @@ import asyncio
 import argparse
 import sys
 from pathlib import Path
-from typing import Iterator, List, Optional, Any, Dict
+from typing import Iterator, List, Optional, Any
 from types import SimpleNamespace
 import signal
+import time
 import re
 import fnmatch
+import json
+
 
 import header
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
-from src.utils.printer import pprint
 from src.utils.path import get_relative_path
 from src.logger.logger import logger
 from src.endpoints.hypo69.code_assistant.make_summary import make_summary
 
-MODE = "dev"
 
 class CodeAssistant:
     """
-    Класс для работы ассистента программиста с моделями ИИ.
-
-    :param role: Роль ассистента, например 'code_checker', 'doc_writer_rst'.
-    :type role: str
-    :param lang: Язык, на котором ассистент будет работать, например 'ru', 'en'.
-    :type lang: str
-    :param model: Список моделей ИИ для использования, например ['gemini', 'openai'].
-    :type model: list[str]
-    :param start_dirs: Список начальных директорий для обработки файлов.
-    :type start_dirs: list[str]
+    .. :class:`CodeAssistant`
+        :synopsis: Класс для работы ассистента программиста с моделями ИИ
     """
+
     role: str
     lang: str
-    start_dirs: Path | str | list[Path] | list[str]
-    base_path: Path
+
     config: SimpleNamespace
     gemini_model: GoogleGenerativeAI
     openai_model: OpenAIModel
-    start_file_number: int
 
-    def __init__(self, **kwargs: Dict[str, Any]) -> None:
+    def __init__(self, role: Optional[str] = 'doc_writer_md', lang: Optional[str] = 'en', models: Optional[list[str, str] | str] = ["gemini"], **kwargs):
         """
         Инициализация ассистента с заданными параметрами.
 
-        :param kwargs: Словарь параметров для инициализации.
-            :key role: Роль ассистента, по умолчанию 'doc_writer_rst'.
-            :key lang: Язык ассистента, по умолчанию 'ne'.
-            :key model: Список моделей ИИ, по умолчанию ['gemini'].
-            :key start_dirs: Список директорий для обработки, по умолчанию ['..'].
+        :param role: Роль ассистента, по умолчанию 'doc_writer_md'.
+        :type role: Optional[str]
+        :param lang: Язык ассистента, по умолчанию 'en'.
+        :type lang: Optional[str]
+        :param models: Список моделей для использования, по умолчанию ["gemini"].
+        :type models: Optional[list[str,str] | str]
+        :param kwargs: Дополнительные параметры.
         :type kwargs: dict
         """
-        self.role = kwargs.get("role", "doc_writer_rst")
-        self.lang = "en" if self.role == "pytest" else kwargs.get("lang", "ne")
-        self.models_list = kwargs.get("model", ["gemini"])
-        self.start_dirs = kwargs.get("start_dirs", [".."])
-        self.base_path = gs.path.endpoints / "hypo69" / "code_assistant"
-        self.config = j_loads_ns(self.base_path / "code_assistant.json")
+        # загрузка конфигурации из файла
+        self.config: SimpleNamespace = j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json')
+        self.role: str = role
+        self.lang: str = lang
+        self.models_list: list = kwargs.get('model', ['gemini'])
         self._initialize_models(**kwargs)
 
-    def _initialize_models(self, **kwargs: Dict[str, Any]) -> None:
+    def _initialize_models(self, **kwargs):
         """
         Инициализация моделей на основе заданных параметров.
 
-        :param kwargs: Параметры для инициализации моделей.
+         :param kwargs: Дополнительные параметры.
         :type kwargs: dict
         """
-        if "gemini" in self.models_list:
+        # чтение системных инструкций
+        system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')
+
+        if 'gemini' in self.models_list:
             self.gemini_model = GoogleGenerativeAI(
                 model_name=self.config.gemini_model_name,
                 api_key=gs.credentials.gemini.onela,
+                system_instruction=system_instruction,
                 **kwargs,
             )
-        if "openai" in self.models_list:
+        if 'openai' in self.models_list:
             self.openai_model = OpenAIModel(
-                model_name="gpt-4o-mini",
+                model_name='gpt-4o-mini',
                 assistant_id=gs.credentials.openai.assistant_id.code_assistant,
                 **kwargs,
             )
-
-    @staticmethod
-    def parse_args() -> Dict[str, Any]:
-        """
-        Разбор аргументов командной строки.
-
-        :return: Словарь с аргументами командной строки.
-        :rtype: dict
-        """
-        parser = argparse.ArgumentParser(description="Ассистент для программистов")
-        parser.add_argument(
-            "--role",
-            type=str,
-            default="code_checker",
-            help="Роль для выполнения задачи",
-        )
-        parser.add_argument("--lang", type=str, default="ru", help="Язык выполнения")
-        parser.add_argument(
-            "--model",
-            nargs="+",
-            type=str,
-            default=["gemini"],
-            help="Список моделей для инициализации",
-        )
-        parser.add_argument(
-            "--start-dirs",
-            nargs="+",
-            type=str,
-            default=[],
-            help="Список директорий для обработки",
-        )
-        parser.add_argument(
-            "--start-file-number",
-            type=int,
-            default=1,
-            help="С какого файла делать обработку. Полезно при сбоях",
-        )
-        return vars(parser.parse_args())
 
     @property
     def system_instruction(self) -> str | bool:
         """
         Чтение инструкции из файла.
-
-        :return: Инструкция в виде строки или False в случае ошибки.
+        
+        :return: Инструкция из файла или False в случае ошибки.
         :rtype: str | bool
         """
         try:
+             # чтение системных инструкций для конкретного языка
             return Path(
                 gs.path.src
-                / "ai"
-                / "prompts"
-                / "developer"
-                / f"{self.role}_{self.lang}.md"
-            ).read_text(encoding="UTF-8")
+                / 'ai'
+                / 'prompts'
+                / 'developer'
+                / f'CODE_RULES.{self.lang}.md'
+            ).read_text(encoding='UTF-8')
         except Exception as ex:
-            logger.error(f"Ошибка чтения файла инструкции: {ex}")
+            logger.error('Ошибка чтения файла инструкций', ex)
             return False
 
     @property
-    def code_instruction(self) -> str:
+    def code_instruction(self) -> str | bool:
         """
         Чтение инструкции для кода.
 
-        :return: Инструкция в виде строки или пустая строка в случае ошибки.
-        :rtype: str
+        :return: Инструкция для кода или пустая строка в случае ошибки.
+        :rtype: str | bool
         """
         try:
+            # чтение инструкций для кода
             return Path(
-                self.base_path
-                / "instructions"
-                / f"instruction_{self.role}_{self.lang}.md"
-            ).read_text(encoding="UTF-8")
+                gs.path.endpoints
+                / 'hypo69'
+                / 'code_assistant'
+                / 'instructions'
+                / f'instruction_{self.role}_{self.lang}.md'
+            ).read_text(encoding='UTF-8')
         except Exception as ex:
-            logger.error(f"Ошибка чтения файла инструкции: {ex}")
-            return ""
+            logger.error('Ошибка чтения файла инструкций', ex)
+            return ''
 
     @property
     def translations(self) -> SimpleNamespace:
         """
         Загрузка переводов для ролей и языков.
 
-        :return: Объект SimpleNamespace с переводами.
+        :return: Переводы для ролей и языков.
         :rtype: SimpleNamespace
         """
+        # загрузка переводов
         return j_loads_ns(
             gs.path.endpoints
-            / "hypo69"
-            / "code_assistant"
-            / "translations"
-            / "translations.json"
+            / 'hypo69'
+            / 'code_assistant'
+            / 'translations'
+            / 'translations.json'
         )
 
-    async def process_files(self, start_file_number: Optional[int] = 1) -> None:
+    def send_file(self, file_path: Path) -> bool:
         """
-        Компиляция, отправка запроса и сохранение результата.
+        Отправка файла в модель.
 
-        :param start_file_number: Номер файла, с которого начать обработку.
-        :type start_file_number: Optional[int]
+        Args:
+            file_path (Path): Абсолютный путь к файлу, который нужно отправить.
+            file_name (Optional[str]): Имя файла для отправки. Если не указано и 'src' отсутствует, используется имя файла без изменений.
+
+        Returns:
+            bool: Успешность выполнения операции.
         """
+        try:
+            # отправка файла в модель
+            response = self.gemini_model.upload_file(file_path)
 
-        async def send_file(file_path: Path, file_name: Optional[str] = None) -> str | bool:
-             """
-             Отправка файла в модель.
+            if response:
+                if hasattr(response, 'url'):
+                    return response.url
 
-             :param file_path: Абсолютный путь к файлу, который нужно отправить.
-             :type file_path: Path
-             :param file_name: Имя файла для отправки. Если не указано и 'src' отсутствует, используется имя файла без изменений.
-             :type file_name: Optional[str]
-             :return: URL файла или False в случае ошибки.
-             :rtype: str | bool
-             """
-             try:
-                 # Проверка имени файла на `__init__.py` и `header.py`
-                 if file_path.name in ('__init__.py', 'header.py'):
-                    logger.info(f'Файл пропущен: {file_path}')
-                    return False
+            return
+        except Exception as ex:
+            logger.error('Ошибка при отправке файла: ', ex)
+            return
 
-                 # Если file_name не задан, извлекается часть пути начиная с 'src'
-                 if not file_name:
-                     if 'src' in file_path.parts:
-                         index = file_path.parts.index('src')
-                         relative_path = Path(*file_path.parts[index:])
+    async def process_files(self, start_dirs: str | Path | list[str, str] | list[Path, Path] = None, start_file_number: Optional[int] = 1) -> bool:
+        """компиляция, отправка запроса и сохранение результата.
 
-                         # Заменяем `/` на `--` и игнорируем суффикс файла
-                         file_name = 'src--' + '--'.join(relative_path.parts[1:-1]) + '--' + relative_path.stem
-                     else:
-                         # Если 'src' нет, используется имя файла без изменений
-                         file_name = file_path.stem
-
-                 # Отправка файла в модель
-                 response = self.gemini_model.upload_file(file_path)
-
-                 if response:
-                     pprint(response, text_color='light_gray')
-                     if hasattr(response, 'url'):
-                         return response.url
-                 return False
-             except Exception as ex:
-                # Логирование ошибки при отправке файла
-                logger.error(f'Ошибка при отправке файла: {ex}')
-                return False
-
-
-        for i, (file_path, content) in enumerate(self._yield_files_content()):
-            # Проверка корректности чтения файла
-            if not all((file_path, content)):
-                continue
-            # Пропускаем файлы до указанного номера
-            if i < start_file_number:
-                continue
-            if file_path and content:
-                # Отправка файла в модель
-                # send_file_response = send_file(file_path) # <- отправить в модель файл
-                content_request = self._create_request(file_path, content)
-                response = await self.gemini_model.ask(content_request)
-
-                if response:
-                    response = self._remove_outer_quotes(response)
-
-                    if not await self._save_response(file_path, response, "gemini"):
-                        logger.error(f"Файл {file_path} не был сохранен")
-                        continue
-                    pprint(f"Обработан файл номер: {i + 1}", text_color="yellow")
-                else:
-                    logger.error("Ошибка ответа модели")
+        :param start_dirs:  Список директорий для обработки.
+        :type start_dirs: str | Path | list[str, str] | list[Path, Path], optional
+        :param start_file_number: Номер файла, с которого начать обработку, по умолчанию 1.
+        :type start_file_number: int, optional
+        :return: True если все файлы обработаны успешно, False в случае ошибки.
+        :rtype: bool
+        """
+        if not start_dirs:
+            start_dirs = self.config.start_dirs
+        if not start_dirs:
+            logger.error("Ошибка иницаилизации стартовой директории")
+            return
+        start_dirs = start_dirs if isinstance(start_dirs, list) else [start_dirs]
+        for process_driectory in start_dirs:
+            logger.info(f"Start {process_driectory=}")
+            # итерация по файлам в директории
+            for i, (file_path, content) in enumerate(self._yield_files_content(process_driectory)):
+                if not any((file_path, content)):  # проверка на ошибку чтения файла
                     continue
+                if i < start_file_number:  # старт с номера файла
+                    continue
+                if file_path and content:
+                    # отправка файла в модель
+                    content_request = self._create_request(file_path, content)
+                    response = await self.gemini_model.ask(content_request)
 
-            await asyncio.sleep(20) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
+                    if response:
+                        response = self._remove_outer_quotes(response)
+
+                        if not await self._save_response(file_path, response, 'gemini'):
+                            logger.error(f"Файл {file_path} \n НЕ сохранился")
+                            continue
+                        logger.debug(f"Processed file number: {i + 1}", None, False)
+                    else:
+                        logger.error("Ошибка ответа модели")
+                        continue
+
+                await asyncio.sleep(20)  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
 
     def _create_request(self, file_path: str, content: str) -> str:
         """
-        Создание запроса с учетом роли и языка.
+         Создание запроса с учетом роли и языка.
 
         :param file_path: Путь к файлу.
         :type file_path: str
         :param content: Содержимое файла.
         :type content: str
-        :return: Строка запроса для модели.
+        :return: Запрос для модели в виде строки.
         :rtype: str
         """
+        # формирование запроса для модели
         content_request = content
         try:
             roles_translations: SimpleNamespace = getattr(self.translations.roles, self.role, 'doc_writer_md')
@@ -337,92 +293,119 @@ class CodeAssistant:
             file_location_translated: str = getattr(self.translations.file_location_translated, self.lang, 'Path to file: ')
 
             content_request: dict = {
-                "role": f"{role_description_translated}",
-                "output_language": self.lang,
-                f"{file_location_translated}": get_relative_path(file_path, "hypotez"),
-                "instruction": self.code_instruction or '',
-                "input_code": f"```{content}```",
+                'role': f'{role_description_translated}',
+                'output_language': self.lang,
+                f'{file_location_translated}': get_relative_path(file_path, 'hypotez'),
+                'instruction': self.code_instruction or '',
+                'input_code': f'```{content}```',
             }
         except Exception as ex:
-            logger.error(f"Ошибка в составлении запроса: {ex}")
+            logger.error(f"Ошибка в составлении запроса ", ex)
             return content
 
-        return str(content_request)
+        return json.dumps(content_request)
 
     def _yield_files_content(
         self,
-        start_dirs: List[Path] = [gs.path.src],
+        process_driectory: str | Path,
     ) -> Iterator[tuple[Path, str]]:
         """
         Генерирует пути файлов и их содержимое по указанным шаблонам.
 
-        :param start_dirs: Список директорий для обхода.
-        :type start_dirs: list[Path]
-        :return: Итератор кортежей из пути файла и его содержимого.
-        :rtype: Iterator[tuple[Path, str]]
+        Args:
+            process_driectory (Path | str): Абсолютный путь к стартовой директории
+          
+        Returns:
+            bool: Iterator
         """
-        # Компилируем паттерны исключаемых файлов
+        process_driectory: Path = process_driectory if isinstance(process_driectory, Path) else Path(process_driectory)
+        # Компиляция паттернов исключаемых файлов
         try:
             exclude_file_patterns = [
                 re.compile(pattern) for pattern in self.config.exclude_file_patterns
             ]
+
         except Exception as ex:
-            logger.error(f"Не удалось скомпилировать регулярки из списка: {self.config.exclude_file_patterns=}, {ex}")
-            return
-
+            logger.error(f"Не удалось скомпилировать регулярки из списка:/n{self.config.exclude_file_patterns=}\n ", ex)
         include_file_patterns = self.config.include_files
-        for start_dir in start_dirs:
-            # Итерация по всем файлам в директории
-            for file_path in start_dir.rglob("*"):
-                # Проверяем соответствие шаблонам включения
-                if not any(
-                    fnmatch.fnmatch(file_path.name, pattern)
-                    for pattern in include_file_patterns
-                ):
-                    continue
 
-                # Проверяем исключенные директории
-                if any(
-                    exclude_dir in file_path.parts
-                    for exclude_dir in self.config.exclude_dirs
-                ):
-                    continue
+        # Итерация по всем файлам в директории
+        for file_path in process_driectory.rglob('*'):
+             # проверка соответствия шаблонам включения
+            if not any(
+                fnmatch.fnmatch(file_path.name, pattern)
+                for pattern in include_file_patterns
+            ):
+                continue
+            # проверка исключенных директорий
+            if any(
+                exclude_dir in file_path.parts
+                for exclude_dir in self.config.exclude_dirs
+            ):
+                continue
+            # проверка исключенных файлов по паттерну
+            if any(
+                exclude.match(str(file_path)) for exclude in exclude_file_patterns
+            ):
+                continue
+            # проверка конкретных исключенных файлов
+            if str(file_path) in self.config.exclude_files:
+                continue
 
-                # Проверяем исключенные файлы по паттерну
-                if any(
-                    exclude.match(str(file_path)) for exclude in exclude_file_patterns
-                ):
-                   continue
+            # чтение содержимого файла
+            try:
+                content = file_path.read_text(encoding='utf-8')
+                yield file_path, content
+                # make_summary( docs_dir = start_dir.parent / 'docs' )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  (create `summary.md`)
+            except Exception as ex:
+                logger.error(f'Ошибка при чтении файла {file_path}', ex)
+                yield None, None
 
-                # Проверяем конкретные исключенные файлы
-                if str(file_path) in self.config.exclude_files:
-                    continue
+    def _remove_outer_quotes(self, response: str) -> str:
+        """
+        Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
 
-                # Чтение содержимого файла
-                try:
-                    content = file_path.read_text(encoding="utf-8")
-                    yield file_path, content
-                    # make_summary( docs_dir = start_dir.parent / 'docs' )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  (create `summary.md`)
-                except Exception as ex:
-                    pprint(
-                        f"Ошибка при чтении файла: {ex}",
-                        text_color="red",
-                        bg_color="light_grey",
-                    )
-                    yield None, None
+        :param response: Ответ модели, который необходимо обработать.
+        :type response: str
+        :return: Очищенный контент как строка.
+        :rtype: str
+
+        :example:
+            Если строка '```md some content ```' будет передана в функцию,
+            результат будет ' some content '.
+        """
+        try:
+            response = response.strip()
+        except Exception as ex:
+            logger.error("Exception in `remove_outer_quotes()`", ex)
+            return ''
+
+        # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений
+        if response.startswith(('```python', '```mermaid')):
+            return response
+
+        # Удаляем маркер для известных форматов, если строка обрамлена в '```'
+        config = j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json')
+        for prefix in config.remove_prefixes:
+            # Сравниваем с префиксом без учёта регистра
+            if response.lower().startswith(prefix.lower()):
+                return response.removeprefix(prefix).removesuffix('```').strip()
+
+        # Возвращаем строку без изменений, если условия не выполнены
+        return response
 
     async def _save_response(self, file_path: Path, response: str, model_name: str) -> bool:
-        """
-        Сохранение ответа модели в файл с добавлением суффикса.
+        """Сохранение ответа модели в файл с добавлением суффикса.
 
-        :param file_path: Исходный путь к файлу, в который будет записан ответ.
-        :type file_path: Path
-        :param response: Ответ модели, который необходимо сохранить.
-        :type response: str
-        :param model_name: Имя модели, использованной для генерации ответа.
-        :type model_name: str
-        :return: True в случае успеха, False в случае ошибки.
-        :rtype: bool
+        Метод сохраняет ответ модели в файл, добавляя к текущему расширению файла
+        дополнительный суффикс, определяемый ролью.
+        Args:
+            file_path (Path): Исходный путь к файлу, в который будет записан ответ.
+            response (str): Ответ модели, который необходимо сохранить.
+            model_name (str): Имя модели, использованной для генерации ответа.
+
+        Raises:
+            OSError: Если не удаётся создать директорию или записать в файл.
         """
         try:
             # Получаем директорию для вывода в зависимости от роли
@@ -450,119 +433,109 @@ class CodeAssistant:
             }
             suffix = suffix_map.get(self.role, '.md')  # По умолчанию используется .md
 
-            # Формируем новый путь с добавлением суффикса
-            export_path = Path(f"{file_path}{suffix}")
+            export_path = Path(file_path)
+            if export_path.suffix == '.md' and suffix == '.md':
+                export_path = Path(f'{file_path}')
+            else:
+                export_path = Path(f'{file_path}{suffix}')
 
-            # Создаём родительскую директорию, если она ещё не существует
             export_path.parent.mkdir(parents=True, exist_ok=True)
-
-            # Записываем ответ в файл с указанной кодировкой UTF-8
             export_path.write_text(response, encoding='utf-8')
-
-            # Выводим сообщение о успешном сохранении файла
-            pprint(f'Ответ модели сохранен в: {export_path}', text_color='green')
             return True
 
         except Exception as ex:
-            logger.critical(f'Ошибка сохранения файла: {export_path=}, {ex}')
+            logger.critical(f'Ошибка сохранения файла: {export_path=}', exc_info=ex)
             return False
 
-    def _remove_outer_quotes(self, response: str) -> str:
-        """
-        Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
+    def run(self, start_file_number: int = 1):
+        """Запуск процесса обработки файлов.
 
-        :param response: Ответ модели, который необходимо обработать.
-        :type response: str
-        :return: Очищенный контент как строка.
-        :rtype: str
-
-        :example:
-            Если строка '```md some content ```' будет передана в функцию,
-            результат будет ' some content '.
-        """
-        try:
-            response = response.strip()
-        except Exception as ex:
-            logger.error(f"Ошибка в `remove_outer_quotes()`: {ex}")
-            return ''
-
-        # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений
-        if response.startswith(('```python', '```mermaid')):
-            return response
-
-        # Удаляем маркер для известных форматов, если строка обрамлена в '```'
-        config = j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json')
-        for prefix in config.remove_prefixes:
-            # Сравниваем с префиксом без учёта регистра
-            if response.lower().startswith(prefix.lower()):
-                return response.removeprefix(prefix).removesuffix("```").strip()
-
-        # Возвращаем строку без изменений, если условия не выполнены
-        return response
-
-    def run(self, start_file_number: int = 1) -> None:
-        """
-        Запуск процесса обработки файлов.
-
-        :param start_file_number: Номер файла, с которого начать обработку.
-        :type start_file_number: int
+            :param start_file_number: Номер файла, с которого начать обработку.
+            :type start_file_number: int, optional
         """
         signal.signal(
             signal.SIGINT, self._signal_handler
         )  # Обработка прерывания (Ctrl+C)
-        asyncio.run(self.process_files(start_file_number))
+        asyncio.run(self.process_files(start_file_number=start_file_number))
 
-    def _signal_handler(self, signal: int, frame: Any) -> None:
-        """
-        Обработка прерывания выполнения.
-
-        :param signal: Номер сигнала.
-        :type signal: int
-        :param frame: Текущий кадр стека.
-        :type frame: Any
-        """
-        pprint("Процесс был прерван", text_color="red")
+    def _signal_handler(self, signal, frame):
+        """Обработка прерывания выполнения."""
+        logger.debug("Процесс был прерван", text_color="red")
         sys.exit(0)
 
-def main() -> None:
-    """
-    Основная функция для запуска.
-    """
-    args = CodeAssistant.parse_args()
-    assistant = CodeAssistant(**args)
-    assistant.run(start_file_number=args["start_file_number"])
 
-if __name__ == "__main__":
+def main():
+    """Основная функция для запуска."""
+    args = parse_args()
+
+    assistant = CodeAssistant(**args)
+
+    assistant.run(start_file_number=args['start_file_number'])
+
+
+def parse_args():
+    """Разбор аргументов командной строки."""
+    parser = argparse.ArgumentParser(description='Ассистент для программистов')
+    parser.add_argument(
+        '--role',
+        type=str,
+        default='code_checker',
+        help='Роль для выполнения задачи',
+    )
+    parser.add_argument('--lang', type=str, default='ru', help='Язык выполнения')
+    parser.add_argument(
+        '--model',
+        nargs='+',
+        type=str,
+        default=['gemini'],
+        help='Список моделей для инициализации',
+    )
+    parser.add_argument(
+        '--start-dirs',
+        nargs='+',
+        type=str,
+        default=[],
+        help='Список директорий для обработки',
+    )
+    parser.add_argument(
+        '--start-file-number',
+        type=int,
+        default=1,
+        help='С какого файла делать обработку. Полезно при сбоях',
+    )
+    return vars(parser.parse_args())
+
+
+if __name__ == '__main__':
     """
     Код запускает бесконечный цикл, в котором выполняется обработка файлов с учетом ролей и языков, указанных в конфигурации.
     Конфигурация обновляется в каждом цикле, что позволяет динамически изменять настройки во время работы программы.
     Для каждой комбинации языка и роли создается экземпляр класса :class:`CodeAssistant`, который обрабатывает файлы, используя заданную модель ИИ.
     """
-    # Путь к файлу конфигурации
+    ########################################################################################
+    #                               Запуск через конфигурацию
+    #
+
     config_path: Path = (
-        gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json"
+        gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json'
     )
 
     while True:
         # Загрузка конфигурации
         config: SimpleNamespace = j_loads_ns(config_path)
-        args = config.argparse
 
         # Обработка файлов для каждой комбинации языков и ролей
-        for lang in args.languages:
-            for role in args.roles:
-                logger.debug(f"Start role: {role}, lang: {lang}")
+        for lang in config.languages:
+            for role in config.roles:
+                logger.debug(f'Start role: {role}, lang: {lang}', None, False)
 
                 assistant_direct = CodeAssistant(
                     role=role,
                     lang=lang,
-                    model=["gemini"],
-                    start_dirs=[".."],
+                    model=['gemini'],
                 )
-                asyncio.run(assistant_direct.process_files(start_file_number=1))
+                asyncio.run(assistant_direct.process_files(start_dirs=config.start_dirs))
 
                 # Обновление конфигурации для учёта изменений во время выполнения
                 config: SimpleNamespace = j_loads_ns(config_path)
-                args = config.argparse
-
 ```

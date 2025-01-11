@@ -1,23 +1,24 @@
-# Анализ кода модуля request.json.md
+# Анализ кода модуля request.json
 
 **Качество кода**
-    7
--   Плюсы
-     -  Код представляет собой JSON-схему, что соответствует ожидаемому формату.
-     -  Используется  стандартная структура JSON с понятными ключами и значениями.
- -   Минусы
-    -  Отсутствует описание назначения и использования структуры данных.
-    -  Используется некорректный синтаксис с `"(HarmCategory)"` и `"(HarmBlockThreshold)"`, которые не являются допустимыми JSON-ключами.
-    -  Не хватает документации в формате RST для описания каждого поля JSON и его предназначения.
-    - Отсутствует описание структуры данных для `schema`, которая используется в `responseSchema`.
+1
+- Плюсы
+    - Структура JSON файла соответствует формату запроса к Gemini API.
+- Минусы
+    - Отсутствует описание назначения JSON схемы.
+    - JSON схема не соответствует стандартам документации.
+    - Несоответствие типов данных (например, `"seconds": "integer"` вместо `"seconds": 0`).
+    - Обилие `string` и `enum` без конкретных значений.
 
 **Рекомендации по улучшению**
-1.  **Добавить описание:**  Включить описание назначения JSON-схемы в начале документа, а также комментарии для каждого поля, чтобы сделать схему более понятной и простой в использовании.
-2.  **Исправить некорректный синтаксис:**  Удалить или переработать `"(HarmCategory)"` и `"(HarmBlockThreshold)"` чтобы они соответствовали синтаксису JSON.
-3.  **Добавить примеры использования:** Включить примеры того, как можно использовать данную JSON-схему в запросах к API.
-4. **Добавить документацию:** Добавить документацию в формате RST, для описания каждого поля и его назначения, а также использовать для описания структуры  `schema`, которая используется в `responseSchema`.
+
+1. **Документация**: Добавить описание назначения этого JSON файла. Указать, для чего он используется и какие данные в нем содержатся.
+2. **Структура**: Необходимо привести структуру JSON в соответствие со стандартами документации (описания, типы данных, примеры).
+3. **Типы данных**: Заменить общие типы данных (например, `string`, `integer`, `enum`) на конкретные примеры данных или более точные описания.
+4. **Enum**: Перечислить возможные значения для `enum`.
 
 **Оптимизированный код**
+
 ```json
 {
   "cachedContent": "string",
@@ -37,12 +38,12 @@
           },
           "videoMetadata": {
             "startOffset": {
-              "seconds": "integer",
-              "nanos": "integer"
+              "seconds": 0,
+              "nanos": 0
             },
             "endOffset": {
-              "seconds": "integer",
-              "nanos": "integer"
+              "seconds": 0,
+              "nanos": 0
             }
           }
         }
@@ -64,7 +65,9 @@
           "name": "string",
           "description": "string",
           "parameters": {
-            "object" 
+             "type": "object",
+             "properties": {
+             }
           }
         }
       ]
@@ -72,27 +75,24 @@
   ],
   "safetySettings": [
     {
-      "category": "enum",
-      "threshold": "enum"
+      "category": "HARM_CATEGORY_HATE_SPEECH",
+      "threshold": "BLOCK_MEDIUM_AND_ABOVE"
     }
   ],
   "generationConfig": {
-    "temperature": "number",
-    "topP": "number",
-    "topK": "number",
-    "candidateCount": "integer",
-    "maxOutputTokens": "integer",
-    "presencePenalty": "float",
-    "frequencyPenalty": "float",
-    "stopSequences": [
-      "string"
-    ],
-    "responseMimeType": "string",
-    "responseSchema": "schema",
-    "seed": "integer",
-    "responseLogprobs": "boolean",
-    "logprobs": "integer",
-    "audioTimestamp": "boolean"
+    "temperature": 0.9,
+    "topP": 0.95,
+    "topK": 40,
+    "candidateCount": 1,
+    "maxOutputTokens": 1024,
+    "presencePenalty": 0.0,
+    "frequencyPenalty": 0.0,
+    "stopSequences": [],
+    "responseMimeType": "text/plain",
+    "seed": 0,
+    "responseLogprobs": false,
+    "logprobs": 0,
+    "audioTimestamp": false
   },
   "labels": {
     "string": "string"

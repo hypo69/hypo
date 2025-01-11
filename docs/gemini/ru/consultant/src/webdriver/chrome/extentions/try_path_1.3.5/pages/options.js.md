@@ -1,286 +1,295 @@
 # Анализ кода модуля options.js
 
 **Качество кода**
-7
- -  Плюсы
-    - Код достаточно хорошо структурирован и разбит на функции.
-    - Используется `browser.storage.sync.set` для сохранения настроек.
-    - Присутствует обработка событий `load` и `click`.
- -  Минусы
-    - Отсутствуют docstring для функций и переменных.
-    - Используется стандартный `XMLHttpRequest` вместо `fetch`.
-    - Нет логирования ошибок с использованием `logger`.
-    - Присутствует избыточное использование `try-catch`.
+8
+-   Плюсы
+    -   Код хорошо структурирован и разбит на функции.
+    -   Используется `browser.storage.sync.set` для сохранения данных.
+    -   Присутствует обработка событий `load` и `click`.
+    -   Используются Promise для асинхронных операций.
+-   Минусы
+    -   Отсутствует docstring для модуля, функций и переменных.
+    -   Не используется `logger` для логирования ошибок.
+    -   Не используются константы для повторяющихся значений.
+    -   Используются магические строки, которые нужно вынести в константы.
+    -   Отсутствует проверка на корректность значений `browser.runtime.sendMessage` и `browser.storage.sync.set` (нужно ловить и логировать ошибки).
+    -   Не используется `async/await` для асинхронных операций.
+    -   Не все переменные объявлены с `const` или `let`.
 
 **Рекомендации по улучшению**
-1.  Добавить docstring для всех функций и переменных, используя reStructuredText (RST) формат.
-2.  Заменить `XMLHttpRequest` на `fetch` для загрузки CSS.
-3.  Добавить логирование ошибок с использованием `logger.error`.
-4.  Убрать избыточное использование `try-catch` блоков.
-5.  Использовать `async/await` для асинхронных операций, где это возможно.
-6.  Переименовать переменные и функции для лучшей читаемости и соответствия общему стилю.
+
+1.  Добавить docstring для модуля, функций и переменных.
+2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+3.  Заменить `var` на `const` или `let` там где это возможно.
+4.  Использовать `async/await` для асинхронных операций.
+5.  Вынести повторяющиеся значения в константы.
+6.  Добавить обработку ошибок для `browser.runtime.sendMessage` и `browser.storage.sync.set`.
+7.  Использовать более информативные сообщения об ошибках.
+8.  Удалить неиспользуемые переменные `tx` и `fu`.
+9.  Переименовать переменные `p` на более информативные.
+10. Добавить комментарии для блоков кода.
 
 **Оптимизированный код**
+
 ```python
 """
 Модуль для управления настройками расширения TryXPath.
-=========================================================================================
+======================================================
 
-Этот модуль предоставляет интерфейс для настройки атрибутов, стилей и размеров всплывающего окна
-расширения TryXPath.
+Этот модуль отвечает за управление настройками расширения TryXPath, такими как атрибуты элементов, стили
+и настройки CSS. Он обеспечивает взаимодействие с пользовательским интерфейсом страницы опций и сохранение
+настроек в хранилище браузера.
 
+Пример использования
+--------------------
+
+При открытии страницы опций этот модуль инициализирует поля ввода значениями из хранилища, а также
+обрабатывает события сохранения и восстановления настроек по умолчанию.
 """
-import json
-from src.logger.logger import logger #  Импорт модуля логирования
-# from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
 
-(function (window, undefined) {
-    "use strict";
+# Константы для атрибутов по умолчанию
+DEFAULT_ATTRIBUTES = {
+    "element": "data-tryxpath-element",
+    "context": "data-tryxpath-context",
+    "focused": "data-tryxpath-focused",
+    "focusedAncestor": "data-tryxpath-focused-ancestor",
+    "frame": "data-tryxpath-frame",
+    "frameAncestor": "data-tryxpath-frame-ancestor"
+}
 
-    # alias
-    var tx = tryxpath;
-    var fu = tryxpath.functions;
+# Константы для стилей по умолчанию
+DEFAULT_POPUP_BODY_STYLES = {
+    "width": "367px",
+    "height": "auto"
+}
 
-    var document = window.document;
+# Объявление переменных
+element_attr = None
+context_attr = None
+focused_attr = None
+ancestor_attr = None
+frame_attr = None
+frame_ancestor_attr = None
+style = None
+popup_body_width = None
+popup_body_height = None
+message = None
+test_element = None
 
-    const defaultAttributes = {
-        "element": "data-tryxpath-element",
-        "context": "data-tryxpath-context",
-        "focused": "data-tryxpath-focused",
-        "focusedAncestor": "data-tryxpath-focused-ancestor",
-        "frame": "data-tryxpath-frame",
-        "frameAncestor": "data-tryxpath-frame-ancestor"
-    };
 
-    const defaultPopupBodyStyles = {
-        "width": "367px",
-        "height": "auto"
-    };
+def is_valid_attr_name(name: str) -> bool:
+    """Проверяет, является ли имя атрибута допустимым.
 
-    var elementAttr, contextAttr, focusedAttr, ancestorAttr, frameAttr,
-        frameAncestorAttr, style, popupBodyWidth, popupBodyHeight, message,
-        testElement;
+    Args:
+        name (str): Имя атрибута для проверки.
 
-    /**
-     * Проверяет, является ли переданное имя допустимым именем атрибута.
-     *
-     * :param name: Имя атрибута для проверки.
-     * :type name: str
-     * :return: `true`, если имя атрибута допустимо, `false` в противном случае.
-     * :rtype: bool
-     */
-    function isValidAttrName(name) {
-        try {
-            # код пытается установить атрибут с переданным именем, чтобы проверить его валидность
-            testElement.setAttribute(name, "testValue");
-        } catch (e) {
-            # в случае ошибки (невалидное имя атрибута) функция вернет `false`
-            return false;
-        }
-        # если установка атрибута прошла успешно, возвращается `true`
-        return true;
-    };
+    Returns:
+        bool: True, если имя атрибута допустимо, False в противном случае.
+    """
+    try:
+        # Код пытается установить атрибут с заданным именем на тестовом элементе
+        test_element.setAttribute(name, "testValue")
+        return True
+    except Exception as ex:
+        # Логирует ошибку и возвращает False в случае ошибки
+        logger.error(f'Недопустимое имя атрибута {name=}', ex)
+        return False
 
-    /**
-     * Проверяет, являются ли все имена атрибутов в переданном объекте допустимыми.
-     *
-     * :param names: Объект, содержащий имена атрибутов для проверки.
-     * :type names: dict
-     * :return: `true`, если все имена атрибутов допустимы, `false` в противном случае.
-     * :rtype: bool
-     */
-    function isValidAttrNames(names) {
-        # код перебирает все имена атрибутов в объекте
-        for (var p in names) {
-            # для каждого имени проверяется его валидность
-            if (!isValidAttrName(names[p])) {
-                # если хотя бы одно имя невалидно, возвращается `false`
-                return false;
-            }
-        }
-        # если все имена валидны, возвращается `true`
-        return true;
-    };
 
-    /**
-     * Проверяет, является ли переданная длина CSS-стиля допустимой.
-     *
-     * :param len: Длина CSS-стиля для проверки.
-     * :type len: str
-     * :return: `true`, если длина допустима (`auto` или `XXXpx`), `false` в противном случае.
-     * :rtype: bool
-     */
-    function isValidStyleLength(len) {
-        # код проверяет, соответствует ли переданная длина одному из допустимых форматов
-        return /^auto$|^[1-9]\\d*px$/.test(len);
-    };
+def is_valid_attr_names(names: dict) -> bool:
+    """Проверяет, являются ли все имена атрибутов в словаре допустимыми.
 
-    /**
-     * Загружает CSS по умолчанию из файла.
-     *
-     * :return: Promise, который разрешается с текстом CSS или отклоняется с ошибкой.
-     * :rtype: Promise<str>
-     */
-    async function loadDefaultCss() {
-        #  Код загружает CSS по умолчанию
-        try{
-            const response = await fetch(browser.runtime.getURL("/css/try_xpath_insert.css"));
-            if (!response.ok) {
-                # Если запрос не удался, код генерирует ошибку
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-           #  Код возвращает текст ответа
-            return await response.text();
-        } catch (error) {
-            #  Код логирует ошибку при загрузке CSS
-            logger.error('Ошибка загрузки CSS по умолчанию', error);
-            throw error;
-        }
-    };
+    Args:
+        names (dict): Словарь с именами атрибутов для проверки.
 
-    /**
-     * Извлекает стили ширины и высоты из CSS.
-     *
-     * :param css: CSS, из которого нужно извлечь стили.
-     * :type css: str
-     * :return: Объект со стилями ширины и высоты.
-     * :rtype: dict
-     */
-    function extractBodyStyles(css) {
-        var styles = {};
-        # Код ищет значения ширины и высоты в CSS
-        var res = /width:(.+?);.*height:(.+?);/.exec(css);
-        if (res) {
-            # Если значения найдены, код сохраняет их в объект `styles`
-            styles.width = res[1];
-            styles.height = res[2];
-        } else {
-            # Если значения не найдены, код устанавливает пустые строки
-            styles.width = "";
-            styles.height = "";
-        }
-        # Код возвращает объект со стилями
-        return styles;
-    };
+    Returns:
+        bool: True, если все имена атрибутов допустимы, False в противном случае.
+    """
+    for attr_name in names:
+        # Код проверяет каждое имя атрибута через is_valid_attr_name
+        if not is_valid_attr_name(names[attr_name]):
+            return False
+    return True
 
-    /**
-     * Создает CSS для всплывающего окна с заданными стилями тела.
-     *
-     * :param bodyStyles: Объект со стилями ширины и высоты.
-     * :type bodyStyles: dict
-     * :return: CSS для всплывающего окна.
-     * :rtype: str
-     */
-    function createPopupCss(bodyStyles) {
-        # Код возвращает строку с CSS для всплывающего окна
-        return "body{width:" + bodyStyles.width + ";height:"
-            + bodyStyles.height + ";}";
-    };
 
-    window.addEventListener("load", async () => {
-        #  Код получает DOM элементы
-        elementAttr = document.getElementById("element-attribute");
-        contextAttr = document.getElementById("context-attribute");
-        focusedAttr = document.getElementById("focused-attribute");
-        ancestorAttr = document.getElementById("ancestor-attribute");
-        frameAttr = document.getElementById("frame-attribute");
-        frameAncestorAttr = document.getElementById(
-            "frame-ancestor-attribute");
-        style = document.getElementById("style");
-        popupBodyWidth = document.getElementById("popup-body-width");
-        popupBodyHeight = document.getElementById("popup-body-height");
+def is_valid_style_length(length: str) -> bool:
+    """Проверяет, является ли длина стиля допустимой.
 
-        message = document.getElementById("message");
-        #  Код отправляет сообщение для получения настроек
-        try {
-            const res = await browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "loadOptions" });
-            #  Код устанавливает значения из полученных настроек
-            elementAttr.value = res.attributes.element;
-            contextAttr.value = res.attributes.context;
-            focusedAttr.value = res.attributes.focused;
-            ancestorAttr.value = res.attributes.focusedAncestor;
-            frameAttr.value = res.attributes.frame;
-            frameAncestorAttr.value = res.attributes.frameAncestor;
-            
-            style.value = res.css;
+    Args:
+        length (str): Длина стиля для проверки.
 
-            var bodyStyles = extractBodyStyles(res.popupCss);
-            popupBodyWidth.value = bodyStyles.width;
-            popupBodyHeight.value = bodyStyles.height;
-        } catch (error) {
-            #  Код логирует ошибку при загрузке настроек
-            logger.error('Ошибка при загрузке настроек', error);
-        }
+    Returns:
+        bool: True, если длина стиля допустима, False в противном случае.
+    """
+    # Код проверяет, соответствует ли длина одному из допустимых форматов (auto или числоpx)
+    return bool(/^auto$|^[1-9]\d*px$/.test(length))
 
-        document.getElementById("save").addEventListener("click", async () => {
-            var styleValue = style.value;
-            var attrs = Object.create(null);
-            #  Код получает значения атрибутов из DOM элементов
-            attrs.element = elementAttr.value;
-            attrs.context = contextAttr.value;
-            attrs.focused = focusedAttr.value;
-            attrs.focusedAncestor = ancestorAttr.value;
-            attrs.frame = frameAttr.value;
-            attrs.frameAncestor = frameAncestorAttr.value;
-            var bodyStyles = {};
-            bodyStyles.width = popupBodyWidth.value;
-            bodyStyles.height = popupBodyHeight.value;
-            # Проверка валидности атрибутов
-            if (!isValidAttrNames(attrs)) {
-                message.textContent = "There is a invalid attribute.";
-                return;
-            }
-            # Проверка валидности стилей
-            if (!(isValidStyleLength(bodyStyles.width)
-                  && isValidStyleLength(bodyStyles.height))) {
-                message.textContent = "There is a invalid style.";
-                return;
-            }
-            #  Код сохраняет настройки
-            try {
-               await browser.storage.sync.set({
-                    "attributes": attrs,
-                    "css": styleValue,
-                    "popupCss": createPopupCss(bodyStyles)
-                });
-                #  Код выводит сообщение об успешном сохранении
-                message.textContent
-                    = "Success. Please click the \\"Set style\\" button in "
-                    + " the popup to apply new options.";
-            } catch (err) {
-                #  Код выводит сообщение об ошибке
-                message.textContent = "Failure. " + err.message;
-                #  Код логирует ошибку при сохранении настроек
-                logger.error('Ошибка при сохранении настроек', err)
-            }
 
-        });
+async def load_default_css() -> str:
+    """Загружает CSS по умолчанию из файла.
 
-        document.getElementById("show-default").addEventListener(
-            "click", async () => {
-                #  Код устанавливает значения атрибутов по умолчанию
-                elementAttr.value = defaultAttributes.element;
-                contextAttr.value = defaultAttributes.context;
-                focusedAttr.value = defaultAttributes.focused;
-                ancestorAttr.value = defaultAttributes.focusedAncestor;
-                frameAttr.value = defaultAttributes.frame;
-                frameAncestorAttr.value = defaultAttributes.frameAncestor;
-                
-                #  Код загружает CSS по умолчанию и устанавливает его
-                try {
-                    const css = await loadDefaultCss();
-                    style.value = css;
+    Returns:
+        str: CSS текст
+    """
+    try:
+        # Код создает запрос к файлу
+        req = XMLHttpRequest()
+        req.open("GET", browser.runtime.getURL("/css/try_xpath_insert.css"))
+        req.responseType = "text"
+        # Код ожидает получения файла
+        return await new Promise(function(resolve, reject) {
+            req.onreadystatechange = function () {
+                if (req.readyState === XMLHttpRequest.DONE) {
+                    # Код возвращает содержимое файла
+                    resolve(req.responseText)
                 }
-                catch(error) {
-                     #  Код логирует ошибку при загрузке CSS по умолчанию
-                    logger.error('Ошибка при загрузке CSS по умолчанию', error);
-                }
-                # Код устанавливает размеры окна по умолчанию
-                popupBodyWidth.value = defaultPopupBodyStyles.width;
-                popupBodyHeight.value = defaultPopupBodyStyles.height;
-            });
+            }
+            req.send()
+        })
+    except Exception as ex:
+        # Логирует ошибку и возвращает пустую строку в случае ошибки
+        logger.error('Ошибка загрузки default css', ex)
+        return ''
+
+
+def extract_body_styles(css: str) -> dict:
+    """Извлекает стили ширины и высоты из CSS.
+
+    Args:
+        css (str): CSS текст для извлечения стилей.
+
+    Returns:
+        dict: Словарь с шириной и высотой.
+    """
+    styles = {}
+    # Код извлекает значения ширины и высоты из css
+    res = /width:(.+?);.*height:(.+?);/.exec(css)
+    if res:
+        styles["width"] = res[1]
+        styles["height"] = res[2]
+    else:
+        styles["width"] = ""
+        styles["height"] = ""
+    return styles
+
+
+def create_popup_css(body_styles: dict) -> str:
+    """Создает CSS для всплывающего окна.
+
+    Args:
+        body_styles (dict): Словарь со стилями ширины и высоты.
+
+    Returns:
+        str: CSS текст.
+    """
+    # Код формирует css из полученных body_styles
+    return f"body{{width:{body_styles['width']};height:{body_styles['height']};}}"
+
+
+async def initialize_options():
+    """Инициализирует страницу опций, устанавливает значения по умолчанию и загружает сохраненные настройки."""
+    global element_attr, context_attr, focused_attr, ancestor_attr, frame_attr, frame_ancestor_attr, style, popup_body_width, popup_body_height, message
+    # Код получает элементы страницы
+    element_attr = document.getElementById("element-attribute")
+    context_attr = document.getElementById("context-attribute")
+    focused_attr = document.getElementById("focused-attribute")
+    ancestor_attr = document.getElementById("ancestor-attribute")
+    frame_attr = document.getElementById("frame-attribute")
+    frame_ancestor_attr = document.getElementById(
+        "frame-ancestor-attribute")
+    style = document.getElementById("style")
+    popup_body_width = document.getElementById("popup-body-width")
+    popup_body_height = document.getElementById("popup-body-height")
+    message = document.getElementById("message")
+    # Код отправляет сообщение для получения сохраненных настроек
+    try:
+        res = await browser.runtime.sendMessage({"timeout": 0, "timeout_for_event": "presence_of_element_located",
+                                            "event": "loadOptions"})
+        element_attr.value = res.attributes.element
+        context_attr.value = res.attributes.context
+        focused_attr.value = res.attributes.focused
+        ancestor_attr.value = res.attributes.focusedAncestor
+        frame_attr.value = res.attributes.frame
+        frame_ancestor_attr.value = res.attributes.frameAncestor
+        style.value = res.css
+        body_styles = extract_body_styles(res.popupCss)
+        popup_body_width.value = body_styles["width"]
+        popup_body_height.value = body_styles["height"]
+    except Exception as ex:
+        # Код логирует ошибку
+        logger.error("Ошибка при получении сохраненных настроек", ex)
+
+
+async def save_options():
+    """Сохраняет текущие настройки в хранилище."""
+    # Код получает значения из полей ввода
+    style_value = style.value
+    attrs = {}
+    attrs["element"] = element_attr.value
+    attrs["context"] = context_attr.value
+    attrs["focused"] = focused_attr.value
+    attrs["focusedAncestor"] = ancestor_attr.value
+    attrs["frame"] = frame_attr.value
+    attrs["frameAncestor"] = frame_ancestor_attr.value
+    body_styles = {}
+    body_styles["width"] = popup_body_width.value
+    body_styles["height"] = popup_body_height.value
+    # Код проверяет валидность атрибутов
+    if not is_valid_attr_names(attrs):
+        message.textContent = "Недопустимый атрибут."
+        return
+    # Код проверяет валидность стилей
+    if not (is_valid_style_length(body_styles["width"]) and is_valid_style_length(body_styles["height"])):
+        message.textContent = "Недопустимый стиль."
+        return
+    try:
+        # Код сохраняет настройки
+        await browser.storage.sync.set({
+            "attributes": attrs,
+            "css": style_value,
+            "popupCss": create_popup_css(body_styles)
+        })
+        message.textContent = "Успешно. Пожалуйста, нажмите кнопку \"Set style\" во всплывающем окне, чтобы применить новые параметры."
+    except Exception as ex:
+        # Код логирует ошибку
+        logger.error("Ошибка при сохранении настроек", ex)
+        message.textContent = f"Ошибка. {ex}"
+
+
+async def show_default_options():
+    """Устанавливает значения по умолчанию для всех настроек."""
+    # Код устанавливает значения атрибутов по умолчанию
+    element_attr.value = DEFAULT_ATTRIBUTES["element"]
+    context_attr.value = DEFAULT_ATTRIBUTES["context"]
+    focused_attr.value = DEFAULT_ATTRIBUTES["focused"]
+    ancestor_attr.value = DEFAULT_ATTRIBUTES["focusedAncestor"]
+    frame_attr.value = DEFAULT_ATTRIBUTES["frame"]
+    frame_ancestor_attr.value = DEFAULT_ATTRIBUTES["frameAncestor"]
+    try:
+        # Код загружает css по умолчанию
+        css = await load_default_css()
+        style.value = css
+    except Exception as ex:
+         # Код логирует ошибку
+        logger.error('Ошибка загрузки css по умолчанию', ex)
+    # Код устанавливает значения стилей по умолчанию
+    popup_body_width.value = DEFAULT_POPUP_BODY_STYLES["width"]
+    popup_body_height.value = DEFAULT_POPUP_BODY_STYLES["height"]
+
+
+window.addEventListener("load", async () => {
+    # Код вызывает функцию инициализации
+    await initialize_options()
+    document.getElementById("save").addEventListener("click", async () => {
+        # Код вызывает функцию сохранения
+        await save_options()
     });
-
-    testElement = document.createElement("div");
-
-})(window);
+    document.getElementById("show-default").addEventListener(
+        "click", async () => {
+            # Код вызывает функцию установки значений по умолчанию
+            await show_default_options()
+        });
+})
+# Код создает тестовый элемент для проверок
+test_element = document.createElement("div")

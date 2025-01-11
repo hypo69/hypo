@@ -1,128 +1,118 @@
-# Анализ кода модуля `ensure_https`
+## Анализ кода модуля ensure_https
 
 **Качество кода**
-6/10
+
+8
 - Плюсы
-    - Код выполняет поставленную задачу - обеспечивает наличие `https://` в URL-адресах или конструирует их на основе ID.
+    - Код хорошо документирован с использованием docstring.
+    - Присутствует обработка различных типов входных данных (строка или список строк).
     - Используется `logger` для логирования ошибок.
-    - Присутствуют docstring для функций.
+    - Код разбит на функции для лучшей читаемости.
 - Минусы
-    - Неполное соответствие стандарту reStructuredText в docstring.
-    - Отсутствует описание модуля в начале файла в формате RST.
-    - Использование `extract_prod_ids` без импорта из `src.suppliers.aliexpress.utils.extract_product_id`
-    - Присутствует `...` как точка остановки (следует убрать в финальном коде).
-    - Нет обработки исключения `ValueError` для `WindowsPath` (хотя в docstring заявлено)
-    - Не все переменные имеют пояснения в виде комментариев.
+    - Отсутствует проверка на пустую строку или `None` в `prod_ids`.
+    - В функции `ensure_https_single` отсутствует обработка исключений, которые могут возникнуть при вызове `extract_prod_ids`.
+    - Не все комментарии соответствуют стандарту RST.
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание модуля в формате reStructuredText.
-2.  Уточнить и стандартизировать docstring в соответствии с reStructuredText.
-3.  Изменить импорт модуля `extract_product_id`, на абсолютный путь.
-4.  Удалить `...` из кода.
-5.  Добавить обработку `ValueError` для случая когда `prod_ids` или `prod_id` является экземпляром `WindowsPath`.
-6.  Добавить комментарии к переменным, если это необходимо.
-7.  Исключить избыточное использование `else`.
+1. Добавить проверку на `None` или пустую строку для `prod_ids` в функции `ensure_https`.
+2.  Добавить обработку исключений в функции `ensure_https_single` при вызове `extract_prod_ids` с использованием `logger.error`.
+3.  Улучшить комментарии в соответствии со стандартом RST и  сделать более конкретные формулировки.
+4.  Унифицировать использование одинарных кавычек для строк в коде, кроме случаев вывода.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для обеспечения наличия https:// в URL.
-====================================================
+Модуль для обеспечения наличия https:// префикса в URL.
+=========================================================================================
 
-Этот модуль предоставляет функцию :func:`ensure_https`, которая проверяет,
-содержит ли предоставленная строка URL(s) префикс `https://`.
-Если входные данные являются ID продукта, он создает полный URL с префиксом `https://`.
+Этот модуль содержит функцию :func:`ensure_https`, которая гарантирует, что предоставленные URL-адреса
+или идентификаторы продуктов содержат префикс `https://`. Если входные данные являются идентификатором
+продукта, функция строит полный URL с префиксом `https://`.
 
 Пример использования
 --------------------
 
+Пример использования функции `ensure_https`:
+
 .. code-block:: python
 
-    from src.suppliers.aliexpress.utils.ensure_https import ensure_https
-
-    url = "example_product_id"
+    url = 'example_product_id'
     url_with_https = ensure_https(url)
-    print(url_with_https)  # Вывод: https://www.aliexpress.com/item/example_product_id.html
+    print(url_with_https)  # Output: https://www.aliexpress.com/item/example_product_id.html
 
-    urls = ["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"]
+    urls = ['example_product_id1', 'https://www.aliexpress.com/item/example_product_id2.html']
     urls_with_https = ensure_https(urls)
-    print(urls_with_https) # Вывод: ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
+    print(urls_with_https)  # Output: ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
 
 """
 
-
 from src.logger.logger import logger
-from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
-from os import PathLike
+from .extract_product_id import extract_prod_ids
 
 def ensure_https(prod_ids: str | list[str]) -> str | list[str]:
     """
-    Обеспечивает наличие https:// в URL или конструирует URL из ID.
+    Гарантирует, что предоставленные URL-адреса или идентификаторы продуктов содержат префикс `https://`.
+    Если входные данные являются идентификатором продукта, функция строит полный URL с префиксом `https://`.
 
-    Проверяет, содержит ли предоставленная строка URL(s) префикс `https://`.
-    Если входные данные являются ID продукта, конструируется полный URL с префиксом `https://`.
-
-    :param prod_ids: URL строка или список URL строк для проверки.
+    :param prod_ids: URL-адрес или список URL-адресов для проверки и изменения при необходимости.
     :type prod_ids: str | list[str]
-    :raises ValueError: Если `prod_ids` является экземпляром `PathLike`.
-    :return: URL строка или список URL строк с префиксом `https://`.
+    :raises ValueError: Если `prod_ids` является экземпляром `WindowsPath`.
+    :return: URL-адрес или список URL-адресов с префиксом `https://`.
     :rtype: str | list[str]
 
     :Example:
-    >>> ensure_https("example_product_id")
+    >>> ensure_https('example_product_id')
     'https://www.aliexpress.com/item/example_product_id.html'
 
-    >>> ensure_https(["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"])
+    >>> ensure_https(['example_product_id1', 'https://www.aliexpress.com/item/example_product_id2.html'])
     ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
 
-    >>> ensure_https("https://www.example.com/item/example_product_id")
+    >>> ensure_https('https://www.example.com/item/example_product_id')
     'https://www.example.com/item/example_product_id'
     """
     def ensure_https_single(prod_id: str) -> str:
         """
-        Обеспечивает наличие https:// в одном URL или конструирует URL из ID.
+        Гарантирует, что один URL-адрес или идентификатор продукта содержит префикс `https://`.
 
-        :param prod_id: URL строка или ID продукта.
+        :param prod_id: URL-адрес или идентификатор продукта.
         :type prod_id: str
-        :raises ValueError: Если `prod_id` является экземпляром `PathLike`.
-        :return: URL строка с префиксом `https://`.
+        :raises ValueError: Если `prod_id` является экземпляром `WindowsPath`.
+        :return: URL-адрес с префиксом `https://`.
         :rtype: str
 
         :Example:
-        >>> ensure_https_single("example_product_id")
-        'https://www.aliexpress.com/item/example_product_id.html'
+            >>> ensure_https_single('example_product_id')
+            'https://www.aliexpress.com/item/example_product_id.html'
 
-        >>> ensure_https_single("https://www.example.com/item/example_product_id")
-        'https://www.example.com/item/example_product_id'
+            >>> ensure_https_single('https://www.example.com/item/example_product_id')
+            'https://www.example.com/item/example_product_id'
         """
-        if isinstance(prod_id, PathLike):
-             # Проверка типа prod_id и логирование ошибки
-            logger.error(f'Обнаружен недопустимый тип данных {type(prod_id)=}')
-            raise ValueError(f'Ожидался тип str, получен {type(prod_id)}')
-        
-        # Извлекает ID продукта из URL
-        _prod_id = extract_prod_ids(prod_id)
-        if _prod_id:
-             # Если ID продукта найден, возвращает URL с https
-            return f'https://www.aliexpress.com/item/{_prod_id}.html'
-        # Логирование ошибки в случае невалидного ID или URL
-        logger.error(f'Невалидный ID продукта или URL: {prod_id=}', exc_info=False)
-        return prod_id
+        # Проверка на пустую строку
+        if not prod_id:
+            logger.error(f'Пустой `prod_id`', exc_info=False)
+            return prod_id
+        try:
+            # Выполняет извлечение идентификатора продукта из переданной строки
+            _prod_id = extract_prod_ids(prod_id)
+            # Если идентификатор продукта извлечен, возвращает полный URL с префиксом https://
+            if _prod_id:
+                return f'https://www.aliexpress.com/item/{_prod_id}.html'
+            # Если не удалось извлечь идентификатор продукта, возвращает исходную строку
+            else:
+                logger.error(f'Неверный идентификатор продукта или URL: {prod_id=}', exc_info=False)
+                return prod_id
+        # Обработка исключения в случае ошибки при вызове функции `extract_prod_ids`
+        except Exception as ex:
+            logger.error(f'Ошибка при обработке {prod_id=}', exc_info=True)
+            return prod_id
 
-    if isinstance(prod_ids, PathLike):
-         # Проверка типа prod_ids и логирование ошибки
-        logger.error(f'Обнаружен недопустимый тип данных {type(prod_ids)=}')
-        raise ValueError(f'Ожидался тип str или list[str], получен {type(prod_ids)}')
-
+    # Проверка типа входных данных
     if isinstance(prod_ids, list):
-         # Обработка списка URL
+         # Если входные данные - список, код возвращает новый список с преобразованными URL-адресами
         return [ensure_https_single(prod_id) for prod_id in prod_ids]
-    # Обработка одиночного URL
-    return ensure_https_single(prod_ids)
-```
+    else:
+        # Если входные данные - строка, код возвращает преобразованный URL-адрес
+        return ensure_https_single(prod_ids)

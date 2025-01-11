@@ -1,247 +1,256 @@
-## ИНСТРУКЦИЯ:
-
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
-
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
-    ```
-
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
-
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
-
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
-```
-
 ## <алгоритм>
 
-1. **Инициализация бота:**
-   - Создается экземпляр класса `TelegramBot`, передавая токен бота.
-   - В конструкторе вызывается метод `register_handlers` для установки обработчиков команд и сообщений.
-   - **Пример:** `bot = TelegramBot(token="YOUR_BOT_TOKEN")`
+**1. Инициализация бота:**
 
-2. **Регистрация обработчиков:**
-   - `register_handlers` устанавливает обработчики для `/start`, `/help`, `/sendpdf`, текстовых сообщений, голосовых сообщений и документов.
-   - **Пример:** Обработчик `/start` привязан к методу `start`, обработчик текстовых сообщений к `handle_message`.
+*   Приложение запускается, и вызывается `main()`.
+*   `main()` получает токен Telegram-бота из переменных окружения (или другого источника).
+*   Создается экземпляр класса `TelegramBot`, которому передается токен.
+*   В конструкторе `__init__` вызывается метод `register_handlers()`, который настраивает обработчики команд и сообщений.
 
-3. **Обработка команды `/start`:**
-   - При получении команды `/start` вызывается метод `start`.
-   - Бот отправляет приветственное сообщение пользователю.
-   - **Пример:** Пользователь отправляет `/start`. Бот отвечает: "Привет! Я телеграм-бот."
+**Пример:**
 
-4. **Обработка команды `/help`:**
-   - При получении команды `/help` вызывается метод `help_command`.
-   - Бот отправляет список доступных команд.
-   - **Пример:** Пользователь отправляет `/help`. Бот отвечает: "Доступные команды: /start, /help, /sendpdf."
+```
+    # Предположим, что TOKEN получен из переменных окружения
+    token = "YOUR_TELEGRAM_BOT_TOKEN"
+    bot = TelegramBot(token) # Инициализация экземпляра TelegramBot
+    bot.run_polling() # Запуск бота
+```
 
-5. **Обработка команды `/sendpdf`:**
-   - При получении команды `/sendpdf` вызывается метод `send_pdf`.
-   - Бот отправляет PDF файл пользователю.
-   - **Пример:** Пользователь отправляет `/sendpdf`. Бот отправляет заранее определенный PDF файл.
+**2. Регистрация обработчиков:**
 
-6. **Обработка текстового сообщения:**
-   - При получении текстового сообщения вызывается метод `handle_message`.
-   - Бот возвращает текст полученного сообщения.
-   - **Пример:** Пользователь отправляет "Привет, бот!". Бот отвечает: "Привет, бот!"
+*   Метод `register_handlers()` добавляет в бота обработчики для следующих типов событий:
+    *   Команды: `/start`, `/help`, `/sendpdf`
+    *   Сообщения: Текстовые сообщения, голосовые сообщения, документы
 
-7. **Обработка голосового сообщения:**
-    - При получении голосового сообщения вызывается метод `handle_voice`.
-    - Бот скачивает голосовое сообщение.
-    - Сохраняет голосовое сообщение во временный файл.
-    - Вызывает метод `transcribe_voice` для преобразования голосового сообщения в текст.
-    - Бот отправляет полученный текст пользователю.
-    - **Пример:** Пользователь отправляет голосовое сообщение. Бот отправляет расшифрованный текст (на данный момент заглушка).
+**Пример:**
 
-8.  **Обработка документа:**
-    - При получении документа вызывается метод `handle_document`.
-    - Бот скачивает документ.
-    - Сохраняет документ во временный файл.
-    - Бот читает содержимое текстового документа.
-    - Бот отправляет содержимое документа пользователю.
-    - **Пример:** Пользователь отправляет текстовый документ. Бот отправляет содержимое файла.
+```python
+    def register_handlers(self):
+        dispatcher = self.application.dispatcher
 
-9. **Запуск бота:**
-    - В функции `main` создается экземпляр бота.
-    - Вызывается метод `run_polling` для запуска бота в режиме прослушивания.
-    - Бот готов принимать команды и сообщения.
+        # Команды
+        dispatcher.add_handler(CommandHandler("start", self.start))
+        dispatcher.add_handler(CommandHandler("help", self.help_command))
+        dispatcher.add_handler(CommandHandler("sendpdf", self.send_pdf))
+
+        # Сообщения
+        dispatcher.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
+        dispatcher.add_handler(MessageHandler(filters.Document.TEXT, self.handle_document))
+        dispatcher.add_handler(MessageHandler(filters.TEXT, self.handle_message))
+
+```
+
+**3. Обработка команд:**
+
+*   Когда пользователь отправляет команду боту (например, `/start`), соответствующий обработчик вызывается.
+*   `/start`: Вызывает `start()`, отправляет приветственное сообщение.
+*   `/help`: Вызывает `help_command()`, отправляет сообщение со списком команд.
+*   `/sendpdf`: Вызывает `send_pdf()`, отправляет PDF-файл пользователю.
+
+**Пример:**
+
+```
+    # Пользователь отправляет /start
+    def start(self, update: Update, context: CallbackContext):
+        update.message.reply_text('Welcome!')
+
+    # Пользователь отправляет /help
+    def help_command(self, update: Update, context: CallbackContext):
+        update.message.reply_text("Available commands: /start, /help, /sendpdf")
+```
+
+**4. Обработка сообщений:**
+
+*   Когда пользователь отправляет сообщение боту, соответствующий обработчик вызывается.
+*   Голосовое сообщение: `handle_voice()` вызывается, скачивает файл, сохраняет его и пытается транскрибировать (заглушка).
+*   Текстовый документ: `handle_document()` вызывается, скачивает файл, сохраняет его и читает текст.
+*   Текстовое сообщение: `handle_message()` вызывается, возвращает текст сообщения.
+
+**Пример (голосовое сообщение):**
+
+```python
+    def handle_voice(self, update: Update, context: CallbackContext):
+        file = context.bot.get_file(update.message.voice.file_id)
+        file_path = Path("temp_voice_file.ogg")
+        file.download(file_path)
+        text = self.transcribe_voice(file_path)  # Транскрипция (заглушка)
+        update.message.reply_text(f"Транскрибировано: {text}")
+```
+
+**5. Транскрибирование голосового сообщения:**
+
+*   `transcribe_voice()` - это заглушка, которая должна быть реализована с использованием сервиса распознавания речи.
+
+**6. Обработка документов:**
+
+*   `handle_document()` скачивает файл, сохраняет его и читает текст, если это текстовый файл.
+
+**Пример (обработка документа):**
+
+```python
+    def handle_document(self, update: Update, context: CallbackContext):
+            file = context.bot.get_file(update.message.document.file_id)
+            file_path = Path(f"temp_document_{update.message.document.file_name}")
+            file.download(file_path)
+            text = file_utils.read_text_file(file_path)
+            update.message.reply_text(f"Содержание документа: {text}")
+```
+
+**7. Запуск бота:**
+
+*   В `main()` вызывается `bot.run_polling()`, что запускает бота и переходит в режим ожидания сообщений.
 
 ## <mermaid>
+
 ```mermaid
 flowchart TD
     subgraph Telegram Bot
-        Start[Start Bot] --> InitBot(Initialize TelegramBot Class)
-        InitBot --> RegisterHandlers(Register Handlers)
-        RegisterHandlers --> Polling(Start Polling)
-        
-        Polling --> UserCommand(User Sends Command/Message)
-        
-        UserCommand -- "/start" --> StartCommand(Handle /start Command)
-        StartCommand --> SendWelcomeMessage(Send Welcome Message)
-        
-        UserCommand -- "/help" --> HelpCommand(Handle /help Command)
-        HelpCommand --> SendHelpMessage(Send Help Message)
-        
-        UserCommand -- "/sendpdf" --> SendPdfCommand(Handle /sendpdf Command)
-        SendPdfCommand --> SendPdfFile(Send PDF File)
-
-        UserCommand -- "Text Message" --> HandleTextMessage(Handle Text Message)
-        HandleTextMessage --> ReturnTextMessage(Return Received Text)
-        
-        UserCommand -- "Voice Message" --> HandleVoiceMessage(Handle Voice Message)
-        HandleVoiceMessage --> DownloadVoice(Download Voice File)
-        DownloadVoice --> SaveVoiceFile(Save Voice File)
-        SaveVoiceFile --> TranscribeVoice(Transcribe Voice Message)
-        TranscribeVoice --> SendTranscription(Send Transcription)
-
-        UserCommand -- "Document" --> HandleDocumentMessage(Handle Document Message)
-        HandleDocumentMessage --> DownloadDocument(Download Document File)
-        DownloadDocument --> SaveDocumentFile(Save Document File)
-        SaveDocumentFile --> ReadDocumentContent(Read Document Content)
-        ReadDocumentContent --> SendDocumentContent(Send Document Content)
-        
+        Start[Start Bot Initialization] --> CreateBotInstance[Create TelegramBot Instance];
+        CreateBotInstance --> RegisterHandlers[Register Message and Command Handlers];
+        RegisterHandlers --> BotPolling[Start Bot Polling];
+        BotPolling --> WaitForMessage[Wait for User Messages];
     end
-    
-    classDef telegram fill:#f9f,stroke:#333,stroke-width:2px
-    class TelegramBot,InitBot,RegisterHandlers,Polling,UserCommand,StartCommand,HelpCommand,SendPdfCommand,HandleTextMessage,HandleVoiceMessage,HandleDocumentMessage telegram
-    classDef function fill:#ccf,stroke:#333,stroke-width:2px
-    class SendWelcomeMessage,SendHelpMessage,SendPdfFile,ReturnTextMessage,DownloadVoice,SaveVoiceFile,TranscribeVoice,SendTranscription,DownloadDocument,SaveDocumentFile,ReadDocumentContent,SendDocumentContent function
+    WaitForMessage --> CommandCheck[Check for Command: /start, /help, /sendpdf];
+    CommandCheck -- Yes --> CommandHandler[Command Handler: start(), help_command(), send_pdf()];
+    CommandHandler --> ReplyToUser[Reply to User with Message or Document];
+    WaitForMessage --> MessageCheck[Check for Message Type: Text, Voice, Document];
+    MessageCheck -- Text --> TextMessageHandler[Text Message Handler: handle_message()];
+    MessageCheck -- Voice --> VoiceMessageHandler[Voice Message Handler: handle_voice()];
+        VoiceMessageHandler --> DownloadVoice[Download Voice File];
+        DownloadVoice --> SaveVoiceFile[Save Voice File Locally];
+        SaveVoiceFile --> TranscribeVoice[Transcribe Voice (Placeholder)];
+        TranscribeVoice --> ReplyToUserVoice[Reply to User with Transcription];
+
+    MessageCheck -- Document --> DocumentMessageHandler[Document Message Handler: handle_document()];
+         DocumentMessageHandler --> DownloadDocument[Download Document File];
+         DownloadDocument --> SaveDocumentFile[Save Document File Locally];
+         SaveDocumentFile --> ReadDocumentContent[Read Content of Text Document];
+         ReadDocumentContent --> ReplyToUserDocument[Reply to User with Document Content];
+    TextMessageHandler --> ReplyToUserText[Reply to User with Received Text];
+    ReplyToUser --> WaitForMessage
+    ReplyToUserVoice --> WaitForMessage
+    ReplyToUserDocument --> WaitForMessage
+    ReplyToUserText --> WaitForMessage
+
+    subgraph File Operations
+        DownloadVoice --> DownloadFile;
+        DownloadDocument --> DownloadFile;
+         DownloadFile[Download File from Telegram];
+    end
+
+    subgraph Text File Operations
+        ReadDocumentContent --> ReadFile;
+        ReadFile[Read Text File Content from Local Storage];
+    end
 ```
 
-**Анализ зависимостей Mermaid:**
+### Объяснение зависимостей `mermaid`:
 
-Диаграмма `mermaid` показывает поток управления и данных внутри телеграм-бота. Вот основные зависимости:
-
--   **Telegram Bot:** Это основная область, представляющая все компоненты бота.
--   **TelegramBot Class:** Класс, который управляет логикой бота. Его методы используются для обработки команд и сообщений.
--   **Handlers (Register Handlers):** Механизм регистрации функций-обработчиков на определенные команды или типы сообщений.
--   **Polling (Start Polling):** Процесс ожидания и обработки входящих сообщений от Telegram API.
--   **User Sends Command/Message:** Взаимодействие пользователя с ботом, когда отправляется команда или сообщение.
--   **Command Handlers (`/start`, `/help`, `/sendpdf`):** Специализированные функции для обработки определенных команд.
--  **Message Handlers (текстовые, голосовые, документы):** Функции для обработки различных типов сообщений.
--  **Functions (различные):** Функции, которые выполняют конкретные задачи (отправка сообщений, загрузка файлов, преобразование текста, чтение контента документов).
-
-Все имена переменных являются осмысленными и описательными, например, `InitBot`, `RegisterHandlers`, `HandleTextMessage`, `SendWelcomeMessage`, что позволяет легко понять их роль в контексте диаграммы.
+*   **Telegram Bot:** Основная логика управления ботом и обработки запросов.
+    *   `Start`: Начало работы бота.
+    *   `CreateBotInstance`: Создание экземпляра класса `TelegramBot`.
+    *   `RegisterHandlers`: Регистрация обработчиков для различных типов сообщений и команд.
+    *   `BotPolling`: Запуск бота в режиме прослушивания входящих сообщений.
+    *   `WaitForMessage`: Ожидание сообщений от пользователей.
+*   **Обработка сообщений:** Различные пути обработки сообщений в зависимости от типа.
+    *   `CommandCheck`: Проверка, является ли сообщение командой.
+    *   `CommandHandler`: Обработчики команд (`start()`, `help_command()`, `send_pdf()`).
+    *   `MessageCheck`: Проверка типа сообщения (текст, голос, документ).
+    *   `TextMessageHandler`: Обработчик текстовых сообщений (`handle_message()`).
+    *   `VoiceMessageHandler`: Обработчик голосовых сообщений (`handle_voice()`).
+    *   `DocumentMessageHandler`: Обработчик документов (`handle_document()`).
+*   **Обработка файлов:** Логика для загрузки, сохранения и обработки файлов.
+    *   `DownloadVoice`: Загрузка голосового сообщения.
+    *   `SaveVoiceFile`: Сохранение голосового сообщения на диск.
+    *   `TranscribeVoice`:  Транскрибирование голосового сообщения (заглушка).
+    *   `DownloadDocument`: Загрузка документа.
+    *   `SaveDocumentFile`: Сохранение документа на диск.
+    *   `ReadDocumentContent`: Чтение содержимого текстового файла.
+*   **Ответ пользователю:**
+    *   `ReplyToUser`: Отправка ответа пользователю.
+    *    `ReplyToUserVoice`: Отправка ответа с транскрибированным текстом.
+    *   `ReplyToUserDocument`: Отправка ответа с контентом текстового документа.
+    *   `ReplyToUserText`: Отправка ответа с текстом полученного сообщения.
 
 ## <объяснение>
 
 **Импорты:**
 
--   `python-telegram-bot`:  Основная библиотека для создания Telegram ботов. Предоставляет классы и методы для взаимодействия с Telegram API. Взаимодействует с Telegram API для отправки и получения сообщений.
--   `pathlib`: Модуль для работы с путями файлов. Обеспечивает удобный объектно-ориентированный способ работы с файловой системой.
--   `tempfile`: Модуль для создания временных файлов и каталогов. Используется для сохранения загруженных файлов, таких как голосовые сообщения и документы.
--   `asyncio`: Библиотека для асинхронного программирования. Позволяет выполнять операции параллельно и эффективно использовать ресурсы.
--   `requests`: Библиотека для выполнения HTTP-запросов. Используется для скачивания файлов из интернета, например, голосовых сообщений и документов.
--   `src.utils.convertors.tts`:  Модуль для преобразования речи в текст и обратно (на данный момент это заглушка). Планируется использовать для преобразования голоса в текст.
--    `src.utils.file`:  Модуль для работы с файлами. Используется для чтения содержимого текстовых файлов.
+*   `logging`:  Используется для записи информации о работе программы, ошибок и предупреждений. Помогает при отладке и мониторинге работы бота.
+*   `os`:  Предоставляет функции для взаимодействия с операционной системой, например, для работы с путями к файлам и доступа к переменным окружения.
+*   `tempfile`:  Модуль для создания временных файлов и каталогов, используется для временного хранения файлов голосовых сообщений и документов.
+*   `pathlib.Path`:  Класс для представления путей к файлам и каталогам в объектно-ориентированном стиле, упрощает работу с файловой системой.
+*   `asyncio`: Библиотека для написания асинхронного кода. Бот использует asyncio для выполнения задач, которые могут блокировать основной поток, например, загрузка файлов.
+*   `telegram.ext`:  Основная библиотека для создания Telegram-ботов. `Application`, `CommandHandler`, `MessageHandler`, `filters`, `CallbackContext` и `Update` используются для управления ботом, регистрации обработчиков команд и сообщений.
+*   `src.utils.convertors.tts`: Пакет для преобразования речи в текст и наоборот. В текущей реализации используется заглушка, но в будущем предполагается использовать этот модуль для транскрибирования голосовых сообщений.
+*   `src.utils.file as file_utils`: Пакет, предоставляющий утилиты для работы с файлами, например, для чтения текстовых файлов.
+*   `requests`: Библиотека для выполнения HTTP запросов, используется для скачивания файлов из Telegram.
+*   `dotenv`: Библиотека для загрузки переменных окружения из файла `.env`, используется для хранения токена бота и других секретов.
 
 **Классы:**
 
--   `TelegramBot`:
-    -   **Роль:** Основной класс, представляющий телеграм-бота. Инициализирует бота, регистрирует обработчики и обрабатывает различные типы сообщений и команд.
-    -   **Атрибуты:** `token` - токен для доступа к Telegram API.
-    -   **Методы:**
-        -   `__init__(self, token: str)`: Конструктор класса. Инициализирует бота с заданным токеном и вызывает метод `register_handlers`.
-        -   `register_handlers(self)`: Регистрирует обработчики для различных команд и типов сообщений.
-        -   `start(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/start`, отправляя приветственное сообщение.
-        -   `help_command(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/help`, отправляя список доступных команд.
-        -   `send_pdf(self, pdf_file: str | Path)`: Обрабатывает команду `/sendpdf`, отправляя PDF-файл пользователю.
-        -   `handle_voice(self, update: Update, context: CallbackContext)`: Обрабатывает голосовые сообщения, загружает их, сохраняет и вызывает метод `transcribe_voice`.
-        -   `transcribe_voice(self, file_path: Path) -> str`: Преобразует голосовое сообщение в текст (на данный момент это заглушка).
-        -   `handle_document(self, update: Update, context: CallbackContext) -> str`: Обрабатывает документ, загружает, сохраняет, и читает содержимое текстового документа.
-        -   `handle_message(self, update: Update, context: CallbackContext) -> str`: Обрабатывает текстовые сообщения, возвращая полученный текст.
-    -   **Взаимодействие:**  Класс `TelegramBot` взаимодействует с библиотекой `python-telegram-bot` для отправки и получения сообщений, а также с модулями `pathlib`, `tempfile`, `requests`, `src.utils.convertors.tts` и `src.utils.file` для работы с файловой системой, загрузкой данных и обработки контента.
+*   `TelegramBot`:
+    *   `__init__(self, token: str)`:
+        *   Аргумент: `token` - токен для аутентификации бота в Telegram API.
+        *   Создает экземпляр `telegram.ext.Application` и сохраняет его в атрибуте `self.application`.
+        *   Вызывает метод `self.register_handlers()` для добавления обработчиков.
+    *   `register_handlers(self)`:
+        *   Регистрирует обработчики для различных типов сообщений (текст, голос, документы) и команд (/start, /help, /sendpdf).
+        *   Использует `dispatcher.add_handler()` для привязки обработчиков к событиям.
+    *   `start(self, update: Update, context: CallbackContext)`:
+        *   Обработчик команды `/start`.
+        *   Отправляет пользователю приветственное сообщение "Welcome!".
+    *   `help_command(self, update: Update, context: CallbackContext)`:
+        *   Обработчик команды `/help`.
+        *   Отправляет список доступных команд.
+    *   `send_pdf(self, update: Update, context: CallbackContext)`:
+        *   Обработчик команды `/sendpdf`.
+        *   Отправляет PDF-файл пользователю.
+    *   `handle_voice(self, update: Update, context: CallbackContext)`:
+        *   Обработчик голосовых сообщений.
+        *   Получает файл голосового сообщения, сохраняет его и пытается транскрибировать.
+        *   Вызывает `self.transcribe_voice()` для транскрипции.
+    *   `transcribe_voice(self, file_path: Path) -> str`:
+        *   Заглушка для функции транскрибирования голосового сообщения.
+        *   Должна быть реализована с использованием `src.utils.convertors.tts`.
+    *   `handle_document(self, update: Update, context: CallbackContext) -> str`:
+        *   Обработчик текстовых документов.
+        *   Скачивает документ, сохраняет его, читает содержимое и возвращает текст пользователю.
+    *   `handle_message(self, update: Update, context: CallbackContext) -> str`:
+        *   Обработчик текстовых сообщений.
+        *   Возвращает текст полученного сообщения.
+    *   `run_polling(self)`:
+        *   Запускает бота в режиме опроса (polling), при котором бот постоянно проверяет наличие новых сообщений.
 
 **Функции:**
 
--   `main()`:
-    -   **Аргументы:** Нет.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Создает экземпляр `TelegramBot`, регистрирует обработчики и запускает бота в режиме прослушивания (polling).
-    -   **Пример:** Вызов `main()` запускает бота.
-
--   `start(self, update: Update, context: CallbackContext)`:
-    -   **Аргументы:** `update` - объект, представляющий входящее обновление от Telegram; `context` - объект контекста.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Обрабатывает команду `/start`, отправляя приветственное сообщение.
-    -   **Пример:** При вызове команды `/start` бот отправляет сообщение "Привет! Я телеграм-бот.".
-
--   `help_command(self, update: Update, context: CallbackContext)`:
-    -   **Аргументы:** `update` - объект, представляющий входящее обновление от Telegram; `context` - объект контекста.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Обрабатывает команду `/help`, отправляя список доступных команд.
-    -   **Пример:** При вызове команды `/help` бот отправляет сообщение "Доступные команды: /start, /help, /sendpdf.".
-
--   `send_pdf(self, pdf_file: str | Path)`:
-    -   **Аргументы:** `pdf_file` - путь к PDF файлу.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Обрабатывает команду `/sendpdf`, отправляя PDF-файл.
-    -   **Пример:** При вызове команды `/sendpdf` бот отправляет заранее определенный PDF файл.
-
--   `handle_voice(self, update: Update, context: CallbackContext)`:
-    -   **Аргументы:** `update` - объект, представляющий входящее обновление от Telegram; `context` - объект контекста.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Обрабатывает голосовые сообщения, загружая и сохраняя их, затем вызывая `transcribe_voice`.
-    -   **Пример:** Когда пользователь отправляет голосовое сообщение, этот метод обрабатывает его и пытается преобразовать в текст (пока это заглушка).
-
--    `transcribe_voice(self, file_path: Path) -> str`:
-    -   **Аргументы:** `file_path` - путь к файлу с голосовым сообщением.
-    -   **Возвращаемое значение:** Строка с преобразованным текстом (на данный момент это заглушка).
-    -   **Назначение:** Преобразует голосовое сообщение в текст. На данный момент это заглушка, которая должна быть реализована позже.
-    -   **Пример:** Функция должна была бы возвращать текст сообщения, но сейчас возвращает "Транскрибация не работает".
-
--    `handle_document(self, update: Update, context: CallbackContext) -> str`:
-     -   **Аргументы:** `update` - объект, представляющий входящее обновление от Telegram; `context` - объект контекста.
-     -   **Возвращаемое значение:** Текст из документа.
-     -  **Назначение:** Обрабатывает входящие документы, загружает их, сохраняет, и читает содержимое текстового документа.
-     -   **Пример:** Пользователь отправляет текстовый документ, бот возвращает его содержимое.
-
--   `handle_message(self, update: Update, context: CallbackContext) -> str`:
-    -   **Аргументы:** `update` - объект, представляющий входящее обновление от Telegram; `context` - объект контекста.
-    -   **Возвращаемое значение:** Строка с текстом сообщения.
-    -   **Назначение:** Обрабатывает текстовые сообщения, возвращая полученный текст.
-    -   **Пример:** Пользователь отправляет "Привет", бот возвращает "Привет".
+*   `main()`:
+    *   Основная функция запуска бота.
+    *   Загружает переменные окружения из файла `.env`.
+    *   Получает токен бота из переменных окружения.
+    *   Создает экземпляр `TelegramBot` и вызывает его метод `run_polling()` для запуска бота.
 
 **Переменные:**
 
--   `token`: Строка, представляющая токен для аутентификации бота в Telegram API.
--   `pdf_file`: Строка или `Path`, представляющая путь к PDF файлу, который будет отправлен пользователю.
--   `update`: Объект, представляющий входящее обновление от Telegram.
--   `context`: Объект контекста, предоставляющий дополнительную информацию о текущем взаимодействии.
--   `file_path`: Объект `Path`, представляющий путь к файлу (голосового сообщения, документа).
+*   `TOKEN`: Токен Telegram-бота, загружается из переменных окружения.
+*   `bot`: Экземпляр класса `TelegramBot`.
 
-**Потенциальные ошибки и области для улучшения:**
+**Потенциальные ошибки и улучшения:**
 
--   **Отсутствие реальной транскрибации:** Функция `transcribe_voice` является заглушкой и не выполняет фактическое преобразование голоса в текст. Необходимо реализовать механизм транскрибации с помощью внешнего сервиса.
--   **Обработка ошибок:** В текущей реализации отсутствует обработка ошибок при скачивании файлов, их обработке, или при обращении к внешним сервисам. Необходимо добавить блоки try-except для обработки ошибок.
--   **Безопасность:** Токен бота должен быть защищен и не должен храниться в открытом виде. Рекомендуется использовать переменные окружения или другие безопасные способы хранения секретов.
--   **Расширение функциональности:** Функциональность бота может быть расширена путем добавления новых команд и возможностей, таких как использование баз данных, интеграция с другими сервисами и т. д.
--    **Ограничения по размеру файлов:** Отсутствует обработка больших файлов. Необходимо реализовать асинхронную загрузку для больших файлов.
--    **Отсутствие обработки других типов документов:** Обрабатываются только текстовые документы. Необходимо добавить обработку других типов файлов, таких как изображения, аудио, видео.
--   **Отсутствие логирования:** Нет логирования работы бота. Необходимо добавить логирование для отслеживания ошибок и работы бота.
+*   **Отсутствует реализация транскрибирования голоса**: `transcribe_voice()` - заглушка и требует реализации с использованием `src.utils.convertors.tts`.
+*   **Обработка ошибок**:  Необходимо добавить обработку ошибок при загрузке файлов, транскрибировании и чтении документов.
+*   **Управление файлами**:  Временные файлы не удаляются после использования, что может привести к заполнению диска. Требуется добавить логику для удаления временных файлов.
+*   **Безопасность:** Токен бота должен храниться безопасно, не в коде. В текущей реализации используется `.env`, но для продакшна рекомендуется использовать более надежные способы.
+*    **Масштабируемость:** При большом количестве пользователей и сообщений, нужно пересмотреть архитектуру с использованием webhook, вместо polling.
+*    **Обработка исключений:** Необходимо добавить обработку ошибок при скачивании, сохранении и транскрибировании файлов.
+*   **Обработка различных типов файлов:**  В текущей реализации обрабатываются только текстовые файлы. Необходимо расширить функциональность для поддержки других типов файлов.
+*   **Настройка параметров бота:** Необходимо добавить возможность настройки параметров бота (например, тайм-ауты, настройки логирования).
 
-**Цепочка взаимосвязей с другими частями проекта:**
+**Взаимосвязи с другими частями проекта:**
 
--   Бот использует модули из `src.utils` для выполнения специфических задач:
-    -   `src.utils.convertors.tts` для преобразования речи в текст (планируется).
-    -   `src.utils.file` для чтения текстовых файлов.
--   Бот является частью проекта `hypotez` и расположен в `src/endpoints/bots/telegram`, что свидетельствует о его роли как одного из конечных компонентов системы.
--   Бот может взаимодействовать с другими частями проекта, например, с модулем `src.core`, для выполнения основных задач, если это будет необходимо в будущем.
+*   `src.utils.convertors.tts`: Используется для транскрибирования голосовых сообщений.
+*   `src.utils.file`: Используется для чтения текстовых файлов.
+*   `src.gs`: Могут использоваться глобальные настройки, если они есть в проекте.
+*   `src.endpoints.bots.telegram` - это часть приложения, отвечающая за взаимодействие с Telegram.
 
-В целом, данный код представляет собой базовую структуру для создания телеграм-бота, который может обрабатывать команды, текстовые сообщения, голосовые сообщения и документы. Для полноценного использования необходимо реализовать недостающие функции и добавить обработку ошибок.
+Этот анализ обеспечивает полное понимание функциональности кода, включая его основные компоненты, взаимосвязи и области для улучшения.

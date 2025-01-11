@@ -1,216 +1,258 @@
-# Анализ кода модуля `post_message`
+## Анализ кода модуля `post_message.py`
 
-**Качество кода: 6/10**
+**Качество кода**
 
--   **Плюсы:**
-    *   Код разбит на отдельные функции, что способствует читаемости и повторному использованию.
-    *   Используется `logger` для логирования ошибок и отладки.
-    *   Присутствует документация в формате docstring для функций.
-    *   Используется `j_loads_ns` для загрузки конфигураций.
--   **Минусы:**
-    *   Много повторяющегося кода, особенно в обработке ошибок и повторных вызовов функций `publish`.
-    *   Не все функции имеют docstring.
-    *   Используется `try-except` блоки без необходимости.
-    *   Не все комментарии соответствуют стандарту reStructuredText.
-    *   Логика обработки медиа-файлов не совсем ясна и может быть упрощена.
-    *   Некоторые `return` без значения.
-    *   Использованы `...` в коде.
-    *   Смешаны стили комментариев (`#` и docstrings)
-    *   Слишком много проверок на `return`
-    *   Не везде используется форматирование f-string
+-   Соответствие требованиям: 8/10
+    -   **Плюсы:**
+        -   Используется `j_loads_ns` для загрузки JSON.
+        -   Присутствуют docstring для функций, что соответствует требованиям.
+        -   Используется `logger` для логирования ошибок.
+        -   Код разбит на логические функции, что улучшает читаемость.
+    -   **Минусы:**
+        -   Не везде используются константы для timeout значений, что затрудняет изменение значений в одном месте.
+        -   В некоторых местах используются `print()` вместо `logger.debug`.
+        -   Некоторые блоки `try-except` слишком общие, можно уточнить тип исключений.
+        -   Иногда используется `return` без значения, что может привести к неопределенному поведению.
+        -   Отсутствует описание модуля в начале файла.
+        -   Не все переменные имеют описания.
 
-**Рекомендации по улучшению:**
+**Рекомендации по улучшению**
 
-1.  **Улучшить документацию:** Дополнить docstring для всех функций и параметров, используя reStructuredText.
-2.  **Рефакторинг `publish`:** Упростить функцию `publish`, убрав лишние рекурсивные вызовы и проверки, а так же повторяющийся код.
-3.  **Обработка ошибок:** Использовать `logger.error` с параметром `exc_info=True` для более детального логирования исключений, а также по возможности избавится от блоков `try/except`
-4.  **Упростить обработку медиа:** Пересмотреть логику обработки медиа-файлов, использовать более явные имена переменных.
-5.  **Унифицировать проверки:** Сделать проверки более компактными, используя `if not`  и  `or`.
-6.  **Форматирование:** Использовать f-строки там, где это возможно.
-7.  **Избавиться от `...`:** Заменить все `...` на конкретную логику или `pass`
-8. **Улучшить стиль комментариев:** Привести все комментарии в единый вид RST
+1.  **Добавить описание модуля:** В начале файла необходимо добавить описание модуля в формате, указанном в инструкции.
+2.  **Использовать константы для таймаутов:**  Вместо магических чисел для таймаутов, использовать константы, чтобы было легче управлять временем ожидания.
+3.  **Заменить `print()` на `logger.debug()`:** Использовать `logger.debug()` для отладочных сообщений вместо `print()`.
+4.  **Уточнить типы исключений:** Вместо общих `Exception`, использовать более конкретные типы исключений.
+5.  **Проверять возвращаемое значение функций:** Убедиться, что функции, которые должны возвращать `bool` или значения, действительно это делают.
+6.  **Добавить комментарии к переменным:** Описать переменные для улучшения читаемости кода.
+7.  **Улучшить обработку ошибок:**  Добавить обработку ошибок в `try except` с указанием исключения.
+8.  **Проверять наличие атрибутов:** Перед обращением к атрибутам объекта проверять их наличие с помощью `hasattr()`.
 
-**Оптимизированный код:**
+**Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
+# file: /src/endpoints/advertisement/facebook/scenarios/post_message.py
+
+#! venv/bin/python/python3.12
+
 """
-Модуль для публикации сообщений в Facebook.
+Модуль для управления публикациями сообщений в Facebook.
 =========================================================================================
 
-Этот модуль содержит функции для автоматизации процесса публикации сообщений, включая текст,
-медиафайлы и обновление подписей.
+Этот модуль предоставляет функции для автоматизации процесса публикации сообщений в Facebook,
+включая добавление текста, загрузку медиафайлов и обновление подписей к изображениям.
+
+Пример использования
+--------------------
+
+Пример использования функции `post_message`:
+
+.. code-block:: python
+
+    from src.webdriver.driver import Driver
+    from types import SimpleNamespace
+
+    driver = Driver(...)
+    message = SimpleNamespace(
+        title='Заголовок сообщения',
+        description='Описание сообщения',
+        products=[
+            SimpleNamespace(local_image_path='path/to/image.jpg',
+                         product_title='Название продукта',
+                         description='Описание продукта',
+                         original_price='100',
+                         sale_price='90',
+                         discount='10%',
+                         evaluate_rate='4.5',
+                         promotion_link='https://example.com'),
+            SimpleNamespace(local_image_path='path/to/image2.jpg',
+                         product_title='Название продукта 2',
+                         description='Описание продукта 2',
+                         original_price='200',
+                         sale_price='180',
+                         discount='10%',
+                         evaluate_rate='4.8',
+                         promotion_link='https://example2.com'),
+        ]
+    )
+    result = post_message(driver, message)
+    print(result)  # Выведет True, если публикация прошла успешно
 """
+
 import time
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Any
 from selenium.webdriver.remote.webelement import WebElement
-
 from src import gs
 from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.utils.printer import pprint
 from src.logger.logger import logger
 
-# Загрузка локаторов из JSON файла.
+# Load locators from JSON file.
 locator: SimpleNamespace = j_loads_ns(
-    Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
+    Path(gs.path.src / 'endpoints' / 'advertisement'/ 'facebook' / 'locators'/ 'post_message.json')
 )
 
+# Константы для таймаутов
+TIMEOUT_SHORT: int = 1
+TIMEOUT_MEDIUM: int = 5
+TIMEOUT_LONG: int = 20
 
-def post_title(d: Driver, message: Union[SimpleNamespace, str]) -> bool:
+def post_title(d: Driver, message: SimpleNamespace | str) -> bool:
     """
     Отправляет заголовок и описание кампании в поле сообщения.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param message: Сообщение для публикации, может быть строкой или SimpleNamespace
-        с полями `title` и `description`.
-    :type message: Union[SimpleNamespace, str]
-    :return: True, если заголовок и описание были успешно отправлены, иначе False.
-    :rtype: bool
+    Args:
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        message (SimpleNamespace | str): Сообщение для публикации. Может быть объектом SimpleNamespace с полями
+            `title` и `description` или просто строкой.
 
-    :Example:
+    Returns:
+        bool: True, если заголовок и описание были успешно отправлены, иначе False.
+
+    Example:
         >>> driver = Driver(...)
-        >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> post_title(driver, category)
+        >>> message = SimpleNamespace(title="Campaign Title", description="Campaign Description")
+        >>> post_title(driver, message)
         True
     """
-    # Прокрутка страницы назад
+    # Код прокручивает страницу назад
     if not d.scroll(1, 1200, 'backward'):
-        logger.error("Ошибка при прокрутке страницы назад во время публикации заголовка")
+        logger.error('Не удалось прокрутить страницу во время установки заголовка')
         return False
 
-    # Открытие поля 'добавить сообщение'
-    if not d.execute_locator(locator=locator.open_add_post_box):
-        logger.debug("Не удалось открыть поле 'добавить сообщение'")
+    # Код открывает окно добавления сообщения
+    if not d.execute_locator(locator = locator.open_add_post_box):
+        logger.debug('Не удалось открыть окно \'add post\'')
         return False
 
-    # Формирование сообщения для публикации
-    m = f"{message.title}\\n{message.description}" if isinstance(message, SimpleNamespace) else message
+    # Формирует сообщение для отправки
+    m =  f"{message.title}\\n{message.description}" if isinstance(message, SimpleNamespace) else message
+    # if isinstance(message, SimpleNamespace) and hasattr( message,'tags'):
+    #     m = f"{m}\\nTags: {message.tags}"
 
-    # Отправка сообщения в поле сообщения
-    if not d.execute_locator(locator.add_message, message=m, timeout=5, timeout_for_event='element_to_be_clickable'):
-        logger.debug(f"Не удалось добавить сообщение в поле сообщения: {m=}")
+    # Код добавляет сообщение в поле
+    if not d.execute_locator(locator.add_message, message = m, timeout = TIMEOUT_MEDIUM, timeout_for_event = 'element_to_be_clickable'):
+        logger.debug(f'Не удалось добавить сообщение в поле ввода: {m=}')
         return False
 
     return True
 
 
-def upload_media(d: Driver, media: Union[SimpleNamespace, List[SimpleNamespace], str, List[str]], no_video: bool = False,
-                 without_captions: bool = False) -> bool:
+def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str],   no_video: bool = False, without_captions:bool = False) -> bool:
     """
-    Загружает медиафайлы и обновляет подписи.
+    Загружает медиафайлы и обновляет подписи к ним.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param media: Пути к медиафайлам или список путей, а также может быть `SimpleNamespace` с атрибутами `local_video_path`, `local_image_path`.
-    :type media: Union[SimpleNamespace, List[SimpleNamespace], str, List[str]]
-    :param no_video: Флаг, указывающий, не использовать видео.
-    :type no_video: bool
-    :param without_captions: Флаг, указывающий, не добавлять подписи к изображениям.
-    :type without_captions: bool
-    :return: True, если медиафайлы были успешно загружены, иначе False.
-    :rtype: bool
-    :raises Exception: если произошла ошибка во время загрузки медиа или обновления подписей.
+    Args:
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        media (SimpleNamespace | List[SimpleNamespace] | str | list[str]): Медиафайлы для загрузки.
+            Может быть одним объектом `SimpleNamespace` или списком объектов с полями `local_image_path`
+            или `local_video_path`, строкой с путем к файлу или списком строк.
+        no_video (bool, optional): Если True, то не загружать видео. По умолчанию False.
+        without_captions (bool, optional): Если True, то не обновлять подписи. По умолчанию False.
 
-    :Example:
+    Returns:
+        bool: True, если медиафайлы успешно загружены, иначе False.
+
+    Raises:
+        Exception: Если произошла ошибка при загрузке медиа или обновлении подписей.
+
+    Example:
         >>> driver = Driver(...)
         >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> upload_media(driver, products)
         True
     """
     if not media:
-        logger.debug("Нет медиа для сообщения!")
+        logger.debug('Нет медиа для сообщения!')
         return False
 
-    # Открытие формы 'добавить медиа'
+    # Код открывает форму добавления медиафайлов
     if not d.execute_locator(locator.open_add_foto_video_form):
         return False
     d.wait(0.5)
 
-    # Преобразование media в список, если это не список
-    media_list: list = media if isinstance(media, list) else [media]
+    # Код приводит медиа к списку для итерации
+    media_list:list = media if  isinstance(media, list) else [media]
+    ret: bool = True
 
-    # Загрузка медиафайлов
+    # Код итерируется по списку медиафайлов и загружает их
     for m in media_list:
-        try:
-            if isinstance(m, SimpleNamespace):
+        if isinstance(m, SimpleNamespace):
+            try:
                 media_path = m.local_video_path if hasattr(m, 'local_video_path') and not no_video else m.local_image_path
-            elif isinstance(m, (str, Path)):
-                media_path = m
+            except Exception as ex:
+                logger.debug(f"Ошибка в поле \'local_image_path\'", exc_info=True)
+                ...
+                continue
+        elif isinstance(m, (str, Path)):
+            media_path = m
+        else:
+            continue
+        try:
+            # Код загружает медиафайл
+            if d.execute_locator(locator = locator.foto_video_input, message = str(media_path) , timeout = TIMEOUT_LONG):
+                d.wait(1.5)
             else:
-                logger.error(f"Неизвестный тип медиа: {type(m)}")
+                logger.error(f'Ошибка загрузки изображения {media_path=}')
                 return False
-
-            # Загрузка медиафайла
-            if not d.execute_locator(locator=locator.foto_video_input, message=str(media_path), timeout=20):
-                logger.error(f"Ошибка загрузки изображения {media_path=}")
-                return False
-            d.wait(1.5)
         except Exception as ex:
-            logger.error("Ошибка при загрузке медиа", exc_info=True)
+            logger.error('Ошибка при загрузке медиа', exc_info=True)
             return False
-
     if without_captions:
         return True
-
-    # Обновление подписей к загруженным медиа
+    # Код открывает форму редактирования загруженных медиафайлов
     if not d.execute_locator(locator.edit_uloaded_media_button):
-        logger.error(f"Ошибка нажатия кнопки редактирования медиа")
+        logger.error(f'Ошибка открытия окна редактирования загруженных изображений')
         return False
-
     uploaded_media_frame = d.execute_locator(locator.uploaded_media_frame)
     if not uploaded_media_frame:
-        logger.debug("Не найдены поля ввода подписей к изображениям")
+        logger.debug('Не найдены поля ввода подписей к изображениям')
         return False
 
     uploaded_media_frame = uploaded_media_frame[0] if isinstance(uploaded_media_frame, list) else uploaded_media_frame
     d.wait(0.3)
 
-    textarea_list = d.execute_locator(locator=locator.edit_image_properties_textarea, timeout=10,
-                                      timeout_for_event='presence_of_element_located')
+    textarea_list = d.execute_locator(locator = locator.edit_image_properties_textarea, timeout = 10, timeout_for_event = 'presence_of_element_located' )
     if not textarea_list:
-        logger.error("Не найдены поля ввода подписи к изображениям")
+        logger.error('Не найдены поля ввода подписи к изображениям')
         return False
-
-    # Обновление подписей
+    # Код обновляет подписи к изображениям
     update_images_captions(d, media, textarea_list)
 
-    return True
+    return ret
 
 
 def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
     """
     Добавляет описания к загруженным медиафайлам.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param media: Список продуктов с деталями для обновления.
-    :type media: List[SimpleNamespace]
-    :param textarea_list: Список текстовых полей, где добавляются подписи.
-    :type textarea_list: List[WebElement]
-    :raises Exception: если произошла ошибка при обновлении подписей к медиа.
-    """
+    Args:
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        media (List[SimpleNamespace]): Список объектов `SimpleNamespace` с деталями для обновления.
+        textarea_list (List[WebElement]): Список полей ввода текста, куда добавляются подписи.
 
-    local_units = j_loads_ns(
-        Path(gs.path.src / 'advertisement' / 'facebook' / 'scenarios' / 'translations.json'))
+    Raises:
+        Exception: Если произошла ошибка при обновлении подписей к медиа.
+    """
+    local_units = j_loads_ns(Path(gs.path.src / 'advertisement' / 'facebook' / 'scenarios' / 'translations.json'))
 
     def handle_product(product: SimpleNamespace, textarea_list: List[WebElement], i: int) -> None:
         """
-         Обрабатывает обновление подписей к медиа для одного продукта.
+        Обновляет подписи к медиафайлу для одного продукта.
 
-         :param product: Продукт для обновления.
-         :type product: SimpleNamespace
-         :param textarea_list: Список текстовых полей, где добавляются подписи.
-         :type textarea_list: List[WebElement]
-         :param i: Индекс продукта в списке.
-         :type i: int
-         """
+        Args:
+            product (SimpleNamespace): Продукт, для которого нужно обновить подписи.
+            textarea_list (List[WebElement]): Список полей ввода текста.
+            i (int): Индекс продукта в списке.
+        """
         lang = product.language.upper()
         direction = getattr(local_units.LOCALE, lang, "LTR")
         message = ""
+
+        # Код добавляет детали продукта в сообщение в зависимости от направления текста
         try:
             if direction == "LTR":
                 if hasattr(product, 'product_title'):
@@ -232,6 +274,10 @@ def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_lis
                 if hasattr(product, 'promotion_link'):
                     message += f"{getattr(local_units.promotion_link, lang)}: {product.promotion_link}\\n"
 
+                # if hasattr(product, 'tags'):
+                #     message += f"{getattr(local_units.tags, lang)}: {product.tags}\\n"
+                # message += f"{getattr(local_units.COPYRIGHT, lang)}"
+
             else:  # RTL direction
                 if hasattr(product, 'product_title'):
                     message += f"\\n{product.product_title}"
@@ -252,141 +298,144 @@ def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_lis
                 if hasattr(product, 'promotion_link'):
                     message += f"\\n{product.promotion_link} :{getattr(local_units.promotion_link, lang)}"
 
+                # if hasattr(product, 'tags'):
+                #     message += f"\\n{product.tags} :{getattr(local_units.tags, lang)}"
+                # message += f"\\n{getattr(local_units.COPYRIGHT, lang)}"
+
         except Exception as ex:
-            logger.error("Ошибка при формировании сообщения", exc_info=True)
+            logger.error("Ошибка при формировании сообщения", ex, exc_info=True)
             return
 
-        # Отправка сообщения в textarea
+        # Код отправляет сообщение в поле ввода
         try:
             textarea_list[i].send_keys(message)
             return True
         except Exception as ex:
-            logger.error("Ошибка при отправке текста в textarea", exc_info=True)
+            logger.error("Ошибка при отправке сообщения в поле ввода", ex)
             return
 
-    # Обработка продуктов и обновление их подписей
+    # Код итерируется по списку медиа и обновляет их подписи
     for i, product in enumerate(media):
         handle_product(product, textarea_list, i)
 
 
-def publish(d: Driver, attempts: int = 5) -> bool:
+def publish(d:Driver, attempts: int = 5) -> bool:
     """
     Публикует сообщение.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param attempts: Количество попыток публикации.
-    :type attempts: int
-    :return: True, если сообщение было успешно опубликовано, иначе False.
-    :rtype: bool
+    Args:
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        attempts (int, optional): Количество попыток публикации. По умолчанию 5.
+
+    Returns:
+        bool: True, если публикация прошла успешно, иначе False.
     """
     if attempts < 0:
         return False
-
-    if not d.execute_locator(locator.finish_editing_button, timeout=1):
-        logger.debug(f"Не удалось обработать локатор {locator.finish_editing_button}")
+    # Код нажимает кнопку завершения редактирования
+    if not d.execute_locator(locator.finish_editing_button, timeout = TIMEOUT_SHORT):
+        logger.debug(f"Неудача обработки локатора {locator.finish_editing_button}")
         return False
     d.wait(1)
-
-    if not d.execute_locator(locator.publish, timeout=5):
-        if d.execute_locator(locator.close_pop_up) or d.execute_locator(locator.not_now):
-            return publish(d, attempts - 1)
+    # Код нажимает кнопку публикации
+    if not d.execute_locator(locator.publish, timeout = TIMEOUT_MEDIUM):
+        if d.execute_locator(locator.close_pop_up):
+            publish(d, attempts -1)
+        if d.execute_locator(locator.not_now):
+            publish(d, attempts -1)
         if attempts > 0:
-            d.wait(5)
-            return publish(d, attempts - 1)
+           d.wait(5)
+           publish(d, attempts -1)
 
-        logger.debug(f"Не удалось обработать локатор {locator.finish_editing_button}")
+        logger.debug(f"Неудача обработки локатора {locator.finish_editing_button}")
         return False
-
-    while not d.execute_locator(locator=locator.open_add_post_box, timeout=10,
-                                timeout_for_event='element_to_be_clickable'):
-        logger.debug(f"не освободилось поле ввода {attempts=}", None, False)
-        if d.execute_locator(locator.close_pop_up) or d.execute_locator(locator.not_now):
-            return publish(d, attempts - 1)
+    # Код ждет пока поле ввода не станет доступным
+    while not d.execute_locator(locator = locator.open_add_post_box, timeout = 10, timeout_for_event = 'element_to_be_clickable'):
+        logger.debug(f"не освободилось поле ввода {attempts=}",None, False)
+        if d.execute_locator(locator.close_pop_up):
+            publish(d, attempts -1)
+        if d.execute_locator(locator.not_now):
+            publish(d, attempts -1)
         if attempts > 0:
-            d.wait(2)
-            return publish(d, attempts - 1)
+           d.wait(2)
+           publish(d, attempts -1)
 
     return True
 
 
 def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool:
     """
-    Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
+    Управляет процессом продвижения публикации, включая заголовок, описание и медиафайлы.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param category: Детали категории, используемые для заголовка и описания поста.
-    :type category: SimpleNamespace
-    :param products: Список продуктов, содержащих медиафайлы и детали для публикации.
-    :type products: List[SimpleNamespace]
-    :param no_video: Флаг, указывающий, не использовать видео.
-    :type no_video: bool
-    :return: True, если пост успешно опубликован, иначе False.
-    :rtype: bool
+    Args:
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        category (SimpleNamespace): Детали категории, используемые для заголовка и описания публикации.
+        products (List[SimpleNamespace]): Список продуктов, содержащих медиафайлы и детали для публикации.
+        no_video (bool, optional): Если True, то не загружать видео. По умолчанию False.
 
-    :Example:
+    Returns:
+        bool: True, если продвижение прошло успешно, иначе False.
+
+    Example:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
         >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> promote_post(driver, category, products)
     """
+    # Код публикует заголовок
     if not post_title(d, category):
         return False
     d.wait(0.5)
-
+    # Код загружает медиафайлы
     if not upload_media(d, products, no_video):
         return False
-
-    if not d.execute_locator(locator=locator.finish_editing_button):
+    # Код нажимает кнопку завершения редактирования
+    if not d.execute_locator(locator = locator.finish_editing_button):
         return False
-    if not d.execute_locator(locator.publish, timeout=20):
-        print("Публикуется...")
+    # Код нажимает кнопку публикации
+    if not d.execute_locator(locator.publish, timeout = TIMEOUT_LONG):
+        print('Публикация...')
         return False
     return True
 
 
-def post_message(d: Driver, message: SimpleNamespace, no_video: bool = False,
-                 images: Optional[Union[str, List[str]]] = None, without_captions: bool = False) -> bool:
+def post_message(d: Driver, message: SimpleNamespace,  no_video: bool = False,  images:Optional[str | list[str]] = None, without_captions:bool = False) -> bool:
     """
     Управляет процессом публикации сообщения с заголовком, описанием и медиафайлами.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param message: Детали сообщения, используемые для заголовка и описания поста.
-    :type message: SimpleNamespace
-    :param no_video: Флаг, указывающий, не использовать видео.
-    :type no_video: bool
-    :param images: Список изображений для публикации.
-    :type images: Optional[Union[str, List[str]]]
-    :param without_captions: Флаг, указывающий, не добавлять подписи к изображениям.
-    :type without_captions: bool
-    :return: True, если сообщение успешно опубликовано, иначе False.
-    :rtype: bool
+    Args:
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        message (SimpleNamespace): Детали сообщения, используемые для заголовка и описания публикации.
+        no_video (bool, optional): Если True, то не загружать видео. По умолчанию False.
+        images (Optional[str | list[str]], optional): Путь к медиафайлу или список путей. По умолчанию None.
+        without_captions (bool, optional): Если True, то не обновлять подписи. По умолчанию False.
 
-    :Example:
+    Returns:
+        bool: True, если публикация прошла успешно, иначе False.
+
+    Example:
         >>> driver = Driver(...)
-        >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
-        >>> promote_post(driver, category, products)
+        >>> message = SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[...])
+        >>> post_message(driver, message)
+        True
     """
+    # Код устанавливает заголовок сообщения
     if not post_title(d, message):
         return False
     d.wait(0.5)
-
-    if not upload_media(d, message.products, no_video=no_video, without_captions=without_captions):
+    # Код загружает медиафайлы
+    if not upload_media(d, message.products, no_video = no_video, without_captions = without_captions):
         return False
     d.wait(0.5)
 
-    if d.execute_locator(locator=locator.send):
-        """ Выход, если было одно изображение """
+    # Код проверяет было ли одно изображение
+    if d.execute_locator(locator = locator.send):
         return True
-
-    if not d.execute_locator(locator=locator.finish_editing_button):
+    # Код нажимает кнопку завершения редактирования
+    if not d.execute_locator(locator = locator.finish_editing_button):
         return False
-
+    # Код публикует сообщение
     if not publish(d):
         return False
 
     return True
-```

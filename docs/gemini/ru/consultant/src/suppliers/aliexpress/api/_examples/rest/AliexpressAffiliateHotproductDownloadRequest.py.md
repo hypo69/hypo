@@ -2,102 +2,103 @@
 
 **Качество кода**
 
-7/10
--  Плюсы
-    - Код соответствует базовым стандартам Python.
-    - Присутствует docstring в начале файла.
-    - Используется наследование от `RestApi`.
--  Минусы
-    - Отсутствуют docstring для класса и методов.
-    - Не используется `from src.logger.logger import logger` для логирования.
-    - Нет обработки исключений.
-    - Не используется `j_loads` или `j_loads_ns`.
-    - Отсутствуют RST комментарии к функциям, переменным.
+-   **Соответствие требованиям по оформлению кода: 7/10**
+    -   **Плюсы:**
+        *   Код в целом соответствует PEP8, использует принятый стиль именования переменных и классов.
+        *   Присутствует базовая структура класса для работы с API.
+        *   Наличие docstring для модуля.
+    -   **Минусы:**
+        *   Отсутствует документация (docstring) для класса и методов.
+        *   Не используется `logger` из `src.logger` для логирования.
+        *   Не используются одинарные кавычки для строк в коде (кроме docstring).
 
 **Рекомендации по улучшению**
 
-1. Добавить docstring в формате RST для класса `AliexpressAffiliateHotproductDownloadRequest` и его методов `__init__` и `getapiname`.
-2. Использовать `from src.logger.logger import logger` для логирования возможных ошибок.
-3. Добавить обработку исключений в методах (хотя бы для примера).
-4. Применить `j_loads` или `j_loads_ns` при чтении файлов, если это требуется в данном контексте.
-5. Добавить RST комментарии к переменным класса.
-6.  Удалить строку `# -*- coding: utf-8 -*-`, она больше не нужна.
-7. Удалить строку ` # <- venv win`, это не влияет на работу, и это не является частью кода.
+1.  **Добавить docstring для класса и методов:** Необходимо добавить документацию в формате RST для класса `AliexpressAffiliateHotproductDownloadRequest` и его методов, включая `__init__` и `getapiname`. Это улучшит читаемость и понимание кода.
+2.  **Использовать одинарные кавычки:** Заменить двойные кавычки на одинарные для всех строковых литералов в коде, кроме операций вывода.
+3.  **Использовать logger:**  Добавить использование `logger` из `src.logger` для логирования ошибок и других важных событий, хотя в данном классе нет операций, где это необходимо.
+4.  **Добавить импорты**: Добавить отсутствующие импорты, если это необходимо. В данном случае, импорт `from src.logger.logger import logger` не требуется, так как класс не выполняет операции логирования.
+5.  **Убрать лишние комментарии**: Убрать лишний комментарий ` # <- venv win` и `## ~~~~~~~~~~~~~~`, т.к. они не несут смысловой нагрузки для кода.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для работы с API Aliexpress для загрузки горячих продуктов.
-=====================================================================
+Модуль для работы с API AliExpress для загрузки горячих товаров.
+==============================================================
 
 Этот модуль содержит класс :class:`AliexpressAffiliateHotproductDownloadRequest`,
-который используется для выполнения запроса на загрузку горячих продуктов
-через API Aliexpress.
+который используется для формирования запроса к API AliExpress для получения списка
+горячих товаров.
 
 Пример использования
 --------------------
 
-Пример создания экземпляра класса::
+Пример создания экземпляра класса `AliexpressAffiliateHotproductDownloadRequest`:
+
+.. code-block:: python
 
     request = AliexpressAffiliateHotproductDownloadRequest()
-    request.category_id = 100
-    request.fields = 'product_id,product_title'
-    ...
-    print(request.getapiname())
+    request.category_id = 123
+    request.country = 'RU'
+    # ...
+    api_name = request.getapiname()
+    print(api_name)
 
 """
 # -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~
 # module: src.suppliers.aliexpress.api._examples.rest
-
+# from src.logger.logger import logger # данный класс не использует логирование, импорт не требуется.
 from ..base import RestApi
-from src.logger.logger import logger # Импорт логгера
 
 class AliexpressAffiliateHotproductDownloadRequest(RestApi):
     """
-    Класс для выполнения запроса на загрузку горячих продуктов Aliexpress.
+    Класс для формирования запроса к API AliExpress для загрузки горячих товаров.
 
-    Этот класс наследует от :class:`RestApi` и предоставляет методы
-    для настройки и выполнения запроса к API Aliexpress для загрузки
-    горячих продуктов.
+    Args:
+        domain (str): Домен API. По умолчанию 'api-sg.aliexpress.com'.
+        port (int): Порт API. По умолчанию 80.
+
+    Attributes:
+        app_signature (str): Подпись приложения.
+        category_id (int): ID категории.
+        country (str): Код страны.
+        fields (str): Список полей для включения в ответ.
+        scenario_language_site (str): Языковой код сайта.
+        page_no (int): Номер страницы.
+        page_size (int): Размер страницы.
+        target_currency (str): Целевая валюта.
+        target_language (str): Целевой язык.
+        tracking_id (str): ID отслеживания.
+
     """
-    def __init__(self, domain="api-sg.aliexpress.com", port=80):
+    def __init__(self, domain='api-sg.aliexpress.com', port=80):
         """
-        Инициализирует объект запроса.
+        Инициализирует экземпляр класса AliexpressAffiliateHotproductDownloadRequest.
 
-        :param domain: Домен API.
-        :param port: Порт API.
+        Args:
+            domain (str): Домен API. По умолчанию 'api-sg.aliexpress.com'.
+            port (int): Порт API. По умолчанию 80.
         """
-        RestApi.__init__(self,domain, port)
-        #: str: Подпись приложения.
+        RestApi.__init__(self, domain, port)
+        # Инициализация атрибутов запроса
         self.app_signature = None
-        #: int: Идентификатор категории.
         self.category_id = None
-        #: str: Код страны.
         self.country = None
-        #: str: Список полей.
         self.fields = None
-        #: str: Языковой сайт сценария.
         self.scenario_language_site = None
-        #: int: Номер страницы.
         self.page_no = None
-        #: int: Размер страницы.
         self.page_size = None
-        #: str: Целевая валюта.
         self.target_currency = None
-        #: str: Целевой язык.
         self.target_language = None
-        #: str: Идентификатор отслеживания.
         self.tracking_id = None
 
     def getapiname(self):
         """
         Возвращает имя API метода.
 
-        :return: Имя API метода.
-        :rtype: str
+        Returns:
+            str: Имя API метода 'aliexpress.affiliate.hotproduct.download'.
         """
         return 'aliexpress.affiliate.hotproduct.download'
 ```

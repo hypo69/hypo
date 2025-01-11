@@ -1,160 +1,159 @@
-# Анализ кода модуля `test_experimentation.py`
+# Анализ кода модуля `test_experimentation`
 
 **Качество кода**
-
-- **Соответствие требованиям**: 7/10
-- **Плюсы**:
-    - Код содержит тесты для проверки функциональности класса `ABRandomizer`.
-    - Используются циклы для многократного тестирования рандомизации.
-    - Присутствуют ассерты для проверки корректности результатов.
-- **Минусы**:
-    - Отсутствует описание модуля.
-    - Не хватает документации в формате RST для функций.
-    - Не используется `from src.logger.logger import logger` для логирования ошибок.
-    - В `test_intervention_1` только `pass`, что не является полноценным тестом.
-    - Импорты `sys.path` выглядят не очень хорошо, лучше использовать более надежный способ добавления путей.
-    - Не используются `j_loads` или `j_loads_ns`.
-    - Присутствует прямое использование `Exception`, лучше использовать более конкретный тип исключения.
+-  Плюсы
+    - Код написан на языке Python и предназначен для тестирования модуля `experimentation`.
+    - Используются `pytest` для тестирования.
+    - Есть несколько тестов, охватывающих различные аспекты рандомизации и дерандомизации.
+    - Тесты проверяют корректность работы методов `randomize`, `derandomize` и `derandomize_name`.
+    - Используется цикл `for` для многократного запуска тестов, что увеличивает их надежность.
+    - Присутствует тест `test_passtrough_name` для проверки пропуска имени.
+-  Минусы
+    - Отсутствуют комментарии в коде, которые объясняли бы логику работы.
+    - Нет документации в формате `RST` для функций.
+    - Используются абсолютные импорты `sys.path.append`, что не является лучшей практикой.
+    - В тестах отсутствует обработка исключений, что может привести к не информативным сбоям тестов.
+    -  Используется `raise Exception`, рекомендуется использовать более специфичные исключения, а также логировать ошибки.
+    -  Отсутствует импорт `logger` и логирования.
+    -  Тест `test_intervention_1` помечен как `TODO` и не имеет реализации.
+    -  В `test_randomize` и `test_derandomize_name`  используется  `raise Exception`  вместо `assert` что усложняет отладку.
+    -  Отстутсвуют докстринги для тестов.
+     - `testing_utils` не импортируется.
 
 **Рекомендации по улучшению**
-
-1. Добавить описание модуля в начале файла в формате RST.
-2. Добавить docstring к каждой функции в формате RST.
-3. Заменить `raise Exception` на более конкретные исключения.
-4. Использовать `from src.logger.logger import logger` для логирования ошибок, если это необходимо.
-5. Реализовать полноценный тест для `test_intervention_1`.
-6. Заменить `sys.path.append` на более надежный способ добавления путей, если это необходимо.
-7. Улучшить структуру кода, добавив необходимые импорты.
-8. Избегать избыточного использования `try-except`, использовать `logger.error` для обработки ошибок.
+1.  Добавить описание модуля в начале файла.
+2.  Добавить `docstring` для всех тестовых функций, с описанием `Args`, `Returns`, `Raises` и примерами.
+3.  Использовать относительные импорты, вместо `sys.path.append` .
+4.  Импортировать `logger` из `src.logger.logger`.
+5.  Заменить `raise Exception` на `assert` с сообщением об ошибке в тестах.
+6.  Внедрить логирование ошибок в тестах.
+7.  Реализовать тест `test_intervention_1`.
+8.  Добавить проверку типов для входных и выходных данных.
+9.  Убрать лишние импорты.
+10. Добавить проверки на граничные условия.
+11. Использовать `from src.utils.jjson import j_loads, j_loads_ns` если есть необходимость работы с файлами.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль тестирования рандомизации A/B тестов
+Модуль для тестирования класса ABRandomizer
 =========================================================================================
 
-Этот модуль содержит набор тестов для проверки функциональности класса :class:`ABRandomizer`,
-который используется для проведения A/B экспериментов.
-Он проверяет корректность рандомизации и дерандомизации вариантов.
+Этот модуль содержит набор тестов для проверки функциональности класса ABRandomizer,
+который используется для A/B тестирования. Тесты проверяют корректность методов
+рандомизации, дерандомизации и обработки имен.
 
 Пример использования
 --------------------
 
-Пример использования тестов для класса `ABRandomizer`:
+Запуск тестов осуществляется с помощью pytest:
 
-.. code-block:: python
+.. code-block:: bash
 
-    pytest.main([__file__])
+    pytest test_experimentation.py
+
 """
-import sys
-# sys.path.append('../../tinytroupe/') #TODO - можно настроить пути через pytest.ini
-# sys.path.append('../../')
-# sys.path.append('../')
 import pytest
+from src.logger.logger import logger
+# from src.utils.jjson import j_loads, j_loads_ns # TODO добавить при необходимости
+# sys.path.append('../../tinytroupe/') #TODO  Удалить
+# sys.path.append('../../')#TODO  Удалить
+# sys.path.append('..')#TODO  Удалить
+# from testing_utils import * #TODO  Удалить
 
-from src.logger.logger import logger #  Используем импорт logger
-from src.utils.jjson import j_loads, j_loads_ns  # Добавляем импорты
 from tinytroupe.experimentation import ABRandomizer
-
 
 def test_randomize():
     """
-    Тест проверяет корректность рандомизации вариантов.
+    Тестирует метод randomize класса ABRandomizer.
 
-    Цикл выполняется 20 раз для проверки различных комбинаций.
-    Для каждого шага проверяется, что варианты (`option1`, `option2`) меняются местами
-    в соответствии с массивом choices.
+    Проверяет, что метод randomize возвращает корректные значения на основе
+    внутренней рандомизации.
 
     Raises:
-        AssertionError: Если рандомизация не соответствует ожидаемым результатам.
+        AssertionError: Если рандомизация не работает правильно.
     """
     randomizer = ABRandomizer()
+    # цикл для многократной проверки рандомизации
     for i in range(20):
-        a, b = randomizer.randomize(i, 'option1', 'option2') # Используем одинарные кавычки
-
+        a, b = randomizer.randomize(i, 'option1', 'option2')
+        # Проверяет значения в соответствии с внутренней рандомизацией
         if randomizer.choices[i] == (0, 1):
-            assert (a, b) == ('option1', 'option2') # Используем одинарные кавычки
+            assert (a, b) == ('option1', 'option2'), f"Рандомизация неверна для item {i}, ожидалось ('option1', 'option2'), получено {a, b}"
         elif randomizer.choices[i] == (1, 0):
-            assert (a, b) == ('option2', 'option1') # Используем одинарные кавычки
+            assert (a, b) == ('option2', 'option1'), f"Рандомизация неверна для item {i}, ожидалось ('option2', 'option1'), получено {a, b}"
         else:
-            logger.error(f'No randomization found for item {i}')  # логируем ошибку
-            raise AssertionError(f'No randomization found for item {i}')
-
+             logger.error(f"No randomization found for item {i}")
+             raise AssertionError(f"No randomization found for item {i}")
 
 def test_derandomize():
     """
-    Тест проверяет корректность дерандомизации вариантов.
+    Тестирует метод derandomize класса ABRandomizer.
 
-    Цикл выполняется 20 раз для проверки различных комбинаций.
-    Для каждого шага проверяется, что после дерандомизации возвращаются исходные варианты
-    (`option1`, `option2`).
+    Проверяет, что метод derandomize возвращает исходные значения после
+    применения рандомизации.
 
-     Raises:
-        AssertionError: Если дерандомизация не возвращает исходные значения.
+    Raises:
+        AssertionError: Если дерандомизация не работает правильно.
     """
     randomizer = ABRandomizer()
 
+    # цикл для многократной проверки дерандомизации
     for i in range(20):
-        a, b = randomizer.randomize(i, 'option1', 'option2') # Используем одинарные кавычки
+        a, b = randomizer.randomize(i, 'option1', 'option2')
         c, d = randomizer.derandomize(i, a, b)
-
-        assert (c, d) == ('option1', 'option2') # Используем одинарные кавычки
-
+        # проверяет, что после дерандомизации получены исходные значения
+        assert (c, d) == ('option1', 'option2'), f"Дерандомизация неверна для item {i}, ожидалось ('option1', 'option2'), получено {c, d}"
 
 def test_derandomize_name():
     """
-    Тест проверяет корректность дерандомизации имен вариантов.
+    Тестирует метод derandomize_name класса ABRandomizer.
 
-    Цикл выполняется 20 раз для проверки различных комбинаций.
-    Для каждого шага проверяется, что после дерандомизации имени возвращается
-    'control' или 'treatment' в соответствии с массивом choices.
+    Проверяет, что метод derandomize_name возвращает корректные имена ('control' или 'treatment')
+    на основе внутренней рандомизации.
 
-     Raises:
-        AssertionError: Если дерандомизация имени не соответствует ожидаемым результатам.
+    Raises:
+        AssertionError: Если дерандомизация имени не работает правильно.
     """
     randomizer = ABRandomizer()
 
     for i in range(20):
-        a, b = randomizer.randomize(i, 'A', 'B') # Используем одинарные кавычки
+        a, b = randomizer.randomize(i, 'A', 'B')
         real_name = randomizer.derandomize_name(i, a)
-
+        # Проверяет имя в соответствии с внутренней рандомизацией
         if randomizer.choices[i] == (0, 1):
-            assert real_name == 'control' # Используем одинарные кавычки
+            assert real_name == 'control', f"Дерандомизация имени неверна для item {i}, ожидалось 'control', получено {real_name}"
         elif randomizer.choices[i] == (1, 0):
-            assert real_name == 'treatment' # Используем одинарные кавычки
+            assert real_name == 'treatment', f"Дерандомизация имени неверна для item {i}, ожидалось 'treatment', получено {real_name}"
         else:
-            logger.error(f'No randomization found for item {i}')  # логируем ошибку
-            raise AssertionError(f'No randomization found for item {i}')
+            logger.error(f"No randomization found for item {i}")
+            raise AssertionError(f"No randomization found for item {i}")
 
 
 def test_passtrough_name():
     """
-    Тест проверяет, что переданное имя пропускается без изменений.
+    Тестирует метод derandomize_name с использованием параметра passtrough_name.
 
-    Создается экземпляр ABRandomizer с именем 'option3' в списке passthrough_name.
-    Проверяется, что дерандомизация имени 'option3' возвращает 'option3'.
+    Проверяет, что если имя присутствует в passtrough_name, оно возвращается без изменений.
 
-     Raises:
-        AssertionError: Если имя не пропускается без изменений.
+    Raises:
+        AssertionError: Если пропуск имени не работает правильно.
     """
-    randomizer = ABRandomizer(passtrough_name=['option3']) # Используем одинарные кавычки
-    a, b = randomizer.randomize(0, 'option1', 'option2') # Используем одинарные кавычки
-    real_name = randomizer.derandomize_name(0, 'option3') # Используем одинарные кавычки
-
-    assert real_name == 'option3' # Используем одинарные кавычки
-
+    randomizer = ABRandomizer(passtrough_name=['option3'])
+    a, b = randomizer.randomize(0, 'option1', 'option2')
+    real_name = randomizer.derandomize_name(0, 'option3')
+    # проверяет, что имя пропускается без изменений
+    assert real_name == 'option3', f"Пропуск имени не работает корректно, ожидалось 'option3', получено {real_name}"
 
 def test_intervention_1():
     """
-    TODO: Добавить реализацию теста для проверки интервенции.
+        TODO: Тест для проверки интервенции.
 
-    Этот тест пока не реализован. Необходимо добавить логику проверки работы интервенций
-    при проведении A/B тестов.
-     Raises:
-        NotImplementedError: Если тест не реализован.
+        Этот тест должен проверять корректную работу метода при применении интервенций.
+
+       Raises:
+          NotImplementedError: Если тест еще не реализован
     """
-    #TODO - добавить реализацию
-    with pytest.raises(NotImplementedError):
-        raise NotImplementedError('Test not implemented') # Используем более конкретное исключение
+    # pass # TODO
+    raise NotImplementedError("Этот тест еще не реализован")
 ```

@@ -1,65 +1,69 @@
-# Анализ кода модуля `affiliate_link`
+# Анализ кода модуля `affiliate_link.py`
 
 **Качество кода**
-7
+8
 -  Плюсы
-    - Код является простым и понятным, описывает структуру данных `AffiliateLink`.
-    - Используется аннотация типов для переменных, что улучшает читаемость и понимание кода.
+    - Код соответствует основным требованиям к оформлению.
+    - Есть объявление класса `AffiliateLink` с необходимыми полями.
 -  Минусы
-    - Отсутствует документация в формате reStructuredText (RST) для класса и его полей.
-    - Нет проверки типов и обработки ошибок.
-    - Не импортированы необходимые библиотеки, если такие понадобятся в будущем.
+    - Отсутствует документация модуля и класса.
+    - Нет импорта необходимых библиотек.
+    - Нет аннотаций типов для полей класса.
 
 **Рекомендации по улучшению**
-1. Добавить reStructuredText (RST) документацию для модуля, класса и переменных.
-2. Добавить проверку типов при присваивании значений переменным.
-3. Использовать `from src.logger.logger import logger` для логирования возможных ошибок.
-4. Рассмотреть возможность добавления валидации полей.
-5.  Удалить  ` # <- venv win` так как это не имеет отношения к коду.
+1.  Добавить описание модуля в начале файла в формате docstring.
+2.  Добавить документацию для класса `AffiliateLink` в формате docstring.
+3.  Добавить аннотации типов для переменных `promotion_link` и `source_value`.
+4.  Добавить импорты, если они необходимы.
+5.  Убрать лишние комментарии `# <- venv win` и `# ~~~~~~~~~~~~~`.
 
 **Оптимизированный код**
+
 ```python
+# -*- coding: utf-8 -*-
 """
-Модуль для описания структуры данных партнерской ссылки AliExpress.
-==============================================================
+Модуль для работы с партнерскими ссылками AliExpress.
+=========================================================================================
 
-Этот модуль содержит класс :class:`AffiliateLink`, который используется для хранения
-информации о партнерских ссылках, включая саму ссылку и источник ее получения.
+Этот модуль определяет структуру данных для партнерской ссылки,
+включая саму ссылку и источник.
+
+Пример использования
+--------------------
+
+Пример создания экземпляра класса AffiliateLink:
+
+.. code-block:: python
+
+    affiliate_link = AffiliateLink(promotion_link='https://example.com', source_value='some_source')
+    print(affiliate_link.promotion_link)
+    print(affiliate_link.source_value)
 """
-from typing import Optional
-
-from src.logger.logger import logger
+from typing import Any
 
 
 class AffiliateLink:
     """
-    Представляет структуру данных для партнерской ссылки.
+    Структура данных для партнерской ссылки.
 
-    :ivar promotion_link: Партнерская ссылка.
-    :vartype promotion_link: str
-    :ivar source_value: Источник партнерской ссылки.
-    :vartype source_value: Optional[str]
+    :param promotion_link: Ссылка для продвижения товара.
+    :type promotion_link: str
+    :param source_value: Источник партнерской ссылки.
+    :type source_value: str
     """
     promotion_link: str
-    source_value: Optional[str]
-
-    def __init__(self, promotion_link: str, source_value: Optional[str] = None):
+    source_value: str
+    
+    def __init__(self, promotion_link: str, source_value: str) -> None:
         """
-        Инициализирует объект AffiliateLink.
-
-        :param promotion_link: Партнерская ссылка.
+        Инициализация объекта AffiliateLink.
+        
+        :param promotion_link: Ссылка для продвижения товара.
         :type promotion_link: str
         :param source_value: Источник партнерской ссылки.
-        :type source_value: Optional[str]
+        :type source_value: str
         """
-        if not isinstance(promotion_link, str):
-            logger.error(f'Неверный тип данных для promotion_link: {type(promotion_link)}')
-            self.promotion_link = ''  # присваиваем значение по умолчанию, чтобы не сломать код
-        else:
-            self.promotion_link = promotion_link
-        if source_value is not None and not isinstance(source_value, str):
-            logger.error(f'Неверный тип данных для source_value: {type(source_value)}')
-            self.source_value = None # присваиваем значение по умолчанию, чтобы не сломать код
-        else:
-             self.source_value = source_value
+        self.promotion_link = promotion_link
+        self.source_value = source_value
+
 ```

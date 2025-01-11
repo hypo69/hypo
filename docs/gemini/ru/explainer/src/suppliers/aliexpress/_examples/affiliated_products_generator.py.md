@@ -1,27 +1,27 @@
 ## ИНСТРУКЦИЯ:
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
 
-1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
 2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
     которые импортируются при создании диаграммы.
     **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
 
     **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
     ```
 
 3.  **<объяснение>**: Предоставьте подробные объяснения:
-    *   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
-    *   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
-    *   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
-    *   **Переменные**: Их типы и использование.
-    *   Выделите потенциальные ошибки или области для улучшения.
+    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    -   **Переменные**: Их типы и использование.
+    -   Выделите потенциальные ошибки или области для улучшения.
 
 Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
 
@@ -30,134 +30,167 @@
 **КОНЕЦ ИНСТРУКЦИИ**
 
 ## <алгоритм>
+1. **Инициализация параметров кампании:**
+   - Задаются переменные: `campaign_name` (например, "summer_sale_2024"), `campaign_category` (например, "electronics" или `None`), `language` (например, "EN"), и `currency` (например, "USD").
+   - **Пример:**
+     ```python
+        campaign_name = "summer_sale_2024"
+        campaign_category = "electronics"
+        language = "EN"
+        currency = "USD"
+     ```
 
-1.  **Начало программы (`if __name__ == "__main__": main()`):**
-    *   Запускается функция `main()`, когда скрипт выполняется напрямую.
+2. **Создание экземпляра `AliAffiliatedProducts`:**
+   - Создается объект `parser` класса `AliAffiliatedProducts`, передавая параметры кампании (`campaign_name`, `campaign_category`, `language`, `currency`).
+   - **Пример:**
+     ```python
+       parser = AliAffiliatedProducts(
+            campaign_name,
+            campaign_category,
+            language,
+            currency
+        )
+     ```
 
-2.  **Инициализация параметров кампании в `main()`:**
-    *   `campaign_name = "summer_sale_2024"`: Задаётся имя рекламной кампании.
-    *   `campaign_category = "electronics"`: Задаётся категория товаров кампании (можно `None`).
-    *   `language = "EN"`: Задаётся язык для аффилированных ссылок.
-    *   `currency = "USD"`: Задаётся валюта для аффилированных ссылок.
+3. **Определение списка URL продуктов:**
+   - Создается список `prod_urls`, содержащий строки URL продуктов или их ID (например, `['123', 'https://www.aliexpress.com/item/123.html', '456', 'https://www.aliexpress.com/item/456.html']`).
+    - **Пример:**
+       ```python
+       prod_urls = [
+          '123',
+           'https://www.aliexpress.com/item/123.html',
+           '456',
+           'https://www.aliexpress.com/item/456.html',
+       ]
+       ```
+4. **Обработка аффилированных продуктов:**
+   - Вызывается метод `process_affiliate_products` объекта `parser`, передавая список `prod_urls`.
+   - Метод возвращает список объектов продуктов с аффилированными ссылками, локальными путями к изображениям и видео (если есть).
+   - **Пример:**
+     ```python
+     products = parser.process_affiliate_products(prod_urls)
+     ```
+5. **Проверка и вывод результатов:**
+   - Проверяется, является ли список `products` не пустым.
+   - Если `products` не пустой:
+     - Выводится количество полученных аффилированных продуктов.
+     - Для каждого продукта в списке:
+       - Выводится `product_id`, `promotion_link`, `local_image_path`.
+       - Если есть `local_video_path`, он также выводится.
+   - Если `products` пустой:
+     - Выводится сообщение об ошибке.
 
-3.  **Создание экземпляра класса `AliAffiliatedProducts`:**
-    *   `parser = AliAffiliatedProducts(campaign_name, campaign_category, language, currency)`: Создаётся объект класса `AliAffiliatedProducts`, который отвечает за преобразование ссылок/ID в аффилированные.
-
-4.  **Определение списка продуктов (`prod_urls`):**
-    *   `prod_urls = ['123', 'https://www.aliexpress.com/item/123.html', '456', 'https://www.aliexpress.com/item/456.html']`: Создаётся список, содержащий как ID товаров, так и полные URL-адреса товаров AliExpress.
-
-5.  **Обработка аффилированных продуктов (`parser.process_affiliate_products(prod_urls)`):**
-    *   Метод `process_affiliate_products` объекта `parser` обрабатывает каждый URL или ID из `prod_urls`.
-    *   Внутри метода:
-        *   Каждый URL/ID товара преобразуется в аффилированную ссылку.
-        *   Загружается изображение продукта.
-        *   Загружается видео продукта (если доступно).
-        *   Создается и возвращается объект данных `Product` для каждого продукта.
-        *   Все полученные объекты `Product` собираются в список и возвращаются.
-    *   Пример: Если `prod_urls` содержит '123', будет сформирована аффилированная ссылка для продукта с ID 123, загружено его изображение (и видео, если доступно), и создан объект с информацией о продукте.
-
-6.  **Обработка результатов:**
-    *   Если `products` не пуст:
-        *   Выводится сообщение о количестве полученных продуктов.
-        *   Для каждого продукта выводится его ID, аффилированная ссылка, локальный путь к изображению и (если есть) локальный путь к видео.
-    *   Иначе:
-        *   Выводится сообщение об ошибке, если не удалось получить аффилированные продукты.
+   - **Пример:**
+     ```python
+     if products:
+        print(f"Получено {len(products)} аффилированных продуктов.")
+        for product in products:
+            print(f"Продукт ID: {product.product_id}")
+            print(f"Аффилированная ссылка: {product.promotion_link}")
+            print(f"Локальный путь к изображению: {product.local_image_path}")
+            if product.local_video_path:
+                print(f"Локальный путь к видео: {product.local_video_path}")
+            print()
+     else:
+        print("Не удалось получить аффилированные продукты.")
+     ```
 
 ## <mermaid>
-
 ```mermaid
 flowchart TD
-    Start(Start) --> InitializeParams[Initialize Campaign Parameters <br> campaign_name, campaign_category, language, currency]
-    InitializeParams --> CreateAliAffiliatedProducts[Create AliAffiliatedProducts Object <br> parser = AliAffiliatedProducts(...)]
-    CreateAliAffiliatedProducts --> DefineProductURLs[Define Product URLs/IDs <br> prod_urls]
-    DefineProductURLs --> ProcessAffiliateProducts[Process Affiliate Products <br> products = parser.process_affiliate_products(prod_urls)]
-    ProcessAffiliateProducts --> CheckProducts[Check if products list is not empty]
-    CheckProducts -- Yes --> LoopThroughProducts[Loop through each product in products]
-    LoopThroughProducts --> PrintProductInfo[Print product ID, promotion link, image path, video path (if available)]
-    PrintProductInfo --> LoopThroughProducts
-    LoopThroughProducts -- End of Loop --> EndOfProcessing[End of Processing]
-    CheckProducts -- No --> NoProductsFound[Print "Failed to get affiliate products"]
-    NoProductsFound --> EndOfProcessing
-    EndOfProcessing --> Finish(Finish)
+    Start[Start] --> InitializeCampaign[Initialize Campaign Parameters];
+    InitializeCampaign --> CreateAliAffiliatedProductsInstance[Create AliAffiliatedProducts Instance];
+    CreateAliAffiliatedProductsInstance --> DefineProductURLs[Define Product URLs];
+    DefineProductURLs --> ProcessAffiliateProducts[Call process_affiliate_products method];
+    ProcessAffiliateProducts --> CheckProductsList[Check if Products List is not empty];
+    CheckProductsList -- Yes --> PrintProductDetails[Print details of each product];
+    PrintProductDetails --> End[End];
+    CheckProductsList -- No --> PrintError[Print Error Message];
+    PrintError --> End;
     
-    subgraph AliAffiliatedProducts Class
-    ProcessAffiliateProducts --> ConvertToAffiliateLink[ConvertToAffiliateLink: for each URL/ID]
-    ConvertToAffiliateLink --> DownloadImage[Download Image for Product]
-    DownloadImage --> DownloadVideo[Download Video for Product (if available)]
-    DownloadVideo --> CreateProductObject[Create Product object]
-    CreateProductObject --> ProcessAffiliateProducts
-    end
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#ccf,stroke:#333,stroke-width:2px
+    
+    classDef variable fill:#e2e2f0,stroke:#333,stroke-width:1px
+    class InitializeCampaign,DefineProductURLs variable
+    class CreateAliAffiliatedProductsInstance,ProcessAffiliateProducts fill:#cdf,stroke:#333,stroke-width:1px
+    class CheckProductsList fill:#ffe,stroke:#333,stroke-width:1px
+    class PrintProductDetails,PrintError fill:#dce,stroke:#333,stroke-width:1px
 ```
 
-**Объяснение `mermaid`:**
+**Объяснение зависимостей `mermaid`:**
 
-*   **Start**: Начало выполнения программы.
-*   **InitializeParams**: Инициализация параметров рекламной кампании, таких как имя кампании, категория, язык и валюта.
-*   **CreateAliAffiliatedProducts**: Создание объекта `AliAffiliatedProducts`, который будет обрабатывать запросы аффилированных продуктов.
-*   **DefineProductURLs**: Определение списка URL-адресов продуктов или их идентификаторов.
-*   **ProcessAffiliateProducts**: Вызов метода `process_affiliate_products` для обработки списка URL-адресов и получения информации о аффилированных продуктах.
-*   **CheckProducts**: Проверка, был ли получен хотя бы один продукт в процессе обработки.
-*   **LoopThroughProducts**: Цикл по всем полученным продуктам.
-*   **PrintProductInfo**: Вывод информации о каждом продукте, включая его идентификатор, аффилированную ссылку, путь к изображению и видео (если имеется).
-*   **EndOfProcessing**: Конец обработки продуктов.
-*   **NoProductsFound**: Вывод сообщения об ошибке, если не удалось получить аффилированные продукты.
-*   **Finish**: Конец программы.
-*   **AliAffiliatedProducts Class**: Подграф, отображающий процессы внутри класса `AliAffiliatedProducts`.
-    *   **ConvertToAffiliateLink**: Преобразование каждого URL/ID товара в аффилированную ссылку.
-    *   **DownloadImage**: Загрузка изображения для каждого продукта.
-    *   **DownloadVideo**: Загрузка видео для продукта, если оно существует.
-    *  **CreateProductObject**: Создание объекта `Product` для каждого продукта.
+- **`Start`:** Начальная точка процесса.
+- **`InitializeCampaign`:** Узел, представляющий инициализацию переменных, таких как имя кампании, категория, язык и валюта.
+- **`CreateAliAffiliatedProductsInstance`:** Узел, где создается экземпляр класса `AliAffiliatedProducts`.
+- **`DefineProductURLs`:** Определение списка URL-адресов или ID продуктов для обработки.
+- **`ProcessAffiliateProducts`:** Вызов метода `process_affiliate_products` для получения аффилированных продуктов.
+- **`CheckProductsList`:** Проверка, содержит ли список продуктов данные.
+- **`PrintProductDetails`:** Вывод информации о каждом продукте (ID, аффилированная ссылка, путь к изображениям и видео).
+- **`PrintError`:** Вывод сообщения об ошибке, если список продуктов пуст.
+- **`End`:** Конечная точка процесса.
 
 ## <объяснение>
+### Импорты:
+- `from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts`: Импортирует класс `AliAffiliatedProducts` из модуля `affiliated_products_generator.py`, расположенного в пакете `src.suppliers.aliexpress`. Этот класс предназначен для обработки и генерации аффилированных ссылок на продукты AliExpress.
 
-**Импорты:**
+### Классы:
+- `AliAffiliatedProducts`:
+    - Роль: Класс, отвечающий за получение аффилированных ссылок на товары AliExpress. Он принимает параметры кампании, такие как имя кампании, категория, язык и валюту, и обрабатывает список URL или ID продуктов для генерации аффилированных ссылок.
+    - Атрибуты:
+        - `campaign_name` (str): Имя рекламной кампании.
+        - `campaign_category` (str): Категория рекламной кампании.
+        - `language` (str): Язык для кампании.
+        - `currency` (str): Валюта для кампании.
+    - Методы:
+        - `__init__(self, campaign_name, campaign_category, language, currency)`: Конструктор класса, инициализирует атрибуты экземпляра.
+        - `process_affiliate_products(self, product_urls)`: Основной метод, который обрабатывает список `product_urls` и возвращает список объектов с аффилированными ссылками, локальными путями к изображениям и видео.
+    - Взаимодействие: Класс `AliAffiliatedProducts` взаимодействует с API AliExpress для получения аффилированных ссылок. Он может быть расширен для обработки различных типов данных и ответов от AliExpress.
 
-*   `from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts`: Импортируется класс `AliAffiliatedProducts` из модуля `affiliated_products_generator.py` внутри пакета `src.suppliers.aliexpress`. Этот класс, предположительно, отвечает за преобразование URL-адресов продуктов AliExpress в аффилированные ссылки и загрузку связанных медиафайлов (изображения, видео).
+### Функции:
+- `main()`:
+    - Назначение: Основная функция, которая управляет логикой генерации аффилированных продуктов.
+    - Аргументы: Нет.
+    - Возвращаемое значение: Нет.
+    - Пример:
+      - Инициализирует параметры кампании.
+      - Создает экземпляр `AliAffiliatedProducts`.
+      - Задает список URL или ID продуктов.
+      - Вызывает метод `process_affiliate_products` для получения аффилированных ссылок.
+      - Выводит результаты в консоль.
+- `if __name__ == "__main__":`:
+    - Назначение: Вызывает функцию `main()`, когда скрипт запускается напрямую.
 
-**Функции:**
+### Переменные:
+- `campaign_name` (str): Имя рекламной кампании. Например, "summer_sale_2024".
+- `campaign_category` (str или None): Категория рекламной кампании. Например, "electronics" или `None`.
+- `language` (str): Язык для кампании. Например, "EN".
+- `currency` (str): Валюта для кампании. Например, "USD".
+- `parser` (AliAffiliatedProducts): Экземпляр класса `AliAffiliatedProducts`.
+- `prod_urls` (list): Список строк URL продуктов или их ID. Например, `['123', 'https://www.aliexpress.com/item/123.html', '456', 'https://www.aliexpress.com/item/456.html']`.
+- `products` (list): Список объектов, содержащих информацию о продукте, включая аффилированную ссылку, локальный путь к изображению и видео.
+- `product` (object): Объект продукта в цикле.
+  - `product.product_id` (str): ID продукта.
+  - `product.promotion_link` (str): Аффилированная ссылка на продукт.
+  - `product.local_image_path` (str): Локальный путь к изображению продукта.
+  - `product.local_video_path` (str): Локальный путь к видео продукта (может быть `None`).
 
-*   `main()`:
-    *   **Назначение**: Главная функция, которая управляет процессом создания аффилированных ссылок.
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет.
-    *   **Пример**: Выполняется при запуске скрипта, создаёт объект `AliAffiliatedProducts`, обрабатывает список ссылок `prod_urls` и выводит результаты.
+### Потенциальные ошибки или области для улучшения:
+- **Обработка ошибок:** Код не содержит обработки ошибок, связанных с запросами к API AliExpress, что может привести к сбою.
+- **Валидация URL:** Код не валидирует URL-адреса продуктов, что может привести к ошибкам при их обработке.
+- **Производительность:** Обработка большого количества URL-адресов может быть медленной. Необходимо оптимизировать процесс обработки.
+- **Асинхронность:** Метод `process_affiliate_products` выполняется синхронно. Можно использовать асинхронное программирование для ускорения процесса.
+- **Логирование:** Отсутствует логирование, которое помогло бы отслеживать ошибки и ход выполнения программы.
+- **Конфигурация:** Параметры кампании и настройки API должны быть вынесены в конфигурационный файл, чтобы их можно было легко изменять.
 
-**Переменные:**
+### Цепочка взаимосвязей с другими частями проекта:
+- Данный скрипт является примером использования класса `AliAffiliatedProducts`, который, скорее всего, расположен в другом модуле (`src.suppliers.aliexpress.affiliated_products_generator`).
+- Класс `AliAffiliatedProducts` может взаимодействовать с другими частями проекта, такими как:
+    - **API-клиент:** Для отправки запросов к API AliExpress и получения данных о продуктах.
+    - **Система хранения файлов:** Для сохранения локальных изображений и видео продуктов.
+    - **База данных:** Для сохранения информации о продуктах и аффилированных ссылках.
+    - **Система логирования:** Для отслеживания ошибок и хода выполнения программы.
 
-*   `campaign_name` (str): Имя рекламной кампании.
-*   `campaign_category` (str, optional): Категория продуктов в рамках кампании (может быть `None`).
-*   `language` (str): Язык для аффилированных ссылок.
-*   `currency` (str): Валюта для аффилированных ссылок.
-*   `parser` (AliAffiliatedProducts): Объект класса `AliAffiliatedProducts`, который обрабатывает ссылки.
-*   `prod_urls` (list): Список URL-адресов продуктов или их идентификаторов.
-*   `products` (list): Список объектов, представляющих продукты с аффилированными ссылками, изображениями и видео (если есть).
-*   `product` (object): Отдельный продукт из списка `products`.
+**Общее описание:**
 
-**Классы:**
-
-*   `AliAffiliatedProducts`:
-    *   **Роль**: Класс, ответственный за генерацию аффилированных ссылок для продуктов AliExpress, загрузку изображений и видео.
-    *   **Атрибуты**:
-        *   `campaign_name`: Имя рекламной кампании.
-        *   `campaign_category`: Категория товаров кампании.
-        *   `language`: Язык для аффилированных ссылок.
-        *   `currency`: Валюта для аффилированных ссылок.
-    *   **Методы**:
-        *   `process_affiliate_products(prod_urls)`: Принимает список URL-адресов или ID продуктов, обрабатывает их и возвращает список объектов с аффилированными ссылками, изображениями и видео.
-
-**Потенциальные ошибки и области для улучшения:**
-
-*   **Обработка ошибок**: Код проверяет только, был ли получен список продуктов, но не обрабатывает потенциальные ошибки при создании аффилированных ссылок, загрузке изображений или видео. Необходимо добавить более детальную обработку исключений.
-*   **Валидация URL**: Желательно добавить проверку валидности URL перед их обработкой. Сейчас, если подать некорректный URL, работа скрипта может быть нарушена.
-*   **Обработка ID**: В коде есть смешанное использование ID и URL. Хорошо было бы иметь стандартизированную логику для обработки ID, например, автоматическое формирование URL из ID.
-*   **Структура вывода**: Вывод информации о продукте можно улучшить, например, форматировать вывод в виде таблицы или использовать JSON.
-*   **Кэширование**: Для избежания повторных загрузок одних и тех же ресурсов можно добавить кэширование изображений и видео.
-*   **Асинхронность**: При загрузке большого количества ресурсов, можно использовать асинхронные запросы для ускорения процесса.
-
-**Взаимосвязи с другими частями проекта:**
-
-*   Этот скрипт зависит от класса `AliAffiliatedProducts`, который находится в другом файле проекта `src/suppliers/aliexpress/affiliated_products_generator.py`. Этот класс является частью логики проекта, которая отвечает за взаимодействие с API AliExpress и обработку данных.
-*  Предполагается, что в проекте существует структура, где `src` является корневой директорией, и в нем организованы пакеты поставщиков (suppliers), где `aliexpress` - один из поставщиков.
-*   Скрипт является примером использования, поэтому основная логика и функции находятся в файле `src/suppliers/aliexpress/affiliated_products_generator.py`.
-
-Таким образом, этот скрипт представляет собой пример использования класса `AliAffiliatedProducts` для преобразования URL-адресов или идентификаторов товаров AliExpress в аффилированные ссылки и загрузки связанных медиафайлов.
+Скрипт `affiliated_products_generator.py` предназначен для демонстрации работы класса `AliAffiliatedProducts`, который используется для генерации аффилированных ссылок на продукты AliExpress. Скрипт инициализирует параметры кампании, создает экземпляр `AliAffiliatedProducts`, задает список URL или ID продуктов, обрабатывает их и выводит результаты в консоль. Этот скрипт является частью более крупного проекта, который, вероятно, занимается автоматизацией аффилированного маркетинга на AliExpress.

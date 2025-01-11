@@ -1,106 +1,98 @@
-# Анализ кода модуля `AliexpressAffiliateHotproductQueryRequest.py`
+# Анализ кода модуля `AliexpressAffiliateHotproductQueryRequest`
 
 **Качество кода**
-9
- - Плюсы
-    - Код соответствует PEP8, за исключением docstring.
-    -  Используется наследование от базового класса `RestApi`.
+8
+- Плюсы
+    - Код соответствует базовым стандартам Python.
     - Присутствует описание модуля в начале файла.
- - Минусы
-    - Отсутствует docstring для класса и методов.
-    - Не используются `j_loads` или `j_loads_ns`.
-    - Нет обработки ошибок.
-    - Не используется логирование.
+    - Класс `AliexpressAffiliateHotproductQueryRequest` наследуется от `RestApi`.
+    - Метод `getapiname` корректно возвращает имя API.
+- Минусы
+    - Отсутствует документация в формате RST для класса, методов и атрибутов.
+    - Используются двойные кавычки в docstring, необходимо использовать одинарные.
+    - Нет импорта `logger`.
+    - Нет использования `j_loads` или `j_loads_ns`.
 
 **Рекомендации по улучшению**
-1.  Добавить docstring для класса и метода `__init__` с использованием reStructuredText (RST).
-2.  Добавить docstring для метода `getapiname` с использованием reStructuredText (RST).
-3.  Использовать `from src.logger.logger import logger` для логирования.
-4.  Внедрить обработку ошибок с помощью `try-except` и логирования.
-5.  Заменить `# -*- coding: utf-8 -*-` на `# -*- coding: utf-8 -*-.`
-6.  Удалить `# <- venv win` так как это комментарий для конкретной системы.
+
+1. Добавить подробную документацию в формате RST для модуля, класса, методов и атрибутов.
+2. Использовать одинарные кавычки для строк в коде и docstring.
+3. Добавить импорт `logger` из `src.logger.logger`.
+4. Добавить комментарии к атрибутам класса с их назначением.
+5. Убрать лишние комментарии, которые не несут смысловой нагрузки.
+6. Добавить примеры использования класса в docstring модуля.
+7. Добавить `...` в методах класса как точку остановки, если там должна быть логика.
+8. Сделать проверку на `None` для входных параметров.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
+# file: src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductQueryRequest.py
 """
-Модуль для работы с запросом горячих товаров Aliexpress.
-=======================================================
+Модуль для запроса горячих продуктов через AliExpress API.
+============================================================
 
-Этот модуль определяет класс `AliexpressAffiliateHotproductQueryRequest`,
-который используется для формирования запроса к API Aliexpress для получения
-списка горячих товаров.
+Этот модуль содержит класс :class:`AliexpressAffiliateHotproductQueryRequest`,
+который используется для выполнения запросов к AliExpress API для получения списка горячих продуктов.
 
-Пример использования
+Пример использования:
 --------------------
 
 .. code-block:: python
 
+    from src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateHotproductQueryRequest
+
     request = AliexpressAffiliateHotproductQueryRequest()
-    request.category_ids = '123,456'
-    request.fields = 'product_id,product_title'
-    # ...
-    api_response = request.get_response()
+    request.app_signature = 'your_app_signature'
+    request.category_ids = '100000001'
+    request.fields = 'productId,productTitle'
+    # ... другие параметры
+    api_name = request.getapiname()
+    print(api_name)
 """
-from src.logger.logger import logger
+from src.logger.logger import logger # Импорт logger
 from ..base import RestApi
 
 
 class AliexpressAffiliateHotproductQueryRequest(RestApi):
     """
-    Класс для формирования запроса горячих товаров Aliexpress.
+    Класс для формирования запроса горячих продуктов AliExpress.
 
-    :param domain: Домен API Aliexpress.
-    :type domain: str, optional
-    :param port: Порт API Aliexpress.
-    :type port: int, optional
+    Этот класс позволяет задавать параметры для запроса горячих продуктов,
+    такие как идентификаторы категорий, ключевые слова, ценовой диапазон и т.д.
+
+    :param domain: Домен API, по умолчанию 'api-sg.aliexpress.com'
+    :type domain: str
+    :param port: Порт API, по умолчанию 80
+    :type port: int
     """
-    def __init__(self, domain="api-sg.aliexpress.com", port=80):
+    def __init__(self, domain='api-sg.aliexpress.com', port=80):
         """
-        Инициализирует экземпляр класса AliexpressAffiliateHotproductQueryRequest.
-        
-        :param domain: Домен API Aliexpress. По умолчанию "api-sg.aliexpress.com".
-        :type domain: str, optional
-        :param port: Порт API Aliexpress. По умолчанию 80.
-        :type port: int, optional
+        Инициализация экземпляра класса.
         """
         RestApi.__init__(self, domain, port)
-        #: Подпись приложения.
-        self.app_signature = None
-        #: Идентификаторы категорий.
-        self.category_ids = None
-        #: Количество дней доставки.
-        self.delivery_days = None
-        #: Поля для отбора.
-        self.fields = None
-        #: Ключевые слова для поиска.
-        self.keywords = None
-        #: Максимальная цена продажи.
-        self.max_sale_price = None
-        #: Минимальная цена продажи.
-        self.min_sale_price = None
-        #: Номер страницы.
-        self.page_no = None
-        #: Размер страницы.
-        self.page_size = None
-        #: Тип продукта платформы.
-        self.platform_product_type = None
-        #: Страна доставки.
-        self.ship_to_country = None
-        #: Сортировка.
-        self.sort = None
-        #: Целевая валюта.
-        self.target_currency = None
-        #: Целевой язык.
-        self.target_language = None
-        #: Идентификатор отслеживания.
-        self.tracking_id = None
-
+        self.app_signature = None # Signature приложения.
+        self.category_ids = None  # Идентификаторы категорий.
+        self.delivery_days = None # Количество дней доставки.
+        self.fields = None # Список полей для ответа.
+        self.keywords = None # Ключевые слова для поиска.
+        self.max_sale_price = None # Максимальная цена продажи.
+        self.min_sale_price = None # Минимальная цена продажи.
+        self.page_no = None  # Номер страницы.
+        self.page_size = None # Размер страницы.
+        self.platform_product_type = None # Тип продукта платформы.
+        self.ship_to_country = None # Страна доставки.
+        self.sort = None # Сортировка.
+        self.target_currency = None # Целевая валюта.
+        self.target_language = None # Целевой язык.
+        self.tracking_id = None # Идентификатор отслеживания.
+    
     def getapiname(self):
         """
-        Возвращает имя API.
+        Возвращает имя API для запроса горячих продуктов.
 
-        :return: Имя API.
+        :return: Имя API
         :rtype: str
         """
         return 'aliexpress.affiliate.hotproduct.query'

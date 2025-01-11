@@ -2,92 +2,103 @@
 
 **Качество кода**
 7
--  Плюсы
-    - Код соответствует базовой структуре REST API запроса.
-    - Используется наследование от базового класса `RestApi`.
-    - Присутствует инициализация необходимых полей запроса.
--  Минусы
-    - Отсутствуют docstring для класса и методов.
-    - Нет обработки ошибок или логирования.
-    - Не используются `j_loads` или `j_loads_ns`.
-    - Не указан тип данных для полей.
+- Плюсы
+    - Код структурирован, имеет базовый класс `RestApi`.
+    - Присутствует определение параметров запроса.
+    - Есть определение имени API запроса.
+- Минусы
+    - Отсутствует документация для модуля и класса.
+    - Нет docstring для методов.
+    - Не используются константы для магических строк (например, имени API).
+    - Нет импорта `logger`.
+    - Не используется `j_loads` или `j_loads_ns`.
+    - Нет обработки ошибок.
+    - Не используется `self` для доступа к атрибутам класса в методах класса, кроме `__init__`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля, класса и методов в формате RST.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-3.  Добавить аннотации типов для переменных.
-4.  Убрать ненужные комментарии, вроде `# <- venv win`
-5.  Уточнить использование `domain` и `port` по умолчанию.
-6.  Изменить способ задания `api_name` на свойство класса.
+1.  Добавить docstring к модулю и классу для описания их назначения и использования.
+2.  Добавить docstring к методу `__init__` для описания параметров.
+3.  Добавить docstring к методу `getapiname` для описания возвращаемого значения.
+4.  Использовать `from src.logger.logger import logger` для логирования.
+5.  Привести имена переменных в соответствие с ранее обработанными файлами.
+6.  Добавить проверку типов для аргументов при инициализации.
+7.  Использовать `self.getapiname()` для доступа к имени API в методе `getapiname`.
+8.  Добавить константу для имени API.
+9.  Добавить пример использования класса в docstring модуля.
+10. Добавить обработку ошибок, например, через логирование с помощью `logger.error`.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
+# <- venv win
+## ~~~~~~~~~~~~
 """
-Модуль для выполнения запроса на получение списка товаров через API Aliexpress.
-============================================================================
+Модуль для работы с API запросом aliexpress.affiliate.product.query
+=========================================================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateProductQueryRequest`,
-который используется для отправки запроса на получение списка товаров через API Aliexpress.
+Этот модуль содержит класс :class:`AliexpressAffiliateProductQueryRequest`, который используется для
+формирования запроса к API AliExpress для получения информации о товарах.
 
 Пример использования
 --------------------
 
-Пример создания и использования класса `AliexpressAffiliateProductQueryRequest`:
+Пример использования класса `AliexpressAffiliateProductQueryRequest`:
 
 .. code-block:: python
 
+    from src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateProductQueryRequest import AliexpressAffiliateProductQueryRequest
+
     request = AliexpressAffiliateProductQueryRequest()
+    request.fields = 'productId,productTitle'
     request.keywords = 'phone'
-    response = request.get_response()
-    print(response)
+    print(request.getapiname())
 """
+from src.logger.logger import logger #  Импорт logger для логирования
 from ..base import RestApi
-# Импортируем logger
-from src.logger.logger import logger
+
 
 class AliexpressAffiliateProductQueryRequest(RestApi):
     """
-    Класс для отправки запроса на получение списка товаров через API Aliexpress.
-
-    :param domain: Домен API, по умолчанию "api-sg.aliexpress.com".
-    :type domain: str
-    :param port: Порт API, по умолчанию 80.
-    :type port: int
+    Класс для формирования запроса к API AliExpress для получения информации о товарах.
     """
-    def __init__(self, domain: str = "api-sg.aliexpress.com", port: int = 80) -> None:
-        """
-        Инициализация экземпляра класса AliexpressAffiliateProductQueryRequest.
-        """
-        # Инициализируем базовый класс RestApi
-        RestApi.__init__(self, domain, port)
-        # Инициализируем параметры запроса
-        self.app_signature: str | None = None
-        self.category_ids: str | None = None
-        self.delivery_days: int | None = None
-        self.fields: str | None = None
-        self.keywords: str | None = None
-        self.max_sale_price: float | None = None
-        self.min_sale_price: float | None = None
-        self.page_no: int | None = None
-        self.page_size: int | None = None
-        self.platform_product_type: str | None = None
-        self.ship_to_country: str | None = None
-        self.sort: str | None = None
-        self.target_currency: str | None = None
-        self.target_language: str | None = None
-        self.tracking_id: str | None = None
+    API_NAME = 'aliexpress.affiliate.product.query' # Константа для имени API
 
-    @property
-    def api_name(self) -> str:
+    def __init__(self, domain='api-sg.aliexpress.com', port=80):
+        """
+        Инициализирует объект запроса к API AliExpress.
+
+        Args:
+            domain (str): Домен API AliExpress.
+            port (int): Порт API AliExpress.
+        """
+        #  Вызов конструктора родительского класса
+        super().__init__(domain, port)
+        #  Инициализация параметров запроса
+        self.app_signature = None
+        self.category_ids = None
+        self.delivery_days = None
+        self.fields = None
+        self.keywords = None
+        self.max_sale_price = None
+        self.min_sale_price = None
+        self.page_no = None
+        self.page_size = None
+        self.platform_product_type = None
+        self.ship_to_country = None
+        self.sort = None
+        self.target_currency = None
+        self.target_language = None
+        self.tracking_id = None
+
+    def getapiname(self):
         """
         Возвращает имя API метода.
-        
-        :return: Имя API метода.
-        :rtype: str
+
+        Returns:
+            str: Имя API метода.
         """
-        # Возвращает имя метода API
-        return 'aliexpress.affiliate.product.query'
+        return self.API_NAME #  Возвращает имя API метода из константы
+
 ```

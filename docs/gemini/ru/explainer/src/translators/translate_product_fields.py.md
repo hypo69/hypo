@@ -1,143 +1,275 @@
+## ИНСТРУКЦИЯ:
+
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+    которые импортируются при создании диаграммы.
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+    ```
+
+3.  **<объяснение>**: Предоставьте подробные объяснения:
+    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    -   **Переменные**: Их типы и использование.
+    -   Выделите потенциальные ошибки или области для улучшения.
+
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+
 ## <алгоритм>
 
-1.  **`get_translations_from_presta_translations_table(product_reference, credentials, i18n)`**:
-    *   **Вход**: `product_reference` (строка, например, "REF123"), `credentials` (словарь, например, `{"host": "localhost", "user": "admin", ...}`), `i18n` (строка, например, "en_EN").
+```mermaid
+graph TD
+    A[Начало] --> B{get_translations_from_presta_translations_table};
+    B --> C{ProductTranslationsManager};
+    C -- Открываем соединение с БД --> D[Создание фильтра поиска];
+    D -- Запрос в БД с фильтром --> E[Получение переводов];
+    E --> F[Возврат списка переводов];
+    F --> G{insert_new_translation_to_presta_translations_table};
+    G --> H{ProductTranslationsManager};
+    H -- Открываем соединение с БД --> I[Вставка записи в БД];
+    I --> J[Завершение вставки];
+    J --> K{translate_record};
+    K --> L{translate};
+    L -- Перевод --> M[Возврат переведенной записи];
+     M --> N[Конец];
+    
+    subgraph "get_translations_from_presta_translations_table"
+    C
+    D
+    E
+    F
+    end
+    
+     subgraph "insert_new_translation_to_presta_translations_table"
+    H
+    I
+    J
+    end
+    
+     subgraph "translate_record"
+    L
+    M
+    end
+```
+
+### Пошаговое описание алгоритма:
+
+1.  **`get_translations_from_presta_translations_table`**:
+    *   **Входные данные**: `product_reference` (строка, например, 'PRODUCT123'), `credentials` (словарь с данными для подключения к базе данных), `i18n` (строка, код языка, например, 'ru-RU', опционально).
     *   **Действие**:
-        *   Инициализирует `ProductTranslationsManager` с предоставленными `credentials`.
-        *   Формирует фильтр поиска `search_filter` по `product_reference` (например, `{"product_reference": "REF123"}`).
-        *   Вызывает метод `select_record` менеджера базы данных с фильтром.
-    *   **Выход**: `product_translations` (список словарей, например, `[{'field': 'name', 'value': 'Product Name', 'lang': 'en_EN', ...}, {...}]`).
-2.  **`insert_new_translation_to_presta_translations_table(record, credentials)`**:
-    *   **Вход**: `record` (словарь, например, `{'product_reference': 'REF123', 'field': 'name', 'value': 'Translated Product Name', 'lang': 'ru-RU'}`), `credentials` (словарь, например, `{"host": "localhost", "user": "admin", ...}`).
+        *   Создается экземпляр `ProductTranslationsManager`, который устанавливает соединение с базой данных.
+        *   Формируется фильтр поиска `search_filter` на основе `product_reference`.
+        *   Вызывается метод `select_record` с фильтром для извлечения переводов.
+    *   **Выходные данные**: `product_translations` (список словарей с переводами или пустой список, если переводов нет).
+2.  **`insert_new_translation_to_presta_translations_table`**:
+    *   **Входные данные**: `record` (словарь с данными для вставки, например, `{'product_reference': 'PRODUCT123', 'lang': 'ru-RU', 'field_name': 'name', 'translation': 'Новый продукт'} `), `credentials` (словарь с данными для подключения к базе данных).
     *   **Действие**:
-        *   Инициализирует `ProductTranslationsManager` с предоставленными `credentials`.
-        *   Вызывает метод `insert_record` менеджера базы данных с `record`.
-    *   **Выход**: Нет явного возвращаемого значения (запись добавляется в базу данных).
-3.  **`translate_record(record, from_locale, to_locale)`**:
-    *   **Вход**: `record` (словарь, например, `{'name': 'Product Name', 'description': 'Product Description'}`), `from_locale` (строка, например, "en_EN"), `to_locale` (строка, например, "ru-RU").
+        *   Создается экземпляр `ProductTranslationsManager`, который устанавливает соединение с базой данных.
+        *   Вызывается метод `insert_record` для вставки записи в таблицу переводов.
+    *   **Выходные данные**: None
+3.  **`translate_record`**:
+    *   **Входные данные**: `record` (словарь с данными, которые нужно перевести, например, `{'name': 'Product Name', 'description': 'Product Description'}`), `from_locale` (строка, код исходного языка, например, 'en_EN'), `to_locale` (строка, код целевого языка, например, 'ru-RU').
     *   **Действие**:
-        *   Вызывает функцию `translate` из модуля `src.ai` для перевода полей `record` с `from_locale` на `to_locale`.
-    *   **Выход**: `translated_record` (словарь, например, `{'name': 'Название продукта', 'description': 'Описание продукта'}`).
+        *   Вызывается функция `translate` из модуля `src.ai`, которая выполняет перевод полей `record`.
+        *   (Здесь есть TODO, подразумевающий добавление дальнейшей обработки переведенной записи).
+    *   **Выходные данные**: `translated_record` (словарь с переведенными значениями).
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph Product Translation Process
-        Start --> GetTranslations[get_translations_from_presta_translations_table]
-        GetTranslations -- product_reference, credentials, i18n --> SelectRecord[ProductTranslationsManager.select_record]
-        SelectRecord -- search_filter --> ReturnTranslations[Возврат списка переводов]
+    Start --> GetTranslations[get_translations_from_presta_translations_table]
+    GetTranslations --> ProductTranslationsManager1[ProductTranslationsManager]
+    ProductTranslationsManager1 --> CreateFilter[Create search_filter]
+    CreateFilter --> SelectRecord[select_record]
+    SelectRecord --> ReturnTranslations[Return product_translations]
+    ReturnTranslations --> InsertTranslation[insert_new_translation_to_presta_translations_table]
+    InsertTranslation --> ProductTranslationsManager2[ProductTranslationsManager]
+    ProductTranslationsManager2 --> InsertRecord[insert_record]
+    InsertRecord --> TranslateRecord[translate_record]
+    TranslateRecord --> TranslateAI[translate]
+    TranslateAI --> ReturnTranslatedRecord[Return translated_record]
+    ReturnTranslatedRecord --> End
 
-        Start --> InsertTranslation[insert_new_translation_to_presta_translations_table]
-        InsertTranslation -- record, credentials --> InsertRecord[ProductTranslationsManager.insert_record]
-        InsertRecord --> NoReturn[Запись добавлена в БД]
+    
+    classDef class_import fill:#f9f,stroke:#333,stroke-width:2px;
+    class GetTranslations,InsertTranslation,TranslateRecord class_import;
 
-         Start --> TranslateRecord[translate_record]
-        TranslateRecord -- record, from_locale, to_locale --> CallTranslate[translate(record, from_locale, to_locale)]
-        CallTranslate --> ReturnTranslatedRecord[Возврат переведенной записи]
+
+    
+    
+    
+    subgraph "get_translations_from_presta_translations_table"
+    ProductTranslationsManager1
+    CreateFilter
+    SelectRecord
+    ReturnTranslations
+    end
+     subgraph "insert_new_translation_to_presta_translations_table"
+    ProductTranslationsManager2
+    InsertRecord
+    end
+
+    subgraph "translate_record"
+    TranslateAI
+    ReturnTranslatedRecord
     end
     
-    subgraph ProductTranslationsManager
-    
-        classDef dbClass fill:#f9f,stroke:#333,stroke-width:2px
-        
-        ProductTranslationsManager --> SelectRecord
-        ProductTranslationsManager --> InsertRecord
-       
-    end
-    class ProductTranslationsManager dbClass
-    
-     subgraph AI
-        classDef aiClass fill:#ccf,stroke:#333,stroke-width:2px
-        translate --> CallTranslate
-    end
-    class translate aiClass
+     classDef class_db fill:#ccf,stroke:#333,stroke-width:2px;
+     class ProductTranslationsManager1,ProductTranslationsManager2 class_db;
+      classDef class_ai fill:#cfc,stroke:#333,stroke-width:2px;
+     class TranslateAI class_ai;
 ```
+
+### Анализ зависимостей `mermaid`:
+*   **`Start`**: Начало процесса.
+*   **`GetTranslations`**: Функция `get_translations_from_presta_translations_table`.
+*   **`ProductTranslationsManager1`**: Менеджер для работы с таблицей переводов (контекстный менеджер).
+*   **`CreateFilter`**: Создание фильтра для поиска.
+*   **`SelectRecord`**: Метод для выборки записи из базы данных.
+*   **`ReturnTranslations`**: Возвращает результат запроса (список словарей переводов).
+*   **`InsertTranslation`**: Функция `insert_new_translation_to_presta_translations_table`.
+*   **`ProductTranslationsManager2`**:  Менеджер для работы с таблицей переводов (контекстный менеджер).
+*   **`InsertRecord`**: Метод для вставки новой записи в базу данных.
+*    **`TranslateRecord`**: Функция `translate_record`.
+*   **`TranslateAI`**: Функция `translate` из модуля `src.ai`, выполняет перевод.
+*   **`ReturnTranslatedRecord`**: Возвращает переведенную запись.
+*   **`End`**: Конец процесса.
+
+### Зависимости импорта:
+*   `pathlib.Path`: Для работы с путями в файловой системе (не используется в предоставленном коде).
+*   `typing.List`, `typing.Dict`: Для аннотации типов (не используется в предоставленном коде).
+*   `src.gs`: Модуль глобальных настроек.
+*   `src.utils.printer.pprint`: Для "красивого" вывода данных (не используется в предоставленном коде).
+*   `src.product.product_fields.product_fields.record`: Модуль для работы с полями товара (не используется напрямую в предоставленном коде).
+*   `src.db.ProductTranslationsManager`: Менеджер для работы с базой данных переводов.
+*   `src.ai.translate`: Функция для выполнения перевода.
+*   `src.endpoints.PrestaShop.PrestaShop`: Класс для взаимодействия с PrestaShop (не используется в предоставленном коде).
 
 ## <объяснение>
 
-**Импорты:**
+### Импорты:
 
-*   `pathlib.Path`: Используется для работы с путями файлов и директорий, хотя в данном коде не используется. Возможно, это заготовка для дальнейшего использования.
-*   `typing.List`, `typing.Dict`: Используются для аннотации типов, делая код более читаемым и понятным, хотя фактически не используются.
-*   `src.gs`: Импортирует глобальные настройки проекта, но в данном коде не используется.
-*   `src.utils.printer.pprint`: Импортирует функцию `pprint` для красивого вывода данных, но в данном коде не используется.
-*   `src.product.product_fields.product_fields.record`: Импортирует `record` из `src.product.product_fields.product_fields`, вероятно,  для работы с полями товара, хотя в данном коде не используется.
-*   `src.db.ProductTranslationsManager`: Импортирует класс `ProductTranslationsManager` для управления переводами товаров в базе данных.
-*   `src.ai.translate`: Импортирует функцию `translate` из модуля `src.ai` для осуществления перевода текста.
-*   `src.endpoints.PrestaShop.PrestaShop`: Импортирует класс `PrestaShop`, вероятно, для взаимодействия с API PrestaShop, но в данном коде не используется.
+*   `pathlib.Path`: Предоставляет способ работы с путями файлов и каталогов. Здесь не используется, но может быть добавлен для будущих расширений.
+*   `typing.List`, `typing.Dict`:  Используются для аннотации типов, что повышает читаемость кода и помогает в отладке. В предоставленном коде не используются, но их импорт подразумевает, что в дальнейшем они могут понадобиться.
+*   `src.gs`: Импорт модуля глобальных настроек (`gs`). Этот модуль, скорее всего, содержит настройки, которые используются в разных частях проекта, например, параметры подключения к базе данных.
+*   `src.utils.printer.pprint`: Функция для удобного вывода структур данных. Здесь не используется.
+*   `src.product.product_fields.product_fields.record`: Импорт класса или модуля `record` для работы с полями продукта, хотя не используется напрямую в текущем коде, подразумевает, что он может использоваться для обработки данных о продуктах.
+*   `src.db.ProductTranslationsManager`: Импорт менеджера для работы с таблицей переводов продуктов в базе данных.  Используется как контекстный менеджер для управления соединениями.
+*    `src.ai.translate`: Функция для перевода текста, скорее всего, использует API внешнего сервиса или локальную модель.
+*   `src.endpoints.PrestaShop.PrestaShop`:  Импортируется класс для взаимодействия с PrestaShop API, но не используется в текущем коде.
 
-**Функции:**
+### Функции:
 
-1.  **`get_translations_from_presta_translations_table(product_reference, credentials, i18n=None)`**:
-    *   **Назначение**: Получает переводы для товара из таблицы переводов PrestaShop по референсу.
+1.  **`get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list`**:
     *   **Аргументы**:
-        *   `product_reference` (str): Референс товара.
-        *   `credentials` (dict): Параметры подключения к базе данных.
-        *   `i18n` (str, optional): Язык перевода (например, 'en_EN'). По умолчанию `None`.
-    *   **Возвращаемое значение**: `list`: Список словарей с переводами (поля и их переводы).
+        *   `product_reference` (str): Уникальный идентификатор товара.
+        *   `credentials` (dict): Словарь с данными для подключения к базе данных (например, имя пользователя, пароль, хост, база данных).
+        *   `i18n` (str, опционально): Код языка перевода (например, 'en_EN', 'ru-RU').
+    *   **Возвращаемое значение**:
+        *   `list`: Список словарей, где каждый словарь содержит перевод для конкретного поля товара.
+    *   **Назначение**: Извлекает переводы для товара из таблицы переводов.
     *   **Пример**:
+
         ```python
-        translations = get_translations_from_presta_translations_table(
-            "REF123", {"host": "localhost", "user": "admin", "password": "password", "database": "prestashop"}
-        )
-        print(translations)
-        # Вывод: [{'field': 'name', 'value': 'Product Name', 'lang': 'en_EN', ...}, ...]
+        credentials = {
+            'host': 'localhost',
+            'user': 'user',
+            'password': 'password',
+            'database': 'prestashop_db'
+        }
+        translations = get_translations_from_presta_translations_table('PRODUCT123', credentials, 'ru-RU')
+        # translations будет содержать список словарей с переводами для PRODUCT123 на русском языке.
         ```
-2.  **`insert_new_translation_to_presta_translations_table(record, credentials)`**:
-    *   **Назначение**: Добавляет новую запись перевода в таблицу переводов PrestaShop.
+2.  **`insert_new_translation_to_presta_translations_table(record: dict, credentials: dict)`**:
     *   **Аргументы**:
-        *   `record` (dict): Словарь с данными перевода (product_reference, field, value, lang).
-        *   `credentials` (dict): Параметры подключения к базе данных.
-    *   **Возвращаемое значение**: Нет явного возвращаемого значения.
+        *   `record` (dict): Словарь с данными для вставки в таблицу переводов (например, `{'product_reference': 'PRODUCT123', 'lang': 'ru-RU', 'field_name': 'name', 'translation': 'Новый продукт'}`).
+        *   `credentials` (dict): Словарь с данными для подключения к базе данных.
+    *   **Возвращаемое значение**: None
+    *   **Назначение**: Добавляет новую запись перевода в таблицу.
     *   **Пример**:
+
         ```python
-        new_translation = {'product_reference': 'REF123', 'field': 'name', 'value': 'Translated Product Name', 'lang': 'ru-RU'}
-        insert_new_translation_to_presta_translations_table(new_translation, {"host": "localhost", "user": "admin", "password": "password", "database": "prestashop"})
+        new_translation = {
+            'product_reference': 'PRODUCT123',
+            'lang': 'ru-RU',
+            'field_name': 'name',
+            'translation': 'Новый продукт'
+        }
+        credentials = {
+            'host': 'localhost',
+            'user': 'user',
+            'password': 'password',
+            'database': 'prestashop_db'
+        }
+        insert_new_translation_to_presta_translations_table(new_translation, credentials)
+        # новая запись будет добавлена в таблицу переводов
         ```
-3.  **`translate_record(record, from_locale, to_locale)`**:
-    *   **Назначение**: Переводит поля товара с одного языка на другой с помощью AI.
+3.  **`translate_record(record: dict, from_locale: str, to_locale: str) -> dict`**:
     *   **Аргументы**:
-        *   `record` (dict): Словарь с полями товара для перевода (например, {'name': 'Product Name', 'description': 'Product Description'}).
-        *   `from_locale` (str): Язык исходного текста (например, 'en_EN').
-        *   `to_locale` (str): Язык, на который нужно перевести (например, 'ru-RU').
-    *   **Возвращаемое значение**: `dict`: Словарь с переведенными полями товара.
+        *   `record` (dict): Словарь с полями для перевода.
+        *   `from_locale` (str): Код исходного языка (например, 'en_EN').
+        *   `to_locale` (str): Код целевого языка (например, 'ru-RU').
+    *   **Возвращаемое значение**:
+        *   `dict`: Словарь с переведенными значениями.
+    *   **Назначение**: Переводит поля записи с одного языка на другой.
     *   **Пример**:
+
         ```python
         product_data = {'name': 'Product Name', 'description': 'Product Description'}
         translated_data = translate_record(product_data, 'en_EN', 'ru-RU')
-        print(translated_data)
-        # Вывод: {'name': 'Название продукта', 'description': 'Описание продукта'}
+        # translated_data будет содержать перевод полей на русский язык
         ```
 
-**Переменные:**
+### Переменные:
 
-*   `MODE`: Строка `'dev'`, вероятно, обозначающая текущий режим работы (разработка).
+*   `product_reference` (str): Уникальный идентификатор продукта (используется как ключ для поиска в таблице переводов).
+*    `credentials` (dict): Словарь с параметрами подключения к базе данных.
+*   `i18n` (str): Код языка перевода.
+*   `translations_manager`: Экземпляр класса `ProductTranslationsManager` для управления доступом к таблице переводов.
+*   `search_filter` (dict): Словарь для фильтрации записей при выборке из базы данных.
+*   `product_translations` (list): Список словарей, содержащих переводы для товара.
+*   `record` (dict): Словарь с данными для вставки в таблицу переводов.
+*   `from_locale` (str): Код исходного языка.
+*   `to_locale` (str): Код целевого языка.
+*    `translated_record` (dict): Словарь с переведенными значениями.
 
-**Объяснение:**
+### Области для улучшения и потенциальные ошибки:
 
-*   Модуль `translate_product_fields.py` служит связующим звеном между словарем полей товара, таблицей переводов и переводчиком (AI). Он предоставляет функции для получения, добавления и перевода полей товара.
-*   Функция `get_translations_from_presta_translations_table` извлекает переводы из базы данных PrestaShop, используя `ProductTranslationsManager`.
-*   Функция `insert_new_translation_to_presta_translations_table` добавляет новые переводы в базу данных.
-*   Функция `translate_record` вызывает AI переводчик (из `src.ai.translate`) для перевода полей.
-*   В коде есть места с комментариями `@todo`, указывающие на необходимость доработок (например, парсер для языков).
-*   Импортированные модули, такие как `PrestaShop` и `record`, не используются в коде, что может указывать на потенциальное расширение функциональности в будущем или на неиспользуемые импорты.
-*   Отсутствует явная обработка ошибок, что может привести к сбоям при взаимодействии с базой данных или AI.
+1.  **Обработка ошибок:** Код не содержит обработки исключений, например, ошибок подключения к базе данных или ошибок перевода. Это может привести к падениям программы.
+2.  **TODO в `translate_record`**: Не хватает обработки переведенной записи. Это может включать сохранение перевода, логирование или другие действия.
+3.  **Формат `i18n`**: В комментариях указано, что нужно продумать парсер для `en_EN`, `he_HE`, `ru-RU`. Возможно стоит использовать более стандартизованный формат кодов языка или библиотеку для работы с языками и локалями.
+4.  **Неиспользуемые импорты**: Некоторые импорты, такие как `Path`, `List`, `Dict`, `pprint` и `PrestaShop`, не используются в представленном коде. Их можно удалить или использовать в будущем.
+5.  **Цепочка взаимосвязей:**
+    *   Модуль `translate_product_fields.py` взаимодействует с:
+        *   `ProductTranslationsManager` для доступа к базе данных.
+        *   `src.ai.translate` для перевода.
+        *   Модулем `src.gs` для получения настроек.
+    *   Этот модуль является частью слоя перевода, который обеспечивает функциональность перевода полей продукта, что, в свою очередь, может быть частью более крупной системы управления продуктами для электронной коммерции.
 
-**Цепочка взаимосвязей с другими частями проекта:**
+### Дополнительные замечания:
 
-1.  `src.db.ProductTranslationsManager`: Этот модуль управляет взаимодействием с базой данных, предоставляя методы для извлечения и добавления записей переводов.
-2.  `src.ai.translate`: Этот модуль отвечает за перевод текста с использованием AI.
-3.  `src.endpoints.PrestaShop.PrestaShop`: (не используется) Этот модуль может предоставлять API для взаимодействия с PrestaShop, но он не используется в данном коде.
-4.  `src.product.product_fields.product_fields.record`: (не используется) Этот модуль, вероятно, предоставляет структуру данных для полей товара, но не используется.
-5.  `src.gs`: (не используется) Глобальные настройки проекта.
-6.  `src.utils.printer.pprint`: (не используется) Утилита для красивого вывода.
+*   Контекстный менеджер `ProductTranslationsManager` обеспечивает правильное управление соединениями с базой данных, что хорошо с точки зрения безопасности и ресурсов.
+*   Код хорошо структурирован с точки зрения разделения ответственности (например, отдельная функция для перевода, отдельная для работы с БД).
+*   Использование аннотаций типов делает код более понятным и поддерживаемым.
 
-**Потенциальные ошибки или области для улучшения:**
+## ```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-*   Отсутствует обработка ошибок (например, ошибки подключения к базе данных, ошибки перевода).
-*   Не реализован парсер для языковых кодов, что делает ввод форматов (en_EN, ru-RU) чувствительным к ошибкам.
-*   Не используются импорты, что может свидетельствовать о незавершенном функционале.
-*   Отсутствует логика сохранения переведенных записей в базу данных после перевода.
-
-Этот анализ дает полное представление о коде, его функциях, взаимосвязях и областях для потенциального улучшения.
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+```

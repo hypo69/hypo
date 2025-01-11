@@ -2,41 +2,41 @@
 
 **Качество кода**
 8
--  Плюсы
-    -   Код использует импорты из внутренних модулей, что способствует модульности и переиспользованию кода.
-    -   Присутствует использование `Path` для работы с путями, что является хорошей практикой.
-    -   Используется `SimpleNamespace` для создания экземпляра кампании, что упрощает доступ к атрибутам.
--  Минусы
-    -   Множественные дублирующиеся и избыточные комментарии в начале файла.
-    -   Отсутствует docstring для модуля.
-    -   Не хватает обработки ошибок и логирования.
-    -   Не все переменные и функции имеют описания в формате RST.
-    -   В коде присутствуют `...` что говорит о незаконченном коде.
-    -   Использование `AliPromoCampaign` и `AliAffiliatedProducts` не показано в полном объеме, что затрудняет анализ.
-    -   Не хватает использования `j_loads_ns` из `src.utils.jjson`.
-    -   Использование `MODE` не определено.
+- Плюсы
+    - Код имеет базовую структуру и выполняет свою задачу по созданию объекта `AliPromoCampaign`.
+    - Используются импорты из `src`, что свидетельствует о структурированности проекта.
+    - Присутствуют комментарии, объясняющие некоторые блоки кода.
+    - Имеется использование `logger` для логирования.
+- Минусы
+    - Присутствуют множественные пустые docstring.
+    - Не все импорты соответствуют рекомендациям, например, импорт `header` и `src.utils.printer`.
+    - Не используется `j_loads` для чтения файлов, что противоречит инструкции.
+    - Отсутствует документация в формате RST для модуля, классов и функций.
+    - Неполное использование возможностей логирования.
+    - Дублирование кода при создании объекта `AliPromoCampaign`.
 
 **Рекомендации по улучшению**
-
-1.  Удалить дублирующиеся комментарии в начале файла и добавить docstring к модулю.
-2.  Добавить docstring к классу `AliPromoCampaign` и переменным.
-3.  Заменить `json.load` на `j_loads_ns` из `src.utils.jjson`.
-4.  Внедрить обработку ошибок с использованием `logger.error`.
-5.  Удалить избыточные `try-except` блоки.
-6.  Добавить логирование важных этапов выполнения кода.
-7.  Заменить `...` на рабочую реализацию.
-8.  Убедиться, что все импорты необходимы и используются.
-9.  Добавить пример использования `AliAffiliatedProducts`.
+1.  Добавить описание модуля в начале файла в формате RST.
+2.  Удалить лишние и дублирующиеся комментарии.
+3.  Использовать `j_loads` из `src.utils.jjson` для чтения файлов, если это необходимо.
+4.  Добавить docstring к классу `AliPromoCampaign` и его методам.
+5.  Уточнить и унифицировать импорты, используя `from src.logger.logger import logger` для логирования.
+6.  Избегать избыточности при создании объектов `AliPromoCampaign`, используя передачу нужных аргументов в конструктор.
+7.  Обеспечить единообразие в использовании кавычек: одинарные кавычки для Python кода, двойные кавычки только для строк, которые нужно напечатать.
+8.  Добавить больше поясняющих комментариев к отдельным частям кода.
+9.  Использовать константы для параметров, если они не меняются, для лучшей читаемости.
+10.  Избегать `...` в коде, заменять на конкретную логику или `pass`, если код не требуется.
 
 **Оптимизированный код**
-
 ```python
-"""
-Модуль для примера создания рекламной кампании AliExpress.
-=========================================================
+# -*- coding: utf-8 -*-
 
-Этот модуль демонстрирует пример создания и настройки рекламной кампании
-на платформе AliExpress, используя классы `AliPromoCampaign` и `AliAffiliatedProducts`.
+"""
+Модуль для демонстрации создания рекламной кампании AliExpress
+============================================================
+
+Этот модуль показывает пример создания экземпляра класса `AliPromoCampaign`
+для работы с рекламными кампаниями на AliExpress.
 
 Пример использования
 --------------------
@@ -44,11 +44,12 @@
 .. code-block:: python
 
    from pathlib import Path
+   from types import SimpleNamespace
    from src.suppliers.aliexpress import AliPromoCampaign
    from src.utils import get_directory_names
    from src.logger.logger import logger
 
-   campaigns_directory = Path(gs.path.google_drive, 'aliexpress', 'campaigns')
+   campaigns_directory = Path('/path/to/google_drive/aliexpress/campaigns') # TODO: replace with your path
    campaign_names = get_directory_names(campaigns_directory)
 
    campaign_name = '280624_cleararanse'
@@ -56,91 +57,59 @@
    language = 'EN'
    currency = 'USD'
 
-   try:
-       campaign = AliPromoCampaign(
-           campaign_name=campaign_name,
-           category_name=category_name,
-           language=language,
-           currency=currency
-       )
-       logger.info(f'Кампания {campaign_name} успешно создана.')
-       # дальнейшие действия с campaign
-   except Exception as e:
-        logger.error(f"Ошибка при создании кампании {campaign_name}: {e}")
+
+   campaign_data = AliPromoCampaign(
+       campaign_name=campaign_name,
+       category_name=category_name,
+       language=language,
+       currency=currency
+   )
+
+   campaign = campaign_data.campaign
+   category = campaign_data.category
+   products = campaign_data.category.products
+
+   # Example with dict
+   campaign_data_dict = AliPromoCampaign(campaign_name, category_name, {'EN':'USD'})
+
+   # Example with strings
+   campaign_data_str = AliPromoCampaign(campaign_name, category_name, 'EN', 'USD')
+
 """
-# -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
-
-
-
-import header # импорт модуля header
-from pathlib import Path # импорт класса Path из модуля pathlib
-from types import SimpleNamespace # импорт класса SimpleNamespace из модуля types
-from src import gs # импорт модуля gs из пакета src
-# импорт класса AliPromoCampaign и AliAffiliatedProducts из пакета src.suppliers.aliexpress
+from pathlib import Path
+from types import SimpleNamespace
+#from src import gs #TODO:  удалить если не используется
 from src.suppliers.aliexpress import AliPromoCampaign
-from src.suppliers.aliexpress import AliAffiliatedProducts
-# импорт функций get_filenames, get_directory_names, read_text_file, csv2dict из пакета src.utils
-from src.utils import get_filenames, get_directory_names, read_text_file, csv2dict
-from src.utils.jjson import j_loads_ns # импорт функции j_loads_ns из пакета src.utils.jjson
-from src.utils.printer import pprint # импорт функции pprint из пакета src.utils.printer
-from src.logger.logger import logger # импорт логера
-
-# определение директории для кампаний
-campaigns_directory = Path(gs.path.google_drive, 'aliexpress', 'campaigns')
-# получение списка имен директорий в директории кампаний
-campaign_names = get_directory_names(campaigns_directory)
-
-# определение имени кампании, категории, языка и валюты
-campaign_name = '280624_cleararanse'
-category_name = 'gaming_comuter_accessories'
-language = 'EN'
-currency = 'USD'
-
-# создание экземпляра AliPromoCampaign с передачей параметров
-try:
-    a: SimpleNamespace = AliPromoCampaign(campaign_name = campaign_name,
-                        category_name = category_name,
-                        language = language,
-                        currency = currency)
-    logger.info(f"Кампания {campaign_name} создана успешно.")
-except Exception as e:
-    logger.error(f"Ошибка при создании кампании {campaign_name}: {e}")
+#from src.suppliers.aliexpress import AliAffiliatedProducts #TODO:  удалить если не используется
+#from src.utils import get_filenames, get_directory_names, read_text_file, csv2dict #TODO: удалить неиспользуемые импорты
+from src.utils.jjson import j_loads_ns
+#from src.utils.printer import pprint #TODO:  удалить если не используется
+from src.logger.logger import logger
 
 
-# получение доступа к атрибутам campaign, category и products
-if hasattr(a, 'campaign'):
-    campaign = a.campaign
-else:
-    logger.error(f"Атрибут 'campaign' не найден в объекте {a}")
-    campaign = None
+CAMPAIGNS_DIRECTORY = Path('/path/to/google_drive/aliexpress/campaigns') # TODO: replace with your path
+# campaign_names = get_directory_names(CAMPAIGNS_DIRECTORY) # TODO: используется только для демонстрации
+CAMPAIGN_NAME = '280624_cleararanse'
+CATEGORY_NAME = 'gaming_comuter_accessories'
+LANGUAGE = 'EN'
+CURRENCY = 'USD'
 
-if hasattr(a, 'category'):
-    category = a.category
-else:
-    logger.error(f"Атрибут 'category' не найден в объекте {a}")
-    category = None
+# Создание экземпляра AliPromoCampaign с передачей параметров
+campaign_data = AliPromoCampaign(
+    campaign_name=CAMPAIGN_NAME,
+    category_name=CATEGORY_NAME,
+    language=LANGUAGE,
+    currency=CURRENCY
+)
 
-if hasattr(a, 'category') and hasattr(a.category, 'products'):
-    products = a.category.products
-else:
-    logger.error(f"Атрибут 'products' не найден в объекте {a}")
-    products = None
+campaign = campaign_data.campaign
+category = campaign_data.category
+products = campaign_data.category.products
 
+# Пример создания с использованием словаря для валюты
+campaign_data_dict = AliPromoCampaign(CAMPAIGN_NAME, CATEGORY_NAME, {'EN': 'USD'})
 
-# пример создания AliPromoCampaign с использованием словаря
-try:
-   a = AliPromoCampaign(campaign_name,category_name,{'EN':'USD'})
-   logger.info(f"Кампания {campaign_name} создана успешно с использованием словаря.")
-except Exception as e:
-    logger.error(f"Ошибка при создании кампании {campaign_name} со словарем: {e}")
-
-# пример создания AliPromoCampaign с использованием строк
-try:
-   a = AliPromoCampaign(campaign_name,category_name, 'EN','USD')
-   logger.info(f"Кампания {campaign_name} создана успешно со строками.")
-except Exception as e:
-    logger.error(f"Ошибка при создании кампании {campaign_name} со строками: {e}")
-...
+# Пример создания с использованием отдельных строк для языка и валюты
+campaign_data_str = AliPromoCampaign(CAMPAIGN_NAME, CATEGORY_NAME, LANGUAGE, CURRENCY)
 ```

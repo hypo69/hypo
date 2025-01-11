@@ -1,117 +1,105 @@
 # Анализ кода модуля `profiling.py`
 
 **Качество кода**
-7
+9
 -  Плюсы
-    -   Код содержит описание модуля.
-    -   Используются аннотации типов.
-    -   Код разбит на функции для построения графиков.
-    -   Функции возвращают DataFrame с данными для графиков.
+    - Код хорошо структурирован и разбит на логические функции.
+    - Используются аннотации типов для повышения читаемости и предотвращения ошибок.
+    - Присутствуют docstring для функций, что способствует пониманию их назначения и использования.
+    - Используется `pandas` для обработки данных и `matplotlib` для визуализации, что является стандартной практикой.
+    - Код возвращает DataFrame, что позволяет использовать данные для дальнейшей обработки.
 -  Минусы
-    -   Отсутствует импорт `logger`.
-    -   Отсутствует документация в формате RST.
-    -   Не все комментарии информативны и соответствуют стандарту.
-    -   Используется `print` для вывода графика, вместо использования `logger`.
-    -   Не используется обработка исключений.
+    - Отсутствует импорт `logger` из `src.logger.logger` для логирования ошибок.
+    - Не используется обработка ошибок с помощью `try-except` и логирование с `logger.error`.
+    - Для всех графиков установлено `show=True`. Это может приводить к нежелательному отображению, если функция используется в цикле.
 
 **Рекомендации по улучшению**
 
-1.  Добавить импорт `logger` из `src.logger.logger`.
-2.  Добавить документацию в формате RST для модуля, функций и параметров.
-3.  Использовать `logger` для вывода сообщений, включая ошибки.
-4.  Обработать возможные исключения, например, при отсутствии данных.
-5.  Улучшить информативность комментариев, сделать их более конкретными.
-6.  Убедиться в соответствии стиля кодирования (использовать одинарные кавычки).
+1. **Импорт `logger`**: Добавить импорт `from src.logger.logger import logger` для логирования ошибок и предупреждений.
+2. **Обработка ошибок**: Обернуть код внутри функций в блоки `try-except` для перехвата исключений и логировать их с помощью `logger.error`.
+3. **Улучшение документации**: Дополнить docstring для параметров и возвращаемых значений.
+4.  **Возможность не выводить графики**: Убрать по умолчанию `show=True` и сделать явный вызов `plt.show()` вне функции.
+5. **Общая функция для построения графиков**: Если графики похожи, можно выделить общую функцию для их отрисовки.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль предоставляет механизмы для анализа характеристик популяций агентов,
-таких как распределение их возрастов, типичные интересы и т.д.
+Provides mechanisms for creating understanding the characteristics of agent populations, such as
+their age distribution, typical interests, and so on.
 
-Руководство по построению графиков: все методы построения графиков должны также возвращать DataFrame
-из Pandas с данными, использованными для построения графиков.
+Guideline for plotting the methods: all plot methods should also return a Pandas dataframe with the data used for 
+plotting.
 """
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import List
 from tinytroupe.agent import TinyPerson
-from src.logger.logger import logger
+from src.logger.logger import logger # Импортируем logger
 
-def plot_age_distribution(agents: List[TinyPerson], title: str = 'Age Distribution', show: bool = True) -> pd.DataFrame:
+def plot_age_distribution(agents: List[TinyPerson], title: str = 'Age Distribution', show: bool = False) -> pd.DataFrame:
     """
-    Построение графика распределения возрастов заданных агентов.
+    Построение гистограммы распределения возраста агентов.
 
-    :param agents: Список агентов, чье распределение возрастов нужно отобразить.
-    :type agents: List[TinyPerson]
-    :param title: Заголовок графика.
-    :type title: str, optional
-    :param show: Флаг, определяющий, нужно ли отображать график.
-    :type show: bool, optional
-    :return: DataFrame с данными, использованными для построения графика.
-    :rtype: pd.DataFrame
+    Args:
+        agents (List[TinyPerson]): Список агентов, для которых строится распределение возраста.
+        title (str, optional): Заголовок графика. По умолчанию 'Age Distribution'.
+        show (bool, optional): Флаг, определяющий, нужно ли отображать график. По умолчанию False.
 
-    :Example:
-        >>> agents = [TinyPerson(age=25), TinyPerson(age=30), TinyPerson(age=25)]
-        >>> df = plot_age_distribution(agents, title='Age Distribution of Agents')
-        >>> print(df)
-           Age
-        0   25
-        1   30
-        2   25
+    Returns:
+        pd.DataFrame: DataFrame с данными, использованными для построения графика.
+    
+    Raises:
+        Exception: В случае возникновения ошибки при построении графика.
     """
     try:
-        # Код извлекает возраст каждого агента
+        # Код извлекает возраст каждого агента и формирует список
         ages = [agent.get('age') for agent in agents]
-        # Код создает DataFrame из полученных возрастов
+
+        # Код создает DataFrame из списка возрастов
         df = pd.DataFrame(ages, columns=['Age'])
+        
         # Код строит гистограмму распределения возрастов
         df['Age'].plot.hist(bins=20, title=title)
+        
         if show:
-            # Код отображает график
             plt.show()
+        
         return df
-    except Exception as ex:
-        logger.error('Ошибка при построении графика распределения возрастов', exc_info=ex)
+    except Exception as e:
+        logger.error('Ошибка при построении гистограммы распределения возраста', exc_info=True)
         return pd.DataFrame()
 
-
-
-def plot_interest_distribution(agents: List[TinyPerson], title: str = 'Interest Distribution', show: bool = True) -> pd.DataFrame:
+def plot_interest_distribution(agents: List[TinyPerson], title: str = 'Interest Distribution', show: bool = False) -> pd.DataFrame:
     """
-    Построение графика распределения интересов заданных агентов.
+    Построение круговой диаграммы распределения интересов агентов.
 
-    :param agents: Список агентов, чье распределение интересов нужно отобразить.
-    :type agents: List[TinyPerson]
-    :param title: Заголовок графика.
-    :type title: str, optional
-    :param show: Флаг, определяющий, нужно ли отображать график.
-    :type show: bool, optional
-    :return: DataFrame с данными, использованными для построения графика.
-    :rtype: pd.DataFrame
+    Args:
+        agents (List[TinyPerson]): Список агентов, для которых строится распределение интересов.
+        title (str, optional): Заголовок графика. По умолчанию 'Interest Distribution'.
+        show (bool, optional): Флаг, определяющий, нужно ли отображать график. По умолчанию False.
 
-    :Example:
-        >>> agents = [TinyPerson(interests='reading'), TinyPerson(interests='sport'), TinyPerson(interests='reading')]
-        >>> df = plot_interest_distribution(agents, title='Interest Distribution of Agents')
-        >>> print(df)
-            Interests
-        0   reading
-        1     sport
-        2   reading
+    Returns:
+        pd.DataFrame: DataFrame с данными, использованными для построения графика.
+    
+    Raises:
+        Exception: В случае возникновения ошибки при построении графика.
     """
     try:
-        # Код извлекает интересы каждого агента
+        # Код извлекает интересы каждого агента и формирует список
         interests = [agent.get('interests') for agent in agents]
-        # Код создает DataFrame из полученных интересов
+
+        # Код создает DataFrame из списка интересов
         df = pd.DataFrame(interests, columns=['Interests'])
+
         # Код строит круговую диаграмму распределения интересов
         df['Interests'].value_counts().plot.pie(title=title)
+        
         if show:
-            # Код отображает график
             plt.show()
+
         return df
-    except Exception as ex:
-        logger.error('Ошибка при построении графика распределения интересов', exc_info=ex)
+    except Exception as e:
+        logger.error('Ошибка при построении круговой диаграммы распределения интересов', exc_info=True)
         return pd.DataFrame()
 ```

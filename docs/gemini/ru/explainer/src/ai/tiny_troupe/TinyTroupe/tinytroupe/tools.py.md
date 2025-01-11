@@ -1,205 +1,220 @@
-## <алгоритм>
+## АНАЛИЗ КОДА: `tinytroupe/tools.py`
 
-1.  **Инициализация инструмента `TinyTool`**:
-    *   Создается экземпляр `TinyTool` с заданным `name`, `description`, `owner`, `real_world_side_effects`, `exporter` и `enricher`.
-    *   Пример: `tool = TinyTool(name="MyTool", description="A test tool", owner="Agent1", real_world_side_effects=False)`.
+### 1. **<алгоритм>**
 
-2.  **Проверка реальных побочных эффектов `_protect_real_world`**:
-    *   Проверяется флаг `real_world_side_effects`. Если `True`, то в лог выводится предупреждение о реальных побочных эффектах.
-    *   Пример: Если `real_world_side_effects` установлен в `True`, будет выведено предупреждение.
+**Общая блок-схема:**
+```mermaid
+graph LR
+    A[Начало] --> B(Создание инструмента TinyTool);
+    B --> C{Вызов process_action};
+    C --> D{_protect_real_world?};
+    D -- Да --> E(Логирование предупреждения);
+    D -- Нет --> F;
+    F --> G{_enforce_ownership?};
+    G -- Да --> H(Проверка принадлежности агенту);
+    H -- Ошибка --> I(Выброс исключения);
+    G -- Нет --> J;
+     J --> K(Вызов _process_action);
+     K --> L(Обработка действия инструмента);
+    L --> M[Конец];
+    I --> M
+```
 
-3.  **Проверка владельца `_enforce_ownership`**:
-    *   Проверяется, установлен ли владелец инструмента `owner`.
-    *   Если владелец установлен, проверяется, является ли текущий агент `agent` владельцем.
-    *   Если агент не является владельцем, вызывается исключение `ValueError`.
-    *   Пример: Если `owner="Agent1"`, а `agent.name="Agent2"`, будет вызвано исключение.
+**Примеры для каждого блока:**
+*   **A (Начало):** Начало работы с любым инструментом.
+*   **B (Создание инструмента `TinyTool`):**  Создание экземпляра `TinyTool`, например, `calendar = TinyCalendar(owner=agent1)`.
+*   **C (Вызов `process_action`):**  Вызов метода для обработки действий, например, `calendar.process_action(agent1, action)`.
+*   **D (`_protect_real_world?`):** Проверка, имеет ли инструмент побочные эффекты, например, `TinyCalendar` нет, а `TinyRealWorldTool` да.
+*   **E (Логирование предупреждения):** Вывод предупреждения в лог, если `real_world_side_effects` is `True`.
+*  **F (Продолжение):** Продолжение выполнения, если нет побочных эффектов.
+*   **G (`_enforce_ownership?`):** Проверка, принадлежит ли инструмент агенту.
+*  **H (Проверка принадлежности агенту):** Сравнение имени агента и владельца инструмента.
+*   **I (Выброс исключения):** Выброс ошибки `ValueError`, если агент не владелец инструмента.
+*   **J (Продолжение):** Продолжение выполнения, если владелец совпадает.
+*   **K (Вызов `_process_action`):** Вызов метода `_process_action` для обработки конкретного действия инструмента.
+*   **L (Обработка действия инструмента):**  Выполнение действия, например, создание события в календаре.
+*   **M (Конец):** Завершение обработки действия инструмента.
 
-4.  **Обработка действия `process_action`**:
-    *   Вызывается метод `_protect_real_world()` для проверки реальных побочных эффектов.
-    *   Вызывается метод `_enforce_ownership()` для проверки прав доступа агента.
-    *   Вызывается метод `_process_action()` для обработки фактического действия.
+**Поток данных:**
 
-5.  **Реализация действия `_process_action`**:
-    *   Этот метод должен быть реализован в подклассах `TinyTool`. В базовом классе вызывает исключение `NotImplementedError`.
-    *   Пример: В `TinyCalendar`, этот метод анализирует JSON `action` и добавляет события в календарь.
+1.  Инициализация: Создание инструмента (`TinyTool`, `TinyCalendar`, `TinyWordProcessor`) с параметрами, включая владельца, описания, экспортера, обогатителя.
+2.  Вызов действия: Агент вызывает метод `process_action` инструмента с описанием действия (`action` в виде словаря).
+3.  Проверка безопасности: `_protect_real_world` проверяет наличие реальных побочных эффектов.
+4.  Проверка владения: `_enforce_ownership` проверяет, имеет ли агент право использовать инструмент.
+5.  Обработка действия: `_process_action` обрабатывает конкретное действие, определяемое типом (`action['type']`) и содержимым (`action['content']`).
+6.  Экспорт и обогащение: `TinyWordProcessor` может использовать `ArtifactExporter` для экспорта и `TinyEnricher` для обогащения контента.
+7.  Результат:  Метод `process_action` возвращает `True`, если действие успешно выполнено, и `False` в противном случае.
 
-6.  **Описание действия `actions_definitions_prompt`**:
-    *   Этот метод должен быть реализован в подклассах `TinyTool` и возвращает описание доступных действий. В базовом классе вызывает исключение `NotImplementedError`.
-    *   Пример: В `TinyCalendar`, этот метод описывает действие `CREATE_EVENT`.
-
-7.  **Ограничения действия `actions_constraints_prompt`**:
-    *   Этот метод должен быть реализован в подклассах `TinyTool` и возвращает ограничения на выполнение действий. В базовом классе вызывает исключение `NotImplementedError`.
-    *   Пример: В `TinyWordProcessor`, этот метод описывает ограничения на объем и детализацию создаваемых документов.
-
-8.  **Добавление события в календарь `TinyCalendar.add_event`**:
-    *   Принимает дату и детали события (заголовок, описание, участники, время).
-    *   Добавляет событие в словарь `calendar`.
-
-9.  **Обработка действия календаря `TinyCalendar._process_action`**:
-    *   Проверяет тип действия `CREATE_EVENT`.
-    *   Парсит JSON из `action['content']`.
-    *   Проверяет наличие недопустимых полей с помощью `utils.check_valid_fields`.
-    *   Вызывает метод `add_event` для добавления события в календарь.
-
-10. **Создание документа `TinyWordProcessor.write_document`**:
-    *   Принимает `title`, `content` и `author` документа.
-    *   Если установлен `enricher`, вызывает `enrich_content` для расширения содержания.
-    *   Если установлен `exporter`, вызывает `export` для сохранения документа в разных форматах.
-
-11. **Обработка действия текстового процессора `TinyWordProcessor._process_action`**:
-    *   Проверяет тип действия `WRITE_DOCUMENT`.
-    *   Парсит JSON из `action['content']`.
-    *   Проверяет наличие недопустимых полей с помощью `utils.check_valid_fields`.
-    *   Вызывает метод `write_document` для создания и сохранения документа.
-
-12. **Обработка ошибок JSON `TinyWordProcessor._process_action`**:
-    *   Перехватывает исключение `JSONDecodeError`, если не удается распарсить JSON.
-    *   Логирует ошибку и возвращает `False`.
-
-## <mermaid>
+### 2. **<mermaid>**
 
 ```mermaid
 flowchart TD
-    Start[Start] --> InitializeTool[Initialize TinyTool]
-    InitializeTool --> CheckRealWorldEffects[Check Real World Effects: _protect_real_world()]
-    CheckRealWorldEffects --> CheckOwnership[Check Ownership: _enforce_ownership()]
-    CheckOwnership --> ProcessAction[Process Action: _process_action()]
-    ProcessAction --> End[End]
+    Start[Начало] --> CreateTool[Создание инструмента TinyTool: <br><code>TinyTool(name, description, owner, real_world_side_effects, exporter, enricher)</code>]
+    CreateTool --> ProcessAction[Вызов <code>process_action(agent, action)</code>];
+    ProcessAction --> ProtectRealWorld[Вызов <code>_protect_real_world()</code>];
+    ProtectRealWorld --  "real_world_side_effects=True" --> LogWarning[Логирование предупреждения]
+    ProtectRealWorld -- "real_world_side_effects=False" --> EnforceOwnership[Вызов <code>_enforce_ownership(agent)</code>];
+    LogWarning --> EnforceOwnership
+    EnforceOwnership -- "owner is not None and agent.name != owner.name" --> ThrowError[Выброс <code>ValueError</code>]
+    EnforceOwnership -- "owner is None or agent.name == owner.name" --> ProcessActionSubclass[Вызов <code>_process_action(agent, action)</code>]
 
-    subgraph TinyCalendar
-        InitializeTool --> InitCalendar[Initialize TinyCalendar]
-        InitCalendar --> AddEvent[Add Event: add_event()]
-        InitCalendar --> ProcessCalendarAction[Process Action: _process_action()]
-        ProcessCalendarAction --> ParseJson[Parse JSON: json.loads()]
-        ParseJson --> ValidateFields[Validate Fields: utils.check_valid_fields()]
-        ValidateFields --> AddEvent
-        AddEvent --> End
+    ThrowError --> End[Конец]
+    ProcessActionSubclass --> HandleAction[Обработка действия инструмента в <code>_process_action()</code>];
+    HandleAction --> End
+    
+     subgraph TinyCalendar
+    T1[Создание календаря: <code>TinyCalendar(owner)</code>] --> T2[<code>add_event(date, title, description, owner, mandatory_attendees, optional_attendees, start_time, end_time)</code>]
+    T2 --> T3[<code>find_events(year, month, day, hour, minute)</code>]
+    T3 --> T4[Обработка CREATE_EVENT в <code>_process_action()</code>];
+        end
+    
+    
+    
+    subgraph TinyWordProcessor
+        W1[Создание вордпроцессора: <code>TinyWordProcessor(owner, exporter, enricher)</code>] --> W2[<code>write_document(title, content, author)</code>]
+        W2 --> W3{Использование <code>TinyEnricher</code>?}
+        W3 -- "Да" --> W4[<code>enrich_content()</code>]
+         W3 -- "Нет" --> W5
+         W4 --> W5
+        W5 --> W6{Использование <code>ArtifactExporter</code>?}
+        W6 -- "Да" --> W7[Экспорт документа в разных форматах]
+        W6 -- "Нет" --> W8
+        W7 --> W8
+        W8 --> W9[Обработка WRITE_DOCUMENT в <code>_process_action()</code>];
+    end    
+    
+
+  subgraph ArtifactExporter
+        EX1[Создание экспортера <code>ArtifactExporter</code>] --> EX2[<code>export(artifact_name, artifact_data, content_type, content_format, target_format)</code>]
     end
     
-     subgraph TinyWordProcessor
-        InitializeTool --> InitWordProcessor[Initialize TinyWordProcessor]
-        InitWordProcessor --> WriteDocument[Write Document: write_document()]
-        WriteDocument --> EnrichContent[Enrich Content: TinyEnricher.enrich_content()]
-        WriteDocument --> ExportArtifact[Export Artifact: ArtifactExporter.export()]
-        InitWordProcessor --> ProcessWordProcessorAction[Process Action: _process_action()]
-        ProcessWordProcessorAction --> ParseJsonWP[Parse JSON: json.loads()]
-         ProcessWordProcessorAction --> CheckJsonContent[Check content type: if isinstance(action['content'], str)]
-        CheckJsonContent-- true --> ParseJsonWP
-        CheckJsonContent-- false --> ValidateFieldsWP
-        ParseJsonWP --> ValidateFieldsWP
-        ValidateFieldsWP --> WriteDocument
-        ProcessWordProcessorAction --> ErrorHandle[Error Handling: json.JSONDecodeError]
-        ErrorHandle --> End
-        
-        ExportArtifact --> End
-         EnrichContent --> ExportArtifact
+  subgraph TinyEnricher
+       EN1[Создание обогатителя <code>TinyEnricher</code>] --> EN2[<code>enrich_content(requirements, content, content_type, context_info, context_cache, verbose)</code>]
     end
     
-    classDef common fill:#f9f,stroke:#333,stroke-width:2px;
-    class InitializeTool,CheckRealWorldEffects,CheckOwnership,ProcessAction,End common;
-    class InitCalendar,AddEvent,ProcessCalendarAction,ParseJson,ValidateFields common;
-    class InitWordProcessor,WriteDocument,EnrichContent,ExportArtifact,ProcessWordProcessorAction,ParseJsonWP,ValidateFieldsWP,CheckJsonContent,ErrorHandle common;
-
+  
+    
+    linkStyle 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19 stroke:#333,stroke-width:2px
 ```
 
-**Зависимости:**
+**Зависимости импорта:**
+*   **`textwrap`**: Используется для форматирования текста.
+*   **`json`**: Используется для работы с JSON-данными.
+*   **`copy`**:  Не используется в данном коде.
+*    **`logging`**: Используется для логирования событий.
+*    **`tinytroupe.utils`**: Содержит вспомогательные функции, такие как `check_valid_fields` и `dedent`.
+*    **`tinytroupe.extraction`**: Содержит класс `ArtifactExporter` для экспорта артефактов.
+*    **`tinytroupe.enrichment`**: Содержит класс `TinyEnricher` для обогащения контента.
 
-*   `textwrap`: Используется для удаления отступов в многострочных строках.
-*   `json`: Используется для работы с JSON данными, например, при парсинге содержимого действий.
-*   `copy`: Импортируется, но в предоставленном коде не используется.
-*   `logging`: Используется для логирования, например, для предупреждений о реальных побочных эффектах или ошибок парсинга JSON.
-*   `tinytroupe.utils`: Используется для утилит, таких как `check_valid_fields` (для проверки допустимых полей в JSON) и `dedent` (для удаления отступов в строках).
-*   `tinytroupe.extraction`: Содержит класс `ArtifactExporter`, который используется для экспорта артефактов (например, документов).
-*   `tinytroupe.enrichment`: Содержит класс `TinyEnricher`, который используется для обогащения контента (например, расширения документа).
-*   `tinytroupe.utils.JsonSerializableRegistry`: Базовый класс для инструментов, предоставляющий функциональность для работы с JSON.
-
-## <объяснение>
+### 3. **<объяснение>**
 
 **Импорты:**
-
-*   `textwrap`: Используется для форматирования текста, например, для удаления лишних пробелов и отступов в многострочных строках, что делает код более читаемым.
-*   `json`: Используется для кодирования и декодирования данных в формате JSON, что необходимо для передачи и обработки структурированной информации, такой как параметры инструментов.
-*   `copy`: Импортируется, но не используется в предоставленном коде. Возможно, это запланированное использование, нереализованное на данный момент.
-*   `logging`: Используется для записи сообщений о событиях, ошибках и предупреждениях в процессе работы. Уровень логирования можно настраивать, чтобы включать или исключать различные сообщения.
-*   `tinytroupe.utils`:
-    *   `check_valid_fields`: Функция для проверки того, что входящие данные JSON (например, параметры инструмента) содержат только разрешенные ключи.
-    *   `dedent`: Функция для удаления отступов из многострочных строк, что упрощает написание и понимание описаний действий и ограничений инструментов.
-*   `tinytroupe.extraction`:
-    *   `ArtifactExporter`: Класс, отвечающий за экспорт созданных артефактов (например, документов) в различные форматы (например, markdown, docx).
-*   `tinytroupe.enrichment`:
-    *   `TinyEnricher`: Класс, отвечающий за расширение и обогащение контента, такого как текст документов. Может использоваться для добавления деталей и контекста.
-*   `tinytroupe.utils.JsonSerializableRegistry`:
-    *   Базовый класс для инструментов, который предоставляет функциональность для работы с JSON, позволяя инструментам сохранять и восстанавливать свое состояние.
+*   `textwrap`: Модуль `textwrap` используется для работы с текстом, в частности, для удаления отступов из многострочных строк, что упрощает форматирование строк для запросов.
+*   `json`: Модуль `json` используется для кодирования и декодирования данных в формате JSON. Это необходимо для передачи и обработки структурированных данных в функциях `_process_action` классов `TinyCalendar` и `TinyWordProcessor`.
+*   `copy`: Хотя модуль `copy` импортируется, он не используется в этом файле, что может указывать на то, что он может быть необходим для других частей проекта или будет использован в будущем.
+*    `logging`: Модуль `logging` используется для записи сообщений журнала. Он позволяет отслеживать работу программы, выявлять ошибки и отлаживать код.
+*   `tinytroupe.utils`: Это собственный модуль проекта, содержащий вспомогательные функции. `utils.check_valid_fields` используется для проверки допустимости полей в словаре, а `utils.dedent` - для форматирования многострочных строк.
+*   `tinytroupe.extraction`: Из этого модуля импортируется `ArtifactExporter`, который предназначен для экспорта данных в разные форматы (например, markdown, json, docx). Он используется в `TinyWordProcessor` для сохранения сгенерированных документов.
+*   `tinytroupe.enrichment`: Из этого модуля импортируется `TinyEnricher`, который используется для обогащения контента документов. В `TinyWordProcessor` он используется для добавления деталей и расширения текста.
 
 **Классы:**
 
-*   `TinyTool`:
-    *   **Роль**: Базовый класс для всех инструментов. Определяет общую структуру и интерфейс для работы с инструментами, включая проверку владения, защиту от реальных побочных эффектов и обработку действий.
+*   **`TinyTool`**:
+    *   **Роль**: Базовый класс для всех инструментов. Определяет общую структуру и методы для всех инструментов.
     *   **Атрибуты**:
-        *   `name` (str): Название инструмента.
+        *   `name` (str): Имя инструмента.
         *   `description` (str): Описание инструмента.
-        *   `owner` (str): Владелец инструмента (может быть `None`, если инструмент доступен всем).
-        *   `real_world_side_effects` (bool): Указывает, имеет ли инструмент реальные побочные эффекты (например, изменение состояния внешнего мира).
-        *   `exporter` (ArtifactExporter): Экспортер для сохранения результатов работы инструмента.
-        *   `enricher` (TinyEnricher): Обогатитель для расширения результатов работы инструмента.
+        *   `owner` (obj): Агент, владеющий инструментом. Может быть `None`.
+        *   `real_world_side_effects` (bool): Флаг, указывающий, имеет ли инструмент побочные эффекты.
+        *   `exporter` (`ArtifactExporter`): Экспортер для сохранения результатов.
+        *   `enricher` (`TinyEnricher`): Обогатитель для добавления деталей.
     *   **Методы**:
-        *   `__init__(self, name, description, owner=None, real_world_side_effects=False, exporter=None, enricher=None)`: Инициализация нового инструмента.
-        *   `_process_action(self, agent, action: dict) -> bool`: Абстрактный метод для обработки действия.
-        *   `_protect_real_world(self)`: Выводит предупреждение, если у инструмента есть реальные побочные эффекты.
-        *   `_enforce_ownership(self, agent)`: Проверяет, имеет ли агент право использовать инструмент.
-        *   `set_owner(self, owner)`: Устанавливает владельца инструмента.
-        *   `actions_definitions_prompt(self) -> str`: Абстрактный метод для возврата описания доступных действий.
-        *   `actions_constraints_prompt(self) -> str`: Абстрактный метод для возврата ограничений на выполнение действий.
-        *   `process_action(self, agent, action: dict) -> bool`: Метод для обработки действия, включающий проверку побочных эффектов и владельца.
-*   `TinyCalendar(TinyTool)`:
-    *   **Роль**: Инструмент для управления календарем.
+        *   `__init__`: Конструктор класса, инициализирует атрибуты инструмента.
+        *   `_process_action(agent, action)`:  Метод, который должен быть реализован в подклассах для обработки действий. Вызывает ошибку `NotImplementedError` если не переопределен.
+        *   `_protect_real_world()`: Метод для логирования предупреждения, если инструмент имеет реальные побочные эффекты.
+        *   `_enforce_ownership(agent)`: Метод для проверки, имеет ли агент право использовать инструмент.
+        *    `set_owner(owner)`: Метод для установки владельца инструмента.
+        *   `actions_definitions_prompt() -> str`: Метод, который должен быть реализован в подклассах для возвращения определения возможных действий. Вызывает ошибку `NotImplementedError` если не переопределен.
+        *  `actions_constraints_prompt() -> str`: Метод, который должен быть реализован в подклассах для возвращения ограничений на использование действий. Вызывает ошибку `NotImplementedError` если не переопределен.
+        *  `process_action(agent, action) -> bool`: Метод, для обработки действий, вызывает `_protect_real_world`, `_enforce_ownership` и `_process_action`.
+*   **`TinyCalendar`** (наследуется от `TinyTool`):
+    *   **Роль**: Инструмент для управления календарем. Позволяет агентам создавать события, но функционал еще в разработке.
     *   **Атрибуты**:
-        *   `calendar`: Словарь для хранения событий, где ключи - даты, а значения - списки событий.
+        * `calendar` (dict): Словарь, где ключи это даты, а значения - списки событий.
     *   **Методы**:
-        *   `__init__(self, owner=None)`: Инициализация календаря.
-        *   `add_event(self, date, title, description=None, owner=None, mandatory_attendees=None, optional_attendees=None, start_time=None, end_time=None)`: Добавляет событие в календарь.
-        *    `find_events(self, year, month, day, hour=None, minute=None)`: Поиск событий по заданным критериям.
-        *   `_process_action(self, agent, action) -> bool`: Обрабатывает действия календаря, такие как создание событий.
-        *   `actions_definitions_prompt(self) -> str`: Возвращает описание доступных действий для календаря.
-        *   `actions_constraints_prompt(self) -> str`: Возвращает ограничения на выполнение действий календаря.
-*   `TinyWordProcessor(TinyTool)`:
-    *   **Роль**: Инструмент для создания и редактирования текстовых документов.
-    *   **Атрибуты**:
-        *   `exporter` (ArtifactExporter): Экспортер для сохранения документов.
-        *   `enricher` (TinyEnricher): Обогатитель для расширения текста.
+        *   `__init__`: Конструктор класса.
+        *   `add_event(date, title, description, owner, mandatory_attendees, optional_attendees, start_time, end_time)`: Метод для добавления события в календарь.
+        *   `find_events(year, month, day, hour, minute)`: Метод для поиска событий в календаре (не реализован).
+        *   `_process_action(agent, action)`: Метод для обработки действия `CREATE_EVENT`. Парсит JSON из `action['content']` и добавляет событие.
+        *    `actions_definitions_prompt() -> str`: Метод возвращает описание действия `CREATE_EVENT` для календаря.
+        *    `actions_constraints_prompt() -> str`: Метод возвращает ограничения для действий календаря.
+*   **`TinyWordProcessor`** (наследуется от `TinyTool`):
+    *   **Роль**: Инструмент для работы с текстовыми документами. Позволяет агентам создавать, обогащать и экспортировать документы.
+    *   **Атрибуты**: отсутствуют, только те что унаследованы от родительского класса
     *   **Методы**:
-        *   `__init__(self, owner=None, exporter=None, enricher=None)`: Инициализация текстового процессора.
-        *   `write_document(self, title, content, author=None)`: Создает и сохраняет документ, при необходимости расширяя и экспортируя его.
-        *   `_process_action(self, agent, action) -> bool`: Обрабатывает действия текстового процессора, такие как создание документов.
-        *   `actions_definitions_prompt(self) -> str`: Возвращает описание доступных действий для текстового процессора.
-        *   `actions_constraints_prompt(self) -> str`: Возвращает ограничения на выполнение действий текстового процессора.
+        *   `__init__`: Конструктор класса, инициализирует `exporter` и `enricher`.
+        *   `write_document(title, content, author)`: Метод для создания документа. Использует `TinyEnricher` для обогащения и `ArtifactExporter` для экспорта в разные форматы.
+        *   `_process_action(agent, action)`: Метод для обработки действия `WRITE_DOCUMENT`. Парсит JSON из `action['content']` и создает документ.
+         *    `actions_definitions_prompt() -> str`: Метод возвращает описание действия `WRITE_DOCUMENT` для вордпроцессора.
+         *    `actions_constraints_prompt() -> str`: Метод возвращает ограничения для действий вордпроцессора.
 
 **Функции:**
 
-*   `check_valid_fields(data, valid_keys)`: Проверяет, что переданные данные JSON содержат только разрешенные ключи.
-*   `dedent(text)`: Удаляет отступы в многострочных строках.
+*   **`_process_action(agent, action)`** (в каждом подклассе):
+    *   **Аргументы**:
+        *   `agent`: Агент, вызывающий действие.
+        *   `action`: Словарь с описанием действия.
+    *   **Возвращаемое значение**: `bool`. `True`, если действие выполнено успешно, `False` в противном случае.
+    *   **Назначение**: Реализует логику выполнения конкретного действия для каждого инструмента.
+*   **`write_document(title, content, author)`** в `TinyWordProcessor`
+    *   **Аргументы**:
+        *   `title` (str): Заголовок документа.
+        *   `content` (str): Содержание документа.
+        *   `author` (str): Автор документа.
+    *   **Возвращаемое значение**: `None`.
+    *   **Назначение**: Создает документ, обогащает его с помощью `TinyEnricher` и экспортирует в различные форматы с помощью `ArtifactExporter`.
+*   **`add_event(date, title, description, owner, mandatory_attendees, optional_attendees, start_time, end_time)`** в `TinyCalendar`
+     *  **Аргументы**:
+        *  `date` (str): Дата события.
+        *  `title` (str): Название события.
+        *  `description` (str): Описание события.
+        *  `owner` (str): Владелец события.
+        *  `mandatory_attendees` (list): Список обязательных участников.
+        *  `optional_attendees` (list): Список приглашенных участников.
+        *  `start_time` (str): Время начала события.
+        *  `end_time` (str): Время окончания события.
+    *   **Возвращаемое значение**: `None`.
+    *   **Назначение**: Добавляет событие в календарь.
 
 **Переменные:**
 
-*   `logger`: Логгер, настроенный для записи сообщений от `tinytroupe`.
-*   `prompt`: Переменные, содержащие текстовые описания действий и ограничений.
+*   `logger`: Объект `logging.Logger` для записи логов.
+*   `prompt`: Многострочная строка для описания действий и их ограничений, используется в `actions_definitions_prompt()` и `actions_constraints_prompt()` методах.
+*   `valid_keys`: Список допустимых ключей для JSON-содержимого в методах `_process_action`.
+*   `self.calendar`: Атрибут словаря, содержащий все события календаря.
+*    `action`: Словарь, содержащий информацию о действии, которое нужно выполнить, используется в методе `_process_action`.
+*    `doc_spec`: Словарь, содержащий параметры документа (заголовок, содержание, автор).
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   В классе `TinyCalendar` метод `find_events` не реализован.
-*   В `TinyCalendar._process_action` не обрабатывается добавление параметров `owner`, `mandatory_attendees`, `optional_attendees`, `start_time`, `end_time` к событию.
-*   В `TinyCalendar` не продумана система уведомления приглашенных на события агентов.
-*   В `TinyWordProcessor` не предусмотрена обработка ошибок при экспорте артефактов.
-*   Не все методы `_process_action` возвращают значение `True` или `False` в зависимости от успеха обработки.
-*   Отсутствует проверка типов данных при передаче параметров в методы.
-*   Импорт `copy` не используется, его можно убрать.
-*   Стоит добавить тесты для каждого из методов и классов.
+*   **Обработка ошибок JSON:** В `_process_action` `TinyWordProcessor` используется `try-except` для обработки `json.JSONDecodeError`, но следует также обработать другие возможные ошибки, связанные с отсутствием ключей или неверным форматом данных.
+*   **`TinyCalendar`:** Функциональность календаря не завершена, в частности, методы `find_events` не реализован, необходимо добавить логику поиска событий. Также надо реализовать оповещение приглашенных о событии.
+*   **`actions_constraints_prompt`:** В классе `TinyCalendar` метод `actions_constraints_prompt()` пуст, нужно добавить ограничения для действий календаря.
+*   **`copy` import**: Модуль `copy` импортируется, но нигде не используется в файле, этот импорт стоит удалить.
+*   **Обработка JSON в TinyCalendar**: В методе `_process_action` класса `TinyCalendar` не обрабатывается случай когда при попытке распарсить JSON с помощью `json.loads` возникает ошибка.
 
-**Взаимосвязи с другими частями проекта:**
+**Взаимосвязь с другими частями проекта:**
 
-*   `tinytroupe.utils`: Используется для общих утилит.
-*   `tinytroupe.extraction`: Используется для экспорта артефактов, что связывает инструменты с возможностью сохранения результатов.
-*   `tinytroupe.enrichment`: Используется для обогащения контента, что связывает инструменты с возможностью улучшения и расширения данных.
-*   `src.gs`: не используется в данном коде, но в других файлах проекта, вероятно, `src` это корень проекта, а `gs` это модуль глобальных настроек.
+*   **`tinytroupe.utils`:** Классы `TinyTool`, `TinyCalendar` и `TinyWordProcessor` используют `utils.check_valid_fields` и `utils.dedent` для валидации и форматирования данных.
+*   **`tinytroupe.extraction`:** `TinyWordProcessor` использует `ArtifactExporter` для экспорта сгенерированных документов.
+*   **`tinytroupe.enrichment`:** `TinyWordProcessor` использует `TinyEnricher` для обогащения контента документов.
 
-Этот анализ предоставляет подробное описание функциональности кода, его взаимодействия и потенциальных областей для улучшения.
+**Общая цепочка:**
+
+1.  Агенты используют инструменты (`TinyCalendar`, `TinyWordProcessor`) для выполнения задач.
+2.  Инструменты обрабатывают действия агентов, проверяют права доступа и логируют предупреждения о побочных эффектах.
+3.  `TinyWordProcessor` использует `TinyEnricher` для обогащения документов и `ArtifactExporter` для сохранения результатов.
+4.  Все взаимодействие с инструментами происходит через метод `process_action`.
+5. `actions_definitions_prompt()` и `actions_constraints_prompt()` предоставляют информацию об использовании инструментов.
+
+В целом, код предоставляет базовую структуру для инструментов, используемых агентами, с возможностью расширения и добавления новых функциональностей.

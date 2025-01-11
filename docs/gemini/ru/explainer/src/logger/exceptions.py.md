@@ -1,323 +1,261 @@
-## ИНСТРУКЦИЯ:
+## Анализ кода `src/logger/exceptions.py`
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+### 1. <алгоритм>
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
-    которые импортируются при создании диаграммы.
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+**Общая логика:**
+Модуль определяет иерархию пользовательских исключений, используемых в приложении. `CustomException` является базовым классом, который обрабатывает логирование ошибок. Другие классы исключений наследуются от `CustomException` или других стандартных исключений, адаптируя их под конкретные ситуации (ошибки ввода/вывода, проблемы с продуктами, KeePass, WebDriver, PrestaShop и т.д.).
 
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
+**Блок-схема:**
 
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+```mermaid
+graph LR
+    A[Start] --> B(CustomException.__init__);
+    B --> C{e is None?};
+    C -- Yes --> D[Log: "Exception occurred: {self}"];
+    C -- No --> E[Log: "Exception occurred: {self}"];
+    E --> F[Log: "Original exception: {e}"];
+    D --> G(CustomException.handle_exception);
+    F --> G;
+    G --> H[End];
+
+    I[Raise FileNotFoundError] --> J(CustomException.__init__);
+    J --> K(CustomException.handle_exception)
+    K --> L[End];
+    
+    M[Raise ProductFieldException] --> N(CustomException.__init__);
+    N --> O(CustomException.handle_exception);
+    O --> P[End];
+    
+    Q[Raise KeePassException] --> R(KeePassError.__init__);
+    R --> S[End];
+    
+    T[Raise DefaultSettingsException] --> U(CustomException.__init__);
+    U --> V(CustomException.handle_exception);
+    V --> W[End];
+    
+    X[Raise WebDriverException] --> Y(WebDriverException.__init__);
+    Y --> Z[End];
+    
+     A1[Raise ExecuteLocatorException] --> A2(CustomException.__init__);
+    A2 --> A3(CustomException.handle_exception);
+    A3 --> A4[End];
+    
+    B1[Raise PrestaShopException] --> B2(PrestaShopException.__init__);
+    B2 --> B3[End];
+    
+    C1[Raise PrestaShopAuthenticationError] --> C2(PrestaShopException.__init__);
+    C2 --> C3[End];
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#ccf,stroke:#333,stroke-width:2px
+     style L fill:#ccf,stroke:#333,stroke-width:2px
+     style P fill:#ccf,stroke:#333,stroke-width:2px
+     style S fill:#ccf,stroke:#333,stroke-width:2px
+     style W fill:#ccf,stroke:#333,stroke-width:2px
+     style Z fill:#ccf,stroke:#333,stroke-width:2px
+    style A4 fill:#ccf,stroke:#333,stroke-width:2px
+     style B3 fill:#ccf,stroke:#333,stroke-width:2px
+     style C3 fill:#ccf,stroke:#333,stroke-width:2px
+```
+
+**Примеры:**
+
+*   **`CustomException`**: Когда возникает общая ошибка, не связанная с конкретным типом, создается экземпляр `CustomException` с сообщением и, возможно, оригинальным исключением.
+    ```python
+    try:
+        # Some code that might fail
+        raise ValueError("Invalid value")
+    except ValueError as e:
+        raise CustomException("Failed to process value", e)
     ```
 
-3. **<объяснение>**: Предоставьте подробные объяснения:
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
-   - **Переменные**: Их типы и использование.
-   - Выделите потенциальные ошибки или области для улучшения.
+*   **`FileNotFoundError`**: Когда файл не найден, создается экземпляр `FileNotFoundError`.
+    ```python
+    try:
+        with open("nonexistent_file.txt", "r") as f:
+            pass
+    except FileNotFoundError as e:
+        raise FileNotFoundError("File not found", e)
+    ```
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+*   **`PrestaShopException`**:  Когда возникает ошибка при взаимодействии с PrestaShop API, создается экземпляр `PrestaShopException` с деталями ошибки.
+     ```python
+     try:
+        # Some code that might fail with PrestaShop
+        raise Exception("PrestaShop Error", 500, "Invalid data", 1002)
+     except Exception as e:
+       raise PrestaShopException(msg="Error from PrestaShop API", ps_error_msg="Invalid data", ps_error_code=1002, error_code=500)
+    ```
 
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
-
-```markdown
-## <алгоритм>
-
-### Общая схема работы модуля `exceptions.py`
-
-1.  **Инициализация:**
-    *   Задается переменная ``.
-    *   Импортируются необходимые модули и классы:
-        *   `Optional` из `typing` для указания необязательных типов.
-        *   `logger` из `src.logger.logger` для логирования.
-        *   `WebDriverException` из `selenium.common.exceptions` для обработки ошибок веб-драйвера.
-        *   `CredentialsError`, `BinaryError`, `HeaderChecksumError`, `PayloadChecksumError`, `UnableToSendToRecycleBin` из `pykeepass.exceptions` для обработки ошибок KeePass.
-
-2.  **Определение базового класса исключений `CustomException`:**
-    *   Конструктор `__init__`:
-        *   Принимает сообщение об ошибке `message` типа `str`, опциональное исключение `e` типа `Exception` и флаг `exc_info` типа `bool`.
-        *   Вызывает конструктор родительского класса `Exception`.
-        *   Сохраняет оригинальное исключение `e` в атрибуте `original_exception`.
-        *   Сохраняет значение флага `exc_info` в атрибуте `exc_info`.
-        *   Вызывает метод `handle_exception`.
-        *   Пример: `CustomException("Файл не найден", FileNotFoundError("file.txt"))`
-    *   Метод `handle_exception`:
-        *   Логирует сообщение об ошибке с помощью `logger.error`.
-        *   Если присутствует `original_exception`, логирует его с помощью `logger.debug`.
-        *   Содержит закомментированную часть для логики восстановления.
-
-3.  **Определение производных классов исключений:**
-    *   `FileNotFoundError`: Наследуется от `CustomException` и `IOError`. Представляет ошибку отсутствия файла.
-        *   Пример: `raise FileNotFoundError("Файл config.ini не найден")`
-    *   `ProductFieldException`: Наследуется от `CustomException`. Представляет ошибки, связанные с полями продукта.
-        *   Пример: `raise ProductFieldException("Неверный формат поля 'цена'")`
-    *   `KeePassException`: Наследуется от нескольких исключений из `pykeepass.exceptions`. Представляет ошибки подключения к базе данных KeePass.
-        *   Пример: `raise KeePassException("Ошибка чтения базы данных KeePass")`
-    *   `DefaultSettingsException`: Наследуется от `CustomException`. Представляет ошибки, связанные с настройками по умолчанию.
-        *   Пример: `raise DefaultSettingsException("Неверные настройки по умолчанию")`
-    *   `WebDriverException`: Наследуется от `WDriverException` из `selenium.common.exceptions`. Представляет ошибки веб-драйвера.
-        *   Пример: `raise WebDriverException("Не удалось найти элемент на странице")`
-    *   `ExecuteLocatorException`: Наследуется от `CustomException`. Представляет ошибки исполнителя локаторов.
-        *   Пример: `raise ExecuteLocatorException("Не удалось выполнить локатор")`
-
-4.  **Определение класса исключений `PrestaShopException`:**
-    *   Конструктор `__init__`:
-        *   Принимает сообщение об ошибке `msg` типа `str`, опциональный код ошибки `error_code` типа `int`, сообщение об ошибке PrestaShop `ps_error_msg` типа `str` и опциональный код ошибки PrestaShop `ps_error_code` типа `int`.
-        *   Сохраняет значения в атрибутах.
-        *    Пример: `PrestaShopException("Ошибка PrestaShop", 500, "Internal Server Error", 500)`
-    *   Метод `__str__`:
-        *   Возвращает строковое представление ошибки PrestaShop или сообщения, если первое отсутствует.
-
-5.  **Определение производного класса исключений `PrestaShopAuthenticationError`:**
-    *   Наследуется от `PrestaShopException`. Представляет ошибки аутентификации PrestaShop (Unauthorized).
-        *   Пример: `raise PrestaShopAuthenticationError("Ошибка аутентификации в PrestaShop")`
-
-### Поток данных:
-
-1.  Исключения возникают в различных частях кода.
-2.  Если исключение является пользовательским, оно наследуется от `CustomException`.
-3.  `CustomException` логирует ошибку с помощью `logger`.
-4.  Исключения `PrestaShopException` и `PrestaShopAuthenticationError` не логируются напрямую через  `CustomException`, но могут быть обработаны другим способом.
-5.  Обработка исключений выполняется в блоках `try...except`, где перехватываются и обрабатываются соответствующие типы исключений.
-
-## <mermaid>
+### 2. <mermaid>
 
 ```mermaid
 classDiagram
     class CustomException {
-        -original_exception: Optional<Exception>
+        -original_exception: Optional[Exception]
         -exc_info: bool
-        +__init__(message: str, e: Optional<Exception], exc_info: bool)
+        +__init__(message: str, e: Optional[Exception], exc_info: bool)
         +handle_exception()
     }
     class FileNotFoundError {
-        <<exception>>
     }
     class ProductFieldException {
-        <<exception>>
     }
     class KeePassException {
-        <<exception>>
     }
-    class DefaultSettingsException {
-      <<exception>>
+     class DefaultSettingsException {
     }
-   class WebDriverException {
-        <<exception>>
+    class WebDriverException {
     }
     class ExecuteLocatorException {
-        <<exception>>
     }
     class PrestaShopException {
-        -msg: str
-        -error_code: Optional<int>
+       -msg: str
+        -error_code: Optional[int]
         -ps_error_msg: str
-        -ps_error_code: Optional<int>
-        +__init__(msg: str, error_code: Optional<int], ps_error_msg: str, ps_error_code: Optional<int])
+        -ps_error_code: Optional[int]
+        +__init__(msg: str, error_code: Optional[int], ps_error_msg: str, ps_error_code: Optional[int])
         +__str__()
     }
     class PrestaShopAuthenticationError {
-       <<exception>>
     }
-
+    
     CustomException <|-- FileNotFoundError
     CustomException <|-- ProductFieldException
     CustomException <|-- DefaultSettingsException
     CustomException <|-- ExecuteLocatorException
     PrestaShopException <|-- PrestaShopAuthenticationError
+    
     KeePassException --|> CredentialsError
     KeePassException --|> BinaryError
     KeePassException --|> HeaderChecksumError
     KeePassException --|> PayloadChecksumError
     KeePassException --|> UnableToSendToRecycleBin
+    
     WebDriverException --|> WDriverException
-    CustomException <|-- ExecuteLocatorException
+
+    
+    
+    
+    class CredentialsError{
+    }
+    class BinaryError{
+    }
+    class HeaderChecksumError{
+    }
+    class PayloadChecksumError{
+    }
+    class UnableToSendToRecycleBin{
+    }
+     class WDriverException{
+    }
+
 ```
 
-### Анализ зависимостей `mermaid`:
+**Анализ зависимостей:**
 
-*   **`CustomException`**: Базовый класс для большинства пользовательских исключений. Он содержит общую логику для инициализации и обработки исключений, включая логирование.
-    *   `original_exception`:  Хранит исходное исключение, если таковое имеется.
-    *   `exc_info`:  Флаг, указывающий, нужно ли логировать информацию об исключении.
-    *   `__init__`: Конструктор класса, инициализирует атрибуты и вызывает `handle_exception()`.
-    *   `handle_exception`:  Метод, который логирует ошибку и исходное исключение (если оно есть) с использованием `logger`.
-*   **`FileNotFoundError`**: Исключение, возникающее, когда файл не найден. Наследуется от `CustomException` и `IOError`.
-*   **`ProductFieldException`**:  Исключение, возникающее при проблемах с полями продукта. Наследуется от `CustomException`.
-*   **`KeePassException`**:  Исключение, связанное с ошибками при работе с KeePass. Наследуется от нескольких исключений из `pykeepass.exceptions`, что позволяет обрабатывать различные ошибки, связанные с KeePass.
-    *   `CredentialsError`, `BinaryError`, `HeaderChecksumError`, `PayloadChecksumError`, `UnableToSendToRecycleBin`: Наследует от различных классов ошибок `pykeepass.exceptions`,  используются для специфичных ошибок.
-*   **`DefaultSettingsException`**:  Исключение, возникающее при проблемах с настройками по умолчанию. Наследуется от `CustomException`.
-*   **`WebDriverException`**:  Исключение, связанное с ошибками веб-драйвера. Наследуется от  `WDriverException` из `selenium.common.exceptions`.
-*  **`ExecuteLocatorException`**: Исключение, связанное с ошибками при работе с локаторами. Наследуется от `CustomException`.
-*   **`PrestaShopException`**: Базовый класс для ошибок PrestaShop.  Содержит специфичные атрибуты для ошибок PrestaShop.
-    *   `msg`: Сообщение об ошибке.
-    *   `error_code`:  Код ошибки.
-    *   `ps_error_msg`:  Сообщение об ошибке от PrestaShop.
-    *   `ps_error_code`: Код ошибки от PrestaShop.
-    *   `__init__`:  Конструктор для инициализации атрибутов.
-    *   `__str__`: Метод для строкового представления исключения.
-*  **`PrestaShopAuthenticationError`**:  Исключение, возникающее при ошибках аутентификации в PrestaShop. Наследуется от `PrestaShopException`.
-*  **Связи**:
-    *   `CustomException` является базовым классом для исключений, связанных с общими ошибками приложения.
-    *   `PrestaShopException` является базовым классом для исключений, связанных с PrestaShop.
-    *   `KeePassException` объединяет специфические исключения `pykeepass.exceptions` для удобства использования.
-    *   `WebDriverException` связан с исключениями `selenium.common.exceptions`.
+*   **`CustomException`**:
+    *   Это базовый класс для большинства пользовательских исключений в модуле.
+    *   Он имеет атрибуты для хранения исходного исключения (`original_exception`) и флага для информации об исключении (`exc_info`).
+    *   Метод `__init__` инициализирует объект, вызывая конструктор родительского класса `Exception`.
+    *   Метод `handle_exception` регистрирует ошибку и исходное исключение, если оно существует.
+*   **`FileNotFoundError`**: Наследуется от `CustomException` и `IOError`, используется для ошибок, связанных с файлами.
+*   **`ProductFieldException`**: Наследуется от `CustomException`, используется для ошибок, связанных с полями продукта.
+*  **`KeePassException`**: Наследуется от нескольких исключений из библиотеки `pykeepass` для обработки ошибок, связанных с KeePass.
+*  **`DefaultSettingsException`**: Наследуется от `CustomException`, используется для ошибок, связанных с настройками по умолчанию.
+*   **`WebDriverException`**: Наследуется от `selenium.common.exceptions.WebDriverException`, используется для ошибок, связанных с Selenium WebDriver.
+*   **`ExecuteLocatorException`**: Наследуется от `CustomException`, используется для ошибок, связанных с выполнением локаторов.
+*   **`PrestaShopException`**:
+    *   Наследуется от `Exception`.
+    *   Содержит атрибуты для хранения сообщения об ошибке, кода ошибки и деталей ошибки PrestaShop.
+    *   Метод `__str__` возвращает читаемое представление ошибки.
+*   **`PrestaShopAuthenticationError`**: Наследуется от `PrestaShopException`, используется для ошибок аутентификации PrestaShop.
 
-## <объяснение>
+### 3. <объяснение>
 
-### Импорты:
+**Импорты:**
 
-*   `from typing import Optional`: Импортирует `Optional` для указания необязательных типов. Это используется, например, в `CustomException` для `e: Optional[Exception]`, что означает, что исключение `e` может быть, а может и не быть передано.
-*   `from src.logger.logger import logger`: Импортирует экземпляр логгера `logger` из модуля `src.logger.logger`. Этот логгер используется для записи информации об исключениях.
-*   `from selenium.common.exceptions import WebDriverException as WDriverException`: Импортирует `WebDriverException` из пакета `selenium.common.exceptions` и переименовывает его в `WDriverException`. Это используется для обработки исключений, связанных с веб-драйвером.
-*   `from pykeepass.exceptions import CredentialsError, BinaryError, HeaderChecksumError, PayloadChecksumError, UnableToSendToRecycleBin`: Импортирует специфичные исключения из пакета `pykeepass.exceptions`, связанные с ошибками при работе с базой данных KeePass.
+*   `from typing import Optional`: Импортирует `Optional` для указания, что переменная может быть либо определенного типа, либо `None`.
+*   `from src.logger.logger import logger`: Импортирует объект логгера из модуля `src.logger.logger`.
+*    `from selenium.common.exceptions import WebDriverException as WDriverException`: Импортирует исключение `WebDriverException` из библиотеки `selenium`, переименовывая его в `WDriverException`
+*   `from pykeepass.exceptions import ...`: Импортирует несколько исключений из библиотеки `pykeepass` для обработки ошибок, связанных с KeePass.
 
-### Классы:
+**Классы:**
 
-1.  **`CustomException`**:
-    *   **Роль**: Базовый класс для всех пользовательских исключений в приложении. Предоставляет общую функциональность для инициализации и логирования исключений.
+*   **`CustomException`**:
+    *   **Роль**: Базовый класс для всех пользовательских исключений.
     *   **Атрибуты**:
-        *   `original_exception`: Содержит оригинальное исключение, если таковое имеется. Тип `Optional[Exception]`.
-        *   `exc_info`: Флаг для указания, нужно ли логировать информацию об исключении. Тип `bool`.
+        *   `original_exception`:  Хранит оригинальное исключение, которое вызвало текущее, если оно есть.
+        *   `exc_info`:  Флаг, указывающий, нужно ли логировать информацию об исключении.
     *   **Методы**:
-        *   `__init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True)`: Конструктор, инициализирует атрибуты и вызывает `handle_exception`.
-        *   `handle_exception(self)`: Логирует сообщение об ошибке и оригинальное исключение (если оно есть) с использованием `logger`.
-    *   **Взаимодействие**: Используется как базовый класс для других исключений, обеспечивая общий механизм обработки и логирования.
+        *   `__init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True)`: Инициализирует исключение, принимая сообщение, оригинальное исключение (необязательно) и флаг логирования.
+        *   `handle_exception(self)`: Обрабатывает исключение, записывая сообщение об ошибке в лог и, если доступно, оригинальное исключение.
+    *   **Взаимодействие**:  Используется как родительский класс для других пользовательских исключений, обеспечивая общую логику логирования.
 
-2.  **`FileNotFoundError`**:
-    *   **Роль**: Представляет ошибку отсутствия файла.
-    *   **Атрибуты**: Нет дополнительных атрибутов.
-    *   **Методы**: Нет дополнительных методов.
-    *   **Взаимодействие**: Наследуется от `CustomException` и `IOError`, расширяя его поведение для конкретного случая.
+*   **`FileNotFoundError`**:
+    *   **Роль**: Исключение для ошибок, когда файл не найден.
+    *   **Наследование**: Наследуется от `CustomException` и `IOError`.
+    *   **Взаимодействие**:  Используется в коде, где выполняются файловые операции, для обработки ситуаций, когда файл не может быть открыт.
 
-3.  **`ProductFieldException`**:
-    *   **Роль**: Представляет ошибки, связанные с полями продукта.
-    *   **Атрибуты**: Нет дополнительных атрибутов.
-    *   **Методы**: Нет дополнительных методов.
-    *   **Взаимодействие**: Наследуется от `CustomException`, расширяя его поведение для конкретного случая.
+*   **`ProductFieldException`**:
+    *   **Роль**: Исключение для ошибок, связанных с полями продукта.
+    *   **Наследование**: Наследуется от `CustomException`.
+    *   **Взаимодействие**:  Используется в коде, где обрабатываются данные продуктов.
 
-4.  **`KeePassException`**:
-    *   **Роль**: Представляет ошибки, связанные с подключением к KeePass.
-    *   **Атрибуты**: Нет дополнительных атрибутов.
-    *   **Методы**: Нет дополнительных методов.
-    *   **Взаимодействие**: Наследуется от множества специфичных исключений `pykeepass.exceptions`, объединяя их для удобства использования.
+*    **`KeePassException`**:
+    *   **Роль**: Исключение для ошибок, связанных с KeePass.
+    *   **Наследование**: Наследуется от нескольких классов исключений библиотеки `pykeepass`.
+    *   **Взаимодействие**:  Используется в коде, где происходит взаимодействие с базой данных KeePass, для обработки ошибок аутентификации, бинарных данных, и проблем с хеш-суммами заголовков и полезной нагрузки.
 
-5.  **`DefaultSettingsException`**:
-    *  **Роль**: Представляет ошибки, связанные с настройками по умолчанию.
-    *   **Атрибуты**: Нет дополнительных атрибутов.
-    *   **Методы**: Нет дополнительных методов.
-    *   **Взаимодействие**: Наследуется от `CustomException`, расширяя его поведение для конкретного случая.
+*    **`DefaultSettingsException`**:
+    *   **Роль**: Исключение для ошибок, связанных с настройками по умолчанию.
+    *   **Наследование**: Наследуется от `CustomException`.
+    *   **Взаимодействие**:  Используется в коде, где проверяются настройки по умолчанию.
 
-6. **`WebDriverException`**:
-     *   **Роль**: Представляет ошибки, связанные с веб-драйвером.
-     *   **Атрибуты**: Нет дополнительных атрибутов.
-     *   **Методы**: Нет дополнительных методов.
-     *   **Взаимодействие**: Наследуется от `WDriverException` из `selenium.common.exceptions`, расширяя его поведение для конкретного случая.
+*   **`WebDriverException`**:
+    *   **Роль**: Исключение для ошибок, связанных с Selenium WebDriver.
+    *   **Наследование**: Наследуется от `WDriverException` (переименованный импорт).
+    *   **Взаимодействие**:  Используется в коде, который управляет браузерами через Selenium, для обработки ошибок, связанных с веб-драйвером.
 
-7. **`ExecuteLocatorException`**:
-    *   **Роль**: Представляет ошибки, связанные с работой с локаторами.
-    *   **Атрибуты**: Нет дополнительных атрибутов.
-    *   **Методы**: Нет дополнительных методов.
-    *   **Взаимодействие**: Наследуется от `CustomException`, расширяя его поведение для конкретного случая.
+*   **`ExecuteLocatorException`**:
+    *   **Роль**: Исключение для ошибок, связанных с выполнением локаторов.
+    *   **Наследование**: Наследуется от `CustomException`.
+    *   **Взаимодействие**:  Используется в коде, где динамически выполняются локаторы элементов.
 
-8.  **`PrestaShopException`**:
-    *   **Роль**: Базовый класс для ошибок PrestaShop WebService.
+*   **`PrestaShopException`**:
+    *   **Роль**: Базовое исключение для ошибок, связанных с PrestaShop.
     *   **Атрибуты**:
-        *   `msg`: Сообщение об ошибке. Тип `str`.
-        *   `error_code`: Код ошибки. Тип `Optional[int]`.
-        *   `ps_error_msg`: Сообщение об ошибке от PrestaShop. Тип `str`.
-        *   `ps_error_code`: Код ошибки от PrestaShop. Тип `Optional[int]`.
+        *   `msg`: Сообщение об ошибке.
+        *   `error_code`: Код ошибки.
+        *   `ps_error_msg`: Сообщение об ошибке PrestaShop.
+        *   `ps_error_code`: Код ошибки PrestaShop.
     *   **Методы**:
-        *   `__init__(self, msg: str, error_code: Optional[int] = None, ps_error_msg: str = '', ps_error_code: Optional[int] = None)`: Конструктор, инициализирует атрибуты.
-        *   `__str__(self)`: Возвращает строковое представление ошибки PrestaShop или общего сообщения, если ps_error_msg отсутствует.
-    *   **Взаимодействие**: Используется как базовый класс для специфичных ошибок PrestaShop.
+        *   `__init__(self, msg: str, error_code: Optional[int] = None, ps_error_msg: str = '', ps_error_code: Optional[int] = None)`: Инициализирует исключение.
+        *   `__str__(self)`: Возвращает сообщение об ошибке или сообщение от PrestaShop.
+    *   **Взаимодействие**:  Используется как базовое исключение для ошибок PrestaShop, от которого наследуются более специализированные исключения.
 
-9.  **`PrestaShopAuthenticationError`**:
-    *   **Роль**: Представляет ошибки аутентификации PrestaShop.
-    *   **Атрибуты**: Нет дополнительных атрибутов.
-    *   **Методы**: Нет дополнительных методов.
-    *   **Взаимодействие**: Наследуется от `PrestaShopException`, расширяя его поведение для конкретного случая.
+*   **`PrestaShopAuthenticationError`**:
+    *   **Роль**: Исключение для ошибок аутентификации PrestaShop.
+    *   **Наследование**: Наследуется от `PrestaShopException`.
+    *   **Взаимодействие**:  Используется, когда ошибка аутентификации при работе с PrestaShop API.
 
-### Переменные:
+**Переменные**:
 
-*   ``: Глобальная переменная, определяющая режим работы приложения.  Может использоваться для переключения между режимами разработки и продакшена (но не используется в данном коде).
+*   В основном используются локальные переменные внутри методов, такие как `message`, `e` в `CustomException.__init__` или `msg`, `error_code`, `ps_error_msg`, `ps_error_code` в `PrestaShopException.__init__`.
 
-### Функции:
+**Потенциальные ошибки и улучшения**:
 
-*   В данном коде нет явных функций, кроме методов классов.
+1.  **Логирование `exc_info`**: В `CustomException` есть атрибут `exc_info`, но он нигде не используется в методе `handle_exception`. Можно добавить `logger.exception(f"Exception occurred: {self}", exc_info=self.exc_info)` чтобы использовать этот флаг.
+2.  **Обработка исключений**: В `handle_exception` есть комментарий: `# Add recovery logic, retries, or other handling as necessary.`. Это место можно расширить для добавления логики восстановления после ошибки.
+3.  **Типизация**: Можно использовать более конкретные типы для `error_code` и `ps_error_code` в `PrestaShopException`, например, `int` вместо `Optional[int]`, если они всегда должны быть целыми числами, когда присутствуют.
+4.  **Сообщения об ошибках**: Сообщения об ошибках (в исключениях) могут быть более информативными для разработчика, например, включать имя файла или поля, вызвавшие ошибку.
 
-### Потенциальные ошибки и области для улучшения:
+**Взаимосвязь с другими частями проекта:**
 
-*   **Отсутствие обработки исключений на верхнем уровне**: Код определяет исключения, но не показывает, как и где они перехватываются и обрабатываются. Нужно гарантировать, что в других частях приложения, где эти исключения могут быть вызваны, существуют блоки `try-except`, корректно обрабатывающие их.
-*   **Жесткая привязка к `logger`**:  Использование `logger` прямо в методе `handle_exception` делает класс `CustomException` зависимым от конкретной реализации логирования. Можно рассмотреть возможность передачи логгера через параметр, чтобы класс стал более гибким.
-*   **Не все исключения логируются**: `PrestaShopException` и `PrestaShopAuthenticationError` не используют механизм логирования `CustomException`. Возможно, следует пересмотреть архитектуру или добавить логику для их логирования.
-*   **Закомментированный код в `handle_exception`**: Нужно либо реализовать логику восстановления (например, повторные попытки), либо удалить закомментированный код.
-*   **Отсутствие документации для специфичных ошибок KeePass**: `KeePassException` наследуется от нескольких исключений, но нет явного указания, когда какое исключение вызывается. Это может затруднить понимание и обработку ошибок в других частях приложения.
-*   **Отсутствие конкретных примеров использования исключений**: В коде описаны классы исключений, но нет примеров, как и когда они должны быть использованы в других модулях.
-*   **Отсутствие обработки ошибок в `PrestaShopException`**: Хотя код и предоставляет методы для форматирования сообщений об ошибках, отсутствует обработка данных ошибок, получаемых из PrestaShop API.
-*   **Режим `dev`**: Глобальная переменная `MODE` установлена в `'dev'`, но не используется нигде в данном коде. Возможно, это задел на будущее использование, но в текущем виде это просто лишняя переменная.
+*   **`src.logger.logger`**: Используется для логирования ошибок. Все пользовательские исключения используют этот модуль для записи своих ошибок, что обеспечивает централизованное логирование.
+*   **`src`**: Так как этот модуль находится внутри `src`, он предназначен для работы с другими модулями пакета. Эти исключения могут использоваться в любом модуле, который может вызвать ошибку.
+*   **`selenium`**: `WebDriverException` используется при работе с Selenium.
+*   **`pykeepass`**: `KeePassException` используется для обработки ошибок при работе с базой данных KeePass.
+*   **PrestaShop API**:  `PrestaShopException` и `PrestaShopAuthenticationError` используются при работе с PrestaShop API.
 
-### Цепочка взаимосвязей с другими частями проекта:
-
-1.  **`src.logger.logger`**: Модуль `exceptions.py` напрямую зависит от модуля `src.logger.logger` для логирования ошибок. Это означает, что если модуль логирования не работает, то ошибки в `exceptions.py` не будут логироваться, что критично для отладки и мониторинга приложения.
-2. **Другие модули** : Остальные модули, использующие классы исключений, будут зависеть от этого модуля. Например, модули, работающие с PrestaShop, будут использовать `PrestaShopException` и `PrestaShopAuthenticationError`. Модули, которые работают с файлами, будут использовать `FileNotFoundError`, и т.д.
-3. **`selenium.common.exceptions`**: При возникновении ошибок при работе с веб-драйвером, будет использоваться  `WebDriverException`.
-4.  **`pykeepass.exceptions`**: При возникновении ошибок при работе с базой данных `KeePass`, будет использоваться `KeePassException`.
-
-Таким образом, модуль `exceptions.py` является важной частью системы обработки ошибок в приложении и имеет взаимосвязи с модулями логирования, веб-драйвера, KeePass и другими частями проекта, которые могут вызывать эти исключения.
-
-**Дополнительно**:
-
-Примеры использования исключений в других частях проекта:
-* В модуле работы с PrestaShop API:
-```python
-    try:
-        # Код взаимодействия с PrestaShop API
-        pass
-    except PrestaShopAuthenticationError as e:
-        logger.error(f"Ошибка аутентификации PrestaShop: {e}")
-    except PrestaShopException as e:
-        logger.error(f"Ошибка PrestaShop: {e}, код ошибки: {e.error_code}, ps_error_msg: {e.ps_error_msg}, ps_error_code: {e.ps_error_code}")
-```
-* В модуле обработки настроек:
-```python
-    try:
-        # Код загрузки настроек
-        pass
-    except DefaultSettingsException as e:
-         logger.error(f"Ошибка настроек по умолчанию: {e}")
-
-```
-* В модуле загрузки файла:
-```python
-    try:
-        with open("config.ini", "r") as f:
-             # Код загрузки файла
-             pass
-    except FileNotFoundError as e:
-        logger.error(f"Файл не найден: {e}")
-```
-```mermaid
-    flowchart TD
-        Start --> ImportLogger[Import Logger from src.logger.logger]
-        ImportLogger --> DefineCustomException[Define CustomException class <br> Handles exception logging]
-        DefineCustomException --> DefineSubExceptions[Define sub-exceptions <br> FileNotFoundError, ProductFieldException, etc]
-        DefineSubExceptions --> PrestaShopException[Define PrestaShopException <br> For PrestaShop WebService errors]
-        PrestaShopException --> PrestaShopAuthError[Define PrestaShopAuthenticationError <br> For auth errors]
-        DefineSubExceptions --> End
-        PrestaShopAuthError --> End
-        classDef classFill fill:#f9f,stroke:#333,stroke-width:2px
-        ImportLogger:::classFill
-        DefineCustomException:::classFill
-        DefineSubExceptions:::classFill
-        PrestaShopException:::classFill
-        PrestaShopAuthError:::classFill
-```
+Таким образом, модуль `src/logger/exceptions.py` является важной частью инфраструктуры обработки ошибок в проекте, обеспечивая стандартизированный способ создания и обработки исключений с возможностью логирования.

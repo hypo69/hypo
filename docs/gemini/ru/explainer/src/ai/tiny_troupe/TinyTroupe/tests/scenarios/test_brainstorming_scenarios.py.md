@@ -1,158 +1,137 @@
 ## АНАЛИЗ КОДА: `test_brainstorming_scenarios.py`
 
-### 1. **<алгоритм>**
+### 1. <алгоритм>
 
 **Блок-схема:**
 
-1.  **`test_brainstorming_scenario(setup, focus_group_world)`**:
-    *   Начало тестового сценария.
-    *   Принимает `setup` (предположительно, для настройки окружения) и `focus_group_world` (объект `TinyWorld`, представляющий мир агентов).
-    *   Пример: `test_brainstorming_scenario(None, my_world)`
+```
+Start --> SetUp(setup, focus_group_world):
+    - Инициализируется тестовая среда (мир) с помощью фикстуры `focus_group_world`.
+    - Мир (объект `TinyWorld`) присваивается переменной `world`.
+    
+SetUp --> Broadcast(world, message):
+    - В мир отправляется сообщение с инструкцией для мозгового штурма.
+    - Сообщение: "Folks, we need to brainstorm ideas..."
 
-2.  **`world = focus_group_world`**:
-    *   Инициализация локальной переменной `world` объектом `TinyWorld`.
-    *   Пример: `world` = `instance of TinyWorld`
+Broadcast --> Run(world, steps=1):
+    - Симуляция мира запускается на 1 шаг. Это позволяет агентам в мире общаться и взаимодействовать.
 
-3.  **`world.broadcast(...)`**:
-    *   Отправка сообщения всем агентам в мире `world`.
-    *   Сообщение: запрос на мозговой штурм идей для новых функций AI в Microsoft Word.
-    *   Пример: `world.broadcast("Folks, we need to brainstorm...")`
+Run --> GetAgent(name="Lisa"):
+    - Из мира извлекается агент с именем "Lisa" (`TinyPerson` instance).
 
-4.  **`world.run(1)`**:
-    *   Запуск симуляции на один шаг (предположительно, для обработки сообщения и реакций агентов).
-    *   Пример: Агенты `Lisa`, `Oscar` и `Marcos` обрабатывают запрос.
+GetAgent --> ListenAndAct(agent, message):
+    - Агент "Lisa" получает сообщение с запросом обобщить идеи мозгового штурма.
+    - Сообщение: "Can you please summarize the ideas that the group came up with?"
 
-5.  **`agent = TinyPerson.get_agent_by_name("Lisa")`**:
-    *   Получение агента `Lisa` из мира `world`.
-    *   Пример: `agent` = объект `TinyPerson` с именем "Lisa"
+ListenAndAct --> CreateExtractor():
+    - Создается экземпляр `ResultsExtractor` для извлечения результатов.
 
-6.  **`agent.listen_and_act(...)`**:
-    *   Отправка запроса агенту `Lisa` на суммирование идей.
-    *   Пример: Агент `Lisa` формирует ответ на вопрос.
+CreateExtractor --> ExtractResults(extractor, agent, objective, situation):
+    - Из агента извлекаются результаты, используя `ResultsExtractor`, с определенной целью и описанием ситуации.
+    - Цель: "Summarize the the ideas that the group came up with, explaining each idea as an item of a list. Describe in details the benefits and drawbacks of each."
+    - Ситуация: "A focus group to brainstorm ideas for a new product."
+    
+ExtractResults --> PrintResults(results):
+    - Результаты извлечения выводятся на экран.
 
-7.  **`extractor = ResultsExtractor()`**:
-    *   Инициализация объекта `ResultsExtractor` для извлечения результатов.
-    *   Пример: `extractor` = новый экземпляр класса `ResultsExtractor`
+PrintResults --> AssertProposition(results):
+    - Проверяется, что результаты соответствуют заданному утверждению.
+    - Утверждение: "The following contains some ideas for new product features or entirely new products: '{results}'"
 
-8.  **`results = extractor.extract_results_from_agent(...)`**:
-    *   Извлечение результатов от агента `Lisa` на основе заданного `extraction_objective` и `situation`.
-    *   Пример: `results` = текстовая строка с суммированными идеями
+AssertProposition --> End
+```
 
-9.  **`print("Brainstorm Results: ", results)`**:
-    *   Вывод результатов в консоль.
-    *   Пример: Вывод строки в формате "Brainstorm Results: [список идей]".
+**Примеры:**
 
-10. **`assert proposition_holds(...)`**:
-    *   Проверка, что извлеченные результаты соответствуют ожидаемым критериям (наличие новых идей).
-    *   Пример: Проверка на наличие ключевых слов или фраз в `results`.
+*   **SetUp**: `focus_group_world` создает виртуальный мир с агентами, готовыми к взаимодействию.
+*   **Broadcast**: Сообщение передается агентам, чтобы инициировать мозговой штурм.
+*   **Run**: Симулируется 1 шаг взаимодействия между агентами, позволяя им обмениваться идеями.
+*   **GetAgent**: Извлекается агент по имени `Lisa` для последующего запроса.
+*   **ListenAndAct**: Агент слушает и обрабатывает запрос на обобщение идей.
+*   **CreateExtractor**: Создается инструмент для извлечения структурированных данных из ответов агента.
+*   **ExtractResults**: Результаты извлекаются и подготавливаются в виде текста, который можно анализировать.
+*   **AssertProposition**: Убеждается, что полученные результаты соответствуют ожидаемому формату и содержанию.
 
-### 2. **<mermaid>**
+### 2. <mermaid>
 
 ```mermaid
 flowchart TD
-    A[test_brainstorming_scenario] --> B{setup, focus_group_world};
-    B --> C[world = focus_group_world];
-    C --> D[world.broadcast("... brainstorm ideas ...")];
-    D --> E[world.run(1)];
-    E --> F[agent = TinyPerson.get_agent_by_name("Lisa")];
-    F --> G[agent.listen_and_act("... summarize ideas ...")];
-    G --> H[extractor = ResultsExtractor()];
-    H --> I[results = extractor.extract_results_from_agent(agent, ...)];
-    I --> J[print("Brainstorm Results: ", results)];
-    J --> K[assert proposition_holds("The following contains ...")];
-    K --> L[End];
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style L fill:#ccf,stroke:#333,stroke-width:2px
+    Start[Начало теста] --> SetUp[Создание тестового окружения: `focus_group_world`]
+    SetUp --> Broadcast[Сообщение: `world.broadcast()`]
+    Broadcast --> RunSim[Запуск симуляции: `world.run(1)`]
+    RunSim --> GetAgent[Получение агента: `TinyPerson.get_agent_by_name("Lisa")`]
+    GetAgent --> ListenAct[Запрос агента: `agent.listen_and_act()`]
+    ListenAct --> CreateExtractor[Создание: `ResultsExtractor()`]
+    CreateExtractor --> ExtractResults[Извлечение результатов: `extractor.extract_results_from_agent()`]
+    ExtractResults --> PrintResults[Вывод результатов: `print(results)`]
+    PrintResults --> AssertResults[Проверка результатов: `assert proposition_holds()`]
+    AssertResults --> End[Конец теста]
 
-    classDef param fill:#ccf,stroke:#333,stroke-width:1px
-    class B param
+    classDef classFill fill:#f9f,stroke:#333,stroke-width:2px
+    class SetUp,Broadcast,RunSim,GetAgent,ListenAct,CreateExtractor,ExtractResults,PrintResults,AssertResults classFill
+
+    style Start fill:#ccf,stroke:#333,stroke-width:2px
+    style End fill:#ccf,stroke:#333,stroke-width:2px
 ```
 
-**Объяснение:**
+**Импорты и зависимости:**
 
-*   `flowchart TD`:  Обозначает, что это блок-схема, и поток данных идет сверху вниз.
-*   `A[test_brainstorming_scenario]`: Начало теста.
-*   `B{setup, focus_group_world}`: Входные параметры функции тестирования.
-*   `C[world = focus_group_world]`:  Инициализация мира.
-*   `D[world.broadcast("... brainstorm ideas ...")]`:  Отправка сообщения о начале мозгового штурма.
-*   `E[world.run(1)]`: Запуск симуляции на один шаг.
-*   `F[agent = TinyPerson.get_agent_by_name("Lisa")]`: Получение агента `Lisa`.
-*   `G[agent.listen_and_act("... summarize ideas ...")]`: Запрос агенту `Lisa` суммировать идеи.
-*   `H[extractor = ResultsExtractor()]`: Создание объекта извлечения результатов.
-*   `I[results = extractor.extract_results_from_agent(agent, ...)]`:  Извлечение результатов от агента.
-*    `J[print("Brainstorm Results: ", results)]`:  Вывод результатов.
-*   `K[assert proposition_holds("The following contains ...")]`: Проверка полученных результатов.
-*   `L[End]`: Конец теста.
+*   `pytest`: Используется для написания и запуска тестов.
+*   `logging`:  Для логирования процесса тестирования (непосредственно в диаграмме не используется, но  зависимость есть).
+*   `sys`: Используется для изменения пути поиска модулей Python, чтобы можно было импортировать модули из других папок.
+*   `tinytroupe`: Основной пакет, содержащий классы и функции для симуляции, создания агентов и обработки результатов.
+*   `tinytroupe.agent.TinyPerson`:  Класс для представления агентов в симуляции.
+*   `tinytroupe.environment.TinyWorld`, `tinytroupe.environment.TinySocialNetwork`: Классы для представления окружения и социальных взаимодействий агентов.
+*   `tinytroupe.factory.TinyPersonFactory`: Фабрика для создания агентов.
+*   `tinytroupe.extraction.ResultsExtractor`: Класс для извлечения результатов из ответов агентов.
+*   `tinytroupe.examples`: Модуль с примерами агентов, используется для создания конкретных персонажей (Lisa, Oscar, Marcos).
+*   `tinytroupe.extraction.default_extractor`:  Экземпляр `ResultsExtractor` по умолчанию.
+*   `tinytroupe.control`: Пакет для управления симуляцией.
+*   `tinytroupe.control.Simulation`:  Класс для управления симуляцией.
+*   `testing_utils`: Модуль с вспомогательными функциями для тестирования.
 
-**Импортированные зависимости (анализ на основе импортов в коде):**
+### 3. <объяснение>
 
-*   `pytest`: Используется для создания и запуска тестов. Зависимость не отображена на диаграмме, так как она относится к тестовому окружению и не влияет на логику работы тестируемого кода.
-*   `logging`: Для логирования информации. Зависимость не отображена на диаграмме, так как она относится к инфраструктуре и не влияет на логику работы тестируемого кода.
-*   `sys`: Используется для модификации пути поиска модулей. Зависимость не отображена на диаграмме, так как она относится к настройке окружения и не влияет на логику работы тестируемого кода.
-*   `tinytroupe` : Главный модуль, содержащий логику моделирования агентов и окружения.
-*   `tinytroupe.agent`: Модуль, содержащий класс `TinyPerson` и связанные с ним классы.
-*   `tinytroupe.environment`: Модуль, содержащий классы `TinyWorld`, `TinySocialNetwork`.
-*   `tinytroupe.factory`: Модуль, содержащий `TinyPersonFactory` для создания агентов.
-*   `tinytroupe.extraction`: Модуль, содержащий классы для извлечения данных, в частности, `ResultsExtractor`.
-*   `tinytroupe.examples`: Модуль, содержащий примеры функций для создания агентов (`create_lisa_the_data_scientist`, `create_oscar_the_architect`, `create_marcos_the_physician`).
-*   `tinytroupe.control`: Модуль, содержащий класс `Simulation`.
-*   `testing_utils`: Модуль, содержащий вспомогательные функции для тестирования, например `proposition_holds`.
-
-### 3. **<объяснение>**
-
-**Импорты:**
-
-*   `pytest`: Фреймворк для тестирования. Непосредственно не влияет на логику тестируемого кода, но используется для запуска и проверки результатов.
-*   `logging`: Для логирования событий и отладки.
-*   `sys`: Используется для добавления директорий в `sys.path`, чтобы Python мог найти модули `tinytroupe`. Позволяет импортировать модули из родительских директорий, что не является стандартным поведением Python.
-*   `tinytroupe`: Это основной модуль, содержащий логику симуляции.
-    *   `tinytroupe.agent`: Содержит класс `TinyPerson`, представляющий агента в симуляции.
-    *   `tinytroupe.environment`: Содержит классы `TinyWorld` (представляет окружение агентов) и `TinySocialNetwork`.
-    *   `tinytroupe.factory`: Содержит `TinyPersonFactory` для создания агентов.
-    *   `tinytroupe.extraction`: Содержит `ResultsExtractor` для извлечения результатов.
-    *   `tinytroupe.examples`: Содержит функции для создания примеров агентов.
-    *    `tinytroupe.control`: Содержит `Simulation`.
-*   `testing_utils`: Кастомный модуль, содержащий функции для тестирования, такие как `proposition_holds`, для проверки результатов.
-
-**Функции:**
-
-*   `test_brainstorming_scenario(setup, focus_group_world)`:
-    *   **Аргументы:**
-        *   `setup`: Предположительно, функция или объект для настройки тестового окружения (не используется в явном виде в этом коде).
-        *   `focus_group_world`: Объект `TinyWorld`, представляющий окружение агентов для тестирования.
-    *   **Возвращаемое значение:** `None`. Функция производит проверку с помощью `assert` и может завершиться с ошибкой (AssertionError), если проверка не пройдет.
-    *   **Назначение:** Проверка сценария мозгового штурма. Создает мир, запускает симуляцию, запрашивает у агента `Lisa` краткое изложение идей, и проверяет, что результаты содержат идеи новых продуктов.
-    *   **Пример:**  `test_brainstorming_scenario(None, world_instance)`.
-
-**Классы:**
-
-*   `TinyPerson`: Класс, представляющий агента в симуляции. Методы и атрибуты:  `get_agent_by_name`, `listen_and_act`.
-*   `TinyWorld`: Класс, представляющий мир симуляции. Методы и атрибуты: `broadcast`, `run`.
-*   `ResultsExtractor`: Класс для извлечения результатов из ответов агентов. Методы и атрибуты: `extract_results_from_agent`.
-
-**Переменные:**
-
-*   `world`: Локальная переменная, хранящая экземпляр `TinyWorld`.
-*   `agent`: Локальная переменная, хранящая экземпляр `TinyPerson`.
-*   `extractor`: Локальная переменная, хранящая экземпляр `ResultsExtractor`.
-*   `results`: Локальная переменная, хранящая извлеченные результаты.
+*   **Импорты:**
+    *   `pytest`:  Используется как основной инструмент для запуска и организации тестов.
+    *   `logging`: Модуль для логирования различных событий и отладки (непосредственно не используется в тесте, но настраивается).
+    *   `sys`:  Позволяет добавлять дополнительные пути к поиску модулей, чтобы скрипт мог импортировать `tinytroupe` из другой директории. Это важно для организации проекта и запуска тестов.
+    *   `tinytroupe`, `tinytroupe.agent`, `tinytroupe.environment`, `tinytroupe.factory`, `tinytroupe.extraction`, `tinytroupe.examples`, `tinytroupe.control`: Эти импорты подключают основные части проекта `TinyTroupe`. Каждый из этих пакетов содержит классы и функции, необходимые для создания симуляций, управления агентами и извлечения результатов.
+    *   `testing_utils`:  Содержит вспомогательные функции для упрощения тестирования, такие как `proposition_holds`, которая проверяет, что результаты теста соответствуют ожиданиям (с помощью LLM).
+*   **Функции:**
+    *   `test_brainstorming_scenario(setup, focus_group_world)`: Основная тестовая функция. Она принимает фикстуры `setup` и `focus_group_world`, предоставляемые `pytest`. Функция тестирует сценарий мозгового штурма, где агенты обсуждают новые идеи.
+        *   `world = focus_group_world`:  Инициализирует виртуальный мир для теста.
+        *   `world.broadcast(...)`:  Отправляет сообщение агентам, инициируя процесс мозгового штурма.
+        *   `world.run(1)`:  Запускает симуляцию на один шаг.
+        *   `agent = TinyPerson.get_agent_by_name("Lisa")`:  Получает агента с именем "Lisa" для дальнейших действий.
+        *   `agent.listen_and_act(...)`: Отправляет запрос агенту "Lisa" с просьбой обобщить результаты мозгового штурма.
+        *   `extractor = ResultsExtractor()`: Создает экземпляр класса `ResultsExtractor` для извлечения результатов.
+        *   `results = extractor.extract_results_from_agent(...)`: Извлекает и структурирует результаты мозгового штурма из ответа агента "Lisa".
+        *   `print("Brainstorm Results: ", results)`: Выводит результаты на консоль.
+        *   `assert proposition_holds(...)`: Проверяет, что извлеченные результаты соответствуют ожидаемому формату и содержанию.
+*   **Переменные:**
+    *   `logger`: Объект логгера, используемый для записи информации о работе теста (напрямую не используется, но есть зависимость).
+    *   `world`:  Экземпляр класса `TinyWorld`, представляющий виртуальный мир, в котором происходит симуляция.
+    *   `agent`:  Экземпляр класса `TinyPerson`, представляющий агента в симуляции (в данном случае `Lisa`).
+    *   `extractor`:  Экземпляр класса `ResultsExtractor`, используемый для извлечения результатов.
+    *   `results`:  Строка, содержащая извлеченные результаты из ответа агента.
+*   **Взаимосвязи с другими частями проекта:**
+    *   Тест использует классы и функции из пакета `tinytroupe`, чтобы создать виртуальную среду, запустить симуляцию, взаимодействовать с агентами и извлекать результаты.
+    *   Функции из `testing_utils` используются для проверки результатов, что делает тесты более надежными.
+*   **Потенциальные ошибки и области для улучшения:**
+    *   Зависимость от фиксированного имени агента `Lisa`. Можно сделать более гибким, передавая имя агента как параметр.
+    *   Результаты выводятся в консоль, но для более серьезного тестирования можно сохранять их в файл.
+    *   Можно добавить больше проверок результатов.
+    *   Проверка утверждений делается с помощью LLM, что может быть нестабильно.
 
 **Цепочка взаимосвязей:**
 
-1.  Тест начинается с создания `TinyWorld` (подразумевается из fixture `focus_group_world`, не показан в коде) и отправки сообщения всем агентам (`world.broadcast()`).
-2.  Симуляция запускается (`world.run(1)`), в результате чего агенты обрабатывают сообщение.
-3.  Агент `Lisa` извлекается из мира по имени (`TinyPerson.get_agent_by_name("Lisa")`).
-4.  `Lisa` получает запрос на суммирование идей (`agent.listen_and_act()`).
-5.  `ResultsExtractor` извлекает результаты (`extractor.extract_results_from_agent()`).
-6.  Результаты проверяются с помощью `proposition_holds()`.
+1.  Тест начинается с создания `TinyWorld`.
+2.  В этот мир помещаются `TinyPerson` (агенты).
+3.  Агенты взаимодействуют (мозговой штурм) с помощью методов `broadcast` и `run`.
+4.  Агент `Lisa` обрабатывает запрос.
+5.  `ResultsExtractor` извлекает результаты из ответов агентов.
+6.  `proposition_holds` (из `testing_utils`) проверяет соответствие результатов ожиданиям.
+7.  Тест либо проходит, либо выдает ошибку.
 
-**Потенциальные ошибки и области для улучшения:**
-
-1.  **Жесткое кодирование имени агента (`Lisa`):** Можно сделать более гибким, чтобы можно было тестировать разных агентов.
-2.  **Магические строки:**  Строки запросов к агентам (`"Can you please summarize..."`) и сообщения в `world.broadcast(...)` могут быть вынесены в константы.
-3.  **Отсутствие setup:** Использование фикстур pytest (`setup`, `focus_group_world`) не показано в коде, что затрудняет понимание полной картины.
-4.  **Недостаточная подробность проверки:** Проверка `proposition_holds` может быть недостаточно строгой, можно добавить более специфичные проверки результатов.
-5.  **Зависимость от состояния LLM:** Результаты зависят от ответов языковой модели, что может быть нестабильным.
-
-Этот код является интеграционным тестом, проверяющим взаимодействие между различными компонентами симуляции (`tinytroupe`). Он демонстрирует создание мира, взаимодействие агентов и извлечение результатов.
+Этот тест предназначен для проверки базовой функциональности мозгового штурма в симуляции `TinyTroupe`. Он гарантирует, что агенты могут общаться, обрабатывать запросы и предоставлять осмысленные результаты.

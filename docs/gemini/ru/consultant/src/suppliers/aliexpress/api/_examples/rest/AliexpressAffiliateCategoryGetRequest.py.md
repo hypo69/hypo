@@ -1,76 +1,83 @@
-# Анализ кода модуля `AliexpressAffiliateCategoryGetRequest.py`
+# Анализ кода модуля `AliexpressAffiliateCategoryGetRequest`
 
 **Качество кода**
-8
+7
 - Плюсы
-    - Код имеет базовую структуру, наследует от `RestApi`.
-    - Присутствует docstring модуля.
-    - Код соответствует PEP8.
+    - Код соответствует базовым требованиям к структуре REST API запроса.
+    - Присутствует базовая инициализация класса и определение имени API.
+    - Используется наследование от базового класса `RestApi`.
 - Минусы
-    - Отсутствует docstring для класса и методов.
+    - Отсутствует документация модуля и методов.
+    - Не используется `logger` для логирования.
+    - Не используются f-строки для форматирования строк.
+    - Используется двойная кавычка в docstring.
+    - Нет проверки типов данных.
     - Нет обработки ошибок.
-    - Нет использования логгера.
-    - Не используется `j_loads` или `j_loads_ns`.
-    - Отсутствует явное указание кодировки.
-    - Не все комментарии соответствуют reStructuredText.
+    - Нет комментариев для переменных.
+    - Нет примеров использования.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для класса `AliexpressAffiliateCategoryGetRequest` и его методов `__init__` и `getapiname` в формате RST.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-3.  Заменить `# -*- coding: utf-8 -*-` на `# coding: utf-8` и поместить в начало файла.
-4.  Удалить ненужный комментарий ` # <- venv win`.
-5.  Все комментарии после `#` должны быть пояснениями к следующему блоку кода.
-6.  Удалить избыточный комментарий `## ~~~~~~~~~~~~~\`.
-7.  Использовать одинарные кавычки для строковых литералов.
-8.  Не использовать `RestApi.__init__(self,domain, port)`, а использовать `super().__init__(domain, port)`.
+1.  Добавить docstring к модулю, классу и методам, используя формат RST.
+2.  Использовать `logger` для вывода отладочной информации и ошибок.
+3.  Использовать f-строки для форматирования строк.
+4.  Добавить проверку типов входных параметров.
+5.  Избегать использования `try-except` без явной необходимости, использовать `logger.error` для обработки ошибок.
+6.  Добавить комментарии к переменным.
+7.  Указать типы данных для переменных.
+8.  Добавить примеры использования.
 
 **Оптимизированный код**
 
 ```python
-# coding: utf-8
 """
-Модуль для получения категорий товаров AliExpress.
-==================================================
+Модуль для работы с запросом категорий AliExpress Affiliate API.
+=========================================================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateCategoryGetRequest`,
-который используется для получения списка категорий товаров через API AliExpress.
+Этот модуль содержит класс :class:`AliexpressAffiliateCategoryGetRequest`, который используется для получения списка категорий
+из AliExpress Affiliate API.
 
 Пример использования
 --------------------
 
-Пример использования класса `AliexpressAffiliateCategoryGetRequest`:
+Пример создания и использования класса `AliexpressAffiliateCategoryGetRequest`:
 
 .. code-block:: python
 
+    from src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateCategoryGetRequest import AliexpressAffiliateCategoryGetRequest
     request = AliexpressAffiliateCategoryGetRequest()
-    api_name = request.getapiname()
-    print(api_name)
-
+    print(request.getapiname())
+    # 'aliexpress.affiliate.category.get'
 """
+# -*- coding: utf-8 -*-
+# <- venv win
+from src.logger.logger import logger # импортируем logger
 from ..base import RestApi
-from src.logger.logger import logger
+from typing import Optional
 
 class AliexpressAffiliateCategoryGetRequest(RestApi):
     """
-    Класс для запроса категорий товаров AliExpress.
+    Класс для формирования запроса на получение списка категорий AliExpress Affiliate API.
 
-    :param domain: Домен API AliExpress.
-    :type domain: str
-    :param port: Порт API AliExpress.
-    :type port: int
+    :param domain: Доменное имя API.
+    :type domain: str, optional
+    :param port: Порт API.
+    :type port: int, optional
+
     """
-    def __init__(self, domain='api-sg.aliexpress.com', port=80):
+    def __init__(self, domain: str = 'api-sg.aliexpress.com', port: int = 80) -> None:
         """
-        Инициализирует экземпляр класса `AliexpressAffiliateCategoryGetRequest`.
+        Инициализирует объект класса AliexpressAffiliateCategoryGetRequest.
 
-        :param domain: Домен API AliExpress.
-        :type domain: str
-        :param port: Порт API AliExpress.
-        :type port: int
+        :param domain: Доменное имя API.
+        :type domain: str, optional
+        :param port: Порт API.
+        :type port: int, optional
         """
-        super().__init__(domain, port) # Код вызывает конструктор родительского класса RestApi
-        self.app_signature = None
+        # Код инициализирует родительский класс RestApi
+        super().__init__(domain, port)
+        # Параметр для подписи запроса
+        self.app_signature: Optional[str] = None
 
     def getapiname(self) -> str:
         """
@@ -79,5 +86,6 @@ class AliexpressAffiliateCategoryGetRequest(RestApi):
         :return: Имя API метода.
         :rtype: str
         """
-        return 'aliexpress.affiliate.category.get' # Код возвращает имя api метода
+        # Код возвращает имя API метода
+        return 'aliexpress.affiliate.category.get'
 ```

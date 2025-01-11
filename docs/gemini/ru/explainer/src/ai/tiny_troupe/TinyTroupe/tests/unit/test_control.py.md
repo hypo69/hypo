@@ -1,181 +1,270 @@
-## АНАЛИЗ КОДА: `test_control.py`
+## <алгоритм>
 
-### 1. <алгоритм>
+### `test_begin_checkpoint_end_with_agent_only`
+1. **Подготовка:**
+   - Удаление файла `control_test.cache.json`, если он существует.
+   - Вызов `control.reset()` для сброса состояния симуляции.
+   - Проверка, что нет запущенных симуляций (`control._current_simulations["default"] is None`).
+2. **Начало симуляции:**
+   - Вызов `control.begin("control_test.cache.json")` для запуска симуляции.
+   - Проверка, что симуляция запущена (`control._current_simulations["default"].status == Simulation.STATUS_STARTED`).
+3. **Инициализация агентов и инструментов:**
+   - Создание `ArtifactExporter` для экспорта данных.
+   - Создание `TinyEnricher` для обогащения данных.
+   - Создание `TinyToolUse` с `TinyWordProcessor`.
+   - Создание агентов `agent_1` (Оскар) и `agent_2` (Лиза) с инструментами.
+   - Определение возраста и национальности для каждого агента.
+4. **Проверка трейсов:**
+   - Проверка, что кэшированный и исполняемый трейсы не `None`.
+5. **Создание чекпоинта:**
+   - Вызов `control.checkpoint()` для сохранения состояния симуляции.
+6. **Действия агентов:**
+   - Агенты задают вопросы.
+7. **Проверка чекпоинта:**
+   - Проверка, что файл `control_test.cache.json` был создан.
+8. **Окончание симуляции:**
+   - Вызов `control.end()` для остановки симуляции.
+   - Проверка, что симуляция остановлена (`control._current_simulations["default"].status == Simulation.STATUS_STOPPED`).
 
-**Общая схема работы тестов:**
+### `test_begin_checkpoint_end_with_world`
+1. **Подготовка:**
+    - Удаление файла `control_test_world.cache.json`, если он существует.
+    - Вызов `control.reset()` для сброса состояния симуляции.
+    - Проверка, что нет запущенных симуляций (`control._current_simulations["default"] is None`).
+2. **Начало симуляции:**
+    - Вызов `control.begin("control_test_world.cache.json")` для запуска симуляции.
+    - Проверка, что симуляция запущена (`control._current_simulations["default"].status == Simulation.STATUS_STARTED`).
+3. **Создание мира:**
+    - Создание `TinyWorld` с агентами Оскаром и Лизой.
+    - Установка доступности всех агентов друг другу.
+4. **Проверка трейсов:**
+   - Проверка, что кэшированный и исполняемый трейсы не `None`.
+5. **Запуск мира:**
+    - Запуск мира на 2 шага (`world.run(2)`).
+6. **Создание чекпоинта:**
+    - Вызов `control.checkpoint()` для сохранения состояния симуляции.
+7. **Проверка чекпоинта:**
+    - Проверка, что файл `control_test_world.cache.json` был создан.
+8. **Окончание симуляции:**
+    - Вызов `control.end()` для остановки симуляции.
+    - Проверка, что симуляция остановлена (`control._current_simulations["default"].status == Simulation.STATUS_STOPPED`).
 
-1.  **Начало теста:**
-    *   Удаление кэш-файла (если существует) для обеспечения чистоты теста.
-    *   Вызов `control.reset()` для сброса состояния системы управления симуляциями.
-    *   Проверка, что нет активных симуляций.
-2.  **Начало симуляции:**
-    *   Вызов `control.begin()` для запуска симуляции, создавая кэш-файл.
-    *   Проверка, что симуляция находится в состоянии "запущена".
-3.  **Действия в симуляции (зависят от теста):**
-    *   Создание агентов (`test_begin_checkpoint_end_with_agent_only`) и добавление им способностей.
-    *   Создание мира (`test_begin_checkpoint_end_with_world`) и запуск симуляции мира.
-    *   Создание агентов через фабрику (`test_begin_checkpoint_end_with_factory`).
-4.  **Сохранение состояния:**
-    *   Вызов `control.checkpoint()` для сохранения текущего состояния симуляции в кэш.
-    *   Проверка существования файла кэша.
-5.  **Завершение симуляции:**
-    *   Вызов `control.end()` для остановки симуляции.
-    *   Проверка, что симуляция находится в состоянии "остановлена".
-6.  **Дополнительные проверки:**
-    *   `test_begin_checkpoint_end_with_factory`: повторение симуляции и проверка идентичности сгенерированных агентов между итерациями.
+### `test_begin_checkpoint_end_with_factory`
+1. **Вспомогательная функция `aux_simulation_to_repeat`:**
+    - Принимает номер итерации и флаг `verbose` для отладки.
+    - **Подготовка:**
+        - Вызов `control.reset()` для сброса состояния симуляции.
+        - Проверка, что нет запущенных симуляций (`control._current_simulations["default"] is None`).
+    - **Начало симуляции:**
+        - Вызов `control.begin("control_test_personfactory.cache.json")` для запуска симуляции.
+        - Проверка, что симуляция запущена (`control._current_simulations["default"].status == Simulation.STATUS_STARTED`).
+    - **Создание фабрики:**
+        - Создание `TinyPersonFactory` для генерации агентов.
+    - **Проверка трейсов:**
+       - Проверка, что кэшированный и исполняемый трейсы не `None`.
+    - **Генерация агента:**
+        - Генерация агента с помощью фабрики.
+        - Проверка, что кэшированный и исполняемый трейсы не `None`.
+    - **Создание чекпоинта:**
+        - Вызов `control.checkpoint()` для сохранения состояния симуляции.
+    - **Проверка чекпоинта:**
+        - Проверка, что файл `control_test_personfactory.cache.json` был создан.
+    - **Окончание симуляции:**
+        - Вызов `control.end()` для остановки симуляции.
+        - Проверка, что симуляция остановлена (`control._current_simulations["default"].status == Simulation.STATUS_STOPPED`).
+    - **Отладка (опционально):**
+        - Если `verbose` установлен в `True`, вывод отладочной информации.
+    - Возврат созданного агента.
+2. **Запуск симуляции №1:**
+    - Вызов `aux_simulation_to_repeat(1, verbose=True)` для первой симуляции.
+    - Получение возраста и национальности агента.
+3. **Запуск симуляции №2:**
+    - Вывод отладочного сообщения.
+    - Вызов `aux_simulation_to_repeat(2, verbose=True)` для второй симуляции.
+    - Получение возраста и национальности агента.
+4. **Проверка результатов:**
+    - Проверка, что возраст и национальность агентов в обеих симуляциях совпадают.
 
-**Примеры:**
-
-*   **`test_begin_checkpoint_end_with_agent_only`**:
-    1.  Удаление `control_test.cache.json`.
-    2.  Инициализация симуляции, создание агентов Oscar и Lisa.
-    3.  Сохранение состояния, вызов `listen_and_act` для агентов.
-    4.  Завершение симуляции.
-*   **`test_begin_checkpoint_end_with_world`**:
-    1.  Удаление `control_test_world.cache.json`.
-    2.  Инициализация симуляции, создание мира с Oscar и Lisa.
-    3.  Запуск мира на 2 итерации, сохранение состояния.
-    4.  Завершение симуляции.
-*   **`test_begin_checkpoint_end_with_factory`**:
-    1.  Удаление `control_test_personfactory.cache.json`.
-    2.  Вызов `aux_simulation_to_repeat`, запуск симуляции.
-    3.  Создание агента через фабрику, сохранение состояния.
-    4.  Завершение симуляции.
-    5.  Повторный вызов `aux_simulation_to_repeat` и сравнение характеристик агентов.
-
-### 2. <mermaid>
+## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Начало теста] --> RemoveCache[Удаление кэш-файла]
-    RemoveCache --> ResetControl[control.reset()]
-    ResetControl --> CheckNoSimulation[Проверка: нет активных симуляций]
-    CheckNoSimulation --> BeginSimulation[control.begin(cache_file)]
-    BeginSimulation --> CheckSimulationStarted[Проверка: симуляция запущена]
-
-    subgraph "test_begin_checkpoint_end_with_agent_only"
-    CheckSimulationStarted --> CreateAgents[Создание агентов (Oscar, Lisa)]
-    CreateAgents --> AddFaculties[Добавление способностей агентам]
+    Start(Start) --> Reset[control.reset() <br> Reset Simulation State]
+    Reset --> CheckNoSim[Assert: <br>No Simulation Running]
+    CheckNoSim --> BeginSim[control.begin(cache_file) <br> Start Simulation with Cache]
+    BeginSim --> CheckSimStarted[Assert: <br> Simulation Started]
+    
+    subgraph test_begin_checkpoint_end_with_agent_only
+        BeginSim --> CreateExporter[ArtifactExporter(output_folder) <br> Create Artifact Exporter]
+        CreateExporter --> CreateEnricher[TinyEnricher() <br> Create Data Enricher]
+        CreateEnricher --> CreateToolUse[TinyToolUse(tools) <br> Create Tool Usage Faculty]
+        CreateToolUse --> CreateAgent1[create_oscar_the_architect() <br> Create Agent 1 (Oscar)]
+         CreateAgent1 --> ConfigureAgent1[agent_1.add_mental_faculties([tooluse_faculty]) <br> Set Agent 1 Mental Faculties]
+        ConfigureAgent1 --> DefineAgent1Attr[agent_1.define("age", 19) <br> agent_1.define("nationality", "Brazilian")<br> Define Agent 1 Attributes]
+        DefineAgent1Attr --> CreateAgent2[create_lisa_the_data_scientist() <br> Create Agent 2 (Lisa)]
+        CreateAgent2 --> ConfigureAgent2[agent_2.add_mental_faculties([tooluse_faculty]) <br> Set Agent 2 Mental Faculties]
+        ConfigureAgent2 --> DefineAgent2Attr[agent_2.define("age", 80) <br> agent_2.define("nationality", "Argentinian") <br> Define Agent 2 Attributes]
+        DefineAgent2Attr --> CheckTraces[Assert: <br> Cached and Execution Traces Exist]
+        CheckTraces --> Checkpoint[control.checkpoint() <br> Save Simulation State]
+        Checkpoint --> Agent1Act[agent_1.listen_and_act("How are you doing?") <br> Agent 1 Action]
+        Agent1Act --> Agent2Act[agent_2.listen_and_act("What\'s up?") <br> Agent 2 Action]
+        Agent2Act --> CheckFileCreated[Assert: <br> Checkpoint File Created]
+        CheckFileCreated --> EndSim[control.end() <br> Stop Simulation]
+        EndSim --> CheckSimStopped[Assert: <br> Simulation Stopped]
+       
+    end
+    
+    subgraph test_begin_checkpoint_end_with_world
+        BeginSim_World[control.begin(cache_file) <br> Start Simulation with Cache]
+        CheckSimStarted --> BeginSim_World
+        BeginSim_World --> CreateWorld[TinyWorld(name, agents) <br> Create Simulation World]
+        CreateWorld --> MakeAccessible[world.make_everyone_accessible() <br> Make Agents Accessible to Each Other]
+        MakeAccessible --> CheckTraces_World[Assert: <br> Cached and Execution Traces Exist]
+        CheckTraces_World --> RunWorld[world.run(2) <br> Run World Simulation]
+        RunWorld --> Checkpoint_World[control.checkpoint() <br> Save Simulation State]
+        Checkpoint_World --> CheckFileCreated_World[Assert: <br> Checkpoint File Created]
+        CheckFileCreated_World --> EndSim_World[control.end() <br> Stop Simulation]
+        EndSim_World --> CheckSimStopped_World[Assert: <br> Simulation Stopped]
+        
+    end
+    
+   subgraph test_begin_checkpoint_end_with_factory
+        BeginSim_Factory[control.begin(cache_file) <br> Start Simulation with Cache]
+       CheckSimStarted --> BeginSim_Factory
+       BeginSim_Factory --> CreateFactory[TinyPersonFactory(description) <br> Create Agent Factory]
+       CreateFactory --> CheckTraces_Factory[Assert: <br> Cached and Execution Traces Exist]
+        CheckTraces_Factory --> GenerateAgent[factory.generate_person(description) <br> Generate Agent from Factory]
+        GenerateAgent --> CheckTraces_Factory2[Assert: <br> Cached and Execution Traces Exist]
+        CheckTraces_Factory2 --> Checkpoint_Factory[control.checkpoint() <br> Save Simulation State]
+        Checkpoint_Factory --> CheckFileCreated_Factory[Assert: <br> Checkpoint File Created]
+        CheckFileCreated_Factory --> EndSim_Factory[control.end() <br> Stop Simulation]
+        EndSim_Factory --> CheckSimStopped_Factory[Assert: <br> Simulation Stopped]
+        CheckSimStopped_Factory --> GetAge1[agent_1.get("age") <br> Get Agent 1 Age]
+        GetAge1 --> GetNationality1[agent_1.get("nationality") <br> Get Agent 1 Nationality]
+        GetNationality1 --> BeginSim_Factory_2[control.begin(cache_file) <br> Start Simulation with Cache]
+         BeginSim_Factory_2 --> CreateFactory_2[TinyPersonFactory(description) <br> Create Agent Factory]
+          CreateFactory_2 --> CheckTraces_Factory_2[Assert: <br> Cached and Execution Traces Exist]
+        CheckTraces_Factory_2 --> GenerateAgent_2[factory.generate_person(description) <br> Generate Agent from Factory]
+        GenerateAgent_2 --> CheckTraces_Factory3[Assert: <br> Cached and Execution Traces Exist]
+        CheckTraces_Factory3 --> Checkpoint_Factory_2[control.checkpoint() <br> Save Simulation State]
+        Checkpoint_Factory_2 --> CheckFileCreated_Factory_2[Assert: <br> Checkpoint File Created]
+         CheckFileCreated_Factory_2 --> EndSim_Factory_2[control.end() <br> Stop Simulation]
+         EndSim_Factory_2 --> CheckSimStopped_Factory_2[Assert: <br> Simulation Stopped]
+         CheckSimStopped_Factory_2 --> GetAge2[agent_2.get("age") <br> Get Agent 2 Age]
+         GetAge2 --> GetNationality2[agent_2.get("nationality") <br> Get Agent 2 Nationality]
+        GetNationality2 --> AssertAgeEqual[Assert: <br> Agent Ages Are Equal]
+        AssertAgeEqual --> AssertNationalityEqual[Assert: <br> Agent Nationalities Are Equal]
+       
     end
 
-     subgraph "test_begin_checkpoint_end_with_world"
-    CheckSimulationStarted --> CreateWorld[Создание мира]
-    CreateWorld --> MakeAccessible[Делаем всех в мире доступными друг другу]
-    MakeAccessible --> RunWorld[Запуск мира (2 шага)]
-    end
-
-
-     subgraph "test_begin_checkpoint_end_with_factory"
-    CheckSimulationStarted --> CreateFactory[Создание фабрики агентов]
-    CreateFactory --> GenerateAgent[Генерация агента]
-    end
-
-
-    CreateAgents --> CheckTraceExists
-    CreateWorld --> CheckTraceExists
-    GenerateAgent --> CheckTraceExists
-    CheckTraceExists[Проверка:  существует cached_trace и execution_trace] --> CheckpointSimulation[control.checkpoint()]
-    CheckpointSimulation --> CheckFileCreated[Проверка: создан кэш-файл]
-    CheckFileCreated --> EndSimulation[control.end()]
-    EndSimulation --> CheckSimulationStopped[Проверка: симуляция остановлена]
-    CheckSimulationStopped --> End[Конец теста]
-
-    style Start fill:#f9f,stroke:#333,stroke-width:2px
-    style End fill:#ccf,stroke:#333,stroke-width:2px
+    AssertNationalityEqual --> End(End)
+    CheckSimStopped --> End
+    CheckSimStopped_World --> End
 ```
 
-**Описание зависимостей в `mermaid`:**
+## <объяснение>
 
-*   `Start`: Начальная точка тестового сценария.
-*   `RemoveCache`: Функция удаления кэш-файла.
-*   `ResetControl`: Функция сброса состояния системы управления симуляциями (`control.reset()`).
-*   `CheckNoSimulation`: Проверка отсутствия активных симуляций до начала теста.
-*   `BeginSimulation`: Функция инициации симуляции (`control.begin()`).
-*   `CheckSimulationStarted`: Проверка статуса симуляции (должна быть "запущена").
-*    `CreateAgents`: Создание агентов (Oscar и Lisa).
-*   `AddFaculties`: Добавление умственных способностей агентам.
-*    `CreateWorld`: Создание мира с агентами.
-*    `MakeAccessible`: Делаем всех агентов в мире доступными друг другу.
-*    `RunWorld`: Запускаем мир на 2 шага.
-*    `CreateFactory`: Создаем фабрику для генерации агентов.
-*    `GenerateAgent`: Создаем агента через фабрику.
-*    `CheckTraceExists`: Проверка что `cached_trace` и `execution_trace` не равны `None`.
-*   `CheckpointSimulation`: Функция сохранения состояния симуляции (`control.checkpoint()`).
-*   `CheckFileCreated`: Проверка создания файла кэша.
-*   `EndSimulation`: Функция завершения симуляции (`control.end()`).
-*   `CheckSimulationStopped`: Проверка статуса симуляции (должна быть "остановлена").
-*   `End`: Конечная точка тестового сценария.
+### Импорты
 
-### 3. <объяснение>
+-   **`pytest`**: Используется для написания и запуска тестов.
+-   **`os`**: Предоставляет функции для взаимодействия с операционной системой, такие как работа с файлами.
+-   **`sys`**: Предоставляет доступ к параметрам и функциям интерпретатора Python. В данном случае, используется для добавления путей к модулям.
+-   **`tinytroupe.examples`**: Содержит функции для создания предустановленных агентов, таких как `create_oscar_the_architect` и `create_lisa_the_data_scientist`.
+-   **`tinytroupe.agent`**: Содержит классы для представления агентов (`TinyPerson`, `TinyToolUse`).
+-   **`tinytroupe.environment`**: Содержит классы для представления окружения (`TinyWorld`).
+-   **`tinytroupe.control`**: Содержит класс `Simulation` и функции для управления симуляциями (`begin`, `checkpoint`, `end`, `reset`).
+-   **`tinytroupe.factory`**: Содержит класс `TinyPersonFactory` для генерации агентов.
+-   **`tinytroupe.enrichment`**: Содержит класс `TinyEnricher` для обогащения данных.
+-   **`tinytroupe.extraction`**: Содержит класс `ArtifactExporter` для экспорта артефактов.
+-   **`tinytroupe.tools`**: Содержит класс `TinyWordProcessor` для обработки текста.
+-   **`logging`**: Используется для логирования сообщений.
+-   **`importlib`**: Используется для динамической загрузки модулей.
+-   **`testing_utils`**: Содержит вспомогательные функции для тестирования, такие как `remove_file_if_exists`.
 
-**Импорты:**
+#### Взаимосвязи с другими пакетами `src.`
+-   `tinytroupe` - это основной пакет, который содержит все компоненты симуляции.
 
-*   `pytest`: Фреймворк для тестирования.
-*   `os`: Модуль для работы с операционной системой (удаление файлов, проверка их существования).
-*   `sys`: Модуль для работы с системными параметрами (изменение пути поиска модулей).
-*   `tinytroupe.examples`: Модуль с примерами создания агентов.
-*   `tinytroupe.agent`: Модуль, содержащий классы `TinyPerson` и `TinyToolUse` (агент и использование инструментов).
-*   `tinytroupe.environment`: Модуль, содержащий класс `TinyWorld` (симуляционная среда).
-*   `tinytroupe.control`: Модуль для управления симуляциями (содержит класс `Simulation`).
-*   `tinytroupe.factory`: Модуль для создания агентов через фабрику.
-*   `tinytroupe.enrichment`: Модуль для обогащения данных.
-*   `tinytroupe.extraction`: Модуль для экспорта артефактов.
-*   `tinytroupe.tools`: Модуль с инструментами для агентов.
-*   `logging`: Модуль для логирования.
-*    `importlib`:  Модуль для импорта модулей динамически.
-*   `testing_utils`: Внутренний модуль с вспомогательными функциями для тестирования (`remove_file_if_exists`).
+### Функции
+#### `test_begin_checkpoint_end_with_agent_only`
+-   **Назначение**: Тестирует процесс начала, создания чекпоинта и окончания симуляции с использованием только агентов.
+-   **Алгоритм**:
+    1. Инициализирует симуляцию и создает агентов.
+    2. Проверяет, что трейсы (кэшированный и исполняемый) существуют.
+    3. Создает чекпоинт.
+    4. Запускает действия агентов.
+    5. Проверяет, что файл чекпоинта был создан.
+    6. Завершает симуляцию.
+    7. Проверяет, что симуляция остановлена.
 
-**Классы:**
+#### `test_begin_checkpoint_end_with_world`
+-   **Назначение**: Тестирует процесс начала, создания чекпоинта и окончания симуляции с использованием мира (`TinyWorld`).
+-   **Алгоритм**:
+    1. Инициализирует симуляцию и создает мир с агентами.
+    2. Делает всех агентов доступными друг другу.
+     3. Проверяет, что трейсы (кэшированный и исполняемый) существуют.
+    4. Запускает мир на два шага.
+    5. Создает чекпоинт.
+    6. Проверяет, что файл чекпоинта был создан.
+    7. Завершает симуляцию.
+    8. Проверяет, что симуляция остановлена.
 
-*   `Simulation`: Класс из `tinytroupe.control`, управляющий жизненным циклом симуляций (создание, запуск, остановка, сохранение). Имеет методы `begin`, `checkpoint`, `end`, и атрибут `status`.
-*   `TinyPerson`: Представляет агента (интеллектуальную сущность) в симуляции.
-*   `TinyToolUse`: Класс для управления инструментами, которыми могут пользоваться агенты.
-*   `TinyWorld`: Класс для представления симуляционной среды, в которой могут взаимодействовать агенты.
-*   `TinyPersonFactory`: Класс для создания агентов на основе описаний.
-*   `ArtifactExporter`: Класс для экспорта артефактов, созданных в симуляции.
-*   `TinyEnricher`: Класс для обогащения данных.
-*   `TinyWordProcessor`: Класс для обработки текста в симуляции.
+#### `test_begin_checkpoint_end_with_factory`
+-   **Назначение**: Тестирует процесс начала, создания чекпоинта и окончания симуляции с использованием фабрики агентов (`TinyPersonFactory`).
+-   **Алгоритм**:
+    1. Использует вспомогательную функцию `aux_simulation_to_repeat` для запуска симуляций.
+    2. Внутри `aux_simulation_to_repeat`:
+        - Инициализирует симуляцию и создает фабрику агентов.
+        - Генерирует агента с помощью фабрики.
+        - Проверяет, что трейсы (кэшированный и исполняемый) существуют.
+        - Создает чекпоинт.
+        - Проверяет, что файл чекпоинта был создан.
+        - Завершает симуляцию.
+    3. Запускает две симуляции.
+    4. Получает возраст и национальность агентов из каждой симуляции.
+    5. Проверяет, что возраст и национальность агентов в обеих симуляциях совпадают.
 
-**Функции:**
+### Вспомогательная Функция `aux_simulation_to_repeat`
+-   **Аргументы**:
+    -   `iteration`: Номер итерации симуляции.
+    -   `verbose`: Флаг для включения отладочного вывода.
+-   **Назначение**: Выполняет шаги симуляции для тестирования с фабрикой.
+-   **Возвращает**: Сгенерированного агента.
 
-*   `test_begin_checkpoint_end_with_agent_only(setup)`: Тестирует запуск, сохранение и завершение симуляции с использованием агентов.
-*   `test_begin_checkpoint_end_with_world(setup)`: Тестирует запуск, сохранение и завершение симуляции с использованием `TinyWorld`.
-*   `test_begin_checkpoint_end_with_factory(setup)`: Тестирует запуск, сохранение и завершение симуляции с использованием `TinyPersonFactory`.
-*   `aux_simulation_to_repeat(iteration, verbose=False)`: Вспомогательная функция для повторения симуляции в тесте с фабрикой.
-*   `remove_file_if_exists(filename)`: Вспомогательная функция для удаления файла, если он существует (из `testing_utils`).
-*   `control.reset()`: Функция сброса состояния системы управления симуляциями (удаляет данные о предыдущих симуляциях).
-*   `control.begin(filename)`: Функция начала симуляции, инициализирует симуляцию и ее кэш.
-*   `control.checkpoint()`: Функция сохранения текущего состояния симуляции.
-*   `control.end()`: Функция завершения симуляции.
+### Переменные
 
-**Переменные:**
+-   `control._current_simulations`: Словарь, содержащий текущие симуляции. Ключом является "default".
+-   `exporter`: Экземпляр класса `ArtifactExporter` для экспорта данных.
+-   `enricher`: Экземпляр класса `TinyEnricher` для обогащения данных.
+-   `tooluse_faculty`: Экземпляр класса `TinyToolUse` для использования инструментов.
+-   `agent_1`, `agent_2`: Экземпляры класса `TinyPerson`, представляющие агентов.
+-   `world`: Экземпляр класса `TinyWorld`, представляющий окружение.
+-    `factory`: Экземпляр класса `TinyPersonFactory`, представляющий фабрику агентов.
+-   `age_1`, `age_2`, `nationality_1`, `nationality_2`: Переменные, хранящие возраст и национальность агентов.
 
-*   `_current_simulations`: Приватная переменная в `tinytroupe.control`, хранит текущие симуляции.
-*   `Simulation.STATUS_STARTED`: Константа, представляющая статус "запущена" для симуляции.
-*   `Simulation.STATUS_STOPPED`: Константа, представляющая статус "остановлена" для симуляции.
-*   `exporter`, `enricher`, `tooluse_faculty`, `agent_1`, `agent_2`, `world`, `factory`, `age_1`, `age_2`, `nationality_1`, `nationality_2` - локальные переменные для тестов.
-*  `logger`: Инстанция логгера для отладки.
+### Классы
 
-**Взаимосвязь с другими частями проекта:**
+-   **`Simulation`**: Класс из `tinytroupe.control`, управляющий состоянием симуляции. Имеет константы статуса `STATUS_STARTED` и `STATUS_STOPPED`.
+-   **`TinyPerson`**: Класс из `tinytroupe.agent`, представляющий агента.
+-   **`TinyToolUse`**: Класс из `tinytroupe.agent`, представляющий возможность использования инструментов агентом.
+-   **`TinyWorld`**: Класс из `tinytroupe.environment`, представляющий окружение, в котором действуют агенты.
+-   **`TinyPersonFactory`**: Класс из `tinytroupe.factory`, создающий агентов.
+-   **`TinyEnricher`**: Класс из `tinytroupe.enrichment`, обогащающий данные.
+-   **`ArtifactExporter`**: Класс из `tinytroupe.extraction`, экспортирующий артефакты.
+-  **`TinyWordProcessor`**: Класс из `tinytroupe.tools`, обрабатывающий текст.
 
-*   Тесты используют классы и функции из пакетов `tinytroupe.agent`, `tinytroupe.environment`, `tinytroupe.control`, `tinytroupe.factory`, `tinytroupe.enrichment`, `tinytroupe.extraction` и `tinytroupe.tools`.
-*   Модуль `testing_utils` предоставляет вспомогательные функции.
+### Потенциальные ошибки и области для улучшения
 
-**Потенциальные ошибки и области для улучшения:**
+-   **Жестко заданные имена файлов**: Имена файлов, такие как `"control_test.cache.json"`, жестко заданы в коде. Это может затруднить масштабирование и тестирование с различными файлами.
+-   **Магические значения**: Числа `19` и `80` для возраста, а также `"Brazilian"` и `"Argentinian"` для национальности, могут быть вынесены в константы или параметры.
+-   **Повторение кода**: Код для проверки наличия трейсов повторяется в каждом тестовом сценарии, что может быть вынесено в отдельную функцию.
+-   **Отсутствие проверок на ошибки**:  В коде нет обработки исключений (например, если файл не может быть создан или удален).
+-   **Зависимость от `default` ключа**: Использование  `_current_simulations["default"]`  может создать проблемы, если понадобится поддерживать несколько одновременных симуляций.
 
-*   Тесты используют строковые литералы для имен кэш-файлов, что может привести к опечаткам.
-*   Жестко закодированные пути к файлам.
-*   Отсутствует подробное тестирование методов агентов и их взаимодействия.
+### Цепочка взаимосвязей с другими частями проекта
 
-**Цепочка взаимосвязей:**
-
-`test_control.py` --> `tinytroupe.control` (основной модуль для тестирования)
-`test_control.py` --> `tinytroupe.agent`
-`test_control.py` --> `tinytroupe.environment`
-`test_control.py` --> `tinytroupe.factory`
-`test_control.py` --> `tinytroupe.enrichment`
-`test_control.py` --> `tinytroupe.extraction`
-`test_control.py` --> `tinytroupe.tools`
-`test_control.py` --> `testing_utils`
-
-Этот анализ дает полное представление о структуре, функциональности и взаимодействии компонентов в `test_control.py`.
+-   Тесты используют `tinytroupe.examples` для создания предустановленных агентов, что демонстрирует зависимость от модуля примеров.
+-   Агенты из `tinytroupe.agent` взаимодействуют с инструментами из `tinytroupe.tools` и окружением из `tinytroupe.environment`, показывая взаимодействие между различными компонентами проекта.
+-   Симуляция, управляемая через `tinytroupe.control`, зависит от классов агентов и окружения, что подчеркивает центральную роль управления симуляцией.
+-   Фабрика из `tinytroupe.factory` используется для создания агентов, что показывает взаимосвязь между фабрикой и агентами.
+-   Экспортер из `tinytroupe.extraction` используется для сохранения данных, что показывает, как данные перемещаются между разными частями проекта.
+-   Обогатитель из `tinytroupe.enrichment` используется для модификации данных, что показывает, как данные могут быть обработаны во время выполнения симуляции.

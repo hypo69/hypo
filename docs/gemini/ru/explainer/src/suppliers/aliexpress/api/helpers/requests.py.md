@@ -1,183 +1,154 @@
 ## <алгоритм>
 
-**1. `api_request(request, response_name, attempts=1)`:**
-   - Функция принимает объект `request` (предположительно, объект, способный выполнять HTTP-запросы), строку `response_name` (ключ для извлечения данных из ответа) и опциональное количество `attempts` (по умолчанию 1).
-   - **Пример:**
-     ```python
-     # request - это какой-то объект с методом getResponse()
-     # response_name = "get_product_detail"
-     result = api_request(request, "get_product_detail")
-     ```
+**Блок-схема:**
 
-**2. Выполнение запроса:**
-   - Пытается получить ответ от `request` с помощью `request.getResponse()`.
-   - **Пример:**
-     ```python
-      try:
-         response = request.getResponse()
-      except Exception as error:
-         ...
-     ```
-   - **Поток данных:** Объект `request` -> `request.getResponse()` -> `response`
+```mermaid
+graph LR
+    A[Начало: Вызов `api_request` с `request`, `response_name`, `attemps`] --> B{Попытка получить `response` из `request.getResponse()`};
+    B -- Успех --> C{Извлечение `resp_result` из `response[response_name]`};
+    B -- Ошибка --> D{Обработка ошибки `request.getResponse()`};
+    C --> E{Преобразование `response` в JSON и обратно в `SimpleNamespace`};
+     E -- Успех --> F{Проверка `response.resp_code`};
+    E -- Ошибка --> G{Обработка ошибки преобразования `response`};
+    F -- `response.resp_code` == 200 --> H{Возврат `response.result`};
+    F -- `response.resp_code` != 200 --> I{Логгирование предупреждения о некорректном `resp_code`};
+     G --> J{Логгирование критической ошибки преобразования `response`};
+    H --> K[Конец: Возврат результата];
+    I --> K
+    J --> K
+    D --> L{Логирование ошибки и возврат None}
+    L --> K
+```
 
-**3. Обработка ошибок запроса:**
-   - Если при выполнении запроса возникает исключение, то происходит перехват ошибки.
-   - Далее происходит возврат из функции.
-   - **Пример:**
-     ```python
-      except Exception as error:           
-         #  Обработка ошибки
-         return None
-     ```
-    - **Поток данных:** `error` -> `logger.critical`
+**Примеры для каждого логического блока:**
 
-**4. Извлечение данных из ответа:**
-   - Извлекает нужные данные из ответа по ключу `response_name` и вложенному ключу `resp_result`
-     ```python
-         response = response[response_name]['resp_result']
-     ```
-   - Конвертирует данные в JSON-строку, а затем обратно в объект `SimpleNamespace`. Это позволяет обращаться к данным как к атрибутам объекта.
-   - **Пример:**
-     ```python
-         response = json.dumps(response)
-         response = json.loads(response, object_hook=lambda d: SimpleNamespace(**d))
-     ```
-   - **Поток данных:** `response` -> `json.dumps()` -> `JSON строка` -> `json.loads()` -> `SimpleNamespace`
-
-**5. Обработка ошибок извлечения данных:**
-   - Если при извлечении данных возникает исключение, то происходит перехват ошибки.
-    - Далее происходит запись ошибки в лог и возврат из функции.
-    - **Пример:**
-     ```python
-         except Exception as error:
-           logger.critical(error.message, pprint(error), exc_info=False)
-           return None
-     ```
-   - **Поток данных:** `error` -> `logger.critical`
-
-**6. Проверка кода ответа:**
-   - Проверяет `response.resp_code`. Если код равен 200, то возвращает `response.result`.
-   - **Пример:**
-     ```python
-         if response.resp_code == 200:
-            return response.result
-         else:
-            ...
-     ```
-
-**7. Обработка ошибок кода ответа:**
-   - Если `response.resp_code` не равен 200, то в лог записывается предупреждение и функция завершается.
-   - Если во время проверки возникает ошибка, она также логируется и функция завершается.
-   - **Пример:**
-     ```python
-         else:
-            logger.warning(f'Response code {response.resp_code} - {response.resp_msg}',exc_info=False)
-            return None
-      except Exception as ex:
-         logger.error(None, ex, exc_info=False)
-         return None
-     ```
-   - **Поток данных:** `response.resp_code` -> `logger.warning` or `ex` -> `logger.error`
-
-**8. Возврат результата:**
-   - Возвращает извлеченные данные `response.result` или `None`.
-   - **Пример:**
-     ```python
-     return response.result # при успешном запросе и коде 200
-     return # или None, если была ошибка
-     ```
-   - **Поток данных:** `response.result` -> выход функции
+1.  **A:** `api_request(aliexpress_request_object, 'get_items_details', 3)`. `aliexpress_request_object` - это объект, имеющий метод `getResponse`, `'get_items_details'` - имя ключа в ответе, `3`- количество попыток.
+2.  **B:** Попытка вызова `aliexpress_request_object.getResponse()`. Если запрос к API успешен, возвращается ответ, иначе - исключение.
+    *   **Пример успеха:** `response` = `{'get_items_details': {'resp_result': {'resp_code': 200, 'resp_msg': 'ok', 'result': {'items': [...]}}}}`
+    *   **Пример ошибки:** `error` = `ConnectionError("Failed to connect")`
+3.  **C:** Извлечение `'resp_result'` из ответа по ключу `'get_items_details'`:
+    *   **Пример:** `response` =  `{'resp_code': 200, 'resp_msg': 'ok', 'result': {'items': [...]}}`
+4.  **D:** Логирование ошибки `request.getResponse()`, возврат `None`
+    *   **Пример:** Запись в лог сообщения `ConnectionError("Failed to connect")`
+5.  **E:** Преобразование `response` из JSON строки в `SimpleNamespace` для удобного доступа к полям как к атрибутам объекта:
+    *   **Пример:**  `response` после преобразования будет `SimpleNamespace(resp_code=200, resp_msg='ok', result=SimpleNamespace(items=[...]))`
+6.  **F:** Проверка кода ответа на равенство `200`.
+    *   **Пример успеха:** `response.resp_code` = `200`
+    *   **Пример неудачи:** `response.resp_code` = `404`
+7.  **G:**  Логирование  ошибки преобразования `response`
+    *   **Пример:** Запись в лог сообщения `KeyError('resp_result')`
+8.  **H:** Возврат результата из объекта `response`:
+    *   **Пример:**  `response.result` = `SimpleNamespace(items=[...])`
+9.  **I:** Логирование предупреждения о том, что код ответа не `200`.
+    *   **Пример:** Запись в лог сообщения `Response code 404 - not found`
+10. **J:** Логирование критической ошибки преобразования `response`
+    *   **Пример:** Запись в лог сообщения `TypeError('object of type int has no len()')`
+11. **K:** Конец функции, возврат результата или `None`.
+12. **L:** Логирование ошибки и возврат None
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Start api_request] --> GetResponse[Call request.getResponse() and get response]
-    GetResponse -- Success --> ExtractResponseData[Extract resp_result from response]
-    GetResponse -- Exception --> HandleRequestError[Log the error and return None]
-    ExtractResponseData -- Success --> ConvertToSimpleNamespace[Convert response to SimpleNamespace]
-    ExtractResponseData -- Exception --> HandleExtractionError[Log the error and return None]
-    ConvertToSimpleNamespace --> CheckResponseCode[Check response.resp_code]
-    CheckResponseCode -- resp_code == 200 --> ReturnResult[Return response.result]
-    CheckResponseCode -- resp_code != 200 --> LogWarning[Log warning about response code]
-    LogWarning --> End[Return None]
-    ReturnResult --> End
-    HandleRequestError --> End
-    HandleExtractionError --> End
-    End[End api_request]
+    A[api_request(request, response_name, attemps)] --> B{request.getResponse()};
+    B -- Success --> C{response[response_name]['resp_result']};
+    B -- Exception --> D[logger.critical(error) & return None];
+    C --> E{json.dumps(response) & json.loads(..., object_hook=SimpleNamespace)};
+    E -- Success --> F{response.resp_code == 200};
+     E -- Exception --> G[logger.critical(error) & return None];
+    F -- True --> H[return response.result];
+    F -- False --> I[logger.warning(f'Response code {response.resp_code} - {response.resp_msg}') & return None];
+    G --> J[return None]
+    I --> J
+   D -->J
 ```
 
-**Описание зависимостей `mermaid`:**
+**Объяснение `mermaid` диаграммы:**
 
-- **`Start`**: Начало функции `api_request`.
-- **`GetResponse`**:  Вызов метода `getResponse()` объекта `request` для получения ответа.
-- **`ExtractResponseData`**: Извлечение данных `resp_result` из ответа.
-- **`ConvertToSimpleNamespace`**: Конвертация JSON-ответа в объект `SimpleNamespace` для удобного доступа к атрибутам.
-- **`CheckResponseCode`**: Проверка кода ответа `resp_code`.
-- **`ReturnResult`**: Возвращение `response.result` при коде 200.
-- **`LogWarning`**: Логирование предупреждения, если код ответа не равен 200.
-- **`HandleRequestError`**: Логирование и обработка ошибки при выполнении запроса.
-- **`HandleExtractionError`**: Логирование и обработка ошибки при извлечении данных из ответа.
-- **`End`**: Конец выполнения функции `api_request`.
+1.  **`A[api_request(request, response_name, attemps)]`**:
+    *   Это начальный узел, представляющий вызов функции `api_request` с параметрами `request` (объект запроса), `response_name` (ключ для извлечения данных из ответа) и `attemps` (количество попыток).
+2.  **`B{request.getResponse()}`**:
+    *   Это узел, представляющий вызов метода `getResponse()` объекта запроса.
+    *   **Связь:** Зависит от объекта `request`, который должен иметь метод `getResponse()`.
+3.  **`C{response[response_name]['resp_result']}`**:
+    *   Извлечение данных из полученного ответа.
+    *   **Связь:** Зависит от успешного выполнения `request.getResponse()`
+4.  **`D[logger.critical(error) & return None]`**:
+    *   Обработка ошибок при вызове `request.getResponse()`. Логирование ошибки в лог, и возврат `None`.
+    *    **Связь:** Зависит от модуля `logger` из `src.logger.logger`.
+5.  **`E{json.dumps(response) & json.loads(..., object_hook=SimpleNamespace)}`**:
+    *   Преобразование ответа в JSON строку и обратно в объект с использованием `SimpleNamespace`, для удобного доступа к полям ответа.
+    *   **Связь:** Зависит от модуля `json`.
+6.  **`F{response.resp_code == 200}`**:
+    *   Проверка кода ответа.
+    *   **Связь:** Зависит от успешного преобразования ответа в `SimpleNamespace`.
+7.  **`G[logger.critical(error) & return None]`**:
+    *   Обработка ошибок при преобразовании ответа в `SimpleNamespace`. Логирование ошибки в лог, и возврат `None`.
+    *   **Связь:** Зависит от модуля `logger` из `src.logger.logger`.
+8.  **`H[return response.result]`**:
+    *   Возвращение результата, если код ответа равен 200.
+    *   **Связь:** Зависит от успешного прохождения проверки `response.resp_code == 200`.
+9.  **`I[logger.warning(f'Response code {response.resp_code} - {response.resp_msg}') & return None]`**:
+    *   Логирование предупреждения, если код ответа не равен 200, и возврат `None`.
+    *   **Связь:** Зависит от модуля `logger` из `src.logger.logger`.
+10. **`J[return None]`**:
+    *  Конец функции, возврат `None`.
+    *  **Связь:** Зависит от предыдущих узлов `D`, `G`, `I`.
 
 ## <объяснение>
 
 **Импорты:**
 
-- `from types import SimpleNamespace`:  Импортирует класс `SimpleNamespace` для создания объектов, атрибуты которых можно задавать напрямую. Используется для преобразования JSON-объектов в объекты, к полям которых можно обращаться как к атрибутам (например, `response.field_name` вместо `response['field_name']`).
-- `from time import sleep`: Импортирует функцию `sleep` из модуля `time`. В данном коде не используется.
-- `from src.logger.logger import logger`: Импортирует объект `logger` из модуля `src.logger.logger` для логирования сообщений. `src` указывает на то, что это модуль в рамках текущего проекта, который используется для логирования.
-- `from src.utils.printer import pprint`: Импортирует функцию `pprint` из модуля `src.utils.printer`. `pprint` - это, вероятно, функция для "красивого" вывода, используемая для отладочной информации.
-- `import json`: Импортирует модуль `json` для работы с данными в формате JSON.
-- `from ..errors import ApiRequestException, ApiRequestResponseException`: Импортирует кастомные исключения `ApiRequestException` и `ApiRequestResponseException` из модуля ошибок на один уровень выше ( `..` ).
+*   `from types import SimpleNamespace`: Импортируется `SimpleNamespace` из модуля `types`. Используется для создания объектов, атрибуты которых могут быть установлены произвольно.
+*   `from time import sleep`: Импортируется функция `sleep` из модуля `time`, которая может использоваться для задержек, но в данном коде не используется.
+*   `from src.logger.logger import logger`: Импортируется объект `logger` из `src.logger.logger`. Используется для логирования ошибок и предупреждений. Это часть подсистемы логирования проекта.
+*   `from src.utils.printer import pprint`: Импортируется функция `pprint` из `src.utils.printer`. Используется для форматированного вывода данных при логировании.
+*   `import json`: Импортируется стандартный модуль `json` для работы с JSON данными.
+*   `from ..errors import ApiRequestException, ApiRequestResponseException`: Импортируются кастомные исключения из модуля `errors` внутри текущего пакета. Используются для обработки ошибок API.
 
-**Функции:**
+**Функция `api_request`:**
 
-- `api_request(request, response_name, attemps:int = 1)`:
-  - **Аргументы:**
-    - `request`: Объект, у которого есть метод `getResponse()`, который выполняет запрос к API. Это может быть объект из библиотеки `requests` или аналогичной.
-    - `response_name`: Строка, которая является ключом для извлечения данных из ответа API.
-    - `attemps`: Целое число, указывающее количество попыток запроса. По умолчанию равно 1.
-  - **Возвращаемое значение:**
-    -  `response.result` если код ответа 200, в противном случае возвращает `None`.
-  - **Назначение:**
-    - Выполняет API-запрос, обрабатывает ответ, проверяет код ответа и возвращает данные.
-  - **Примеры:**
-    ```python
-    # Предполагаем, что существует объект request с методом getResponse
-    # и что API возвращает ответ в JSON формате
-    # Пример использования:
-    result = api_request(request_object, "product_details")
-    if result:
-        print(result.product_name)
-    else:
-        print("Failed to retrieve product details")
-    ```
+*   **Аргументы:**
+    *   `request`: Объект, представляющий запрос к API, который должен иметь метод `getResponse()`.
+    *   `response_name`: Строка, ключ для получения нужной части ответа из API.
+    *   `attemps`: Целое число, представляет количество попыток запроса (по умолчанию 1). (В текущей реализации никак не используется)
+*   **Возвращаемое значение:**
+    *   Возвращает результат (значение поля `result`) из ответа, если запрос успешен и код ответа равен 200.
+    *   Возвращает `None`, если произошла ошибка при выполнении запроса, обработке ответа или код ответа не равен 200.
+
+*   **Назначение:**
+    *   Основная цель функции - выполнить запрос к API, обработать ответ и вернуть результат. Она является своего рода оберткой для запросов к API, обеспечивая единый подход к обработке ответов и ошибок.
+    *   Внутри функции используется блок `try...except` для обработки возможных исключений при выполнении запроса и обработки ответа.
+    *   Функция проверяет `response.resp_code`. Если код 200 -  возвращает  `response.result`, в противном случае возвращает `None`, при этом пишет в лог предупреждение.
+    *   Функция использует  `logger.critical()`  для критических ошибок и `logger.warning()` для предупреждений, `pprint` для вывода данных при логировании.
 
 **Переменные:**
 
-- `response`: Используется для хранения ответа от API и промежуточных результатов обработки.
-- `error`: Используется для хранения объекта исключения при возникновении ошибки.
-- `ex`: Используется для хранения объекта исключения при обработке ошибок ответа.
-- `response_name`: Строка, которая является ключом для извлечения данных из ответа API.
-- `attemps`: Целое число, указывающее количество попыток запроса. По умолчанию равно 1.
+*   `response`:  Переменная для хранения ответа от API. Может быть словарем или объектом.
+*   `error`: Переменная для хранения исключений.
+*   `ex`: Переменная для хранения исключений.
 
 **Потенциальные ошибки и области для улучшения:**
 
-1. **Обработка ошибок:** Сейчас в случае ошибки при выполнении запроса или обработке ответа, функция просто возвращает `None` и в некоторых случаях записывает сообщение в лог. Было бы полезно выбрасывать исключения, чтобы вызывающий код мог адекватно обрабатывать ошибки.
-2.  **Логирование:** В коде есть закомментированные строки, которые выбрасывают исключения и логируют ошибки.
-3.  **Количество попыток `attemps`**: Параметр `attemps` в функции не используется, что ограничивает гибкость повторных запросов при сбоях. Его можно реализовать через цикл `for`.
-4.  **Отсутствие обработки `response_name`**: Код предполагает, что структура ответа всегда одинаковая. Нужно предусмотреть разные структуры ответов.
-5.  **Обработка кодов ответа**: Код обрабатывает только `200`. Необходимо обработать другие статусы.
-6. **Общая обработка исключений**: Функция использует общие блоки `except Exception as error` для обработки исключений, что может затруднить отладку и обработку разных типов ошибок.
-7.  **Обработка пустых ответов**: Не предусмотрена проверка на пустой ответ.
+*   **Отсутствие обработки `attemps`:** Параметр `attemps` заявлен, но не используется, что может вызвать вопросы. Необходимо реализовать механизм повторных попыток, если это является требованием.
+*   **Универсальность обработки исключений:** Обработка исключений может быть более гранулярной. Сейчас все исключения от `request.getResponse()`  обрабатываются одинаково, без разделения по типам ошибок.
+*   **Жесткая привязка к структуре ответа:** Код полагается на конкретную структуру ответа (`response[response_name]['resp_result']`), что делает его уязвимым к изменениям в API.
+*   **Отсутствие обработки ошибок API:** Код комментирует выброс ошибок типа `ApiRequestException`, тем самым пропуская их. Необходимо реализовать более глубокую обработку `ApiRequestException`, так как они предназначены для обработки ошибок именно API.
+*  **Логирование:** Не все сообщения для логирования имеют `exc_info=True` параметр, для того чтобы видеть стек вызова.
+*  **Возврат None:** Возврат `None` в случае ошибки может привести к сложностям при отладке и последующей обработке результатов. Желательно возвращать более информативные результаты или бросать собственные кастомные исключения.
 
-**Цепочка взаимосвязей с другими частями проекта:**
--  `src.logger.logger`: Используется для логирования.
-- `src.utils.printer`: Используется для красивого вывода в логе.
--  `src.suppliers.aliexpress.api.errors`: Используется для обработки ошибок API.
--  Вероятно, вызывается из модулей, которые делают запросы к API Aliexpress (возможно, из `src.suppliers.aliexpress.api`).
+**Взаимосвязи с другими частями проекта:**
 
-**Заключение:**
+*   `src.logger.logger`: Функция `api_request` использует логгер для записи ошибок и предупреждений, что позволяет отслеживать проблемы с запросами к API.
+*   `src.utils.printer`: Функция `pprint` используется для форматирования вывода в лог, что делает его более читабельным.
+*   `src.suppliers.aliexpress.api.errors`: Модуль `errors` используется для кастомных исключений, которые могут возникнуть при работе с API.
+*   `src.suppliers.aliexpress.api`: Функция является частью `aliexpress api`, что предполагает ее использование для конкретных API вызовов.
 
-Код представляет собой функцию `api_request`, которая инкапсулирует логику отправки запроса к API, обработки ответа и обработки ошибок. Функция использует сторонние модули для логирования и работы с JSON, а также кастомные исключения из модуля ошибок. Для повышения надёжности, необходимо улучшить обработку ошибок и добавить функциональность повторных попыток запроса.
+**Цепочка взаимосвязей:**
+
+1.  Функция `api_request` принимает объект запроса (например, `aliexpress_request_object`), который определен в другом месте проекта.
+2.  `api_request` обращается к `logger` для логирования событий.
+3.  `api_request` вызывает метод `getResponse()` объекта запроса.
+4.  `api_request` использует `json` для работы с ответом.
+5.  `api_request` может сгенерировать исключения, определенные в модуле `errors`.
+6.  Результат работы `api_request` может быть передан другим компонентам, например, для парсинга данных или дальнейшей обработки.

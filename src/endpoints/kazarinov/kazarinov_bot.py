@@ -31,9 +31,10 @@ import header
         Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
 ```
 """    
+import header
 from src import gs
-#from src.endpoints.bots.telegram.bot_web_hooks import TelegramBot
-from src.endpoints.bots.telegram.bot_long_polling import TelegramBot
+from src.endpoints.bots.telegram import TelegramWebHooksBot, TelegamLongPoolingBot
+
 from src.endpoints.kazarinov.bot_handlers import BotHandler
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
@@ -45,7 +46,7 @@ from src.logger.logger import logger
 import argparse
 
 
-class KazarinovTelegramBot(TelegramBot, BotHandler):
+class KazarinovTelegramBot(TelegramWebHooksBot, BotHandler):
     """Telegram bot with custom behavior for Kazarinov."""
 
     token: str
@@ -71,7 +72,7 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
         )
         
         # Call parent initializers
-        TelegramBot.__init__(self, self.token)
+        TelegramWebHooksBot.__init__(self, self.token)
         #self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_log))
         BotHandler.__init__(self, getattr(self.config , 'webdriver_name' ,'firefox') )
 

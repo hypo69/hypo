@@ -1,10 +1,9 @@
-## \file /src/product/product_fields/product_fields.py
+## \file /src/endpoints/prestashop/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.product.product_fields 
+.. module:: endpoints.prestashop.product_fields.product_fields
 	:platform: Windows, Unix
 	:synopsis: Расписано каждое поле товара для таблиц престашоп
 
@@ -212,17 +211,19 @@ empty fields template
 
 import asyncio
 from datetime import datetime
-import logging
+
 from enum import Enum
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Dict, Optional
 from types import SimpleNamespace
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
+
 
 import header
 from src import gs
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file
+from src.utils.convertors.dict import dict2ns
 from src.logger import logger
 from src.logger.exceptions import ProductFieldException  # If you have this exception class
 
@@ -234,10 +235,13 @@ class ProductFields:
     lang_index: int
     product_fields_list: List[str] = field(init=False)
     presta_fields: SimpleNamespace = field(init=False)
+
+
     assist_fields_dict: Dict[str, any] = field(default_factory=lambda: {
         'default_image_url': '',
         'images_urls': []
     })
+    base_path:Path = gs.path.endpoints / 'prestashop' 
 
     def __post_init__(self):
         """Инициализация класса после создания экземпляра. Загружаются данные полей, языков и их идентификаторов."""
@@ -255,7 +259,8 @@ class ProductFields:
         Returns:
             bool: True, если загрузка прошла успешно, иначе False.
         """
-        presta_fields_list:list =  read_text_file(gs.path.src / 'product' / 'product_fields' / 'fields_list.txt', as_list=True) 
+
+        presta_fields_list:list =  read_text_file(self.base_path / 'product_fields' / 'fields_list.txt', as_list=True) 
         if not presta_fields_list:
             logger.error(f"Ошибка загрузки файла со списком полей ")
             ...
@@ -267,20 +272,21 @@ class ProductFields:
             logger.error(f"Ошибка конвертации", ex)
             ...
             return
-        
-        data = j_loads (gs.path.src  / 'product' / 'product_fields' / 'product_fields_default_values.json')
-        if not data:
-            logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
+
+        data_ns: SimpleNamespace = j_loads_ns (self.base_path  / 'product_fields' / 'product_fields_default_values.json')
+        if not data_ns:
+            logger.debug(f"Ошибка загрузки полей из файла product_fields_default_values.json")
             ...
-            return 
+            return False
         try:
-            for name, value in data.items():
-                setattr(self.presta_fields, name, value)  # Use setattr on presta_fields
+            for name in data_ns.__dict__: # используем __dict__ для итерации по атрибутам
+                value = getattr(data_ns, name)
+                setattr(self.presta_fields, name, value )  # Use setattr on presta_fields
             return True
         except Exception as ex:
             logger.error(f"Exception ", ex)
             ...
-            return 
+            return False 
 
     @property
     def associations(self) -> Optional[Dict]:
@@ -292,11 +298,6 @@ class ProductFields:
         """Устанавливает словарь ассоциаций."""
         self.presta_fields.associations = value
 
-    
-    @associations.setter
-    def associations(self, value: Dict[str, Optional[str]]):
-        """  <sub>*[setter]*</sub>  Словарь ассоциаций. Список ассоциаций: """
-        self.presta_fields.associations = value
 
     @property    
     def id_product(self) -> Optional[int]:
@@ -435,17 +436,22 @@ class ProductFields:
         value = value if isinstance(value, list) else [value]
         
         for v in value:
-            if not isinstance(v, int):
+            try:
+                v:int = int(v)
+            except Exception as ex:
                 logger.error(f'недопустимое значение для категории {v=}, Должен быть `int`')
                 ...
                 continue
                 
             try:
-                self.presta_fields.associations.categories.update({'id':v})
+                if not hasattr(self.presta_fields.associations, 'categories'):
+                    setattr(self.presta_fields.associations.categories , 'category', [SimpleNamespace(**{'id':v})])
+                    continue
+
+                self.presta_fields.associations.categories.category.append(SimpleNamespace(**{'id':v}))
             
-            except ProductFieldException as ex:
-                logger.error(f"""Ошибка заполнения поля: 'additional_categories' данными {v}
-                Ошибка: """, ex)  
+            except Exception as ex:
+                logger.error(f"""Ошибка заполнения поля: 'additional_categories' данными {v}""", ex)  
                 return
    
 # # # #   5   Магазин по умолчанию

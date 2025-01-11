@@ -1,95 +1,108 @@
-# Анализ кода модуля `AliexpressAffiliateOrderListbyindexRequest.py`
+# Анализ кода модуля `AliexpressAffiliateOrderListbyindexRequest`
 
 **Качество кода**
-8
--  Плюсы
-    - Код соответствует базовым требованиям Python.
-    - Используется класс `RestApi` для определения структуры запроса.
+9
+- Плюсы
+    - Код соответствует PEP8 в части именования классов и функций.
     - Присутствует docstring модуля.
+    - Используется наследование от `RestApi`.
+    - Присутствует `__init__` метод.
+    - Указаны значения по умолчанию для `domain` и `port` в `__init__`.
+    - Есть метод `getapiname`.
 
--  Минусы
-    - Отсутствуют docstring для класса и методов.
-    - Не используется `logger` для логирования.
-    - Использованы двойные кавычки вместо одинарных в docstring.
-    - Нет проверки типов для параметров методов.
-    - Не используются f-строки.
-    - Отсутствуют импорты, если они требуются, например для `logger`.
-    - Использован не рекомендованный shebang для windows ``
+- Минусы
+    - Отсутствует документация (docstring) для класса и методов.
+    - Не используются f-строки для форматирования.
+    - Не импортирован `logger`.
+    - Нет обработки ошибок и логирования.
+    - Нет проверки типов.
+    - Нет примеров использования.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для класса `AliexpressAffiliateOrderListbyindexRequest` и метода `__init__`, `getapiname`.
-2.  Заменить двойные кавычки на одинарные в docstring.
-3.  Добавить использование `logger` для логирования возможных ошибок, хотя в данном случае он и не требуется.
-4.  Добавить импорт `from src.logger.logger import logger`.
-5.  Добавить проверку типов аргументов в методе `__init__`.
-6.  Удалить shebang ``, так как он специфичен для Windows и не рекомендуется к использованию в кроссплатформенном коде.
-7.  Использовать f-строки.
+1.  Добавить `logger` для логирования ошибок и отладки.
+2.  Добавить docstring для класса и методов, включая описание параметров и возвращаемых значений.
+3.  Использовать f-строки для форматирования строк.
+4.  Добавить аннотации типов.
+5.  Добавить обработку ошибок и логирование исключений.
+6.  Добавить примеры использования в docstring.
+7.  Привести в соответствие docstring с ранее обработанными файлами.
+8.  Убрать лишние комментарии, оставить только пояснения к коду.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для работы с запросом списка заказов аффилиата AliExpress по индексу.
-===========================================================================
+Модуль для работы с API Aliexpress, получения списка заказов по индексу.
+======================================================================
 
-Этот модуль определяет класс :class:`AliexpressAffiliateOrderListbyindexRequest`,
-который используется для создания запроса к API AliExpress для получения списка заказов
-аффилиата, используя индекс.
+Этот модуль содержит класс :class:`AliexpressAffiliateOrderListbyindexRequest`,
+который используется для запроса списка заказов через API Aliexpress.
 
 Пример использования
 --------------------
 
-Пример создания объекта запроса:
+Пример использования класса `AliexpressAffiliateOrderListbyindexRequest`:
 
 .. code-block:: python
 
+    from src.suppliers.aliexpress.api.base import RestApi
+    from src.logger import logger
+
     request = AliexpressAffiliateOrderListbyindexRequest()
-    request.start_query_index_id = '12345'
-    request.start_time = '2023-01-01 00:00:00'
-    request.end_time = '2023-01-31 23:59:59'
+    request.app_signature = 'test_signature'
+    request.end_time = '2024-01-20'
+    request.fields = 'orderId,buyerId'
     request.page_size = 20
-    request.fields = 'orderId,gmtCreate,gmtPay,orderStatus'
+    request.start_query_index_id = 0
+    request.start_time = '2024-01-01'
+    request.status = 'WAIT_SELLER_SEND_GOODS'
     print(request.getapiname())
+
+
 """
 # -*- coding: utf-8 -*-
-# ~~~~~~~~~~~~~~
-#  # <- venv win # удалено, так как не рекомендуется
-
-from ..base import RestApi
-# from src.logger.logger import logger # импорт не требуется, так как logger не используется
+# <- venv win
+# ~~~~~~~~~~~~
+from src.suppliers.aliexpress.api.base import RestApi
+from src.logger import logger #  Импорт logger
 
 class AliexpressAffiliateOrderListbyindexRequest(RestApi):
     """
-    Класс для создания запроса списка заказов аффилиата AliExpress по индексу.
+    Класс для запроса списка заказов Aliexpress по индексу.
 
-    :param domain: Домен API.
-    :type domain: str
-    :param port: Порт API.
-    :type port: int
+    Этот класс наследует от `RestApi` и предоставляет методы
+    для формирования и отправки запроса на получение списка заказов
+    с использованием параметров, специфичных для API Aliexpress.
     """
-    def __init__(self, domain: str = 'api-sg.aliexpress.com', port: int = 80):
+    def __init__(self, domain: str = "api-sg.aliexpress.com", port: int = 80) -> None:
         """
-        Инициализирует объект запроса.
+        Инициализирует экземпляр класса AliexpressAffiliateOrderListbyindexRequest.
+
+        Args:
+            domain (str): Домен API Aliexpress. По умолчанию "api-sg.aliexpress.com".
+            port (int): Порт API Aliexpress. По умолчанию 80.
+
         """
-        # Код инициализирует класс RestApi
+        #  Вызов конструктора родительского класса
         RestApi.__init__(self, domain, port)
-        # Код инициализирует атрибуты класса
-        self.app_signature = None
-        self.end_time = None
-        self.fields = None
-        self.page_size = None
-        self.start_query_index_id = None
-        self.start_time = None
-        self.status = None
+        # Инициализация параметров запроса значениями по умолчанию
+        self.app_signature: str | None = None
+        self.end_time: str | None = None
+        self.fields: str | None = None
+        self.page_size: int | None = None
+        self.start_query_index_id: int | None = None
+        self.start_time: str | None = None
+        self.status: str | None = None
+
 
     def getapiname(self) -> str:
         """
         Возвращает имя API метода.
 
-        :return: Имя API метода.
-        :rtype: str
+        Returns:
+            str: Имя API метода 'aliexpress.affiliate.order.listbyindex'.
         """
-        # Код возвращает имя api
+        # Возвращает имя API метода
         return 'aliexpress.affiliate.order.listbyindex'
 ```

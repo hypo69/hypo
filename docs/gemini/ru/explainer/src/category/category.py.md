@@ -1,274 +1,351 @@
-## АНАЛИЗ КОДА
+## <алгоритм>
 
-### <алгоритм>
+### 1. Инициализация `Category`
+   - Создается экземпляр класса `Category` с API-кредами.
+   - Вызывается конструктор родительского класса `PrestaCategory`.
+   - **Пример:** `category_instance = Category(api_credentials={"key": "value"})`
 
-**1. Инициализация `Category`:**
-   - Создается экземпляр класса `Category`, который наследуется от `PrestaCategory`.
-   - Принимает `api_credentials` для доступа к данным категорий.
+### 2. Получение родительских категорий `get_parents`
+   - Метод `get_parents` принимает ID категории (`id_category`) и уровень (`dept`).
+   - Вызывает метод `get_list_parent_categories` из родительского класса `PrestaCategory`.
+   - Возвращает список родительских категорий.
+   - **Пример:** `parent_categories = category_instance.get_parents(123, 2)`
 
-**2. Получение родительских категорий `get_parents`:**
-   - Принимает `id_category` и `dept`.
-   - Вызывает `get_list_parent_categories` из родительского класса `PrestaCategory` и возвращает список родительских категорий.
+### 3. Асинхронный обход категорий `crawl_categories_async`
+   - Принимает URL, глубину, Selenium-драйвер, локатор, путь к файлу для сохранения, ID категории по умолчанию, и опционально словарь категории.
+   - Если словарь категории не предоставлен, создается базовый словарь с URL, пустым именем, настройками PrestaShop и пустым словарем для дочерних категорий.
+   - Если глубина равна 0, возвращает текущий словарь категории.
+   - Загружает страницу по URL с помощью Selenium WebDriver.
+   - Извлекает ссылки на категории по локатору XPath. Если ссылки не найдены, выводит ошибку и возвращает текущую категорию.
+   - Запускает асинхронные задачи для каждой ссылки, рекурсивно вызывая `crawl_categories_async` с уменьшенной глубиной.
+   - Проверяет дубликаты URL перед рекурсивным вызовом, используя метод `_is_duplicate_url`.
+   - После завершения всех асинхронных задач возвращает обновленный словарь категории.
+   - Если возникает исключение, выводит сообщение об ошибке и возвращает текущую категорию.
+    - **Пример:**
+        -   `url` = "https://example.com/categories"
+        -   `depth` = 2
+        -   `driver` = (Selenium WebDriver instance)
+        -   `locator` = "//div/a"
+        -   `dump_file` = "categories.json"
+        -   `default_category_id` = 1
+    ```mermaid
+    flowchart TD
+        A[Start crawl_categories_async] --> B{category is None?};
+        B -- Yes --> C[Initialize category];
+        B -- No --> D{depth <= 0?};
+        C --> D;
+        D -- Yes --> E[Return category];
+        D -- No --> F[driver.get(url)];
+        F --> G[Wait for page load];
+        G --> H[Find category links];
+        H --> I{category_links is empty?};
+        I -- Yes --> J[Log error];
+        J --> K[Return category];
+        I -- No --> L[Create tasks list];
+        L --> M[asyncio.gather(*tasks)];
+        M --> N[Return category];
+        N --> End[End];
+        K --> End
+        
+    ```
 
-**3. Асинхронный обход категорий `crawl_categories_async`:**
-   - Принимает `url`, `depth`, `driver`, `locator`, `dump_file`, `default_category_id`, `category` (необязательный).
-   - **Начало:**
-     - Если `category` не задан, создается новый словарь с начальными данными.
-     - Если `depth` меньше или равно 0, возвращается текущий `category`.
-   - **Обход страницы:**
-     - Загружает страницу по `url` с помощью `driver.get(url)`.
-     - Ждет 1 секунду для загрузки страницы.
-     - Находит ссылки на категории, используя `driver.execute_locator(locator)`.
-     - Если ссылки не найдены, регистрирует ошибку и возвращает текущий `category`.
-   - **Рекурсивный обход:**
-     - Для каждой найденной ссылки создается задача `self.crawl_categories_async` с уменьшенной глубиной (`depth - 1`).
-     - Фильтрует дубликаты URL с помощью `_is_duplicate_url`.
-     - Использует `asyncio.gather` для параллельного выполнения всех задач.
-   - **Завершение:**
-     - Возвращает обновленный `category`.
-   - **Обработка ошибок:**
-     - Если возникает ошибка, регистрирует ее и возвращает `category`.
+### 4. Синхронный обход категорий `crawl_categories`
+   - Принимает URL, глубину, Selenium-драйвер, локатор, путь к файлу для сохранения, ID категории по умолчанию и опционально словарь категории.
+   - Если глубина равна 0, возвращает текущий словарь категории.
+   - Загружает страницу по URL с помощью Selenium WebDriver.
+   - Извлекает ссылки на категории по локатору XPath. Если ссылки не найдены, выводит ошибку и возвращает текущую категорию.
+   - Итерируется по ссылкам на категории.
+   - Проверяет дубликаты URL перед рекурсивным вызовом, используя метод `_is_duplicate_url`.
+   - Создает новый словарь категории и рекурсивно вызывает `crawl_categories` с уменьшенной глубиной.
+   - Загружает существующие данные из файла `dump_file`, объединяет их с новым словарем категорий и сохраняет обратно в файл.
+   - Возвращает обновленный словарь категории.
+   - Если возникает исключение, выводит сообщение об ошибке и возвращает текущую категорию.
+    - **Пример:**
+        -   `url` = "https://example.com/categories"
+        -   `depth` = 2
+        -   `driver` = (Selenium WebDriver instance)
+        -   `locator` = "//div/a"
+        -   `dump_file` = "categories.json"
+        -   `default_category_id` = 1
+        -   `category` = {}
+    ```mermaid
+    flowchart TD
+        A[Start crawl_categories] --> B{depth <= 0?};
+        B -- Yes --> C[Return category];
+        B -- No --> D[driver.get(url)];
+        D --> E[Wait for page load];
+        E --> F[Find category links];
+        F --> G{category_links is empty?};
+        G -- Yes --> H[Log error];
+        H --> I[Return category];
+        G -- No --> J[Iterate through category_links];
+         J --> K{is_duplicate_url?};
+        K -- Yes --> J;
+        K -- No --> L[Create new category];
+        L --> M[Add new category to current];
+        M --> N[Recursively call crawl_categories];
+        N --> O[Load data from dump_file];
+        O --> P[Merge data and save to dump_file];
+        P --> Q[Return category];
+        Q --> End[End];
+        I --> End
 
-**4. Синхронный обход категорий `crawl_categories`:**
-   - Принимает те же параметры, что и `crawl_categories_async`, но без `async`.
-   - **Начало:**
-     - Если `depth` меньше или равно 0, возвращается текущий `category`.
-   - **Обход страницы:**
-     - Загружает страницу по `url` с помощью `driver.get(url)`.
-     - Ждет 1 секунду для загрузки страницы.
-     - Находит ссылки на категории, используя `driver.execute_locator(locator)`.
-     - Если ссылки не найдены, регистрирует ошибку и возвращает текущий `category`.
-   - **Рекурсивный обход:**
-     - Для каждой найденной ссылки проверяется дубликат URL с помощью `_is_duplicate_url`.
-     - Если не дубликат, создается новая категория и добавляется в словарь `category`.
-     - Рекурсивно вызывает `self.crawl_categories` с уменьшенной глубиной (`depth - 1`).
-   - **Объединение с сохраненными данными и сохранение:**
-     - Загружает данные из `dump_file` с помощью `j_loads`.
-     - Обновляет `category` с загруженными данными.
-     - Сохраняет обновленный `category` в `dump_file` с помощью `j_dumps`.
-   - **Завершение:**
-     - Возвращает обновленный `category`.
-   - **Обработка ошибок:**
-      - Если возникает ошибка, регистрирует ее и возвращает `category`.
+    ```
 
-**5. Проверка дубликатов URL `_is_duplicate_url`:**
-   - Принимает `category` и `url`.
-   - Проверяет, существует ли `url` в словаре `category`.
-   - Возвращает `True`, если URL дублируется, и `False` в противном случае.
+### 5. Проверка дубликатов URL `_is_duplicate_url`
+   - Принимает словарь категории и URL.
+   - Проверяет, существует ли URL в значениях словаря.
+   - Возвращает `True`, если URL дублируется, иначе `False`.
+   - **Пример:** `is_duplicate = category_instance._is_duplicate_url(category_dict, "https://example.com/page")`
 
-**6. Сравнение словаря с данными файла `compare_and_print_missing_keys`:**
-    - Принимает `current_dict` и путь к файлу `file_path`.
-    - Загружает данные из `file_path` с помощью `j_loads`.
-    - Проходит по ключам загруженных данных и печатает те, которых нет в `current_dict`.
-    - Обрабатывает исключения при загрузке файла.
+### 6. Сравнение и вывод недостающих ключей `compare_and_print_missing_keys`
+   - Принимает словарь и путь к файлу.
+   - Загружает данные из файла. Если загрузка не удалась, выводит ошибку и завершается.
+   - Итерируется по ключам загруженных данных.
+   - Если ключ не найден в переданном словаре, выводит его в консоль.
+   - **Пример:** `compare_and_print_missing_keys(current_category_dict, "categories.json")`
+    ```mermaid
+    flowchart TD
+        A[Start compare_and_print_missing_keys] --> B[Load data from file];
+         B --> C{Error loading data?};
+        C -- Yes --> D[Log error];
+        D --> End[End];
+        C -- No --> E[Iterate through keys from file];
+        E --> F{key not in current_dict?};
+        F -- Yes --> G[Print key];
+        G --> E;
+        F -- No --> E;
+        E --> End
 
-**Пример использования `crawl_categories`:**
+    ```
 
-   1. Вызов `crawl_categories` с начальным URL, глубиной, экземпляром `driver`, локатором, путем к файлу и ID категории по умолчанию.
-   2. Функция получает URL и загружает страницу.
-   3. Функция находит ссылки на категории на странице.
-   4. Для каждой ссылки создается новый словарь категории.
-   5. Если URL не является дубликатом, функция рекурсивно вызывается для новой категории с уменьшенной глубиной.
-   6. Результаты обхода сохраняются в файл.
-   7. При достижении глубины 0 или возникновении ошибки обход завершается.
-
-### <mermaid>
+## <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph category.py
-    Start[Start] --> InitCategory[Init Category Object]
-    InitCategory --> GetParents[get_parents]
-    GetParents --> PrestaCategoryMethod[PrestaCategory.get_list_parent_categories]
-    PrestaCategoryMethod --> ReturnParents[Return Parent Category List]
-    InitCategory --> CrawlCategoriesAsync[crawl_categories_async]
-    CrawlCategoriesAsync --> CheckDepthAsync{depth <= 0?}
-    CheckDepthAsync -- Yes --> ReturnCategoryAsync[Return Category]
-    CheckDepthAsync -- No --> GetPageAsync[driver.get(url)]
-    GetPageAsync --> WaitAsync[asyncio.sleep(1)]
-    WaitAsync --> FindLinksAsync[driver.execute_locator(locator)]
-    FindLinksAsync --> CheckLinksAsync{Links Found?}
-    CheckLinksAsync -- No --> ErrorLogAsync[logger.error]
-    ErrorLogAsync --> ReturnCategoryAsync
-    CheckLinksAsync -- Yes --> CreateTasksAsync[Create Tasks for each link]
-    CreateTasksAsync --> FilterDuplicatesAsync[Filter Duplicates using _is_duplicate_url]
-    FilterDuplicatesAsync --> GatherAsync[asyncio.gather(*tasks)]
-    GatherAsync --> ReturnCategoryAsync
-    GetPageAsync --> ExceptionHandlerAsync[Exception handling]
-    ExceptionHandlerAsync --> ErrorLogAsync
+    A[Category Object] --> B(get_parents);
+    B --> C[PrestaCategory.get_list_parent_categories];
+    A --> D(crawl_categories_async);
+    D --> E{category is None?};
+    E -- Yes --> F[Initialize category];
+    E -- No --> G{depth <= 0?};
+    F --> G;
+    G -- Yes --> H[Return category];
+    G -- No --> I[driver.get(url)];
+    I --> J[Wait for page load];
+    J --> K[Find category links];
+    K --> L{category_links is empty?};
+    L -- Yes --> M[Log error];
+    M --> N[Return category];
+    L -- No --> O[Create tasks list];
+    O --> P[asyncio.gather(*tasks)];
+    P --> Q[Return category];
     
-    InitCategory --> CrawlCategories[crawl_categories]
-    CrawlCategories --> CheckDepth{depth <= 0?}
-    CheckDepth -- Yes --> ReturnCategory[Return Category]
-    CheckDepth -- No --> GetPage[driver.get(url)]
-    GetPage --> Wait[driver.wait(1)]
-    Wait --> FindLinks[driver.execute_locator(locator)]
-    FindLinks --> CheckLinks{Links Found?}
-    CheckLinks -- No --> ErrorLog[logger.error]
-    ErrorLog --> ReturnCategory
-    CheckLinks -- Yes --> LoopThroughLinks[Loop through each link]
-     LoopThroughLinks --> CheckDuplicate{_is_duplicate_url(url)}
-     CheckDuplicate -- Yes --> NextLink[Next Link]
-     CheckDuplicate -- No --> CreateCategory[Create New Category]
-     CreateCategory --> RecursiveCall[crawl_categories (recursive)]
-     RecursiveCall --> NextLink
-     LoopThroughLinks --> SaveData[j_loads(dump_file), j_dumps(category, dump_file)]
-     SaveData --> ReturnCategory
-     GetPage --> ExceptionHandler[Exception handling]
-     ExceptionHandler --> ErrorLog
+    A --> R(crawl_categories);
+    R --> S{depth <= 0?};
+    S -- Yes --> T[Return category];
+    S -- No --> U[driver.get(url)];
+    U --> V[Wait for page load];
+    V --> W[Find category links];
+    W --> X{category_links is empty?};
+     X -- Yes --> Y[Log error];
+    Y --> Z[Return category];
+     X -- No --> AA[Iterate through category_links];
+    AA --> AB{is_duplicate_url?};
+    AB -- Yes --> AA;
+    AB -- No --> AC[Create new category];
+    AC --> AD[Add new category to current];
+    AD --> AE[Recursively call crawl_categories];
+    AE --> AF[Load data from dump_file];
+    AF --> AG[Merge data and save to dump_file];
+     AG --> AH[Return category];
+
+
+    A --> AI(_is_duplicate_url);
+    AI --> AJ{url in category.values()?};
+    AJ -- Yes --> AK[return True];
+    AJ -- No --> AL[return False];
     
-     InitCategory --> IsDuplicateUrl[_is_duplicate_url]
-     
-     Start --> CompareAndPrint[compare_and_print_missing_keys]
-     CompareAndPrint --> LoadFile[j_loads(file_path)]
-     LoadFile --> CheckKeys[Check keys in file vs current dict]
-      CheckKeys -- Missing key --> PrintMissingKey[Print missing key]
-    end
+    MN[compare_and_print_missing_keys] --> AO[Load data from file];
+    AO --> AP{Error loading data?};
+    AP -- Yes --> AQ[Log error];
+     AP -- No --> AR[Iterate through keys from file];
+    AR --> AS{key not in current_dict?};
+    AS -- Yes --> AT[Print key];
+    AT --> AR;
+     AS -- No --> AR;
     
-    style Start fill:#f9f,stroke:#333,stroke-width:2px
-    style ReturnParents fill:#ccf,stroke:#333,stroke-width:1px
-    style ReturnCategoryAsync fill:#ccf,stroke:#333,stroke-width:1px
-    style ReturnCategory fill:#ccf,stroke:#333,stroke-width:1px
+    classDef green fill:#90EE90
+    class A, MN green
 ```
-
-**Объяснение `mermaid`:**
-
-1. **`subgraph category.py`**: Определяет область диаграммы, относящуюся к файлу `category.py`.
-2. **`Start`**: Начало выполнения программы.
-3.  **`InitCategory`**: Инициализация объекта класса `Category`.
-4.  **`GetParents`**: Вызов метода `get_parents` для получения списка родительских категорий.
-5. **`PrestaCategoryMethod`**:  Вызов метода `get_list_parent_categories` из базового класса `PrestaCategory`.
-6.  **`ReturnParents`**: Возвращение списка родительских категорий.
-7. **`CrawlCategoriesAsync`**: Вызов асинхронного метода `crawl_categories_async` для обхода категорий.
-8. **`CheckDepthAsync`**: Проверка глубины рекурсии в асинхронном обходе.
-9. **`ReturnCategoryAsync`**: Возвращение категории из `crawl_categories_async`.
-10. **`GetPageAsync`**: Загрузка страницы по URL в асинхронном обходе.
-11. **`WaitAsync`**: Ожидание загрузки страницы в асинхронном обходе.
-12. **`FindLinksAsync`**: Поиск ссылок на категории на странице в асинхронном обходе.
-13. **`CheckLinksAsync`**: Проверка, найдены ли ссылки на категории в асинхронном обходе.
-14. **`ErrorLogAsync`**: Логирование ошибки в асинхронном обходе.
-15. **`CreateTasksAsync`**: Создание задач для рекурсивного обхода в асинхронном обходе.
-16. **`FilterDuplicatesAsync`**: Фильтрация дубликатов URL в асинхронном обходе.
-17. **`GatherAsync`**: Запуск задач параллельно в асинхронном обходе.
-18. **`ExceptionHandlerAsync`**: Обработка исключений в асинхронном обходе.
-19. **`CrawlCategories`**: Вызов синхронного метода `crawl_categories` для обхода категорий.
-20. **`CheckDepth`**: Проверка глубины рекурсии в синхронном обходе.
-21. **`ReturnCategory`**: Возвращение категории из `crawl_categories`.
-22. **`GetPage`**: Загрузка страницы по URL в синхронном обходе.
-23. **`Wait`**: Ожидание загрузки страницы в синхронном обходе.
-24. **`FindLinks`**: Поиск ссылок на категории на странице в синхронном обходе.
-25. **`CheckLinks`**: Проверка, найдены ли ссылки на категории в синхронном обходе.
-26. **`ErrorLog`**: Логирование ошибки в синхронном обходе.
-27. **`LoopThroughLinks`**: Итерация по каждой ссылке на категории.
-28. **`CheckDuplicate`**: Проверка на дубликаты URL.
-29. **`NextLink`**: Переход к следующей ссылке.
-30. **`CreateCategory`**: Создание нового словаря категории.
-31. **`RecursiveCall`**: Рекурсивный вызов метода `crawl_categories`.
-32. **`SaveData`**: Загрузка и сохранение данных в файл.
-33. **`ExceptionHandler`**: Обработка исключений в синхронном обходе.
-34. **`IsDuplicateUrl`**:  Вызов функции `_is_duplicate_url` для проверки дубликатов URL.
-35. **`CompareAndPrint`**: Вызов функции `compare_and_print_missing_keys` для сравнения и печати отсутствующих ключей.
-36. **`LoadFile`**: Загрузка данных из файла.
-37. **`CheckKeys`**: Проверка ключей в файле на наличие в текущем словаре.
-38. **`PrintMissingKey`**: Печать отсутствующих ключей.
-39. **Стили**:  Применяются стили для визуального выделения начала и завершения функций.
-
-**Импортируемые зависимости в `mermaid`:**
-
--   **`PrestaCategory.get_list_parent_categories`**: Метод из родительского класса `PrestaCategory`, используется для получения списка родительских категорий.
--   **`driver.get(url)`**: Метод из Selenium WebDriver, используемый для загрузки веб-страницы по заданному URL.
--   **`driver.execute_locator(locator)`**: Метод из Selenium WebDriver, используемый для поиска элементов на веб-странице с помощью заданного локатора (например, XPath).
--   **`asyncio.sleep(1)`**: Функция из модуля `asyncio`, используемая для асинхронной задержки (ожидания).
--    **`asyncio.gather(*tasks)`**: Функция из модуля `asyncio`, используемая для параллельного выполнения асинхронных задач.
--   **`logger.error`**: Метод из модуля `src.logger.logger`, используемый для логирования ошибок.
--   **`_is_duplicate_url`**: Метод текущего класса, используемый для проверки наличия URL в словаре категорий.
--   **`j_loads(dump_file)`**: Функция из `src.utils.jjson`, используется для безопасной загрузки JSON данных из файла.
--   **`j_dumps(category, dump_file)`**: Функция из `src.utils.jjson`, используется для безопасного сохранения JSON данных в файл.
+**Объяснение зависимостей:**
+*   **`Category`**: Основной класс для управления категориями.
+*   **`PrestaCategory`**: Родительский класс, предоставляющий методы для работы с категориями PrestaShop.
+*   **`get_parents`**: Метод для получения родительских категорий.
+*   **`crawl_categories_async`**: Асинхронный метод для обхода иерархии категорий.
+*   **`crawl_categories`**: Синхронный метод для обхода иерархии категорий.
+*   **`_is_duplicate_url`**: Метод для проверки наличия дубликатов URL.
+*   **`compare_and_print_missing_keys`**: Функция для сравнения словаря с данными из файла и вывода отсутствующих ключей.
 
 ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-    
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
 ```
-**Объяснение `header.py`:**
 
-- **`Start`**: Начало работы модуля.
-- **`Header`**: Модуль `header.py` определяет корень проекта.
-- **`import`**: Импортирует глобальные настройки из `src.gs`, обеспечивая доступ к общим параметрам проекта.
+## <объяснение>
 
-### <объяснение>
+### Импорты:
 
-**Импорты:**
+-   `from __future__ import annotations`: Позволяет использовать аннотации типов, которые могут ссылаться на еще не определенные классы (например, внутри класса).
+-   `import asyncio`: Модуль для асинхронного программирования, используется для параллельного выполнения задач.
+-   `from pathlib import Path`: Модуль для работы с путями к файлам, обеспечивает кроссплатформенность.
+-   `import os`: Модуль для работы с операционной системой, в данном случае не используется напрямую.
+-    `from typing import Dict`: Модуль для определения типов данных, используется для аннотации словарей.
+-   `from lxml import html`: Библиотека для работы с HTML и XML, используется для парсинга веб-страниц.
+-   `import requests`: Библиотека для отправки HTTP-запросов.
+-   `import header`: Локальный модуль для определения корневой директории проекта.
+-   `from src import gs`: Локальный модуль для доступа к глобальным настройкам проекта.
+-   `from src.logger.logger import logger`: Локальный модуль для логирования событий.
+-   `from src.utils.jjson import j_loads, j_dumps`: Локальный модуль для безопасной работы с JSON.
+-   `from src.endpoints.prestashop import PrestaCategory`: Локальный модуль, представляющий класс для взаимодействия с API PrestaShop категорий.
 
--   `asyncio`: Модуль для асинхронного программирования. Используется для `crawl_categories_async`.
--   `pathlib`: Модуль для работы с файловыми путями.
--   `os`: Модуль для взаимодействия с операционной системой.
--   `typing.Dict`: Типизация для словарей.
--   `lxml.html`: Модуль для парсинга HTML.
--   `requests`: Модуль для отправки HTTP запросов (хотя в данном коде напрямую не используется).
--   `header`: Пользовательский модуль для определения корня проекта.
--   `src.gs`: Глобальные настройки проекта.
--   `src.logger.logger`: Модуль для логирования.
--   `src.utils.jjson`: Модуль для работы с JSON.
--   `src.endpoints.prestashop`: Модуль, содержащий классы для работы с PrestaShop, включая `PrestaShop` и `PrestaCategory`.
+**Взаимосвязь с другими пакетами:**
+    - `src.logger`: Используется для логирования ошибок и других событий.
+    - `src.utils`: Содержит утилиты для работы с JSON.
+    - `src.endpoints`: Содержит классы для взаимодействия с различными API, в том числе PrestaShop.
 
-**Класс `Category`:**
+### Классы:
 
--   Наследует от `PrestaCategory`, предоставляя методы для работы с категориями PrestaShop.
--   `credentials`: Атрибут для хранения учетных данных API.
--   `__init__`: Конструктор класса.
-    -   Принимает `api_credentials` для аутентификации при работе с PrestaShop API.
-    -   Инициализирует базовый класс `PrestaCategory`.
--   `get_parents`:
-    -   Принимает `id_category` и `dept`.
-    -   Вызывает `get_list_parent_categories` у родителя и возвращает список.
--   `crawl_categories_async`:
-    -   Асинхронный метод для обхода категорий.
-    -   Принимает `url`, `depth`, `driver` (Selenium WebDriver), `locator` (XPath), `dump_file` (путь к файлу для сохранения) и `default_category_id`.
-    -   Создает иерархический словарь категорий.
-    -   Использует `asyncio.gather` для параллельного обхода.
--   `crawl_categories`:
-    -   Синхронный метод для обхода категорий.
-    -   Принимает те же параметры, что и `crawl_categories_async`.
-    -   Рекурсивно обходит категории и сохраняет результат в файл.
-    -   Использует `j_loads` и `j_dumps` для безопасной работы с JSON.
--   `_is_duplicate_url`:
-    -   Принимает `category` и `url`.
-    -   Проверяет, существует ли `url` в словаре категорий.
+#### `Category(PrestaCategory)`:
 
-**Функции:**
+*   **Роль**: Класс для обработки категорий продуктов, наследовается от `PrestaCategory`.
+*   **Атрибуты**:
+    *   `credentials`: Словарь с учетными данными API.
+*   **Методы**:
+    *   `__init__`: Конструктор класса, инициализирует объект `Category`. Принимает API-креды.
+    *   `get_parents`: Возвращает список родительских категорий. Вызывает `get_list_parent_categories` из родительского класса.
+    *   `crawl_categories_async`: Асинхронно обходит категории, строя иерархический словарь. Использует `asyncio.gather` для запуска нескольких задач одновременно.
+    *   `crawl_categories`: Синхронно обходит категории, строя иерархический словарь.
+    *   `_is_duplicate_url`: Проверяет наличие URL в словаре категорий.
 
--   `compare_and_print_missing_keys`:
-    -   Принимает `current_dict` и `file_path`.
-    -   Загружает данные из файла с помощью `j_loads`.
-    -   Сравнивает ключи и выводит те, которых нет в словаре.
-    -   Обрабатывает ошибки загрузки файла.
+**Взаимодействие с другими компонентами:**
+    - Наследуется от `PrestaCategory` для использования API-методов.
+    - Использует `logger` для логирования.
+    - Использует `j_loads` и `j_dumps` для безопасной работы с JSON файлами.
+    - Использует методы Selenium WebDriver.
 
-**Переменные:**
+### Функции:
 
--   `api_credentials`: Словарь, содержащий учетные данные для PrestaShop API.
--   `url`: URL страницы для обхода.
--   `depth`: Глубина рекурсивного обхода.
--   `driver`: Экземпляр Selenium WebDriver для управления браузером.
--   `locator`: XPath локатор для поиска ссылок на категории.
--   `dump_file`: Путь к файлу для сохранения результатов обхода.
--   `default_category_id`: ID категории по умолчанию.
--   `category`: Словарь, представляющий структуру категорий.
+#### `crawl_categories_async(self, url, depth, driver, locator, dump_file, default_category_id, category=None)`:
 
-**Потенциальные ошибки и улучшения:**
+*   **Аргументы**:
+    *   `url`: URL страницы для обхода.
+    *   `depth`: Глубина рекурсии.
+    *   `driver`: Экземпляр Selenium WebDriver.
+    *   `locator`: XPath-локатор для поиска ссылок на категории.
+    *   `dump_file`: Путь к файлу для сохранения результата.
+    *   `default_category_id`: ID категории по умолчанию.
+    *   `category`: Существующий словарь категорий (необязательный).
+*   **Возвращаемое значение**: Обновленный словарь категорий.
+*   **Назначение**: Асинхронный обход категорий и построение иерархического словаря.
+*   **Пример:**
+    ```python
+    async def main():
+        api_creds = {"key": "value"}
+        category_obj = Category(api_creds)
+        from selenium import webdriver
+        driver = webdriver.Chrome()
+        url = "https://example.com/categories"
+        locator = "//a[@class='category-link']"
+        dump_file = "categories.json"
+        default_category_id = 1
+        result = await category_obj.crawl_categories_async(url, 2, driver, locator, dump_file, default_category_id)
+        print(result)
+        driver.quit()
 
--   Обработка ошибок в `crawl_categories_async` и `crawl_categories` может быть улучшена.
--   В `crawl_categories` используется синхронный `driver.wait(1)` который блокирует выполнение потока, рекомендуется использовать `asyncio.sleep(1)` в связке с `async` функциями.
--   В `crawl_categories` загрузка данных из файла происходит при каждом вызове функции. Это можно оптимизировать.
--   Метод `_is_duplicate_url` в цикле каждый раз генерирует генератор словаря. Рекомендуется создать `set` для более эффективной проверки.
--   Отсутствует асинхронная версия метода `compare_and_print_missing_keys`
+    if __name__ == "__main__":
+         asyncio.run(main())
+    ```
 
-**Взаимосвязи с другими частями проекта:**
+#### `crawl_categories(self, url, depth, driver, locator, dump_file, id_category_default, category={})`:
 
--   Зависит от `header.py` для определения корня проекта.
--   Использует `src.gs` для доступа к глобальным настройкам.
--   Использует `src.logger.logger` для логирования событий и ошибок.
--   Использует `src.utils.jjson` для безопасной работы с JSON файлами.
--   Наследуется от `src.endpoints.prestashop.PrestaCategory` для работы с категориями PrestaShop.
+*   **Аргументы**:
+    *   `url`: URL страницы для обхода.
+    *   `depth`: Глубина рекурсии.
+    *   `driver`: Экземпляр Selenium WebDriver.
+    *   `locator`: XPath-локатор для поиска ссылок на категории.
+    *   `dump_file`: Путь к файлу для сохранения результата.
+    *   `id_category_default`: ID категории по умолчанию.
+    *   `category`: Существующий словарь категорий (необязательный).
+*   **Возвращаемое значение**: Обновленный словарь категорий.
+*   **Назначение**: Синхронный обход категорий и построение иерархического словаря.
+*   **Пример:**
+    ```python
+    api_creds = {"key": "value"}
+    category_obj = Category(api_creds)
+    from selenium import webdriver
+    driver = webdriver.Chrome()
+    url = "https://example.com/categories"
+    locator = "//a[@class='category-link']"
+    dump_file = "categories.json"
+    id_category_default = 1
+    result = category_obj.crawl_categories(url, 2, driver, locator, dump_file, id_category_default)
+    print(result)
+    driver.quit()
+    ```
+
+#### `_is_duplicate_url(self, category, url)`:
+
+*   **Аргументы**:
+    *   `category`: Словарь категорий.
+    *   `url`: URL для проверки.
+*   **Возвращаемое значение**: `True`, если URL уже существует в словаре, `False` в противном случае.
+*   **Назначение**: Проверка дублирования URL.
+
+#### `compare_and_print_missing_keys(current_dict, file_path)`:
+
+*   **Аргументы**:
+    *   `current_dict`: Словарь для сравнения.
+    *   `file_path`: Путь к файлу JSON.
+*   **Возвращаемое значение**: None.
+*   **Назначение**: Сравнение ключей текущего словаря с ключами из файла и вывод отсутствующих ключей.
+*   **Пример:**
+   ```python
+   current_dict = {"key1": "value1", "key2": "value2"}
+   file_path = "categories.json"
+   compare_and_print_missing_keys(current_dict, file_path)
+   ```
+
+### Переменные:
+
+*   `credentials`: Словарь для хранения учетных данных API.
+*   `category`: Словарь для хранения информации о категориях и их подкатегориях (в методах обхода).
+*   `url`: Строка, представляющая URL страницы.
+*   `depth`: Целое число, представляющее глубину обхода.
+*   `driver`: Экземпляр Selenium WebDriver.
+*   `locator`: Строка, представляющая XPath-локатор.
+*   `dump_file`: Строка, представляющая путь к файлу JSON.
+*    `id_category_default` - id категории по умолчанию
+*    `default_category_id` - id категории по умолчанию
+
+### Потенциальные ошибки и области для улучшения:
+
+1.  **Обработка исключений**: В блоках `try-except` логируется общая ошибка. Можно было бы сделать более специфическую обработку исключений.
+2.  **Зависимости**: Код сильно зависит от Selenium WebDriver. При изменении верстки веб-страницы,  XPath локаторы нужно будет обновлять.
+3.  **Производительность**: Синхронный обход `crawl_categories` может быть медленным для больших объемов данных.
+4.  **Дублирование кода**: Код обхода категорий (`crawl_categories` и `crawl_categories_async`) имеет много общего, можно вынести общие части в отдельную функцию.
+5.  **Расширение функциональности**: Можно добавить методы для обновления категорий, создания новых категорий и т.д.
+6.  **Использование глобальных переменных:** `id_category_default` используется и как глобальная переменная.
+7. **Проверка типа данных:** В методе `crawl_categories` не проверяется правильность типа `dump_file`. Это может привести к ошибкам.
+
+### Цепочка взаимосвязей:
+
+1.  **`Category` -> `PrestaCategory`**: Наследование для работы с API PrestaShop.
+2.  **`Category` -> `src.logger.logger`**: Логирование событий.
+3.  **`Category` -> `src.utils.jjson`**: Безопасная работа с JSON.
+4.  **`Category` -> `Selenium WebDriver`**: Для обхода веб-страниц.
+5.  **`crawl_categories_async` -> `asyncio`**: Асинхронное выполнение задач.
+6.  **`compare_and_print_missing_keys` -> `j_loads`**: Загрузка данных из файла.
+7.  **`header.py` -> `src.gs`**: определение корневой директории и чтение глобальных параметров.

@@ -378,6 +378,7 @@ class CodeAssistant:
 
             export_path.parent.mkdir(parents=True, exist_ok=True)
             export_path.write_text(response, encoding='utf-8')
+            logger.success(f"{ '/'.join(file_path.parts[-4:])}")
             return True
 
         except Exception as ex:

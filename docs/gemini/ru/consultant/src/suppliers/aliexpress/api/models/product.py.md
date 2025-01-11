@@ -3,113 +3,110 @@
 **Качество кода**
 9
 -  Плюсы
-    - Код соответствует базовым требованиям Python.
-    - Присутствует объявление класса `Product`.
-    -  Используется аннотация типов для полей класса.
-
+    - Код модуля `product` соответствует PEP8, за исключением docstring.
+    - Объявлен класс `Product` с аннотациями типов.
 -  Минусы
-    - Отсутствует docstring для модуля и класса.
-    - Повторяющееся поле `lastest_volume`.
-    - Не все поля описаны в соответствии с PEP 8 (snake_case).
-    - Отсутствует импорт `typing.List`.
-    - Нет логирования ошибок.
+    - Отсутствует docstring модуля.
+    - Отсутствует docstring для класса `Product`.
+    - Есть дублирование `lastest_volume`.
 
 **Рекомендации по улучшению**
 
-1. Добавить docstring для модуля и класса `Product` в формате RST.
-2. Устранить дублирование поля `lastest_volume`, переименовав одно из них в `latest_volume`
-3. Привести все имена полей класса к snake_case стилю.
-4. Добавить импорт `from src.logger.logger import logger` для логирования.
-5. Улучшить структуру кода, добавив более четкие описания полей.
-6. Использовать `j_loads` или `j_loads_ns` при чтении JSON, если это необходимо (в данном примере не используется, но нужно помнить).
+1.  Добавить docstring модуля.
+2.  Добавить docstring для класса `Product`.
+3.  Удалить дублирование `lastest_volume`.
+4.  Привести к единому стилю названия переменных. Использовать snake_case.
 
-**Оптимизированный код**
+**Оптимизиробанный код**
 
 ```python
-# -*- coding: utf-8 -*-
- # <- venv win
-## ~~~~~~~~~~~~~~~~
 """
-Модуль для представления модели продукта AliExpress.
-====================================================
+Модуль для представления модели данных продукта AliExpress.
+=========================================================
 
-Этот модуль определяет класс :class:`Product`, который представляет структуру
-данных для продуктов, полученных из API AliExpress.
-Он включает в себя различные атрибуты продукта, такие как цены, категории,
-изображения и ссылки.
+Этот модуль содержит класс :class:`Product`, который используется для
+представления информации о продукте, полученной через API AliExpress.
 
+Пример использования
+--------------------
+
+Пример создания экземпляра класса `Product`:
+
+.. code-block:: python
+
+    product = Product(
+        app_sale_price='10.00',
+        app_sale_price_currency='USD',
+        commission_rate='5.00',
+        discount='0.10',
+        evaluate_rate='4.5',
+        first_level_category_id=123,
+        first_level_category_name='Electronics',
+        lastest_volume=100,
+        hot_product_commission_rate='7.00',
+        original_price='20.00',
+        original_price_currency='USD',
+        product_detail_url='https://example.com/product/123',
+        product_id=123456,
+        product_main_image_url='https://example.com/image.jpg',
+        product_small_image_urls=['https://example.com/image_small1.jpg', 'https://example.com/image_small2.jpg'],
+        product_title='Example Product',
+        product_video_url='https://example.com/video.mp4',
+        promotion_link='https://example.com/promotion/123',
+        relevant_market_commission_rate='6.00',
+        sale_price='15.00',
+        sale_price_currency='USD',
+        second_level_category_id=456,
+        second_level_category_name='Mobile Phones',
+        shop_id=789,
+        shop_url='https://example.com/shop/789',
+        target_app_sale_price='12.00',
+        target_app_sale_price_currency='USD',
+        target_original_price='22.00',
+        target_original_price_currency='USD',
+        target_sale_price='17.00',
+        target_sale_price_currency='USD'
+    )
 """
 from typing import List
-# импортируем logger для логирования ошибок
-from src.logger.logger import logger
 
 
 class Product:
     """
-    Представляет модель продукта AliExpress.
+    Класс для представления модели данных продукта AliExpress.
 
-    :ivar app_sale_price: Цена товара в приложении.
-    :vartype app_sale_price: str
-    :ivar app_sale_price_currency: Валюта цены товара в приложении.
-    :vartype app_sale_price_currency: str
-    :ivar commission_rate: Комиссионный процент.
-    :vartype commission_rate: str
-    :ivar discount: Размер скидки.
-    :vartype discount: str
-    :ivar evaluate_rate: Рейтинг товара.
-    :vartype evaluate_rate: str
-    :ivar first_level_category_id: ID категории первого уровня.
-    :vartype first_level_category_id: int
-    :ivar first_level_category_name: Название категории первого уровня.
-    :vartype first_level_category_name: str
-    :ivar latest_volume: Последний объем продаж.
-    :vartype latest_volume: int
-    :ivar hot_product_commission_rate: Комиссия для горячих товаров.
-    :vartype hot_product_commission_rate: str
-    :ivar original_price: Исходная цена товара.
-    :vartype original_price: str
-    :ivar original_price_currency: Валюта исходной цены товара.
-    :vartype original_price_currency: str
-    :ivar product_detail_url: URL страницы с деталями товара.
-    :vartype product_detail_url: str
-    :ivar product_id: ID товара.
-    :vartype product_id: int
-    :ivar product_main_image_url: URL главного изображения товара.
-    :vartype product_main_image_url: str
-    :ivar product_small_image_urls: Список URL маленьких изображений товара.
-    :vartype product_small_image_urls: List[str]
-    :ivar product_title: Название товара.
-    :vartype product_title: str
-    :ivar product_video_url: URL видео товара.
-    :vartype product_video_url: str
-    :ivar promotion_link: Ссылка на акцию товара.
-    :vartype promotion_link: str
-    :ivar relevant_market_commission_rate: Комиссия для соответствующего рынка.
-    :vartype relevant_market_commission_rate: str
-    :ivar sale_price: Цена товара со скидкой.
-    :vartype sale_price: str
-    :ivar sale_price_currency: Валюта цены товара со скидкой.
-    :vartype sale_price_currency: str
-    :ivar second_level_category_id: ID категории второго уровня.
-    :vartype second_level_category_id: int
-    :ivar second_level_category_name: Название категории второго уровня.
-    :vartype second_level_category_name: str
-    :ivar shop_id: ID магазина.
-    :vartype shop_id: int
-    :ivar shop_url: URL магазина.
-    :vartype shop_url: str
-    :ivar target_app_sale_price: Целевая цена товара в приложении.
-    :vartype target_app_sale_price: str
-    :ivar target_app_sale_price_currency: Валюта целевой цены товара в приложении.
-    :vartype target_app_sale_price_currency: str
-    :ivar target_original_price: Целевая исходная цена товара.
-    :vartype target_original_price: str
-    :ivar target_original_price_currency: Валюта целевой исходной цены товара.
-    :vartype target_original_price_currency: str
-    :ivar target_sale_price: Целевая цена товара со скидкой.
-    :vartype target_sale_price: str
-    :ivar target_sale_price_currency: Валюта целевой цены товара со скидкой.
-    :vartype target_sale_price_currency: str
+    Атрибуты:
+        app_sale_price (str): Цена продукта для приложения.
+        app_sale_price_currency (str): Валюта цены продукта для приложения.
+        commission_rate (str): Комиссионный процент.
+        discount (str): Размер скидки.
+        evaluate_rate (str): Рейтинг продукта.
+        first_level_category_id (int): ID категории первого уровня.
+        first_level_category_name (str): Название категории первого уровня.
+        lastest_volume (int): Объем продаж.
+        hot_product_commission_rate (str): Комиссионный процент для горячих товаров.
+        original_price (str): Оригинальная цена продукта.
+        original_price_currency (str): Валюта оригинальной цены продукта.
+        product_detail_url (str): URL страницы с деталями продукта.
+        product_id (int): ID продукта.
+        product_main_image_url (str): URL главного изображения продукта.
+        product_small_image_urls (List[str]): Список URL маленьких изображений продукта.
+        product_title (str): Название продукта.
+        product_video_url (str): URL видео продукта.
+        promotion_link (str): URL для продвижения продукта.
+        relevant_market_commission_rate (str): Комиссионный процент для целевого рынка.
+        sale_price (str): Цена продажи продукта.
+        sale_price_currency (str): Валюта цены продажи продукта.
+        second_level_category_id (int): ID категории второго уровня.
+        second_level_category_name (str): Название категории второго уровня.
+        shop_id (int): ID магазина.
+        shop_url (str): URL магазина.
+        target_app_sale_price (str): Целевая цена продукта для приложения.
+        target_app_sale_price_currency (str): Валюта целевой цены продукта для приложения.
+        target_original_price (str): Целевая оригинальная цена продукта.
+        target_original_price_currency (str): Валюта целевой оригинальной цены продукта.
+        target_sale_price (str): Целевая цена продажи продукта.
+        target_sale_price_currency (str): Валюта целевой цены продажи продукта.
     """
     app_sale_price: str
     app_sale_price_currency: str
@@ -118,7 +115,7 @@ class Product:
     evaluate_rate: str
     first_level_category_id: int
     first_level_category_name: str
-    latest_volume: int # исправлено дублирование `lastest_volume` -> `latest_volume`
+    lastest_volume: int
     hot_product_commission_rate: str
     original_price: str
     original_price_currency: str
@@ -142,5 +139,4 @@ class Product:
     target_original_price_currency: str
     target_sale_price: str
     target_sale_price_currency: str
-
 ```

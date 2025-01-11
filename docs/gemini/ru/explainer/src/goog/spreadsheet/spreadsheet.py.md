@@ -1,192 +1,186 @@
-## АНАЛИЗ КОДА
+## АНАЛИЗ КОДА: `src/goog/spreadsheet/spreadsheet.py`
 
-### <алгоритм>
-1.  **Инициализация (`__init__`)**:
-    *   Принимает `spreadsheet_id` (может быть `None` для создания новой таблицы), `sheet_name`, и `spreadsheet_name`.
-    *   Создает учетные данные Google API (`_create_credentials`).
-    *   Авторизует клиент Google Sheets API (`_authorize_client`).
-    *   Открывает существующую таблицу Google Sheet по `spreadsheet_id` или создает новую, если `spreadsheet_id` - `None`.
-    *   Если таблица не найдена, выбрасывается исключение `gspread.exceptions.SpreadsheetNotFound`.
-    *   **Пример**:
-        ```python
-        google_sheet_handler = SpreadSheet(
-            spreadsheet_id='12345abcde', 
-            sheet_name='Sheet1'
-        )
-        ```
+### 1. <алгоритм>
 
-2.  **Создание учетных данных (`_create_credentials`)**:
-    *   Определяет путь к файлу с учетными данными JSON `e-cat-346312-137284f4419e.json` (путь определяется через `gs.path.secrets`).
-    *   Определяет область доступа `SCOPES` для Google Sheets и Drive API.
-    *   Создает объект `ServiceAccountCredentials` из JSON-файла учетных данных и области доступа.
-    *   Возвращает созданные учетные данные.
-    *   **Пример**:
-        ```
-        creds = _create_credentials()
-        # creds имеет тип <oauth2client.service_account.ServiceAccountCredentials>
-        ```
+**Блок-схема работы с Google Sheets:**
 
-3.  **Авторизация клиента (`_authorize_client`)**:
-    *   Использует полученные учетные данные для авторизации клиента Google Sheets API.
-    *   Возвращает авторизованный клиент.
-    *   **Пример**:
-        ```
-        client = _authorize_client(creds)
-        # client имеет тип <gspread.client.Client>
-        ```
+1. **Инициализация `SpreadSheet`:**
+   - Пример: `google_sheet_handler = SpreadSheet(spreadsheet_id='some_id', sheet_name='Sheet1')`
+   - Создается объект `SpreadSheet` с указанным `spreadsheet_id` (или `None` для создания нового) и `sheet_name`.
+   - Вызывается метод `_create_credentials()` для получения учетных данных из JSON-файла.
+   - Вызывается метод `_authorize_client()` для авторизации клиента Google Sheets API.
+   - Если `spreadsheet_id` указан, происходит попытка открыть существующую таблицу через `client.open_by_key(self.spreadsheet_id)`. Если таблица не найдена, возбуждается исключение.
 
-4.  **Получение листа (`get_worksheet`)**:
-    *   Принимает имя листа `worksheet_name`.
-    *   Пытается получить существующий лист по имени из таблицы.
-    *   Если лист не найден, вызывает метод `create_worksheet` для создания листа.
-    *   Возвращает лист или `None` в случае ошибки.
-    *   **Пример**:
-        ```python
-        worksheet = google_sheet_handler.get_worksheet(worksheet_name='Sheet1')
-        # worksheet имеет тип <gspread.worksheet.Worksheet>
-        ```
+2. **`_create_credentials()`:**
+   - Определяется путь к файлу учетных данных (`creds_file`) через `gs.path.secrets`. 
+   - Указываются `SCOPES` (области доступа) для Google Sheets и Google Drive API.
+   - Создаются учетные данные `ServiceAccountCredentials` из JSON-файла с помощью `from_json_keyfile_name`.
+   - Возвращаются учетные данные.
 
-5.  **Создание листа (`create_worksheet`)**:
-    *   Принимает имя нового листа `title` и размеры `dim` (строки и столбцы).
-    *   Создает новый лист в Google Sheets и возвращает его.
-    *   Обрабатывает ошибки при создании.
-    *    **Пример**:
-    ```python
-         worksheet = google_sheet_handler.create_worksheet(title='Sheet2', dim={'rows':50, 'cols':15})
-         # worksheet имеет тип <gspread.worksheet.Worksheet>
-    ```
+3. **`_authorize_client()`:**
+   - Создается и авторизуется клиент Google Sheets API с помощью `gspread.authorize(self.credentials)`.
+   - Возвращается авторизованный клиент.
 
-6.  **Копирование листа (`copy_worksheet`)**:
-    *   Принимает имена исходного `from_worksheet` и нового листа `to_worksheet`.
-    *   Копирует указанный лист в текущей Google Sheets таблицу.
-    *   Возвращает скопированный лист.
-     *   **Пример**:
-    ```python
-       worksheet = google_sheet_handler.copy_worksheet(from_worksheet='Sheet1', to_worksheet='Sheet3')
-         # worksheet имеет тип <gspread.worksheet.Worksheet>
-    ```
+4. **`get_worksheet()`:**
+    - Пример: `worksheet = google_sheet_handler.get_worksheet('Sheet1')`
+    - Пытается получить лист из таблицы по имени `worksheet_name` через `self.spreadsheet.worksheet(worksheet_name)`.
+    - Если лист не найден, вызывается `create_worksheet(worksheet_name)` для его создания.
+    - Возвращает объект листа.
 
-7.  **Загрузка данных (`upload_data_to_sheet`)**:
-    *   Проверяет наличие и корректность файла данных `self.data_file`.
-    *   Читает данные из CSV-файла с помощью `pandas`.
-    *   Преобразует данные DataFrame в список списков (с заголовками).
-    *   Записывает данные в Google Sheet с ячейки `A1`.
-    *   Обрабатывает ошибки при загрузке.
-    *    **Пример**:
-    ```python
-    data_file = Path('/mnt/data/google_extracted/your_data_file.csv')
-        google_sheet_handler = SpreadSheet(
-        spreadsheet_id='12345abcde',
-        sheet_name='Sheet1'
-        data_file = data_file
-    )
-    google_sheet_handler.upload_data_to_sheet()
-    ```
+5. **`create_worksheet()`:**
+   - Пример: `worksheet = google_sheet_handler.create_worksheet('New Sheet', {'rows': 50, 'cols': 5})`
+   - Создаёт новый лист в Google Sheets с именем `title` и размерами, указанными в `dim`.
+   - Возвращает созданный объект листа.
+   
+6.  **`copy_worksheet()`:**
+    - Пример: `worksheet = google_sheet_handler.copy_worksheet('Sheet1','Sheet2')`
+    - Получает объект листа `from_worksheet` из таблицы.
+    - Дублирует лист с новым именем `to_worksheet`.
+    - Возвращает объект дублированного листа.
+ 
+7. **`upload_data_to_sheet()`:**
+   - Проверяется, установлен ли путь к файлу данных (`self.data_file`) и существует ли файл. Если нет, возбуждается исключение `ValueError`.
+   - Читаются данные из CSV-файла в pandas DataFrame.
+   - Преобразуются данные DataFrame в список списков, включая заголовки столбцов.
+   - Вызывается метод `update` объекта листа для загрузки данных, начиная с ячейки 'A1'.
+   
+8.  **Пример использования:**
+    - Из `__main__` создается объект `SpreadSheet`, указывая `spreadsheet_id=None` для создания новой таблицы.
+    - Вызывается `upload_data_to_sheet()` для загрузки данных.
 
-### <mermaid>
+### 2. <mermaid>
+
 ```mermaid
 flowchart TD
-    subgraph SpreadSheet
-        A[<code>SpreadSheet.__init__</code><br>Initialize Spreadsheet]
-        B[<code>SpreadSheet._create_credentials</code><br>Create Credentials]
-        C[<code>SpreadSheet._authorize_client</code><br>Authorize Client]
-        D[<code>SpreadSheet.get_worksheet</code><br>Get Worksheet]
-        E[<code>SpreadSheet.create_worksheet</code><br>Create Worksheet]
-        F[<code>SpreadSheet.copy_worksheet</code><br>Copy Worksheet]
-        G[<code>SpreadSheet.upload_data_to_sheet</code><br>Upload Data]
+    subgraph SpreadSheet Class
+        A[<code>__init__</code><br>Initialize] --> B{<code>_create_credentials</code><br>Create Credentials}
+        B --> C{<code>_authorize_client</code><br>Authorize Client}
+        C --> D{<code>client.open_by_key</code><br>Open Spreadsheet}
+        D -- Spreadsheet Found --> E[<code>get_worksheet</code><br>Get Worksheet]
+        D -- Spreadsheet Not Found --> F[Error: Spreadsheet Not Found]
+        E --> G{Worksheet exists?}
+         G -- Yes --> H[Return Worksheet]
+        G -- No --> I[<code>create_worksheet</code><br>Create Worksheet]
+        I --> H
+        H --> J[<code>upload_data_to_sheet</code><br>Upload Data]
+        J --> K[Read CSV data using pandas]
+        K --> L[Prepare data for upload]
+        L --> M[<code>worksheet.update</code><br>Update Sheet with data]
+        M --> N[Return]
+        F --> Z[Error]
     end
     
-    A --> B
-    A --> C
-    A -->|spreadsheet_id| D
-    D -->|worksheet|E
-    D -->|worksheet| F
+   subgraph _create_credentials
+    AA[Determine secrets path] -->  BB[Create Credentials <br> from JSON Keyfile]
+    BB --> CC[Return Credentials]
+   end
     
-    D -->|worksheet|G
+    subgraph _authorize_client
+    DD[Authorize client <br> with provided credentials] -->  EE[Return Authorized Client]
+   end
     
-    B -->|credentials|C
-        
+     subgraph create_worksheet
+    FF[Create New Worksheet] -->  GG[Return New Worksheet]
+   end
     
-    
-    classDef classFill fill:#f9f,stroke:#333,stroke-width:2px
-    class SpreadSheet classFill
+    A --> AA
+    B --> DD
+    I --> FF
 ```
 
-```mermaid
-flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
+**Объяснение зависимостей в `mermaid`:**
+
+- **`SpreadSheet Class`**: Основной класс, инкапсулирующий логику работы с Google Sheets.
+  - `__init__`: Метод инициализации класса, который вызывает методы для создания учетных данных, авторизации клиента и открытия таблицы.
+  - `_create_credentials`: Создает учетные данные для доступа к Google Sheets API.
+  - `_authorize_client`: Авторизует клиент Google Sheets API.
+  - `client.open_by_key`: Открывает существующую Google Sheet по ее ID или выводит ошибку `SpreadsheetNotFound`.
+  - `get_worksheet`: Получает или создает лист в таблице.
+  - `create_worksheet`: Создает новый лист, если он не существует.
+  - `upload_data_to_sheet`: Загружает данные из CSV-файла в Google Sheet.
+  
+- **`_create_credentials`**:
+  - `Determine secrets path` : Определяет путь к файлу секретов `gs.path.secrets`.
+  - `Create Credentials from JSON Keyfile` : Создает учетные данные на основе `json` файла и `SCOPES`.
+  - `Return Credentials` : Возвращает созданные учетные данные для авторизации клиента.
+  
+- **`_authorize_client`**:
+  - `Authorize client with provided credentials` : Авторизует клиент с помощью созданных учетных данных.
+  - `Return Authorized Client` : Возвращает авторизованный клиент.
+  
+- **`create_worksheet`**:
+  - `Create New Worksheet` : Создаёт новый лист на основе запроса.
+  - `Return New Worksheet` : Возвращает новый лист.
+
+### 3. <объяснение>
+
+**Импорты:**
+
+-   `from pathlib import Path`: Используется для работы с путями к файлам в виде объектов, упрощает создание и управление путями.
+-   `import gspread`: Основная библиотека для работы с Google Sheets API.
+-   `from gspread import Spreadsheet, Worksheet`: Импортирует классы `Spreadsheet` и `Worksheet` из `gspread`, используемые для работы с таблицами и листами.
+-   `from oauth2client.service_account import ServiceAccountCredentials`: Импортирует класс `ServiceAccountCredentials` для аутентификации через JSON-файл учетных данных.
+-   `import pandas as pd`: Библиотека для работы с табличными данными, используется для чтения CSV-файлов и преобразования их в DataFrame.
+-   `from src.logger.logger import logger`: Импортирует логгер из пакета `src.logger`, используемого для записи сообщений о событиях и ошибках.
+-   `from src import gs`: Импортирует глобальные настройки проекта.
+-  `from src.utils.printer import pprint`: Импортирует функцию `pprint` для более наглядного вывода данных, используется для отладки.
+
+**Класс `SpreadSheet`:**
+
+-   **Назначение**: Предоставляет интерфейс для работы с Google Sheets API, включая создание таблиц, управление листами и загрузку данных.
+-   **Атрибуты**:
+    -   `spreadsheet_id`: (str | None) ID существующей таблицы Google Sheets. Если `None`, создается новая таблица.
+    -   `spreadsheet_name`: (str | None) Название новой таблицы Google Sheets, если `spreadsheet_id` не указан.
+    -   `spreadsheet`: (Spreadsheet) Объект таблицы Google Sheets.
+    -   `data_file`: (Path) Путь к CSV-файлу с данными.
+    -   `sheet_name`: (str) Имя листа в Google Sheets.
+    -   `credentials`: (ServiceAccountCredentials) Учетные данные для доступа к Google Sheets API.
+    -   `client`: (gspread.Client) Авторизованный клиент Google Sheets API.
+    -   `worksheet`: (Worksheet) Объект листа Google Sheets.
+    -   `create_sheet`: (bool) Флаг для создания листа, если он не существует.
+-   **Методы**:
+    -   `__init__(spreadsheet_id: str, *args, **kwards)`: Конструктор класса, который принимает `spreadsheet_id`, создает учетные данные, авторизует клиента и открывает таблицу.
+    -   `_create_credentials()`: Создает учетные данные на основе JSON-файла, используя путь к файлу секретов, определенный в глобальных настройках.
+    -   `_authorize_client()`: Авторизует клиент Google Sheets API с помощью полученных учетных данных.
+    -  `get_worksheet(worksheet_name: str | Worksheet) -> Worksheet | None`: Получает лист из таблицы по имени или создаёт новый.
+    -   `create_worksheet(title:str, dim:dict = {'rows':100,'cols':10}) -> Worksheet | None`: Создаёт новый лист с именем title и размерностью dim.
+    -  `copy_worksheet(from_worksheet: str, to_worksheet: str)`: Создает копию существующего листа.
+    -  `upload_data_to_sheet()`: Загружает данные из CSV-файла в Google Sheet.
     
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
-```
 
-### <объяснение>
+**Функции:**
 
-#### Импорты:
+-   В данном коде есть только методы класса `SpreadSheet`.
+-  Функция `main` расположена в разделе  `if __name__ == "__main__":`, данный код демонстрирует создание объекта `SpreadSheet` и вызов метода `upload_data_to_sheet()` для загрузки данных.
 
-*   `pathlib.Path`: Для работы с путями файлов и каталогов. Используется для указания пути к файлу учетных данных (`creds_file`).
-*   `gspread`: Основная библиотека для взаимодействия с Google Sheets API.
-*   `gspread.Spreadsheet`, `gspread.Worksheet`: Классы из `gspread` для работы с таблицами и листами.
-*   `oauth2client.service_account.ServiceAccountCredentials`: Для создания учетных данных из JSON-файла.
-*   `pandas as pd`: Для работы с данными в формате DataFrame, чтения из CSV.
-*   `src.logger.logger as logger`: Для логирования событий и ошибок.
-*   `src import gs`: Импортирует глобальные настройки, включая путь к файлу учетных данных.
-*   `src.utils.printer import pprint`:  Используется для красивой печати данных, не используется в данном коде.
+**Переменные:**
 
-#### Классы:
-*   **`SpreadSheet`**:
-    *   **Роль**: Предоставляет интерфейс для работы с Google Sheets API, включая открытие, создание, загрузку данных в таблицы.
-    *   **Атрибуты**:
-        *   `spreadsheet_id: str | None`: ID Google Sheets таблицы.
-        *   `spreadsheet_name: str | None`: Имя Google Sheets таблицы.
-        *   `spreadsheet: gspread.Spreadsheet`: Объект, представляющий Google Sheets таблицу.
-        *    `data_file: Path`: Путь к файлу с данными.
-        *   `sheet_name: str`: Имя листа в Google Sheets.
-        *   `credentials: ServiceAccountCredentials`: Учетные данные для доступа к API.
-        *   `client: gspread.Client`: Клиент для взаимодействия с Google Sheets API.
-        *   `worksheet: gspread.Worksheet`: Объект, представляющий лист в таблице.
-        * `create_sheet: bool` - флаг для создания нового листа (не используется в текущем коде).
+-   Глобальные переменные:
+    -  `SCOPES`: Список областей доступа к Google API, необходимых для работы с таблицами и диском.
+-   Переменные класса:
+    - `spreadsheet_id`, `spreadsheet_name`, `spreadsheet`, `data_file`, `sheet_name`, `credentials`, `client`, `worksheet`, `create_sheet` - атрибуты экземпляра класса `SpreadSheet`.
+    
+**Потенциальные ошибки и улучшения:**
 
-    *   **Методы**:
-        *   `__init__(self, spreadsheet_id, sheet_name, spreadsheet_name)`:
-            *   Инициализирует объект, устанавливает `spreadsheet_id`, получает учетные данные, авторизует клиент, открывает или создает таблицу.
-        *   `_create_credentials(self)`:
-            *   Создает учетные данные из JSON-файла.
-        *   `_authorize_client(self)`:
-            *   Авторизует клиент Google Sheets API.
-        *    `get_worksheet(self, worksheet_name: str) -> Worksheet | None`:
-           *    Возвращает лист по имени, создавая его, если необходимо.
-        *   `create_worksheet(self, title:str, dim:dict = {'rows':100,'cols':10}) -> Worksheet | None`:
-            *   Создает новый лист в Google Sheets.
-        *   `copy_worksheet(self, from_worksheet: str, to_worksheet: str) -> Worksheet`:
-             *    Копирует лист по имени.
-        *   `upload_data_to_sheet(self)`:
-            *   Загружает данные из CSV файла в Google Sheets.
-            
-#### Функции:
-*   Все функции в коде являются методами класса `SpreadSheet`, и их назначение описано в разделе `Классы`.
-#### Переменные:
-*   `creds_file`: Путь к JSON файлу с учетными данными (тип: `pathlib.Path`).
-*   `SCOPES`: Список областей доступа к Google API (тип: `list`).
-*  `data_file`: Путь к файлу с данными (тип: `pathlib.Path`).
-*  `data`: DataFrame, считанный из CSV файла (`pandas.DataFrame`).
-*   `data_list`: Список списков, подготовленный для записи в Google Sheet.
-*   `spreadsheet_id`: Идентификатор гугл таблицы
-*   `spreadsheet_name`: Имя гугл таблицы
-*   `sheet_name`: Имя листа в гугл таблице
-*   `worksheet`: Рабочий лист в гугл таблице
+-   **Обработка ошибок:**
+    -   В блоках `try-except` не всегда обрабатываются конкретные типы исключений, что затрудняет отладку. Рекомендуется уточнить типы исключений, например `gspread.exceptions.APIError`, для более точной обработки.
+    -   Исключение `gspread.exceptions.SpreadsheetNotFound` уже обрабатывается, но можно добавить логику, например, создание новой таблицы, если это необходимо.
+-   **Безопасность:**
+    -   Хранение пути к файлу учетных данных в коде является потенциальной угрозой безопасности. Рекомендуется использовать переменные окружения или другие методы для безопасного хранения конфиденциальной информации.
+    -  `creds_file`  должен создаваться программно, например в `tmp` директории и не быть частью проекта.
+-   **Общие улучшения:**
+    -   Добавить возможность работы с различными форматами данных, например, Excel.
+    -   Улучшить валидацию входных данных, например, проверять, является ли `spreadsheet_id` допустимым.
+    -   Расширить функциональность класса, например, добавить возможность загрузки данных из DataFrame, а не только из CSV.
+    -    Реализовать асинхронные операции с Google Sheets, чтобы не блокировать выполнение программы при длительных операциях.
 
-#### Потенциальные ошибки и области для улучшения:
-*   **Обработка ошибок**: В блоках `try...except` логируются ошибки, но исключения перебрасываются далее, возможно, следует более детально их обрабатывать.
-*   **Безопасность**: Файл с учетными данными хранится локально. Рекомендуется использовать более безопасные методы хранения, например, в переменных окружения.
-*   **Гибкость**: Параметры создания листа по умолчанию заданы жестко. Следует разрешить пользователю настраивать их.
-*   **Отсутствует** механизм загрузки данных из листа, только выгрузка в лист.
-*   **`copy_worksheet`** не реализован полностью.
-*  **Не используется** `printer.pprint`
+**Взаимосвязь с другими частями проекта:**
 
-#### Взаимосвязь с другими частями проекта:
-*   `src.logger.logger`: Используется для логирования событий, ошибок, и для отладки.
-*   `src import gs`: Используется для получения пути к файлу с учетными данными, который задан в глобальных настройках.
-*   `src.utils.printer`: Используется для красивой печати данных.
-*   `header.py` Определяет путь к корневой директории проекта, используется в `src import gs`
+-   `src.logger.logger`: используется для логирования событий и ошибок, что важно для отладки и мониторинга.
+-   `src`: Пакет, содержащий настройки и глобальные переменные.
+- `src.utils.printer`: Выводит данные на экран.
+-   `gs.path.secrets`: используется для хранения пути к секретному файлу, что обеспечивает более структурированное управление конфигурацией.
+-   `oauth2client`: Обеспечивает авторизацию в Google API через сервисный аккаунт.
+-   `gspread`: Обеспечивает связь с Google Sheets.
 
-Этот анализ предоставляет всестороннее понимание функциональности и структуры кода, а также выделяет потенциальные области для улучшения и возможные ошибки.
+В целом, этот код предоставляет базовую функциональность для работы с Google Sheets. Его можно усовершенствовать, добавив обработку ошибок, повысив безопасность и расширив функциональные возможности.

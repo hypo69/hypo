@@ -1,41 +1,37 @@
 # Анализ кода модуля `file.py`
 
-**Качество кода: 7/10**
--   **Плюсы:**
-    -   Модуль предоставляет полезные функции для работы с файлами, включая чтение, запись, рекурсивный поиск и удаление BOM.
-    -   Используются генераторы для эффективной обработки больших файлов.
-    -   Присутствует базовая документация для функций.
-    -   Логирование ошибок реализовано с использованием `logger`.
--   **Минусы:**
-    -   Не все функции имеют подробную документацию в формате RST.
-    -   В некоторых местах используется `try-except` с `...` для обработки ошибок, что снижает информативность.
-    -   Используется стандартный `json.dump` вместо `j_dumps` из `src.utils.jjson`.
-    -   Функция `read_text_file` дублирует функционал с `read_text_file_generator`.
-    -   В `recursively_read_text_files` используются `os.walk` и `fnmatch`, что можно заменить на более консистентный с остальным кодом `Path.rglob`.
-    -   В функции `_read_file_lines_generator` код обработки последней строки и перенос её в следующий чанк сложноват, и может быть упрощен.
-    -   Не всегда используется `from src.logger.logger import logger`.
+**Качество кода**
+7
+-  Плюсы
+    - Код содержит подробную документацию в формате docstring для каждой функции, что облегчает понимание и использование модуля.
+    - Используются типы в аннотациях, что улучшает читаемость и поддержку кода.
+    - Присутствует логирование ошибок с помощью `logger.error`, что помогает отслеживать проблемы.
+    - Есть примеры использования функций в docstring.
+    - Код разделен на логические блоки, что упрощает его восприятие.
 
-**Рекомендации по улучшению:**
+-  Минусы
+    - В коде используются стандартные `json.dump` вместо `j_loads` или `j_loads_ns`.
+    - Некоторые функции дублируют функциональность (например `read_text_file` и `read_text_file_generator` ,`recursively_get_file_path` и `recursively_yield_file_path`) и требуют рефакторинга.
+    - Присутствуют множественные `try-except` блоки, где можно использовать `logger.error` и `...` для упрощения.
+    - Используются двойные кавычки в строках кода, где должны быть одинарные.
+    - Не всегда корректное использование генераторов.
+    - Некоторые блоки кода могут быть упрощены.
+    - Используются `print` в коде.
+    - Используется `os.walk` в `recursively_read_text_files` и в `remove_bom`, что дублирует функциональность `Path.rglob`.
+    - Код местами избыточен.
+**Рекомендации по улучшению**
+1.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.dump`.
+2.  Удалить дублирование функциональности.
+3.  Упростить обработку ошибок, использовать `logger.error` вместо `try-except`.
+4.  Заменить двойные кавычки на одинарные в коде.
+5.  Упростить логику работы с генераторами и списками.
+6.  Удалить `print` из кода.
+7.  Использовать `Path.rglob` вместо `os.walk`
+8.  Добавить `...` в местах обработки ошибок.
+9.  Вместо `if not chunk` использовать `if chunk` для улучшения читаемости кода.
+10. Добавить проверку `if not extensions` в `get_filenames_from_directory` чтобы не создавать пустой список в `extensions = [ext if ext.startswith(\'.\') else f\'.{ext}\' for ext in extensions]`.
 
-1.  **Документация:**
-    -   Добавить подробную документацию в формате RST для всех функций, методов и переменных, включая примеры использования.
-    -   Привести документацию к единому стилю, используя docstring.
-2.  **Обработка ошибок:**
-    -   Заменить `try-except` с `...` на явную обработку ошибок с помощью `logger.error` и возвратом `None` или `False`, где это уместно.
-    -   В `recursively_read_text_files` можно использовать `try-except` только для операций с файлами, а не для цикла `for`.
-3.  **Импорты:**
-    -   Использовать `from src.logger.logger import logger` везде, где используется логгер.
-4.  **Код:**
-    -   Заменить `json.dump` на `j_dumps` из `src.utils.jjson`.
-    -   Упростить `_read_file_lines_generator` - можно отказаться от отдельной обработки последнего символа, так как `splitlines` отбрасывает символ переноса строки в конце.
-    -   Объединить функциональность `read_text_file` и `read_text_file_generator` или удалить дублирующую `read_text_file`.
-    -   В функции `recursively_read_text_files` заменить `os.walk` и `fnmatch` на `Path.rglob` для консистентности.
-5.  **Общее:**
-    -   Сделать код более читаемым за счет форматирования и использования более конкретных имен переменных.
-    -   Удалить `MODE` так как он не используется в коде.
-
-**Оптимизированный код:**
-
+**Оптимизированный код**
 ```python
 """
 Модуль для работы с файлами.
@@ -61,11 +57,15 @@
     save_text_file(file_path, 'Новый текст')
 """
 import os
+# import json # стандартная библиотека json больше не используется
 import fnmatch
 from pathlib import Path
 from typing import List, Optional, Union, Generator
 from src.logger.logger import logger
-from src.utils.jjson import j_dumps
+#  Импортируем j_loads и j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns
+
+MODE = 'dev'  # Константа режима
 
 
 def save_text_file(
@@ -80,10 +80,8 @@ def save_text_file(
         file_path (str | Path): Путь к файлу для сохранения.
         data (str | list[str] | dict): Данные для записи. Могут быть строкой, списком строк или словарем.
         mode (str, optional): Режим записи файла ('w' для записи, 'a' для добавления).
-
     Returns:
         bool: `True`, если файл успешно сохранен, `False` в противном случае.
-
     Raises:
         Exception: При возникновении ошибки при записи в файл.
 
@@ -95,27 +93,23 @@ def save_text_file(
         >>> print(result)
         True
     """
-    # Преобразуем путь к файлу в объект Path
+    # код исполняет запись данных в файл
     try:
         file_path = Path(file_path)
-        # Создаем родительские директории, если они не существуют
         file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Открываем файл в заданном режиме
         with file_path.open(mode, encoding='utf-8') as file:
-            # Если данные - список, записываем каждую строку в файл
             if isinstance(data, list):
-                file.writelines(f'{line}\n' for line in data)
-            # Если данные - словарь, записываем их в формате JSON
+                file.writelines(f'{line}\\n' for line in data)
             elif isinstance(data, dict):
-                file.write(j_dumps(data))
-            # Если данные - строка, записываем ее в файл
+                #  используем j_loads_ns для записи в файл
+                file.write(j_loads_ns(data))
             else:
                 file.write(data)
         return True
-    # Ловим и логируем ошибку, если что-то пошло не так
     except Exception as ex:
         logger.error(f'Ошибка при сохранении файла {file_path}.', ex)
+        ...
         return False
 
 
@@ -130,32 +124,31 @@ def read_text_file_generator(
     """
     Читает содержимое файла(ов) или директории.
 
-    Args:
-        file_path (str | Path): Путь к файлу или директории.
-        as_list (bool, optional): Если `True`, то возвращает генератор строк или список строк, в зависимости от типа вывода.
-        extensions (list[str], optional): Список расширений файлов для включения при чтении директории.
-        chunk_size (int, optional): Размер чанка для чтения файла в байтах.
-        recursive (bool, optional): Если `True`, то поиск файлов выполняется рекурсивно.
-        patterns (str | list[str], optional): Шаблоны для фильтрации файлов при рекурсивном поиске.
+        Args:
+            file_path (str | Path): Путь к файлу или директории.
+            as_list (bool, optional): Если `True`, то возвращает генератор строк или список строк, в зависимости от типа вывода.
+            extensions (list[str], optional): Список расширений файлов для включения при чтении директории.
+            chunk_size (int, optional): Размер чанка для чтения файла в байтах.
+            recursive (bool, optional): Если `True`, то поиск файлов выполняется рекурсивно.
+            patterns (str | list[str], optional): Шаблоны для фильтрации файлов при рекурсивном поиске.
 
-    Returns:
-        Generator[str, None, None] | str | list[str] | None:
+        Returns:
+            Generator[str, None, None] | str | list[str] | None:
             - Если `as_list` is True и `file_path` является файлом, возвращает генератор строк.
             - Если `as_list` is True и `file_path` является директорией и `recursive` is True, возвращает список строк.
             - Если `as_list` is False и `file_path` является файлом, возвращает строку.
             - Если `as_list` is False и `file_path` является директорией, возвращает объединенную строку.
             - Возвращает `None` в случае ошибки.
+        Raises:
+            Exception: При возникновении ошибки при чтении файла.
 
-    Raises:
-        Exception: При возникновении ошибки при чтении файла.
-
-    Example:
-        >>> from pathlib import Path
-        >>> file_path = Path('example.txt')
-        >>> content = read_text_file(file_path)
-        >>> if content:
-        ...    print(f'File content: {content[:100]}...')
-        File content: Пример текста...
+        Example:
+            >>> from pathlib import Path
+            >>> file_path = Path('example.txt')
+            >>> content = read_text_file(file_path)
+            >>> if content:
+            ...    print(f'File content: {content[:100]}...')
+            File content: Пример текста...
     Функция read_text_file может возвращать несколько разных типов данных в зависимости от входных параметров:
 
     Возвращаемые значения:
@@ -174,12 +167,13 @@ def read_text_file_generator(
             file_path – это файл и as_list равен False.
             file_path – это директория, recursive равен False и as_list равен False. При этом возвращается объединенная строка, состоящая из содержимого всех файлов в директории, разделенных символами новой строки (\\n).
             file_path – это директория, recursive равен True и as_list равен False. При этом возвращается объединенная строка, состоящая из содержимого всех файлов в директории и её поддиректориях, разделенных символами новой строки (\\n).
-    
+ 
     - list[str] (Список строк):
         Этот тип явно не возвращается функцией, однако когда file_path – это директория, recursive равен True и as_list равен True - функция возвращает генератор, который можно преобразовать в список при помощи list()
         - Когда:
             file_path – не является ни файлом, ни директорией.
             Произошла ошибка при чтении файла или директории (например, файл не найден, ошибка доступа и т.п.).
+
 
     Note:
         Если вы хотите прочитать содержимое файла построчно (особенно для больших файлов) используйте as_list = True. В этом случае вы получите генератор строк.
@@ -192,59 +186,46 @@ def read_text_file_generator(
     Важно помнить:
         В случае чтения директории, если as_list=False, функция объединяет все содержимое найденных файлов в одну строку. Это может потребовать много памяти, если файлов много или они большие.
         Функция полагается на другие функции-помощники (_read_file_lines_generator, _read_file_content, recursively_get_file_path, yield_text_from_files), которые здесь не определены и их поведение влияет на результат read_text_file.
+
+
     """
+    # код исполняет чтение файла или директории
     try:
         path = Path(file_path)
-        # Если путь - файл
         if path.is_file():
-            # Если нужно вернуть список строк, используем генератор
             if as_list:
                 return _read_file_lines_generator(path, chunk_size=chunk_size)
-            # Иначе возвращаем содержимое файла в виде строки
             else:
                 return _read_file_content(path, chunk_size=chunk_size)
-        # Если путь - директория
         elif path.is_dir():
-            # Если нужно рекурсивно прочитать файлы
             if recursive:
-                # Получаем список файлов по шаблону, если он есть
-                if patterns:
-                    files = recursively_get_file_path(path, patterns)
-                # Иначе получаем список всех файлов в директории
-                else:
-                    files = [
+                files = recursively_get_file_path(path, patterns) if patterns else [
                         p for p in path.rglob('*') if p.is_file() and (not extensions or p.suffix in extensions)
                     ]
-                # Если нужно вернуть список строк, используем генератор
                 if as_list:
                     return (
                         line
                         for file in files
-                        for line in _read_file_lines_generator(file, chunk_size=chunk_size)
+                        for line in yield_text_from_files(file, as_list=True, chunk_size=chunk_size)
                     )
-                # Иначе возвращаем объединенную строку
                 else:
-                    return '\n'.join(filter(None, [read_text_file_generator(p, chunk_size=chunk_size) for p in files]))
-            # Если не нужно рекурсивно прочитать файлы
+                    return '\n'.join(filter(None, [read_text_file(p, chunk_size=chunk_size) for p in files]))
             else:
                 files = [
                     p for p in path.iterdir() if p.is_file() and (not extensions or p.suffix in extensions)
                 ]
-                # Если нужно вернуть список строк, используем генератор
                 if as_list:
-                    return (line for file in files for line in _read_file_lines_generator(file, chunk_size=chunk_size))
-                # Иначе возвращаем объединенную строку
+                    return (line for file in files for line in read_text_file(file, as_list=True, chunk_size=chunk_size))
                 else:
-                    return '\n'.join(filter(None, [read_text_file_generator(p, chunk_size=chunk_size) for p in files]))
-        # Если путь не является ни файлом, ни директорией
+                    return '\n'.join(filter(None, [read_text_file(p, chunk_size=chunk_size) for p in files]))
         else:
             logger.error(f'Путь \'{file_path}\' не является файлом или директорией.')
+            ...
             return None
-    # Ловим и логируем ошибку, если что-то пошло не так
     except Exception as ex:
         logger.error(f'Ошибка при чтении файла/директории {file_path}.', ex)
+        ...
         return None
-
 
 def read_text_file(
     file_path: Union[str, Path],
@@ -257,30 +238,31 @@ def read_text_file(
 
     Args:
         file_path (str | Path): Путь к файлу или директории.
-        as_list (bool, optional): Если True, возвращает содержимое в виде списка строк. По умолчанию False.
+        as_list (bool, optional): Если True, возвращает содержимое как список строк. По умолчанию False.
         extensions (list[str], optional): Список расширений файлов для включения при чтении директории. По умолчанию None.
-        exc_info (bool, optional): Если True, логирует traceback при ошибке. По умолчанию True.
+        exc_info (bool, optional): Если True, логирует трассировку ошибки. По умолчанию True.
 
     Returns:
         str | list[str] | None: Содержимое файла в виде строки или списка строк, или None, если произошла ошибка.
     """
+    # код исполняет чтение файла
     try:
         path = Path(file_path)
         if path.is_file():
             with path.open('r', encoding='utf-8') as f:
                 return f.readlines() if as_list else f.read()
         elif path.is_dir():
-             files = [
-                 p for p in path.rglob('*') if p.is_file() and (not extensions or p.suffix in extensions)
-             ]
-             contents = [read_text_file(p, as_list) for p in files]
-             return [item for sublist in contents if sublist for item in sublist] if as_list else '\n'.join(filter(None, contents))
+            files = [
+                p for p in path.rglob('*') if p.is_file() and (not extensions or p.suffix in extensions)
+            ]
+            contents = [read_text_file(p, as_list) for p in files]
+            return [item for sublist in contents if sublist for item in sublist] if as_list else '\n'.join(filter(None, contents))
         else:
             logger.warning(f'Path \'{file_path}\' is invalid.')
-            return None
+            return
     except Exception as ex:
         logger.error(f'Failed to read file {file_path}.', ex, exc_info=exc_info)
-        return None
+        return
 
 
 def yield_text_from_files(
@@ -300,7 +282,7 @@ def yield_text_from_files(
         Generator[str, None, None] | str | None: Генератор строк, объединенная строка или None в случае ошибки.
 
     Yields:
-        str: Строки из файла, если as_list is True.
+       str: Строки из файла, если as_list is True.
 
     Example:
         >>> from pathlib import Path
@@ -310,6 +292,7 @@ def yield_text_from_files(
         Первая строка файла
         Вторая строка файла
     """
+    # код исполняет чтение файла и возвращает генератор или строку
     try:
         path = Path(file_path)
         if path.is_file():
@@ -319,9 +302,11 @@ def yield_text_from_files(
                 yield _read_file_content(path, chunk_size=chunk_size)
         else:
             logger.error(f'Путь \'{file_path}\' не является файлом.')
+            ...
             return None
     except Exception as ex:
         logger.error(f'Ошибка при чтении файла {file_path}.', ex)
+        ...
         return None
 
 
@@ -332,13 +317,12 @@ def _read_file_content(file_path: Path, chunk_size: int) -> str:
     Args:
         file_path (Path): Путь к файлу для чтения.
         chunk_size (int): Размер чанка для чтения файла в байтах.
-
     Returns:
         str: Содержимое файла в виде строки.
-    
     Raises:
         Exception: При возникновении ошибки при чтении файла.
     """
+    # код исполняет чтение файла по частям
     with file_path.open('r', encoding='utf-8') as f:
         content = ''
         while True:
@@ -356,19 +340,28 @@ def _read_file_lines_generator(file_path: Path, chunk_size: int) -> Generator[st
     Args:
         file_path (Path): Путь к файлу для чтения.
         chunk_size (int): Размер чанка для чтения файла в байтах.
-
     Yields:
         str: Строки из файла.
-    
     Raises:
         Exception: При возникновении ошибки при чтении файла.
     """
+    # код исполняет чтение файла по строкам
     with file_path.open('r', encoding='utf-8') as f:
         while True:
             chunk = f.read(chunk_size)
             if not chunk:
                 break
-            yield from chunk.splitlines()
+            lines = chunk.splitlines()
+            # Если чанк не закончился полной строкой, то последнюю строку добавляем к следующему чанку
+            if lines and not chunk.endswith('\n'):
+                next_chunk = f.read(1)
+                if next_chunk:
+                    lines[-1] += next_chunk
+                else:
+                    yield from lines
+                    break
+            yield from lines
+
 
 def get_filenames_from_directory(
     directory: str | Path, extensions: str | list[str] = '*'
@@ -390,12 +383,13 @@ def get_filenames_from_directory(
         >>> get_filenames_from_directory(directory, ['.txt', '.md'])
         ['example.txt', 'readme.md']
     """
+    # код исполняет получение списка имен файлов в директории
     try:
         path = Path(directory)
         if isinstance(extensions, str):
             extensions = [extensions] if extensions != '*' else []
-        extensions = [ext if ext.startswith('.') else f'.{ext}' for ext in extensions]
-
+        if extensions:  #  проверка на пустой список
+            extensions = [ext if ext.startswith('.') else f'.{ext}' for ext in extensions]
         return [
             file.name
             for file in path.iterdir()
@@ -427,12 +421,14 @@ def recursively_yield_file_path(
         ./example.txt
         ./readme.md
     """
+    # код исполняет рекурсивный поиск файлов в директории и возвращает генератор путей
     try:
         patterns = [patterns] if isinstance(patterns, str) else patterns
         for pattern in patterns:
             yield from Path(root_dir).rglob(pattern)
     except Exception as ex:
         logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', ex)
+        ...
 
 
 def recursively_get_file_path(
@@ -456,11 +452,12 @@ def recursively_get_file_path(
         >>> print(paths)
         [Path('./example.txt'), Path('./readme.md')]
     """
+    # код исполняет рекурсивный поиск файлов в директории и возвращает список путей
     try:
-        file_paths = []
         patterns = [patterns] if isinstance(patterns, str) else patterns
+        file_paths = []
         for pattern in patterns:
-            file_paths.extend(Path(root_dir).rglob(pattern))
+             file_paths.extend(Path(root_dir).rglob(pattern))
         return file_paths
     except Exception as ex:
         logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', ex)
@@ -496,28 +493,25 @@ def recursively_read_text_files(
         Первая строка readme.md
         Вторая строка readme.md
     """
+    # код исполняет рекурсивное чтение текстовых файлов
     matches = []
     root_path = Path(root_dir)
-
     if not root_path.is_dir():
         logger.debug(f'Корневая директория \'{root_path}\' не существует или не является директорией.')
         return []
-
-    logger.debug(f'Поиск в директории: {root_path}')
 
     if isinstance(patterns, str):
         patterns = [patterns]
 
     for file_path in recursively_get_file_path(root_path, patterns):
-        try:
-             with file_path.open('r', encoding='utf-8') as file:
-                if as_list:
-                    matches.extend(file.readlines())
-                else:
-                    matches.append(file.read())
-        except Exception as ex:
-           logger.error(f'Ошибка при чтении файла \'{file_path}\'.', ex)
-
+            try:
+                with file_path.open('r', encoding='utf-8') as file:
+                    if as_list:
+                         matches.extend(file.readlines())
+                    else:
+                         matches.append(file.read())
+            except Exception as ex:
+                logger.error(f'Ошибка при чтении файла \'{file_path}\'.', ex)
     return matches
 
 
@@ -537,6 +531,7 @@ def get_directory_names(directory: str | Path) -> list[str]:
         >>> get_directory_names(directory)
         ['dir1', 'dir2']
     """
+    # код исполняет получение списка имен директорий
     try:
         return [entry.name for entry in Path(directory).iterdir() if entry.is_dir()]
     except Exception as ex:
@@ -561,6 +556,7 @@ def remove_bom(path: str | Path) -> None:
         ...     print(f.read())
         Пример текста с BOM
     """
+    # код исполняет удаление BOM из файла или директории
     path = Path(path)
     if path.is_file():
         try:
@@ -571,23 +567,26 @@ def remove_bom(path: str | Path) -> None:
                 file.truncate()
         except Exception as ex:
             logger.error(f'Ошибка при удалении BOM из файла {path}.', ex)
+            ...
     elif path.is_dir():
         for file_path in recursively_get_file_path(path, '*.py'):
-             try:
-                with file_path.open('r+', encoding='utf-8') as f:
+            try:
+                 with file_path.open('r+', encoding='utf-8') as f:
                     content = f.read().replace('\ufeff', '')
                     f.seek(0)
                     f.write(content)
                     f.truncate()
-             except Exception as ex:
+            except Exception as ex:
                 logger.error(f'Ошибка при удалении BOM из файла {file_path}.', ex)
-
+                ...
     else:
         logger.error(f'Указанный путь \'{path}\' не является файлом или директорией.')
+        ...
 
 
 def main() -> None:
     """Entry point for BOM removal in Python files."""
+    #  удаляем BOM из всех файлов python в директории src
     root_dir = Path('..', 'src')
     logger.info(f'Starting BOM removal in {root_dir}')
     remove_bom(root_dir)

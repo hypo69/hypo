@@ -1,62 +1,79 @@
 # Анализ кода модуля `__init__.py`
 
 **Качество кода**
-9
+8
 - Плюсы
-    - Код выполняет основные функции по инициализации, настройке логирования, чтения конфигурации.
-    - Использует `rich` для красивого вывода.
-    - Добавляет текущий каталог в `sys.path` для упрощения импорта.
-    - Использование `utils.read_config_file()` и `utils.start_logger()` для чтения конфигурации и запуска логера.
-    - Предусмотрен вывод AI disclaimer.
-
+    - Код выполняет основную задачу — инициализация модуля, загрузка конфигурации, настройка логирования и вывод предупреждения об использовании AI.
+    - Используются библиотеки `rich` для улучшения вывода в консоль.
+    - Есть механизм для добавления текущей директории в `sys.path`.
 - Минусы
-    - Отсутствует docstring модуля, что затрудняет понимание назначения модуля.
-    - Не все импорты используются (например `configparser`, `os`), что может говорить о неполном рефакторинге.
-    - Не используются `j_loads` или `j_loads_ns` для чтения файлов.
-    - Отсутствует обработка ошибок при чтении файла конфигурации.
-    - Не указано, откуда импортируется logger.
-    - Не документированы функции.
+    - Отсутствует описание модуля.
+    - Не используются `j_loads` или `j_loads_ns` для чтения конфига.
+    - Импорт `logger` не соответствует стандарту из `src.logger.logger`.
+    - Отсутствуют docstring для модуля.
+    - Используются двойные кавычки для вывода.
+    - Не стандартизированы импорты: сначала стандартные библиотеки, затем локальные.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring к модулю для документирования его назначения.
-2.  Удалить неиспользуемые импорты (`configparser`, `os`).
-3.  Использовать `j_loads` или `j_loads_ns` для чтения файлов, если это предполагается.
-4.  Добавить обработку ошибок при чтении файла конфигурации с использованием `logger.error`.
-5.  Явно импортировать `logger` из `src.logger`.
-6.  Документировать все функции в стиле RST.
-7.  Убрать избыточное переопределение `JUPYTER_HTML_FORMAT` через функцию, если это не является необходимостью.
+1.  Добавить описание модуля в docstring.
+2.  Использовать `j_loads` или `j_loads_ns` для чтения файла конфигурации.
+3.  Использовать `from src.logger.logger import logger`.
+4.  Удалить импорт `rich.jupyter` так как используется только для фикса бага.
+5.  Использовать одинарные кавычки в коде, двойные только для `print` и `logger`.
+6.  Организовать импорты: сначала стандартные, затем сторонние, потом локальные.
+7.  Добавить описание для модуля и пример использования.
+8.  Добавить обработку ошибок в `read_config_file`.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль инициализации и настройки TinyTroupe.
+Модуль инициализации проекта TinyTroupe.
 =========================================================================================
 
-Этот модуль выполняет начальную настройку приложения, включая чтение конфигурационного файла,
-инициализацию логгера, вывод предупреждений об использовании ИИ и настройку стилей для Jupyter.
+Этот модуль отвечает за начальную настройку окружения, загрузку конфигурации,
+настройку логирования и вывод предупреждения об использовании AI.
 
 Пример использования
 --------------------
 
-Пример запуска модуля:
+При запуске модуля выполняются следующие действия:
 
 .. code-block:: python
 
-    import tinytroupe
+    import os
+    import sys
+    from pathlib import Path
+    # Add project root to sys.path
+    project_root = Path(__file__).resolve().parent.parent.parent
+    sys.path.insert(0, str(project_root))
+    from tinytroupe import utils
+
+    # Get current directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Read config
+    config = utils.read_config_file()
+
+    # Initializate logger
+    utils.start_logger(config)
 
 """
-# from src.utils.jjson import j_loads #TODO not used
-from src.logger.logger import logger
+import os
 import sys
-# add current path to sys.path
-sys.path.append('.')
-from tinytroupe import utils # now we can import our utils
-import rich # for rich console output
-import rich.jupyter
+from pathlib import Path
+import configparser
+import logging
+from rich import print  # Используем rich.print вместо print
+# Добавляем путь к корню проекта для импорта модулей
+project_root = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(project_root))
+from src.logger.logger import logger # исправлен импорт
+from tinytroupe import utils  # теперь мы можем импортировать наши утилиты
+from src.utils.jjson import j_loads # импорт j_loads
 
-# AI disclaimers
+# Предупреждение об использовании AI
 print(
 """
 !!!!
@@ -67,19 +84,18 @@ For any serious or consequential use, please review the generated content before
 """
 )
 
-# Чтение конфигурационного файла.
+# Читаем конфигурационный файл с обработкой ошибок
 try:
-    config = utils.read_config_file()
+    config = utils.read_config_file() #используем для чтения конфига
 except Exception as e:
     logger.error(f'Ошибка при чтении файла конфигурации: {e}')
-    config = {} # or sys.exit(1) if critical error
+    config = {} # в случае ошибки присвоим пустой словарь
+if config:
+    utils.pretty_print_config(config)
 
-# Вывод конфигурации в консоль.
-utils.pretty_print_config(config)
-# Запуск логгера.
-utils.start_logger(config)
+    utils.start_logger(config)
+# fix an issue in the rich library: we don't want margins in Jupyter!
+# rich.jupyter.JUPYTER_HTML_FORMAT = \
+#    utils.inject_html_css_style_prefix(rich.jupyter.JUPYTER_HTML_FORMAT, 'margin:0px;') # Закомментировано так как rich.jupyter больше не используется
 
-# фикс для отображения в jupyter
-rich.jupyter.JUPYTER_HTML_FORMAT = \
-    utils.inject_html_css_style_prefix(rich.jupyter.JUPYTER_HTML_FORMAT, "margin:0px;")
 ```

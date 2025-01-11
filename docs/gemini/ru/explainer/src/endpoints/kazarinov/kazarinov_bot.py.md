@@ -1,196 +1,146 @@
-## АНАЛИЗ КОДА: `kazarinov_bot.py`
-
-### 1. <алгоритм>
-
-**Описание работы:**
+## <алгоритм>
 
 1.  **Инициализация**:
-    *   Бот инициализируется с помощью `KazarinovTelegramBot`, класс наследуется от `TelegramBot` и `BotHandler`.
-    *   Определяется режим работы ('test' или 'production') через аргумент командной строки, значение по умолчанию 'test', или значение `config.mode`, или 'prod' если выполняется на хосте `'Vostro-3888'`.
-    *   Токен Telegram-бота выбирается в зависимости от режима работы.
-    *   Инициализируются базовые классы `TelegramBot` и `BotHandler`.
-    *   Создается экземпляр модели `GoogleGenerativeAI`.
-    
-    *Пример:*
-    `kt = KazarinovTelegramBot(mode='production')`
-
-2.  **Обработка сообщений**:
-    *   Функция `handle_message` обрабатывает входящие сообщения.
-    *   Если сообщение равно `?`, отправляется изображение `user_flowchart.png`.
-
-        *Пример:* Пользователь пишет `?`.
-        
-        *  _Результат_: бот отвечает картинкой `user_flowchart.png`.
-    *   Если сообщение является URL, вызывается `self.handle_url`.
-    *   Если сообщение является командой для перехода к следующему сообщению (извлеченному через парсер), вызывается `handle_next_command`.
-        *Пример:* Пользователь пишет `-next`.
-    *   В противном случае, сообщение отправляется в модель `GoogleGenerativeAI` для генерации ответа, который отправляется обратно пользователю.
-        *Пример:* Пользователь пишет `Привет, как дела?`.
-        *  _Результат_: бот отвечает сгенерированным ответом от `GoogleGenerativeAI`.
+    *   При запуске скрипта, сначала проверяется, является ли он точкой входа (`if __name__ == "__main__":`). Если да, то начинается процесс инициализации.
+    *   Инициализируется `argparse` для разбора аргументов командной строки.  Принимается аргумент `-m` или `--mode`, который указывает режим работы бота ('test' или 'production').
+    *   Определяется режим работы: если имя хоста `gs.host_name` равно `'Vostro-3888'`, то режим принудительно устанавливается в `'prod'`. В ином случае используется режим, переданный через аргумент командной строки или `'prod'` по умолчанию.
+    *   Создается экземпляр `KazarinovTelegramBot`, передавая в него определенный ранее режим `mode`.
+2.  **`KazarinovTelegramBot` Instance Creation**:
+    *   В конструкторе `__init__` класса `KazarinovTelegramBot`:
+        *   Определяется режим работы `mode`. Если аргумент не передан, используется значение `self.config.mode`, прочитанное из конфигурационного файла `kazarinov.json`.
+        *   Токен бота извлекается на основе `mode`: для режима `'test'` используется токен тестового бота, для `'production'` - боевого.
+        *   Инициализируется родительский класс `TelegramBot` с полученным токеном.
+        *   Инициализируется родительский класс `BotHandler` c именем вебдрайвера.
+    *   Экземпляр класса `KazarinovTelegramBot` теперь готов к обработке сообщений.
 3.  **Запуск бота**:
-    *   Скрипт парсит аргументы командной строки для режима работы.
-    *   Создается экземпляр `KazarinovTelegramBot`.
-    *   Бот запускается в режиме long polling с помощью `asyncio.run(kt.application.run_polling())`.
-    
-    *Пример*:
-    `python kazarinov_bot.py -m production` (запуск в production режиме)
+    *   Вызывается `asyncio.run(kt.application.run_polling())` для запуска бота в режиме long polling. Бот начинает ожидать входящие сообщения.
+4.  **Обработка сообщений** (`handle_message`):
+    *   При получении нового сообщения:
+        *   Извлекается текст сообщения `q`.
+        *   Если `q == '?'`: Бот отправляет пользователю изображение `user_flowchart.png`.
+        *   Если `q` является URL: Вызывается метод `handle_url` для обработки URL (логика не показана в данном коде, подразумевается обращение к методу родительского класса `BotHandler`, где и описана логика работы с вебдрайвером и парсером). После этого бот завершает обработку сообщения.
+        *   Если `q` является командой  ('\--next', '\-next', '\_\_next', '\-n', '\-q'): вызывается метод `handle_next_command` (логика не показана в данном коде).
+        *   В противном случае текст `q` отправляется в языковую модель (`self.model.chat(q)`), и полученный ответ отправляется обратно пользователю.
 
-### 2. <mermaid>
+## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Start] --> InitBot[Initialize KazarinovTelegramBot]
-    InitBot --> SetMode{Set Mode}
-    SetMode -- "mode='test'" --> SetTokenTest[Set Test Token]
-    SetMode -- "mode='production'" --> SetTokenProd[Set Production Token]
-    SetTokenTest --> InitTelegramBot[Init TelegramBot]
-    SetTokenProd --> InitTelegramBot
-    InitTelegramBot --> InitBotHandler[Init BotHandler]
-    InitBotHandler --> InitModel[Init GoogleGenerativeAI Model]
-    InitModel --> StartPolling[Start Bot Polling]
-    StartPolling --> HandleUpdate[Handle Incoming Update]
-    HandleUpdate --> CheckQuestionMark{Message is "?"}
-    CheckQuestionMark -- Yes --> SendImage[Send user_flowchart.png]
-    SendImage --> HandleUpdate
-    CheckQuestionMark -- No --> CheckURL{Message is URL?}
-    CheckURL -- Yes --> HandleURL[Call self.handle_url()]
-    HandleURL --> HandleUpdate
-    CheckURL -- No --> CheckNextCommand{Message is next command?}
-    CheckNextCommand -- Yes --> HandleNextCommand[Call self.handle_next_command()]
-    HandleNextCommand --> HandleUpdate
-    CheckNextCommand -- No --> SendToModel[Send message to GoogleGenerativeAI]
-    SendToModel --> SendReply[Send Reply to User]
-    SendReply --> HandleUpdate
-    
-    classDef mainClass fill:#f9f,stroke:#333,stroke-width:2px;
-    class InitBot, SetMode, SetTokenTest, SetTokenProd, InitTelegramBot, InitBotHandler, InitModel, StartPolling mainClass;
+    Start[Start Script Execution] --> ArgParse[Parse Command Line Arguments]
+    ArgParse --> DetermineMode{Determine Mode: <br>Argument '-m' or Host Check}
+    DetermineMode -- 'test' or 'prod' mode --> CreateBotInstance[Create KazarinovTelegramBot Instance]
+    CreateBotInstance --> InitKazarinovBot[<code>KazarinovTelegramBot.__init__</code> <br> Load Config, Get Token, Init Parent Classes]
+     InitKazarinovBot --> InitTelegramBot[<code>TelegramBot.__init__</code>]
+    InitKazarinovBot --> InitBotHandler[<code>BotHandler.__init__</code>]
+    InitTelegramBot --> StartLongPolling[<code>asyncio.run(kt.application.run_polling())</code>]
+    StartLongPolling --> WaitForMessage[Wait for Telegram Message]
+    WaitForMessage --> HandleMessage[<code>KazarinovTelegramBot.handle_message</code>]
+    HandleMessage --> CheckForQuestion{Message is '?'}
+    CheckForQuestion -- Yes --> SendFlowchart[Send User Flowchart Image]
+    CheckForQuestion -- No --> CheckForURL{Message is URL?}
+    CheckForURL -- Yes --> HandleURL[<code>self.handle_url</code><br>Handle URL]
+    HandleURL --> EndMessageHandling[End Message Handling]
+     CheckForURL -- No --> CheckForNextCommand{Message is Next Command?}
+    CheckForNextCommand -- Yes --> HandleNextCommand[<code>self.handle_next_command</code><br>Handle next command]
+     HandleNextCommand --> EndMessageHandling[End Message Handling]
+    CheckForNextCommand -- No --> SendToModel[Send Message to Language Model <code>self.model.chat(q)</code>]
+    SendToModel --> ReplyWithAnswer[Reply with Language Model Answer]
+    ReplyWithAnswer --> EndMessageHandling[End Message Handling]
+    EndMessageHandling --> WaitForMessage
 ```
-
-**Описание диаграммы `mermaid`:**
-
-*   **Start**: Начало процесса.
-*   **Initialize KazarinovTelegramBot**: Создается экземпляр класса `KazarinovTelegramBot`.
-*   **Set Mode**: Определяется режим работы бота ('test' или 'production').
-*   **Set Test Token**: Устанавливается токен для тестового бота.
-*  **Set Production Token**: Устанавливается токен для продакшн бота.
-*   **Init TelegramBot**: Инициализируется базовый класс `TelegramBot`.
-*   **Init BotHandler**: Инициализируется базовый класс `BotHandler`.
-*    **Init GoogleGenerativeAI Model**: Инициализируется модель `GoogleGenerativeAI`.
-*   **Start Bot Polling**: Запускается процесс long polling для получения обновлений от Telegram.
-*   **Handle Incoming Update**: Обрабатывается входящее обновление (сообщение).
-*   **Message is "?"**: Проверяется, является ли сообщение символом `?`.
-*   **Send user_flowchart.png**: Отправляется изображение `user_flowchart.png`.
-*   **Message is URL?**: Проверяется, является ли сообщение URL-адресом.
-*   **Call self.handle_url()**: Вызывается метод `handle_url` для обработки URL.
-*  **Message is next command?**: Проверяется, является ли сообщение командой для перехода к следующему.
-*   **Call self.handle_next_command()**: Вызывается метод `handle_next_command` для перехода к следующему сообщению.
-*   **Send message to GoogleGenerativeAI**: Сообщение отправляется в модель `GoogleGenerativeAI` для получения ответа.
-*   **Send Reply to User**: Ответ, сгенерированный моделью, отправляется пользователю.
-
-**Импортированные зависимости:**
-* `asyncio`: Для асинхронного выполнения.
-* `pathlib.Path`: Для работы с путями к файлам и каталогам.
-* `typing.List, Optional, Dict, Self`: Для аннотации типов.
-* `types.SimpleNamespace`: Для создания простых пространств имен.
-* `telegram.Update`: Для обработки обновлений от Telegram.
-* `telegram.ext.Application, CommandHandler, MessageHandler, filters, CallbackContext`: Для работы с Telegram ботом.
-* `header`: Для определения корневой директории проекта и импорта глобальных настроек.
-* `src.gs`: Глобальные настройки проекта.
-* `src.endpoints.bots.telegram.bot_long_polling.TelegramBot`: Базовый класс для Telegram-бота (используется long polling).
-* `src.endpoints.kazarinov.bot_handlers.BotHandler`: Обработчик действий бота.
-* `src.ai.openai.OpenAIModel`: Модель OpenAI (не используется напрямую, но импортирована).
-* `src.ai.gemini.GoogleGenerativeAI`: Модель Google Generative AI.
-* `src.utils.file.recursively_read_text_files, save_text_file`: Для работы с файлами (не используется напрямую).
-* `src.utils.url.is_url`: Для проверки, является ли строка URL-адресом.
-* `src.utils.jjson.j_loads, j_loads_ns, j_dumps`: Для работы с JSON.
-* `src.logger.logger.logger`: Для логирования.
-* `argparse`: Для обработки аргументов командной строки.
 
 ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
     
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
 ```
 
-### 3. <объяснение>
+## <объяснение>
 
 **Импорты:**
 
-*   `asyncio`: Используется для асинхронного программирования, что необходимо для работы с Telegram ботом в режиме long polling.
-*   `pathlib.Path`: Используется для работы с путями к файлам, облегчая работу с файловой системой.
-*   `typing.List, Optional, Dict, Self`: Используется для аннотации типов, делая код более читаемым и понятным.
-*   `types.SimpleNamespace`: Позволяет создавать объекты, атрибуты которых доступны по имени, что облегчает работу с конфигурационными данными.
-*   `telegram.Update`, `telegram.ext.Application`, `telegram.ext.CommandHandler`, `telegram.ext.MessageHandler`, `telegram.ext.filters`, `telegram.ext.CallbackContext`: Используются для взаимодействия с Telegram API и обработки сообщений.
-*   `header`: Используется для определения корневой директории проекта и импорта глобальных настроек.
-*   `src.gs`: Содержит глобальные настройки проекта (пути, учетные данные и др.).
-*   `src.endpoints.bots.telegram.bot_long_polling.TelegramBot`: Базовый класс для реализации Telegram-бота с использованием long polling.
-*   `src.endpoints.kazarinov.bot_handlers.BotHandler`: Класс-обработчик, содержит логику для работы с парсером Mexiron и другими инструментами.
-*   `src.ai.openai.OpenAIModel`: Используется для интеграции с моделью OpenAI (хоть и не используется напрямую в этом коде).
-*   `src.ai.gemini.GoogleGenerativeAI`: Класс для работы с моделью Google Generative AI, используемой для генерации ответов.
-*   `src.utils.file.recursively_read_text_files`, `src.utils.file.save_text_file`: Используется для рекурсивного чтения текстовых файлов и сохранения текста в файлы, но напрямую не используется в этом коде.
-*   `src.utils.url.is_url`: Используется для проверки, является ли строка URL-адресом.
-*   `src.utils.jjson.j_loads, j_loads_ns, j_dumps`: Используется для загрузки и сохранения JSON-данных, включая конфигурационные файлы.
-*   `src.logger.logger`: Используется для логирования событий.
-*   `argparse`: Используется для обработки аргументов командной строки, например, для выбора режима работы.
+*   `asyncio`: библиотека для асинхронного программирования, используется для работы с ботом в неблокирующем режиме.
+*   `pathlib.Path`: класс для работы с путями к файлам и каталогам.
+*   `typing.List, Optional, Dict, Self`: используются для аннотации типов, делая код более читаемым и помогая обнаруживать ошибки на этапе разработки.
+*   `types.SimpleNamespace`: класс для создания простых объектов с атрибутами, используется для хранения настроек.
+*   `telegram.Update, telegram.ext.*`:  классы и модули для взаимодействия с Telegram API.
+*    `import header`: импортирует модуль `header.py` для определения корневого каталога проекта и загрузки глобальных настроек.
+*   `from src import gs`: импортирует глобальные настройки проекта, включающие пути, ключи API и другие параметры.
+*  `from src.endpoints.bots.telegram.bot_long_polling import TelegramBot`: Импортирует класс `TelegramBot` для управления Telegram ботом, использующим long polling.
+*   `from src.endpoints.kazarinov.bot_handlers import BotHandler`: импортирует класс `BotHandler`, который, как предполагается, обрабатывает взаимодействие с веб-парсером.
+*   `from src.ai.openai import OpenAIModel, from src.ai.gemini import GoogleGenerativeAI`: импортирует классы для работы с моделями генеративного AI от OpenAI и Google. В данном случае используется `GoogleGenerativeAI`.
+*   `from src.utils.file import recursively_read_text_files, save_text_file`: импортирует функции для работы с файлами.
+*   `from src.utils.url import is_url`: импортирует функцию для проверки, является ли строка URL.
+*   `from src.utils.jjson import j_loads, j_loads_ns, j_dumps`: импортирует функции для работы с JSON.
+*   `from src.logger.logger import logger`: импортирует объект `logger` для логирования.
+*   `import argparse`: импортирует библиотеку для разбора аргументов командной строки.
 
 **Классы:**
 
-*   **`KazarinovTelegramBot`**:
-    *   Наследуется от `TelegramBot` и `BotHandler`.
-    *   `token`: Содержит токен Telegram бота.
-    *   `config`: Загружает конфигурацию из файла `kazarinov.json`.
-    *   `model`: Экземпляр `GoogleGenerativeAI` для взаимодействия с моделью.
-    *   `__init__`: Инициализирует бота, устанавливает режим работы, токен и вызывает конструкторы базовых классов.
-    *   `handle_message`: Обрабатывает входящие текстовые сообщения, перенаправляя их на соответствующие обработчики. Проверяет наличие `?`, URL, команд перехода `-n, --next` и вызывает соответствующие методы.
-*   `TelegramBot` (из `src.endpoints.bots.telegram.bot_long_polling`): Базовый класс для работы с Telegram ботом.
-* `BotHandler` (из `src.endpoints.kazarinov.bot_handlers`): Класс, предоставляющий методы для обработки контента и взаимодействия с парсером.
+*   `KazarinovTelegramBot(TelegramBot, BotHandler)`:
+    *   Наследует от `TelegramBot` для работы с Telegram API и `BotHandler` для обработки логики, связанной с веб-парсингом.
+    *   `token: str`: токен Telegram бота.
+    *   `config`: загружает конфигурацию из файла `kazarinov.json` в виде `SimpleNamespace`.
+    *   `model: GoogleGenerativeAI`:  экземпляр класса `GoogleGenerativeAI` для обработки текстовых запросов.
+    *   `__init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox')`: инициализирует бота, устанавливает режим работы, получает токен и инициализирует родительские классы.
+    *    `handle_message(self, update: Update, context: CallbackContext)`: обрабатывает входящие сообщения, проверяет, является ли сообщение URL, обрабатывает команды '\--next', '\-next', '\_\_next', '\-n', '\-q', или отправляет запрос в языковую модель, если не соответствует никаким условиям.
 
 **Функции:**
 
-*   `__init__`: Конструктор класса `KazarinovTelegramBot`.
-    *   Аргументы: `mode` (опционально, режим работы), `webdriver_name` (опционально, имя webdriver).
-    *   Устанавливает режим работы и токен бота.
-    *   Вызывает конструкторы базовых классов.
-    *   Нет возвращаемого значения.
-    *   *Пример:* `bot = KazarinovTelegramBot(mode='test')`
-*   `handle_message`: Обрабатывает входящие текстовые сообщения.
-    *   Аргументы: `update` (обновление Telegram), `context` (контекст).
-    *   Извлекает текст из сообщения.
-    *   Если сообщение `?`, отправляет картинку.
-    *   Если сообщение URL, вызывает `self.handle_url`.
-    *   Если команда перехода, вызывает `self.handle_next_command`.
-    *   Иначе отправляет сообщение в `self.model` и отправляет ответ.
-    *   Нет возвращаемого значения.
-    *   *Пример:* Вызывается при получении сообщения от пользователя в Telegram.
+*   `__init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox')` : Конструктор класса `KazarinovTelegramBot`. Инициализирует объект класса:
+    *   `mode`: Определяет режим работы бота ('test' или 'production'). Если не передан, используется значение `self.config.mode`, загруженное из `kazarinov.json`.
+    *   `webdriver_name`: имя вебдрайвера для BotHandler, по умолчанию 'firefox'.
+    *   Определяет токен бота, в зависимости от режима.
+    *   Инициализирует родительские классы `TelegramBot` и `BotHandler`.
+*  `handle_message(self, update: Update, context: CallbackContext)`: Функция для обработки входящих сообщений от Telegram. Принимает `update` (событие Telegram) и `context` (контекст выполнения).
+   *   Извлекает текст сообщения из `update.message.text`.
+   *   Если текст сообщения `?`, бот отправляет изображение-схему.
+   *   Если текст сообщения является URL, то вызывается функция  `self.handle_url()` для обработки URL.
+   *   Если текст сообщения является командой (`--next`, `-next`, `__next`, `-n`, `-q`), то вызывается метод `handle_next_command()`.
+   *   В остальных случаях текст сообщения отправляется в модель `self.model.chat(q)` и ответ отправляется пользователю.
 
 **Переменные:**
 
-*   `token`: Строка, представляющая токен Telegram бота.
-*   `config`: Объект `SimpleNamespace`, содержащий конфигурационные параметры бота.
-*   `model`: Экземпляр `GoogleGenerativeAI` для взаимодействия с моделью.
-*   `mode`: Строка, представляющая режим работы бота ('test' или 'production').
-*   `args`: Результат работы `ArgumentParser`.
-* `kt`: экземпляр `KazarinovTelegramBot`
-* `gs.host_name`: Имя хоста где запущен скрипт.
+*   `token`: токен Telegram бота.
+*   `config`:  конфигурация бота, загруженная из `kazarinov.json`, как `SimpleNamespace`.
+*   `model`: экземпляр языковой модели `GoogleGenerativeAI`
+*   `mode`: режим работы бота ('test' или 'production'), определяется аргументом командной строки или значением по умолчанию 'prod'.
+*   `gs.credentials.telegram.hypo69_test_bot, gs.credentials.telegram.hypo69_kazarinov_bot`: токены Telegram для тестового и основного ботов, загружаются из глобальных настроек.
+*   `parser`: экземпляр `argparse.ArgumentParser` для обработки аргументов командной строки.
+*   `args`: объект, содержащий разобранные аргументы командной строки.
+*  `kt`: экземпляр класса `KazarinovTelegramBot`.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   Обработка ошибок в `handle_message` могла бы быть более подробной (например, обработка ошибок API Telegram, ошибок модели).
-*   В коде есть комментарий `# <- add logic after url scenario ended`, что указывает на незавершенную реализацию обработки URL.
-*   Использование `...` в коде может затруднить понимание логики.
-*   Используется long polling, что может быть неэффективно при большом количестве пользователей. Возможно, стоит рассмотреть использование веб-хуков.
-*   Не все импортированные модули используются напрямую, что может усложнить понимание зависимостей.
+*   Отсутствует подробная обработка ошибок.
+*   Логика методов `handle_url` и `handle_next_command` не описана в предоставленном коде.
+*   Код может быть расширен для поддержки других типов сообщений и команд.
+*   Жесткое кодирование имени хоста `Vostro-3888` может быть заменено на переменную окружения или конфигурацию.
+*   Отсутствует обработка ошибок, которые могут возникнуть при работе с Telegram API, файловой системой, API языковой модели или веб-парсером.
+*   Принудительное изменение `mode` на `'prod'` при запуске на хосте `'Vostro-3888'` может создать сложности при локальной разработке.
 
-**Цепочка взаимосвязей с другими частями проекта:**
+**Взаимосвязи с другими частями проекта:**
 
-*   Зависит от `header.py` для определения корневой директории проекта.
-*   Использует `src.gs` для глобальных настроек и учетных данных.
-*   Использует `src.endpoints.bots.telegram.bot_long_polling.TelegramBot` в качестве базового класса для Telegram-бота.
-*   Использует `src.endpoints.kazarinov.bot_handlers.BotHandler` для обработки контента.
-*   Использует `src.ai.gemini.GoogleGenerativeAI` для генерации ответов.
-*   Использует `src.utils.url.is_url` для проверки URL.
-*   Использует `src.utils.jjson` для работы с JSON.
-*   Использует `src.logger.logger` для логирования.
+*   Бот использует глобальные настройки из модуля `src.gs`, что обеспечивает доступ к путям, ключам API и другим параметрам.
+*   Бот использует классы из пакета `src.endpoints.bots.telegram` для работы с Telegram API, в частности `TelegramBot` для связи с ботом и `bot_long_polling` для обработки обновлений в режиме long-polling.
+*   Бот взаимодействует с моделью `GoogleGenerativeAI` для обработки текстовых сообщений.
+*   Бот использует модуль `BotHandler` для взаимодействия с веб-парсером, который должен быть реализован в методах класса `BotHandler`.
+*   Бот использует функции из `src.utils.file` и `src.utils.url` для работы с файлами и URL соответственно.
+*   Бот использует логирование через модуль `src.logger.logger`.
 
-Этот код является частью более крупной системы, которая включает в себя модули для работы с Telegram, AI моделями и другими утилитами. Он обеспечивает основу для Telegram-бота, способного обрабатывать текстовые сообщения, URL-адреса и использовать модель Google Generative AI для генерации ответов.
+**Цепочка взаимосвязей:**
+
+1.  Скрипт запускается (`__main__`).
+2.  Инициализируется `argparse` и определяется режим работы (`test` или `production`).
+3.  Создается экземпляр `KazarinovTelegramBot`.
+4.  `KazarinovTelegramBot` инициализирует `TelegramBot` для работы с Telegram API и `BotHandler` для веб-парсинга.
+5.  Запускается long-polling через `asyncio.run(kt.application.run_polling())`.
+6.  Бот ожидает входящие сообщения.
+7.  Полученное сообщение обрабатывается в `handle_message`.
+8.  В зависимости от содержимого сообщения:
+    *   Отправляется изображение-схема.
+    *   Вызывается метод `handle_url`  класса `BotHandler` для обработки URL.
+    *   Вызывается метод `handle_next_command` если сообщение является командой.
+    *   Отправляется запрос в языковую модель `GoogleGenerativeAI`.
+9.  Ответ отправляется пользователю.

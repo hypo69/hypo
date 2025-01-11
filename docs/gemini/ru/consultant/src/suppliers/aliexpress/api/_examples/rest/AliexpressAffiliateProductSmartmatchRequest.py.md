@@ -1,107 +1,120 @@
-# Анализ кода модуля `AliexpressAffiliateProductSmartmatchRequest.py`
+# Анализ кода модуля `AliexpressAffiliateProductSmartmatchRequest`
 
 **Качество кода**
-8
--  Плюсы
-    - Код соответствует PEP8, использует snake_case.
-    - Присутствует docstring для модуля, что упрощает понимание его назначения.
-    - Используется наследование от `RestApi`, что предполагает наличие общей логики для работы с API.
--  Минусы
-    - Отсутствует reStructuredText (RST) документация для класса `AliexpressAffiliateProductSmartmatchRequest` и его методов.
-    - Нет комментариев, объясняющих назначение каждого атрибута класса.
-    - Нет обработки ошибок и логирования.
-    - Не используются `j_loads` или `j_loads_ns` для работы с JSON (хотя в данном коде JSON не используется, но в инструкции указано что нужно использовать если используется).
-    - Не приведены импорты нужных модулей, таких как `from src.logger.logger import logger`.
+9
+- Плюсы
+    - Код соответствует PEP8.
+    - Присутствует описание модуля.
+    - Используется наследование от `RestApi`.
+    - Есть docstring для класса.
+- Минусы
+    - Отсутствует документация для переменных класса и метода `getapiname`.
+    - Отсутствует импорт `logger`.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    *   Добавить документацию в формате reStructuredText (RST) для класса и его методов.
-    *   Описать назначение каждого атрибута класса в docstring.
-2.  **Импорты**:
-    *   Добавить необходимые импорты, такие как `from src.logger.logger import logger`.
-3.  **Логирование**:
-    *   Внедрить логирование для отслеживания ошибок и выполнения операций.
-4.  **Обработка данных**:
-    *   Использовать `j_loads` или `j_loads_ns` при работе с JSON, если это необходимо в дальнейшем.
-5.  **Комментарии**:
-    *   Добавить комментарии, объясняющие назначение каждого блока кода и переменных.
-6.  **Консистентность**:
-    *   Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+1.  Добавить импорт `logger` из `src.logger.logger`.
+2.  Добавить документацию в формате RST для переменных класса, в `__init__` и метода `getapiname`.
+3.  Использовать одинарные кавычки для строк в коде.
+4.  Добавить описание модуля в начале файла в формате docstring.
+5.  Добавить проверку типа и значения переменных в `__init__`
+6.  Добавить `Args:` в документацию функции `__init__`
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для работы с запросами к API Aliexpress для получения умных рекомендаций товаров.
-=========================================================================================
+Модуль для работы с запросом смарт-подбора продуктов AliExpress Affiliate API.
+========================================================================
 
-Этот модуль определяет класс :class:`AliexpressAffiliateProductSmartmatchRequest`,
-который используется для создания запросов к API Aliexpress с целью получения
-умных рекомендаций товаров на основе различных параметров.
+Этот модуль содержит класс :class:`AliexpressAffiliateProductSmartmatchRequest`,
+который используется для отправки запроса на смарт-подбор продуктов через AliExpress Affiliate API.
+Класс наследуется от :class:`RestApi`.
 
 Пример использования
 --------------------
 
-Пример создания и использования класса `AliexpressAffiliateProductSmartmatchRequest`:
-
 .. code-block:: python
 
+    from src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateProductSmartmatchRequest
+
     request = AliexpressAffiliateProductSmartmatchRequest()
-    request.keywords = "example"
-    request.country = "US"
-    api_name = request.getapiname()
-    print(api_name)
+    request.app = 'your_app_key'
+    request.keywords = 'phone'
+    response = request.get_response()
+    print(response)
 """
 # -*- coding: utf-8 -*-
- # <- venv win
+# <- venv win
 ## ~~~~~~~~~~~~
+from src.logger.logger import logger # импорт логера
 from ..base import RestApi
-from src.logger.logger import logger # Импортируем logger
 
 class AliexpressAffiliateProductSmartmatchRequest(RestApi):
     """
-    Класс для создания запросов к API Aliexpress для получения умных рекомендаций товаров.
+    Класс для отправки запроса на смарт-подбор продуктов через AliExpress Affiliate API.
 
-    :param domain: Домен API Aliexpress. По умолчанию "api-sg.aliexpress.com".
-    :type domain: str
-    :param port: Порт API Aliexpress. По умолчанию 80.
-    :type port: int
+    :ivar app: Ключ приложения.
+    :vartype app: str, optional
+    :ivar app_signature: Подпись приложения.
+    :vartype app_signature: str, optional
+    :ivar country: Код страны.
+    :vartype country: str, optional
+    :ivar device: Тип устройства.
+    :vartype device: str, optional
+    :ivar device_id: Идентификатор устройства.
+    :vartype device_id: str, optional
+    :ivar fields: Список полей для возврата.
+    :vartype fields: str, optional
+    :ivar keywords: Ключевые слова для поиска.
+    :vartype keywords: str, optional
+    :ivar page_no: Номер страницы.
+    :vartype page_no: int, optional
+    :ivar product_id: Идентификатор продукта.
+    :vartype product_id: int, optional
+    :ivar site: Сайт.
+    :vartype site: str, optional
+    :ivar target_currency: Целевая валюта.
+    :vartype target_currency: str, optional
+    :ivar target_language: Целевой язык.
+    :vartype target_language: str, optional
+    :ivar tracking_id: Идентификатор отслеживания.
+    :vartype tracking_id: str, optional
+    :ivar user: Информация о пользователе.
+    :vartype user: str, optional
     """
-    def __init__(self, domain="api-sg.aliexpress.com", port=80):
+    def __init__(self, domain='api-sg.aliexpress.com', port=80):
         """
-        Инициализирует объект класса.
+        Инициализирует экземпляр класса AliexpressAffiliateProductSmartmatchRequest.
 
-        :param domain: Домен API Aliexpress.
-        :type domain: str
-        :param port: Порт API Aliexpress.
-        :type port: int
+        Args:
+            domain (str, optional): Домен API. По умолчанию 'api-sg.aliexpress.com'.
+            port (int, optional): Порт API. По умолчанию 80.
         """
-        # Инициализирует родительский класс RestApi
+        # код инициализирует родительский класс RestApi
         RestApi.__init__(self, domain, port)
-        # Инициализируем атрибуты
-        self.app = None # Идентификатор приложения
-        self.app_signature = None # Подпись приложения
-        self.country = None # Код страны
-        self.device = None # Тип устройства
-        self.device_id = None # Идентификатор устройства
-        self.fields = None # Поля, которые необходимо получить
-        self.keywords = None # Ключевые слова для поиска
-        self.page_no = None # Номер страницы
-        self.product_id = None # Идентификатор товара
-        self.site = None # Сайт
-        self.target_currency = None # Целевая валюта
-        self.target_language = None # Целевой язык
-        self.tracking_id = None # Идентификатор отслеживания
-        self.user = None # Идентификатор пользователя
+        self.app = None
+        self.app_signature = None
+        self.country = None
+        self.device = None
+        self.device_id = None
+        self.fields = None
+        self.keywords = None
+        self.page_no = None
+        self.product_id = None
+        self.site = None
+        self.target_currency = None
+        self.target_language = None
+        self.tracking_id = None
+        self.user = None
 
-    def getapiname(self) -> str:
+    def getapiname(self):
         """
         Возвращает имя API метода.
 
-        :return: Имя API метода.
-        :rtype: str
+        Returns:
+             str: Имя API метода 'aliexpress.affiliate.product.smartmatch'
         """
-        # Возвращает имя API метода
+        # код возвращает имя API метода
         return 'aliexpress.affiliate.product.smartmatch'
 ```

@@ -2,42 +2,47 @@
 
 **Качество кода**
 8
--  Плюсы
-    - Код хорошо структурирован и разделен на функции с четкими целями.
-    - Присутствует документация в формате docstring для функций.
-    - Используется асинхронность для операций ввода-вывода, что хорошо для производительности.
-    - Есть обработка ошибок и логирование.
-    - Проверки на существование и размер файла после сохранения.
--  Минусы
-    -  Отсутствует общий docstring для модуля.
-    -  Используется `asyncio.run` в `main()`, что может быть не оптимально для асинхронных приложений.
-    -  В `main()` отсутствует обработка ошибок при выполнении `save_video_from_url`.
+- Плюсы
+    - Код хорошо структурирован и разбит на отдельные функции.
+    - Используется асинхронное программирование для эффективной загрузки видео.
+    - Присутствует обработка ошибок и логирование.
+    - Есть docstring для функций.
+    - Используются `Path` для работы с путями к файлам.
+- Минусы
+    - Отсутствует описание модуля в начале файла.
+    - Не используется `j_loads` или `j_loads_ns`.
+    - В некоторых местах используется `print`, нужно заменить на `logger`.
+    - `exc_info=True` при логировании ошибок не всегда нужен.
+    - Не все docstring соответствуют стандарту Sphinx.
+    - Отсутствует проверка размера файла после скачивания
+    - `main()` не соответствует общему стилю кода
 
 **Рекомендации по улучшению**
-
-1.  **Добавить Docstring модуля:** В начале файла добавить docstring, описывающий назначение модуля.
-2.  **Уточнить документацию:** Дополнить документацию, включая примеры использования, в соответствии с RST.
-3.  **Улучшить обработку ошибок:** Логировать ошибки с использованием `logger.error`.
-4.  **Использовать `j_loads`:** В данном модуле не требуется использование `j_loads`, так как нет работы с JSON.
-5.  **Улучшить `main`:**  Обработать ошибку возвращаемую из `save_video_from_url` и переписать `main` для работы в асинхронном контексте
-6.  **Унифицировать кавычки:** Использовать одинарные кавычки в коде Python, кроме случаев вывода.
-7.  **Импортировать `logger`:** Использовать явный импорт `from src.logger.logger import logger`.
+1.  Добавить описание модуля в начале файла.
+2.  Заменить `print` в `main` на `logger.info`.
+3.  Уточнить docstring в соответствии со стандартами Sphinx.
+4.  Убрать `exc_info=True` из logger.error, где это не нужно.
+5.  Добавить проверку размера файла после скачивания.
+6.  Сделать `main` асинхронной.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
+#! venv/bin/python/python3.12
+
 """
-Модуль для асинхронной загрузки и сохранения видео файлов.
+Модуль для работы с видео файлами.
 =========================================================================================
 
-Этот модуль предоставляет асинхронные функции для загрузки и сохранения видеофайлов,
+Этот модуль предоставляет асинхронные функции для загрузки и сохранения видео файлов,
 а также для получения данных видео. Включает обработку ошибок и логирование для
-обеспечения надежной работы.
+надежной работы.
 
 Пример использования
 --------------------
 
-Пример использования асинхронной функции `save_video_from_url`:
+Примеры использования функций:
 
 .. code-block:: python
 
@@ -45,32 +50,25 @@
     from pathlib import Path
 
     async def main():
-        result = await save_video_from_url(
-            'https://example.com/video.mp4', 'local_video.mp4'
-        )
-        if result:
-            print(f'Видео сохранено по пути: {result}')
+        # Загрузка видео по URL
+        video_path = await save_video_from_url('https://example.com/video.mp4', 'local_video.mp4')
+        if video_path:
+            print(f"Видео успешно сохранено в: {video_path}")
         else:
-             print('Не удалось сохранить видео')
+            print("Не удалось сохранить видео.")
 
-    asyncio.run(main())
+        # Получение данных из видео файла
+        if video_path:
+            video_data = get_video_data(str(video_path))
+            if video_data:
+                print(f"Первые 10 байт видео: {video_data[:10]}")
+            else:
+                print("Не удалось получить данные видео.")
 
 
-Пример использования функции `get_video_data`:
-
-.. code-block:: python
-
-    data = get_video_data('local_video.mp4')
-    if data:
-        print(data[:10]) # Выводим первые 10 байт, чтобы проверить
-    else:
-         print('Не удалось прочитать видео')
-
+    if __name__ == "__main__":
+        asyncio.run(main())
 """
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 import aiohttp
 import aiofiles
 from pathlib import Path
@@ -83,132 +81,100 @@ async def save_video_from_url(
     url: str,
     save_path: str
 ) -> Optional[Path]:
-    """Асинхронно загружает видео с URL и сохраняет его локально.
+    """
+    Асинхронно загружает видео по URL и сохраняет его локально.
 
     Args:
         url (str): URL для загрузки видео.
-        save_path (str): Путь для сохранения загруженного видео.
+        save_path (str): Путь для сохранения видео.
 
     Returns:
-        Optional[Path]: Путь к сохраненному файлу или None, если операция не удалась.
-            Возвращает None в случае ошибок и если размер файла равен 0 байт.
+        Optional[Path]: Путь к сохраненному файлу, или None в случае ошибки.
 
     Raises:
-        aiohttp.ClientError: В случае сетевых ошибок во время загрузки.
+        aiohttp.ClientError: Возникает при сетевых ошибках во время загрузки.
 
     Example:
         >>> import asyncio
-        >>> async def main():
-        ...     result = await save_video_from_url('https://example.com/video.mp4', 'test.mp4')
-        ...     if result:
-        ...         print(f'Видео сохранено по пути: {result}')
-        ...     else:
-        ...          print('Не удалось сохранить видео')
-        >>> asyncio.run(main())
-        ... # PosixPath('test.mp4') или None если не удалось
+        >>> asyncio.run(save_video_from_url("https://example.com/video.mp4", "local_video.mp4"))
+        PosixPath('local_video.mp4')  # or None if failed
     """
-    # Преобразует путь к файлу в объект Path
     save_path = Path(save_path)
-
     try:
-        # Создаёт асинхронную сессию для выполнения HTTP запроса
         async with aiohttp.ClientSession() as session:
-            # Выполняет GET запрос по указанному URL
             async with session.get(url) as response:
-                # Проверяет статус ответа на наличие ошибок HTTP
-                response.raise_for_status()
+                response.raise_for_status()  # Проверка HTTP ошибок
 
-                # Создаёт родительские директории, если они не существуют
+                # Создает родительские директории, если они не существуют
                 save_path.parent.mkdir(parents=True, exist_ok=True)
 
-                # Открывает файл для записи в двоичном режиме
                 async with aiofiles.open(save_path, 'wb') as file:
-                    # Цикл для чтения данных из ответа
                     while True:
-                        # Читает данные кусками по 8192 байта
                         chunk = await response.content.read(8192)
-                        # Если данных нет, код завершает цикл
                         if not chunk:
                             break
-                        # Записывает полученные данные в файл
                         await file.write(chunk)
 
-        # Проверяет существование файла после сохранения
+        # Проверки после сохранения
         if not save_path.exists():
-            logger.error(f'Файл {save_path} не был сохранен.')
+            logger.error(f'Файл {save_path} не был успешно сохранен.')
             return None
 
-        # Проверяет, что файл не пустой
         if save_path.stat().st_size == 0:
             logger.error(f'Загруженный файл {save_path} пустой.')
             return None
 
-        # Возвращает путь к сохранённому файлу в случае успеха
         return save_path
 
-    # Обрабатывает сетевые ошибки при загрузке видео
     except aiohttp.ClientError as e:
         logger.error(f'Сетевая ошибка при загрузке видео: {e}')
         return None
-    # Обрабатывает любые другие ошибки при сохранении видео
     except Exception as e:
-        logger.error(f'Ошибка при сохранении видео {save_path}: {e}', exc_info=True)
+        logger.error(f'Ошибка при сохранении видео {save_path}: {e}')
         return None
 
 
 def get_video_data(file_name: str) -> Optional[bytes]:
-    """Получает бинарные данные видеофайла, если он существует.
+    """
+    Получает бинарные данные видео файла.
 
     Args:
-        file_name (str): Путь к видеофайлу для чтения.
+        file_name (str): Путь к видео файлу.
 
     Returns:
-        Optional[bytes]: Бинарные данные файла, если он существует, иначе `None`.
-        Возвращает `None`, если файл не найден или произошла ошибка.
+        Optional[bytes]: Бинарные данные файла, или None, если файл не найден или произошла ошибка.
 
     Example:
-        >>> data = get_video_data('test.mp4')
+        >>> data = get_video_data("local_video.mp4")
         >>> if data:
-        ...    print(data[:10])
-        ... # b'\\x00\\x00\\x00...' или None если не удалось
+        ...     print(data[:10])
+        b'\\x00\\x00\\x00...'
     """
-    # Преобразует имя файла в объект Path
     file_path = Path(file_name)
 
-    # Проверяет, существует ли файл
     if not file_path.exists():
         logger.error(f'Файл {file_name} не найден.')
         return None
 
     try:
-        # Открывает файл в двоичном режиме для чтения
         with open(file_path, 'rb') as file:
-            # Возвращает бинарные данные файла
             return file.read()
-    # Обрабатывает любые ошибки при чтении файла
     except Exception as e:
-        logger.error(f'Ошибка при чтении файла {file_name}: {e}', exc_info=True)
+        logger.error(f'Ошибка при чтении файла {file_name}: {e}')
         return None
 
 
 async def main():
     """
-    Функция main для запуска асинхронной загрузки видео.
+    Функция для демонстрации работы функций сохранения и получения видео.
     """
-    # Замените на валидный URL
-    url = 'https://example.com/video.mp4'
+    url = 'https://example.com/video.mp4'  # Замените на корректный URL
     save_path = 'local_video.mp4'
-
-    # Вызывает асинхронную функцию для загрузки и сохранения видео
     result = await save_video_from_url(url, save_path)
-
-    # Проверяет результат и выводит сообщение об успехе или ошибке
     if result:
-        print(f'Видео сохранено в {result}')
-    else:
-         print('Не удалось сохранить видео')
+        logger.info(f'Видео сохранено в {result}')
+
 
 if __name__ == '__main__':
-    # Запускает асинхронную функцию main
     asyncio.run(main())
 ```
