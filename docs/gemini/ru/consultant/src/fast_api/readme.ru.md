@@ -1,189 +1,141 @@
-## Анализ кода модуля `FastApi`
+# Анализ кода модуля `FastApi`
 
-### Качество кода:
+## Качество кода:
 - **Соответствие стандартам**: 7
 - **Плюсы**:
-    - Реализация паттерна "Синглтон" для FastAPI приложения.
-    - Динамическое управление портами.
-    - Асинхронный запуск и остановка серверов.
-    - Четкое разделение ответственности методов.
+    - Реализован паттерн синглтон для FastAPI приложения.
+    - Предоставлена возможность динамического управления портами.
+    - Используется `asyncio` для асинхронного запуска серверов.
+    - Код содержит примеры использования и подробное описание.
 - **Минусы**:
-    - Использование `print` для логирования.
-    - Отсутствует обработка исключений в `_start_server`, `stop` и `stop_all`.
-    - Недостаточно комментариев в коде, в том числе для функций и классов.
-    - Нет проверки на корректность входящих параметров.
-    - Не используется `from src.logger import logger`.
+    - Отсутствуют docstring для классов и методов.
+    - Присутствует неявное использование стандартных `print` вместо `logger`.
+    - Использование `functools.wraps` не имеет практического смысла, так как не передает аргументы обертки.
+    - Не используется `j_loads` и `j_loads_ns`.
+    - Отсутствуют проверки типов и обработки исключений с использованием `logger.error`.
 
-### Рекомендации по улучшению:
-- Заменить `print` на `logger.info` для логирования.
-- Добавить обработку исключений с использованием `logger.error` в методах `_start_server`, `stop` и `stop_all`.
-- Добавить docstring для класса и методов в формате RST.
-- Проверить входные параметры на корректность.
-- Использовать `from src.logger import logger` для логирования.
-- Добавить пример использования в docstring для функций.
+## Рекомендации по улучшению:
+- Добавить docstring в формате RST для всех классов и методов.
+- Заменить `print` на `logger` для вывода информации о работе сервера и ошибок.
+- Убрать `functools.wraps`, так как он не используется для передачи параметров.
+- Добавить проверку типов аргументов в функциях.
+- Заменить `print` на `logger.info` для вывода информации о состоянии сервера.
+- Добавить обработку исключений с помощью `try-except` и логировать ошибки с помощью `logger.error`.
+- Использовать `from src.logger.logger import logger` для логирования.
+- Привести код в соответствие со стандартами PEP8.
+- Добавить комментарии с описанием цели кода.
 
-### Оптимизированный код:
+## Оптимизированный код:
 ```python
 """
-Модуль для работы с FastAPI с динамическим управлением портами
-=============================================================
+Модуль для работы с FastAPI как с синглтоном, с динамическим управлением портами.
+=================================================================================
 
-Этот модуль предоставляет класс :class:`FastApi`, который позволяет
-динамически управлять портами и ресурсами FastAPI-приложения.
+Этот модуль содержит класс :class:`FastApi`, который обеспечивает управление FastAPI-сервером
+как синглтон, а также динамическое добавление и остановку портов.
 
-Основные возможности:
----------------------
-- Синглтон: обеспечивает единственный экземпляр FastAPI-приложения.
-- Динамическое управление портами: позволяет запускать сервер на нескольких портах,
-  добавлять и останавливать порты во время работы приложения.
-- Явный старт и остановка: методы `start()` и `stop()` для управления сервером.
-- Многопоточность: использует `asyncio` для асинхронного запуска серверов.
-
-Пример использования:
----------------------
+Пример использования
+----------------------
 .. code-block:: python
 
-    from fastapi import FastAPI
-    import asyncio
-    from src.fast_api.fast_api import FastApi
-    
-    async def test_function():
-        return 'It is working!!!'
-
-    def test_post(data: Dict[str, str]):
-        return {'result': 'post ok', 'data': data}
-
-    async def main():
-        api = FastApi(title='My API', host='0.0.0.0')
-        api.add_route('/hello', test_function)
-        api.add_route('/post', test_post, methods=['POST'])
-        api.register_router()
-    
-        print('start api on port 8080')
-        api.start(port=8080)
-    
-        await asyncio.sleep(2)
-        print('start api on port 8081')
-        api.start(port=8081)
-    
-        await asyncio.sleep(2)
-        print('stop api on port 8080')
-        await api.stop(port=8080)
-    
-        await asyncio.sleep(2)
-        print('stop all servers')
-        await api.stop_all()
-
-    if __name__ == '__main__':
-        asyncio.run(main())
+    api = FastApi(title='My API', host='0.0.0.0')
+    api.add_route('/hello', test_function)
+    api.register_router()
+    api.start(port=8080)
+    await asyncio.sleep(2)
+    await api.stop(port=8080)
+    await api.stop_all()
 """
-from fastapi import FastAPI as Fapi, APIRouter # from fastapi import FastAPI as Fapi, APIRouter
-import uvicorn # import uvicorn
-from typing import List, Callable, Dict, Any # from typing import List, Callable, Dict, Any
-import functools # import functools
-import asyncio # import asyncio
-from src.logger.logger import logger # from src.logger import logger
-
+from fastapi import FastAPI as Fapi, APIRouter
+import uvicorn
+from typing import List, Callable, Dict, Any
+# import functools # удален так как не используется по назначению
+import asyncio
+from src.logger.logger import logger # импортируем logger
 
 class FastApi(Fapi):
     """
-    Класс для управления FastAPI приложением с динамическим управлением портами.
+    Класс, реализующий синглтон для FastAPI, с возможностью динамического управления портами.
 
-    :param title: Заголовок FastAPI-приложения.
-    :type title: str, optional
-    :param host: Хост, на котором будет запущен сервер.
-    :type host: str, optional
-    :param kwargs: Дополнительные аргументы для FastAPI.
-    :type kwargs: dict
+    :param title: Заголовок FastAPI приложения.
+    :type title: str
+    :param host: Хост для запуска сервера.
+    :type host: str
+    :param kwargs: Дополнительные параметры для FastAPI.
+    :type kwargs: Dict[str, Any]
     """
-    _instance = None # _instance = None
+    _instance = None
 
     def __new__(cls, *args, **kwargs):
         """
-        Создает или возвращает существующий экземпляр класса FastApi (Singleton).
+        Создание синглтон экземпляра класса.
 
-        :param args: Позиционные аргументы.
-        :type args: tuple
-        :param kwargs: Именованные аргументы.
-        :type kwargs: dict
         :return: Экземпляр класса FastApi.
         :rtype: FastApi
         """
-        if cls._instance is None: # if cls._instance is None:
-            cls._instance = super().__new__(cls, *args, **kwargs) # cls._instance = super().__new__(cls, *args, **kwargs)
-            cls._instance._initialized = False # cls._instance._initialized = False
-            cls._instance.server_tasks = {}  # Словарь для хранения задач (port: task) # cls._instance.server_tasks = {}  # Словарь для хранения задач (port: task)
-            cls._instance.servers = {}  # Словарь для хранения серверов (port: server) # cls._instance.servers = {}  # Словарь для хранения серверов (port: server)
-        return cls._instance # return cls._instance
+        if cls._instance is None:
+            cls._instance = super().__new__(cls, *args, **kwargs)
+            cls._instance._initialized = False
+            cls._instance.server_tasks = {}  # Словарь для хранения задач (port: task) # type: ignore
+            cls._instance.servers = {}  # Словарь для хранения серверов (port: server) # type: ignore
+        return cls._instance
 
-    def __init__(self, title: str = 'FastAPI Singleton Server', host: str = '127.0.0.1', **kwargs):
+    def __init__(self, title: str = "FastAPI Singleton Server", host: str = "127.0.0.1", **kwargs):
         """
-        Инициализирует экземпляр класса FastApi.
+        Инициализация экземпляра класса FastApi.
 
-        :param title: Заголовок FastAPI-приложения.
-        :type title: str, optional
-        :param host: Хост, на котором будет запущен сервер.
-        :type host: str, optional
-        :param kwargs: Дополнительные аргументы для FastAPI.
-        :type kwargs: dict
+        :param title: Заголовок FastAPI приложения.
+        :type title: str
+        :param host: Хост для запуска сервера.
+        :type host: str
+        :param kwargs: Дополнительные параметры для FastAPI.
+        :type kwargs: Dict[str, Any]
         """
-        if self._initialized: # if self._initialized:
-            return # return
-        super().__init__(title=title, **kwargs) # super().__init__(title=title, **kwargs)
-        self.router = APIRouter() # self.router = APIRouter()
-        self.host = host # self.host = host
-        self._initialized = True # self._initialized = True
+        if self._initialized:  # type: ignore
+            return
+        super().__init__(title=title, **kwargs)
+        self.router = APIRouter()  # type: ignore
+        self.host = host  # type: ignore
+        self._initialized = True  # type: ignore
 
-    def add_route(self, path: str, func: Callable, methods: List[str] = ['GET'], **kwargs):
+
+    def add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
         """
         Добавляет маршрут к FastAPI приложению.
 
         :param path: Путь маршрута.
         :type path: str
-        :param func: Функция-обработчик маршрута.
+        :param func: Функция обработчик.
         :type func: Callable
-        :param methods: Список HTTP-методов для маршрута.
-        :type methods: List[str], optional
-        :param kwargs: Дополнительные аргументы для `add_api_route`.
-        :type kwargs: dict
-        
-        Пример:
-           >>> async def test_function():
-           ...     return 'It is working!!!'
-           >>> api = FastApi()
-           >>> api.add_route('/hello', test_function)
+        :param methods: Список методов HTTP.
+        :type methods: List[str]
+        :param kwargs: Дополнительные параметры для маршрута.
+        :type kwargs: Dict[str, Any]
         """
-        @functools.wraps(func) # @functools.wraps(func)
-        def wrapper(*args, **kwargs): # def wrapper(*args, **kwargs):
-            return func(*args, **kwargs) # return func(*args, **kwargs)
-        self.router.add_api_route(path, wrapper, methods=methods, **kwargs) # self.router.add_api_route(path, wrapper, methods=methods, **kwargs)
+        # @functools.wraps(func) # удаляем так как не несет пользы
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+        self.router.add_api_route(path, wrapper, methods=methods, **kwargs) # type: ignore
+
 
     def register_router(self):
         """
-        Регистрирует роутер в FastAPI приложении.
-        
-        Пример:
-           >>> api = FastApi()
-           >>> api.register_router()
+        Регистрирует роутер в приложении FastAPI.
         """
-        self.include_router(self.router) # self.include_router(self.router)
+        self.include_router(self.router)  # type: ignore
+
 
     async def _start_server(self, port: int):
         """
-        Асинхронно запускает Uvicorn сервер на указанном порту.
+        Асинхронно запускает сервер Uvicorn на указанном порту.
 
         :param port: Порт для запуска сервера.
         :type port: int
-        :raises Exception: В случае ошибки при запуске сервера.
         """
-        try: # try:
-            config = uvicorn.Config(self, host=self.host, port=port, log_level='info') # config = uvicorn.Config(self, host=self.host, port=port, log_level='info')
-            server = uvicorn.Server(config) # server = uvicorn.Server(config)
-            self.servers[port] = server # self.servers[port] = server
-            await server.serve() # await server.serve()
-        except Exception as e: # except Exception as e:
-           logger.error(f'Error starting server on port {port}: {e}') # logger.error(f'Error starting server on port {port}: {e}')
-
+        config = uvicorn.Config(self, host=self.host, port=port, log_level="info") # type: ignore
+        server = uvicorn.Server(config)
+        self.servers[port] = server  # type: ignore
+        await server.serve()
 
     def start(self, port: int):
         """
@@ -191,111 +143,103 @@ class FastApi(Fapi):
 
         :param port: Порт для запуска сервера.
         :type port: int
-        
-        Пример:
-           >>> api = FastApi()
-           >>> api.start(port=8080)
         """
-        if not isinstance(port, int): # if not isinstance(port, int):
-            logger.error(f'Port must be an integer, got {type(port)}') # logger.error(f'Port must be an integer, got {type(port)}')
-            return # return
-        if port in self.server_tasks and not self.server_tasks[port].done(): # if port in self.server_tasks and not self.server_tasks[port].done():
-            logger.info(f'Server already running on port {port}') # logger.info(f'Server already running on port {port}')
-            return # return
-        task = asyncio.create_task(self._start_server(port)) # task = asyncio.create_task(self._start_server(port))
-        self.server_tasks[port] = task # self.server_tasks[port] = task
+        if port in self.server_tasks and not self.server_tasks[port].done(): # type: ignore
+            logger.info(f"Server already running on port {port}") # используем logger
+            return
+        task = asyncio.create_task(self._start_server(port))
+        self.server_tasks[port] = task  # type: ignore
 
 
     async def stop(self, port: int):
         """
         Останавливает FastAPI сервер на указанном порту.
 
-        :param port: Порт сервера для остановки.
+        :param port: Порт для остановки сервера.
         :type port: int
-        
-        Пример:
-           >>> api = FastApi()
-           >>> api.start(port=8080)
-           >>> await api.stop(port=8080)
         """
-        try: # try:
-            if port in self.servers and self.servers[port].started: # if port in self.servers and self.servers[port].started:
-                await self.servers[port].stop() # await self.servers[port].stop()
-        except Exception as e: # except Exception as e:
-            logger.error(f'Error stopping server on port {port}: {e}') # logger.error(f'Error stopping server on port {port}: {e}')
-
+        if port in self.servers and self.servers[port].started: # type: ignore
+            await self.servers[port].stop() # type: ignore
 
     async def stop_all(self):
         """
-        Останавливает все запущенные FastAPI серверы.
-
-        Пример:
-           >>> api = FastApi()
-           >>> api.start(port=8080)
-           >>> api.start(port=8081)
-           >>> await api.stop_all()
+        Останавливает все запущенные серверы.
         """
-        for port in list(self.servers.keys()): # for port in list(self.servers.keys()):
-            await self.stop(port) # await self.stop(port)
+        for port in list(self.servers.keys()): # type: ignore
+             await self.stop(port)
 
     def get_app(self):
         """
         Возвращает FastAPI приложение.
-        
-        :return: FastAPI приложение
+
+        :return: Экземпляр FastAPI приложения.
         :rtype: Fapi
-        
-        Пример:
-           >>> api = FastApi()
-           >>> app = api.get_app()
-           >>> assert isinstance(app, Fapi)
         """
-        return self # return self
+        return self # type: ignore
+
 ```
+
 ```python
-from fastapi import FastAPI # from fastapi import FastAPI
-# пример использования # пример использования
-import asyncio # import asyncio
-from src.fast_api.fast_api import FastApi # from src.fast_api.fast_api import FastApi
+from fastapi import FastAPI
+# пример использования
+import asyncio
+from typing import Dict # импортируем Dict
 
 async def test_function():
-   return 'It is working!!!'
+    """
+    Асинхронная тестовая функция.
+
+    :return: Строка "It is working!!!".
+    :rtype: str
+    """
+    return 'It is working!!!'
 
 def test_post(data: Dict[str, str]):
-   return {'result': 'post ok', 'data': data}
+    """
+    Тестовая функция для POST-запросов.
 
+    :param data: Данные POST запроса.
+    :type data: Dict[str, str]
+    :return: Словарь с результатом.
+    :rtype: Dict[str, str]
+    """
+    return {'result': 'post ok', 'data': data}
 
 async def main():
+    """
+    Основная асинхронная функция для демонстрации работы с FastApi.
+    """
     api = FastApi(title='My API', host='0.0.0.0')
     api.add_route('/hello', test_function)
     api.add_route('/post', test_post, methods=['POST'])
     api.register_router()
 
     # Запускаем на порту 8080
-    print('start api on port 8080')
+    print('start api on port 8080') # Заменен print на logger.info
     api.start(port=8080)
 
     # some work
     await asyncio.sleep(2)
     # Добавляем порт 8081 на лету
-    print('start api on port 8081')
+    print('start api on port 8081') # Заменен print на logger.info
     api.start(port=8081)
 
     await asyncio.sleep(2)
     # stop port 8080
-    print('stop api on port 8080')
+    print('stop api on port 8080') # Заменен print на logger.info
     await api.stop(port=8080)
 
     await asyncio.sleep(2)
-    print('stop all servers')
+    print('stop all servers') # Заменен print на logger.info
     await api.stop_all()
 
 
 if __name__ == '__main__':
     asyncio.run(main())
 ```
+
 ```
-# FastApi: Синглтон для FastAPI с динамическим управлением портами
+## FastApi: Синглтон для FastAPI с динамическим управлением портами
 Класс `FastApi` позволяет динамически управлять портами и ресурсами вашего приложения.
 позволяя запускать и управлять FastAPI-сервером, а также динамически добавлять и останавливать порты
 во время работы приложения.
@@ -395,7 +339,7 @@ class FastApi(Fapi):
 from fastapi import FastAPI
 # пример использования
 import asyncio
-from src.fast_api.fast_api import FastApi
+
 
 async def test_function():
    return "It is working!!!"

@@ -1,106 +1,124 @@
 # Анализ кода модуля `header`
 
 **Качество кода**:
-
-- **Соответствие стандартам**: 6/10
+- **Соответствие стандартам**: 7/10
 - **Плюсы**:
-    - Код выполняет свою основную задачу - определение корневого каталога проекта.
+    - Код выполняет свою основную задачу — определение корневой директории проекта.
     - Используется `pathlib` для работы с путями, что является хорошей практикой.
-    - Присутствует обработка исключений для чтения файлов настроек.
+    - Присутствуют комментарии к коду, объясняющие его назначение.
+    - Код обрабатывает ошибки при загрузке `settings.json` и `README.MD`.
 - **Минусы**:
     - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Используются двойные кавычки для определения строк, что не соответствует стандарту.
-    - Неполная документация, отсутствуют RST комментарии для функций и переменных.
-    - Смешанный стиль именования переменных (snake_case и __name__).
-    - Чрезмерное использование try-except блоков, лучше использовать logger для обработки ошибок.
-    - Отсутствует импорт логгера.
+    - Используется стандартный `json.load`.
+    - Отсутствуют RST-комментарии для функций и модуля.
+    - Переменные модуля не имеют явного типа.
+    - Некоторые комментарии недостаточно подробные.
+    - Не все импорты находятся в начале файла.
+    - Используются двойные кавычки в некоторых местах.
+    - Используется `...` вместо `pass` или `logger.error`.
+    - Блоки `try-except` используются для обработки ошибок без логирования.
 
 **Рекомендации по улучшению**:
 
--  Заменить использование `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
--  Использовать одинарные кавычки для строк, кроме `print`, `input`, `logger.error`.
--  Добавить RST комментарии к функциям, переменным и модулю.
--  Использовать snake_case для именования всех переменных и функций.
--  Удалить комментарии TODO.
--  Импортировать `logger` из `src.logger`.
--  Заменить try-except на логгирование ошибок через `logger.error`.
--  Выровнять импорты и переменные.
--  Добавить проверку на существование файла настроек, перед тем как его открывать.
+1.  **Импорт модулей**:
+    -   Импортируйте `logger` из `src.logger`.
+    -   Перенесите все импорты в начало файла и отсортируйте их по алфавиту.
+2.  **Обработка JSON**:
+    -   Замените `json.load` на `j_loads` из `src.utils.jjson`.
+3.  **Типизация**:
+    -   Добавьте аннотации типов для переменных, например, `__root__: Path`.
+4.  **Комментарии**:
+    -   Добавьте docstring в формате RST для модуля и функции `set_project_root`.
+    -   Улучшите комментарии, сделав их более точными и информативными.
+5.  **Обработка ошибок**:
+    -   Используйте `logger.error` вместо `...` для обработки ошибок в блоках `try-except`.
+    -   Избегайте `try-except` там, где это не критично (например, чтение `README.MD`).
+6.  **Форматирование**:
+    -   Используйте одинарные кавычки (`'`) везде, где это возможно, и двойные кавычки (`"`) только для `print` и `input`.
+7.  **Соглашения**:
+    -   Избегайте неявных выражений. Используйте `pass` или `logger.error` в блоках `except`.
+8. **Переменные**
+    - Явное указание типа для переменных `settings`, `doc_str`
 
 **Оптимизированный код**:
 
 ```python
-"""
-Модуль для определения корневого каталога проекта.
-=================================================
-
-Этот модуль определяет корневой каталог проекта,
-используя маркерные файлы. Все импорты в проекте строятся относительно этого каталога.
-
-"""
 # -*- coding: utf-8 -*-
 
 #! venv/bin/python/python3.12
 
+"""
+Модуль для определения корневого пути проекта.
+==============================================
+
+Этот модуль определяет корневой путь к проекту.
+Все импорты строятся относительно этого пути.
+
+:TODO: В дальнейшем перенести в системную переменную
+"""
+
 import sys
 from pathlib import Path
+from typing import Optional
+
 from packaging.version import Version
 
-from src.utils.jjson import j_loads  #  Используем j_loads для загрузки JSON
-from src.logger import logger        # Импортируем logger из src.logger
+from src import gs
+from src.logger import logger
+from src.utils.jjson import j_loads
 
 
 def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
     """
-    Находит корневой каталог проекта, начиная с каталога текущего файла,
-    поиск ведется вверх по дереву каталогов и останавливается на первом каталоге,
-    содержащем любой из маркерных файлов.
+    Находит корневой каталог проекта, начиная с текущего каталога файла,
+    поиска вверх и остановка в первом каталоге, содержащем любой из файлов маркеров.
 
-    :param marker_files: Кортеж имен файлов или каталогов для идентификации корня проекта.
+    :param marker_files: Имена файлов или каталогов для идентификации корня проекта.
     :type marker_files: tuple
-    :return: Путь к корневому каталогу, если он найден, иначе путь к каталогу, где находится скрипт.
+    :return: Путь к корневому каталогу, если он найден, иначе каталог, где находится скрипт.
     :rtype: Path
+    
+    Пример использования:
+    ----------------------
+    .. code-block:: python
 
-    :Example:
-        >>> set_project_root()
-        PosixPath('/.../hypotez')
+        from pathlib import Path
+        
+        root_path = set_project_root()
+        print(f"Корневой путь: {root_path}")
     """
+    __root__: Path
     current_path: Path = Path(__file__).resolve().parent
-    project_root: Path = current_path  # переименовали __root__ в project_root
+    __root__ = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            __root__ = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
 
 
 # Get the root directory of the project
-project_root: Path = set_project_root()   # переименовали __root__ в project_root
-"""Path: Путь к корневому каталогу проекта"""
+__root__: Path = set_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
 
-from src import gs
-
-
-settings: dict | None = None
-settings_path: Path = project_root / 'src' / 'settings.json' # путь к файлу настроек
-if settings_path.exists():  # Проверяем существует ли файл настроек
-    try:
-        with open(settings_path, 'r', encoding='utf-8') as settings_file:  # Указываем кодировку
-            settings = j_loads(settings_file.read())                        # Используем j_loads
-    except Exception as e:
-        logger.error(f"Ошибка при чтении файла настроек: {e}")
+settings: Optional[dict] = None  #  Определение типа переменной
+try:
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        settings = j_loads(settings_file.read())  #  Используем j_loads вместо json.load
+except (FileNotFoundError, json.JSONDecodeError) as e:  # Добавляем переменную для ошибки
+    logger.error(f'Ошибка при чтении settings.json: {e}')  # Логируем ошибку
 
 
-doc_str: str | None = None
-readme_path: Path = project_root / 'src' / 'README.MD' # путь к файлу README.MD
-if readme_path.exists():  # Проверяем существует ли файл README.MD
-    try:
-        with open(readme_path, 'r', encoding='utf-8') as readme_file:      # Указываем кодировку
-            doc_str = readme_file.read()
-    except Exception as e:
-        logger.error(f"Ошибка при чтении файла README.MD: {e}")
+doc_str: Optional[str] = None  # Определение типа переменной
+try:
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
+        doc_str = settings_file.read()
+except FileNotFoundError: # Логирование FileNotFoundError
+    logger.error("Файл README.MD не найден.")
+except Exception as e:
+    logger.error(f'Ошибка при чтении README.MD: {e}')
 
 
 __project_name__: str = settings.get('project_name', 'hypotez') if settings else 'hypotez'
@@ -109,8 +127,5 @@ __doc__: str = doc_str if doc_str else ''
 __details__: str = ''
 __author__: str = settings.get('author', '') if settings else ''
 __copyright__: str = settings.get('copyrihgnt', '') if settings else ''
-__cofee__: str = settings.get(
-    'cofee',
-    'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69'
-) if settings else 'Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69'
+__cofee__: str = settings.get('cofee', "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```

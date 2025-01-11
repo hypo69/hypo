@@ -1,42 +1,46 @@
-# Анализ кода модуля `src.scenario`
+### Анализ кода модуля `src.scenario`
 
-**Качество кода:**
+**Качество кода**:
+- **Соответствие стандартам**: 7
+- **Плюсы**:
+    - Наличие документации модуля.
+    - Использование `run_scenario_files` и `run_scenarios` для запуска сценариев.
+    - Логическая организация кода в целом.
+- **Минусы**:
+    - Отсутствие импорта `logger`.
+    - Некорректное использование двойных кавычек в документации.
+    - Нет комментариев в стиле RST для функций и классов.
+    - Не стандартизированные отступы.
+    - Использование `codeblock` вместо `code-block`.
+    - Нет обработки ошибок.
 
-*   **Соответствие стандартам**: 7
-*   **Плюсы**:
-    *   Наличие документации модуля.
-    *   Хорошее описание назначения модуля.
-    *   Примеры использования в документации.
-*   **Минусы**:
-    *   Не используются одинарные кавычки для строк в коде.
-    *   Не все импорты отформатированы по алфавиту.
-    *   Используется не рекомендуемый импорт `logger`.
-    *   Не хватает RST-документации для функций.
-    *   Используются многоточия (`...`) в коде.
+**Рекомендации по улучшению**:
+    - Добавить импорт `logger` из `src.logger`.
+    - Использовать одинарные кавычки в коде и двойные только для вывода.
+    - Добавить RST комментарии для всех функций и классов.
+    - Стандартизировать отступы в соответствии с PEP8.
+    - Использовать `code-block` вместо `codeblock`.
+    - Добавить обработку ошибок с помощью `logger.error`.
 
-**Рекомендации по улучшению:**
-
-1.  Используйте одинарные кавычки (`'`) для всех строк в коде, за исключением строк, используемых для операций вывода (`print`, `input`, `logger`).
-2.  Отсортируйте импорты по алфавиту для лучшей читаемости.
-3.  Импортируйте `logger` из `src.logger`.
-4.  Добавьте RST-документацию для всех функций.
-5.  Сохраните `...` без изменений, как маркеры.
-
-**Оптимизированный код:**
-
+**Оптимизированный код**:
 ```python
 """
-Модуль для управления сценариями поставщиков.
-===========================================
+Модуль для выполнения сценариев поставщиков
+=========================================
 
-Этот модуль предоставляет функции для выполнения сценариев, загруженных из файлов или представленных в виде словарей.
-Функции включают в себя запуск отдельных сценариев, множества сценариев и загрузку сценариев из файлов.
+Этот модуль содержит функции для запуска сценариев, загруженных из файлов или переданных в виде объектов.
+Он предоставляет гибкий способ управления процессами обработки данных для различных поставщиков.
 
-Пример использования:
----------------------
+Примеры
+--------
+
 .. code-block:: python
 
+    from src.scenario import run_scenario_files, run_scenarios
+    from src.supplier import Supplier
+
     s = Supplier('aliexpress')
+
     run_scenario_files(s, 'file1')
 
     scenario_files = ['file1', ...]
@@ -48,69 +52,70 @@
     list_of_scenarios = [scenario1, ...]
     run_scenarios(s, list_of_scenarios)
 
-.. :examples:
-Пример файла сценария:
-```json
-{
-  "scenarios": {
 
-    "feet-hand-treatment": {
-      "url": "https://hbdeadsea.co.il/product-category/bodyspa/feet-hand-treatment/",
-      "name": "Foot and Hand Care",
-      "condition": "new",
-      "presta_categories": {
-        "default_category": 11259,
-        "additional_categories": []
-      }
-    },
+Пример файла сценария
+---------------------
 
-    "creams-butters-serums-for-body": {
-      "url": "https://hbdeadsea.co.il/product-category/bodyspa/creams-butters-serums-for-body/",
-      "name": "Creams, Butters, and Serums for Body",
-      "condition": "new",
-      "presta_categories": {
-        "default_category": 11260,
-        "additional_categories": []
+.. code-block:: json
+
+    {
+      "scenarios": {
+
+        "feet-hand-treatment": {
+          "url": "https://hbdeadsea.co.il/product-category/bodyspa/feet-hand-treatment/",
+          "name": "Foot and Hand Care",
+          "condition": "new",
+          "presta_categories": {
+            "default_category": 11259,
+            "additional_categories": []
+          }
+        },
+
+        "creams-butters-serums-for-body": {
+          "url": "https://hbdeadsea.co.il/product-category/bodyspa/creams-butters-serums-for-body/",
+          "name": "Creams, Butters, and Serums for Body",
+          "condition": "new",
+          "presta_categories": {
+            "default_category": 11260,
+            "additional_categories": []
+          }
+        }
       }
     }
-  }
-}
-```
 
-Подробную информацию о словаре сценария можно найти здесь: ...
+Подробная информация о словаре сценариев
+---------------------------------------
 
-Когда программа запускается через main(), происходит следующая последовательность выполнения:
-@code
-s = Supplier('aliexpress')
+...
 
+После запуска программы через main() выполняется следующая последовательность действий:
 
-s.run()
+.. code-block:: python
 
+    s = Supplier('aliexpress')
 
-s.run('file1')
+    s.run()
 
+    s.run('file1')
 
-scenario_files = ['file1', ...]
-s.run(scenario_files)
+    scenario_files = ['file1', ...]
+    s.run(scenario_files)
 
+    scenario1 = {'key': 'value'}
+    s.run(scenario1)
 
-scenario1 = {'key': 'value'}
-s.run(scenario1)
+    list_of_scenarios = [scenario1, ...]
+    s.run(list_of_scenarios)
 
-
-list_of_scenarios = [scenario1, ...]
-s.run(list_of_scenarios)
-```
 """
-# -*- coding: utf-8 -*- # Сохраняем кодировку
+# -*- coding: utf-8 -*- # Добавлен комментарий для сохранения
+#! venv/bin/python/python3.12 # Добавлен комментарий для сохранения
 
-#! venv/bin/python/python3.12 # Сохраняем shebang
-
-from .executor import ( #  Импортируем необходимые функции
-    insert_grabbed_data_to_prestashop,
+from src.logger import logger # Импорт логгера
+from .executor import ( # Выравнивание импортов
     run_scenario,
+    run_scenarios,
     run_scenario_file,
     run_scenario_files,
-    run_scenarios,
+    insert_grabbed_data_to_prestashop,
 )
-```

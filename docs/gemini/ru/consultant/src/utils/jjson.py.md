@@ -1,94 +1,84 @@
 ### Анализ кода модуля `jjson`
 
 **Качество кода**:
-- **Соответствие стандартам**: 6/10
+- **Соответствие стандартам**: 7/10
 - **Плюсы**:
-    - Присутствует базовая обработка ошибок.
-    - Код разделён на функции для лучшей читаемости.
-    - Используются типы данных для параметров и возвращаемых значений.
+    - Наличие подробной документации модуля в формате RST.
+    - Использование `logger` для логирования ошибок.
+    - Разделение функций на `j_dumps`, `j_loads`, `j_loads_ns`.
+    - Обработка различных типов входных данных (строки, файлы, директории, `SimpleNamespace`).
+    -  Корректное использование `repair_json` для исправления поврежденных JSON-строк.
 - **Минусы**:
-    - Непоследовательное использование кавычек (используются как одинарные, так и двойные в строках).
-    - Чрезмерное использование try-except, что усложняет отладку и анализ.
-    - Проблемы с обработкой ошибок.
-    - Некоторые функции используют излишние преобразования типов.
-    - Смешивание логики обработки данных и записи в файл в функции `j_dumps`.
-    - Дублирование кода при конвертации SimpleNamespace и dict в функции `j_dumps`.
-    - Отсутствие единого подхода к обработке данных (например, декодирование escape-последовательностей).
-    - Использование `simplejson` без явной необходимости, что может привести к неоднородности в обработке данных.
-    - Непоследовательное логирование.
-    - Проблемы с комментариями и документацией.
-    - Обилие `...` как маркеров.
+    - Неоднородность в форматировании кода (например, отступы, пробелы).
+    - Чрезмерное использование `try-except` блоков.
+    - Использование `json.load` и `json.dumps` вместо `simplejson`.
+    - Отсутствие единого стандарта для кавычек (использование как одинарных, так и двойных).
+    - Использование `vars(obj)` для конвертации `SimpleNamespace` в `dict` может привести к потере порядка.
+    - Не совсем корректная логика в обработке режимов `a+` и `+a`, и использование `update` для списков.
+    - Некоторые функции не имеют подробной RST-документации.
+    - Дублирование кода в функции `_convert`.
 
 **Рекомендации по улучшению**:
-- Необходимо унифицировать использование кавычек: использовать одинарные кавычки для строк в коде и двойные кавычки только для вывода в консоль или лог.
-- Упростить обработку ошибок, избегая чрезмерного использования try-except. Предпочтительно логировать ошибки с помощью `logger.error` и возвращать пустой словарь или `None` в случае неудачи.
-- Разделить логику записи в файл и преобразования данных. Функция `j_dumps` должна только преобразовывать данные в JSON формат, а запись в файл должна выполняться отдельной функцией.
-- Убрать дублирование кода для конвертации SimpleNamespace и dict, вынеся эту логику в отдельную функцию или используя общую функцию `dict2ns`.
-- Вынести логику обработки строк в отдельные функции.
-- Использовать `j_loads_ns` для загрузки данных в `SimpleNamespace`.
-- Использовать `OrderedDict` при необходимости сохранения порядка элементов в JSON.
-- Использовать `src.logger.logger.logger` для логирования.
-- Добавить RST-документацию для всех функций, методов и классов.
-- Убрать `...` маркеры и обработать их.
-- В функции `j_loads` в `decode_strings`  удалить `decoded_data = json.loads(json.dumps(data))` т.к. эта строка не имеет смысла.
-- В функции `j_loads` в `string2dict` при обнаружении ошибки парсинга  возвращать пустой словарь `{}`.
-- В функции `j_dumps` упростить логику конвертации данных, используя общий подход.
-- В функции `j_dumps` упростить логику обработки режима `a+` и `+a`, унифицировав код.
+- Привести форматирование кода к единому стилю (PEP8).
+- Заменить множественные блоки `try-except` на более точную обработку исключений с использованием `logger.error`.
+- Использовать `simplejson.dumps` вместо `json.dumps` для более корректной обработки строк.
+- Использовать только одинарные кавычки (`'`) для определения строк. Двойные кавычки (`"`) использовать только для вывода в консоль.
+- Упростить логику обработки `a+` и `+a` режимов, и добавить проверки типов данных для корректного слияния.
+- Добавить RST-документацию для всех функций, включая примеры использования.
+- Вынести функцию `_convert` за пределы функции `j_dumps` для переиспользования и убрать дублирование кода.
+- Изменить логику  `decode_strings` для лучшей обработки escape последовательностей и убрать лишний вызов `json.loads(json.dumps(data))`.
+- Использовать `OrderedDict` из `collections` для сохранения порядка ключей.
 
 **Оптимизированный код**:
-
 ```python
 """
-Модуль для работы с JSON и CSV файлами
-======================================
+Модуль для работы с JSON и CSV файлами.
+=================================================
 
-Этот модуль предоставляет функции для загрузки, выгрузки и преобразования данных в форматах JSON и CSV.
-Включает в себя функции для сохранения данных в файлы, загрузки из файлов и строк, а также конвертации в SimpleNamespace.
+Этот модуль предоставляет функции для загрузки, сохранения и объединения данных JSON и CSV.
 
-Пример использования:
+Функции этого модуля включают:
+- **j_dumps**: Сохраняет JSON данные в файл или возвращает JSON как словарь.
+- **j_loads**: Загружает JSON или CSV данные из файла, директории или строки.
+- **j_loads_ns**: Загружает JSON или CSV данные и конвертирует их в SimpleNamespace.
+
+Примеры использования
 ----------------------
 .. code-block:: python
 
     from pathlib import Path
-    from src.utils.jjson import j_dumps, j_loads_ns
-
+    from src.utils.jjson import j_dumps, j_loads, j_loads_ns
+    
+    # Запись в файл
     data = {'key': 'value'}
-    file_path = Path('output.json')
-    j_dumps(data, file_path)
+    j_dumps(data, Path('output.json'))
 
-    loaded_data = j_loads_ns(file_path)
-    print(loaded_data)
+    # Загрузка из файла
+    loaded_data = j_loads(Path('output.json'))
+
+    # Загрузка и конвертация в SimpleNamespace
+    ns_data = j_loads_ns(Path('output.json'))
 """
-
 from datetime import datetime
 import copy
 from math import log
 from pathlib import Path
 from typing import List, Dict, Optional, Any
 from types import SimpleNamespace
-import json
 import os
 import re
 import pandas as pd
 from json_repair import repair_json
 import simplejson as simplejson
-from typing import Any
-from pathlib import Path
-import json
-import pandas as pd
-from types import SimpleNamespace
 from collections import OrderedDict
-
 
 from src.logger.logger import logger
 from src.utils.printer import pprint
 from .convertors.dict import dict2ns
-# from .convertors.ns import ns2dict
 
-
-def _convert_value(value: Any) -> Any:
+def _convert(value: Any) -> Any:
     """
-    Рекурсивно обрабатывает значения для поддержки вложенных структур и пустых ключей.
+    Рекурсивно обрабатывает значения для работы с вложенными структурами, включая SimpleNamespace, dict и list.
 
     :param value: Значение для обработки.
     :type value: Any
@@ -96,66 +86,12 @@ def _convert_value(value: Any) -> Any:
     :rtype: Any
     """
     if hasattr(value, '__dict__'):
-        return {key or '': _convert_value(val) for key, val in vars(value).items()}
+        return {key or '': _convert(val) for key, val in vars(value).items()}
     elif hasattr(value, 'items'):
-        return {key or '': _convert_value(val) for key, val in value.items()}
+        return {key or '': _convert(val) for key, val in value.items()}
     elif isinstance(value, list):
-        return [_convert_value(item) for item in value]
+        return [_convert(item) for item in value]
     return value
-
-
-def _write_json_file(
-    path: Path, data: dict, ensure_ascii: bool = True, indent: int = 4
-) -> bool:
-    """
-    Записывает JSON данные в файл.
-
-    :param path: Путь к файлу.
-    :type path: Path
-    :param data: Данные для записи.
-    :type data: dict
-    :param ensure_ascii: Флаг для сохранения ASCII.
-    :type ensure_ascii: bool
-    :param indent: Отступ для форматирования.
-    :type indent: int
-    :return: True, если запись успешна, иначе False.
-    :rtype: bool
-    :raises Exception: В случае ошибки записи.
-    """
-    try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open('w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=ensure_ascii, indent=indent)
-        return True
-    except Exception as ex:
-        logger.error(f'Failed to write to {path}: {ex}', exc_info=True)
-        return False
-
-
-def _read_json_file(
-    path: Path, exc_info: bool = True
-) -> Optional[dict]:
-    """
-    Читает JSON данные из файла.
-
-    :param path: Путь к файлу.
-    :type path: Path
-    :param exc_info: Флаг для логирования ошибок с трассировкой.
-    :type exc_info: bool
-    :return: Словарь с JSON данными или None при ошибке.
-    :rtype: Optional[dict]
-    :raises json.JSONDecodeError: Если JSON не удалось декодировать.
-    :raises Exception: В случае других ошибок чтения.
-    """
-    try:
-        with path.open('r', encoding='utf-8') as f:
-            return json.load(f)
-    except json.JSONDecodeError as e:
-        logger.error(f'Error decoding JSON in {path}: {e}', exc_info=exc_info)
-        return None
-    except Exception as ex:
-        logger.error(f'Error reading {path=}: {ex}', exc_info=exc_info)
-        return None
 
 
 def j_dumps(
@@ -164,23 +100,32 @@ def j_dumps(
     ensure_ascii: bool = True,
     mode: str = 'w',
     exc_info: bool = True,
-) -> Optional[dict]:
+) -> Optional[Dict]:
     """
-    Преобразует JSON-совместимые данные в JSON формат и записывает в файл или возвращает как словарь.
+    Сохраняет JSON данные в файл или возвращает JSON как словарь.
 
-    :param data: JSON-совместимые данные или SimpleNamespace объекты для выгрузки.
+    :param data: JSON-совместимые данные или объекты SimpleNamespace для сохранения.
     :type data: Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]
-    :param file_path: Путь к файлу для вывода. Если None, возвращает JSON как словарь.
+    :param file_path: Путь к файлу для сохранения. Если None, возвращает JSON как словарь.
     :type file_path: Optional[Path], optional
-    :param ensure_ascii: Если True, экранирует не-ASCII символы.
+    :param ensure_ascii: Если True, экранирует не-ASCII символы в выводе.
     :type ensure_ascii: bool, optional
-    :param mode: Режим открытия файла ('w', 'a+', '+a').
+    :param mode: Режим открытия файла ('w', 'a+', '+a'). По умолчанию 'w'.
     :type mode: str, optional
     :param exc_info: Если True, логирует исключения с трассировкой.
     :type exc_info: bool, optional
-    :return: JSON данные как словарь или None в случае ошибки.
-    :rtype: Optional[dict]
+    :return: JSON данные как словарь, если успешно, иначе None.
+    :rtype: Optional[Dict]
     :raises ValueError: Если режим файла не поддерживается.
+    
+    Пример:
+    
+        >>> from pathlib import Path
+        >>> data = {'key': 'value'}
+        >>> file_path = Path('output.json')
+        >>> result = j_dumps(data, file_path)
+        >>> print(result)
+        None
     """
     path = Path(file_path) if isinstance(file_path, (str, Path)) else None
 
@@ -188,119 +133,79 @@ def j_dumps(
         try:
             data = repair_json(data)
         except Exception as ex:
-            logger.error(f'Ошибка конвертации строки: {pprint(data)}', ex, False)
+            logger.error(f'Ошибка конвертации строки: {pprint(data)}', exc_info=exc_info) # Исправлено: exc_info=exc_info
             return None
 
-    data = _convert_value(data)
-    if not path:
-        return data
+    data = _convert(data)
 
     if mode not in {'w', 'a+', '+a'}:
         mode = 'w'
-    
-    existing_data = {}
 
+    existing_data = {}
     if path and path.exists():
         if mode in {'a+', '+a'}:
-           existing_data = _read_json_file(path, exc_info)
-           if existing_data is None:
-                return None
-    
-        if mode == 'a+':
             try:
-                if isinstance(data, list) and isinstance(existing_data, list):
-                    data = data + existing_data
-                elif isinstance(data, dict) and isinstance(existing_data, dict):
-                    data.update(existing_data)
-                else:
-                     logger.error('Data types mismatch for a+ mode', exc_info=exc_info)
-                     return None
+                with path.open('r', encoding='utf-8') as f:
+                    existing_data = simplejson.load(f)
+            except simplejson.JSONDecodeError as e:
+                logger.error(f'Ошибка декодирования JSON в {path}: {e}', exc_info=exc_info)
+                return None
             except Exception as ex:
-                logger.error(f"Error processing mode 'a+': {ex}", exc_info=exc_info)
+                logger.error(f'Ошибка чтения {path=}: {ex}', exc_info=exc_info) # Исправлено: exc_info=exc_info
                 return None
-                
-        elif mode == '+a':
-             try:
-                if isinstance(data, list) and isinstance(existing_data, list):
-                    data = existing_data + data
-                elif isinstance(data, dict) and isinstance(existing_data, dict):
-                    existing_data.update(data)
-                    data = existing_data
-                else:
-                    logger.error('Data types mismatch for +a mode', exc_info=exc_info)
+
+            if mode == 'a+':
+                try:
+                    if isinstance(data, list) and isinstance(existing_data, list):
+                         data =  data + existing_data
+                    elif isinstance(data, dict) and isinstance(existing_data, dict):
+                        data.update(existing_data)
+                    else:
+                        logger.error('Несовместимые типы данных для слияния (a+)')
+                        return None
+                except Exception as ex:
+                    logger.error(f'Ошибка слияния данных (a+): {ex}', exc_info=exc_info)
                     return None
-             except Exception as ex:
-                logger.error(f"Error processing mode '+a': {ex}", exc_info=exc_info)
+            elif mode == '+a':
+                try:
+                   if isinstance(data, list) and isinstance(existing_data, list):
+                         data = existing_data + data
+                   elif isinstance(data, dict) and isinstance(existing_data, dict):
+                        existing_data.update(data)
+                        data = existing_data
+                   else:
+                        logger.error('Несовместимые типы данных для слияния (+a)')
+                        return None
+                except Exception as ex:
+                    logger.error(f'Ошибка слияния данных (+a): {ex}', exc_info=exc_info)
+                    return None
+
+            try:
+               with path.open('w', encoding='utf-8') as f:
+                  simplejson.dump(data, f, ensure_ascii=ensure_ascii, indent=4)
+            except Exception as ex:
+                logger.error(f'Ошибка записи в файл {path}: {ex}', exc_info=exc_info)
                 return None
-        
-    if not _write_json_file(path, data, ensure_ascii):
-        return None
-    return data
 
-
-
-def _decode_string(data: str) -> str:
-    """
-    Декодирует строку, обрабатывая escape-последовательности.
-
-    :param data: Строка для декодирования.
-    :type data: str
-    :return: Декодированная строка.
-    :rtype: str
-    """
-    try:
-        return data.encode().decode('unicode_escape')
-    except Exception:
+    if path:
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open('w', encoding='utf-8') as f:
+                simplejson.dump(data, f, ensure_ascii=ensure_ascii, indent=4)
+        except Exception as ex:
+            logger.error(f'Ошибка записи в {path}: {ex}', exc_info=exc_info)
+            return None
+    else:
         return data
 
 
-def _decode_strings(data: Any) -> Any:
-    """
-    Рекурсивно перекодирует строки в структуре данных.
-
-    :param data: Данные для обработки.
-    :type data: Any
-    :return: Данные с декодированными строками.
-    :rtype: Any
-    """
-    if isinstance(data, str):
-        return _decode_string(data)
-    elif isinstance(data, list):
-        return [_decode_strings(item) for item in data]
-    elif isinstance(data, dict):
-        return {
-            _decode_strings(key): _decode_strings(value)
-            for key, value in data.items()
-        }
-    return data
-
-
-def _string_to_dict(json_string: str) -> dict:
-    """
-    Удаляет тройные обратные кавычки и 'json' из начала и конца строки, преобразует строку в словарь.
-
-    :param json_string: Строка JSON для преобразования.
-    :type json_string: str
-    :return: Словарь, полученный из строки, или пустой словарь при ошибке.
-    :rtype: dict
-    """
-    if json_string.startswith(('```', '```json')) and json_string.endswith(
-        ('```', '```\n')
-    ):
-        json_string = json_string.strip('`').replace('json', '', 1).strip()
-    try:
-        _j = simplejson.loads(json_string)
-        return json.loads(json.dumps(_j))
-    except json.JSONDecodeError as ex:
-        logger.error(f'Ошибка парсинга строки JSON:\\n {json_string}', ex, False)
-        return {}
-
-
 def j_loads(
-    jjson: dict | SimpleNamespace | str | Path | list, ordered: bool = True
+    jjson: dict | SimpleNamespace | str | Path | list,
+    ordered: bool = True
 ) -> dict | list:
     """
-    Загружает JSON или CSV данные из файла, директории, строки, объекта JSON или SimpleNamespace.
+    Загрузка JSON или CSV данных из файла, директории, строки, объекта JSON или SimpleNamespace.
+    Перекодирует строки ключей и значений в Unicode.
 
     :param jjson: Путь к файлу, директории, строка JSON данных, объект JSON или SimpleNamespace.
     :type jjson: dict | SimpleNamespace | str | Path | list
@@ -309,8 +214,44 @@ def j_loads(
     :return: Обработанные данные (словарь или список словарей).
     :rtype: dict | list
     :raises FileNotFoundError: Если указанный файл не найден.
-    :raises json.JSONDecodeError: Если данные JSON не удалось разобрать.
+    :raises simplejson.JSONDecodeError: Если данные JSON не удалось разобрать.
+
+    Пример:
+    
+        >>> from pathlib import Path
+        >>> file_path = Path('example.json')
+        >>> data = j_loads(file_path)
+        >>> print(data)
+        {}
     """
+    def decode_strings(data: Any) -> Any:
+        """Рекурсивно перекодирует строки в структуре данных."""
+        if isinstance(data, str):
+            try:
+                return data.encode().decode('unicode_escape')
+            except Exception:
+                return data
+        elif isinstance(data, list):
+            return [decode_strings(item) for item in data]
+        elif isinstance(data, dict):
+            return {decode_strings(key): decode_strings(value) for key, value in data.items()}
+        return data
+
+    def string2dict(json_string: str) -> dict:
+        """Удаляет тройные обратные кавычки и 'json' из начала и конца строки."""
+        if json_string.startswith(('```', '```json')) and json_string.endswith(('```', '```\n')):
+            json_string = json_string.strip('`').replace('json', '', 1).strip()
+        try:
+            _j = simplejson.loads(json_string)
+            return _j
+        except simplejson.JSONDecodeError as ex:
+            logger.error(f'Ошибка парсинга строки JSON:\\n {json_string}', exc_info=False) # Исправлено: exc_info=False
+            return {}
+        except Exception as ex:
+            logger.error(f'Ошибка декодирования JSON: {ex}', exc_info=False) # Исправлено: exc_info=False
+            return {}
+
+
     try:
         if isinstance(jjson, SimpleNamespace):
             jjson = vars(jjson)
@@ -321,37 +262,46 @@ def j_loads(
                 return [j_loads(file, ordered=ordered) for file in files]
             if jjson.suffix.lower() == '.csv':
                 return pd.read_csv(jjson).to_dict(orient='records')
-            return json.loads(jjson.read_text(encoding='utf-8'))
+            return simplejson.loads(jjson.read_text(encoding='utf-8'))
         elif isinstance(jjson, str):
-            return _string_to_dict(jjson)
+            return string2dict(jjson)
         elif isinstance(jjson, list):
-            return [_decode_strings(item) for item in jjson]
+            return [decode_strings(item) for item in jjson]
         elif isinstance(jjson, dict):
-            return _decode_strings(jjson)
+            return decode_strings(jjson)
+
     except FileNotFoundError as ex:
-        logger.error(f'Файл не найден: {jjson}')
+        logger.error(f'Файл не найден: {jjson}', exc_info=False)
         return {}
-    except json.JSONDecodeError as ex:
-        logger.error(f'Ошибка парсинга JSON:\\n{jjson}\\n', ex, False)
+    except simplejson.JSONDecodeError as ex:
+        logger.error(f'Ошибка парсинга JSON:\\n{jjson}\\n', exc_info=False)
         return {}
     except Exception as ex:
-        logger.error(f'Ошибка загрузки данных: ', ex, False)
+        logger.error(f'Ошибка загрузки данных: {ex}', exc_info=False)
         return {}
     return {}
 
-
 def j_loads_ns(
-    jjson: Path | SimpleNamespace | Dict | str, ordered: bool = True
+    jjson: Path | SimpleNamespace | Dict | str,
+    ordered: bool = True
 ) -> SimpleNamespace:
     """
-    Загружает JSON или CSV данные из файла, директории или строки и преобразует в SimpleNamespace.
+    Загружает JSON или CSV данные из файла, директории или строки и конвертирует в SimpleNamespace.
 
-    :param jjson: Путь к файлу, директории или JSON данные в виде строки или JSON-объекта.
+    :param jjson: Путь к файлу, директории, строка JSON данных, или объект JSON.
     :type jjson: Path | SimpleNamespace | Dict | str
-    :param ordered: Возвращает OrderedDict вместо обычного dict для сохранения порядка элементов.
+    :param ordered: Если True, возвращает OrderedDict вместо обычного словаря для сохранения порядка элементов.
     :type ordered: bool, optional
-    :return: SimpleNamespace или список SimpleNamespace объектов, если успешно, иначе None.
-    :rtype: SimpleNamespace | List[SimpleNamespace]
+    :return: SimpleNamespace или список SimpleNamespace объектов, если успешно. Возвращает пустой словарь, если jjson не найден или не может быть прочитан.
+    :rtype: SimpleNamespace
+    
+    Пример:
+
+        >>> from pathlib import Path
+        >>> data = Path('example.json')
+        >>> result = j_loads_ns(data)
+        >>> print(result)
+        {}
     """
     data = j_loads(jjson, ordered=ordered)
     if data:

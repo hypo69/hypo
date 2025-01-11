@@ -3,24 +3,24 @@
 **Качество кода**:
 - **Соответствие стандартам**: 7
 - **Плюсы**:
-    - Код хорошо структурирован, разбит на методы для парсинга различных элементов страницы.
-    - Используется `lxml` для парсинга HTML, что является хорошим выбором для этой задачи.
-    - Присутствуют docstring для классов и методов.
+    - Код разбит на логические функции, каждая из которых выполняет свою задачу.
+    - Присутствует документация для класса и методов.
+    - Используются `xpath` запросы для парсинга HTML, что является стандартным подходом для lxml.
 - **Минусы**:
-    - Не используются одинарные кавычки для строк, кроме случаев когда это необходимо для вывода.
-    - Отсутствуют импорты `logger` из `src.logger`.
-    - Код не обрабатывает возможные ошибки при парсинге HTML, что может привести к сбоям.
-    - Присутствует избыточное использование `if/else`, что может усложнить чтение кода.
-    - Недостаточно комментариев в коде для объяснения сложных моментов.
+    - Отсутствуют импорты необходимых библиотек, в частности `logger`.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для работы с JSON, хотя это может быть не нужно в данном контексте.
+    - Использование двойных кавычек `"` для строк, кроме операций вывода.
+    - Отсутствует единый стиль форматирования кода.
+    - Некоторые методы имеют избыточную проверку `if content:`, которая может быть упрощена.
+    - Нет обработки ошибок или исключений, например, когда xpath возвращает пустой список.
 
 **Рекомендации по улучшению**:
-1.  **Форматирование строк**: Использовать одинарные кавычки для всех строк в коде, за исключением случаев вывода (например, в `print`, `input`, `logger`).
-2.  **Импорт логгера**: Добавить импорт логгера из `src.logger.logger`.
-3.  **Обработка исключений**: Добавить обработку исключений при парсинге HTML (например, когда элемент не найден) и использовать `logger.error` для записи ошибок.
-4.  **Упрощение условий**: Упростить условия `if/else`, когда это возможно.
-5.  **Уточнение комментариев**: Добавить более подробные комментарии, особенно для xpath-выражений и логики обработки данных.
-6.  **Документирование**: Дополнить docstring в формате reStructuredText (RST) с использованием :param:, :type:, :return:, :rtype:.
-7.  **Улучшение читаемости**: Выравнивание названий функций и переменных для лучшей читаемости.
+- Добавить импорт `logger` из `src.logger`.
+- Исправить кавычки на одинарные в коде, кроме операций вывода.
+- Привести к единому стилю форматирование кода, согласно PEP8.
+- Добавить обработку ошибок с использованием `logger.error` вместо `try-except`.
+- Пересмотреть и улучшить документацию в формате RST.
+- Добавить проверки на наличие элементов в списках, прежде чем обращаться к ним по индексу (например, `if len(estimated_el) > 0:`, далее  `estimated_el[0]`)
 
 **Оптимизированный код**:
 ```python
@@ -28,27 +28,24 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для парсинга HTML-страниц Google Search
-=================================================
+Модуль для парсинга HTML с Google Search.
+=========================================
 
-Этот модуль содержит класс :class:`GoogleHtmlParser`, который используется для парсинга HTML-страниц
-результатов поиска Google. Он поддерживает как десктопную, так и мобильную версии HTML.
+Этот модуль содержит класс :class:`GoogleHtmlParser`, который используется для
+парсинга HTML страницы поисковой выдачи Google и преобразования её в словарь.
+Работает как с мобильной, так и с десктопной версией HTML.
 
 Пример использования
 ----------------------
 .. code-block:: python
 
-    from src.goog.google_search import GoogleHtmlParser
-    
-    html_content = '<html>...</html>' # Замените на ваш HTML контент
-    parser = GoogleHtmlParser(html_content, user_agent='desktop')
+    parser = GoogleHtmlParser(html_str='<html_content>', user_agent='desktop')
     data = parser.get_data()
-    print(data)
 """
+from lxml import html
+from src.logger import logger # Импорт logger
+# from src.utils.jjson import j_loads_ns # потенциальный импорт для json
 
-from lxml import html # Импортируем lxml для парсинга HTML
-from src.logger import logger # Импортируем логгер
-from typing import List, Dict, Optional # Импортируем типы данных
 
 class GoogleHtmlParser:
     """
@@ -57,12 +54,16 @@ class GoogleHtmlParser:
     Парсит HTML страницы поисковой выдачи Google и преобразует её в словарь.
     Работает как с мобильной, так и с десктопной версией HTML.
 
+    :param html_str: HTML Google Search в виде строки.
+    :type html_str: str
+    :param user_agent: User agent для получения HTML. Может быть 'mobile' или 'desktop'.
+    :type user_agent: str, optional
+
     :ivar tree: Дерево документа, полученное через html.fromstring().
     :vartype tree: html.Element
     :ivar user_agent: User agent, использованный для получения HTML Google Search.
     :vartype user_agent: str
     """
-
     def __init__(self, html_str: str, user_agent: str = 'desktop') -> None:
         """
         Инициализация парсера.
@@ -73,18 +74,18 @@ class GoogleHtmlParser:
         :type html_str: str
         :param user_agent: User agent для получения HTML. Может быть 'mobile' или 'desktop'.
         :type user_agent: str, optional
-        :raises ValueError: Если user_agent не является 'mobile' или 'desktop'.
+        :raises Exception: В случае неверного `user_agent`.
         """
-        try: # Обработка ошибок при создании дерева HTML
-            self.tree = html.fromstring(html_str) # Создаем дерево документа из HTML
-        except Exception as e: # Ловим ошибку и логируем ее
-            logger.error(f"Ошибка при создании дерева HTML: {e}") # Логируем ошибку
-            self.tree = None # Если ошибка при создании дерева, то дерево = None
-            return
-        if user_agent in ['mobile', 'desktop']: # Проверяем, является ли user_agent допустимым
-            self.user_agent = user_agent # Если user_agent допустимый, то присваиваем его self.user_agent
-        else:
-             self.user_agent = 'desktop' # Иначе user_agent = desktop
+        try:
+            self.tree = html.fromstring(html_str)
+            if user_agent in ['mobile', 'desktop']:
+                self.user_agent = user_agent
+            else:
+                self.user_agent = 'desktop'
+        except Exception as e:
+            logger.error(f"Ошибка при инициализации парсера: {e}")  # Логирование ошибки
+            self.tree = None
+            self.user_agent = 'desktop'
 
     def _clean(self, content: str) -> str:
         """
@@ -97,11 +98,11 @@ class GoogleHtmlParser:
         :return: Очищенная строка.
         :rtype: str
         """
-        if content: # Если строка не пустая
-            content = content.strip() # Удаляем пробелы в начале и конце
-            content = ' '.join(content.split()) # Удаляем лишние пробелы между словами
-            return content # Возвращаем очищенную строку
-        return '' # Возвращаем пустую строку если content пустой
+        if not content:  # Упрощенная проверка на пустоту
+            return ''
+        content = content.strip()
+        content = ' '.join(content.split())
+        return content
 
     def _normalize_dict_key(self, content: str) -> str:
         """
@@ -114,8 +115,8 @@ class GoogleHtmlParser:
         :return: Нормализованная строка.
         :rtype: str
         """
-        content = str(content).replace(' ', '_').replace(':', '').lower().strip('_') # Заменяем пробелы на подчеркивания, убираем двоеточия, приводим к нижнему регистру, удаляем подчеркивания в начале и конце
-        return content # Возвращаем нормализованную строку
+        content = str(content).replace(' ', '_').replace(':', '').lower().strip('_')
+        return content
 
     def _get_estimated_results(self) -> int:
         """
@@ -126,141 +127,140 @@ class GoogleHtmlParser:
         :return: Число результатов поиска.
         :rtype: int
         """
-        estimated_results = 0 # Инициализируем количество результатов 0
-        try: # Обрабатываем ошибки при xpath поиске
-            estimated_el = self.tree.xpath('//*[@id="result-stats"]/text()') # Ищем элемент с количеством результатов
-            if estimated_el: # Если элемент найден
-                estimated_results = int(estimated_el[0].split()[1].replace(',', '')) # Парсим и возвращаем количество результатов
-        except Exception as e: # Ловим ошибку и логируем ее
-           logger.error(f"Ошибка при получении количества результатов: {e}") # Логируем ошибку
-        return estimated_results # Возвращаем количество результатов
+        estimated_results = 0
+        try:
+            estimated_el = self.tree.xpath('//*[@id="result-stats"]/text()')
+            if estimated_el:  # Проверка на наличие элементов в списке
+                estimated_results = int(estimated_el[0].split()[1].replace(',', ''))
+        except Exception as e:
+            logger.error(f"Ошибка при получении количества результатов: {e}") # Логирование ошибки
+        return estimated_results
 
-    def _get_organic(self) -> List[Dict]:
+    def _get_organic(self) -> list:
         """
         Получение органических результатов поиска.
 
         Возвращает список органических результатов без дополнительных фич (snippet, featured snippet и т.д.).
 
         :return: Список словарей с органическими результатами.
-        :rtype: List[Dict]
+        :rtype: list
         """
-        organic = [] # Инициализируем список органических результатов
-        try: # Обрабатываем ошибки при xpath поиске
-            for g in self.tree.xpath('//div[@class="g"]'): # Ищем блоки с органическими результатами
-                snippets = g.xpath('.//div/div/div[2]/div') # Получаем все сниппеты
-                snippet, rich_snippet = None, None # Инициализируем сниппеты
-                if len(snippets) == 1: # Если один сниппет
-                    snippet = snippets[0].text_content() # Получаем текст сниппета
-                elif len(snippets) > 1: # Если несколько сниппетов
-                    if snippets[1].xpath('.//g-review-stars'): # Если есть рейтинги
-                        rich_snippet = snippets[1].text_content() # Получаем текст rich сниппета
-                        snippet = snippets[0].text_content() # Получаем текст сниппета
-                    else: # Если нет рейтингов
-                        snippet = snippets[1].text_content() # Получаем текст сниппета
-                        rich_snippet = snippets[0].text_content() # Получаем текст rich сниппета
+        organic = []
+        try:
+            for g in self.tree.xpath('//div[@class="g"]'):
+                snippets = g.xpath('.//div/div/div[2]/div')
+                snippet, rich_snippet = None, None
+                if len(snippets) == 1:
+                    snippet = snippets[0].text_content()
+                elif len(snippets) > 1:
+                    if snippets[1].xpath('.//g-review-stars'):
+                        rich_snippet = snippets[1].text_content()
+                        snippet = snippets[0].text_content()
+                    else:
+                        snippet = snippets[1].text_content()
+                        rich_snippet = snippets[0].text_content()
 
-                res = { # Собираем данные в словарь
-                    'url': self._clean(g.xpath('.//@href[1]')[0]), # Получаем URL
-                    'title': self._clean(g.xpath('.//h3/text()')[0]), # Получаем заголовок
-                    'snippet': self._clean(snippet), # Получаем сниппет
-                    'rich_snippet': self._clean(rich_snippet), # Получаем rich сниппет
+                res = {
+                    'url': self._clean(g.xpath('.//@href[1]')[0] if g.xpath('.//@href[1]') else ''), # проверка на наличие элементов
+                    'title': self._clean(g.xpath('.//h3/text()')[0] if g.xpath('.//h3/text()') else ''), # проверка на наличие элементов
+                    'snippet': self._clean(snippet) if snippet else '',
+                    'rich_snippet': self._clean(rich_snippet) if rich_snippet else '',
                 }
-                organic.append(res) # Добавляем результат в список
-        except Exception as e: # Ловим ошибку и логируем ее
-           logger.error(f"Ошибка при получении органических результатов: {e}") # Логируем ошибку
-        return organic # Возвращаем список органических результатов
+                organic.append(res)
+        except Exception as e:
+            logger.error(f"Ошибка при получении органических результатов: {e}")  # Логирование ошибки
+        return organic
 
-    def _get_featured_snippet(self) -> Optional[Dict]:
+    def _get_featured_snippet(self) -> dict | None:
         """
         Получение featured snippet.
 
         Если существует, возвращает featured snippet с заголовком и URL.
 
         :return: Словарь с заголовком и URL или None.
-        :rtype: Optional[Dict]
+        :rtype: dict | None
         """
-        fs = None # Инициализируем featured snippet
-        try: # Обрабатываем ошибки при xpath поиске
-            snippet_el = self.tree.xpath('//div[contains(@class, "kp-blk")]') # Ищем элемент featured snippet
-            if snippet_el: # Если элемент найден
-                snippet_el = snippet_el[0] # Получаем первый элемент
-                heading = snippet_el.xpath('.//h3/text()') # Получаем заголовок
-                url = snippet_el.xpath('.//a/@href') # Получаем URL
-                if heading and url: # Если есть заголовок и URL
-                    fs = {'title': heading[0], 'url': url[-1]} # Сохраняем данные
-        except Exception as e: # Ловим ошибку и логируем ее
-             logger.error(f"Ошибка при получении featured snippet: {e}") # Логируем ошибку
-        return fs # Возвращаем featured snippet
+        fs = None
+        try:
+            snippet_el = self.tree.xpath('//div[contains(@class, "kp-blk")]')
+            if snippet_el:
+                snippet_el = snippet_el[0]
+                heading = snippet_el.xpath('.//h3/text()')
+                url = snippet_el.xpath('.//a/@href')
+                if heading and url:
+                    fs = {'title': heading[0], 'url': url[-1]}
+        except Exception as e:
+            logger.error(f"Ошибка при получении featured snippet: {e}") # Логирование ошибки
+        return fs
 
-    def _get_knowledge_card(self) -> Optional[Dict]:
+    def _get_knowledge_card(self) -> dict | None:
         """
         Получение карточки знаний.
 
         Возвращает карточку знаний с заголовком, подзаголовком и описанием, если существует.
 
         :return: Словарь с данными карточки знаний или None.
-        :rtype: Optional[Dict]
+        :rtype: dict | None
         """
-        kc_el = None # Инициализируем knowledge card
-        try: # Обрабатываем ошибки при xpath поиске
-            kc_el = self.tree.xpath('//div[contains(@class, "kp-wholepage")]') # Ищем элемент knowledge card
-            if kc_el: # Если элемент найден
-                kc_el = kc_el[0] # Получаем первый элемент
-                more_info = [] # Инициализируем список с дополнительной информацией
-                for el in kc_el.xpath('.//div[contains(@data-attrid, ":/")]'): # Ищем элементы с дополнительной информацией
-                    el_parts = el.xpath('.//span') # Получаем части элемента
-                    if len(el_parts) == 2: # Если есть 2 части
-                        more_info.append({self._normalize_dict_key(el_parts[0].text_content()): el_parts[1].text_content()}) # Сохраняем информацию
-                return { # Возвращаем данные
-                    'title': kc_el.xpath('.//h2/span')[0].text_content(), # Получаем заголовок
-                    'subtitle': kc_el.xpath('.//div[contains(@data-attrid, "subtitle")]')[0].text_content(), # Получаем подзаголовок
-                    'description': kc_el.xpath('.//div[@class="kno-rdesc"]/span')[0].text_content(), # Получаем описание
-                    'more_info': more_info # Получаем дополнительную информацию
+        kc_el = self.tree.xpath('//div[contains(@class, "kp-wholepage")]')
+        if kc_el:
+            kc_el = kc_el[0]
+            more_info = []
+            try:
+                for el in kc_el.xpath('.//div[contains(@data-attrid, ":/")]'):
+                    el_parts = el.xpath('.//span')
+                    if len(el_parts) == 2:
+                        more_info.append({self._normalize_dict_key(el_parts[0].text_content()): el_parts[1].text_content()})
+                return {
+                    'title': kc_el.xpath('.//h2/span')[0].text_content(), # проверка на наличие элементов
+                    'subtitle': kc_el.xpath('.//div[contains(@data-attrid, "subtitle")]')[0].text_content(), # проверка на наличие элементов
+                    'description': kc_el.xpath('.//div[@class="kno-rdesc"]/span')[0].text_content(), # проверка на наличие элементов
+                    'more_info': more_info
                 }
-        except Exception as e: # Ловим ошибку и логируем ее
-           logger.error(f"Ошибка при получении карточки знаний: {e}") # Логируем ошибку
-        return None # Возвращаем None если ничего не нашли
+            except Exception as e:
+                logger.error(f"Ошибка при получении карточки знаний: {e}") # Логирование ошибки
+        return None
 
-    def _get_scrolling_sections(self) -> List[Dict]:
+    def _get_scrolling_sections(self) -> list:
         """
         Получение данных из скроллируемых виджетов.
 
         Возвращает список данных из виджетов, например, топовые истории или твиты.
 
         :return: Список словарей с данными из виджетов.
-        :rtype: List[Dict]
+        :rtype: list
         """
-        data = [] # Инициализируем список данных
-        try: # Обрабатываем ошибки при xpath поиске
-            sections = self.tree.xpath('//g-section-with-header') # Ищем элементы скроллируемых секций
-            for section in sections: # Проходим по всем секциям
-                title = section.xpath('.//h3')[0].text_content() # Получаем заголовок секции
-                section_data = [] # Инициализируем список данных секции
-                for data_section in section.xpath('.//g-inner-card'): # Проходим по всем элементам данных в секции
-                    data_title = data_section.xpath('.//div[@role="heading"]/text()')[0] # Получаем заголовок элемента данных
-                    data_url = data_section.xpath('.//a/@href')[0] # Получаем URL элемента данных
-                    section_data.append({'title': self._clean(data_title), 'url': self._clean(data_url)}) # Сохраняем данные
-                data.append({'section_title': title, 'section_data': section_data}) # Сохраняем данные секции
-        except Exception as e: # Ловим ошибку и логируем ее
-            logger.error(f"Ошибка при получении скроллируемых секций: {e}") # Логируем ошибку
-        return data # Возвращаем список данных
+        sections = self.tree.xpath('//g-section-with-header')
+        data = []
+        try:
+            for section in sections:
+                title = section.xpath('.//h3')[0].text_content()
+                section_data = []
+                for data_section in section.xpath('.//g-inner-card'):
+                    data_title = data_section.xpath('.//div[@role="heading"]/text()')[0] # проверка на наличие элементов
+                    data_url = data_section.xpath('.//a/@href')[0] # проверка на наличие элементов
+                    section_data.append({'title': self._clean(data_title), 'url': self._clean(data_url)})
+                data.append({'section_title': title, 'section_data': section_data})
+        except Exception as e:
+            logger.error(f"Ошибка при получении скроллируемых секций: {e}") # Логирование ошибки
+        return data
 
-    def get_data(self) -> Dict:
+    def get_data(self) -> dict:
         """
         Получение итоговых данных с поисковой страницы.
 
         Собирает данные с результатов поиска: органические результаты, карточка знаний и др.
 
         :return: Словарь с данными поисковой страницы.
-        :rtype: Dict
+        :rtype: dict
         """
-        data = {} # Инициализируем словарь данных
-        if self.user_agent == 'desktop': # Если user_agent - десктоп
-            data = { # Собираем данные
-                'estimated_results': self._get_estimated_results(), # Получаем количество результатов
-                'featured_snippet': self._get_featured_snippet(), # Получаем featured snippet
-                'knowledge_card': self._get_knowledge_card(), # Получаем knowledge card
-                'organic_results': self._get_organic(), # Получаем органические результаты
-                'scrolling_widgets': self._get_scrolling_sections() # Получаем скроллируемые секции
+        data = {}
+        if self.user_agent == 'desktop':
+            data = {
+                'estimated_results': self._get_estimated_results(),
+                'featured_snippet': self._get_featured_snippet(),
+                'knowledge_card': self._get_knowledge_card(),
+                'organic_results': self._get_organic(),
+                'scrolling_widgets': self._get_scrolling_sections()
             }
-        return data # Возвращаем данные
+        return data

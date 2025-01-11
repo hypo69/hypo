@@ -1,46 +1,48 @@
-### Анализ кода модуля `src.utils.file_async`
+### Анализ кода модуля `file_async`
 
-**Качество кода:**
+**Качество кода**:
 
 - **Соответствие стандартам**: 7/10
 - **Плюсы**:
-    - Асинхронное выполнение операций с файлами.
-    - Использование `pathlib` для работы с путями.
-    - Генераторы для чтения больших файлов.
-    - Логирование ошибок.
+    - Асинхронность: Код использует `asyncio` и `aiofiles` для асинхронных операций с файлами, что повышает производительность при работе с IO-операциями.
+    - Генераторы: Использование генераторов для чтения файлов позволяет обрабатывать большие файлы, не загружая их целиком в память.
+    - Обработка ошибок: Присутствует общая обработка исключений с логированием ошибок.
+    - Типизация: Код использует аннотации типов, что улучшает читаемость и помогает выявлять ошибки на ранних этапах.
+    - Документация: Функции имеют docstrings с описанием параметров, возвращаемых значений и примерами.
 - **Минусы**:
-    - Смешение стилей кавычек (`'` и `"`) в коде.
-    - Не везде используется `from src.logger import logger`.
-    - Избыточные комментарии в начале кода.
-    - Функция `recursively_read_text_files` использует `os.walk`, вместо `pathlib`.
-    - Не везде используется `f-strings` для форматирования строк.
-    - Смешение `try-except` и `logger.error`.
+    - Непоследовательное использование кавычек: В коде используются как одинарные, так и двойные кавычки, что нарушает консистентность.
+    - Неполное соответствие RST:  Не все docstrings соответствуют стандарту RST, который подразумевает использование `:param:`, `:return:` и т.д.
+    - Смешанная обработка ошибок: В коде используется `try-except` и логирование ошибок через `logger.error`, что можно упростить.
+    - Избыточный `try-except` в `_read_file_content` и других функциях.
+    - Дублирование кода: Есть схожие блоки кода в функциях `read_text_file` и `yield_text_from_files`.
+    - Не всегда точные описания: Комментарии не всегда точно описывают действие кода.
+    -  Импорт `logger` из `src.logger.logger`.
 
-**Рекомендации по улучшению:**
+**Рекомендации по улучшению**:
 
-1.  **Использовать одинарные кавычки**: Привести все строки к одинарным кавычкам, кроме операций вывода, где уместны двойные кавычки.
-2.  **Импортировать логгер**: Использовать `from src.logger import logger` для импорта логгера во всех местах.
-3.  **Удалить лишние комментарии**: Сократить комментарии в начале модуля, оставив только основную информацию.
-4.  **Использовать `pathlib`**: Переписать `recursively_read_text_files` с использованием `pathlib` для более консистентного подхода.
-5.  **Использовать `f-strings`**: Применить `f-strings` для более читаемого форматирования строк в логах.
-6.  **Согласованность обработки ошибок**: Использовать `logger.error` вместо прямого `try-except` для обработки ошибок.
-7. **Документирование функций**: Добавить **RST** docstring для всех функций, методов и классов.
+-   Привести кавычки к единому стилю: Использовать одинарные кавычки для строк в коде, двойные только для вывода.
+-   Улучшить docstrings: Привести docstrings к полному соответствию стандартам RST, с использованием `:param:`, `:type:`, `:return:`, `:rtype:`, `:raises:`, и  `:yields:`.
+-   Упростить обработку ошибок:  Избегать `try-except` там, где можно обойтись логированием ошибок через `logger.error`.
+-   Устранить дублирование кода: Вынести общую логику в отдельные функции или использовать более общие функции.
+-   Уточнить комментарии: Использовать более конкретные формулировки в комментариях.
+-   Импорт: `from src.logger.logger import logger`
+-   Удалить лишние импорты: `import os`, так как не используется напрямую в коде, используется внутри pathlib.
 
-**Оптимизированный код:**
+**Оптимизированный код**:
 
 ```python
 # -*- coding: utf-8 -*-
 #! venv/bin/python/python3.12
 """
-Модуль для асинхронной работы с файлами.
-=================================================
+Модуль для работы с файлами.
+=========================================================================================
 
-Этот модуль предоставляет набор асинхронных утилит для выполнения операций с файлами,
-таких как сохранение, чтение и поиск файлов. Поддерживает обработку больших файлов
-с использованием асинхронных генераторов для экономии памяти.
+Модуль содержит набор утилит для выполнения операций с файлами, таких как сохранение, чтение,
+и получение списков файлов. Поддерживает обработку больших файлов с использованием генераторов
+для экономии памяти.
 
 Пример использования
-----------------------
+--------------------
 
 .. code-block:: python
 
@@ -54,15 +56,16 @@
 
     await save_text_file(file_path, 'Новый текст')
 """
-import os
+import asyncio
 import json
 import fnmatch
-import asyncio
 import aiofiles
 import aiofiles.os
 from pathlib import Path
-from typing import List, Optional, Union, AsyncGenerator
-from src.logger import logger # Исправлен импорт логгера
+from typing import List, Optional, Union, AsyncGenerator, Generator
+
+from src.logger.logger import logger #  Импорт logger из src.logger
+
 
 MODE = 'dev'  # Константа режима
 
@@ -95,18 +98,18 @@ async def save_text_file(
     """
     try:
         file_path = Path(file_path)
-        await aiofiles.os.makedirs(file_path.parent, exist_ok=True)
-        async with aiofiles.open(file_path, mode, encoding='utf-8') as file:
+        await aiofiles.os.makedirs(file_path.parent, exist_ok = True)
+        async with aiofiles.open(file_path, mode, encoding = 'utf-8') as file: #  Открытие файла для записи
             if isinstance(data, list):
                 for line in data:
-                    await file.write(f'{line}\n')
+                  await file.write(f'{line}\\n')
             elif isinstance(data, dict):
-                await file.write(json.dumps(data, ensure_ascii=False, indent=4))
+                await file.write(json.dumps(data, ensure_ascii = False, indent = 4))
             else:
                 await file.write(data)
         return True
     except Exception as ex:
-        logger.error(f'Ошибка при сохранении файла {file_path}.', exc_info=ex) # Изменен стиль логгирования
+        logger.error(f'Ошибка при сохранении файла {file_path}.', ex) # Логирование ошибки
         return False
 
 
@@ -134,13 +137,13 @@ async def read_text_file(
     :param patterns: Шаблоны для фильтрации файлов при рекурсивном поиске.
     :type patterns: str | list[str], optional
     :return:
-        - Если `as_list` is True и `file_path` является файлом, возвращает асинхронный генератор строк.
-        - Если `as_list` is True и `file_path` является директорией и `recursive` is True, возвращает список строк.
-        - Если `as_list` is False и `file_path` является файлом, возвращает строку.
-        - Если `as_list` is False и `file_path` является директорией, возвращает объединенную строку.
-        - Возвращает `None` в случае ошибки.
+            - Если `as_list` is True и `file_path` является файлом, возвращает асинхронный генератор строк.
+            - Если `as_list` is True и `file_path` является директорией и `recursive` is True, возвращает список строк.
+            - Если `as_list` is False и `file_path` является файлом, возвращает строку.
+            - Если `as_list` is False и `file_path` является директорией, возвращает объединенную строку.
+            - Возвращает `None` в случае ошибки.
     :rtype: AsyncGenerator[str, None] | str | list[str] | None
-    :raises Exception: В случае ошибки при чтении файла.
+    :raises Exception: При возникновении ошибки при чтении файла.
 
     Пример:
         >>> from pathlib import Path
@@ -149,7 +152,6 @@ async def read_text_file(
         >>> if content:
         ...    print(f'File content: {content[:100]}...')
         File content: Пример текста...
-
     Функция read_text_file может возвращать несколько разных типов данных в зависимости от входных параметров:
 
     Возвращаемые значения:
@@ -186,15 +188,14 @@ async def read_text_file(
     Важно помнить:
         В случае чтения директории, если as_list=False, функция объединяет все содержимое найденных файлов в одну строку. Это может потребовать много памяти, если файлов много или они большие.
         Функция полагается на другие функции-помощники (_read_file_lines_generator, _read_file_content, recursively_get_file_path, yield_text_from_files), которые здесь не определены и их поведение влияет на результат read_text_file.
-
     """
     try:
         path = Path(file_path)
         if path.is_file():
             if as_list:
-                return _read_file_lines_generator(path, chunk_size=chunk_size)
+                return _read_file_lines_generator(path, chunk_size = chunk_size)
             else:
-                return await _read_file_content(path, chunk_size=chunk_size)
+                return await _read_file_content(path, chunk_size = chunk_size)
         elif path.is_dir():
             if recursive:
                 if patterns:
@@ -204,29 +205,29 @@ async def read_text_file(
                         p for p in path.rglob('*') if p.is_file() and (not extensions or p.suffix in extensions)
                     ]
                 if as_list:
-                    return (
+                  return (
                         line
                         async for file in files
-                        async for line in yield_text_from_files(file, as_list=True, chunk_size=chunk_size)
+                        async for line in yield_text_from_files(file, as_list = True, chunk_size = chunk_size)
                     )
 
                 else:
-                    contents = await asyncio.gather(*[read_text_file(p, chunk_size=chunk_size) for p in files])
-                    return '\n'.join(filter(None, contents))
+                   contents = await asyncio.gather(*[read_text_file(p, chunk_size = chunk_size) for p in files])
+                   return '\n'.join(filter(None, contents))
             else:
                 files = [
                     p for p in path.iterdir() if p.is_file() and (not extensions or p.suffix in extensions)
                 ]
                 if as_list:
-                    return (line async for file in files async for line in read_text_file(file, as_list=True, chunk_size=chunk_size))
+                  return (line async for file in files async for line in read_text_file(file, as_list = True, chunk_size = chunk_size))
                 else:
-                    contents = await asyncio.gather(*[read_text_file(p, chunk_size=chunk_size) for p in files])
-                    return '\n'.join(filter(None, contents))
+                  contents = await asyncio.gather(*[read_text_file(p, chunk_size = chunk_size) for p in files])
+                  return '\n'.join(filter(None, contents))
         else:
-            logger.error(f'Путь \'{file_path}\' не является файлом или директорией.') # Исправлено форматирование строки
+            logger.error(f'Путь \'{file_path}\' не является файлом или директорией.') # Логирование ошибки
             return None
     except Exception as ex:
-        logger.error(f'Ошибка при чтении файла/директории {file_path}.', exc_info=ex) # Изменен стиль логгирования
+        logger.error(f'Ошибка при чтении файла/директории {file_path}.', ex)  # Логирование ошибки
         return None
 
 
@@ -246,9 +247,8 @@ async def yield_text_from_files(
     :type chunk_size: int, optional
     :return: Генератор строк, объединенная строка или None в случае ошибки.
     :rtype: AsyncGenerator[str, None] | str | None
-
-    :yield: Строки из файла, если as_list is True.
-    :ytype: str
+    :yields: Строки из файла, если as_list is True.
+    :rtype: str
 
     Пример:
         >>> from pathlib import Path
@@ -262,14 +262,14 @@ async def yield_text_from_files(
         path = Path(file_path)
         if path.is_file():
             if as_list:
-                async for line in  _read_file_lines_generator(path, chunk_size=chunk_size):
-                  yield line
+                 async for line in  _read_file_lines_generator(path, chunk_size = chunk_size):
+                   yield line
             else:
-              yield await _read_file_content(path, chunk_size=chunk_size)
+               yield await _read_file_content(path, chunk_size = chunk_size)
         else:
-            logger.error(f'Путь \'{file_path}\' не является файлом.') # Исправлено форматирование строки
+            logger.error(f'Путь \'{file_path}\' не является файлом.') # Логирование ошибки
     except Exception as ex:
-        logger.error(f'Ошибка при чтении файла {file_path}.', exc_info=ex) # Изменен стиль логгирования
+        logger.error(f'Ошибка при чтении файла {file_path}.', ex) # Логирование ошибки
 
 
 async def _read_file_content(file_path: Path, chunk_size: int) -> str:
@@ -282,20 +282,21 @@ async def _read_file_content(file_path: Path, chunk_size: int) -> str:
     :type chunk_size: int
     :return: Содержимое файла в виде строки.
     :rtype: str
-    :raises Exception: В случае ошибки при чтении файла.
+    :raises Exception: При возникновении ошибки при чтении файла.
     """
+    content = ''
     try:
-        content = ''
-        async with aiofiles.open(file_path, 'r', encoding='utf-8') as f:
-            while True:
-                chunk = await f.read(chunk_size)
-                if not chunk:
-                    break
-                content += chunk
-        return content
+      async with aiofiles.open(file_path, 'r', encoding = 'utf-8') as f:
+          while True:
+              chunk = await f.read(chunk_size)
+              if not chunk:
+                  break
+              content += chunk
+      return content
     except Exception as ex:
-         logger.error(f'Ошибка при чтении файла {file_path}.', exc_info=ex) # Изменен стиль логгирования
-         return ''
+      logger.error(f'Ошибка при чтении файла {file_path}.', ex) # Логирование ошибки
+      return ''
+
 
 async def _read_file_lines_generator(file_path: Path, chunk_size: int) -> AsyncGenerator[str, None]:
     """
@@ -305,9 +306,9 @@ async def _read_file_lines_generator(file_path: Path, chunk_size: int) -> AsyncG
     :type file_path: Path
     :param chunk_size: Размер чанка для чтения файла в байтах.
     :type chunk_size: int
-    :yield: Строки из файла.
-    :ytype: str
-    :raises Exception: В случае ошибки при чтении файла.
+    :yields: Строки из файла.
+    :rtype: str
+    :raises Exception: При возникновении ошибки при чтении файла.
     """
     try:
         async with aiofiles.open(file_path, 'r', encoding='utf-8') as f:
@@ -328,7 +329,7 @@ async def _read_file_lines_generator(file_path: Path, chunk_size: int) -> AsyncG
                     yield line
 
     except Exception as ex:
-       logger.error(f'Ошибка при чтении файла {file_path}.', exc_info=ex) # Изменен стиль логгирования
+       logger.error(f'Ошибка при чтении файла {file_path}.', ex) # Логирование ошибки
 
 
 async def get_filenames_from_directory(
@@ -361,7 +362,7 @@ async def get_filenames_from_directory(
             if file.is_file() and (not extensions or file.suffix in extensions)
         ]
     except Exception as ex:
-        logger.error(f'Ошибка при получении списка имен файлов из \'{directory}\'.', exc_info=ex) # Изменен стиль логгирования
+        logger.error(f'Ошибка при получении списка имен файлов из \'{directory}\'.', ex) # Логирование ошибки
         return []
 
 
@@ -375,8 +376,8 @@ async def recursively_yield_file_path(
     :type root_dir: str | Path
     :param patterns: Шаблоны для фильтрации файлов.
     :type patterns: str | list[str]
-    :yield: Путь к файлу, соответствующему шаблону.
-    :ytype: Path
+    :yields: Путь к файлу, соответствующему шаблону.
+    :rtype: Path
 
     Пример:
         >>> from pathlib import Path
@@ -392,7 +393,7 @@ async def recursively_yield_file_path(
           for path in Path(root_dir).rglob(pattern):
                 yield path
     except Exception as ex:
-        logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', exc_info=ex) # Изменен стиль логгирования
+        logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', ex) # Логирование ошибки
 
 
 async def recursively_get_file_path(
@@ -424,7 +425,7 @@ async def recursively_get_file_path(
             file_paths.append(path)
        return file_paths
     except Exception as ex:
-         logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', exc_info=ex) # Изменен стиль логгирования
+         logger.error(f'Ошибка при рекурсивном поиске файлов в \'{root_dir}\'.', ex) # Логирование ошибки
          return []
 
 
@@ -438,7 +439,8 @@ async def recursively_read_text_files(
 
     :param root_dir: Путь к корневой директории для поиска.
     :type root_dir: str | Path
-    :param patterns: Шаблон(ы) имени файла для фильтрации. Может быть как одиночным шаблоном (например, '*.txt'), так и списком.
+    :param patterns: Шаблон(ы) имени файла для фильтрации.
+             Может быть как одиночным шаблоном (например, '*.txt'), так и списком.
     :type patterns: str | list[str]
     :param as_list: Если True, то возвращает содержимое файла как список строк. По умолчанию `False`.
     :type as_list: bool, optional
@@ -459,26 +461,26 @@ async def recursively_read_text_files(
     root_path = Path(root_dir)
 
     if not root_path.is_dir():
-        logger.debug(f'Корневая директория \'{root_path}\' не существует или не является директорией.')
+        logger.debug(f'Корневая директория \'{root_path}\' не существует или не является директорией.') # Логирование ошибки
         return []
 
-    logger.debug(f'Поиск в директории: {root_path}') # Изменено форматирование строки
+    print(f'Поиск в директории: {root_path}')
 
     if isinstance(patterns, str):
         patterns = [patterns]
 
-    for root, _, files in os.walk(root_path): #  Заменен на os.walk на pathlib.rglob
+    for root, _, files in os.walk(root_path):
         for filename in files:
             if any(fnmatch.fnmatch(filename, pattern) for pattern in patterns):
                 file_path = Path(root) / filename
                 try:
-                    async with aiofiles.open(file_path, 'r', encoding='utf-8') as file:
+                    async with aiofiles.open(file_path, 'r', encoding = 'utf-8') as file:
                        if as_list:
                             matches.extend(await file.readlines())
                        else:
                             matches.append(await file.read())
                 except Exception as ex:
-                   logger.error(f'Ошибка при чтении файла \'{file_path}\'.', exc_info=ex) # Изменен стиль логгирования
+                   logger.error(f'Ошибка при чтении файла \'{file_path}\'.', ex) # Логирование ошибки
     return matches
 
 
@@ -500,9 +502,8 @@ async def get_directory_names(directory: str | Path) -> list[str]:
     try:
         return [entry.name for entry in Path(directory).iterdir() if entry.is_dir()]
     except Exception as ex:
-        logger.error(f'Ошибка при получении списка имен директорий из \'{directory}\'.', exc_info=ex) # Изменен стиль логгирования
+        logger.error(f'Ошибка при получении списка имен директорий из \'{directory}\'.', ex) # Логирование ошибки
         return []
-
 
 
 async def remove_bom(path: str | Path) -> None:
@@ -525,37 +526,37 @@ async def remove_bom(path: str | Path) -> None:
     path = Path(path)
     if path.is_file():
         try:
-            async with aiofiles.open(path, 'r+', encoding='utf-8') as file:
+            async with aiofiles.open(path, 'r+', encoding = 'utf-8') as file:
                 content = await file.read()
                 content = content.replace('\ufeff', '')
                 await file.seek(0)
                 await file.write(content)
                 await file.truncate()
         except Exception as ex:
-            logger.error(f'Ошибка при удалении BOM из файла {path}.', exc_info=ex) # Изменен стиль логгирования
+            logger.error(f'Ошибка при удалении BOM из файла {path}.', ex) # Логирование ошибки
     elif path.is_dir():
-         for file_path in path.rglob('*.py'):  # Используем pathlib для поиска файлов
-            if file_path.is_file():
+        for root, _, files in os.walk(path):
+             for file in files:
+                 if file.endswith('.py'):
+                    file_path = Path(root) / file
                     try:
-                        async with aiofiles.open(file_path, 'r+', encoding='utf-8') as f:
+                        async with aiofiles.open(file_path, 'r+', encoding = 'utf-8') as f:
                             content = await f.read()
                             content = content.replace('\ufeff', '')
                             await f.seek(0)
                             await f.write(content)
                             await f.truncate()
                     except Exception as ex:
-                       logger.error(f'Ошибка при удалении BOM из файла {file_path}.', exc_info=ex) # Изменен стиль логгирования
-
+                       logger.error(f'Ошибка при удалении BOM из файла {file_path}.', ex) # Логирование ошибки
     else:
-        logger.error(f'Указанный путь \'{path}\' не является файлом или директорией.') # Исправлено форматирование строки
+        logger.error(f'Указанный путь \'{path}\' не является файлом или директорией.') # Логирование ошибки
 
 
 async def main() -> None:
     """Entry point for BOM removal in Python files."""
     root_dir = Path('..', 'src')
-    logger.info(f'Starting BOM removal in {root_dir}') # Изменено форматирование строки
+    logger.info(f'Starting BOM removal in {root_dir}')
     await remove_bom(root_dir)
-
 
 
 if __name__ == '__main__':

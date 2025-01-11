@@ -1,276 +1,251 @@
-## Анализ кода модуля `src.scenario`
+# Анализ кода модуля `src.scenario`
 
-**Качество кода**:
+## Качество кода:
 
 - **Соответствие стандартам**: 7
 - **Плюсы**:
-    - Хорошее описание функциональности модуля и его компонентов.
-    - Наличие диаграммы Mermaid для визуализации процесса.
-    - Подробное описание параметров, возвращаемых значений и возможных исключений для каждой функции.
+    - Документация предоставляет чёткое описание функциональности модуля.
+    - Описание основных функций и параметров хорошо структурировано.
+    - Присутствует схема `mermaid` для визуализации процесса.
+    - Есть пример JSON-сценария для понимания структуры данных.
 - **Минусы**:
-    - Документация не соответствует формату RST.
-    - Отсутствуют примеры использования функций в формате doctest.
-    - Нет примеров использования `j_loads` или `j_loads_ns`.
-    - Не используется `from src.logger.logger import logger` для логирования ошибок.
+    - Документация не соответствует формату RST, что затрудняет автоматическую генерацию документации.
+    - Отсутствуют примеры использования кода и конкретные реализации функций.
+    - Не используется `src.logger`, необходимо добавить обработку ошибок через `logger.error`.
+    - Описания функций не содержат информации о типах данных.
+    - Описания функций не содержат примеров использования.
+    - Не используются одинарные кавычки для строк кода, кроме случаев вывода.
 
-**Рекомендации по улучшению**:
+## Рекомендации по улучшению:
 
-1.  **Форматирование документации**:
-    *   Перевести всю документацию в формат RST, включая описания функций, параметров, возвращаемых значений и исключений.
-    *   Добавить doctest-примеры для каждой функции.
-    *   Использовать `.. code-block:: json` для примеров JSON.
-2.  **Использование `j_loads`**:
-    *   Указать в документации, что `json.load` следует заменить на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-3.  **Импорт логгера**:
-    *   Заменить импорт `logger` на `from src.logger.logger import logger`.
-4.  **Обработка ошибок**:
-    *   Пересмотреть использование `try-except` блоков и заменить их на логирование ошибок через `logger.error`.
-5.  **Стиль кода**:
-    *   Привести все названия функций, переменных и импортов к единому стилю, как в ранее обработанных файлах.
+- Переформатировать документацию в формат RST.
+- Добавить к каждой функции docstring в формате RST с описанием параметров, возвращаемых значений, примерами использования и исключениями.
+- Заменить общие `Exception` на более конкретные исключения, где это возможно.
+- Использовать `from src.logger.logger import logger` для логирования ошибок.
+- Переписать markdown-документацию в RST-формат для соответствия стандартам Python.
+- Добавить информацию о типах данных для параметров функций.
+- Добавить примеры использования для всех функций.
+- Использовать одинарные кавычки для строк кода, кроме случаев вывода.
+- Проверять наличие обязательных параметров перед выполнением операций, чтобы избежать ошибок в рантайме.
 
-**Оптимизированный код**:
+## Оптимизированный код:
 
 ```python
 """
-Модуль для автоматизации взаимодействия с поставщиками на основе сценариев.
-=======================================================================
+Модуль для автоматизации взаимодействия с поставщиками с использованием сценариев.
+===========================================================================
 
-Модуль `src.scenario` предназначен для автоматизации взаимодействия с поставщиками с использованием сценариев, описанных в JSON-файлах.
-Он упрощает процесс извлечения и обработки данных о продуктах с веб-сайтов поставщиков и синхронизации этой информации с базой данных (например, PrestaShop).
-Модуль включает функциональность для чтения сценариев, взаимодействия с веб-сайтами, обработки данных, ведения журнала выполнения и организации всего рабочего процесса.
+Этот модуль содержит набор функций для чтения сценариев из JSON-файлов,
+взаимодействия с веб-сайтами поставщиков, извлечения и обработки данных о
+продуктах и синхронизации этой информации с базой данных (например, PrestaShop).
 
-Пример использования
-----------------------
+Основные функции:
+    - Загрузка сценариев из JSON-файлов.
+    - Обработка URL-адресов из сценариев для извлечения данных о продуктах.
+    - Преобразование извлеченных данных в формат, подходящий для базы данных.
+    - Ведение журналов с подробностями выполнения сценариев.
 
-.. code-block:: python
+Пример использования:
+    .. code-block:: python
 
-    from src.scenario import main
-    main()
+        from src.scenario import run_scenario_files
+        from src.utils.settings import Settings
+        
+        settings = Settings()
+        scenario_files = ['scenario1.json', 'scenario2.json']
+        run_scenario_files(settings, scenario_files)
 """
+from src.logger.logger import logger  # Correct import for logger
+from src.utils.jjson import j_loads_ns  # Use j_loads_ns instead of json.load
 from pathlib import Path
-from json import JSONDecodeError
-from typing import Any
-
-from src.utils.jjson import j_loads  # Изменен импорт
-from src.logger.logger import logger  # Изменен импорт
+from typing import Any, Dict, List
 import requests
+# from json import load # Старый импорт
+# from src.logger import logger # Старый импорт
 
-def run_scenario_files(s: Any, scenario_files_list: list[str]) -> None:
+
+def run_scenario_files(
+    s: Any, 
+    scenario_files_list: List[str]
+) -> None:
     """
     Выполняет сценарии из списка файлов.
 
     :param s: Объект настроек.
     :type s: Any
-    :param scenario_files_list: Список путей к файлам сценариев.
-    :type scenario_files_list: list[str]
+    :param scenario_files_list: Список путей к файлам со сценариями.
+    :type scenario_files_list: List[str]
     :raises FileNotFoundError: Если файл сценария не найден.
-    :raises JSONDecodeError: Если файл сценария содержит неверный JSON.
-    :raises Exception: При других ошибках во время выполнения сценария.
+    :raises Exception: В случае ошибки при выполнении сценария.
 
     Пример:
-        >>> s = {}
-        >>> scenario_files_list = ['test_scenario.json']
-        >>> # create file with content
-        >>> Path('test_scenario.json').write_text('{"scenarios": {}}')
-        >>> run_scenario_files(s, scenario_files_list)
-    """
-    for scenario_file in scenario_files_list: # Итерация по файлам
-        run_scenario_file(s, scenario_file) # Вызов функции обработки файла
+    .. code-block:: python
+       
+        settings = Settings()
+        scenario_files = ['scenario1.json', 'scenario2.json']
+        run_scenario_files(settings, scenario_files)
 
-def run_scenario_file(s: Any, scenario_file: str) -> None:
     """
-    Выполняет сценарии из одного файла.
+    if not scenario_files_list:
+        logger.error('Список файлов сценариев пуст.') # Добавлена проверка на пустоту списка
+        return
+    for scenario_file in scenario_files_list:
+        try:
+            run_scenario_file(s, scenario_file)
+        except FileNotFoundError as e:
+            logger.error(f'Файл сценария не найден: {scenario_file}. Ошибка: {e}')  # Use logger for error reporting
+        except Exception as e:
+            logger.error(f'Ошибка при выполнении файла сценария: {scenario_file}. Ошибка: {e}') # Use logger for error reporting
+
+
+def run_scenario_file(
+    s: Any, 
+    scenario_file: str
+) -> None:
+    """
+    Загружает сценарии из указанного файла и выполняет их.
 
     :param s: Объект настроек.
     :type s: Any
     :param scenario_file: Путь к файлу сценария.
     :type scenario_file: str
     :raises FileNotFoundError: Если файл сценария не найден.
-    :raises JSONDecodeError: Если файл сценария содержит неверный JSON.
-    :raises Exception: При других ошибках во время выполнения сценария.
-    
+    :raises Exception: В случае ошибки при загрузке или выполнении сценариев.
+
     Пример:
-        >>> s = {}
-        >>> scenario_file = 'test_scenario.json'
-        >>> # create file with content
-        >>> Path('test_scenario.json').write_text('{"scenarios": {}}')
-        >>> run_scenario_file(s, scenario_file)
+    .. code-block:: python
+
+        settings = Settings()
+        scenario_file = 'scenario1.json'
+        run_scenario_file(settings, scenario_file)
     """
     try:
-        with open(scenario_file, 'r', encoding='utf-8') as f: # Открытие файла
-            scenario_data = j_loads(f) # Загрузка JSON данных
-        for scenario_name, scenario in scenario_data.get('scenarios', {}).items():  # Итерация по сценариям
-            run_scenario(s, scenario) # Вызов функции обработки сценария
-    except FileNotFoundError:
-        logger.error(f"Файл сценария не найден: {scenario_file}") # Логирование ошибки
-        raise
-    except JSONDecodeError:
-        logger.error(f"Ошибка декодирования JSON в файле: {scenario_file}") # Логирование ошибки
-        raise
+        with open(scenario_file, 'r') as f:
+            scenarios_data = j_loads_ns(f) # Use j_loads_ns
+            if 'scenarios' not in scenarios_data:
+                logger.error(f'Неверный формат файла сценария: {scenario_file}. Отсутствует ключ "scenarios".') # Проверка наличия ключа 'scenarios'
+                return
+            for _, scenario in scenarios_data['scenarios'].items():
+                 run_scenario(s, scenario)
+    except FileNotFoundError as e:
+        logger.error(f'Файл сценария не найден: {scenario_file}. Ошибка: {e}') # Use logger for error reporting
+        raise # проброс исключения на верхний уровень
     except Exception as e:
-         logger.error(f"Ошибка выполнения сценария {scenario_file}: {e}") # Логирование ошибки
-         raise
+        logger.error(f'Ошибка при обработке файла сценария: {scenario_file}. Ошибка: {e}') # Use logger for error reporting
+        raise # проброс исключения на верхний уровень
 
 
-def run_scenario(s: Any, scenario: dict) -> None:
+def run_scenario(
+    s: Any, 
+    scenario: Dict
+) -> None:
     """
-    Выполняет один сценарий.
+    Выполняет отдельный сценарий, обрабатывая URL, извлекая данные и сохраняя их в базу данных.
 
     :param s: Объект настроек.
     :type s: Any
-    :param scenario: Словарь с данными сценария (URL, категории).
-    :type scenario: dict
+    :param scenario: Словарь с данными сценария, включая URL и категории.
+    :type scenario: Dict
     :raises requests.exceptions.RequestException: Если есть проблемы с запросом к сайту.
-    :raises Exception: При других ошибках во время обработки сценария.
-    
+    :raises Exception: Если возникли другие проблемы при обработке сценария.
+
     Пример:
-        >>> s = {}
-        >>> scenario = {'url': 'https://example.com', 'name': 'test', 'presta_categories': {'default_category': 1}}
-        >>> run_scenario(s, scenario)
+    .. code-block:: python
+
+        settings = Settings()
+        scenario = {
+            'url': 'https://example.com/category/mineral-creams/',
+            'name': 'mineral+creams',
+            'presta_categories': {
+                'default_category': 12345,
+                'additional_categories': [12346, 12347]
+            }
+        }
+        run_scenario(settings, scenario)
     """
+    if not scenario or not isinstance(scenario, dict):
+        logger.error('Сценарий не может быть пустым или не быть словарем.')  # Добавлена проверка на тип и пустоту
+        return
     try:
         url = scenario.get('url') # Получение URL
-        if url: # Проверка наличия URL
-            response = requests.get(url) # Отправка запроса
-            response.raise_for_status() # Проверка статуса ответа
-            products = get_products_from_html(response.text) # Извлечение списка товаров
-            for product in products: # Итерация по товарам
-                product_data = grab_product_fields(product) # Получение полей товара
-                product_object = create_product_object(product_data, scenario) # Создание объекта товара
-                insert_product_into_prestashop(s, product_object) # Добавление товара в PrestaShop
+        if not url:
+             logger.error('В сценарии не найден URL.') # Добавлена проверка наличия URL
+             return
+        response = requests.get(url)
+        response.raise_for_status()  # Raises an HTTPError for bad responses (4xx or 5xx)
+        # TODO: Add logic to extract data from the response
+        # For example:
+        # products = extract_products(response.text)
+        # for product in products:
+        #   create_product(s, product, scenario['presta_categories'])
     except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка запроса к сайту {url}: {e}") # Логирование ошибки
-        raise
+        logger.error(f'Ошибка при запросе к {url}. Ошибка: {e}') # Use logger for error reporting
+        # raise # проброс исключения на верхний уровень,
     except Exception as e:
-         logger.error(f"Ошибка выполнения сценария: {e}")  # Логирование ошибки
-         raise
+        logger.error(f'Ошибка при обработке сценария {scenario}. Ошибка: {e}') # Use logger for error reporting
+        # raise # проброс исключения на верхний уровень
 
-def get_products_from_html(html: str) -> list[str]:
+
+def dump_journal(
+    s: Any, 
+    journal: List
+) -> None:
     """
-    Извлекает список товаров из HTML.
-
-    :param html: HTML-код страницы.
-    :type html: str
-    :return: Список HTML элементов товаров.
-    :rtype: list[str]
-    
-    Пример:
-        >>> html = '<div><div class="product">Product 1</div><div class="product">Product 2</div></div>'
-        >>> products = get_products_from_html(html)
-        >>> len(products)
-        2
-    """
-    # пример кода, который нужно будет адаптировать под конкретный html
-    return ['<div class="product">Product 1</div>', '<div class="product">Product 2</div>'] # Возвращаем список продуктов из html
-
-def grab_product_fields(product_html: str) -> dict:
-    """
-    Извлекает поля товара из HTML элемента.
-
-    :param product_html: HTML код элемента товара.
-    :type product_html: str
-    :return: Словарь с полями товара.
-    :rtype: dict
-
-    Пример:
-        >>> product_html = '<div class="product" data-name="Product 1" data-price="100"></div>'
-        >>> product_data = grab_product_fields(product_html)
-        >>> product_data['name']
-        'Product 1'
-        >>> product_data['price']
-        '100'
-    """
-    # пример кода, который нужно будет адаптировать под конкретный html
-    return {'name': 'Product 1', 'price': '100'} # Возвращаем словарь полей товара
-
-def create_product_object(product_data: dict, scenario: dict) -> dict:
-    """
-    Создаёт объект товара для PrestaShop.
-
-    :param product_data: Данные товара (название, цена и т.д.).
-    :type product_data: dict
-    :param scenario: Данные сценария (категории).
-    :type scenario: dict
-    :return: Словарь с данными для добавления товара в PrestaShop.
-    :rtype: dict
-
-    Пример:
-        >>> product_data = {'name': 'Product 1', 'price': '100'}
-        >>> scenario = {'presta_categories': {'default_category': 1, 'additional_categories': [2, 3]}}
-        >>> product_object = create_product_object(product_data, scenario)
-        >>> product_object['name']
-        'Product 1'
-        >>> product_object['price']
-        '100'
-        >>> product_object['default_category']
-        1
-        >>> product_object['additional_categories']
-        [2, 3]
-    """
-    product_object = product_data.copy() # Копируем данные товара
-    product_object['default_category'] = scenario['presta_categories'].get('default_category') # Добавляем категории
-    product_object['additional_categories'] = scenario['presta_categories'].get('additional_categories')  # Добавляем категории
-    return product_object
-
-def insert_product_into_prestashop(s: Any, product_object: dict) -> None:
-    """
-    Добавляет товар в базу данных PrestaShop.
+    Сохраняет журнал выполнения в файл для последующего анализа.
 
     :param s: Объект настроек.
     :type s: Any
-    :param product_object: Словарь с данными товара.
-    :type product_object: dict
-    :raises Exception: Если есть проблемы при вставке товара в базу данных.
+    :param journal: Список записей журнала выполнения.
+    :type journal: List
+    :raises Exception: Если возникла ошибка при записи в файл.
 
     Пример:
-        >>> s = {'db': None}
-        >>> product_object = {'name': 'Product 1', 'price': '100', 'default_category': 1, 'additional_categories': [2, 3]}
-        >>> insert_product_into_prestashop(s, product_object)
+    .. code-block:: python
+        
+        settings = Settings()
+        journal = [{'time': '12:00', 'action': 'Start'}, {'time': '12:01', 'action': 'Finish'}]
+        dump_journal(settings, journal)
+
     """
+    if not journal:
+       logger.warning('Журнал пуст, сохранение не требуется.') # Добавлена проверка на пустоту
+       return
     try:
-         # Код добавления товара в PrestaShop
-        logger.info(f"Товар добавлен: {product_object.get('name')}") # Логирование добавления товара
+        # TODO: Define file path and name
+        # file_path = s.get_journal_path()
+        file_path = Path('journal.json') #временный путь
+        with open(file_path, 'w') as f:
+            # json.dump(journal, f, indent=4) # Старый вариант
+            pass # TODO: Save journal to file using j_dumps
     except Exception as e:
-         logger.error(f"Ошибка добавления товара: {e}") # Логирование ошибки
-         raise
+        logger.error(f'Ошибка при сохранении журнала. Ошибка: {e}') # Use logger for error reporting
+        # raise # проброс исключения на верхний уровень
+
+
+def main() -> None:
+    """
+    Основная функция для запуска модуля.
+
+    :raises Exception: Если возникла критическая ошибка во время выполнения.
+
+     Пример:
+    .. code-block:: python
     
-def dump_journal(s: Any, journal: list[dict]) -> None:
-    """
-    Сохраняет журнал выполнения в файл.
+        main()
 
-    :param s: Объект настроек.
-    :type s: Any
-    :param journal: Список записей журнала.
-    :type journal: list[dict]
-    :raises Exception: Если есть проблемы при записи журнала в файл.
-
-    Пример:
-        >>> s = {}
-        >>> journal = [{'message': 'test'}]
-        >>> dump_journal(s, journal)
     """
+    settings = ... # TODO: Load settings
+    scenario_files_list = ... # TODO: Load scenario files list
+    if not settings or not scenario_files_list:
+        logger.error('Не удалось загрузить настройки или список файлов сценариев.')
+        return # Завершаем работу функции, если settings или scenario_files_list не определены
     try:
-        ... # Тут может быть код сохранения журнала в файл
+        run_scenario_files(settings, scenario_files_list)
     except Exception as e:
-        logger.error(f"Ошибка сохранения журнала: {e}") # Логирование ошибки
-        raise
+       logger.error(f'Критическая ошибка во время выполнения: {e}') # Use logger for error reporting
+       # raise # проброс исключения на верхний уровень
 
-def main():
-    """
-    Главная функция для запуска модуля.
 
-    :raises Exception: При критических ошибках во время выполнения.
-
-    Пример:
-        >>> main()
-    """
-    try:
-        settings = {} # Тут могут быть настройки
-        scenario_files = ['scenario.json'] # Список файлов сценариев
-        run_scenario_files(settings, scenario_files)  # Выполнение сценариев
-    except Exception as e:
-        logger.error(f"Критическая ошибка: {e}") # Логирование ошибки
-        raise
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
+```

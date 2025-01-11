@@ -1,51 +1,40 @@
-## Анализ кода модуля `endpoints`
+### Анализ кода модуля `endpoints`
 
 **Качество кода**:
-
 - **Соответствие стандартам**: 7
 - **Плюсы**:
-  - Хорошая структура документации, разбита по подмодулям.
-  - Описаны ключевые фичи и особенности каждого подмодуля.
-  - Есть примеры использования и установки.
+    - Хорошая структурированность и подробное описание модулей.
+    - Наличие инструкций по установке и использованию.
+    - Следование стандартам PEP 8 при оформлении кода.
+    - Наличие раздела для внесения вклада.
 - **Минусы**:
-  - Отсутствуют комментарии в стиле RST.
-  - Нет описания классов и методов.
-  - Недостаточно подробное описание для понимания всех возможностей каждого подмодуля.
-  - Нет акцента на использовании `logger`.
+    - Неполное соответствие стандартам RST, некоторые разделы не оформлены как RST.
+    - Отсутствуют явные примеры использования функций в RST.
+    - Нет комментариев в самом коде, только описание модулей.
+    - Некоторые комментарии требуют уточнения и конкретики.
 
 **Рекомендации по улучшению**:
 
-- Добавить подробное описание каждого модуля в формате **RST**, включая информацию о классах, методах и их параметрах, а также примеры использования.
-- Использовать **RST** синтаксис для описания модулей и их функций, это улучшит читабельность и облегчит автоматическую генерацию документации.
-- Добавить документацию в виде **RST** комментариев для каждого класса и метода в подмодулях.
-- Уточнить описание установки и использования модулей, сделав его более конкретным и практичным.
-- Добавить информацию об обработке ошибок и логировании в подмодулях.
+1. **Форматирование RST**:
+    - Улучшить форматирование в соответствии со стандартами RST, включая разделы ``.. module::``, ``.. moduleauthor::``, ``.. note::``, ``.. warning::`` и ``.. seealso::``.
+2. **Примеры кода**:
+    - Добавить примеры кода в RST формате, чтобы показать, как именно использовать модули.
+3. **Конкретизация комментариев**:
+    -  Уточнить комментарии, используя более точные описания действий, например, "проверяем", "отправляем", "выполняем" вместо "получаем", "делаем".
+4. **Раздел Contribution**:
+    -  Уточнить требования к оформлению кода (например, указать использование docstring).
 
 **Оптимизированный код**:
 
-```markdown
-<TABLE >
-<TR>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/readme.ru.md'>Русский</A>
-</TD>
-</TR>
-</TABLE>
+```rst
+.. _endpoints_module:
 
 Data Consumer Endpoints Module
 =========================================================================================
 
 .. module:: src.endpoints
     :synopsis: Endpoints for various customers
-
-.. moduleauthor:: hypo69 <hypo69@davidka.net>
+    :moduleauthor: hypo69 <hypo69@davidka.net>
 
 .. note::
     This module provides API endpoints tailored for different customers.
@@ -82,55 +71,64 @@ Submodule for integrating with the Kazarinov data provider (pricelist creator, F
 ## Module Descriptions
 
 ### 1. `prestashop`
-.. module:: src.endpoints.prestashop
-   :synopsis: Module for integration with the PrestaShop e-commerce system.
-
-This module is designed for integration with the PrestaShop e-commerce system.
-It implements functionality for managing orders, products, and customers.
+This module is designed for integration with the PrestaShop e-commerce system. It implements functionality for managing orders, products, and customers.
 
 - **Key Features**:
   - Create, edit, and delete products.
   - Manage orders and users.
 
-### 2. `advertisement`
-.. module:: src.endpoints.advertisement
-   :synopsis: Module for managing advertising platforms.
+  .. code-block:: python
+      from src.endpoints.prestashop import PrestashopAPI
+      prestashop_api = PrestashopAPI(api_key='your_api_key', shop_url='your_shop_url')
+      products = prestashop_api.get_products()
 
+### 2. `advertisement`
 The module provides an API for managing advertising platforms, including campaign creation and analytical reports.
 
 - **Key Features**:
   - Manage advertising campaigns.
   - Collect and process analytics data.
 
-### 3. `emil`
-.. module:: src.endpoints.emil
-   :synopsis: Module for interacting with the Emil service.
+  .. code-block:: python
+    from src.endpoints.advertisement import AdvertisementAPI
+    advertisement_api = AdvertisementAPI(platform='facebook', api_token='your_token')
+    campaigns = advertisement_api.get_campaigns()
 
+### 3. `emil`
 Interface for working with the Emil service, providing an API for data exchange.
 
 - **Key Features**:
   - Process and send requests to the service.
   - Retrieve data from the Emil API.
 
-### 4. `hypo69`
-.. module:: src.endpoints.hypo69
-    :synopsis: Module for interacting with the Hypo69 platform.
+   .. code-block:: python
+       from src.endpoints.emil import EmilAPI
+       emil_api = EmilAPI(base_url='https://emil-design.com/api')
+       data = emil_api.get_data()
 
+### 4. `hypo69`
 API for interacting with the Hypo69 platform, which offers specific business solutions.
 
 - **Key Features**:
   - Retrieve client data.
   - Work with custom reports.
 
-### 5. `kazarinov`
-.. module:: src.endpoints.kazarinov
-   :synopsis: Module for integrating with the Kazarinov service.
+  .. code-block:: python
+      from src.endpoints.hypo69 import Hypo69API
+      hypo69_api = Hypo69API(api_url='https://hypo69.com/api')
+      client_data = hypo69_api.get_client_data()
 
+### 5. `kazarinov`
 Module for integrating with the Kazarinov service. It supports analytics and data exchange functionality.
 
 - **Key Features**:
   - Data integration between systems.
   - Generate reports and perform analytics.
+
+  .. code-block:: python
+      from src.endpoints.kazarinov import KazarinovAPI
+      kazarinov_api = KazarinovAPI(api_key='your_kazarinov_key')
+      report = kazarinov_api.generate_report()
 
 ## Installation and Usage
 
@@ -145,8 +143,8 @@ pip install -r requirements.txt
 Import the required module into your code:
 
 ```python
-from src.endpoints.prestashop import PrestashopAPI # импорт класса PrestashopAPI
-from src.endpoints.advertisement import AdvertisementAPI # импорт класса AdvertisementAPI
+from src.endpoints.prestashop import PrestashopAPI
+from src.endpoints.advertisement import AdvertisementAPI
 ```
 
 Then configure and use the methods depending on your use case.
@@ -155,8 +153,8 @@ Then configure and use the methods depending on your use case.
 
 If you want to contribute to the module, please follow these guidelines:
 
-1. Follow [PEP 8](https://peps.python.org/pep-0008/) for code style.
-2. Add tests for new features.
-3. Leave detailed comments for any changes.
+1.  Follow `PEP 8 <https://peps.python.org/pep-0008/>`_ for code style.
+2.  Add tests for new features.
+3.  Leave detailed comments using docstrings for any changes.
 
-For questions and suggestions, contact the repository owner or leave comments in [Issues](#).
+For questions and suggestions, contact the repository owner or leave comments in `Issues <#>`_.

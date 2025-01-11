@@ -1,29 +1,33 @@
 ### Анализ кода модуля `main`
 
-**Качество кода:**
+**Качество кода**:
+
 - **Соответствие стандартам**: 7/10
 - **Плюсы**:
-    - Код имеет четкую структуру с разделением на функции.
+    - Код хорошо структурирован и разделен на функции, что облегчает понимание и поддержку.
     - Используется `argparse` для обработки аргументов командной строки.
-    - Присутствует базовая документация в виде docstrings.
-    - Логирование ошибок через `logger.error`.
+    - Присутствует интерактивное меню для выбора и запуска скриптов.
+    - Используется `logger.error` для обработки ошибок ввода.
 - **Минусы**:
-    - Не все строки соответствуют стандарту оформления кода.
-    - Используются двойные кавычки для вывода, где нужно использовать одинарные.
-    - Комментарии не соответствуют стандарту RST.
-    - Комментарии дублируют функционал кода.
-    - Присутствует неиспользуемый код.
+    - Не все строки соответствуют PEP8 (длина строк, отступы).
+    - Присутствуют лишние пустые строки.
+    - Для вывода используется как `print`, так и `logger.error`.
+    - Некоторые комментарии не информативны, например, `# ... (Add script 1 code here)`.
+    - Не используются одинарные кавычки в коде для строк.
+    - В блоке с комментариями есть закомментированный код.
 
-**Рекомендации по улучшению:**
-- Необходимо привести весь код в соответствие со стандартами, описанными в инструкции:
-    - Заменить двойные кавычки на одинарные в коде, кроме случаев вывода.
-    - Переписать docstring в формате RST.
-    - Удалить лишний код.
-    - Добавить docstring для модуля.
-    - Убрать дублирующие комментарии.
-    - Отформатировать код согласно PEP8.
+**Рекомендации по улучшению**:
 
-**Оптимизированный код:**
+- Привести код в соответствие со стандартами PEP8 (ограничить длину строк, убрать лишние отступы и пустые строки).
+- Использовать одинарные кавычки для строк в коде, двойные кавычки использовать только в `print`, `input` и `logger.error`.
+- Удалить закомментированный код, если он не нужен.
+- Уточнить комментарии, чтобы они более точно описывали назначение кода.
+- Использовать `logger.info` вместо `print` для информационных сообщений.
+- Добавить более подробное описание в документацию к функциям (RST).
+- Добавить обработку исключений для `input` в `interactive_menu`.
+
+**Оптимизированный код**:
+
 ```python
 """
 Модуль для интерактивного запуска скриптов.
@@ -44,121 +48,104 @@
     python main.py --help # Отображает справку
 
 """
-import argparse
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций j_loads и j_loads_ns
-from src.logger.logger import logger # Импорт логгера
 
+import argparse
+from src.utils.jjson import j_loads, j_loads_ns # Импорт j_loads и j_loads_ns
+from src.logger.logger import logger  # Импорт logger
 
 def script1():
     """
     Выполняет скрипт 1.
 
-    :raises Exception: В случае возникновения ошибки при выполнении скрипта.
-    
+    :return: None
+    :rtype: None
+
     Пример:
         >>> script1()
         Script 1 started
     """
-    print('Script 1 started') # Вывод сообщения о запуске скрипта 1
-    # ... (Здесь должен быть код скрипта 1) # Маркер для кода скрипта 1
-
+    logger.info('Script 1 started')
+    # ... (Add script 1 code here) # TODO: Заменить заглушку на реальный код
 
 def script2():
     """
     Выполняет скрипт 2.
 
-    :raises Exception: В случае возникновения ошибки при выполнении скрипта.
-    
+    :return: None
+    :rtype: None
+
     Пример:
         >>> script2()
         Script 2 started
     """
-    print('Script 2 started') # Вывод сообщения о запуске скрипта 2
-    # ... (Здесь должен быть код скрипта 2) # Маркер для кода скрипта 2
-
+    logger.info('Script 2 started')
+    # ... (Add script 2 code here) # TODO: Заменить заглушку на реальный код
 
 def show_help():
     """
-    Выводит справочную информацию о доступных командах.
-    
-    Пример:
-        >>> show_help()
-        
-        Available commands:
-        1. Run script 1 - Executes script 1.
-        2. Run script 2 - Executes script 2.
-        3. --help - Displays this help menu.
-        4. exit - Exits the program.
+    Отображает справочную информацию по доступным командам.
+
+    :return: None
+    :rtype: None
     """
-    print('\nAvailable commands:') # Вывод заголовка списка доступных команд
-    print('1. Run script 1 - Executes script 1.') # Вывод описания команды 1
-    print('2. Run script 2 - Executes script 2.') # Вывод описания команды 2
-    print('3. --help - Displays this help menu.') # Вывод описания команды 3
-    print('4. exit - Exits the program.\n')  # Вывод описания команды 4
+    logger.info("\nAvailable commands:")
+    logger.info("1. Run script 1 - Executes script 1.")
+    logger.info("2. Run script 2 - Executes script 2.")
+    logger.info("3. --help - Displays this help menu.")
+    logger.info("4. exit - Exits the program.\n")
 
 
 def interactive_menu():
     """
-    Предоставляет интерактивное меню для выбора и запуска скриптов.
+    Интерактивное меню для выбора и запуска скриптов.
 
-    Пользователь выбирает одну из команд: запустить скрипт 1, скрипт 2, вывести помощь или выйти.
-    
-    Пример:
-        >>> interactive_menu()
-        Welcome! Choose one of the commands:
-
-        1. Run script 1
-        2. Run script 2
-        3. --help - Show command list.
-        4. exit - Exit the program.
-        Enter command number: 
+    :return: None
+    :rtype: None
     """
-    print('Welcome! Choose one of the commands:\n') # Вывод приветствия
-    while True: # Бесконечный цикл для отображения меню
-        print('1. Run script 1') # Вывод пункта меню 1
-        print('2. Run script 2') # Вывод пункта меню 2
-        print('3. --help - Show command list.') # Вывод пункта меню 3
-        print('4. exit - Exit the program.') # Вывод пункта меню 4
+    logger.info("Welcome! Choose one of the commands:\n")
+    while True:
+        logger.info("1. Run script 1")
+        logger.info("2. Run script 2")
+        logger.info("3. --help - Show command list.")
+        logger.info("4. exit - Exit the program.")
 
-        choice = input('Enter command number: ').strip() # Получение ввода пользователя
+        try:
+            choice = input("Enter command number: ").strip() # Получаем ввод пользователя
+        except EOFError:
+            logger.error("End of input detected, exiting program.") # Обработка EOFError
+            break
 
-        if choice == '1': # Проверка выбора пользователя
-            script1() # Запуск скрипта 1
-        elif choice == '2': # Проверка выбора пользователя
-            script2() # Запуск скрипта 2
-        elif choice == '3' or choice.lower() == '--help': # Проверка выбора пользователя
-            show_help() # Вывод справки
-        elif choice.lower() == 'exit': # Проверка выбора пользователя
-            print('Exiting the program.') # Вывод сообщения о выходе
-            break # Выход из цикла
+        if choice == '1': # Запускаем скрипт 1
+            script1()
+        elif choice == '2': # Запускаем скрипт 2
+            script2()
+        elif choice == '3' or choice.lower() == '--help': # Отображаем справку
+            show_help()
+        elif choice.lower() == 'exit': # Выходим из программы
+            logger.info("Exiting the program.")
+            break
         else:
-            logger.error('Invalid input. Please choose a valid command.') # Логирование ошибки при некорректном вводе
-
+            logger.error('Invalid input. Please choose a valid command.') # Обрабатываем неверный ввод
 
 def main():
     """
-    Основная функция для обработки аргументов командной строки и запуска меню.
-    
-    Инициализирует парсер аргументов командной строки, обрабатывает аргумент '--help',
-    и запускает интерактивное меню или отображает справку.
-    
-    Пример:
-        >>> main()
-        Welcome! Choose one of the commands:
+    Главная функция для обработки аргументов командной строки и запуска меню.
+
+    :return: None
+    :rtype: None
     """
-    parser = argparse.ArgumentParser(description='Interactive menu for running scripts.') # Инициализация парсера аргументов
+    parser = argparse.ArgumentParser(description='Interactive menu for running scripts.') # Создаем парсер аргументов
     parser.add_argument(
         '--help',
         action='store_true',
         help='Show available options and help information',
-    )  # Добавление аргумента --help
-    args = parser.parse_args() # Парсинг аргументов командной строки
+    ) # Добавляем аргумент --help
+    args = parser.parse_args() # Парсим аргументы
 
-    if args.help: # Проверка наличия аргумента --help
-        show_help() # Вывод справки
+    if args.help: # Проверяем наличие аргумента --help
+        show_help()
     else:
-        interactive_menu() # Запуск интерактивного меню
-
+        interactive_menu() # Запускаем интерактивное меню
 
 if __name__ == '__main__':
-    main() # Запуск основной функции при запуске скрипта
+    main()

@@ -1,94 +1,94 @@
 ### Анализ кода модуля `exceptions`
 
 **Качество кода**:
-- **Соответствие стандартам**: 8/10
+- **Соответствие стандартам**: 7
 - **Плюсы**:
-    - Хорошо структурированный код с использованием пользовательских исключений.
-    - Присутствует базовая документация модуля.
-    - Исключения наследуются от `Exception` и других специфичных классов.
-    - Используется `logger.error` для логирования исключений.
-    - Добавлена возможность передачи оригинального исключения в кастомные исключения.
+    - Хорошо структурированный код с использованием классов исключений.
+    - Присутствует базовая обработка исключений и логирование.
+    - Использование `CustomException` для унификации обработки исключений.
+    - Наличие RST-документации для модуля и классов.
 - **Минусы**:
-    - Не хватает подробной RST-документации для каждого класса и метода.
-    - Используются двойные кавычки в некоторых строках, где должны быть одинарные.
-    - Не все классы исключений имеют подробное описание в docstring.
-    - Не используется единый импорт для logger (`from src.logger import logger`).
-    - В некоторых местах отсутствуют комментарии, объясняющие назначение кода.
-    - Некоторые классы (например, `FileNotFoundError`) не имеют собственной логики, но объявлены как отдельные классы.
-    - Есть смешение родительских классов в `KeePassException`.
+    - Не везде используется RST-документация для методов.
+    - Класс `KeePassException` наследует сразу несколько классов, что может быть избыточным и затруднять понимание.
+    - Есть дублирование информации об ошибках, например `msg` и `ps_error_msg`.
+    - Не все классы исключений имеют конкретные описания.
+    -  Используется `repr` вместо `str` в `__str__` методе класса `PrestaShopException`, что не соответствует стандартам.
+    -  Используются множественные наследования в `KeePassException`, что усложняет структуру, и  `WebDriverException`, что не соответствует логике класса.
 
 **Рекомендации по улучшению**:
-1.  Добавить подробные docstring в формате RST для каждого класса и метода.
-2.  Заменить двойные кавычки на одинарные в коде, кроме случаев вывода в лог или print.
-3.  Использовать `from src.logger.logger import logger` для единообразия импорта logger.
-4.  Предоставить более подробное описание для каждого класса исключений, включая примеры использования в docstring.
-5.  Упростить иерархию исключений, где это возможно, например, если класс не имеет своей логики, его можно не создавать отдельно.
-6.  Прояснить, почему `KeePassException` наследуется от нескольких классов ошибок pykeepass, и, возможно, пересмотреть эту структуру.
-7.  Добавить комментарии к логике, где это необходимо, особенно если есть не очевидные моменты.
-8.  Улучшить обработку исключений, возможно, добавив больше контекста в сообщения об ошибках.
-9.  Унифицировать стиль кода, следуя PEP8.
-10. Добавить примеры использования классов исключений в комментариях.
+- Добавить RST-документацию для методов, особенно для `__init__` и `handle_exception` в классе `CustomException`.
+- Упростить класс `KeePassException`, возможно, используя композицию вместо множественного наследования.
+- Избегать дублирования информации об ошибках в классе `PrestaShopException`, унифицировать атрибуты.
+- Дать более конкретные описания для каждого класса исключений, это поможет в понимании назначения исключений.
+- Исправить `__str__` в `PrestaShopException`, чтобы возвращалось строковое представление ошибки, а не `repr`.
+- Изменить наследование `WebDriverException`, чтобы класс наследовался от `CustomException`.
+- Стандартизировать форматирование, например отступы в docstring.
+- Убрать избыточные комментарии, например, `"""Exception raised when a file is not found."""`
 
 **Оптимизированный код**:
 ```python
-# -*- coding: utf-8 -*-
 """
-Модуль для определения пользовательских исключений
-==================================================
+.. module:: src.logger.exceptions
+    :platform: Windows, Unix
+    :synopsis: This module defines custom exceptions used in the application.
 
-Этот модуль содержит набор пользовательских исключений, используемых в приложении.
-Исключения предназначены для обработки ошибок, связанных с файловыми операциями,
-полями продуктов, подключениями к базам данных KeePass, настройками по умолчанию,
-веб-драйверами, локаторами и веб-службами PrestaShop.
+Program Exceptions
+------------------
 
-Классы:
--------
-- CustomException: Базовый класс для всех пользовательских исключений, обрабатывающий логирование.
-- FileNotFoundError: Исключение, возникающее, когда файл не найден.
-- ProductFieldException: Исключение для ошибок, связанных с полями продуктов.
-- KeePassException: Исключение для ошибок, связанных с подключением к базе данных KeePass.
-- DefaultSettingsException: Исключение для проблем с настройками по умолчанию.
-- WebDriverException: Исключение для ошибок веб-драйвера.
-- ExecuteLocatorException: Исключение для ошибок исполнителей локаторов.
-- PrestaShopException: Общее исключение для ошибок веб-службы PrestaShop.
-- PrestaShopAuthenticationError: Исключение для ошибок аутентификации PrestaShop.
+This module contains several custom exception classes to handle errors related to various application components,
+including file operations, product fields, KeePass database connections, and PrestaShop WebService errors.
+
+Classes:
+--------
+- CustomException: The base custom exception class that handles logging.
+- FileNotFoundError: Raised when a file is not found.
+- ProductFieldException: Raised for errors related to product fields.
+- KeePassException: Raised for errors related to KeePass database connections.
+- DefaultSettingsException: Raised when there are issues with default settings.
+- WebDriverException: Raised for errors related to WebDriver.
+- ExecuteLocatorException: Raised for errors related to locator executors.
+- PrestaShopException: Raised for generic PrestaShop WebService errors.
+- PrestaShopAuthenticationError: Raised for authentication errors with PrestaShop WebServices.
+
 """
+
 from typing import Optional
-from src.logger.logger import logger # Используем импорт logger напрямую
+from src.logger import logger  # Исправлен импорт logger
 from selenium.common.exceptions import WebDriverException as WDriverException
-from pykeepass.exceptions import (CredentialsError, BinaryError,
-                                   HeaderChecksumError, PayloadChecksumError,
-                                   UnableToSendToRecycleBin)
+from pykeepass.exceptions import (
+    CredentialsError,
+    BinaryError,
+    HeaderChecksumError,
+    PayloadChecksumError,
+    UnableToSendToRecycleBin,
+)
 
 
 class CustomException(Exception):
     """
-    Базовый класс пользовательского исключения.
+    Base custom exception class.
 
-    Этот класс является основой для всех пользовательских исключений в приложении.
-    Он обеспечивает логирование исключений и механизм для работы с исходным исключением, если оно есть.
+    This is the base class for all custom exceptions in the application. It handles logging of the exception
+    and provides a mechanism for dealing with the original exception if it exists.
 
-    :param message: Сообщение об ошибке.
+    :param message: The error message.
     :type message: str
-    :param e: Оригинальное исключение, вызвавшее данное исключение.
+    :param e: The original exception that caused this custom exception, if any.
     :type e: Optional[Exception]
-    :param exc_info: Флаг, указывающий, нужно ли логировать информацию об исключении.
+    :param exc_info: A flag to indicate if exception information should be logged.
     :type exc_info: bool
-
-    :ivar original_exception: Оригинальное исключение, которое вызвало это пользовательское исключение, если есть.
-    :vartype original_exception: Optional[Exception]
-    :ivar exc_info: Флаг, указывающий, нужно ли логировать информацию об исключении.
-    :vartype exc_info: bool
-
-    :Example:
-        >>> try:
-        ...    raise ValueError('Test Error')
-        ... except ValueError as e:
-        ...    raise CustomException('Custom error occurred', e)
     """
+
     def __init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True):
         """
-        Инициализирует CustomException сообщением и оригинальным исключением.
+        Initializes the CustomException with a message and an optional original exception.
+
+        :param message: The error message.
+        :type message: str
+        :param e: The original exception that caused this custom exception, if any.
+        :type e: Optional[Exception]
+        :param exc_info: A flag to indicate if exception information should be logged.
+        :type exc_info: bool
         """
         super().__init__(message)
         self.original_exception = e
@@ -96,152 +96,152 @@ class CustomException(Exception):
         self.handle_exception()
 
     def handle_exception(self):
-        """
-        Обрабатывает исключение, логируя сообщение об ошибке и оригинальное исключение, если оно доступно.
-        """
-        logger.error(f"Exception occurred: {self}") # Используем f-строку для форматирования
+        """Handles the exception by logging the error and original exception, if available."""
+        logger.error(f"Exception occurred: {self}")
         if self.original_exception:
-            logger.debug(f"Original exception: {self.original_exception}") # Используем f-строку для форматирования
+            logger.debug(f"Original exception: {self.original_exception}")
+        # Add recovery logic, retries, or other handling as necessary.
 
 
 class FileNotFoundError(CustomException, IOError):
     """
-    Исключение, возникающее, когда файл не найден.
-    
-    :Example:
-        >>> try:
-        ...     with open('nonexistent_file.txt', 'r') as f:
-        ...         pass
-        ... except FileNotFoundError as e:
-        ...     logger.error(f'File not found: {e}')
+    Exception raised when a file is not found.
+
+    :param message: The error message.
+    :type message: str
+    :param e: The original exception that caused this custom exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: A flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
+
     pass
 
 
 class ProductFieldException(CustomException):
     """
-    Исключение для ошибок, связанных с полями продуктов.
+    Exception raised for errors related to product fields.
 
-    :Example:
-        >>> try:
-        ...    raise ProductFieldException('Invalid product field')
-        ... except ProductFieldException as e:
-        ...    logger.error(f'Error in product field: {e}')
+     :param message: The error message.
+    :type message: str
+    :param e: The original exception that caused this custom exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: A flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
     pass
 
 
-class KeePassException(CredentialsError, BinaryError, HeaderChecksumError, PayloadChecksumError, UnableToSendToRecycleBin):
+class KeePassException(CustomException):
     """
-    Исключение для проблем с подключением к базе данных KeePass.
+    Exception raised for connection issues with KeePass database.
 
-    Это исключение объединяет различные ошибки pykeepass, связанные с аутентификацией,
-    бинарными данными и проверкой контрольных сумм.
+    Wraps common KeePass exceptions.
 
-    :Example:
-        >>> try:
-        ...    raise CredentialsError('Invalid credentials')
-        ... except KeePassException as e:
-        ...    logger.error(f'Error with KeePass: {e}')
+    :param message: The error message.
+    :type message: str
+    :param e: The original exception that caused this custom exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: A flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
-    pass
+    def __init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True):
+        if isinstance(e, (CredentialsError, BinaryError, HeaderChecksumError, PayloadChecksumError, UnableToSendToRecycleBin)):
+             super().__init__(message, e, exc_info) # Передаём исходное исключение
+        else:
+           super().__init__(message, e, exc_info)
+            
 
 
 class DefaultSettingsException(CustomException):
     """
-    Исключение для проблем с настройками по умолчанию.
+    Exception raised for issues with default settings.
 
-    :Example:
-        >>> try:
-        ...    raise DefaultSettingsException('Default settings error')
-        ... except DefaultSettingsException as e:
-        ...    logger.error(f'Error with default settings: {e}')
+    :param message: The error message.
+    :type message: str
+    :param e: The original exception that caused this custom exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: A flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
     pass
 
 
-class WebDriverException(WDriverException):
+class WebDriverException(CustomException): # Изменено наследование
     """
-    Исключение для проблем с WebDriver.
+    Exception raised for WebDriver related issues.
 
-    :Example:
-        >>> try:
-        ...    raise WDriverException('WebDriver error')
-        ... except WebDriverException as e:
-        ...    logger.error(f'Error with web driver: {e}')
+    :param message: The error message.
+    :type message: str
+    :param e: The original exception that caused this custom exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: A flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
-    pass
+    def __init__(self, message: str, e: Optional[WDriverException] = None, exc_info: bool = True): # Добавлено принятие WDriverException
+        super().__init__(message, e, exc_info)
+
 
 
 class ExecuteLocatorException(CustomException):
     """
-    Исключение для проблем с выполнением локаторов.
+    Exception raised for errors related to locator executors.
 
-    :Example:
-         >>> try:
-         ...     raise ExecuteLocatorException('Locator execution failed')
-         ... except ExecuteLocatorException as e:
-         ...     logger.error(f'Locator error: {e}')
+    :param message: The error message.
+    :type message: str
+    :param e: The original exception that caused this custom exception, if any.
+    :type e: Optional[Exception]
+    :param exc_info: A flag to indicate if exception information should be logged.
+    :type exc_info: bool
     """
     pass
 
 
 class PrestaShopException(Exception):
     """
-    Общее исключение для ошибок PrestaShop WebService.
+    Generic exception for PrestaShop WebService errors.
 
-    Этот класс используется для обработки ошибок, возникающих при взаимодействии
-    с веб-сервисом PrestaShop.
+    This class is used for handling errors that occur when interacting with the PrestaShop WebService.
 
-    :param msg: Пользовательское сообщение об ошибке.
+    :param msg: A custom error message.
     :type msg: str
-    :param error_code: Код ошибки, возвращенный PrestaShop.
+    :param error_code: The error code returned by PrestaShop.
     :type error_code: Optional[int]
-    :param ps_error_msg: Сообщение об ошибке от PrestaShop.
+    :param ps_error_msg: The error message from PrestaShop.
     :type ps_error_msg: str
-    :param ps_error_code: Код ошибки от PrestaShop.
+    :param ps_error_code: The PrestaShop error code.
     :type ps_error_code: Optional[int]
-
-    :ivar msg: Пользовательское сообщение об ошибке.
-    :vartype msg: str
-    :ivar error_code: Код ошибки, возвращенный PrestaShop.
-    :vartype error_code: Optional[int]
-    :ivar ps_error_msg: Сообщение об ошибке от PrestaShop.
-    :vartype ps_error_msg: str
-    :ivar ps_error_code: Код ошибки от PrestaShop.
-    :vartype ps_error_code: Optional[int]
-
-    :Example:
-        >>> try:
-        ...     raise PrestaShopException(msg='PrestaShop error', ps_error_msg='API error', ps_error_code=100)
-        ... except PrestaShopException as e:
-        ...     logger.error(f'PrestaShop error: {e}')
     """
-    def __init__(self, msg: str, error_code: Optional[int] = None,
-                 ps_error_msg: str = '', ps_error_code: Optional[int] = None):
+
+    def __init__(
+        self,
+        msg: str,
+        error_code: Optional[int] = None,
+        ps_error_msg: str = '',
+        ps_error_code: Optional[int] = None,
+    ):
         """
-        Инициализирует PrestaShopException с сообщением и деталями ошибки.
+        Initializes the PrestaShopException with the provided message and error details.
+
+        :param msg: A custom error message.
+        :type msg: str
+        :param error_code: The error code returned by PrestaShop.
+        :type error_code: Optional[int]
+        :param ps_error_msg: The error message from PrestaShop.
+        :type ps_error_msg: str
+        :param ps_error_code: The PrestaShop error code.
+        :type ps_error_code: Optional[int]
         """
-        self.msg = msg
+        self.message = msg # Исправлено имя атрибута
         self.error_code = error_code
         self.ps_error_msg = ps_error_msg
         self.ps_error_code = ps_error_code
 
     def __str__(self):
-        """
-        Возвращает строковое представление исключения.
-        """
-        return repr(self.ps_error_msg or self.msg)
+        """Returns the string representation of the exception."""
+        return self.ps_error_msg or self.message # Исправлено на str
 
 
 class PrestaShopAuthenticationError(PrestaShopException):
-    """
-    Исключение для ошибок аутентификации PrestaShop (Unauthorized).
-
-     :Example:
-         >>> try:
-         ...     raise PrestaShopAuthenticationError(msg='Authentication failed')
-         ... except PrestaShopAuthenticationError as e:
-         ...     logger.error(f'PrestaShop authentication error: {e}')
-    """
+    """Exception raised for PrestaShop authentication errors (Unauthorized)."""
     pass

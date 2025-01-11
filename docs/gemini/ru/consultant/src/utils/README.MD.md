@@ -1,221 +1,198 @@
-### Анализ кода модуля `README.MD`
+## Анализ кода модуля `README.MD`
 
 **Качество кода**:
-- **Соответствие стандартам**: 8
+- **Соответствие стандартам**: 7
 - **Плюсы**:
-    - Хорошо структурированное и информативное описание библиотеки.
-    - Чётко разделены модули и их функции.
-    - Предоставлены примеры использования.
-    - Наличие инструкций по установке и вкладу в проект.
+    - Хорошая организация и описание структуры библиотеки.
+    - Наличие примеров использования.
+    - Разделение на модули для удобства доступа к функциональности.
+    - Использование Markdown для структурирования информации.
 - **Минусы**:
-    - Код не является Python кодом, это markdown файл, поэтому  неприменимы требования к кавычкам и импортам.
-    - Отсутствует RST документация.
-    - Нет прямой возможности для автоматической проверки стандартам PEP8.
+    - Не указаны конкретные зависимости в `requirements.txt`.
+    - Нет подробной документации по каждой функции и методу в модулях.
+    - Отсутствует подробное описание типов данных и возможных ошибок в примерах использования.
+    - В коде примеров используется `print` для вывода, что не соответствует рекомендациям использовать `logger` для логирования.
 
 **Рекомендации по улучшению**:
-    - Добавить больше конкретики в описание каждого модуля.
-    - Пересмотреть структуру README.MD и возможно разнести документацию на несколько файлов, например на каждый модуль или каждый тип модуля.
-    - Пересмотреть примеры использования и добавить более продвинутые примеры.
-    - Добавить ссылку на конкретные примеры тестов, или описать как запускать тесты.
-    - Описать как делать contributions, какие нужны форматы, и тд.
+- Добавить подробное описание зависимостей в `requirements.txt` для корректной установки и работы библиотеки.
+- Включить подробные описания для каждой функции и метода в модулях, используя формат RST, чтобы улучшить документацию и сделать ее более информативной.
+- В примерах использования следует использовать `logger` для логирования вместо `print` для соблюдения стандарта логирования.
+- Добавить проверку типов и обработку ошибок в примерах, чтобы показать пользователям, как правильно работать с библиотекой и обрабатывать исключения.
+- Улучшить описания модулей, добавив примеры использования и описание параметров.
+- Предоставить ссылки на более детальную документацию, например, на сгенерированную Sphinx документацию.
+- Убедиться, что все ссылки на документацию и внешние ресурсы являются актуальными и работают.
 
 **Оптимизированный код**:
+
 ```markdown
 <TABLE>
 <TR>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+<A HREF='https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
 </TD>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A>  
+<A HREF='https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A>
 </TD>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/utils/readme.ru.md'>Русский</A>
+<A HREF='https://github.com/hypo69/hypo/blob/master/src/utils/readme.ru.md'>Русский</A>
 </TD>
 </TR>
 </TABLE>
 
 # Tiny Utils
-<!-- Заголовок проекта -->
 
-**Tiny Utils** is a utility library providing a collection of lightweight helper functions for various common tasks. This library includes utilities for data format conversion, text and file manipulation, string operations, date-time formatting, image processing, and more. It is organized into several modules for easy access to specific functionalities.
-<!-- Краткое описание библиотеки и ее возможностей -->
+**Tiny Utils** - это библиотека утилит, предоставляющая набор легких вспомогательных функций для различных распространенных задач.
+Эта библиотека включает в себя утилиты для преобразования форматов данных, манипуляции текстом и файлами, строковых операций,
+форматирования даты-времени, обработки изображений и многого другого. Она организована в несколько модулей для легкого доступа к конкретным функциональным возможностям.
 
-## Table of Contents
-<!-- Оглавление -->
+## Содержание
 
 - [Tiny Utils](#tiny-utils)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-  - [Modules Overview](#modules-overview)
-  - [Module Descriptions](#module-descriptions)
-    - [Convertors](#convertors)
-      - [Files:](#files)
-    - [String Utilities](#string-utilities)
-    - [File Operations](#file-operations)
-    - [Date-Time Utilities](#date-time-utilities)
-    - [FTP Utilities](#ftp-utilities)
-    - [Image Utilities](#image-utilities)
-    - [PDF Utilities](#pdf-utilities)
-    - [Printer Utilities](#printer-utilities)
-  - [Usage Examples](#usage-examples)
-    - [Convert Text to PNG Image](#convert-text-to-png-image)
-    - [Convert XML to Dictionary](#convert-xml-to-dictionary)
-    - [Parse and Manipulate JSON](#parse-and-manipulate-json)
-  - [Contributing](#contributing)
-  - [License](#license)
+  - [Содержание](#содержание)
+  - [Установка](#установка)
+  - [Обзор модулей](#обзор-модулей)
+  - [Описание модулей](#описание-модулей)
+    - [Конверторы](#конверторы)
+      - [Файлы:](#файлы)
+    - [Строковые утилиты](#строковые-утилиты)
+    - [Файловые операции](#файловые-операции)
+    - [Утилиты даты и времени](#утилиты-даты-и-времени)
+    - [FTP утилиты](#ftp-утилиты)
+    - [Утилиты изображений](#утилиты-изображений)
+    - [PDF утилиты](#pdf-утилиты)
+    - [Утилиты принтера](#утилиты-принтера)
+  - [Примеры использования](#примеры-использования)
+    - [Конвертация текста в PNG изображение](#конвертация-текста-в-png-изображение)
+    - [Конвертация XML в словарь](#конвертация-xml-в-словарь)
+    - [Разбор и манипуляция JSON](#разбор-и-манипуляция-json)
+  - [Внесение вклада](#внесение-вклада)
+  - [Лицензия](#лицензия)
 
-## Installation
-<!-- Инструкция по установке -->
+## Установка
 
-To use **Tiny Utils**, clone the repository and install any necessary dependencies as specified in the `requirements.txt` file.
-<!-- Описание процесса установки -->
+Для использования **Tiny Utils** клонируйте репозиторий и установите необходимые зависимости, указанные в файле `requirements.txt`.
 
 ```bash
 git clone https://github.com/hypo69/tiny-utils.git
 cd tiny_utils
 pip install -r requirements.txt
 ```
-<!-- Команды для установки -->
+**Примечание**: Убедитесь, что файл `requirements.txt` содержит все необходимые зависимости для корректной работы библиотеки.
 
-## Modules Overview
-<!-- Обзор модулей -->
+## Обзор модулей
 
-This library contains several sub-modules, each handling a specific task:
-<!-- Общее описание структуры модулей -->
+Эта библиотека содержит несколько подмодулей, каждый из которых отвечает за конкретную задачу:
 
-- **Convertors**: Modules for converting data formats, such as text-to-image, webp-to-png, JSON, XML, Base64 encoding, and more.
-- **String Utilities**: Tools for advanced string manipulation.
-- **File Operations**: Functions for file handling and manipulation.
-- **Date-Time Utilities**: Tools for date and time formatting.
-- **FTP Utilities**: FTP file handling functions.
-- **Image Utilities**: Basic image processing functions.
-- **PDF Utilities**: PDF file manipulation and conversion.
-- **Printer Utilities**: Functions for sending data to a printer.
-<!-- Список модулей и их назначение -->
+- **Конверторы**: Модули для преобразования форматов данных, таких как текст в изображение, webp в png, JSON, XML, кодирование Base64 и многое другое.
+- **Строковые утилиты**: Инструменты для расширенной манипуляции строками.
+- **Файловые операции**: Функции для обработки файлов и манипуляций с ними.
+- **Утилиты даты и времени**: Инструменты для форматирования даты и времени.
+- **FTP утилиты**: Функции для обработки файлов через FTP.
+- **Утилиты изображений**: Базовые функции обработки изображений.
+- **PDF утилиты**: Манипуляция и конвертация PDF файлов.
+- **Утилиты принтера**: Функции для отправки данных на принтер.
 
-## Module Descriptions
-<!-- Описание модулей -->
+## Описание модулей
 
-### Convertors
-<!-- Описание модуля Convertors -->
+### Конверторы
 
-The `convertors` module contains utilities for converting data between formats. These modules can handle diverse data types, from CSV to JSON and text to images.
-<!-- Детальное описание модуля Convertors -->
+Модуль `convertors` содержит утилиты для преобразования данных между форматами. Эти модули могут обрабатывать различные типы данных, от CSV до JSON и от текста до изображений.
 
-#### Files:
-<!-- Список файлов в модуле Convertors -->
+#### Файлы:
 
-- **text2png.py**: Converts text data to a PNG image file.
-- **tts.py**: Converts text to speech and saves it as an audio file.
-- **webp2png.py**: Converts images from WebP format to PNG format.
-- **xls.py**: Handles conversions and manipulations of XLS files.
-- **xml2dict.py**: Converts XML data to a Python dictionary.
-- **base64.py**: Encodes or decodes data using Base64 encoding.
-- **csv.py**: Provides CSV parsing and manipulation tools.
-- **dict.py**: Utilities for handling Python dictionaries.
-- **html.py**: Converts HTML content to various formats.
-- **json.py**: Utilities for JSON parsing and manipulation.
-- **md2dict.py**: Converts Markdown content to a dictionary.
-- **ns.py**: Specialized namespace conversion utilities.
-<!-- Описание каждого файла в модуле Convertors -->
+- **text2png.py**: Конвертирует текстовые данные в файл изображения PNG.
+- **tts.py**: Конвертирует текст в речь и сохраняет его как аудиофайл.
+- **webp2png.py**: Конвертирует изображения из формата WebP в формат PNG.
+- **xls.py**: Обрабатывает преобразования и манипуляции с файлами XLS.
+- **xml2dict.py**: Конвертирует XML данные в словарь Python.
+- **base64.py**: Кодирует или декодирует данные с помощью кодирования Base64.
+- **csv.py**: Предоставляет инструменты для разбора и обработки CSV.
+- **dict.py**: Утилиты для работы со словарями Python.
+- **html.py**: Конвертирует HTML контент в различные форматы.
+- **json.py**: Утилиты для разбора и манипуляции JSON.
+- **md2dict.py**: Конвертирует Markdown контент в словарь.
+- **ns.py**: Специализированные утилиты для преобразования пространства имен.
 
-### String Utilities
-<!-- Описание модуля String Utilities -->
+### Строковые утилиты
 
-The `string` module includes advanced functions for string manipulation, offering tools to enhance basic Python string operations.
-<!-- Детальное описание модуля String Utilities -->
+Модуль `string` включает в себя расширенные функции для манипуляции строками, предлагая инструменты для улучшения базовых строковых операций Python.
 
-### File Operations
-<!-- Описание модуля File Operations -->
+### Файловые операции
 
-The `file.py` module includes utilities for file handling, providing functions to read, write, copy, delete, and move files with additional options for error handling and file format compatibility.
-<!-- Детальное описание модуля File Operations -->
+Модуль `file.py` включает утилиты для обработки файлов, предоставляя функции для чтения, записи, копирования, удаления и перемещения файлов с дополнительными параметрами для обработки ошибок и совместимости форматов файлов.
 
-### Date-Time Utilities
-<!-- Описание модуля Date-Time Utilities -->
+### Утилиты даты и времени
 
-The `date_time.py` module provides various date and time utilities, enabling users to parse, format, and manipulate date-time values for consistent formatting and conversions.
-<!-- Детальное описание модуля Date-Time Utilities -->
+Модуль `date_time.py` предоставляет различные утилиты для работы с датой и временем, позволяя пользователям разбирать, форматировать и манипулировать значениями даты-времени для согласованного форматирования и преобразований.
 
-### FTP Utilities
-<!-- Описание модуля FTP Utilities -->
+### FTP утилиты
 
-The `ftp.py` module includes functions for handling FTP operations, such as connecting to servers, uploading, downloading, and managing files over FTP.
-<!-- Детальное описание модуля FTP Utilities -->
+Модуль `ftp.py` включает функции для обработки операций FTP, таких как подключение к серверам, загрузка, скачивание и управление файлами через FTP.
 
-### Image Utilities
-<!-- Описание модуля Image Utilities -->
+### Утилиты изображений
 
-The `image.py` module provides basic image manipulation tools, such as resizing, cropping, format conversion, and applying filters.
-<!-- Детальное описание модуля Image Utilities -->
+Модуль `image.py` предоставляет базовые инструменты для манипуляции изображениями, такие как изменение размера, обрезка, преобразование формата и применение фильтров.
 
-### PDF Utilities
-<!-- Описание модуля PDF Utilities -->
+### PDF утилиты
 
-The `pdf.py` module offers PDF handling utilities, including PDF file conversion, merging, splitting, and text extraction.
-<!-- Детальное описание модуля PDF Utilities -->
+Модуль `pdf.py` предлагает утилиты для обработки PDF, включая преобразование PDF файлов, слияние, разделение и извлечение текста.
 
-### Printer Utilities
-<!-- Описание модуля Printer Utilities -->
+### Утилиты принтера
 
-The `printer.py` module includes functions to send files or formatted data to a printer, supporting print job configuration options.
-<!-- Детальное описание модуля Printer Utilities -->
+Модуль `printer.py` включает функции для отправки файлов или форматированных данных на принтер, поддерживая параметры конфигурации заданий печати.
 
-## Usage Examples
-<!-- Примеры использования -->
+## Примеры использования
 
-Here are some usage examples demonstrating how to work with the **Tiny Utils** library.
-<!-- Введение к примерам использования -->
+Вот несколько примеров использования, демонстрирующих, как работать с библиотекой **Tiny Utils**.
 
-### Convert Text to PNG Image
-<!-- Пример конвертации текста в PNG -->
+### Конвертация текста в PNG изображение
 
 ```python
-from tiny_utils.convertors import text2png
+from src.utils.convertors import text2png # Изменен импорт на src.utils
+from src.logger import logger             # Импортируем logger
 
-text = "Hello, World!"
-output_path = "output_image.png"
-text2png.convert(text, output_path)
+try:
+    text = 'Hello, World!'
+    output_path = 'output_image.png'
+    text2png.convert(text, output_path)
+    logger.info("Изображение успешно создано: %s", output_path) # Логируем успешное создание
+except Exception as e:
+    logger.error("Ошибка при конвертации текста в PNG: %s", e)  # Логируем ошибку
 ```
-<!-- Код для конвертации текста в PNG -->
 
-### Convert XML to Dictionary
-<!-- Пример конвертации XML в словарь -->
+### Конвертация XML в словарь
 
 ```python
-from tiny_utils.convertors import xml2dict
+from src.utils.convertors import xml2dict # Изменен импорт на src.utils
+from src.logger import logger             # Импортируем logger
 
-xml_data = "<root><item>Hello</item></root>"
-dictionary = xml2dict.convert(xml_data)
-print(dictionary)
+try:
+    xml_data = '<root><item>Hello</item></root>'
+    dictionary = xml2dict.convert(xml_data)
+    logger.info("Словарь из XML: %s", dictionary) # Логируем словарь
+except Exception as e:
+    logger.error("Ошибка при конвертации XML в словарь: %s", e) # Логируем ошибку
 ```
-<!-- Код для конвертации XML в словарь -->
 
-### Parse and Manipulate JSON
-<!-- Пример парсинга и обработки JSON -->
+### Разбор и манипуляция JSON
 
 ```python
-from tiny_utils.convertors import json
+from src.utils.convertors import json # Изменен импорт на src.utils
+from src.logger import logger          # Импортируем logger
+from src.utils.jjson import j_loads    # Используем j_loads
 
-json_data = '{"name": "John", "age": 30}'
-parsed_data = json.parse(json_data)
-print(parsed_data)
+try:
+    json_data = '{"name": "John", "age": 30}'
+    parsed_data = j_loads(json_data)     # Используем j_loads
+    logger.info("JSON данные: %s", parsed_data) # Логируем JSON данные
+except Exception as e:
+    logger.error("Ошибка при разборе JSON: %s", e)  # Логируем ошибку
 ```
-<!-- Код для парсинга и обработки JSON -->
 
-## For more examples and detailed documentation, please visit the 
-  [Tiny Utils Wiki](https://github.com/hypo69/tiny-utils/wiki).
-<!-- Ссылка на вики проекта -->
+## Внесение вклада
 
-## Contributing
-<!-- Информация о вкладе в проект -->
+Приветствуются любые вклады! Пожалуйста, сделайте форк репозитория и отправьте запрос на слияние с вашими изменениями. Убедитесь, что вы обновили документацию для любых новых функций или изменений.
 
-Contributions are welcome! Please fork the repository and submit a pull request with your changes. Make sure to update the documentation for any new features or changes.
-<!-- Инструкция по вкладу в проект -->
+## Лицензия
 
-## License
-<!-- Лицензия проекта -->
-
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
-<!-- Указание лицензии -->
+Этот проект распространяется под лицензией MIT. Для получения дополнительной информации см. файл [LICENSE](./LICENSE).

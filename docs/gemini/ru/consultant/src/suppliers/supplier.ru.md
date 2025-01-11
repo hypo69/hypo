@@ -1,189 +1,207 @@
-### Анализ кода модуля `supplier`
+## Анализ кода модуля `supplier`
 
 **Качество кода**:
-- **Соответствие стандартам**: 8
+- **Соответствие стандартам**: 7
 - **Плюсы**:
-    - Код хорошо структурирован и использует классы для представления поставщиков.
-    - Используются аннотации типов, что улучшает читаемость кода.
-    - Применение `pydantic` для валидации данных.
-    - Динамическая загрузка модулей поставщиков через `importlib`.
-    - Логирование через `src.logger.logger`.
+  - Использование `pydantic` для валидации данных.
+  - Применение `importlib` для динамической загрузки модулей.
+  - Наличие подробной документации в виде блок-схемы и описания.
+  - Использование статической типизации.
 - **Минусы**:
-    -  Не все комментарии соответствуют стандарту RST.
-    -  Используются стандартные блоки `try-except`, которые можно заменить на `logger.error`.
-    -  Импорт `logger` сделан не совсем по инструкции.
-    - Не все названия переменных и функций выровнены по стандарту.
-    -  Не хватает документации для всех функций и методов.
+  - Не везде используется `logger.error` для обработки ошибок.
+  - Неоднородное использование кавычек в коде.
+  - Отсутствие RST-документации для методов и класса.
+  - Использование общего `except Exception as ex` без конкретизации типа ошибки.
+  - Отсутствует единый стиль форматирования (не везде используется PEP8).
 
 **Рекомендации по улучшению**:
-- Необходимо добавить docstrings в формате RST для всех классов, методов и функций.
-- Использовать `from src.logger.logger import logger` для импорта `logger`.
-- Заменить общие блоки `try-except` на более точную обработку ошибок с использованием `logger.error`.
-- Выровнять названия функций, переменных и импортов для соответствия ранее обработанным файлам.
-- Проверить и, при необходимости, уточнить назначение модуля `header`.
-- Добавить больше валидаторов `pydantic` для дополнительных полей, если требуется.
+- Привести все строковые литералы в коде к использованию одинарных кавычек (`'`).
+- Использовать `logger.error` для обработки ошибок с указанием конкретного типа ошибки.
+- Добавить RST-документацию для класса `Supplier` и его методов.
+- Избегать чрезмерного использования `try-except` блоков, где это возможно, заменяя на `logger.error`.
+- Привести форматирование кода в соответствие со стандартами PEP8.
+- Заменить импорт `from src import gs` на `from src.gs import gs`.
+- Уточнить назначение `import header`.
+- Добавить валидаторы для остальных полей модели `Supplier`, если это необходимо.
 
 **Оптимизированный код**:
+
 ```python
 """
 Модуль для работы с поставщиками.
-==================================
+======================================
 
-Этот модуль содержит класс :class:`Supplier`, который используется для управления
-различными поставщиками, загрузки их настроек, выполнения сценариев и входа на сайты.
+Этот модуль содержит класс :class:`Supplier`, который используется
+для управления поставщиками, загрузки их настроек и выполнения сценариев.
+
+Пример использования
+----------------------
+.. code-block:: python
+
+    supplier = Supplier(supplier_prefix='test_supplier')
+    supplier.login()
+    supplier.run_scenario_files()
 """
 import importlib
 from typing import List, Optional, Dict, Any
 from types import ModuleType, SimpleNamespace
-
 from pydantic import BaseModel, Field, validator
-import header # Предположительно пользовательский модуль
-from src import gs
+# from src import gs # Изменен импорт для соответствия PEP8
+from src.gs import gs # Изменен импорт для соответствия PEP8
 from src.utils.jjson import j_loads_ns
 from src.webdriver.driver import Driver
 from src.scenario import run_scenarios, run_scenario_files
-from src.logger.logger import logger  #  Импортируем logger правильно
+from src.logger.logger import logger # Исправлен импорт logger
 from src.logger.exceptions import DefaultSettingsException
+# import header # TODO: Уточнить назначение модуля header
 
 
 class Supplier(BaseModel):
     """
-    Базовый класс для представления поставщиков.
+    Класс для представления поставщика.
 
-    :param supplier_id: Идентификатор поставщика.
-    :type supplier_id: Optional[str]
-    :param supplier_prefix: Префикс поставщика (обязательное поле).
+    Управляет загрузкой конфигурации, выполнением сценариев и входом на сайты поставщиков.
+
+    :param supplier_id: Идентификатор поставщика, defaults to None
+    :type supplier_id: Optional[str], optional
+    :param supplier_prefix: Префикс поставщика, required
     :type supplier_prefix: str
-    :param locale: Код локали поставщика.
-    :type locale: str
-    :param price_rule: Правило расчета цен.
-    :type price_rule: Optional[str]
-    :param related_modules: Модуль, содержащий специфические функции для поставщика.
-    :type related_modules: Optional[ModuleType]
-    :param scenario_files: Список файлов сценариев для поставщика.
-    :type scenario_files: Optional[List[str]]
-    :param current_scenario: Текущий исполняемый сценарий.
-    :type current_scenario: Optional[Dict]
-    :param locators: Локаторы для элементов страницы.
-    :type locators: Optional[Dict[str, str]]
-    :param driver: Экземпляр веб-драйвера.
-    :type driver: Optional[Driver]
+    :param locale: Код локали поставщика, defaults to 'en'
+    :type locale: str, optional
+    :param price_rule: Правило расчета цен, defaults to None
+    :type price_rule: Optional[str], optional
+    :param related_modules: Модуль, содержащий специфические функции для поставщика, defaults to None
+    :type related_modules: Optional[ModuleType], optional
+    :param scenario_files: Список файлов сценариев для поставщика, defaults to []
+    :type scenario_files: List[str], optional
+    :param current_scenario: Текущий исполняемый сценарий, defaults to {}
+    :type current_scenario: Dict[str, Any], optional
+    :param locators: Локаторы для элементов страницы, defaults to {}
+    :type locators: Dict[str, str], optional
+    :param driver: Экземпляр веб-драйвера, defaults to None
+    :type driver: Optional[Driver], optional
 
-    :raises DefaultSettingsException: Если не удалось загрузить настройки поставщика.
+    :raises DefaultSettingsException: Если не удалось загрузить настройки.
+
+    :Example:
+        >>> supplier = Supplier(supplier_prefix='test_supplier')
+        >>> supplier.login()
+        True
     """
     supplier_id: Optional[str] = None
     supplier_prefix: str
     locale: str = 'en'
     price_rule: Optional[str] = None
     related_modules: Optional[ModuleType] = None
-    scenario_files: Optional[List[str]] = None
-    current_scenario: Optional[Dict] = None
-    locators: Optional[Dict[str, str]] = None
+    scenario_files: List[str] = []
+    current_scenario: Dict[str, Any] = {}
+    locators: Dict[str, str] = {}
     driver: Optional[Driver] = None
 
     class Config:
-        """
-        Настройки модели.
-        """
-        arbitrary_types_allowed = True # Разрешаем произвольные типы данных
+        arbitrary_types_allowed = True
 
     def __init__(self, **data):
         """
-        Инициализирует объект поставщика и загружает настройки.
+        Инициализирует объект поставщика, загружает настройки через метод `_payload()`.
 
-        :param data: Данные для инициализации.
-        :type data: Dict[str, Any]
+        :param data: Данные для инициализации объекта
+        :type data: dict
         """
-        super().__init__(**data)
+        super().__init__(**data) # Инициализация базового класса
         if not self._payload():
-             # Логируем ошибку, используя logger.error
-            logger.error(f"Failed to load settings for supplier: {self.supplier_prefix}")
-            raise DefaultSettingsException(f"Failed to load settings for supplier: {self.supplier_prefix}")
+            logger.error(f'Failed to load settings for supplier: {self.supplier_prefix}') # Логирование ошибки
+            raise DefaultSettingsException(f'Failed to load settings for supplier: {self.supplier_prefix}')
 
     def _payload(self) -> bool:
         """
         Загружает настройки поставщика из JSON-файла.
 
-        :return: True, если настройки загружены успешно, иначе False.
+        Использует `j_loads_ns` для загрузки данных и динамически импортирует модуль поставщика.
+
+        :return: `True` если настройки загружены успешно, `False` в случае ошибки.
         :rtype: bool
         """
-        logger.info(f"Start load settings for supplier: {self.supplier_prefix}")
+        logger.info(f'Start loading settings for {self.supplier_prefix}') # Логирование начала загрузки
+
         try:
-            related_module = importlib.import_module(f"src.suppliers.{self.supplier_prefix}") # Динамически импортируем модуль поставщика
-            self.related_modules = related_module  # Сохраняем импортированный модуль в атрибут
-        except ImportError as ex:  #  Ловим ошибку импорта модуля
-            logger.error(f"Module not found for supplier: {self.supplier_prefix}. Error: {ex}")  # Логируем ошибку
+            related_module = importlib.import_module(f'src.suppliers.{self.supplier_prefix}') # Динамический импорт модуля
+            self.related_modules = related_module
+        except ImportError as ex:
+            logger.error(f'Failed to import module for supplier {self.supplier_prefix}: {ex}') # Логирование ошибки импорта
             return False
 
-        settings_path = gs.path.src / 'suppliers' / f"{self.supplier_prefix}_settings.json" #  Формируем путь к файлу настроек
+        settings_path = gs.path.src / 'suppliers' / f'{self.supplier_prefix}_settings.json' # Формирование пути к файлу настроек
         try:
-            settings = j_loads_ns(settings_path) #  Загружаем настройки из файла
-            if not settings: #  Проверяем загружены ли настройки
-                logger.error(f"Settings file is empty or not found: {settings_path}")  #  Логируем ошибку если настроек нет
+            settings = j_loads_ns(settings_path) # Загрузка настроек из JSON файла
+            if not settings:
+                logger.error(f'Settings file not found or empty: {settings_path}') # Логирование ошибки отсутствия файла или пустого файла
                 return False
-            self.price_rule = getattr(settings, 'price_rule', None) #  Получаем правило расчета цен
-            self.locale = getattr(settings, 'locale', 'en') # Получаем локаль
-            self.scenario_files = getattr(settings, 'scenario_files', []) #  Получаем файлы сценариев
-            self.locators = getattr(settings, 'locators', {}) #  Получаем локаторы
 
-            logger.info(f"Settings loaded successfully for supplier: {self.supplier_prefix}")#  Логируем успешную загрузку настроек
+            self.price_rule = getattr(settings, 'price_rule', None) # Установка правила расчета цен
+            self.locale = getattr(settings, 'locale', 'en') # Установка локали
+            self.scenario_files = getattr(settings, 'scenario_files', []) # Установка файлов сценариев
+            self.locators = getattr(settings, 'locators', {}) # Установка локаторов
+            logger.info(f'Settings loaded successfully for {self.supplier_prefix}') # Логирование успешной загрузки
             return True
-        except Exception as ex:  # Ловим другие исключения
-            logger.error(f"Error loading settings for supplier: {self.supplier_prefix}. Error: {ex}")#  Логируем ошибку
+        except Exception as ex:
+            logger.error(f'Failed to load settings from {settings_path}: {ex}') # Логирование общей ошибки загрузки
             return False
 
     def login(self) -> bool:
         """
         Выполняет вход на сайт поставщика.
 
-        :return: True, если вход выполнен успешно, иначе False.
+        Вызывает метод `login` из модуля, связанного с поставщиком.
+
+        :return: `True` если вход выполнен успешно, `False` в случае ошибки.
         :rtype: bool
         """
-        if not self.related_modules: # Проверяем, загружен ли модуль
-             logger.error(f"Module not loaded for supplier: {self.supplier_prefix}")#  Логируем ошибку если модуль не загружен
-             return False
-
-        login_method = getattr(self.related_modules, 'login', None)  #  Получаем метод логина из модуля
-        if not login_method:  # Проверяем наличие метода login
-            logger.error(f"Login method not found in module for supplier: {self.supplier_prefix}")#  Логируем ошибку если метода нет
-            return False
-        return login_method(self) # вызываем метод логина
+        if self.related_modules and hasattr(self.related_modules, 'login'):
+            return self.related_modules.login(self) # Вызов метода login из модуля поставщика
+        else:
+           logger.error(f'Login method not found in module for supplier {self.supplier_prefix}') # Логирование ошибки отсутствия метода login
+           return False
 
     def run_scenario_files(self, scenario_files: Optional[str | List[str]] = None) -> bool:
         """
-        Выполняет сценарии из указанных файлов.
+        Выполняет сценарии, указанные в файлах.
 
-        :param scenario_files: Список файлов сценариев или путь к одному файлу.
-        :type scenario_files: Optional[str | List[str]]
-        :return: True, если сценарии выполнены успешно, иначе False.
+        Использует функцию `run_scenario_files` из модуля `src.scenario`.
+
+        :param scenario_files: Список файлов сценариев или путь к одному файлу, defaults to None
+        :type scenario_files: Optional[str | List[str]], optional
+        :return: `True`, если все сценарии выполнены успешно, иначе `False`.
         :rtype: bool
         """
-        if scenario_files is None: # Если файлы не переданы используем файлы из настроек
-            scenario_files = self.scenario_files
-        return run_scenario_files(self, scenario_files)  #  Вызываем функцию из src.scenario
+        if not scenario_files:
+            scenario_files = self.scenario_files # Если список файлов сценариев не передан, то используется атрибут класса
+        return run_scenario_files(self, scenario_files) # Вызов функции run_scenario_files из src.scenario
 
     def run_scenarios(self, scenarios: dict | List[dict]) -> bool:
         """
-        Выполняет переданные сценарии.
+        Выполняет сценарии.
+
+        Использует функцию `run_scenarios` из модуля `src.scenario`.
 
         :param scenarios: Словарь или список словарей, представляющих сценарии.
         :type scenarios: dict | List[dict]
-        :return: True, если сценарии выполнены успешно, иначе False.
+        :return: `True`, если сценарии выполнены успешно, иначе `False`.
         :rtype: bool
         """
-        return run_scenarios(self, scenarios)  # Вызываем функцию из src.scenario
+        return run_scenarios(self, scenarios) # Вызов функции run_scenarios из src.scenario
 
     @validator('supplier_prefix')
-    def check_supplier_prefix(cls, value: str) -> str:
+    def check_supplier_prefix(cls, value):
         """
-        Валидатор для проверки, что префикс поставщика не пустая строка.
+        Валидатор для проверки, что `supplier_prefix` не пустая строка.
 
-        :param value: Значение префикса поставщика.
+        :param value: Значение `supplier_prefix`
         :type value: str
-        :raises ValueError: Если префикс поставщика пустой.
-        :return: Значение префикса поставщика.
+        :raises ValueError: Если `supplier_prefix` пустая строка
+        :return: Значение `supplier_prefix`
         :rtype: str
         """
         if not value:
-            raise ValueError('Supplier prefix cannot be empty') #  Выдаем ошибку если префикс пустой
+            raise ValueError('Supplier prefix cannot be empty') # Вызов исключения если префикс пустой
         return value

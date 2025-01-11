@@ -1,72 +1,59 @@
-# Анализ кода модуля `printer`
+### Анализ кода модуля `printer`
 
-**Качество кода:**
+**Качество кода**:
+- **Соответствие стандартам**: 7
+- **Плюсы**:
+    -   Хорошая организация кода, разделение на функции.
+    -   Использование ANSI escape-кодов для стилизации текста.
+    -   Наличие документации для функций.
+- **Минусы**:
+    -   Не все строки соответствуют PEP8 (например, длина строк).
+    -   Используется стандартный `json.dumps`, а не `j_dumps` или `j_dumps_ns` из `src.utils.jjson`.
+    -   Отсутствует импорт `logger` из `src.logger`.
+    -   Не все комментарии в стиле RST, не хватает подробностей.
+    -   Слишком общий блок `try-except` в функции `pprint`, нет логирования ошибок.
+    -   Использованы двойные кавычки для строк в примере использования.
 
-*   **Соответствие стандартам**: 7/10
-*   **Плюсы**:
-    *   Хорошая базовая структура для стилизации текста в консоли.
-    *   Использование ANSI escape кодов для управления цветом, фоном и стилем текста.
-    *   Наличие документации для функций и модуля.
-    *   Поддержка различных типов данных для печати.
-*   **Минусы**:
-    *   Отсутствует импорт `logger` из `src.logger`.
-    *   Используется стандартный `json.dumps` вместо `j_dumps` из `src.utils.jjson`.
-    *   Не используется `logger` для вывода ошибок, вместо этого используется `print`.
-    *   Избыточное использование `try-except` без логирования.
-    *   Смешивание форматирования строк (f-строки) и конкатенации.
-    *   В примере использования функции `pprint`, используются двойные кавычки вместо одинарных.
-    *   В документации используется `code-block` без указания языка.
+**Рекомендации по улучшению**:
+-   Привести код в соответствие со стандартом PEP8, исправить длину строк.
+-   Заменить `json.dumps` на `j_dumps` или `j_dumps_ns` из `src.utils.jjson`.
+-   Добавить импорт `logger` из `src.logger`.
+-   Добавить подробную документацию в стиле RST, включая примеры использования для всех функций.
+-   В функции `pprint` использовать логирование ошибок через `logger.error` вместо общего `try-except` с выводом ошибки через `print`.
+-   Исправить одинарные кавычки на двойные в выводе `print`.
 
-**Рекомендации по улучшению:**
-
-*   Импортировать `logger` из `src.logger` для логирования ошибок.
-*   Использовать `j_dumps` из `src.utils.jjson` вместо `json.dumps`.
-*   Заменить `print` на `logger.error` при возникновении ошибок.
-*   Удалить избыточный `try-except` и использовать `logger.error` для обработки исключений.
-*   Использовать f-строки для всех форматирований строк.
-*   Унифицировать использование кавычек, использовать одинарные кавычки в коде, двойные кавычки только в выводе.
-*   Добавить `python` в `code-block` для корректного отображения примеров.
-*   Использовать RST формат для документации функций.
-*   Добавить проверку типа для `print_data` в `pprint`, чтобы избегать лишних вызовов `Path()`.
-*   Добавить комментарии для не очевидных действий.
-
-**Оптимизированный код:**
-
+**Оптимизированный код**:
 ```python
-## \file /src/utils/printer.py
-# -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
-
 """
-Модуль для управления печатью
-================================
+Модуль для работы с печатью в консоль.
+=======================================
 
-Этот модуль предоставляет функции для печати данных в удобочитаемом формате с дополнительной стилизацией текста,
-включая цвет, фон и стили шрифта.
+Этот модуль предоставляет функции для вывода данных в консоль с возможностью стилизации текста,
+включая цвета, фоны и шрифтовые стили.
 
-Пример использования
-----------------------
+Пример использования:
+---------------------
 .. code-block:: python
 
     from src.utils.printer import pprint
 
     data = {'name': 'Alice', 'age': 30}
     pprint(data, text_color='green')
-
 """
-import csv # импортируем csv
-import pandas as pd # импортируем pandas
-from pathlib import Path # импортируем Path
-from typing import Any # импортируем Any
-from src.utils.jjson import j_dumps # импортируем j_dumps
-from src.logger import logger # импортируем logger для логирования
-from pprint import pprint as pretty_print # импортируем pretty_print
+
+import csv  # сохраняем импорт
+from pathlib import Path
+from typing import Any
+
+import pandas as pd  # сохраняем импорт
+from src.utils.jjson import j_dumps  # Используем j_dumps
+from src.logger import logger # Импортируем logger
+from pprint import pprint as pretty_print  # Сохраняем оригинальный импорт
 
 # ANSI escape codes
-RESET = '\033[0m' # константа для сброса стилей
+RESET = '\033[0m'
 
-TEXT_COLORS = { # словарь с цветами текста
+TEXT_COLORS = {
     'red': '\033[31m',
     'green': '\033[32m',
     'blue': '\033[34m',
@@ -83,7 +70,7 @@ TEXT_COLORS = { # словарь с цветами текста
 }
 
 # Background colors mapping
-BG_COLORS = { # словарь с цветами фона
+BG_COLORS = {
     'bg_red': '\033[41m',
     'bg_green': '\033[42m',
     'bg_blue': '\033[44m',
@@ -99,8 +86,7 @@ BG_COLORS = { # словарь с цветами фона
     'bg_light_yellow': '\033[103m',
 }
 
-
-FONT_STYLES = { # словарь со стилями шрифта
+FONT_STYLES = {
     'bold': '\033[1m',
     'underline': '\033[4m',
 }
@@ -108,7 +94,10 @@ FONT_STYLES = { # словарь со стилями шрифта
 
 def _color_text(text: str, text_color: str = '', bg_color: str = '', font_style: str = '') -> str:
     """
-    Применяет цвет, фон и стиль шрифта к тексту.
+    Применяет стили к тексту.
+
+    Эта вспомогательная функция применяет указанный цвет, фон и стили шрифта к заданному тексту,
+    используя ANSI escape-коды.
 
     :param text: Текст для стилизации.
     :type text: str
@@ -130,7 +119,11 @@ def _color_text(text: str, text_color: str = '', bg_color: str = '', font_style:
 
 def pprint(print_data: Any = None, text_color: str = 'white', bg_color: str = '', font_style: str = '') -> None:
     """
-    Выводит данные с применением стилизации текста.
+    Выводит данные в консоль с возможностью стилизации.
+
+    Эта функция форматирует входные данные в зависимости от их типа и выводит их в консоль.
+    Данные выводятся с дополнительным цветом текста, цветом фона и стилем шрифта на основе указанных параметров.
+    Функция может обрабатывать словари, списки, строки и пути к файлам.
 
     :param print_data: Данные для вывода.
     :type print_data: Any, optional
@@ -140,44 +133,53 @@ def pprint(print_data: Any = None, text_color: str = 'white', bg_color: str = ''
     :type bg_color: str, optional
     :param font_style: Стиль шрифта.
     :type font_style: str, optional
-    :raises Exception: В случае ошибки при выводе данных.
+    :return: None
+    :rtype: None
+
+    :raises Exception: Если тип данных не поддерживается или возникает ошибка во время вывода.
 
     :Example:
         >>> pprint({'name': 'Alice', 'age': 30}, text_color='green')
-        \\033[32m{\\n    "name": "Alice",\\n    "age": 30\\n}\\033[0m
+        \033[32m{
+            "name": "Alice",
+            "age": 30
+        }\033[0m
+
         >>> pprint(['apple', 'banana', 'cherry'], text_color='blue', font_style='bold')
-        \\033[34m\\033[1mapple\\033[0m
-        \\033[34m\\033[1mbanana\\033[0m
-        \\033[34m\\033[1mcherry\\033[0m
+        \033[34m\033[1mapple\033[0m
+        \033[34m\033[1mbanana\033[0m
+        \033[34m\033[1mcherry\033[0m
+
         >>> pprint('text example', text_color='yellow', bg_color='bg_red', font_style='underline')
-        \\033[4m\\033[33m\\033[41mtext example\\033[0m
+        \033[4m\033[33m\033[41mtext example\033[0m
     """
-    text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS['white']) # получаем цвет текста, по умолчанию белый
-    bg_color = BG_COLORS.get(bg_color.lower(), '') # получаем цвет фона, по умолчанию пустая строка
-    font_style = FONT_STYLES.get(font_style.lower(), '') # получаем стиль шрифта, по умолчанию пустая строка
+    text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS['white'])
+    bg_color = BG_COLORS.get(bg_color.lower(), '')
+    font_style = FONT_STYLES.get(font_style.lower(), '')
 
-    if print_data is None: # если данных нет, выводим сообщение об этом
-        print(_color_text('No data to print!', text_color=TEXT_COLORS['red'])) # выводим сообщение об отсутствии данных
-        return # выходим из функции
+    if print_data is None:
+        print(_color_text('No data to print!', text_color=TEXT_COLORS['red']))
+        return
 
-    try: # пробуем выполнить печать
-        if isinstance(print_data, dict): # если данные - словарь, печатаем его как json
-            print(_color_text(j_dumps(print_data, indent=4), text_color)) # печатаем словарь с отступом 4
-        elif isinstance(print_data, list): # если данные - список, печатаем каждый элемент
-            for item in print_data: # проходимся по списку и выводим каждый элемент
-                print(_color_text(str(item), text_color)) # выводим каждый элемент
-        elif isinstance(print_data, (str, Path)) and Path(print_data).is_file(): # если данные - строка или путь к файлу и это файл
-            ext = Path(print_data).suffix.lower() # получаем расширение файла
-            if ext in ['.csv', '.xls']: # если расширение .csv или .xls
-                 print(_color_text('File reading supported for .csv, .xls only.', text_color)) # выводим сообщение об поддержке форматов
-            else: # если другой формат
-                print(_color_text('Unsupported file type.', text_color)) # выводим сообщение о неподдерживаемом формате
-        else: # если тип данных не поддерживается
-            print(_color_text(str(print_data), text_color)) # выводим данные как строку
-    except Exception as ex: # если произошла ошибка
-        logger.error(f'Error: {ex}') # логируем ошибку, используя logger, вместо print
+    try:
+        if isinstance(print_data, dict):
+            print(_color_text(j_dumps(print_data, indent=4), text_color)) # используем j_dumps
+        elif isinstance(print_data, list):
+            for item in print_data:
+                print(_color_text(str(item), text_color))
+        elif isinstance(print_data, (str, Path)) and Path(print_data).is_file():
+            ext = Path(print_data).suffix.lower()
+            if ext in ['.csv', '.xls']:
+                print(_color_text('File reading supported for .csv, .xls only.', text_color))
+            else:
+                print(_color_text('Unsupported file type.', text_color))
+        else:
+            print(_color_text(str(print_data), text_color))
+    except Exception as ex:
+        logger.error(f'Error during printing: {ex}') # Логируем ошибку
+        print(_color_text(f'Error: {ex}', text_color=TEXT_COLORS['red']))
+
 
 
 if __name__ == '__main__':
     pprint({'name': 'Alice', 'age': 30}, text_color='green')
-```
