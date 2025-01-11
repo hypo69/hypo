@@ -5,26 +5,25 @@ import functools
 import threading
 import asyncio
 
+class Singleton(type):
+    """Metaclass for implementing the singleton pattern."""
+    _instances = {}
 
-class FastApiServer(FastAPI):
-    _instance = None
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
 
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls, *args, **kwargs)
-            cls._instance._initialized = False
-            cls._instance.server_tasks = {}  # Словарь для хранения задач (port: task)
-            cls._instance.servers = {}  # Словарь для хранения серверов (port: server)
-        return cls._instance
+
+class FastApiServer(FastAPI, metaclass=Singleton):
+    """FastAPI server with singleton implementation."""
 
     def __init__(self, title: str = "FastAPI Singleton Server", host: str = "127.0.0.1", **kwargs):
-        if self._initialized:
-            return
         super().__init__(title=title, **kwargs)
         self.router = APIRouter()
         self.host = host
-        self._initialized = True
-
+        self.server_tasks = {}  # Словарь для хранения задач (port: task)
+        self.servers = {}  # Словарь для хранения серверов (port: server)
 
     def add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
         """Добавляет маршрут к FastAPI приложению."""
@@ -76,7 +75,7 @@ def test_post(data: Dict[str, str]):
 
 
 async def main():
-    api = FastApi(title="My API", host="0.0.0.0")
+    api = FastApiServer(title="My API", host="0.0.0.0")
     api.add_route("/hello", test_function)
     api.add_route("/post", test_post, methods=["POST"])
     api.register_router()

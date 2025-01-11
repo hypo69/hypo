@@ -30,6 +30,7 @@
     "docs",
     "images",
     "exe",
+    "profile*",
     "pytest",
     "emil-design.com",
     "ai_games",
@@ -44,6 +45,9 @@
   "exclude_files": [
     "version.py",
     "header.py",
+    "__init__.py",
+    "*.js",
+    "*.js",
     "*.png",
     "*.jpg",
     "*.jpeg",
@@ -54,18 +58,7 @@
     "*.yml",
     "*.ini",
     "*.cfg",
-    "*.git*"
-  ],
-
-  "exclude_file_patterns": [
-    ".*\\(.*\\).*",
-    "___{3,}.*",
-    "___.*",
-    ".*___.*\\..*",
-    ".*___.*"
-  ],
-  "include_files": [
-    "*.py",
+    "*.git*",
     "*.js",
     "*.mjs",
     "*.htm*",
@@ -80,6 +73,18 @@
     "CONTRIBUTING*",
     "CODE_OF_CONDUCT*",
     "conf.py"
+  ],
+
+  "exclude_file_patterns": [
+    ".*\\(.*\\).*",
+    "___{3,}.*",
+    "___.*",
+    ".*___.*\\..*",
+    ".*___.*"
+  ],
+  "include_files": [
+    "*.py",
+    "*.md"
   ],
   "remove_prefixes": [
     "```md",

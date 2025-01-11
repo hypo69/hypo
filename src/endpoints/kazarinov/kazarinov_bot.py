@@ -33,7 +33,7 @@ import header
 """    
 import header
 from src import gs
-from src.endpoints.bots.telegram import TelegramWebHooksBot, TelegamLongPoolingBot
+from src.endpoints.bots.telegram.bot_web_hooks import TelegramBot
 
 from src.endpoints.kazarinov.bot_handlers import BotHandler
 from src.ai.openai import OpenAIModel
@@ -46,7 +46,7 @@ from src.logger.logger import logger
 import argparse
 
 
-class KazarinovTelegramBot(TelegramWebHooksBot, BotHandler):
+class KazarinovTelegramBot(TelegramBot, BotHandler):
     """Telegram bot with custom behavior for Kazarinov."""
 
     token: str
@@ -72,7 +72,7 @@ class KazarinovTelegramBot(TelegramWebHooksBot, BotHandler):
         )
         
         # Call parent initializers
-        TelegramWebHooksBot.__init__(self, 
+        TelegramBot.__init__(self, 
                                      token = self.token, 
                                      port = self.config.telegram.port)
         #self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_log))
@@ -100,16 +100,3 @@ class KazarinovTelegramBot(TelegramWebHooksBot, BotHandler):
         await update.message.reply_text(answer)
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run Kazarinov Telegram Bot with specified mode.")
-    parser.add_argument('-m', '--mode', type=str, default='prod', help="Operating mode: 'test' or 'production'")
-    args = parser.parse_args()
-
-    mode = args.mode
-
-    if gs.host_name == 'Vostro-3888':
-        mode = 'prod'
-        #mode = 'test' # <- comment to prod
-
-    kt = KazarinovTelegramBot(mode)
-    asyncio.run(kt.application.run_polling())

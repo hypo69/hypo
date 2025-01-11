@@ -40,6 +40,7 @@ from src.utils.date_time import TimeoutCheck
 from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import get_image_bytes
+from src.utils.printer import pprint as print
 
 timeout_check = TimeoutCheck()
 
@@ -216,10 +217,10 @@ class GoogleGenerativeAI:
                 return response.text
              else:
                 logger.error("Empty response in chat", None)
-                return
+                return response
         except Exception as ex:
             logger.error(f"Ошибка чата {response=}", ex)
-            return
+            return ex
         finally:
             await self._save_chat_history()
         
