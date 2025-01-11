@@ -100,6 +100,7 @@ class MexironBuilder:
             self.export_path = storage / 'kazarinov' / 'mexironim' / self.mexiron_name
         except Exception as ex:
             logger.error(f"Error constructing export path:",ex)
+            ...
             return
 
 

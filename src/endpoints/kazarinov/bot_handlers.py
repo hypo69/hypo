@@ -53,7 +53,7 @@ class BotHandler:
 
     mexiron: MexironBuilder
 
-    def __init__(self, webdriver_name: str ):
+    def __init__(self):
         """
         Инициализация обработчика событий телеграм-бота.
 
@@ -62,6 +62,26 @@ class BotHandler:
         """
 
         self.mexiron = MexironBuilder()
+
+    async def handle_message(self, update: Update, context: CallbackContext) -> None:
+        """Handle text messages with URL-based routing."""
+        q = update.message.text
+        if q == '?':
+            await update.message.reply_photo(gs.path.endpoints / 'kazarinov' / 'assets' / 'user_flowchart.png' )
+            return
+        user_id = update.effective_user.id
+        if is_url(q):
+            await self.bot_handler.handle_url(update, context)
+            # <- add logic after url scenario ended
+            ...
+            return # <-
+
+
+        if q in ('--next', '-next', '__next', '-n', '-q'):
+            return await self.bot_handler.handle_next_command(update)
+
+        answer = self.model.chat(q)
+        await update.message.reply_text(answer)
 
     async def handle_url(self, update: Update, context: CallbackContext) -> Any:
         """

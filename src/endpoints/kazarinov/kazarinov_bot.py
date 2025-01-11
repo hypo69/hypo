@@ -1,15 +1,13 @@
-
-## \file /src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
 
 #! venv/bin/python/python3.12
 """
 Telegram-бот для проекта Kazarinov
 ====================================================
-Бот взаимодействует 
+Бот взаимодействует
 с парсером Mexiron и моделью Google Generative AI, поддерживает обработку текстовых сообщений, документов и URL.
 
-.. module:: src.endpoints.kazarinov.kazarinov_bot 
+.. module:: src.endpoints.kazarinov.kazarinov_bot
 	:platform: Windows, Unix
 	:synopsis: KazarinovTelegramBot
 
@@ -22,39 +20,29 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 import header
-"""
-.. header.py:
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
-```
-"""    
 import header
 from src import gs
 from src.endpoints.bots.telegram.bot_web_hooks import TelegramBot
-
 from src.endpoints.kazarinov.bot_handlers import BotHandler
-from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
-from src.utils.file import recursively_read_text_files, save_text_file
 from src.utils.url import is_url
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
+from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
+import os
+from src.fast_api.fast_api import FastApiServer as FastApi
 
-import argparse
 
-
-class KazarinovTelegramBot(TelegramBot, BotHandler):
+class KazarinovTelegramBot(TelegramBot):
     """Telegram bot with custom behavior for Kazarinov."""
 
-    token: str
-    config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
-    model:GoogleGenerativeAI = GoogleGenerativeAI(api_key = gs.credentials.gemini.kazarinov, generation_config = {"response_mime_type": "text/plain"})
+    config: SimpleNamespace = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
+    model: GoogleGenerativeAI = GoogleGenerativeAI(
+        api_key=gs.credentials.gemini.kazarinov,
+        generation_config={"response_mime_type": "text/plain"}
+    )
     """Эта модель используется для диалога с пользователем. Для обработки сценариев используется модель, определяемая в классе `BotHandler`"""
 
-    def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
+    def __init__(self, mode: Optional[str] = None,  webdriver_name: Optional[str] = 'firefox', fast_api = None):
         """
         Initialize the KazarinovTelegramBot instance.
 
@@ -63,40 +51,43 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
             webdriver_name (Optional[str]): Webdriver to use with BotHandler. Defaults to 'firefox'.
         """
         # Set the mode
-        mode = mode or self.config.mode
+        mode = 'prod'
         # Initialize the token based on mode
-        self.token = (
+        token = (
             gs.credentials.telegram.hypo69_test_bot
             if mode == 'test'
             else gs.credentials.telegram.hypo69_kazarinov_bot
         )
-        
+
+        # Initialize the BotHandler
+        bot_handler = BotHandler()
+
         # Call parent initializers
-        TelegramBot.__init__(self, 
-                                     token = self.token, 
-                                     port = self.config.telegram.port)
-        #self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_log))
-        BotHandler.__init__(self, getattr(self.config , 'webdriver_name' ,'firefox') )
+        super().__init__(token=token, 
+                         port = self.config.telegram.port,
+                         bot_handler=bot_handler,
+                         fast_api=fast_api)
 
 
-    async def handle_message(self, update: Update, context: CallbackContext) -> None:
-        """Handle text messages with URL-based routing."""
-        q = update.message.text
-        if q == '?':
-            await update.message.reply_photo(gs.path.endpoints / 'kazarinov' / 'assets' / 'user_flowchart.png' )
-            return
-        user_id = update.effective_user.id
-        if is_url(q):
-            await self.handle_url(update, context)
-            # <- add logic after url scenario ended
-            ...
-            return # <- 
 
 
-        if q in ('--next', '-next', '__next', '-n', '-q'):
-            return await self.handle_next_command(update)
+async def main():
+    """Main function to run the bot."""
+    fast_api = FastApi(title="Kazarinov Bot API")
+    bot = KazarinovTelegramBot(fast_api = fast_api)
+    config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
+    try:
+         await bot.fast_api.start()
 
-        answer = self.model.chat(q)
-        await update.message.reply_text(answer)
+    finally:
+        if bot:
+            try:
+                await bot.application.stop()
+                await bot.application.bot.delete_webhook()
+                logger.info("Bot stopped.")
+            except Exception as ex:
+                logger.error(f'Error deleting webhook:', ex, False)
 
 
+if __name__ == "__main__":
+    asyncio.run(main())
