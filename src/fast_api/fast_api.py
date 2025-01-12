@@ -1,10 +1,16 @@
-from fastapi import FastAPI, APIRouter
-import uvicorn
-from typing import List, Callable, Dict, Any
-import functools
 import asyncio
-import header
+import functools
+import json
+import os
+from typing import List, Callable, Dict, Any
+
+import typer
+import uvicorn
+from fastapi import FastAPI, APIRouter
+
 from src.utils.jjson import j_dumps
+
+app = typer.Typer()
 
 
 class Singleton(type):
@@ -27,19 +33,18 @@ class FastApiServer(FastAPI, metaclass=Singleton):
         self.server_tasks = {}  # Словарь для хранения задач (port: task)
         self.servers = {}  # Словарь для хранения серверов (port: server)
 
-
     def add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
         """Добавляет маршрут к FastAPI приложению."""
+
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
             return await func(*args, **kwargs)
-        self.router.add_api_route(path, wrapper, methods=methods, **kwargs)
 
+        self.router.add_api_route(path, wrapper, methods=methods, **kwargs)
 
     def register_router(self):
         """Регистрирует роутер"""
         self.include_router(self.router)
-
 
     async def _start_server(self, port: int):
         config = uvicorn.Config(self, host=self.host, port=port, log_level="info")
@@ -56,7 +61,6 @@ class FastApiServer(FastAPI, metaclass=Singleton):
         self.server_tasks[port] = task
         j_dumps(self.server_tasks, 'servers.json')
 
-
     async def stop(self, port: int):
         if port in self.servers and self.servers[port].started:
             await self.servers[port].stop()
@@ -64,46 +68,48 @@ class FastApiServer(FastAPI, metaclass=Singleton):
 
     async def stop_all(self):
         for port in list(self.servers.keys()):
-             await self.stop(port)
+            await self.stop(port)
 
     def get_app(self):
-      """Возвращает FastAPI приложение"""
-      return self
-
+        """Возвращает FastAPI приложение"""
+        return self
 
 
 async def test_function():
-   return "It is working!!!"
+    return "It is working!!!"
+
 
 async def test_post(data: Dict[str, str]):
-   return {"result": "post ok", "data": data}
+    return {"result": "post ok", "data": data}
 
 
-async def main():
-    api = FastApiServer(title="My API", host="0.0.0.0")
+@app.command()
+def start_server(
+        port: int = typer.Option(8000, help="Port to run the server on"),
+        host: str = typer.Option("0.0.0.0", help="Host address for server"),
+):
+    """Starts the FastAPI server on the specified port."""
+    api = FastApiServer(title="My API", host=host)
     api.add_route("/hello", test_function)
     api.add_route("/post", test_post, methods=["POST"])
     api.register_router()
 
-    # Запускаем на порту 8080
-    print('start api on port 8080')
-    await api.start(port=8080)
+    asyncio.run(api.start(port=port))
 
-    # some work
-    await asyncio.sleep(2)
-    # Добавляем порт 8081 на лету
-    print('start api on port 8081')
-    await api.start(port=8081)
 
-    await asyncio.sleep(2)
-    # stop port 8080
-    print('stop api on port 8080')
-    await api.stop(port=8080)
+@app.command()
+def stop_server(
+    port: int = typer.Option(8000, help="Port of the server to stop"),
+):
+    """Stops the FastAPI server on the specified port."""
+    api = FastApiServer()  # Get the singleton instance
+    asyncio.run(api.stop(port=port))
 
-    await asyncio.sleep(2)
-    print('stop all servers')
-    await api.stop_all()
-
+@app.command()
+def stop_all_servers():
+    """Stops all running FastAPI servers."""
+    api = FastApiServer()
+    asyncio.run(api.stop_all())
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    app()
