@@ -8,7 +8,9 @@ import typer
 import uvicorn
 from fastapi import FastAPI, APIRouter
 
+import header
 from src.utils.jjson import j_dumps
+from src.utils.printer import pprint as print
 from src.logger import logger
 
 app = typer.Typer()
@@ -107,6 +109,7 @@ def start(
         logger.error(f"Error starting server on port {port}: {e}")
     else:
       print("Server already initialized. Use other commands to manage it.")
+
 @app.command()
 def stop(
     port: int = typer.Option(8000, help="Port of the server to stop"),

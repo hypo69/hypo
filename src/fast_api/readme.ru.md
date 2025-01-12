@@ -1,220 +1,241 @@
+# FastAPI Server Manager
 
-# FastApi: Синглтон для FastAPI с динамическим управлением портами
-Класс `FastApi` позволяет динамически управлять портами и ресурсами вашего приложения.
-позволяя запускать и управлять FastAPI-сервером, а также динамически добавлять и останавливать порты 
-во время работы приложения.
+Этот проект предоставляет инструменты для управления FastAPI серверами, включая:
 
-## Основные возможности
+- Интерактивный CLI инструмент на Python для управления серверами.
+- Интерактивный PowerShell скрипт для управления серверами.
 
-*   **Синглтон:** Обеспечивает единственный экземпляр FastAPI-приложения в вашем приложении.
-*   **Динамическое управление портами:** Позволяет запускать сервер на нескольких портах, а также добавлять и останавливать порты во время выполнения программы.
-*   **Явный старт и остановка:**  Предоставляет методы `start()` и `stop()` для управления сервером на каждом порту.
-*   **Многопоточность:** Использует `asyncio` для асинхронного запуска серверов.
+## Особенности
+
+-   **Singleton Pattern:** Обеспечивает наличие только одного экземпляра FastAPI сервера, управляемого через CLI.
+-   **Интерактивное управление:** Запуск сервера один раз, последующее управление его состоянием (запуск, остановка, просмотр статуса) через команды.
+-   **Настраиваемые опции:** Возможность указания порта и хоста для запуска серверов.
+-   **Асинхронное управление:** Использует `asyncio` для асинхронного запуска и остановки серверов (в Python CLI).
+-   **Отслеживание статуса:** Возможность просмотра состояния сервера и всех запущенных на нем портов.
+-   **Предотвращение Коллизий:** Использует мьютекс (в PowerShell скрипте) для обеспечения того, что только один экземпляр скрипта может быть запущен одновременно.
+-   **Интерактивное Меню:** Удобный интерфейс командной строки через PowerShell.
+-   **Проверка Портов:** Проверка доступности портов перед запуском серверов (в PowerShell скрипте).
+-   **Обработка ошибок:** Запись ошибок при выполнении скриптов.
+
+## Требования
+
+-   Python 3.7+
+-   Windows (для PowerShell скрипта)
+-   PowerShell 5.1 или выше (для PowerShell скрипта)
+-   Установленные зависимости (для Python CLI):
+    -   `typer`
+    -   `uvicorn`
+    -   `fastapi`
+    -   `pydantic`
+    -   `loguru` (или аналогичный модуль для логгирования)
+
+## Установка
+
+1.  Клонируйте репозиторий (если применимо) или скопируйте файлы.
+2.  **Для Python CLI (main.py):**
+     *   Рекомендуется создать виртуальное окружение.
+     *   Установите необходимые зависимости, например, через: `pip install -r requirements.txt`, либо вручную (если `requirements.txt` отсутствует) `pip install typer uvicorn fastapi pydantic loguru`.
+3.  **Для PowerShell скрипта (server_manager.ps1):**
+   *  Убедитесь, что `python.exe` установлен и доступен через переменную окружения `PATH`.
 
 ## Использование
 
-### Установка
+### Python CLI
 
-Для использования класса `FastApi` вам необходимо установить FastAPI и Uvicorn:
+1.  Убедитесь, что файл `main.py` (Python CLI) находится в вашей рабочей директории.
+2.  Запустите CLI, используя Python:
 
-```bash
-pip install fastapi uvicorn
-```
-
-### Создание экземпляра
-
-Создайте экземпляр класса `FastApi`:
-
-```python
-from fastapi import FastAPI as Fapi, APIRouter
-import uvicorn
-from typing import List, Callable, Dict, Any
-import functools
-import threading
-import asyncio
-
-
-class FastApi(Fapi):
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls, *args, **kwargs)
-            cls._instance._initialized = False
-            cls._instance.server_tasks = {}  # Словарь для хранения задач (port: task)
-            cls._instance.servers = {}  # Словарь для хранения серверов (port: server)
-        return cls._instance
-
-    def __init__(self, title: str = "FastAPI Singleton Server", host: str = "127.0.0.1", **kwargs):
-        if self._initialized:
-            return
-        super().__init__(title=title, **kwargs)
-        self.router = APIRouter()
-        self.host = host
-        self._initialized = True
-
-
-    def add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
-        """Добавляет маршрут к FastAPI приложению."""
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-        self.router.add_api_route(path, wrapper, methods=methods, **kwargs)
-
-
-    def register_router(self):
-        """Регистрирует роутер"""
-        self.include_router(self.router)
-
-
-    async def _start_server(self, port: int):
-        config = uvicorn.Config(self, host=self.host, port=port, log_level="info")
-        server = uvicorn.Server(config)
-        self.servers[port] = server
-        await server.serve()
-
-    def start(self, port: int):
-        """Запускает FastAPI сервер на указанном порту."""
-        if port in self.server_tasks and not self.server_tasks[port].done():
-            print(f"Server already running on port {port}")
-            return
-        task = asyncio.create_task(self._start_server(port))
-        self.server_tasks[port] = task
-
-
-    async def stop(self, port: int):
-        if port in self.servers and self.servers[port].started:
-            await self.servers[port].stop()
-
-    async def stop_all(self):
-        for port in list(self.servers.keys()):
-             await self.stop(port)
-
-    def get_app(self):
-      """Возвращает FastAPI приложение"""
-      return self
-```
-
-```python
-from fastapi import FastAPI
-# пример использования
-import asyncio
-
-
-async def test_function():
-   return "It is working!!!"
-
-def test_post(data: Dict[str, str]):
-   return {"result": "post ok", "data": data}
-
-
-async def main():
-    api = FastApi(title="My API", host="0.0.0.0")
-    api.add_route("/hello", test_function)
-    api.add_route("/post", test_post, methods=["POST"])
-    api.register_router()
-
-    # Запускаем на порту 8080
-    print('start api on port 8080')
-    api.start(port=8080)
-
-    # some work
-    await asyncio.sleep(2)
-    # Добавляем порт 8081 на лету
-    print('start api on port 8081')
-    api.start(port=8081)
-
-    await asyncio.sleep(2)
-    # stop port 8080
-    print('stop api on port 8080')
-    await api.stop(port=8080)
-
-    await asyncio.sleep(2)
-    print('stop all servers')
-    await api.stop_all()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-### Добавление маршрутов
-
-Используйте метод `add_route()` для добавления маршрутов к вашему приложению:
-
-```python
-api.add_route("/hello", test_function)
-api.add_route("/post", test_post, methods=["POST"])
-```
-`path`: путь маршрута
-`func`: функция обработчик
-`methods`: список методов
-`kwargs`: дополнительные аргументы
-
-### Регистрация роутера
-
-Не забудьте зарегистрировать роутер с помощью метода `register_router()`:
-
-```python
-api.register_router()
-```
-
-### Запуск сервера на порту
-
-Используйте метод `start()` для запуска сервера на определенном порту:
-
-```python
-api.start(port=8080)
-```
-`port`: порт для запуска
-
-### Динамическое добавление портов
-
-Вы можете добавить новые порты для прослушивания в любое время, вызвав `start()` с новым портом:
-
-```python
-api.start(port=8081)
-```
-
-### Остановка сервера на порту
-
-Используйте метод `stop()` для остановки сервера на определенном порту:
-
-```python
-await api.stop(port=8080)
-```
-`port`: порт, который надо остановить
-
-### Остановка всех серверов
-
-Используйте метод `stop_all()` для остановки всех запущенных серверов:
-
-```python
-await api.stop_all()
-```
-
-## Настройки
-
-*   **`title`**: Заголовок вашего FastAPI-приложения. Устанавливается при создании экземпляра класса.
-    ```python
-        api = FastApi(title="My API", host="0.0.0.0")
+    ```bash
+    python main.py <command> [options]
     ```
-*   **`host`**: Хост, на котором будет запущен сервер. Устанавливается при создании экземпляра класса.
-   ```python
-    api = FastApi(title="My API", host="0.0.0.0")
+
+#### Команды
+
+-   **`start`:** Инициализирует и запускает FastAPI сервер.
+    -   `--port`: (Необязательно) Порт для запуска сервера (по умолчанию: 8000).
+    -   `--host`: (Необязательно) Адрес хоста для сервера (по умолчанию: 0.0.0.0).
+
+    Пример:
+
+    ```bash
+    python main.py start --port 8080
+    python main.py start --port 8081 --host 127.0.0.1
     ```
-* **`port`** Порт, на котором будет запущен сервер. Устанавливается в методе start
-    ```python
-       api.start(port=8081)
+
+    *Примечание:* Если сервер уже инициализирован, будет выведено сообщение об этом, повторно инициализировать сервер нельзя.
+-   **`stop`:** Останавливает FastAPI сервер на указанном порту.
+    -   `--port`: (Обязательно) Порт сервера для остановки.
+
+    Пример:
+
+    ```bash
+    python main.py stop --port 8080
     ```
+
+    *Примечание:* Вы не можете остановить сервер, если он не был запущен.
+-   **`stop-all`:** Останавливает все запущенные FastAPI серверы.
+
+    Пример:
+
+    ```bash
+    python main.py stop-all
+    ```
+
+    *Примечание:* Вы не можете остановить сервер, если он не был запущен.
+-   **`status`:** Выводит состояние сервера и всех запущенных на нем портов.
+
+    Пример:
+
+    ```bash
+    python main.py status
+    ```
+
+    *Примечание:* Выведет информацию о сервере только если он был запущен.
+-   **`--help`:** Выводит справку по командам.
+
+    Пример:
+
+    ```bash
+    python main.py --help
+    python main.py start --help
+    ```
+
+#### Пример Использования Python CLI
+
+1.  **Запуск сервера:** Запустите сервер на порту 8000:
+
+    ```bash
+    python main.py start --port 8000
+    ```
+
+2.  **Просмотр статуса:** Вы можете просмотреть статус сервера и запущенные на нем порты:
+
+    ```bash
+    python main.py status
+    ```
+
+3.  **Попытка повторного запуска:** Попытайтесь запустить сервер на другом порту (например, 8081):
+
+    ```bash
+    python main.py start --port 8081
+    ```
+    В консоль будет выведено сообщение, о том, что сервер уже запущен.
+
+4.  **Остановка сервера на порту 8000:** Остановите сервер на порту 8000:
+
+    ```bash
+    python main.py stop --port 8000
+    ```
+
+5.  **Просмотр статуса после остановки:** Вы можете просмотреть статус сервера:
+
+    ```bash
+    python main.py status
+    ```
+
+    На экране появится сообщение о том, что сервер не запущен на порту 8000.
+6.  **Остановка всех серверов:**
+
+    ```bash
+    python main.py stop-all
+    ```
+
+7.  **Просмотр статуса после остановки всех серверов:**
+
+    ```bash
+    python main.py status
+    ```
+
+    В консоле будет сообщение, что сервер не был инициализирован.
+
+### PowerShell Script
+
+1.  Убедитесь, что файл `server_manager.ps1` (PowerShell Script) и `main.py` (Python CLI) находятся в одной директории или укажите правильный путь к `main.py` в переменной `$pythonScriptPath`.
+2.  Запустите PowerShell от имени администратора.
+3.  Перейдите в каталог, где находится файл `server_manager.ps1`.
+4.  Выполните скрипт:
+
+    ```powershell
+    .\server_manager.ps1
+    ```
+
+#### Меню
+
+После запуска скрипта вы увидите меню:
+
 ```
-## Примеры
+FastAPI Server Manager
+----------------------
+1. Start Server
+2. Stop Server
+3. Stop All Servers
+4. Get Server Status
+5. Exit
+```
 
-Примеры использования можно найти в коде выше.
+Выберите опцию, введя соответствующую цифру (1-5) и нажмите Enter.
 
-**Как использовать этот файл:**
+#### Команды Меню
 
-1.  Создайте файл с именем `readme.ru.md` в том же каталоге, где находится ваш код.
-2.  Скопируйте и вставьте этот текст в файл `readme.ru.md`.
+-   **`1. Start Server`:**
+    -   Запрашивает порт (по умолчанию: 8000).
+    -   Запрашивает хост (по умолчанию: 0.0.0.0).
+        - Можно пропустить ввод хоста или порта, тогда будут использованы дефолтные значения.
+    -   Проверяет, не занят ли порт.
+    -   Вызывает Python CLI `main.py` для запуска сервера FastAPI.
 
-Теперь у вас есть подробный файл `README` на русском языке, который поможет пользователям разобраться с вашим классом `FastApi`.
+-   **`2. Stop Server`:**
+    -   Запрашивает порт сервера для остановки.
+    -    Вызывает Python CLI `main.py` для остановки FastAPI сервера на указанном порту.
+
+-   **`3. Stop All Servers`:**
+    -    Вызывает Python CLI `main.py` для остановки всех запущенных FastAPI серверов.
+
+-   **`4. Get Server Status`:**
+     - Вызывает Python CLI `main.py` для вывода статуса всех запущенных FastAPI серверов.
+
+-   **`5. Exit`:**
+    -   Завершает работу скрипта.
+
+#### Пример Использования PowerShell Script
+
+1.  **Запуск сервера:**
+    -   Выберите `1`.
+    -   Введите порт, например `8080` (или оставьте поле пустым для порта по умолчанию `8000`).
+    -   Введите хост, например `127.0.0.1` (или оставьте поле пустым для хоста по умолчанию `0.0.0.0`).
+2.  **Остановка сервера:**
+    -   Выберите `2`.
+    -   Введите порт, например `8080`.
+3.  **Остановка всех серверов**
+    -   Выберите `3`.
+4.  **Просмотр статуса:**
+    -   Выберите `4`.
+5.  **Выход**
+    -   Выберите `5`.
+
+#### Защита от одновременного запуска PowerShell Script
+Скрипт использует мьютекс для гарантии, что только один экземпляр скрипта может быть запущен в любой момент времени. Если вы попытаетесь запустить второй экземпляр, он завершится с ошибкой.
+
+## Архитектура
+
+-   `FastApiServer`: Класс Singleton, представляющий собой FastAPI приложение, и управляющий запуском серверов (в `main.py`).
+-   `main.py`: Содержит CLI команды и логику интерактивного управления сервером на Python.
+-   `server_manager.ps1`: Скрипт PowerShell, предоставляющий интерактивный интерфейс для управления FastAPI сервером через CLI Python.
+-   `typer`: Библиотека, используемая для создания интерфейса командной строки (в `main.py`).
+-   `uvicorn`: ASGI веб-сервер для запуска FastAPI приложения (в `main.py`).
+-   `Test-NetConnection`: Командлет PowerShell для проверки портов (в `server_manager.ps1`).
+-   `System.Threading.Mutex`: .NET класс для реализации мьютекса (в `server_manager.ps1`).
+-   `python.exe`: Вызывает Python для запуска команд CLI в `main.py` (в `server_manager.ps1`).
+
+## Зависимости
+
+-   `python.exe`: Должен быть установлен в системе и доступен через переменную окружения `PATH` (для PowerShell).
+-   `fastapi`: веб-фреймворк для создания API (в Python).
+-   `typer`: библиотека для создания интерфейсов командной строки (в Python).
+-   `uvicorn`: ASGI веб-сервер (в Python).
+-   `pydantic`: библиотека для валидации типов (в Python).
+-   `loguru`: библиотека для логгирования (в Python).
+
+## Лицензия
+
+[LICENCE]

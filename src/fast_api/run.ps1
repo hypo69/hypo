@@ -1,5 +1,20 @@
 # Путь к файлу Python скрипта
-$pythonScriptPath = ".\main.py"
+$pythonScriptPath = ".\src\fast_api\main.py" # <--- Обновлен путь
+
+# Уникальное имя мьютекса (используйте что-то специфичное для вашего приложения)
+$mutexName = "Global\FastAPIServerManagerMutex"
+
+# Создаем мьютекс
+$mutex = New-Object System.Threading.Mutex($False, $mutexName)
+
+# Пытаемся получить мьютекс
+$acquiredMutex = $mutex.WaitOne(0, $False)
+
+if (!$acquiredMutex) {
+    Write-Error "Another instance of this script is already running."
+    $mutex.Close()
+    exit
+}
 
 # Функция для запуска сервера
 function Start-FastAPIServer {
@@ -10,7 +25,7 @@ function Start-FastAPIServer {
 
     Write-Host "Starting FastAPI server on port $Port and host $Host..."
     try {
-        python $pythonScriptPath start --port $Port --host $Host
+        python $pythonScriptPath --command start --port $Port --host $Host # <--- Изменен вызов
         Write-Host "Server started successfully."
     } catch {
         Write-Error "Failed to start server: $($_.Exception.Message)"
@@ -25,7 +40,7 @@ function Stop-FastAPIServer {
 
     Write-Host "Stopping FastAPI server on port $Port..."
     try {
-        python $pythonScriptPath stop --port $Port
+        python $pythonScriptPath --command stop --port $Port # <--- Изменен вызов
         Write-Host "Server stopped successfully."
     } catch {
         Write-Error "Failed to stop server: $($_.Exception.Message)"
@@ -36,7 +51,7 @@ function Stop-FastAPIServer {
 function Stop-AllFastAPIServers {
     Write-Host "Stopping all FastAPI servers..."
     try {
-       python $pythonScriptPath stop-all
+       python $pythonScriptPath --command stop_all # <--- Изменен вызов
         Write-Host "All servers stopped successfully."
     } catch {
         Write-Error "Failed to stop all servers: $($_.Exception.Message)"
@@ -46,7 +61,7 @@ function Stop-AllFastAPIServers {
 function Get-FastAPIServerStatus {
     Write-Host "Getting FastAPI server status..."
     try {
-       python $pythonScriptPath status
+       python $pythonScriptPath --command status # <--- Изменен вызов
     } catch {
         Write-Error "Failed to get server status: $($_.Exception.Message)"
     }
@@ -124,3 +139,6 @@ while ($true) {
 
     Write-Host ""
 }
+# Закрываем мьютекс, когда скрипт завершается
+$mutex.ReleaseMutex()
+$mutex.Close()

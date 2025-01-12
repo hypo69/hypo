@@ -1,6 +1,5 @@
 ## \file /src/endpoints/kazarinov/header.py
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
 
 """
