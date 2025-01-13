@@ -64,6 +64,15 @@ class MexironBuilder:
         export_path (Path): Путь для экспорта данных.
         products_list (List[dict]): Список обработанных данных о продуктах.
     """
+    ENDPOINT = 'kazarinov'
+    base_path:Path = gs.path.endpoints / ENDPOINT
+
+    try:
+        config: SimpleNamespace = j_loads_ns(base_path / f'{ENDPOINT}.json')
+    except Exception as ex:
+        logger.error(f"Error loading configuration",ex)
+        
+        
 
     driver: Playwrid = Playwrid()
     export_path: Path
@@ -72,8 +81,8 @@ class MexironBuilder:
     timestamp: str
     products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
-    config: SimpleNamespace
-    translations: 'SimpleNamespace' =  j_loads_ns(gs.path.endpoints / 'kazarinov' / 'translations' / 'mexiron.json')
+    
+    translations: 'SimpleNamespace' =  j_loads_ns(base_path / 'translations' / 'mexiron.json')
     # telegram
     update: Update 
     context: CallbackContext
@@ -86,11 +95,7 @@ class MexironBuilder:
             driver (Driver): Selenium WebDriver instance.
             mexiron_name (Optional[str]): Custom name for the Mexiron process.
         """
-        try:
-            self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
-        except Exception as e:
-            logger.error(f"Error loading configuration: {e}")
-            return  # or raise an exception, depending on your error handling strategy
+
 
         self.timestamp = gs.now
         self.mexiron_name = mexiron_name or self.timestamp

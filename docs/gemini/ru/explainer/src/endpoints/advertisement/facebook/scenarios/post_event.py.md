@@ -126,7 +126,7 @@ flowchart TD
 -   `from selenium.webdriver.remote.webelement import WebElement`: Импортирует `WebElement` для взаимодействия с веб-элементами через Selenium, но в коде напрямую не используется.
 -   `from src import gs`: Импортирует модуль `gs` из пакета `src`. Модуль содержит глобальные настройки проекта, например, пути к директориям.
 -   `from src.webdriver.driver import Driver`: Импортирует класс `Driver` из модуля `src.webdriver.driver`. Этот класс используется для управления браузером и взаимодействия с веб-страницей.
--   `from src.utils.jjson import j_loads_ns, pprint`: Импортирует функции `j_loads_ns` для загрузки JSON данных в виде `SimpleNamespace` и `pprint` для печати данных в удобном формате (не используется в коде, но может быть полезна для отладки).
+-   `from src.utils.jjson import j_loads_ns`: Импортирует функции `j_loads_ns` для загрузки JSON данных в виде `SimpleNamespace` и `pprint` для печати данных в удобном формате (не используется в коде, но может быть полезна для отладки).
 -   `from src.logger.logger import logger`: Импортирует объект `logger` для записи событий и ошибок.
 
 #### Классы:

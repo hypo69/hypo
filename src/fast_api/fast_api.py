@@ -9,6 +9,7 @@ import uvicorn
 from fastapi import FastAPI, APIRouter
 
 import header
+from header import __root__
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.printer import pprint as print
@@ -16,15 +17,16 @@ from src.logger import logger
 from pathlib import Path
 
 
-api_instance = None  # Глобальная переменная для хранения экземпляра FastApiServer
-
 try:
     config:SimpleNamespace = j_loads_ns (gs.path.src / 'fast_api' / 'fast_api.json')
     config.ports:list = config.ports if isinstance(config.ports, list) else [config.ports]
 
 except Exception as ex:
-    logger.critical(f"Config file nort found!")
+    logger.critical(f"Config file not found!")
     sys.exit()
+
+
+api_instance = None  # Глобальная переменная для хранения экземпляра FastApiServer
 
 
 class Singleton(type):
@@ -47,6 +49,9 @@ class FastApiServer(FastAPI, metaclass=Singleton):
         self.host = host or config.host
         self.server_tasks = {}  # Словарь для хранения задач (port: task)
         self.servers = {}  # Словарь для хранения серверов (port: server)
+        self.add_route("/hello", test_function)
+        self.add_route("/post", test_post, methods=["POST"])
+        # self.register_router()
 
     def add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
         """Добавляет маршрут к FastAPI приложению."""
@@ -61,7 +66,7 @@ class FastApiServer(FastAPI, metaclass=Singleton):
         """Регистрирует роутер"""
         if self.router.routes:
             print(self.router)
-            self.include_router(self.router)
+            #self.include_router( self.router)
 
     def _start_server(self, port: int):
         config = uvicorn.Config(self, host=self.host, port=port, log_level="info")
@@ -82,7 +87,6 @@ class FastApiServer(FastAPI, metaclass=Singleton):
          if port in self.servers and self.servers[port].started:
             try:
                 self.servers[port].stop()
-                #j_dumps(self.server_tasks, 'servers.json') #Убрано сохранение
             except Exception as e:
                 logger.error(f"Error stopping server on port {port}: {e}")
          else:
@@ -118,9 +122,6 @@ def start(port: int, host: str):
     if api_instance is None:
       try:
         api_instance = FastApiServer(title="My API", host=host)
-        api_instance.add_route("/hello", test_function)
-        api_instance.add_route("/post", test_post, methods=["POST"])
-        #api_instance.register_router()
         api_instance.start(port=port)
       except Exception as e:
         logger.error(f"Error starting server on port {port}: {e}")
@@ -181,23 +182,22 @@ def parse_port_range(range_str):
     else:
         return [int(range_str)]
 
-def get_ports_from_config(config):
-    """Извлекает список портов из конфигурации."""
-    ports = []
-    for range_str in config.ports:
-        ports.extend(parse_port_range(range_str))
-    return ports
 
 def main():
     """Основная функция запуска."""
     host = config.host
-    ports = get_ports_from_config(config)
+    ports = []
+    for range_str in config.ports:
+        ports.extend(parse_port_range(range_str))
+    
 
     if not ports:
         print("No ports specified in config file.")
         return
 
+
     for port in ports:
+        print(f'Starting {port=}')
         start(port=port, host=host)
 
     while True:

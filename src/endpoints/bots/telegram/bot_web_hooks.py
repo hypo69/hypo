@@ -1,12 +1,12 @@
 from pathlib import Path
 import asyncio
 import json
-import socket
 import os
+import sys
 from types import SimpleNamespace
-from typing import Optional
+from typing import Optional, List, Union
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, BaseHandler
 from fastapi import Request, Response
 
 import header
@@ -14,41 +14,54 @@ from src import gs
 from src.fast_api.fast_api import FastApiServer as FastApi  # Explicit import of custom FastApi
 from src.endpoints.bots.telegram.bot_handlers import BotHandler
 from src.logger.logger import logger
-from src.utils.get_free_port import get_free_port
-from uvicorn import Config, Server
 
 from src.utils.jjson import j_loads_ns
 
 
-class TelegramBot:
-    """Telegram bot interface class."""
+class TelegramBot():
+    """Telegram bot interface class, now a Singleton."""
+
+    ENDPOINT = 'bots/telegram'
+    base_path: Path = gs.path.endpoints / ENDPOINT
+    config: SimpleNamespace = j_loads_ns(base_path / 'telegram.json')
+    if not config:
+        logger.error(f"Файл конфигурации не найден! {base_path=}")
+        raise FileNotFoundError(f"Конфигурационный файл не найден: {base_path}")
 
     application: Application
-    webhook_url: str
+    webhook_url: str = config.webhook
     bot_handler: BotHandler
-    config: SimpleNamespace
+
     fast_api: FastApi
+    fast_api_task: asyncio.Task
 
     def __init__(self,
                  token: str,
-                 port:int,
-                 webhook_url: Optional[str] = None,
-                 bot_handler: Optional[BotHandler] = None):
-        """Initialize the Telegram bot."""
-        self.config = j_loads_ns(gs.path.endpoints / 'bots' / 'telegram' / 'telegram.json')
+                 port: int,
+                 route:str = None
+                 ):
+        
+   
+        self.fast_api = FastApi(title="Telegram Bot API", )
+        try:
+            self.fast_api.start(port=int(port))
+        except Exception as ex:
+            logger.error(f"Ошибка FastApiServer",ex)
+            sys.exit()
+
+        if route: 
+            app.add_route(f"/{route}", telegram_webhook, methods=["POST"])
 
         self.application = Application.builder().token(token).build()
-        self.bot_handler = bot_handler if bot_handler else BotHandler()
-        self.webhook_url = webhook_url if webhook_url else '/telegram_webhook'
-        self._register_handlers()
-        
-        #Pass the fast_api instance instead of creating it here.
-        self.fast_api = FastApi(title="Telegram Bot API",)
-        asyncio.create_task(self.fast_api.run(port = self.config.port))
+
+        self._register_default_handlers(BotHandler())
+        asyncio.run(self.initialize_bot()) #Запускаем корутину инициализации
+       
 
 
-    def _register_handlers(self):
-        """Register bot commands and message handlers."""
+    def _register_default_handlers(self, bot_handler:BotHandler):
+        """Register the default handlers using the BotHandler instance."""
+        self.bot_handler = bot_handler #Сохраняем bot_handler переданный в конструктор
         self.application.add_handler(CommandHandler('start', self.bot_handler.start))
         self.application.add_handler(CommandHandler('help', self.bot_handler.help_command))
         self.application.add_handler(CommandHandler('sendpdf', self.bot_handler.send_pdf))
@@ -67,70 +80,62 @@ class TelegramBot:
         await self.bot_handler.handle_message(update, context)
 
 
-# FastAPI App Creation
-app = FastApi(title="Telegram Bot API")
-bot_instance: Optional[TelegramBot] = None
+    async def initialize_bot(self):
+        """Initialize the bot instance."""
+        try:
+            await self.application.bot.set_webhook(
+                url=self.webhook_url
+            )
+            logger.info(f"Bot started with webhook: {self.webhook_url}")
+        except Exception as ex:
+            logger.error('Error setting webhook:', ex) # Исправили вывод ошибки
+        if not self.webhook_url:
+          asyncio.create_task(self.application.start_polling())
 
 
 async def telegram_webhook(request: Request):
     """Handle incoming webhook requests."""
-    if not bot_instance:
-        logger.error("Bot not initialized.")
-        return Response(status_code=500, content="Bot not initialized.")
-
+    bot_instance = TelegramBot()
     try:
         data = await request.json()
         async with bot_instance.application:
-            await bot_instance.application.process_update(
-                Update.de_json(data, bot_instance.application.bot)
-            )
+            update = Update.de_json(data, bot_instance.application.bot)
+            await bot_instance.application.process_update(update)
         return Response(status_code=200)
+    except json.JSONDecodeError as e:
+        logger.error(f'Error decoding JSON: {e}')
+        return Response(status_code=400, content=f'Invalid JSON: {e}')
     except Exception as e:
-        logger.error(f'Error processing webhook: {e}')
+        logger.error(f'Error processing webhook: {type(e)} - {e}')
         return Response(status_code=500, content=f'Error processing webhook: {e}')
 
 
-async def initialize_bot(token: str):
-    """Initialize the bot instance."""
-    global bot_instance
-    if not bot_instance:
-        bot_instance = TelegramBot(token)  # Passing app to the constructor
-        try:
-            await bot_instance.application.bot.set_webhook(
-                url=bot_instance.webhook_url
-            )
-            logger.info(f"Bot started with webhook: {bot_instance.webhook_url}")
-        except Exception as ex:
-            logger.error(f'Error setting webhook: {ex}')
-        
-        if not bot_instance.webhook_url:
-            asyncio.create_task(bot_instance.application.start_polling()) #Start polling if webhook is not set
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Startup event handler."""
-    token = os.getenv('TELEGRAM_BOT_TOKEN')
-    await initialize_bot(token)
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Shutdown event handler."""
+async def stop_bot(bot_instance: TelegramBot):
     if bot_instance:
+        # Cancel the task for the fast api when the program stops
+        if hasattr(bot_instance, 'fast_api_task') and bot_instance.fast_api_task:
+            bot_instance.fast_api_task.cancel()
+            try:
+                await bot_instance.fast_api_task  # Wait until the fast api closes
+            except asyncio.CancelledError:
+                pass
         try:
             await bot_instance.application.bot.delete_webhook()
             logger.info("Bot stopped.")
         except Exception as ex:
             logger.error(f'Error deleting webhook: {ex}')
 
+# FastAPI App Creation
+app = FastApi(title="Telegram Bot API")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Shutdown event handler."""
+    bot_instance = TelegramBot()
+    await stop_bot(bot_instance)
+
 
 # Handle Webhook
-app.add_route("/telegram_webhook", telegram_webhook, methods=["POST"])
-
-
-app.register_router()
-
-
+# app.add_route("/kazarinov", telegram_webhook, methods=["POST"]) #Убрали
 if __name__ == "__main__":
     app.run()
