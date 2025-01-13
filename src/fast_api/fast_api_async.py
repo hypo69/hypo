@@ -120,7 +120,7 @@ def start(port: int, host: str):
         api_instance = FastApiServer(title="My API", host=host)
         api_instance.add_route("/hello", test_function)
         api_instance.add_route("/post", test_post, methods=["POST"])
-        #api_instance.register_router()
+        # api_instance.register_router()
         api_instance.start(port=port)
       except Exception as e:
         logger.error(f"Error starting server on port {port}: {e}")

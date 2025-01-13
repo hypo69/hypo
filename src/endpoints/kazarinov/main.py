@@ -16,8 +16,10 @@ import asyncio
 import json
 from pathlib import Path
 from pydantic import BaseModel
+
+import header
 from src.logger.logger import logger
-from .kazarinov_bot import KazarinovTelegramBot
+from src.endpoints.kazarinov.kazarinov_bot import KazarinovTelegramBot
 
 
 def parse_args() -> dict:
