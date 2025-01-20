@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 #! venv/bin/python/python3.12
 """
 Telegram-бот для проекта Kazarinov
@@ -15,7 +14,9 @@ Telegram-бот для проекта Kazarinov
 import asyncio
 import os
 from pathlib import Path
-from telegram.ext import MessageHandler, filters
+from pyrogram import Client, filters, idle
+from pyrogram.types import Message
+from pyrogram.handlers import MessageHandler
 from dotenv import load_dotenv
 
 import header
@@ -25,7 +26,7 @@ from src.endpoints.kazarinov.bot_handlers import BotHandler as KazarinovBotHandl
 from src.ai.gemini import GoogleGenerativeAI
 
 
-class KazarinovTelegramBot(TelegramBot):
+class KazarinovTelegramBot():
     """Telegram bot with custom behavior for Kazarinov."""
 
     def __init__(self):
@@ -36,16 +37,22 @@ class KazarinovTelegramBot(TelegramBot):
             mode (Optional[str]): Operating mode, 'test' or 'production'. Defaults to 'firefox'.
         """
         load_dotenv()
+        # _____________________ model ______________________
         self.model = GoogleGenerativeAI(
             api_key=os.getenv('GEMINI_API'),
             generation_config={"response_mime_type": "text/plain"}
         )
+        # ____________________  route (Fast Api)
         self.route = 'kazarinov'
+
+
         self.token = os.getenv('TELEGRAM_BOT_TOKEN')
         
-        # Call parent initializers
-        super().__init__(route = self.route, token = self.token)
-        
+        bot = Client(
+        name="Kazarinv bot",
+        api_id=os.getenv('TELEGRAM_BOT_TOKEN')
+        )
+
         self._register_custom_handlers()
 
     def _register_custom_handlers(self):
