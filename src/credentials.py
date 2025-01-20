@@ -78,6 +78,7 @@ class ProgramSettings:
     Синглтон, хранящий основные параметры и настройки проекта.
     """
     host_name:str = field(default_factory=lambda: socket.gethostname())
+    
     base_dir: Path = field(default_factory=lambda: set_project_root())
     config: SimpleNamespace = field(default_factory=lambda: SimpleNamespace())
     
@@ -127,7 +128,7 @@ class ProgramSettings:
         facebook=[],
         gapi={}
     ))
-    MODE: str = 'dev'
+
     path: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         root = None,
         src = None,
@@ -142,6 +143,7 @@ class ProgramSettings:
         dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
     ))
 
+    host:str = field(default = '127.0.0.1')
 
     def __post_init__(self):
         """Выполняет инициализацию после создания экземпляра класса."""
@@ -152,7 +154,7 @@ class ProgramSettings:
             sys.exit()
         self.config.timestamp_format = getattr(self.config, 'timestamp_format', '%y_%m_%d_%H_%M_%S_%f')
         self.config.project_name = self.base_dir.name
-        
+        self.host = getattr( self.config,'host', '127.0.0.1')
         self.path = SimpleNamespace(
             root = Path(self.base_dir),
             bin = Path(self.base_dir / 'bin'), # <- тут бинарники (chrome, firefox, ffmpeg, ...)
@@ -171,8 +173,7 @@ class ProgramSettings:
         if check_latest_release(self.config.git_user, self.config.git):
             ...  # Логика что делать когда есть новая версия hypo69 на github 
 
-        self.MODE = self.config.mode
-
+    
         # Paths to bin directories
         gtk_bin_dir = self.path.bin  / 'gtk' / 'gtk-nsis-pack' / 'bin'
         ffmpeg_bin_dir = self.base_dir  / 'bin' / 'ffmpeg' / 'bin'

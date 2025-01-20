@@ -25,8 +25,7 @@
   "telegram": {
     "bot_name": "hypo69_kazarinov_bot",
     "log_path": "bot_logs/<user_id>/<timestamp>.txt",
-    "host": "0.0.0.0",
-    "port": 3001
+    "webhook": "/kazarinov"
   },
   "storage": "external_storage"
 }

@@ -48,7 +48,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 
-class BotHandler:
+class BotHandler():
     """Исполнитель команд, полученных ботом."""
 
     mexiron: MexironBuilder

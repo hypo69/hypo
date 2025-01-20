@@ -1,141 +1,165 @@
+## \file /src/endpoints/bots/telegram/telegram_webhooks.py
+# -*- coding: utf-8 -*-
+#! venv/bin/python/python3.12
+"""
+Телеграм бот через сервер FastAPI через RPC
+====================================================
+
+.. module:: src.endpoints.bots.telegram.telegram_webhooks
+    :platform: Windows, Unix
+    :synopsis: Телеграм бот с сервером FAST API Через RPC
+
+"""
 from pathlib import Path
 import asyncio
 import json
-import os
 import sys
 from types import SimpleNamespace
-from typing import Optional, List, Union
+from typing import Optional
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, BaseHandler
-from fastapi import Request, Response
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+from xmlrpc.client import ServerProxy
+from fastapi import FastAPI, Request, Response
+import socket
+import os
 
 import header
+from header import __root__
 from src import gs
-from src.fast_api.fast_api import FastApiServer as FastApi  # Explicit import of custom FastApi
 from src.endpoints.bots.telegram.bot_handlers import BotHandler
+from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
 from src.utils.jjson import j_loads_ns
 
+app = FastAPI()
 
-class TelegramBot():
+
+class TelegramBot:
     """Telegram bot interface class, now a Singleton."""
 
-    ENDPOINT = 'bots/telegram'
-    base_path: Path = gs.path.endpoints / ENDPOINT
-    config: SimpleNamespace = j_loads_ns(base_path / 'telegram.json')
-    if not config:
-        logger.error(f"Файл конфигурации не найден! {base_path=}")
-        raise FileNotFoundError(f"Конфигурационный файл не найден: {base_path}")
+    def __init__(self, token: str, route: str = 'telegram_webhook'):
+        """
+        Initialize the TelegramBot instance.
 
-    application: Application
-    webhook_url: str = config.webhook
-    bot_handler: BotHandler
+        Args:
+            token (str): Telegram bot token.
+            route (str): Webhook route for FastAPI. Defaults to '/telegram_webhook'.
+        """
+        self.token: str = token
+        self.port: int = 8443
+        self.route: str = route
+        self.config: SimpleNamespace = j_loads_ns(__root__ / 'src/endpoints/bots/telegram/telegram.json')
+        self.application: Application = Application.builder().token(self.token).build()
+        self.bot_handler: BotHandler = BotHandler()
+        self._register_default_handlers()
 
-    fast_api: FastApi
-    fast_api_task: asyncio.Task
-
-    def __init__(self,
-                 token: str,
-                 port: int,
-                 route:str = None
-                 ):
-        
-   
-        self.fast_api = FastApi(title="Telegram Bot API", )
+    def run(self):
+        """Run the bot and initialize RPC and webhook."""
         try:
-            self.fast_api.start(port=int(port))
+            # Initialize RPC client
+            rpc_client = ServerProxy(f"http://{gs.host}:9000", allow_none=True)
+
+            # Start the server via RPC
+            rpc_client.start_server(self.port, gs.host)
+
+            # Register the route via RPC
+            # Динамическое добавление маршрутов
+            # await self.register_route_via_rpc(rpc_client)
+
+            logger.success(f'Server running at http://{gs.host}:{self.port}/hello')
         except Exception as ex:
-            logger.error(f"Ошибка FastApiServer",ex)
+            logger.error(f"Ошибка FastApiServer: {ex}", exc_info=True)
             sys.exit()
 
-        if route: 
-            app.add_route(f"/{route}", telegram_webhook, methods=["POST"])
+        # Initialize the Telegram bot webhook
+        webhook_url = self.initialize_bot_webhook(self.route)
+        # 
+        if webhook_url:
+            try:
+                asyncio.run( self.application.run_webhook( webhook_url=webhook_url, port=self.port))
+                logger.info(f"Application started: {self.application.bot_data}")
+                ...
 
-        self.application = Application.builder().token(token).build()
+            except Exception as ex:
+                logger.error(f"Ошибка установки вебхука")
+                ...
 
-        self._register_default_handlers(BotHandler())
-        asyncio.run(self.initialize_bot()) #Запускаем корутину инициализации
-       
+            ...
+        else:
+            self.application.run_polling()
+            ...
 
 
-    def _register_default_handlers(self, bot_handler:BotHandler):
+    def _register_default_handlers(self):
         """Register the default handlers using the BotHandler instance."""
-        self.bot_handler = bot_handler #Сохраняем bot_handler переданный в конструктор
         self.application.add_handler(CommandHandler('start', self.bot_handler.start))
         self.application.add_handler(CommandHandler('help', self.bot_handler.help_command))
         self.application.add_handler(CommandHandler('sendpdf', self.bot_handler.send_pdf))
-        self.application.add_handler(
-            MessageHandler(filters.TEXT & ~filters.COMMAND, self._handle_message)
-        )
+        self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self._handle_message))
         self.application.add_handler(MessageHandler(filters.VOICE, self.bot_handler.handle_voice))
         self.application.add_handler(MessageHandler(filters.Document.ALL, self.bot_handler.handle_document))
-        self.application.add_handler(
-            MessageHandler(filters.TEXT & ~filters.COMMAND, self.bot_handler.handle_log)
-        )
-
+        self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.bot_handler.handle_log))
 
     async def _handle_message(self, update: Update, context: CallbackContext) -> None:
         """Handle any text message."""
         await self.bot_handler.handle_message(update, context)
 
+    def initialize_bot_webhook(self, route: str):
+        """Initialize the bot webhook."""
+        route = route if route.startswith('/') else f'/{route}'
+        host = gs.host
+        if host in ('127.0.0.1', 'localhost'):
+            from pyngrok import ngrok
+            ngrok.set_auth_token(os.getenv("NGROK_AUTH_TOKEN", ""))
+            http_tunnel = ngrok.connect(self.port)
+            host = http_tunnel.public_url
 
-    async def initialize_bot(self):
-        """Initialize the bot instance."""
+        host = host if host.startswith('http') else f'https://{host}'
+        webhook_url = f'{host}{route}'
+
+        _dev = True
+        if _dev:
+            import requests
+            response = requests.post(f'{webhook_url}')
+            logger.info(response)
+
         try:
-            await self.application.bot.set_webhook(
-                url=self.webhook_url
-            )
-            logger.info(f"Bot started with webhook: {self.webhook_url}")
+            self.application.bot.set_webhook(url=webhook_url)
+            logger.success(f'https://api.telegram.org/bot{self.token}/getWebhookInfo') 
+            return webhook_url
         except Exception as ex:
-            logger.error('Error setting webhook:', ex) # Исправили вывод ошибки
-        if not self.webhook_url:
-          asyncio.create_task(self.application.start_polling())
+            logger.error(f'Error setting webhook: ',ex, exc_info=True)
+            return False
 
-
-async def telegram_webhook(request: Request):
-    """Handle incoming webhook requests."""
-    bot_instance = TelegramBot()
-    try:
-        data = await request.json()
-        async with bot_instance.application:
-            update = Update.de_json(data, bot_instance.application.bot)
-            await bot_instance.application.process_update(update)
-        return Response(status_code=200)
-    except json.JSONDecodeError as e:
-        logger.error(f'Error decoding JSON: {e}')
-        return Response(status_code=400, content=f'Invalid JSON: {e}')
-    except Exception as e:
-        logger.error(f'Error processing webhook: {type(e)} - {e}')
-        return Response(status_code=500, content=f'Error processing webhook: {e}')
-
-
-async def stop_bot(bot_instance: TelegramBot):
-    if bot_instance:
-        # Cancel the task for the fast api when the program stops
-        if hasattr(bot_instance, 'fast_api_task') and bot_instance.fast_api_task:
-            bot_instance.fast_api_task.cancel()
-            try:
-                await bot_instance.fast_api_task  # Wait until the fast api closes
-            except asyncio.CancelledError:
-                pass
+    def register_route_via_rpc(self, rpc_client: ServerProxy):
+        """Register the Telegram webhook route via RPC."""
         try:
-            await bot_instance.application.bot.delete_webhook()
+            # Регистрация маршрута через RPC
+            route = self.route if self.route.startswith('/') else f'/{self.route}'
+            rpc_client.add_new_route(
+                route,
+                self.telegram_webhook, 
+                ['POST']
+            )
+
+            logger.info(f"Route {self.route} registered via RPC.")
+        except Exception as ex:
+            logger.error(f"Failed to register route via RPC:",ex, exc_info=True)
+            ...
+
+    def stop(self):
+        """Stop the bot and delete the webhook."""
+        try:
+            self.application.stop()
+            self.application.bot.delete_webhook()
             logger.info("Bot stopped.")
         except Exception as ex:
-            logger.error(f'Error deleting webhook: {ex}')
-
-# FastAPI App Creation
-app = FastApi(title="Telegram Bot API")
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Shutdown event handler."""
-    bot_instance = TelegramBot()
-    await stop_bot(bot_instance)
+            logger.error(f'Error deleting webhook:',ex, exc_info=True)
 
 
-# Handle Webhook
-# app.add_route("/kazarinov", telegram_webhook, methods=["POST"]) #Убрали
 if __name__ == "__main__":
-    app.run()
+    from dotenv import load_dotenv
+    load_dotenv()
+    bot = TelegramBot(os.getenv('TELEGRAM_TOKEN'))
+    bot.run()

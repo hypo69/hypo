@@ -95,8 +95,6 @@ import requests  # For downloading files
 from src.utils.convertors.tts import speech_recognizer, text2speech
 from src.utils.file import read_text_file
 
-logging.getLogger('telegram').setLevel(logging.ERROR)
-
 
 class TelegramBot:
     """Telegram bot interface class."""
