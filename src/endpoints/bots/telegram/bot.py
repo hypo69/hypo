@@ -32,8 +32,6 @@ from src.logger.logger import logger
 
 from src.utils.jjson import j_loads_ns
 
-app = FastAPI()
-
 
 class TelegramBot:
     """Telegram bot interface class, now a Singleton."""
@@ -47,7 +45,7 @@ class TelegramBot:
             route (str): Webhook route for FastAPI. Defaults to '/telegram_webhook'.
         """
         self.token: str = token
-        self.port: int = 8443
+        self.port: int = 443
         self.route: str = route
         self.config: SimpleNamespace = j_loads_ns(__root__ / 'src/endpoints/bots/telegram/telegram.json')
         self.application: Application = Application.builder().token(self.token).build()
@@ -65,19 +63,26 @@ class TelegramBot:
 
             # Register the route via RPC
             # Динамическое добавление маршрутов
-            # await self.register_route_via_rpc(rpc_client)
+            
 
             logger.success(f'Server running at http://{gs.host}:{self.port}/hello')
         except Exception as ex:
             logger.error(f"Ошибка FastApiServer: {ex}", exc_info=True)
             sys.exit()
 
+
+
+
         # Initialize the Telegram bot webhook
         webhook_url = self.initialize_bot_webhook(self.route)
         # 
         if webhook_url:
+            self.register_route_via_rpc(rpc_client)
             try:
-                asyncio.run( self.application.run_webhook( webhook_url=webhook_url, port=self.port))
+                self.application.run_webhook(listen='0.0.0.0',
+                                                         webhook_url=webhook_url, 
+                                                         port=self.port)
+                
                 logger.info(f"Application started: {self.application.bot_data}")
                 ...
 
@@ -109,6 +114,7 @@ class TelegramBot:
         """Initialize the bot webhook."""
         route = route if route.startswith('/') else f'/{route}'
         host = gs.host
+
         if host in ('127.0.0.1', 'localhost'):
             from pyngrok import ngrok
             ngrok.set_auth_token(os.getenv("NGROK_AUTH_TOKEN", ""))
@@ -122,7 +128,7 @@ class TelegramBot:
         if _dev:
             import requests
             response = requests.post(f'{webhook_url}')
-            logger.info(response)
+            print(response.json, text_color='green', bg_color='gray')
 
         try:
             self.application.bot.set_webhook(url=webhook_url)
@@ -139,7 +145,7 @@ class TelegramBot:
             route = self.route if self.route.startswith('/') else f'/{self.route}'
             rpc_client.add_new_route(
                 route,
-                self.telegram_webhook, 
+                self.bot_handler.handle_message,
                 ['POST']
             )
 

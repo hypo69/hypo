@@ -1,4 +1,4 @@
-## \file /src/fast_api/fast_api_rpc.py
+## \file /src/fast_api/fast_api.py
 # -*- coding: utf-8 -*-
 #! venv/bin/python/python3.12
 
@@ -26,14 +26,17 @@ from dotenv import load_dotenv
 
 import uvicorn
 from fastapi import FastAPI, APIRouter
+import importlib  # Добавлен для динамического импорта
 
 import header  # <-- Обязательный импорт
 from header import __root__
+from src.fast_api.routes import Routes
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
-#from src.endpoints.bots.telegram.webhooks import telegram_webhook
 from src.utils.printer import pprint as print
 from src.logger import logger
+
+route_functions = Routes()
 
 import re
 
@@ -70,7 +73,7 @@ class FastApiServer:
         self._initialized = True
         self.add_route("/hello", test_function)
         self.add_route("/post", test_post, methods=["POST"])
-        self.add_route("/telegram_webhook", telegram_webhook, methods=["POST"])
+        #self.add_route("/telegram_webhook", telegram_webhook, methods=["POST"])
 
         self.app = FastAPI()
         self.host = host or config.host
@@ -80,15 +83,15 @@ class FastApiServer:
 
     def add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
         """Добавляет маршрут к FastAPI приложению."""
-        self.router.add_api_route(path, func, methods=methods, **kwargs)
-
-    def add_new_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs):
-        """Добавляет новый маршрут к уже работающему приложению."""
-        self.add_route(path, func, methods, **kwargs)
+        try:
+            self.router.add_api_route(path, func, methods=methods, **kwargs)
+            logger.info(f"Маршрут {path} зарегистрирван")
+        except Exception as ex:
+            logger.error(f"Ошибка добавления маршрута {path}")
 
     async def _start_server(self, port: int):
         """Запускает uvicorn сервер асинхронно."""
-        config = uvicorn.Config(self.app, host=self.host, port=port, log_level="info")
+        config = uvicorn.Config(self.app, host=self.host, port=port, log_level="debug")
         server = uvicorn.Server(config)
         try:
             await server.serve()
@@ -130,9 +133,33 @@ class FastApiServer:
         """Возвращает статус всех серверов."""
         return {port: "Running" if task.is_alive() else "Stopped" for port, task in self.servers.items()}
 
+    def get_routes(self):
+      """Возвращает список всех роутов."""
+      routes = []
+      for route in self.app.routes:
+          if hasattr(route, "path"):
+            methods = getattr(route, "methods", ["GET"])
+            routes.append({"path": route.path, "methods": list(methods)})
+      return routes
+
     def get_app(self):
         """Возвращает FastAPI приложение."""
         return self.app
+
+    def add_new_route(self, path: str, module_name: str, func_name: str, methods: List[str] = ["GET"], **kwargs):
+        """Добавляет новый маршрут к уже работающему приложению."""
+        try:
+            # Динамически импортируем модуль
+            module = importlib.import_module(module_name)
+            # Получаем функцию из модуля
+            func = getattr(module, func_name, None)
+            if func is None:
+                raise AttributeError(f"Function '{func_name}' not found in module '{module_name}'")
+            
+            self.add_route(path, func, methods=methods, **kwargs)
+            logger.info(f"Маршрут {path} зарегистрирован из модуля {module_name}")
+        except Exception as ex:
+            logger.error(f"Ошибка добавления маршрута {path} из модуля {module_name}: {ex}")
 
 
 def telegram_webhook():
@@ -164,7 +191,7 @@ def stop_server(port: int):
 
 
 def stop_all_servers():
-    """Останавливает все запущенные FastAPI серверы."""
+    """Останавливает все запущенные FastAPI сервера."""
     global _api_server_instance
     if _api_server_instance:
         _api_server_instance.stop_all()
@@ -184,12 +211,26 @@ def status_servers():
     else:
         print("Server not initialized.")
 
+def get_routes():
+    """Показывает все роуты."""
+    global _api_server_instance
+    if _api_server_instance:
+      routes = _api_server_instance.get_routes()
+      if routes:
+        print("Available routes:")
+        for route in routes:
+          print(f"  - Path: {route['path']}, Methods: {route['methods']}")
+      else:
+        print("No routes defined")
+    else:
+        print("Server not initialized.")
 
-def add_new_route(path: str, func: Callable, methods: List[str] = ["GET"]):
+
+def add_new_route(path: str, module_name: str, func_name: str, methods: List[str] = ["GET"]):
     """Добавляет новый роут к серверу."""
     global _api_server_instance
     if _api_server_instance:
-        _api_server_instance.add_new_route(path=path, func=func, methods=methods)
+        _api_server_instance.add_new_route(path=path, module_name=module_name, func_name=func_name, methods=methods)
         print(f"Route added: {path}, {methods=}")
     else:
         print("Server not initialized. Start server first")
@@ -239,16 +280,126 @@ class CommandHandler:
     def status_servers(self):
         status_servers()
 
-    def add_new_route(self, path: str, func: str, methods: List[str] = ["GET"]):
-        # Передаем ссылку на функцию вместо eval.
-        func_ref = globals().get(func)
-        if func_ref:
-            add_new_route(path=path, func=func_ref, methods=methods)
-        else:
-            print(f"Function {func} not found.")
+    def get_routes(self):
+        get_routes()
+
+    def add_new_route(self, path: str, module_name: str, func_name: str, methods: List[str] = ["GET"]):
+        add_new_route(path=path, module_name=module_name, func_name=func_name, methods=methods)
 
     def shutdown(self):
         self.stop_all_servers()
         self.rpc_server.shutdown()
         print("RPC server shutdown")
         sys.exit(0)
+
+
+## \file /src/fast_api/main.py
+# -*- coding: utf-8 -*-
+#! venv/bin/python/python3.12
+
+"""
+.. module:: src.fast_api.main 
+    :platform: Windows, Unix
+    :synopsis: Управление параметрами Fast Api сервера
+
+"""
+
+import sys
+import header  # <-- Обязательный импорт
+from src.fast_api.fast_api import CommandHandler, logger
+
+
+def display_menu():
+    """Выводит меню с доступными командами."""
+    print("\nAvailable commands:")
+    print("  start <port>        - Start server on the specified port")
+    print("  status              - Show all served ports status")
+    print("  routes              - Show all registered routes")
+    print("  stop <port>         - Stop server on the specified port")
+    print("  stop_all            - Stop all servers")
+    print("  add_route <path>    - Add a new route to the server")
+    print("  shutdown            - Stop all servers and exit")
+    print("  help                - Show this help menu")
+    print("  exit                - Exit the program")
+
+
+def main():
+    """Основная функция управления сервером."""
+    command_handler = CommandHandler()
+    while True:
+        display_menu()
+        try:
+            command_line = input("Enter command: ").strip().lower()
+            if not command_line:
+                continue
+
+            parts = command_line.split()
+            command = parts[0]
+
+            if command == "start":
+                if len(parts) != 2:
+                    print("Usage: start <port>")
+                    continue
+                try:
+                    port = int(parts[1])
+                    host = input("Enter host address (default: 127.0.0.1): ").strip() or "127.0.0.1"
+                    command_handler.start_server(port=port, host=host)
+                except ValueError:
+                    print("Invalid port number.")
+                except Exception as ex:
+                    logger.error(f"An error occurred:", ex, exc_info=True)
+
+            elif command == "status":
+                command_handler.status_servers()
+
+            elif command == "routes":
+                command_handler.get_routes()
+            
+            elif command == "stop":
+               if len(parts) != 2:
+                   print("Usage: stop <port>")
+                   continue
+               try:
+                    port = int(parts[1])
+                    command_handler.stop_server(port=port)
+               except ValueError:
+                   print("Invalid port number.")
+               except Exception as ex:
+                  logger.error(f"An error occurred:", ex, exc_info=True)
+            
+            elif command == "stop_all":
+               command_handler.stop_all_servers()
+            
+            elif command == "add_route":
+                if len(parts) < 2:
+                    print("Usage: add_route <path> <module_name> <func_name>")
+                    continue
+                path = parts[1]
+                module_name = input("Enter module name: ").strip()
+                func_name = input("Enter function name: ").strip()
+                methods = input("Enter HTTP methods (comma-separated, default: GET): ").strip().upper() or "GET"
+                methods = [method.strip() for method in methods.split(",")]
+                command_handler.add_new_route(path=path, module_name=module_name, func_name=func_name, methods=methods)
+
+
+            elif command == "shutdown":
+                command_handler.stop_all_servers()
+                print("Shutting down all servers.")
+                sys.exit(0)
+
+            elif command == "help":
+                display_menu()
+
+            elif command == "exit":
+                print("Exiting the program.")
+                sys.exit(0)
+            
+            else:
+                print("Unknown command. Type 'help' to see the list of available commands")
+
+        except Exception as ex:
+            logger.error(f"An error occurred:", ex, exc_info=True)
+
+
+if __name__ == "__main__":
+    main()

@@ -19,6 +19,7 @@ def display_menu():
     print("\nAvailable commands:")
     print("  start <port>        - Start server on the specified port")
     print("  status              - Show all served ports status")
+    print("  routes              - Show all registered routes")
     print("  stop <port>         - Stop server on the specified port")
     print("  stop_all            - Stop all servers")
     print("  add_route <path>    - Add a new route to the server")
@@ -55,6 +56,9 @@ def main():
 
             elif command == "status":
                 command_handler.status_servers()
+
+            elif command == "routes":
+                command_handler.get_routes()
             
             elif command == "stop":
                if len(parts) != 2:
@@ -78,7 +82,8 @@ def main():
                 path = parts[1]
                 methods = input("Enter HTTP methods (comma-separated, default: GET): ").strip().upper() or "GET"
                 methods = [method.strip() for method in methods.split(",")]
-                command_handler.add_new_route(path=path, func=lambda: {"message": "Hello from the new route"}, methods=methods)
+                command_handler.add_new_route(path=path, func="lambda: {\"message\": \"Hello from the new route\"}", methods=methods)
+
 
             elif command == "shutdown":
                 command_handler.stop_all_servers()

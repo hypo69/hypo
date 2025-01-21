@@ -4,10 +4,15 @@
 
 """
 .. module:: src.fast_api.routes
-    :platform: Windows, Unix
-    :synopsis: Функции маршрутов
+	:platform: Windows, Unix
+	:synopsis: Манипулирование маршрутами в серевере
 
 """
-from typing import Any
+import header
+from src.endpoints.bots.telegram.bot_handlers import BotHandler
+class Routes:
 
-
+	def tegram_message_handler(self):
+		""" """
+		bot_nahdlers = BotHandler()
+		telega_message_handler = bot_nahdlers.handle_message

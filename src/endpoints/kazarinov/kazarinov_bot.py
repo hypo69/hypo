@@ -3,66 +3,100 @@
 """
 Telegram-бот для проекта Kazarinov
 ====================================================
-Бот взаимодействует
-с парсером Mexiron и моделью Google Generative AI, поддерживает обработку текстовых сообщений, документов и URL.
+Бот взаимодействует с парсером Mexiron и моделью Google Generative AI, 
+поддерживает обработку текстовых сообщений, документов и URL.
 
 .. module:: src.endpoints.kazarinov.kazarinov_bot
-	:platform: Windows, Unix
-	:synopsis: KazarinovTelegramBot
-
+   :platform: Windows, Unix
+   :synopsis: KazarinovTelegramBot
 """
+
 import asyncio
 import os
-from pathlib import Path
+from typing import Optional
+from dotenv import load_dotenv
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message
-from pyrogram.handlers import MessageHandler
-from dotenv import load_dotenv
+import httpx
+import header  # Формирование путей проекта
 
-import header
-from src import gs
-from src.endpoints.bots.telegram.bot_web_hooks import TelegramBot
 from src.endpoints.kazarinov.bot_handlers import BotHandler as KazarinovBotHandler
-from src.ai.gemini import GoogleGenerativeAI
 
 
-class KazarinovTelegramBot():
-    """Telegram bot with custom behavior for Kazarinov."""
+class HTTPClientManager:
+    """Управление HTTP-клиентом."""
 
     def __init__(self):
-        """
-        Initialize the KazarinovTelegramBot instance.
+        self._client: Optional[httpx.AsyncClient] = None
 
-        Args:
-            mode (Optional[str]): Operating mode, 'test' or 'production'. Defaults to 'firefox'.
-        """
+    def get_client(self) -> httpx.AsyncClient:
+        """Возвращает экземпляр HTTP-клиента."""
+        if self._client is None:
+            self._client = httpx.AsyncClient()
+        return self._client
+
+    async def close_client(self):
+        """Закрывает HTTP-клиент."""
+        if self._client:
+            await self._client.aclose()
+            self._client = None
+
+
+class Singleton(type):
+    """Реализация Singleton для Telegram-бота."""
+
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
+class KazarinovTelegramBot(metaclass=Singleton):
+    """Telegram-бот для проекта Kazarinov."""
+
+    def __init__(self):
+        """Инициализация бота."""
+        if hasattr(self, '_initialized'):
+            return
+
         load_dotenv()
-        # _____________________ model ______________________
-        self.model = GoogleGenerativeAI(
-            api_key=os.getenv('GEMINI_API'),
-            generation_config={"response_mime_type": "text/plain"}
-        )
-        # ____________________  route (Fast Api)
+        self.http_client_manager = HTTPClientManager()
+
+
         self.route = 'kazarinov'
-
-
         self.token = os.getenv('TELEGRAM_BOT_TOKEN')
-        
-        bot = Client(
-        name="Kazarinv bot",
-        api_id=os.getenv('TELEGRAM_BOT_TOKEN')
+
+        # Настройка клиента Pyrogram
+        self.app = Client(
+            name="hypo69",
+            # api_id=int(os.getenv('TELEGRAM_API_ID')),
+            # api_hash=os.getenv('TELEGRAM_API_HASH'),
+            bot_token=self.token
         )
+                                                        
+        self._initialized = True
 
-        self._register_custom_handlers()
-
-    def _register_custom_handlers(self):
-        """Register or override handlers with custom ones."""
+    def _register_handlers(self):
+        """Регистрация пользовательских обработчиков."""
         handler = KazarinovBotHandler()
-        self.application.add_handler(
-            MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_message)
+        self.app.add_handler(
+            filters.text & ~filters.command(r'^/'),
+            handler.handle_message
         )
+
+    async def run(self):
+        """Запуск Telegram-бота."""
+        await self.app.start()
+        self._register_handlers()
+        print("Bot started")
+        await idle()  # Поддерживает бота активным до остановки
+        print("Bot stopped")
+        await self.app.stop()
+        await self.http_client_manager.close_client()
 
 
 if __name__ == "__main__":
-    bot = KazarinovTelegramBot() 
-    asyncio.run (bot.run())
+    bot = KazarinovTelegramBot()
+    asyncio.run(bot.run())
