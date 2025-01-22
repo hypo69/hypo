@@ -31,7 +31,7 @@
 Модуль для работы с запросами горячих продуктов Aliexpress.
 =========================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateHotproductDownloadRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateHotproductDownloadRequest`,
 который используется для формирования запроса на скачивание горячих товаров.
 """
 from src.logger import logger  # исправлено: импорт logger

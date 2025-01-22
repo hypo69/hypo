@@ -10,7 +10,7 @@
 Обработчик собтий телеграм-бота  `kazarinov_bot`
 =========================================================================================
 
-Этот модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab
+Модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab
 и выполнение связанных сценариев.
 
 Пример использования
@@ -27,8 +27,11 @@
 import asyncio
 import random
 import requests
+from pathlib import Path
 from typing import Optional, Any
 from bs4 import BeautifulSoup
+from telegram import Update
+from telegram.ext import CallbackContext
 
 import header
 from src import gs
@@ -37,8 +40,8 @@ from src.webdriver.playwright import Playwrid
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import MexironBuilder
 from src.utils.url import is_url
-from telegram import Update
-from telegram.ext import CallbackContext
+from src.utils.printer import pprint as print
+
 
 
 class BotHandler:
@@ -142,3 +145,92 @@ class BotHandler:
         except requests.exceptions.RequestException as ex:
             logger.error('Ошибка при выполнении запроса: %s', ex)
             return
+
+
+
+    async def help_command(self, update: Update, context: CallbackContext) -> None:
+        """Handle the /help command."""
+        self.update = update
+        self.context = context
+        await self.update.message.reply_text(
+            'Available commands:\n'
+            '/start - Start the bot\n'
+            '/help - Show this help message\n'
+            '/sendpdf - Send a PDF file'
+        )
+
+    async def send_pdf(self, pdf_file: str | Path) -> None:
+        """Handle the /sendpdf command to generate and send a PDF file."""
+        try:
+            # Отправка PDF-файла пользователю
+            with open(pdf_file, 'rb') as pdf_file_obj:
+                await self.update.message.reply_document(document=pdf_file_obj)
+
+        except Exception as ex:
+            logger.error('Ошибка при отправке PDF-файла: ', ex)
+            await self.update.message.reply_text('Произошла ошибка при отправке PDF-файла. Попробуй ещё раз.')
+
+    async def handle_voice(self, update: Update, context: CallbackContext) -> None:
+        """Handle voice messages and transcribe the audio."""
+        self.update = update
+        self.context = context
+        try:
+            # Получаем файл голосового сообщения
+            voice = self.update.message.voice
+            file = await self.context.bot.get_file(voice.file_id)
+            file_path = gs.path.temp / f'{voice.file_id}.ogg'
+            
+            # Сохраняем файл на локальной системе
+            await file.download_to_drive(file_path)
+
+            # Здесь можно добавить обработку файла (распознавание речи), например, с помощью Google Speech-to-Text
+            transcribed_text = self.transcribe_voice(file_path)
+            
+            # Отправляем распознанный текст пользователю
+            await self.update.message.reply_text(f'Распознанный текст: {transcribed_text}')
+        
+        except Exception as ex:
+            logger.error('Ошибка при обработке голосового сообщения: ', ex)
+            await self.update.message.reply_text('Произошла ошибка при обработке голосового сообщения. Попробуй ещё раз.')
+
+    async def transcribe_voice(self, file_path: Path) -> str:
+        """Transcribe voice message using a speech recognition service."""
+        # Пример заглушки, замените это на реальную логику распознавания речи
+        return 'Распознавание голоса ещё не реализовано.'
+
+    async def handle_document(self, update: Update, context: CallbackContext) -> str:
+        """Handle received documents.
+
+        Args:
+            update (Update): Update object containing the message data.
+            context (CallbackContext): Context of the current conversation.
+
+        Returns:
+            str: Content of the text document.
+        """
+        self.update = update
+        self.context = context
+        file = await self.update.message.document.get_file()
+        tmp_file_path = await file.download_to_drive()  # Save file locally
+        await update.message.reply_text(f'Файл сохранене в {tmp_file_path}')
+        return True 
+
+    async def handle_message(self, update: Update, context: CallbackContext) -> str:
+        """Handle any text message.
+
+        Args:
+            update (Update): Update object containing the message data.
+            context (CallbackContext): Context of the current conversation.
+
+        Returns:
+            str: Text received from the user.
+        """
+        self.update = update
+        self.context = context
+        return self.update.message.text
+
+    async def handle_log(self, update: Update, context: CallbackContext) -> None:
+        """Handle log messages."""
+        log_message = update.message.text
+        logger.info(f"Received log message: {log_message}")
+        await update.message.reply_text("Log received and processed.")

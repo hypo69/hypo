@@ -2,7 +2,7 @@
 
 ## Обзор
 
-Этот модуль содержит класс `AliexpressAffiliateFeaturedpromoGetRequest`, который используется для выполнения запроса к API AliExpress для получения информации о рекомендуемых акциях.
+Модуль содержит класс `AliexpressAffiliateFeaturedpromoGetRequest`, который используется для выполнения запроса к API AliExpress для получения информации о рекомендуемых акциях.
 
 ## Оглавление
 

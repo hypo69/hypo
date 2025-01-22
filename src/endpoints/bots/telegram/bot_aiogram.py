@@ -1,4 +1,3 @@
-## \file /src/endpoints/bots/telegram/telegram_webhooks.py
 # -*- coding: utf-8 -*-
 #! venv/bin/python/python3.12
 """
@@ -10,24 +9,24 @@
     :synopsis: Телеграм бот с сервером FAST API Через RPC
 
 """
-from pathlib import Path
 import asyncio
-import json
 import sys
 from types import SimpleNamespace
 from typing import Optional
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
-from xmlrpc.client import ServerProxy
-from fastapi import FastAPI, Request, Response
-import socket
+
 import os
+
+from aiogram import Bot, Dispatcher, types
+from aiogram.enums import ParseMode
+from aiogram.filters import Command
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiohttp import web
+from xmlrpc.client import ServerProxy
 
 import header
 from header import __root__
 from src import gs
 from src.endpoints.bots.telegram.bot_handlers import BotHandler
-from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
 from src.utils.jjson import j_loads_ns
@@ -46,69 +45,71 @@ class TelegramBot:
         """
         self.token: str = token
         self.port: int = 443
+
         self.route: str = route
         self.config: SimpleNamespace = j_loads_ns(__root__ / 'src/endpoints/bots/telegram/telegram.json')
-        self.application: Application = Application.builder().token(self.token).build()
+        self.bot: Bot = Bot(token=self.token)
+        self.dp: Dispatcher = Dispatcher()
         self.bot_handler: BotHandler = BotHandler()
         self._register_default_handlers()
+        self.app: Optional[web.Application] = None
+        self.rpc_client: Optional[ServerProxy] = None  # Add rpc_client as an attribute
 
     def run(self):
         """Run the bot and initialize RPC and webhook."""
         try:
             # Initialize RPC client
-            rpc_client = ServerProxy(f"http://{gs.host}:9000", allow_none=True)
+            
+            port = 9000
+
+            self.rpc_client = ServerProxy(f"http://{gs.host}:{port}", allow_none=True) 
 
             # Start the server via RPC
-            rpc_client.start_server(self.port, gs.host)
+            self.rpc_client.start_server(port, gs.host)
 
             # Register the route via RPC
-            # Динамическое добавление маршрутов
-            
-
-            logger.success(f'Server running at http://{gs.host}:{self.port}/hello')
+            logger.success(f'RPC Server running at http://{gs.host}:{port}/')
         except Exception as ex:
-            logger.error(f"Ошибка FastApiServer: {ex}", exc_info=True)
+            logger.error(f"Ошибка FastApiServer: ",ex, exc_info=True)
             sys.exit()
-
-
-
 
         # Initialize the Telegram bot webhook
         webhook_url = self.initialize_bot_webhook(self.route)
-        # 
+       
         if webhook_url:
-            self.register_route_via_rpc(rpc_client)
+            self._register_route_via_rpc(self.rpc_client)
             try:
-                self.application.run_webhook(listen='0.0.0.0',
-                                                         webhook_url=webhook_url, 
-                                                         port=self.port)
-                
-                logger.info(f"Application started: {self.application.bot_data}")
-                ...
+                # Use web application for webhook
+                self.app = web.Application()
+                webhook_requests_handler = SimpleRequestHandler(
+                    dispatcher=self.dp,
+                    bot=self.bot,
+                )
+
+                webhook_requests_handler.register(self.app, path=self.route)
+                setup_application(self.app, self.dp, bot=self.bot)
+                web.run_app(self.app, host="0.0.0.0", port=self.port)
+                logger.info(f"Application started: {self.bot.id}")
 
             except Exception as ex:
-                logger.error(f"Ошибка установки вебхука")
-                ...
+                logger.error(f"Ошибка установки вебхука: ", ex, exc_info=True)
 
-            ...
         else:
-            self.application.run_polling()
-            ...
-
+            asyncio.run(self.dp.start_polling(self.bot))
 
     def _register_default_handlers(self):
         """Register the default handlers using the BotHandler instance."""
-        self.application.add_handler(CommandHandler('start', self.bot_handler.start))
-        self.application.add_handler(CommandHandler('help', self.bot_handler.help_command))
-        self.application.add_handler(CommandHandler('sendpdf', self.bot_handler.send_pdf))
-        self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self._handle_message))
-        self.application.add_handler(MessageHandler(filters.VOICE, self.bot_handler.handle_voice))
-        self.application.add_handler(MessageHandler(filters.Document.ALL, self.bot_handler.handle_document))
-        self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.bot_handler.handle_log))
+        self.dp.message.register(self.bot_handler.start, Command('start'))
+        self.dp.message.register(self.bot_handler.help_command, Command('help'))
+        self.dp.message.register(self.bot_handler.send_pdf, Command('sendpdf'))
+        self.dp.message.register(self._handle_message)
+        self.dp.message.register(self.bot_handler.handle_voice, lambda message: message.voice is not None)
+        self.dp.message.register(self.bot_handler.handle_document, lambda message: message.document is not None)
+        self.dp.message.register(self.bot_handler.handle_log, lambda message: message.text is not None)
 
-    async def _handle_message(self, update: Update, context: CallbackContext) -> None:
+    async def _handle_message(self, message: types.Message):
         """Handle any text message."""
-        await self.bot_handler.handle_message(update, context)
+        await self.bot_handler.handle_message(message)
 
     def initialize_bot_webhook(self, route: str):
         """Initialize the bot webhook."""
@@ -124,43 +125,36 @@ class TelegramBot:
         host = host if host.startswith('http') else f'https://{host}'
         webhook_url = f'{host}{route}'
 
-        _dev = True
-        if _dev:
-            import requests
-            response = requests.post(f'{webhook_url}')
-            print(response.json, text_color='green', bg_color='gray')
-
         try:
-            self.application.bot.set_webhook(url=webhook_url)
-            logger.success(f'https://api.telegram.org/bot{self.token}/getWebhookInfo') 
+            asyncio.run(self.bot.set_webhook(url=webhook_url))
+            logger.success(f'https://api.telegram.org/bot{self.token}/getWebhookInfo')
             return webhook_url
         except Exception as ex:
             logger.error(f'Error setting webhook: ',ex, exc_info=True)
             return False
 
-    def register_route_via_rpc(self, rpc_client: ServerProxy):
+    def _register_route_via_rpc(self, rpc_client: ServerProxy):
         """Register the Telegram webhook route via RPC."""
         try:
-            # Регистрация маршрута через RPC
             route = self.route if self.route.startswith('/') else f'/{self.route}'
             rpc_client.add_new_route(
                 route,
-                self.bot_handler.handle_message,
+                'self.bot_handler.handle_message',
                 ['POST']
             )
-
             logger.info(f"Route {self.route} registered via RPC.")
         except Exception as ex:
             logger.error(f"Failed to register route via RPC:",ex, exc_info=True)
-            ...
 
     def stop(self):
-        """Stop the bot and delete the webhook."""
-        try:
-            self.application.stop()
-            self.application.bot.delete_webhook()
+         """Stop the bot and delete the webhook."""
+         if self.app:
+            asyncio.run(self.app.shutdown())
+            asyncio.run(self.app.cleanup())
+         try:
+            asyncio.run(self.bot.delete_webhook())
             logger.info("Bot stopped.")
-        except Exception as ex:
+         except Exception as ex:
             logger.error(f'Error deleting webhook:',ex, exc_info=True)
 
 

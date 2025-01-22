@@ -50,7 +50,7 @@ def add_numbers(a, b):
 </algorithm>
 <explanation>
 **Импорты**:
-- `from src.utils.calculator import calculate_sum`: Импортирует функцию `calculate_sum`, которая используется для вычисления суммы. Этот модуль лежит в папке `src.utils`.
+- `from src.utils.calculator import calculate_sum`: Импортирует функцию `calculate_sum`, которая используется для вычисления суммы. Модуль лежит в папке `src.utils`.
 
 **Функция `add_numbers`**:
 - Назначение: упрощает сложение двух чисел через вызов функции `calculate_sum`.
@@ -75,7 +75,7 @@ def add_numbers(a, b):
 Модуль для генерации HTML-ответа с анализом кода.
 ==================================================
 
-Этот модуль содержит логику для анализа кода и создания структурированного HTML-ответа,
+Модуль содержит логику для анализа кода и создания структурированного HTML-ответа,
 включающего исходный код, алгоритм его работы и подробное объяснение.
 
 Пример использования:
@@ -189,7 +189,7 @@ def _generate_explanation(code: str) -> str:
             import_parts = import_line.split('import ') #  Разделяем строку
             if len(import_parts) > 1:
                 module_name = import_parts[1] #  Получаем название модуля
-                explanation_parts.append(f"**Импорты**:\n- `from src.utils.calculator import {module_name}`: Импортирует функцию `{module_name}`, которая используется для вычисления суммы. Этот модуль лежит в папке `src.utils`.\n")  #  Добавляем шаг импорта
+                explanation_parts.append(f"**Импорты**:\n- `from src.utils.calculator import {module_name}`: Импортирует функцию `{module_name}`, которая используется для вычисления суммы. Модуль лежит в папке `src.utils`.\n")  #  Добавляем шаг импорта
         func_def_line = next((line for line in lines if line.strip().startswith('def ')), None) #  Находим строку с определением функции
         if func_def_line: #  Если функция найдена
             func_name = func_def_line.split('def ')[1].split('(')[0] #  Получаем имя функции
@@ -228,7 +228,7 @@ def _generate_explanation(code: str) -> str:
 Модуль для генерации HTML-ответа с анализом кода.
 ==================================================
 
-Этот модуль содержит логику для анализа кода и создания структурированного HTML-ответа,
+Модуль содержит логику для анализа кода и создания структурированного HTML-ответа,
 включающего исходный код, алгоритм его работы и подробное объяснение.
 
 Пример использования:
@@ -342,7 +342,7 @@ def _generate_explanation(code: str) -> str:
             import_parts = import_line.split('import ') #  Разделяем строку
             if len(import_parts) > 1:
                 module_name = import_parts[1] #  Получаем название модуля
-                explanation_parts.append(f'**Импорты**:\n- `from src.utils.calculator import {module_name}`: Импортирует функцию `{module_name}`, которая используется для вычисления суммы. Этот модуль лежит в папке `src.utils`.\n')  #  Добавляем шаг импорта
+                explanation_parts.append(f'**Импорты**:\n- `from src.utils.calculator import {module_name}`: Импортирует функцию `{module_name}`, которая используется для вычисления суммы. Модуль лежит в папке `src.utils`.\n')  #  Добавляем шаг импорта
         func_def_line = next((line for line in lines if line.strip().startswith('def ')), None) #  Находим строку с определением функции
         if func_def_line: #  Если функция найдена
             func_name = func_def_line.split('def ')[1].split('(')[0] #  Получаем имя функции

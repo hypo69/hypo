@@ -1,102 +1,96 @@
-# -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
-"""
-Telegram-бот для проекта Kazarinov
-====================================================
-Бот взаимодействует с парсером Mexiron и моделью Google Generative AI, 
-поддерживает обработку текстовых сообщений, документов и URL.
-
-.. module:: src.endpoints.kazarinov.kazarinov_bot
-   :platform: Windows, Unix
-   :synopsis: KazarinovTelegramBot
-"""
-
-import asyncio
+import telebot
 import os
-from typing import Optional
+import datetime
+import random
+from pathlib import Path
+
 from dotenv import load_dotenv
-from pyrogram import Client, filters, idle
-from pyrogram.types import Message
-import httpx
-import header  # Формирование путей проекта
+load_dotenv()
 
-from src.endpoints.kazarinov.bot_handlers import BotHandler as KazarinovBotHandler
+import header
+from header import __root__
+base_dir:Path = __root__ / 'endpoints' / 'kazarinov'
 
+from src import gs
+from src.endpoints.kazarinov.kazarinov_bot_handlers_telebot import BotHandler()
+from src.logger import logger
 
-class HTTPClientManager:
-    """Управление HTTP-клиентом."""
+# --- config.py -----------------
+class Config:
+    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+    CHANNEL_ID = '@onela'
+    PHOTO_DIR = base_dir / 'assets' # создайте папку photos и добавьте туда фотографии
+    COMMAND_INFO = 'This is a simple bot. Use /help to see commands.'
+    UNKNOWN_COMMAND_MESSAGE = 'Unknown command. Use /help to see available commands.'
+    START_MESSAGE = "Howdy, how are you doing?"
+    HELP_MESSAGE = """
+    Here are the available commands:
+    /start - Starts the bot.
+    /help - Shows this help message.
+    /info - Shows information about the bot.
+    /time - Shows the current time.
+    /photo - Sends a random photo.
+    """
+# --- config.py end -----------------
 
-    def __init__(self):
-        self._client: Optional[httpx.AsyncClient] = None
-
-    def get_client(self) -> httpx.AsyncClient:
-        """Возвращает экземпляр HTTP-клиента."""
-        if self._client is None:
-            self._client = httpx.AsyncClient()
-        return self._client
-
-    async def close_client(self):
-        """Закрывает HTTP-клиент."""
-        if self._client:
-            await self._client.aclose()
-            self._client = None
-
-
-class Singleton(type):
-    """Реализация Singleton для Telegram-бота."""
-
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+# --- bot.py ---
+config = Config()
+handler = BotHandler()
+bot = telebot.TeleBot(config.BOT_TOKEN)
+#chat = bot.get_chat(config.CHANNEL_ID)
 
 
-class KazarinovTelegramBot(metaclass=Singleton):
-    """Telegram-бот для проекта Kazarinov."""
 
-    def __init__(self):
-        """Инициализация бота."""
-        if hasattr(self, '_initialized'):
-            return
-
-        load_dotenv()
-        self.http_client_manager = HTTPClientManager()
+@bot.message_handler(commands=['start'])
+def command_start(message):
+    logger.info(f"User {message.from_user.username} send /start command")
+    bot.send_message(message.chat.id, config.START_MESSAGE)
 
 
-        self.route = 'kazarinov'
-        self.token = os.getenv('TELEGRAM_BOT_TOKEN')
+@bot.message_handler(commands=['help'])
+def command_help(message):
+    logger.info(f"User {message.from_user.username} send /help command")
+    bot.send_message(message.chat.id, config.HELP_MESSAGE)
 
-        # Настройка клиента Pyrogram
-        self.app = Client(
-            name="hypo69",
-            # api_id=int(os.getenv('TELEGRAM_API_ID')),
-            # api_hash=os.getenv('TELEGRAM_API_HASH'),
-            bot_token=self.token
-        )
-                                                        
-        self._initialized = True
+@bot.message_handler(commands=['info'])
+def command_info(message):
+    logger.info(f"User {message.from_user.username} send /info command")
+    bot.send_message(message.chat.id, config.COMMAND_INFO)
 
-    def _register_handlers(self):
-        """Регистрация пользовательских обработчиков."""
-        handler = KazarinovBotHandler()
-        self.app.add_handler(
-            filters.text & ~filters.command(r'^/'),
-            handler.handle_message
-        )
-
-    async def run(self):
-        """Запуск Telegram-бота."""
-        await self.app.start()
-        self._register_handlers()
-        print("Bot started")
-        await idle()  # Поддерживает бота активным до остановки
-        print("Bot stopped")
-        await self.app.stop()
-        await self.http_client_manager.close_client()
+@bot.message_handler(commands=['time'])
+def command_time(message):
+    logger.info(f"User {message.from_user.username} send /time command")
+    now = datetime.datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    bot.send_message(message.chat.id, f"Current time: {current_time}")
 
 
-if __name__ == "__main__":
-    bot = KazarinovTelegramBot()
-    asyncio.run(bot.run())
+@bot.message_handler(commands=['photo'])
+def command_photo(message):
+    logger.info(f"User {message.from_user.username} send /photo command")
+    try:
+        photo_files = os.listdir(config.PHOTO_DIR)
+        if photo_files:
+            random_photo = random.choice(photo_files)
+            photo_path = os.path.join(config.PHOTO_DIR, random_photo)
+            with open(photo_path, 'rb') as photo:
+                bot.send_photo(message.chat.id, photo)
+        else:
+             bot.send_message(message.chat.id, "No photos in the folder.")
+    except FileNotFoundError:
+        bot.send_message(message.chat.id, "Photo directory not found.")
+
+
+@bot.message_handler(func=lambda message: message.text and not message.text.startswith('/'))
+def handle_text_message(message):
+    logger.info(f"User {message.from_user.username} sent message: {message.text}")
+    handler.handle_message(bot,message)
+
+
+@bot.message_handler(func=lambda message: message.text and message.text.startswith('/'))
+def handle_unknown_command(message):
+     logger.info(f"User {message.from_user.username} send unknown command: {message.text}")
+     bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
+
+bot.polling(none_stop=True)
+# --- bot.py end ---

@@ -28,7 +28,7 @@
 Модуль для работы с Aliexpress Affiliate API.
 ==================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateProductdetailGetRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateProductdetailGetRequest`,
 который используется для получения деталей продукта через Aliexpress Affiliate API.
 
 Пример использования

@@ -31,7 +31,7 @@
 Модуль для запроса списка заказов через AliExpress Affiliate API.
 ===============================================================
 
-Этот модуль определяет класс :class:`AliexpressAffiliateOrderListRequest`,
+Модуль определяет класс :class:`AliexpressAffiliateOrderListRequest`,
 который используется для отправки запроса на получение списка заказов
 через AliExpress Affiliate API.
 

@@ -33,7 +33,7 @@
 Модуль для работы с запросом продуктов по акции Aliexpress.
 ==========================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateFeaturedpromoProductsGetRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateFeaturedpromoProductsGetRequest`,
 который используется для получения списка акционных продуктов через API Aliexpress.
 
 Пример использования

@@ -30,7 +30,7 @@
 Модуль для работы с запросом Aliexpress Affiliate Featuredpromo
 =============================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateFeaturedpromoGetRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateFeaturedpromoGetRequest`,
 который используется для выполнения запроса к API Aliexpress для получения
 информации о популярных акциях.
 

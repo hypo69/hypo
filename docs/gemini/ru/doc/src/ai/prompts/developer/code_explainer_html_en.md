@@ -184,7 +184,7 @@ def add_numbers(a, b):
 
 <explanation>
 **Импорты**:
-- `from src.utils.calculator import calculate_sum`: Импортирует функцию `calculate_sum`, которая используется для вычисления суммы. Этот модуль находится в папке `src.utils`.
+- `from src.utils.calculator import calculate_sum`: Импортирует функцию `calculate_sum`, которая используется для вычисления суммы. Модуль находится в папке `src.utils`.
 
 **Функция `add_numbers`**:
 - Назначение: упрощает сложение двух чисел через вызов функции `calculate_sum`.

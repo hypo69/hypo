@@ -43,7 +43,7 @@
 Модуль для работы с API Aliexpress для получения продуктов
 ========================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateProductSmartmatchRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateProductSmartmatchRequest`,
 который используется для взаимодействия с API Aliexpress
 и получения данных о продуктах.
 

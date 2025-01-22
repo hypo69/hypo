@@ -2,7 +2,7 @@
 
 ## Обзор
 
-Этот модуль содержит тесты для класса `DriverBase` из `src.webdriver.driver`. Тесты проверяют корректность работы различных методов, таких как `driver_payload`, `scroll`, `locale`, `get_url`, `extract_domain`, `_save_cookies_localy`, `page_refresh`, `wait` и `delete_driver_logs`. Для проведения тестов используется `pytest` и `unittest.mock` для имитации объектов и их поведения.
+Модуль содержит тесты для класса `DriverBase` из `src.webdriver.driver`. Тесты проверяют корректность работы различных методов, таких как `driver_payload`, `scroll`, `locale`, `get_url`, `extract_domain`, `_save_cookies_localy`, `page_refresh`, `wait` и `delete_driver_logs`. Для проведения тестов используется `pytest` и `unittest.mock` для имитации объектов и их поведения.
 
 ## Оглавление
 

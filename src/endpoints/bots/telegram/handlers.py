@@ -9,7 +9,7 @@
 Обработчик собтий телеграм-бота  `kazarinov_bot`
 =========================================================================================
 
-Этот модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab
+Модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab
 и выполнение связанных сценариев.
 
 Пример использования
@@ -118,14 +118,31 @@ class BotHandler:
         """Transcribe voice message using a speech recognition service."""
         return 'Распознавание голоса ещё не реализовано.'
 
-    async def handle_document(self, update: Update, context: CallbackContext) -> str:
-        """Handle received documents."""
-        file = await update.message.document.get_file()
-        tmp_file_path = await file.download_to_drive()
-        return read_text_file(tmp_file_path)
+    async def handle_document(self, update: Update, context: CallbackContext) -> bool:
+        """Handle received documents.
+
+        Args:
+            update (Update): Update object containing the message data.
+            context (CallbackContext): Context of the current conversation.
+
+        Returns:
+            str: Content of the text document.
+        """
+        try:
+            self.update = update
+            self.context = context
+            file = await self.update.message.document.get_file()
+            file_name = await self.update.message.document.file_name
+            tmp_file_path = await file.download_to_drive()  # Save file locally
+            await update.message.reply_text(f'Файл сохранения в {self.update.message.document.file_name}')
+            return True
+        except Exception as ex:
+            await update.message.reply_text(f'Ошибка сохраненеия файла {file_name}')
+
 
     async def handle_log(self, update: Update, context: CallbackContext) -> None:
         """Handle log messages."""
+        return True
         log_message = update.message.text
         logger.info(f"Received log message: {log_message}")
         await update.message.reply_text("Log received and processed.")

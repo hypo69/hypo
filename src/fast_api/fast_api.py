@@ -1,4 +1,3 @@
-## \file /src/fast_api/fast_api.py
 # -*- coding: utf-8 -*-
 #! venv/bin/python/python3.12
 
@@ -87,7 +86,7 @@ class FastApiServer:
             self.router.add_api_route(path, func, methods=methods, **kwargs)
             logger.info(f"Маршрут {path} зарегистрирван")
         except Exception as ex:
-            logger.error(f"Ошибка добавления маршрута {path}")
+            logger.error(f"Ошибка добавления маршрута {path}", exc_info=True)
 
     async def _start_server(self, port: int):
         """Запускает uvicorn сервер асинхронно."""
@@ -97,7 +96,7 @@ class FastApiServer:
             await server.serve()
             logger.success(f"Server started on: {self.host}:{port}")
         except Exception as e:
-            logger.error(f"Error running server on port {port}: {e}")
+            logger.error(f"Error running server on port {port}: {e}", exc_info=True)
         finally:
             self.servers.pop(port, None)
 
@@ -120,7 +119,7 @@ class FastApiServer:
                 self.servers.pop(port)
                 print(f"Server on port {port} stopped.")
             except Exception as e:
-                logger.error(f"Error stopping server on port {port}: {e}")
+                logger.error(f"Error stopping server on port {port}: {e}", exc_info=True)
         else:
             print(f"Server on port {port} is not running or already stopped.")
 
@@ -159,7 +158,7 @@ class FastApiServer:
             self.add_route(path, func, methods=methods, **kwargs)
             logger.info(f"Маршрут {path} зарегистрирован из модуля {module_name}")
         except Exception as ex:
-            logger.error(f"Ошибка добавления маршрута {path} из модуля {module_name}: {ex}")
+            logger.error(f"Ошибка добавления маршрута {path} из модуля {module_name}: {ex}", exc_info=True)
 
 
 def telegram_webhook():
@@ -180,21 +179,30 @@ def start_server(port: int, host: str):
     global _api_server_instance
     if _api_server_instance is None:
         _api_server_instance = FastApiServer(host=host)
-    _api_server_instance.start(port=port)
+    try:
+      _api_server_instance.start(port=port)
+    except Exception as ex:
+      logger.error(f"Ошибка запуска FastAPI сервера на порту {port}:",ex, exc_info=True)
 
 
 def stop_server(port: int):
     """Останавливает FastAPI сервер на указанном порту."""
     global _api_server_instance
     if _api_server_instance:
-        _api_server_instance.stop(port=port)
+        try:
+            _api_server_instance.stop(port=port)
+        except Exception as ex:
+            logger.error(f"Ошибка остановки FastAPI сервера на порту {port}:",ex, exc_info=True)
 
 
 def stop_all_servers():
     """Останавливает все запущенные FastAPI сервера."""
     global _api_server_instance
     if _api_server_instance:
+      try:
         _api_server_instance.stop_all()
+      except Exception as ex:
+        logger.error(f"Ошибка остановки всех FastAPI серверов:",ex, exc_info=True)
 
 
 def status_servers():
@@ -230,8 +238,11 @@ def add_new_route(path: str, module_name: str, func_name: str, methods: List[str
     """Добавляет новый роут к серверу."""
     global _api_server_instance
     if _api_server_instance:
-        _api_server_instance.add_new_route(path=path, module_name=module_name, func_name=func_name, methods=methods)
-        print(f"Route added: {path}, {methods=}")
+      try:
+          _api_server_instance.add_new_route(path=path, module_name=module_name, func_name=func_name, methods=methods)
+          print(f"Route added: {path}, {methods=}")
+      except Exception as ex:
+        logger.error(f"Ошибка добавления нового роута {path}:",ex, exc_info=True)
     else:
         print("Server not initialized. Start server first")
 
@@ -291,22 +302,6 @@ class CommandHandler:
         self.rpc_server.shutdown()
         print("RPC server shutdown")
         sys.exit(0)
-
-
-## \file /src/fast_api/main.py
-# -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.fast_api.main 
-    :platform: Windows, Unix
-    :synopsis: Управление параметрами Fast Api сервера
-
-"""
-
-import sys
-import header  # <-- Обязательный импорт
-from src.fast_api.fast_api import CommandHandler, logger
 
 
 def display_menu():
@@ -383,9 +378,7 @@ def main():
 
 
             elif command == "shutdown":
-                command_handler.stop_all_servers()
-                print("Shutting down all servers.")
-                sys.exit(0)
+                command_handler.shutdown()  # call shutdown method on command_handler
 
             elif command == "help":
                 display_menu()

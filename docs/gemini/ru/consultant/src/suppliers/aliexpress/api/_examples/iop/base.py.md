@@ -33,7 +33,7 @@
 Модуль для работы с API AliExpress
 ==================================
 
-Этот модуль содержит классы :class:`IopRequest`, :class:`IopResponse`, и :class:`IopClient`,
+Модуль содержит классы :class:`IopRequest`, :class:`IopResponse`, и :class:`IopClient`,
 которые используются для взаимодействия с API AliExpress.
 
 Пример использования

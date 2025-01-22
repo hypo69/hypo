@@ -33,7 +33,7 @@
 Модуль тестирования для класса AliAffiliatedProducts
 ======================================================
 
-Этот модуль содержит тесты для проверки функциональности класса
+Модуль содержит тесты для проверки функциональности класса
 :class:`AliAffiliatedProducts`, включая методы
 :meth:`check_and_process_affiliate_products` и
 :meth:`process_affiliate_products`.

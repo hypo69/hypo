@@ -26,7 +26,7 @@
 Модуль для работы с Google Spreadsheet
 ======================================
 
-Этот модуль предоставляет классы для взаимодействия с Google Sheets API,
+Модуль предоставляет классы для взаимодействия с Google Sheets API,
 включая :class:`GSpreadsheet`, :class:`GWorksheet`, и :class:`GSRenderr`.
 
 Пример использования

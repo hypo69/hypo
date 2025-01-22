@@ -31,7 +31,7 @@
 Модуль для работы с Aliexpress Affiliate API.
 =============================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateHotproductQueryRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateHotproductQueryRequest`,
 который используется для запроса горячих продуктов с AliExpress.
 
 Пример использования

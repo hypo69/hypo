@@ -29,7 +29,7 @@
 Модуль для генерации партнерских ссылок Aliexpress
 ==================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateLinkGenerateRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateLinkGenerateRequest`,
 который используется для генерации партнерских ссылок через API Aliexpress.
 
 Пример использования

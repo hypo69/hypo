@@ -41,7 +41,7 @@
 Модуль для работы с OpenAI API
 =================================================
 
-Этот модуль содержит класс :class:`OpenAIClient` и :class:`AzureClient`,
+Модуль содержит класс :class:`OpenAIClient` и :class:`AzureClient`,
 которые используются для взаимодействия с OpenAI и Azure OpenAI API.
 
 Пример использования

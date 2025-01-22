@@ -35,7 +35,7 @@
 Модуль для работы с API Aliexpress.
 ====================================
 
-Этот модуль предоставляет класс :class:`AliexpressApi` для взаимодействия с API Aliexpress,
+Модуль предоставляет класс :class:`AliexpressApi` для взаимодействия с API Aliexpress,
 а также определяет модели данных и версии.
 
 .. code-block:: python

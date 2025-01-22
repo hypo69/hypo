@@ -2,7 +2,7 @@
 
 ## Обзор
 
-Этот модуль содержит тесты для класса `AliAffiliatedProducts`, проверяя корректность его методов `check_and_process_affiliate_products` и `process_affiliate_products`. Он использует `pytest` для запуска тестов и `unittest.mock` для мокирования внешних зависимостей.
+Модуль содержит тесты для класса `AliAffiliatedProducts`, проверяя корректность его методов `check_and_process_affiliate_products` и `process_affiliate_products`. Он использует `pytest` для запуска тестов и `unittest.mock` для мокирования внешних зависимостей.
 
 ## Содержание
 

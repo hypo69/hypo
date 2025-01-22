@@ -35,7 +35,7 @@
 Модуль для парсинга HTML файлов с беседами ChatGPT
 ==================================================
 
-Этот модуль содержит функцию :func:`extract_conversations_from_html`,
+Модуль содержит функцию :func:`extract_conversations_from_html`,
 которая извлекает все <div class="conversation"> из HTML файла.
 """
 

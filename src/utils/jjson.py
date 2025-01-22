@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 from types import SimpleNamespace
-import pandas as pd
+#import pandas as pd
 from json_repair import repair_json
 from collections import OrderedDict
 
@@ -170,8 +170,8 @@ def j_loads(
             if jjson.is_dir():
                 files = list(jjson.glob("*.json"))
                 return [j_loads(file, ordered=ordered) for file in files]
-            if jjson.suffix.lower() == ".csv":
-                return pd.read_csv(jjson).to_dict(orient="records")
+            # if jjson.suffix.lower() == ".csv":
+            #     return pd.read_csv(jjson).to_dict(orient="records")
              
             return json.loads(jjson.read_text(encoding="utf-8"))
         if isinstance(jjson, str):

@@ -26,7 +26,7 @@
 Модуль для работы с запросом списка заказов Aliexpress Affiliate API по индексу.
 ===========================================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateOrderListbyindexRequest`,
+Модуль содержит класс :class:`AliexpressAffiliateOrderListbyindexRequest`,
 который используется для отправки запроса на получение списка заказов
 партнерской программы Aliexpress по индексу.
 
