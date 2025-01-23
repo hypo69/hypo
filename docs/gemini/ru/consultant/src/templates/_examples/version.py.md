@@ -42,7 +42,7 @@
     print(__author__)
 """
 # -*- coding: utf-8 -*- # Сохраняем кодировку
-#! venv/bin/python/python3.12 # Сохраняем shebang
+#! .pyenv/bin/python3 # Сохраняем shebang
 
 from typing import Dict # Добавляем импорт для Dict
 from src.logger import logger # импортируем logger

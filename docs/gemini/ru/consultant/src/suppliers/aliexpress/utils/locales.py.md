@@ -27,7 +27,7 @@
 ## Оптимизированный код:
 ```python
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для загрузки данных локалей из JSON файла

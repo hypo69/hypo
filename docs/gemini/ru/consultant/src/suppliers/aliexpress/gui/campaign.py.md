@@ -31,7 +31,7 @@
 ## \file /src/suppliers/aliexpress/gui/campaign.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для создания и редактирования кампаний AliExpress.

@@ -4,7 +4,7 @@ from src.suppliers import aliexpress
 ## \file /src/endpoints/emil/scenarios/from_supplier_to_prestashop.py
 # -*- coding: utf-8 -*-\
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль исполнения сценария создания мехирона для Сергея Казаринова

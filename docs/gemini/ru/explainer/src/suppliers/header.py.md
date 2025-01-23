@@ -48,7 +48,7 @@ flowchart TD
     NextParent --> FindRoot
     Break --> AddRootToPath[Добавление `__root__` в `sys.path`]
     AddRootToPath --> ReturnRoot[Возврат `__root__`]
-    ReturnRoot --> DefineGlobalRoot[Определение глобального `__root__` : <br> `__root__ = set_project_root()` ]
+    ReturnRoot --> DefineGlobalRoot[Определение глобального `__root__` : <br> `__root__: Path = set_project_root()` ]
 	DefineGlobalRoot --> ImportGS[Импорт `from src import gs`]
     ImportGS --> ReadSettings[Чтение `settings.json`]
     ReadSettings --> ReadReadme[Чтение `README.MD`]

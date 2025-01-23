@@ -2,7 +2,7 @@ from __future__ import annotations
 ## \file /src/suppliers/get_graber_by_supplier.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Module for getting a grabber based on the supplier URL
@@ -55,7 +55,7 @@ from src.logger.logger import logger
 MODE = 'dev'
 
 
-def get_graber_by_supplier_url(self, url: str) -> 'Graber' | None:
+def get_graber_by_supplier_url(driver: 'Driver', url: str, lang_index:int ) -> 'Graber' | None:
     """
     Function that returns the appropriate grabber for a given supplier URL.
 
@@ -63,57 +63,58 @@ def get_graber_by_supplier_url(self, url: str) -> 'Graber' | None:
 
     :param url: Supplier page URL.
     :type url: str
+    :param lang_index: Указывает индекс языка в магазине Prestashop
     :return: Graber instance if a match is found, None otherwise.
     :rtype: Optional[object]
     """
-    self.driver.get_url(url)
+    driver.get_url(url)
     if url.startswith(('https://aliexpress.com', 'https://wwww.aliexpress.com')):
-        return AliexpressGraber(self.driver)
+        return AliexpressGraber(driver,lang_index)
 
     if url.startswith(('https://amazon.com', 'https://wwww.amazon.com')):
-        return AmazonGraber(self.driver)
+        return AmazonGraber(driver,lang_index)
 
     if url.startswith(('https://bangood.com', 'https://wwww.bangood.com')):
-        return BangoodGraber(self.driver)
+        return BangoodGraber(driver,lang_index)
 
     if url.startswith(('https://cdata.co.il', 'https://wwww.cdata.co.il')):
-        return CdataGraber(self.driver)
+        return CdataGraber(driver,lang_index)
 
     if url.startswith(('https://ebay.', 'https://wwww.ebay.c')):
-        return EbayGraber(self.driver)
+        return EbayGraber(driver,lang_index)
 
     if url.startswith(('https://etzmaleh.co.il','https://www.etzmaleh.co.il')):
-        return EtzmalehGraber(self.driver)
+        return EtzmalehGraber(driver,lang_index)
 
     if url.startswith(('https://gearbest.com', 'https://wwww.gearbest.com')):
-        return GearbestGraber(self.driver)
+        return GearbestGraber(driver,lang_index)
 
     if url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
-        return GrandadvanceGraber(self.driver)
+        return GrandadvanceGraber(driver,lang_index)
 
     if url.startswith(('https://hb-digital.co.il', 'https://www.hb-digital.co.il')):
-        return HBGraber(self.driver)
+        return HBGraber(driver,lang_index)
 
     if url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
-        return IvoryGraber(self.driver)
+        return IvoryGraber(driver,lang_index)
 
     if url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
-        return KspGraber(self.driver)
+        return KspGraber(driver,lang_index)
 
     if url.startswith(('https://kualastyle.com', 'https://www.kualastyle.com')):
-        return KualaStyleGraber(self.driver)
+        return KualaStyleGraber(driver,lang_index)
 
     if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-        return MorleviGraber(self.driver)
+        return MorleviGraber(driver,lang_index)
 
     if url.startswith(('https://www.visualdg.com', 'https://visualdg.com')):
-        return VisualDGGraber(self.driver)
+        return VisualDGGraber(driver,lang_index)
 
     if url.startswith(('https://wallashop.co.il', 'https://www.wallashop.co.il')):
-        return WallaShopGraber(self.driver)
+        return WallaShopGraber(driver,lang_index)
 
     if url.startswith(('https://www.wallmart.com', 'https://wallmart.com')):
-        return WallmartGraber(self.driver)
+        return WallmartGraber(driver,lang_index)
 
     logger.debug(f'No graber found for URL: {url}')
     ...

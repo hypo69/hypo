@@ -19,7 +19,7 @@
 3.  Импортировать `logger` из `src.logger.logger`.
 4.  Выровнять импорты и функции в соответствии со стандартами.
 5.  Переписать docstring с использованием стандарта RST.
-6.  Удалить ненужные строки с `#! venv/bin/python/python3.12` и комментарий `## \\file /src/suppliers/aliexpress/gui/styles.py`.
+6.  Удалить ненужные строки с `#! .pyenv/bin/python3` и комментарий `## \\file /src/suppliers/aliexpress/gui/styles.py`.
 
 **Оптимизированный код:**
 

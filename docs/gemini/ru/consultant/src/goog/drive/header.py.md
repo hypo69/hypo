@@ -28,7 +28,7 @@
 # -*- coding: utf-8 -*-
 # file: src/goog/drive/header.py
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль инициализации проекта

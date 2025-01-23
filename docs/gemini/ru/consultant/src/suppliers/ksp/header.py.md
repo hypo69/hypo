@@ -65,7 +65,7 @@
 """
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 import sys
 from pathlib import Path
@@ -97,7 +97,7 @@ def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
 
 
 # Получаем корневую директорию проекта
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """Path: Путь к корневой директории проекта."""
 
 

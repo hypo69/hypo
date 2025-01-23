@@ -2,7 +2,7 @@ from __future__ import annotations
 ## \file /src/endpoints/emil/emil_bot.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 Telegram-бот для проекта emil-design.com
 ====================================================

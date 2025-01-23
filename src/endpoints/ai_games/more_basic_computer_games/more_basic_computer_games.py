@@ -1,7 +1,7 @@
 ## \file /src/endpoints/ai_games/101_basic_games/101_basic_games.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.endpoints.ai_games.101_basic_games 

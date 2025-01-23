@@ -34,7 +34,7 @@
 """
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 # from src.logger import logger #  импортируем logger # from src.logger.logger import logger
 # from src.utils.jjson import j_loads_ns # импортируем j_loads_ns из src.utils.jjson # from src.utils.jjson import j_loads_ns

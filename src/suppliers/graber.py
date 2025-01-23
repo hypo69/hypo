@@ -1,8 +1,7 @@
 from __future__ import annotations
 ## \file /src/suppliers/graber.py
 # -*- coding: utf-8 -*-
-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 
@@ -61,7 +60,7 @@ from src.utils.string.normalizer import( normalize_string,
                                         normalize_sku )
 from src.logger.exceptions import ExecuteLocatorException
 #from src.endpoints.prestashop import PrestaShop
-from src.utils.printer import pprint
+from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
 # Глобальные настройки через объект `Context`
@@ -88,7 +87,7 @@ class Context:
 # Общее название декоратора `@close_pop_up` можно изменить 
 # Если декоратор не используется в поставщике - поставь 
 
-def close_pop_up(value: 'Driver' = None) -> Callable:
+def close_pop_up() -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
     Args:
@@ -105,7 +104,11 @@ def close_pop_up(value: 'Driver' = None) -> Callable:
                     await Context.driver.execute_locator(Context.locator_for_decorator)  # Await async pop-up close  
                     ... 
                 except ExecuteLocatorException as ex:
-                    logger.debug(f'Ошибка выполнения локатора:', ex)
+                    logger.debug(f'Ошибка выполнения локатора:', ex, False)
+
+                finally:
+                    Context.locator_for_decorator = None
+
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
@@ -114,7 +117,7 @@ def close_pop_up(value: 'Driver' = None) -> Callable:
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
     
-    def __init__(self, supplier_prefix: str, driver: 'Driver'):
+    def __init__(self, supplier_prefix: str, lang_index:int, driver: 'Driver'):
         """Инициализация класса Graber.
 
         Args:
@@ -124,9 +127,10 @@ class Graber:
         self.supplier_prefix = supplier_prefix
         self.locator: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
         self.driver = driver
-        self.fields: ProductFields = ProductFields()
+        self.fields: ProductFields = ProductFields(lang_index) # <- установка базового языка. Тип - `int`
         Context.driver = self.driver
-        Context.supplier_prefix = supplier_prefix
+        Context.supplier_prefix = None
+        Context.locator_for_decorator = None
 
     async def error(self, field: str):
         """Обработчик ошибок для полей."""
@@ -790,7 +794,7 @@ class Graber:
             self.fields.description = normalize_string( raw_value )
             return True
         except Exception as ex:
-            logger.error(f"Ошибка получения значения в поле `description` \n {pprint(raw_value)}", ex)
+            logger.error(f"Ошибка получения значения в поле `description` \n {print(raw_value)}", ex)
             ...
             return
 

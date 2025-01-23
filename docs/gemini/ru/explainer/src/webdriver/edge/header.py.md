@@ -34,7 +34,7 @@ flowchart TD
     addToSysPath --> returnRoot[Return: <code>__root__</code>]
     checkSysPath -- "In path" --> returnRoot
     returnRoot --> end
-    end --> setGlobalRoot[Set:<br><code>__root__ = set_project_root()</code>]
+    end --> setGlobalRoot[Set:<br><code>__root__: Path = set_project_root()</code>]
 
     
     subgraph header.py

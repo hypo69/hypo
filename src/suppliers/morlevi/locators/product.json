@@ -2,7 +2,7 @@
   "close_pop_up": {
     "attribute": null,
     "by": "XPATH",
-    "selector": "//button[@class='close']",
+    "selector": "//div[@class='modal-content']//button",
     "if_list": "first",
     "use_mouse": false,
     "timeout": 0,

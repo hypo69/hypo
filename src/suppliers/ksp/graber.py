@@ -2,7 +2,7 @@ from __future__ import annotations
 ## \file /src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.ksp 
@@ -56,10 +56,10 @@ class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
     supplier_prefix: str
 
-    def __init__(self, driver: 'Driver'):
+    def __init__(self, driver: 'Driver', lang_index:int):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'ksp'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver, lang_index=lang_index)
         time.sleep(3)
         if '/mob/' in self.driver.current_url: # <- бывет, что подключается к мобильной версии сайта
             self.locator = j_loads_ns(gs.path.src / 'suppliers' / 'ksp' / 'locators' / 'product_mobile_site.json')

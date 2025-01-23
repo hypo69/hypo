@@ -39,7 +39,7 @@
 констант проекта, таких как имя, версия и автор.
 """
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 import sys
 from pathlib import Path

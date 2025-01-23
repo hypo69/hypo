@@ -1,7 +1,7 @@
 ## \file /src/suppliers/kualastyle/_experiments/list_product_urls.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.kualastyle._experiments 

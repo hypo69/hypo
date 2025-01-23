@@ -2,14 +2,14 @@
 
 ### <алгоритм>
 
-1.  **Начало файла**: Файл начинается с объявления кодировки (`# -*- coding: utf-8 -*-`) и шебанга (`#! venv/bin/python/python3.12`), указывающего на интерпретатор Python.
+1.  **Начало файла**: Файл начинается с объявления кодировки (`# -*- coding: utf-8 -*-`) и шебанга (`#! .pyenv/bin/python3`), указывающего на интерпретатор Python.
 2.  **Комментарии модуля**: В начале файла присутствует несколько строк комментариев, описывающих модуль.
 3.  **Завершение файла**:  Файл завершается объявлением модуля: `""" module: src.webdriver.firefox._pytest """`.
 
 **Примеры:**
 
 *   **Кодировка**: `# -*- coding: utf-8 -*-` - гарантирует правильное отображение символов Unicode.
-*   **Shebang**: `#! venv/bin/python/python3.12` - указывает, что файл должен выполняться с помощью Python 3.12 из виртуального окружения `venv`.
+*   **Shebang**: `#! .pyenv/bin/python3` - указывает, что файл должен выполняться с помощью Python 3.12 из виртуального окружения `venv`.
 *   **Комментарии модуля**: Комментарии вида `""" module: src.webdriver.firefox._pytest """` и другие комментарии - метаданные о модуле, описывают его назначение, платформы и т.п.
 
 ### <mermaid>
@@ -18,7 +18,7 @@
 flowchart TD
     Start --> FileStart[<code>test_firefox.py</code><br>Start of File]
     FileStart --> Encoding[Set Encoding: <br><code># -*- coding: utf-8 -*-</code>]
-    Encoding --> Shebang[Set Interpreter: <br><code>#! venv/bin/python/python3.12</code>]
+    Encoding --> Shebang[Set Interpreter: <br><code>#! .pyenv/bin/python3</code>]
     Shebang --> ModuleDescription[Module Description <br>Comments and MetaData]
     ModuleDescription --> ModuleDeclaration[Module Declaration: <br><code>""" module: src.webdriver.firefox._pytest """</code>]
     ModuleDeclaration --> FileEnd[End of File]

@@ -23,7 +23,7 @@
 # -*- coding: utf-8 -*-
 # src/ai/revai/__init__.py
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль инициализации RevAI

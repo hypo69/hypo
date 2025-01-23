@@ -1,7 +1,7 @@
 ## \file /src/endpoints/kazarinov/scenarios/_experiments/ask_model.py
 # -*- coding: utf-8 -*-\
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для проверки валидности ответов от модели

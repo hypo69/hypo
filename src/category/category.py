@@ -2,7 +2,7 @@ from __future__ import annotations
 ## \file /src/category/category.py
 # -*- coding: utf-8 -*-\
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 Module for working with categories, primarily for PrestaShop.
 ============================================================

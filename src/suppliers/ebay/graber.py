@@ -1,7 +1,7 @@
 ## \file /src/suppliers/ebay/graber.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.ebay 
@@ -53,10 +53,10 @@ class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
     supplier_prefix: str
 
-    def __init__(self, driver: Driver):
+    def __init__(self, driver: Driver, lang_index):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'ebay'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver, lang_index=lang_index)
         # Устанавливаем глобальные настройки через Context
         
         Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`

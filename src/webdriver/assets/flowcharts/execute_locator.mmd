@@ -1,0 +1,22 @@
+       graph TD
+            A[Start] --> B[Check if locator is SimpleNamespace or dict]
+            B --> C{Is locator SimpleNamespace?}
+            C -->|Yes| D[Use locator as is]
+            C -->|No| E[Convert dict to SimpleNamespace]
+            E --> D
+            D --> F[Define async function _parse_locator]
+            F --> G[Check if locator has event, attribute, or mandatory]
+            G -->|No| H[Return None]
+            G -->|Yes| I[Try to map by and evaluate attribute]
+            I --> J[Catch exceptions and log if needed]
+            J --> K{Does locator have event?}
+            K -->|Yes| L[Execute event]
+            K -->|No| M{Does locator have attribute?}
+            M -->|Yes| N[Get attribute by locator]
+            M -->|No| O[Get web element by locator]
+            L --> P[Return result of event]
+            N --> P[Return attribute result]
+            O --> P[Return web element result]
+            P --> Q[Return final result of _parse_locator]
+            Q --> R[Return result of execute_locator]
+            R --> S[End]

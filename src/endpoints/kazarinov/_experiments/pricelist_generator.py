@@ -1,7 +1,7 @@
 ## \file /src/endpoints/kazarinov/_experiments/pricelist_generator.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.endpoints.kazarinov._experiments 

@@ -75,7 +75,7 @@ def test_settings_loading(mock_path):
     """Test loading of settings.json, handling FileNotFoundError."""
     mock_path.root.joinpath('src', 'settings.json').exists.return_value = False
     with pytest.raises(FileNotFoundError):
-        __root__ = set_project_root() #This line is necessary to make the function run
+        __root__: Path = set_project_root() #This line is necessary to make the function run
         settings = None
         
 @patch('hypotez.src.endpoints.advertisement.header.Path')
@@ -83,7 +83,7 @@ def test_doc_loading(mock_path):
     """Test loading of README.MD, handling FileNotFoundError."""
     mock_path.root.joinpath('src', 'README.MD').exists.return_value = False
     with pytest.raises(FileNotFoundError):
-        __root__ = set_project_root() #This line is necessary to make the function run
+        __root__: Path = set_project_root() #This line is necessary to make the function run
         doc_str = None
 
 

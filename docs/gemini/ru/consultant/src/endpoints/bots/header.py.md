@@ -97,7 +97,7 @@ def set_project_root(marker_files: tuple[str, ...] = ('__root__', '.git')) -> Pa
 
 
 # Get the root directory of the project
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 settings: dict | None = None # аннотация типа

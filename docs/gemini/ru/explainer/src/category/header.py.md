@@ -36,7 +36,7 @@ flowchart TD
     CheckMarker -- Marker Not Found --> UseCurrent[Use Current Directory as Root]
     SetRoot --> AddToSysPath[Add Root to <code>sys.path</code>]
     UseCurrent --> AddToSysPath
-    AddToSysPath --> SetGlobalRoot[<code>__root__ = set_project_root()</code> <br>Set Global Project Root Path]
+    AddToSysPath --> SetGlobalRoot[<code>__root__: Path = set_project_root()</code> <br>Set Global Project Root Path]
     SetGlobalRoot --> ImportGS[Import Global Settings: <br><code>from src import gs</code>]
     ImportGS --> LoadSettings[Try to Load Settings: <br><code>settings.json</code>]
     LoadSettings -- Success --> SetProjectInfo[Set Project Info <br>from <code>settings</code>]

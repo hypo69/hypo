@@ -48,7 +48,7 @@ flowchart TD
     AddSysPath --> ReturnRoot[Return <br><code>__root__</code>]
     
     CheckSysPath -- Yes --> ReturnRoot
-    ReturnRoot --> GlobalRoot[<code>__root__ = set_project_root()</code>]
+    ReturnRoot --> GlobalRoot[<code>__root__: Path = set_project_root()</code>]
     GlobalRoot --> ImportGS[Import Global Settings: <br><code>from src import gs</code>]
     ImportGS --> End
 ```

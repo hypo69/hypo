@@ -70,7 +70,7 @@ def test_set_project_root_sys_path_appends(mock_gs, tmp_path):
 def test_settings_loading_success(settings_file):
     """Test loading settings when settings.json exists."""
     with patch('hypotez.src.endpoints.hypo69.header.gs.path.root', new=Path(settings_file.parent)):
-        __root__ = set_project_root()
+        __root__: Path = set_project_root()
         assert __root__ == Path(settings_file.parent)
         
 
@@ -95,7 +95,7 @@ def test_settings_loading_json_decode_error(mock_path):
 def test_readme_loading_success(readme_file):
     """Test loading README.MD when it exists."""
     with patch('hypotez.src.endpoints.hypo69.header.gs.path.root', new=Path(readme_file.parent)):
-        __root__ = set_project_root()
+        __root__: Path = set_project_root()
         assert __root__ == Path(readme_file.parent)
 
 def test_readme_loading_file_not_found(tmp_path):

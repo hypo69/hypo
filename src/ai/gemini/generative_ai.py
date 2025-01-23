@@ -1,6 +1,6 @@
 ## \file src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module::  src.ai.gemini.generative_ai
@@ -51,7 +51,7 @@ def normalize_text(text):
     # Заменяем escape-последовательности HTML, если необходимо (например, <br>)
     text = re.sub(r'\\n', '\n', text)  # Заменяем \n на настоящий символ новой строки
 
-    return text
+    return remove_html_blocks(text)
 
 def remove_html_blocks(text: str) -> str:
     """
@@ -199,8 +199,7 @@ class GoogleGenerativeAI:
             response = await self._chat.send_message_async(q)
             if response and response.text:
                 response_text = normalize_text(response.text)
-                response_text = remove_html_blocks(response_text)
-
+               
                 self.chat_history.append({"role": "user", "parts": [q]})
                 self.chat_history.append({"role": "model", "parts": [response_text]})
                 await self._save_chat_history(chat_data_folder)
@@ -219,7 +218,7 @@ class GoogleGenerativeAI:
 
 
 
-    async def ask(self, q: str, attempts: int = 15) -> Optional[str]:
+    async def ask(self, q: str, attempts: int = 15, save_history:bool = False) -> Optional[str]:
         """
         Метод отправляет текстовый запрос модели и возвращает ответ.
         """
@@ -235,14 +234,15 @@ class GoogleGenerativeAI:
                     )
                     time.sleep(2**attempt)
                     continue  # Повторить попытку
+
                 response_text = normalize_text(response.text)
-                response_text = remove_html_blocks(response.text)
-                messages = [
+              
+                if save_history:
+                    await self._save_dialogue([
                     {"role": "user", "content": q},
                     {"role": "model", "content": response_text},
-                ]
+                    ])
 
-                self._save_dialogue([messages])
                 return response_text
 
             except requests.exceptions.RequestException as ex:

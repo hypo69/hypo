@@ -43,7 +43,7 @@
     print(header.__project_name__)
 
 """
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 import sys
 from pathlib import Path

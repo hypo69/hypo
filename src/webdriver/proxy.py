@@ -1,7 +1,7 @@
 ## \file /src/webdriver/proxy.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для работы с прокси
@@ -28,6 +28,7 @@ from requests.exceptions import ProxyError, RequestException
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import header
+from header import __root__
 from src import gs
 from src.utils.printer import pprint
 from src.logger.logger import logger
@@ -36,7 +37,7 @@ from src.logger.logger import logger
 url: str = 'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/all/data.txt'
 
 # Путь к файлу для сохранения списка прокси
-proxies_list_path: Path = gs.path.src / 'webdriver' / 'proxies.txt'
+proxies_list_path: Path = __root__ / 'src' / 'webdriver' / 'proxies.txt'
 
 
 def download_proxies_list(url: str = url, save_path: Path = proxies_list_path) -> bool:

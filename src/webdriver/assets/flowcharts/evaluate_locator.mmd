@@ -1,0 +1,9 @@
+                graph TD
+            A[Start] --> B[Check if attribute is list]
+            B -->|Yes| C[Iterate over each attribute in list]
+            C --> D[Call _evaluate for each attribute]
+            D --> E[Return gathered results from asyncio.gather]
+            B -->|No| F[Call _evaluate for single attribute]
+            F --> G[Return result of _evaluate]
+            G --> H[End]
+            E --> H

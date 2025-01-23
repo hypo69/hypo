@@ -36,7 +36,7 @@ from __future__ import annotations
 # /src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для работы с OpenAI API и обучения моделей

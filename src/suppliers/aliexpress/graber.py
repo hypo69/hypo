@@ -1,7 +1,7 @@
 ## \file /src/suppliers/aliexpress/graber.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 rst```
@@ -78,7 +78,7 @@ class Graber(Grbr):
     """
     supplier_prefix: str
 
-    def __init__(self, driver: Driver):
+    def __init__(self, driver: Driver, lang_index:int):
         """
         Инициализация класса сбора полей товара.
 
@@ -87,7 +87,7 @@ class Graber(Grbr):
         """
         self.supplier_prefix = 'aliexpress'
         # вызов конструктора родительского класса
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver, lang_index=lang_index)
 
         # устанавливает значение локатора для декоратора в `None`
         # если будет установленно значение - то оно выполнится в декораторе `@close_pop_up`

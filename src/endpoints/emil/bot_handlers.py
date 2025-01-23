@@ -1,7 +1,7 @@
 ## \file /src/endpoints/emil/bot_handlers.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 .. module:: src.endpoints.emil.bot_handlers 
 	:platform: Windows, Unix

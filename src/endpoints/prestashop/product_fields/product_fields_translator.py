@@ -1,7 +1,7 @@
 ## \file /src/product/product_fields/product_fields_translator.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.product.product_fields 

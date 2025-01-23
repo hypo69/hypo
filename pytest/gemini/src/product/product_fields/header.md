@@ -70,7 +70,7 @@ def test_settings_loading():
         json.dump(mock_settings, f)
 
 
-    __root__ = set_project_root()
+    __root__: Path = set_project_root()
     assert isinstance(settings, dict)
     assert settings["project_name"] == "Example Project"
 
@@ -87,7 +87,7 @@ def test_readme_loading():
     with open(readme_file_path, 'w') as f:
         f.write("This is a README file.")
 
-    __root__ = set_project_root()
+    __root__: Path = set_project_root()
     assert isinstance(__doc__, str)
     assert len(__doc__) > 0
 

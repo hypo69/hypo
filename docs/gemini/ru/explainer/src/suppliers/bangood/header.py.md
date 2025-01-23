@@ -83,7 +83,7 @@ flowchart TD
     CheckRootInSysPath -- <code>__root__</code> не в <code>sys.path</code> --> InsertRootToSysPath[Добавление <code>__root__</code> в <code>sys.path</code>]
     InsertRootToSysPath --> ReturnRootPath[Возврат <code>__root__</code>]
     CheckRootInSysPath -- <code>__root__</code> в <code>sys.path</code> --> ReturnRootPath
-    ReturnRootPath --> SetGlobalRootVariable[Установка глобальной переменной: <br><code>__root__ = set_project_root()</code>]
+    ReturnRootPath --> SetGlobalRootVariable[Установка глобальной переменной: <br><code>__root__: Path = set_project_root()</code>]
     SetGlobalRootVariable --> ImportGlobalSettings[Импорт глобальных настроек: <code>from src import gs</code>]
     ImportGlobalSettings --> ReadSettingsFile[Чтение файла настроек: <br> <code>settings.json</code>]
     ReadSettingsFile --> HandleSettings[Обработка настроек и ошибок]

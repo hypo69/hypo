@@ -1,7 +1,7 @@
 ## \file /src/endpoints/hypo69/code_assistant/make_summary.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 module: src.endpoints.hypo69.code_assistant.make_summary

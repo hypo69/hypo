@@ -1,7 +1,7 @@
 ## \file /src/endpoints/advertisement/facebook/start_sergey.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.endpoints.advertisement.facebook 

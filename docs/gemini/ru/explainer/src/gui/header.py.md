@@ -43,7 +43,7 @@ flowchart TD
     CheckRootInPath -- Нет --> InsertRootToPath[Добавление корня проекта в `sys.path`]
     InsertRootToPath --> ReturnRoot[Возврат корневого пути: `return __root__`]
     CheckRootInPath -- Да --> ReturnRoot
-    ReturnRoot --> GetProjectRoot[Присваивание корня проекта переменной: `__root__ = set_project_root()`]
+    ReturnRoot --> GetProjectRoot[Присваивание корня проекта переменной: `__root__: Path = set_project_root()`]
      GetProjectRoot --> ImportGS[Импорт глобальных настроек: `from src import gs`]
     ImportGS --> ReadSettings[Чтение настроек из `settings.json`: `with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:`]
     ReadSettings -- Успех --> ParseSettings[Загрузка настроек из JSON: `settings = json.load(settings_file)`]

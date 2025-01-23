@@ -1,6 +1,6 @@
 ## \file /src/utils/get_free_port.py
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 .. module:: src.utils.get_free_port
     :platform: Windows, Unix

@@ -1,7 +1,7 @@
 ## \file /src/suppliers/morlevi/graber.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.morlevi 
@@ -19,6 +19,9 @@
 
 from pathlib import Path
 from typing import Any
+from typing import Callable
+from functools import wraps
+
 import header
 from src import gs
 from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
@@ -27,71 +30,15 @@ from src.utils.image import save_image
 from src.logger.logger import logger
 
 
-#
-#
-#           DECORATOR TEMPLATE. 
-#
-# def close_pop_up(value: Any = None) -> Callable:
-#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
-
-#     Args:
-#         value (Any): Дополнительное значение для декоратора.
-
-#     Returns:
-#         Callable: Декоратор, оборачивающий функцию.
-#     """
-#     def decorator(func: Callable) -> Callable:
-#         @wraps(func)
-#         async def wrapper(*args, **kwargs):
-#             try:
-#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
-#                 ... 
-#             except ExecuteLocatorException as e:
-#                 logger.debug(f'Ошибка выполнения локатора: {e}')
-#             return await func(*args, **kwargs)  # Await the main function
-#         return wrapper
-#     return decorator
-
 
 class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
     supplier_prefix: str
 
-    def __init__(self, driver: Driver):
+    def __init__(self, driver: Driver, lang_index:int):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'morlevi'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        #Context.locator_for_decorator = self.locator.close_pop_up  # <- Вместо этого я делаю рефреш
+        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver, lang_index=lang_index)
+        Context.locator_for_decorator = self.locator.close_pop_up 
 
-    # # 
-    # @close_pop_up()
-    # async def local_image_path(self, value: Any = None):
-    #     """Fetch and save image locally.
-    #     Функция получает изображение как скриншот сохраняет через файл в `tmp` и сохраняет путь к локальному файлу в поле `local_image_path` объекта `ProductFields`
-    #     Args:
-    #     value (Any): это значение можно передать в словаре kwargs через ключ {local_image_path = `value`} при определении класса.
-    #     Если `value` был передан, его значение подставляется в поле `ProductFields.local_image_path`.
-    #     .. note:
-    #         путь к изображению ведет в директорию  `tmp`
-    #     .. todo:
-    #         - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-    #         - Как передать путь кроме жестко указанного   
-    #     """
-       
-    #     if not value:
-    #         try:
-    #             if not self.fields.id_product:
-    #                 self.id_product() # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-    #             raw = await self.driver.execute_locator(self.locator.default_image_url) # <- получаю скриншот как `bytes` 
-    #             img_tmp_path = await save_image(raw[0] if isinstance(raw, list) else raw , Path( gs.path.tmp / f'{self.fields.id_product}.png'))
-    #             if img_tmp_path:
-    #                 self.fields.local_image_path = img_tmp_path
-    #                 return True
-    #             else:
-    #                 logger.debug(f"Ошибка сохранения изображения")
-    #                 ...
-    #                 return
-    #         except Exception as ex:
-    #             logger.error(f'Ошибка сохранения изображения в поле `local_image_path`', ex)
-    #             ...
-    #             return
+   

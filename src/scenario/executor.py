@@ -1,7 +1,7 @@
 # \file hypotez/src/scenario/executor.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Module for executing scenarios.

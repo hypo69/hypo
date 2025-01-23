@@ -81,7 +81,7 @@ def set_project_root(marker_files: tuple[str, ...] = ('__root__', '.git')) -> Pa
 
 
 # Получаем корневой каталог проекта
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """__root__ (Path): Путь к корневому каталогу проекта"""
 
 wkhtmltopdf_exe = __root__ / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe'

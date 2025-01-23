@@ -51,7 +51,7 @@
     print(f"Документация: {__doc__}")
 """
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 from pathlib import Path
 from src.utils.jjson import j_loads  # Используем j_loads

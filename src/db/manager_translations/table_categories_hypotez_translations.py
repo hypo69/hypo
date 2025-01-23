@@ -1,7 +1,7 @@
 ## \file /src/db/manager_translations/table_categories_hypotez_translations.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.db.manager_translations 

@@ -1,7 +1,7 @@
 ## \file /src/ai/llama/model.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 # https://huggingface.co/lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF?library=llama-cpp-python
 

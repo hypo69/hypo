@@ -1,7 +1,7 @@
 ## \file /src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/test_1_murano_glass_scenario.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass 

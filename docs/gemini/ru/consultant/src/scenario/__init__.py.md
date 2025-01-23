@@ -109,7 +109,7 @@
 
 """
 # -*- coding: utf-8 -*- # Добавлен комментарий для сохранения
-#! venv/bin/python/python3.12 # Добавлен комментарий для сохранения
+#! .pyenv/bin/python3 # Добавлен комментарий для сохранения
 
 from src.logger import logger # Импорт логгера
 from .executor import ( # Выравнивание импортов

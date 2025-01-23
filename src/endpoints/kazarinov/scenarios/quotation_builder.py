@@ -1,8 +1,7 @@
 from __future__ import annotations
 ## \file /src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-\
-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль исполнения сценария создания мехирона для Сергея Казаринова
@@ -18,20 +17,23 @@ and integration with Facebook for product posting.
 
 """
 
-
+from bs4 import BeautifulSoup
+import requests
 import asyncio
 import random
 import shutil
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Any
 from types import SimpleNamespace
 from dataclasses import field
 
 import header
+from header import __root__
 from src import gs
 from src.endpoints.prestashop.product_fields import ProductFields
 
-#from src.webdriver.driver import Driver
+from src.webdriver.driver import Driver
+from src.webdriver.firefox import Firefox
 from src.webdriver.playwright import Playwrid
 
 
@@ -55,7 +57,7 @@ from src.utils.printer import pprint
 from src.logger.logger import logger
 
 
-class MexironBuilder:
+class QuotationBuilder:
     """
     Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
     
@@ -65,7 +67,7 @@ class MexironBuilder:
         products_list (List[dict]): Список обработанных данных о продуктах.
     """
     ENDPOINT = 'kazarinov'
-    base_path:Path = gs.path.endpoints / ENDPOINT
+    base_path:Path = __root__ / 'src' / 'endpoints' / ENDPOINT
 
     try:
         config: SimpleNamespace = j_loads_ns(base_path / f'{ENDPOINT}.json')
@@ -74,7 +76,8 @@ class MexironBuilder:
         
         
 
-    driver: Playwrid = Playwrid()
+    #driver: Playwrid = Playwrid()
+    driver = Driver(Firefox)
     export_path: Path
     mexiron_name: str
     price: float
@@ -83,9 +86,15 @@ class MexironBuilder:
     model: GoogleGenerativeAI
     
     translations: 'SimpleNamespace' =  j_loads_ns(base_path / 'translations' / 'mexiron.json')
-    # telegram
-    update: Update 
-    context: CallbackContext
+
+
+    # Не все поля товара надо заполнять. Вот кортеж необходимых полей:
+    required_fields:tuple = ('id_product',
+                                'name',
+                                'description_short',
+                                'description',
+                                'specification',
+                                'local_image_path')
 
     def __init__(self, mexiron_name: Optional[str] = None):
         """
@@ -110,9 +119,8 @@ class MexironBuilder:
 
 
         try:
-            system_instruction = (gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
-            
-            api_key = gs.credentials.gemini.kazarinov
+            system_instruction:str = (self.base_path / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
+            api_key:str = gs.credentials.gemini.kazarinov
             self.model = GoogleGenerativeAI(
                 api_key=api_key,
                 system_instruction=system_instruction,
@@ -123,137 +131,8 @@ class MexironBuilder:
             return
 
 
-    async def run_scenario(
-        self, 
-        update: Update, 
-        context: CallbackContext,
-        urls: list[str],
-        price: Optional[str] = '', 
-        mexiron_name: Optional[str] = '', 
-        
-    ) -> bool:
-        """
-        Executes the scenario: parses products, processes them via AI, and stores data.
 
-        Args:
-            system_instruction (Optional[str]): System instructions for the AI model.
-            price (Optional[str]): Price to process.
-            mexiron_name (Optional[str]): Custom Mexiron name.
-            urls (Optional[str | List[str]]): Product page URLs.
-
-        Returns:
-            bool: True if the scenario executes successfully, False otherwise.
-
-        .. todo:
-            сделать логер перед отрицательным выходом из функции. 
-            Важно! модель ошибается. 
-
-        """
-        self.update = update
-        self.context = context
-
-        # Не все поля товара надо заполнять. Вот кортеж необходимых полей:
-        required_fields:tuple = ('id_product',
-                                 'name',
-                                 'description_short',
-                                 'description',
-                                 'specification',
-                                 'local_image_path')
-        products_list = []
-
-        # 1. Сбор товаров
-        for url in urls:
-
-            graber = self.get_graber_by_supplier_url(url) 
-            
-            if not graber:
-                logger.debug(f"Нет грабера для: {url}", None, False)
-                ...
-                continue
-
-            try:
-                await update.message.reply_text(f"""Process: 
-                {url}""")
-                f = await graber.grab_page(*required_fields)
-
-                ...
-                if gs.host_name == 'Vostro-3888':
-                    ...
-                    #self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
-            except Exception as ex:
-                logger.error(f"Ошибка получения полей товара",ex, False)
-                ...
-                continue
-
-            if not f:
-                logger.debug(f'Failed to parse product fields for URL: {url}')
-                ...
-                continue
-
-            product_data = await self.convert_product_fields(f)
-            if not product_data:
-                logger.debug(f'Failed to convert product fields: {product_data}')
-                ...
-                continue
-
-            if not await self.save_product_data(product_data):
-                logger.error(f"Data not saved! {pprint(product_data)}")
-                ...
-                continue
-            products_list.append(product_data)    
-
-        # 2. AI processing
-        """ список компонентов сборки компьютера уходит в обработку моделью (`gemini`) -> 
-        модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
-        Внимание! модель может ошибаться"""
-
-        langs_list:list = ['he','ru']
-        for lang in langs_list:
-
-            await update.message.reply_text(f"AI processing lang = {lang}")
-            data:dict = await self.process_ai(products_list, lang)
-            if not data:
-                await update.message.reply_text("Ошибка модели")
-                continue
-
-            data[lang]['price'] = price
-            data[lang]['currency'] = getattr( self.translations.currency , lang, "ש''ח")
-
-            if not j_dumps(data, self.export_path / f'{self.mexiron_name}_{lang}.json'):
-                await update.message.reply_text("Ошибка JSON")
-
-            html_file = Path(self.export_path/f'{self.mexiron_name}_{lang}.html')
-            pdf_file =  Path(self.export_path/f'{self.mexiron_name}_{lang}.pdf')
-            # 3. Report creating
-            if await self.create_report(data[lang], lang, html_file, pdf_file):
-                await update.message.reply_text("successfull")
-
-
-    def get_graber_by_supplier_url(self, url: str):
-        """
-        Returns the appropriate graber for a given supplier URL.
-        Для каждого поставщика реализован свой грабер, который вытаскивает значения полей с целевой html страницы 
-
-        Args:
-            url (str): Supplier page URL.
-
-        Returns:
-            Optional[object]: Graber instance if a match is found, None otherwise.
-        """
-        self.driver.get_url(url)
-        if url.startswith(('https://morlevi.co.il', 'https://www.morlevi.co.il')):
-            return MorleviGraber(self.driver)
-        if url.startswith(('https://ksp.co.il', 'https://www.ksp.co.il')):
-            return KspGraber(self.driver)
-        if url.startswith(('https://grandadvance.co.il', 'https://www.grandadvance.co.il')):
-            return GrandadvanceGraber(self.driver)
-        if url.startswith(('https://ivory.co.il', 'https://www.ivory.co.il')):
-            return IvoryGraber(self.driver)
-        logger.debug(f'No graber found for URL: {url}')
-        ...
-        return 
-
-    async def convert_product_fields(self, f: ProductFields) -> dict:
+    def convert_product_fields(self, f: ProductFields) -> dict:
         """
         Converts product fields into a dictionary. 
         Функция конвертирует поля из объекта `ProductFields` в простой словарь для модели ии.
@@ -270,16 +149,21 @@ class MexironBuilder:
         if not f.id_product:
             return {} # <- сбой при получении полей товара. Такое может произойти если вместо страницы товара попалась страница категории, при невнимательном составлении мехирона из комплектующих
         ...
+        product_name = '' if not f.name else  f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
+        description = '' if not f.description else f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
+        description_short = '' if not f.description_short else f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
+        specification = '' if not f.specification else f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
+        
         return {
-            'product_title': f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
+            'product_name':product_name,
             'product_id': f.id_product,
-            'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
-            'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
-            'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
+            'description_short':description_short,
+            'description': description,
+            'specification': specification,
             'local_image_path': str(f.local_image_path),
         }
 
-    async def save_product_data(self, product_data: dict):
+    async def save_product_data(self, product_data: dict) -> bool:
         """
         Saves individual product data to a file.
 
@@ -312,7 +196,8 @@ class MexironBuilder:
         if attempts < 1:
             ...
             return {}  # return early if no attempts are left
-        model_command = Path(gs.path.endpoints / 'kazarinov' / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
+
+        model_command = Path(self.base_path / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
         # Request response from the AI model
         q = model_command + '\n' + str(products_list)
         response = await self.model.ask(q)
@@ -362,13 +247,11 @@ class MexironBuilder:
 
         generator = ReportGenerator()
 
-        if await generator.create_report(data, lang, html_file, pdf_file):
-            # Проверка, существует ли файл и является ли он файлом
-            if pdf_file.exists() and pdf_file.is_file():
-                # Отправка боту PDF-файл через reply_document()
-                await self.update.message.reply_document(document=pdf_file)
-                return True
-            else:
-                logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
-                return
+        await generator.create_report(data, lang, html_file, pdf_file)
+        # Проверка, существует ли файл и является ли он файлом
+        if pdf_file.exists() and pdf_file.is_file():
+            return pdf_file
+        else:
+            logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
+            return
 

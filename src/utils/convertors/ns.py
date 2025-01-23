@@ -1,7 +1,7 @@
 ## \file /src/utils/convertors/ns.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.utils.convertors.ns 

@@ -31,7 +31,7 @@
 # /src/suppliers/grandadvance/graber.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для сбора данных о товарах с сайта grandadvance.co.il.

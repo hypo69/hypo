@@ -34,7 +34,7 @@
 """
 # -*- coding: utf-8 -*- # Сохраняем кодировку UTF-8
 
-#! venv/bin/python/python3.12 # Сохраняем shebang
+#! .pyenv/bin/python3 # Сохраняем shebang
 #
 # .. module:: src.utils.iso # Удаляем лишнее, так как описание модуля есть выше
 #   :platform: Windows, Unix # Удаляем лишнее, так как описание модуля есть выше

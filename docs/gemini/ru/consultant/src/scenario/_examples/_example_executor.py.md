@@ -36,7 +36,7 @@
 ```python
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Примеры использования модуля `executor` из `src.scenario.executor`.

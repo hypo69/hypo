@@ -1,7 +1,7 @@
 ## \file /src/suppliers/_experiments/test_categories_from_template.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers._experiments 

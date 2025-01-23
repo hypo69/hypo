@@ -1,0 +1,20 @@
+                graph TD
+            A[Start] --> B[Check if locator is SimpleNamespace or dict]
+            B -->|Yes| C[Convert locator to SimpleNamespace if needed]
+            C --> D[Call get_webelement_by_locator]
+            D --> E[Check if web_element is found]
+            E -->|No| F[Log debug message and return]
+            E -->|Yes| G[Check if locator.attribute is a dictionary-like string]
+            G -->|Yes| H[Parse locator.attribute string to dict]
+            H --> I[Check if web_element is a list]
+            I -->|Yes| J[Retrieve attributes for each element in list]
+            J --> K[Return list of attributes]
+            I -->|No| L[Retrieve attributes for a single web_element]
+            L --> K
+            G -->|No| M[Check if web_element is a list]
+            M -->|Yes| N[Retrieve attributes for each element in list]
+            N --> O[Return list of attributes or single attribute]
+            M -->|No| P[Retrieve attribute for a single web_element]
+            P --> O
+            O --> Q[End]
+            F --> Q

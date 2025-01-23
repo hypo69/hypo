@@ -1,7 +1,7 @@
 ## \file /src/suppliers/chat_gpt/gpt_traigner.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.chat_gpt 

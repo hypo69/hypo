@@ -10,12 +10,12 @@
     - Отсутствует подробная документация в формате RST.
     - Не используется импорт `logger` из `src.logger`.
     - Отсутствуют комментарии к импортам.
-    - Избыточные строки: `#! venv/bin/python/python3.12` и `# -*- coding: utf-8 -*-`
+    - Избыточные строки: `#! .pyenv/bin/python3` и `# -*- coding: utf-8 -*-`
 
 **Рекомендации по улучшению**:
 
 - Добавить подробное описание модуля в формате RST.
-- Удалить избыточные строки `#! venv/bin/python/python3.12` и `# -*- coding: utf-8 -*-`.
+- Удалить избыточные строки `#! .pyenv/bin/python3` и `# -*- coding: utf-8 -*-`.
 - Добавить комментарии к импортам в стиле RST.
 - Использовать импорт `logger` из `src.logger`.
 
@@ -45,7 +45,7 @@
     translated_fields = translate_presta_fields_dict({})
 """
 # -*- coding: utf-8 -*- # Избыточная строка
-#! venv/bin/python/python3.12 # Избыточная строка
+#! .pyenv/bin/python3 # Избыточная строка
 
 
 from .product_fields import ProductFields  # импорт класса для работы с полями товаров

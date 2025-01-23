@@ -1,7 +1,7 @@
 ## \file /src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.endpoints.advertisement.facebook.scenarios 

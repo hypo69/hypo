@@ -48,7 +48,7 @@
 ## \file /src/webdriver/executor.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для выполнения действий с веб-элементами

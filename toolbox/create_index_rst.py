@@ -1,7 +1,7 @@
 ## \file /dev_utils/create_index_rst.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module: dev_utils 

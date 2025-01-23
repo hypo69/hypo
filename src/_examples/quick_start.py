@@ -1,7 +1,7 @@
 ## \file /src/_examples/quick_start.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src._examples 

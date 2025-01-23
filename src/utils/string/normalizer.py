@@ -1,7 +1,7 @@
 ## \file /src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для нормализации строк и числовых данных

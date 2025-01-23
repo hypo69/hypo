@@ -28,7 +28,7 @@
 
 """
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 from src.logger import logger # Импорт logger
 # from src.utils.jjson import j_loads, j_loads_ns

@@ -13,7 +13,7 @@
      - Если текущий файл находится в `/home/user/project/src/translators/header.py`, и в `/home/user/project` есть файл `.git`, то `__root__` будет `/home/user/project`.
      - Если ни один из `marker_files` не найден в родительских каталогах, то `__root__` останется `/home/user/project/src/translators`.
 
-2. **`__root__ = set_project_root()`**:
+2. **`__root__: Path = set_project_root()`**:
    - Вызывается функция `set_project_root()`, чтобы определить корень проекта.
    - Возвращенное значение присваивается глобальной переменной `__root__`.
 

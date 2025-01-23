@@ -1,7 +1,7 @@
 ## \file /src/suppliers/chat_gpt/scenarios/grab_lilnks_to_chats.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.chat_gpt.scenarios 

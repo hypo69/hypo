@@ -45,7 +45,7 @@
 """
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 import sys
 from pathlib import Path
 from src.utils.jjson import j_loads # Используем j_loads для загрузки json

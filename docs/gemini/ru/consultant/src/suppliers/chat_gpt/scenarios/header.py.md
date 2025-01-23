@@ -49,7 +49,7 @@
     print(f"Project version: {__version__}")
 """
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 import sys
 from pathlib import Path
 from packaging.version import Version
@@ -83,7 +83,7 @@ def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
 
 
 # Get the root directory of the project
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 from src import gs

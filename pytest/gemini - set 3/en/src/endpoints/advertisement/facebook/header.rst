@@ -53,7 +53,7 @@ def test_settings_json_exists():
     (Path("./src/settings.json")).write_text(json.dumps(mock_settings))
     settings_json = mock_gs.path.root / 'src' / 'settings.json'
 
-    __root__ = set_project_root()
+    __root__: Path = set_project_root()
     expected_project_name = mock_settings.get("project_name")
     assert __project_name__ == expected_project_name
 
@@ -61,7 +61,7 @@ def test_settings_json_exists():
 
 def test_settings_json_not_exists():
     """Checks handling if settings.json does not exist."""
-    __root__ = set_project_root()
+    __root__: Path = set_project_root()
     assert __project_name__ == 'hypotez'
 
 
@@ -69,13 +69,13 @@ def test_readme_md_exists():
     """Checks if README.md is loaded correctly when it exists."""
     mock_readme = "This is a README"
     (Path("./src/README.MD")).write_text(mock_readme)
-    __root__ = set_project_root()
+    __root__: Path = set_project_root()
     assert __doc__ == mock_readme
 
 
 def test_readme_md_not_exists():
     """Checks handling if README.md does not exist."""
-    __root__ = set_project_root()
+    __root__: Path = set_project_root()
     assert __doc__ == ""
 
 

@@ -1,7 +1,7 @@
 ## \file /dev_utils/code2file_for_chat_gpt.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module: dev_utils 

@@ -32,7 +32,7 @@
 таких как публикация сообщений, создание событий и рекламы.
 """
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 from .login import login
 from .post_ad import post_ad

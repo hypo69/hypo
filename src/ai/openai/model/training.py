@@ -3,7 +3,7 @@ from __future__ import annotations
 ## \file /src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.ai.openai.model 

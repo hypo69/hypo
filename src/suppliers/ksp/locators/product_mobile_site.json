@@ -900,16 +900,17 @@
     "locator_description": "На сайте нет полного описания товара, поэтому я повторяю локатор `specification`"
   },
   "specification": {
-    "attribute": "innerText",
-    "by": "XPATH",
-    "selector": "(//div[@class='rtl-1xo3mso'])[8]",
-    "if_list": "all",
+    "attribute": [ "innerText", "innerText" ],
+    "by": [ "XPATH", "XPATH" ],
+    "selector": [ "//div[@class='rtl-988706']", "//div[@class='alignright rtl-76rexf']" ],
+    "if_list": [ "all", "all" ],
+    "sorted": "pairs",
     "use_mouse": false,
-    "mandatory": true,
-    "timeout": 0,
+    "mandatory": [ true, true ],
+    "timeout": [ 0, 0 ],
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "KSP mobile Технические характеристики. "
+    "locator_description": "KSP mobile Технические характеристики. Собирает с двух элементов и сортирует по парам "
   },
   "affiliate_short_link": {
     "attribute": null,

@@ -2,7 +2,7 @@ from __future__ import annotations
 ## \file /src/utils/pdf.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.utils.pdf 
@@ -54,7 +54,7 @@ def set_project_root(marker_files=('__root__','.git')) -> Path:
 
 
 # Get the root directory of the project
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 

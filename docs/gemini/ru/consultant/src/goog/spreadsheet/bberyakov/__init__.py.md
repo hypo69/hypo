@@ -15,7 +15,7 @@
 - Добавить документацию в формате RST для модуля.
 - Использовать `logger` из `src.logger`.
 - Использовать одинарные кавычки для строк.
--  Убрать ненужные комментарии (`# -*- coding: utf-8 -*-` и `#! venv/bin/python/python3.12`).
+-  Убрать ненужные комментарии (`# -*- coding: utf-8 -*-` и `#! .pyenv/bin/python3`).
 - Добавить пустую строку после документации модуля.
 - Выровнять импорты.
 
@@ -42,7 +42,7 @@
     worksheets = spreadsheet.get_worksheets()
 """
 # -*- coding: utf-8 -*- # удален ненужный комментарий
-#! venv/bin/python/python3.12 # удален ненужный комментарий
+#! .pyenv/bin/python3 # удален ненужный комментарий
 
 from .gspreadsheet import GSpreadsheet # исправлено выравнивание
 from .gworksheets import GWorksheet # исправлено выравнивание

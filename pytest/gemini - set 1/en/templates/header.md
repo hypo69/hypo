@@ -30,7 +30,7 @@ def test_header_src_path():
             """
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
         )

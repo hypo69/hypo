@@ -1,7 +1,7 @@
 ## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_4_lxml_get_unique_links.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.endpoints.prestashop._experiments.suppliers.hb 

@@ -46,7 +46,7 @@
 ## \file /src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для преобразования HTML в Markdown

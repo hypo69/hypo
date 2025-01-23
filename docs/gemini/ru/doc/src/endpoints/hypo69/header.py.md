@@ -52,7 +52,7 @@ def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
 
 **Описание**: Путь к корневой директории проекта.
 ```python
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 ```
 

@@ -42,7 +42,7 @@
     print(__project_name__, __version__, __doc__)
 """
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 import sys
 from pathlib import Path

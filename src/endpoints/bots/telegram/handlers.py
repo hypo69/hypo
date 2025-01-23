@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 .. module:: src.endpoints.kazarinov.bot_handlers 
 	:platform: Windows, Unix

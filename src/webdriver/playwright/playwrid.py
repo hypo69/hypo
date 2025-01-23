@@ -1,7 +1,7 @@
 ## \file /src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.webdriver.playwright 
@@ -24,8 +24,10 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 from types import SimpleNamespace
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
+#from crawlee.crawlers import PlaywrightCrawler, PlaywrightCrawlingContext
 
 import header
+from header import __root__
 from src import gs
 from src.webdriver.playwright.executor import PlaywrightExecutor
 from src.webdriver.js import JavaScript
@@ -41,7 +43,7 @@ class Playwrid(PlaywrightCrawler):
         driver_name (str): Name of the driver, defaults to 'playwrid'.
     """
     driver_name: str = 'playwrid'
-    base_path: Path = gs.path.src / 'webdriver' / 'playwright'
+    base_path: Path = __root__ / 'src' / 'webdriver' / 'playwright'
     config: SimpleNamespace = j_loads_ns(base_path / 'playwrid.json')
     context = None
 

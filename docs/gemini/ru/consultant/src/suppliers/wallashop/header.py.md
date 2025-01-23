@@ -30,7 +30,7 @@
 ## \file /src/suppliers/wallashop/header.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для инициализации настроек и переменных проекта.

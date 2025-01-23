@@ -102,7 +102,7 @@ flowchart TD
     CheckRootPathInSysPath -- Yes --> InsertRootPathInSysPath[Insert: <br><code>sys.path.insert(0, str(__root__))</code>]
     InsertRootPathInSysPath --> ReturnRootPath[Return:<br><code>return __root__</code>]
     CheckRootPathInSysPath -- No --> ReturnRootPath
-    ReturnRootPath --> AssignRootModuleVariable[Assign:<br> <code>__root__ = set_project_root()</code>]
+    ReturnRootPath --> AssignRootModuleVariable[Assign:<br> <code>__root__: Path = set_project_root()</code>]
     AssignRootModuleVariable --> ImportGS[Import:<br><code>from src import gs</code>]
     ImportGS --> InitializeSettingsVariable[Initialize:<br><code>settings:dict = None</code>]
     InitializeSettingsVariable --> TryLoadSettings[Try: <br><code>try: open and load settings.json</code>]

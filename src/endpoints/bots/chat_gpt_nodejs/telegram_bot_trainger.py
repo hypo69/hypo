@@ -1,7 +1,7 @@
 ## \file /src/bots/openai_bots/telegram_bot_trainger.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.bots.openai_bots 

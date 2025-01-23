@@ -74,7 +74,7 @@ def test_settings_loading_success(mock_gs_path, monkeypatch):
       json.dump(settings_data, f)
   
   # Call the function to be tested
-  __root__ = set_project_root()
+  __root__: Path = set_project_root()
   # ... rest of your code from the original file ...
 
   assert __project_name__ == "TestProject"
@@ -106,7 +106,7 @@ import hypotez.src.endpoints.kazarinov.scenarios.header as header
 
 def test_header_values_with_valid_settings_json(mock_open_settings_file):
     """Test that header variables are correctly populated with valid settings.json."""
-    header.__root__ = set_project_root()
+    header.__root__: Path = set_project_root()
     assert header.__project_name__ == "TestProject"
 
 

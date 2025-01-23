@@ -1,7 +1,7 @@
 ## \file /src/suppliers/wallmart/_experiments/JUPYTER_header.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.wallmart._experiments 

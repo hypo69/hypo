@@ -44,7 +44,7 @@
     main()
 """
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 from pathlib import Path #  Для работы с путями
 import tempfile # Для работы с временными файлами

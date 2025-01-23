@@ -1,7 +1,7 @@
 ## \file /src/utils/_examples/get_relative_path.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.utils._examples.get_relative_path 

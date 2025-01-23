@@ -33,7 +33,7 @@
 ## \file /src/suppliers/aliexpress/header.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для настройки окружения и загрузки конфигурации.
@@ -92,7 +92,7 @@ def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
 
 
 # Get the root directory of the project #  Удалён лишний комментарий
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 settings: dict = None #  Выравнивание аннотации типов и переменных

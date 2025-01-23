@@ -1,6 +1,6 @@
 ## \file /src/endpoints/bots/telegram/telegram_webhooks.py
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 Телеграм бот через сервер FastAPI через RPC
 ====================================================

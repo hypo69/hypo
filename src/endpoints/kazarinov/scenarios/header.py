@@ -1,7 +1,7 @@
 ## \file /src/endpoints/kazarinov/scenarios/header.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.endpoints.kazarinov.scenarios 
@@ -12,9 +12,6 @@
 
 
 import sys
-import json
-from packaging.version import Version
-
 from pathlib import Path
 def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
@@ -40,32 +37,5 @@ def set_project_root(marker_files=('__root__','.git')) -> Path:
 
 
 # Get the root directory of the project
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
-
-from src import gs
-
-settings:dict = None
-try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = json.load(settings_file)
-except (FileNotFoundError, json.JSONDecodeError):
-    ...
-
-
-doc_str:str = None
-try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
-        doc_str = settings_file.read()
-except (FileNotFoundError, json.JSONDecodeError):
-    ...
-
- 
-
-__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
-__version__: str = settings.get("version", '')  if settings  else ''
-__doc__: str = doc_str if doc_str else ''
-__details__: str = ''
-__author__: str = settings.get("author", '')  if settings  else ''
-__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

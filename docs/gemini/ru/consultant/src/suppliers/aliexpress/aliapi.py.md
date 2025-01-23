@@ -47,7 +47,7 @@
 ## \file /src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для взаимодействия с API AliExpress

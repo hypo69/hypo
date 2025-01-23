@@ -31,7 +31,7 @@
 Содержит информацию о версии, документации и деталях расширений.
 """
 # -*- coding: utf-8 -*-  # Сохраняем кодировку файла
-#! venv/bin/python/python3.12 # Сохраняем shebang
+#! .pyenv/bin/python3 # Сохраняем shebang
 
 from packaging.version import Version # Импорт для работы с версиями
 # from src.logger.logger import logger # не используется

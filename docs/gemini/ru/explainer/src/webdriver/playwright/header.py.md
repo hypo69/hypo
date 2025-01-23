@@ -54,7 +54,7 @@ flowchart TD
     ImportGlobalSettings --> FunctionSetProjectRoot[<code>def set_project_root()</code>]
     ImportFromPathLib --> FunctionSetProjectRoot
     ImportVersion --> FunctionSetProjectRoot
-    FunctionSetProjectRoot --> SetProjectRootVariable[<code>__root__ = set_project_root()</code>]
+    FunctionSetProjectRoot --> SetProjectRootVariable[<code>__root__: Path = set_project_root()</code>]
     
     SetProjectRootVariable --> End
     

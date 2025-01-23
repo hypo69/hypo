@@ -1,7 +1,7 @@
 ## \file /src/db/manager_coupons_and_sales/product_campaigns.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.db.manager_coupons_and_sales 

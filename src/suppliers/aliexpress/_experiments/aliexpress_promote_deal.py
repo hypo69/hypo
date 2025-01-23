@@ -1,7 +1,7 @@
 ## \file /src/suppliers/aliexpress/_experiments/aliexpress_promote_deal.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.aliexpress._experiments 

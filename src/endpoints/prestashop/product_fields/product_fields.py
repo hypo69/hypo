@@ -1,6 +1,6 @@
 ## \file /src/endpoints/prestashop/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: endpoints.prestashop.product_fields.product_fields
@@ -220,6 +220,7 @@ from types import SimpleNamespace
 
 
 import header
+from header import __root__
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file
@@ -241,7 +242,7 @@ class ProductFields:
         'default_image_url': '',
         'images_urls': []
     })
-    base_path:Path = gs.path.endpoints / 'prestashop' 
+    base_path:Path = __root__ / 'src' / 'endpoints' / 'prestashop' 
 
     def __post_init__(self):
         """Инициализация класса после создания экземпляра. Загружаются данные полей, языков и их идентификаторов."""

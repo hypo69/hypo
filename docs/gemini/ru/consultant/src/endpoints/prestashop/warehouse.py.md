@@ -25,7 +25,7 @@
 ```python
 # -*- coding: utf-8 -*-
 #  /src/endpoints/prestashop/warehouse.py
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 Модуль для работы со складами PrestaShop
 =======================================

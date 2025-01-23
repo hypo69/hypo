@@ -1,7 +1,7 @@
 ## \file /src/suppliers/aliexpress/campaign/_experiments/deals_from_xls.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.aliexpress.campaign._experiments 

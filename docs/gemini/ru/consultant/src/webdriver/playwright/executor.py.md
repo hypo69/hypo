@@ -51,7 +51,7 @@
 ```python
 # /src/webdriver/playwright/executor.py
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 Модуль для управления браузером с использованием Playwright.
 ============================================================

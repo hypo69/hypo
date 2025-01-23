@@ -14,7 +14,7 @@
      - Проверяется, находится ли `__root__` в списке путей поиска модулей `sys.path`.
      - Если нет, `__root__`  добавляется в начало списка, чтобы обеспечить возможность импорта модулей из корневого каталога.
    - **Возврат**: Функция возвращает путь к корневому каталогу проекта (`__root__`).
-2. **`__root__ = set_project_root()`**:
+2. **`__root__: Path = set_project_root()`**:
     - Вызывается `set_project_root()` для определения корневого каталога проекта, результат сохраняется в глобальной переменной `__root__`.
 3. **Импорт настроек `gs`**:
     - Выполняется импорт `from src import gs`, который, предположительно, предоставляет глобальные настройки, включая пути.
@@ -54,7 +54,7 @@ flowchart TD
     NextParent --> CheckMarkers
     SetRoot -->  AddToSysPath[Add <code>__root__</code> to <code>sys.path</code> if needed]
     AddToSysPath --> ReturnRoot[Return <code>__root__</code>]
-    ReturnRoot --> SetGlobalRoot[<code>__root__ = set_project_root()</code><br>Set Global Project Root]
+    ReturnRoot --> SetGlobalRoot[<code>__root__: Path = set_project_root()</code><br>Set Global Project Root]
     SetGlobalRoot --> ImportGlobalSettings[Import Global Settings:<br> <code>from src import gs</code>]
     ImportGlobalSettings --> LoadSettings[Load Settings:<br><code>settings = json.load(...)</code>]
     LoadSettings -- Success --> ReadDoc[Read Document:<br><code>doc_str = settings_file.read()</code>]

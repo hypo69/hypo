@@ -48,7 +48,7 @@
 """
 # -*- coding: utf-8 -*- # Сохраняем кодировку
 
-#! venv/bin/python/python3.12 # Сохраняем shebang
+#! .pyenv/bin/python3 # Сохраняем shebang
 
 from src.logger import logger # импортируем logger
 from .playwright import Playwright # исправляем опечатку и импортируем класс Playwright

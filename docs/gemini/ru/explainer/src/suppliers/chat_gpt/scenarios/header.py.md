@@ -50,7 +50,7 @@ flowchart TD
         H -- Yes --> J
      end
      
-     K[Call: __root__ = set_project_root()] --> L[Import: from src import gs]
+     K[Call: __root__: Path = set_project_root()] --> L[Import: from src import gs]
      L --> M{Try: Open settings.json}
      M -- Success --> N[Load settings: settings = json.load(settings_file)]
      M -- Fail --> O[Exception: FileNotFoundError, JSONDecodeError]

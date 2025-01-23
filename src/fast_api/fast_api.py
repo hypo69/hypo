@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 FastAPI сервер с XML-RPC интерфейсом для удалённого управления

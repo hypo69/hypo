@@ -82,7 +82,7 @@
 
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 import time # импорт модуля time
 from src.utils.jjson import j_loads # импорт функции j_loads из src.utils.jjson

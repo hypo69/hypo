@@ -1,7 +1,7 @@
 ## \file /src/suppliers/hb/_experiments/ide_experiments_grabber.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.suppliers.hb._experiments 

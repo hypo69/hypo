@@ -29,7 +29,7 @@
 ```python
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 """
 Модуль для инициализации проекта и загрузки настроек.
 ======================================================
@@ -81,7 +81,7 @@ def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
 
 
 # Get the root directory of the project
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 """Path: Путь к корневому каталогу проекта"""
 
 settings: dict = None

@@ -1,7 +1,7 @@
 ## \file /toolbx/encoder_decoder_file_names.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 module: toolbx.encoder_decoder_file_names

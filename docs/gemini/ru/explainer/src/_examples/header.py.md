@@ -22,7 +22,7 @@
         4.  `/path/to/project` добавляется в `sys.path`
         5.  Возвращается `/path/to/project`.
 
-2.  **`__root__ = set_project_root()`**:
+2.  **`__root__: Path = set_project_root()`**:
     *   Вызывается функция `set_project_root()` для определения и сохранения пути корня проекта в переменную `__root__`.
 
 3.  **Импорт `from src import gs`**:

@@ -53,7 +53,7 @@ import sys
 from header import __root__
 
 # Определяем корневую директорию
-__root__ = set_project_root()
+__root__: Path = set_project_root()
 
 # Теперь можно импортировать модули из корневой директории
 from src.utils.helpers import some_function

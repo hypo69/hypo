@@ -31,7 +31,7 @@
 ## \file /src/ai/helicone/helicone.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 Модуль для взаимодействия с Helicone и OpenAI

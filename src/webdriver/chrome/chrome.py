@@ -1,6 +1,6 @@
 ## \file /src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 rst

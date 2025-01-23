@@ -1,7 +1,7 @@
 ## \file /src/webdriver/crawlee_python/crawlee_python.py
 # -*- coding: utf-8 -*-
 
-#! venv/bin/python/python3.12
+#! .pyenv/bin/python3
 
 """
 .. module:: src.webdriver.crawlee_python 
