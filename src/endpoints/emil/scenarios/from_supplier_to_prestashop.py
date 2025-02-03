@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-from src.suppliers import aliexpress
 ## \file /src/endpoints/emil/scenarios/from_supplier_to_prestashop.py
 # -*- coding: utf-8 -*-\
 
@@ -20,40 +17,38 @@ and integration with Prestashop for product posting.
 
 """
 
-
+from __future__ import annotations
 import asyncio
 import random
 import shutil
 from pathlib import Path
 from typing import Optional, List
 from types import SimpleNamespace
-from dataclasses import field
-
-from telegram import Update
-from telegram.ext import CallbackContext
 
 import header
 from src import gs
+
 from src.endpoints.prestashop.product_fields import ProductFields
+from src.endpoints.prestashop.product_async import PrestaProductAsync
+from src.endpoints.prestashop.category import PrestaCategoryAsync
 from src.webdriver.driver import Driver
+from src.webdriver.firefox import Firefox
 from src.ai.gemini import GoogleGenerativeAI
-from src.endpoints.advertisement.facebook.scenarios import (
-    post_message_title, upload_post_media, message_publish
-)
-
-
+from src.endpoints.emil.report_generator import ReportGenerator
+from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
 
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
 from src.utils.image import save_image_from_url, save_image
 from src.utils.convertors.unicode import decode_unicode_escape
-from src.utils.printer import pprint
+from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
+ENDPOINT = 'emil'
 
 class SupplierToPrestashopProvider:
-    """
-    Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
+    """Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
+    Данные могут быть получены как из посторнних сайтов, так из файла JSON
     
     Attributes:
         driver (Driver): Экземпляр Selenium WebDriver.
@@ -66,13 +61,13 @@ class SupplierToPrestashopProvider:
     mexiron_name: str
     price: float
     timestamp: str
-    products_list: List = field(default_factory=list)
+    products_list: list
     model: 'GoogleGenerativeAI'
     config: SimpleNamespace
-    update: 'Update' 
-    context: 'CallbackContext'
+    local_images_path:Path = gs.path.external_storage / ENDPOINT / 'images' / 'furniture_images'
+    lang: str
 
-    def __init__(self, driver: Driver):
+    def __init__(self, lang:str, driver: Optional [Driver] = None):
         """
         Initializes SupplierToPrestashopProvider class with required components.
 
@@ -80,41 +75,42 @@ class SupplierToPrestashopProvider:
             driver (Driver): Selenium WebDriver instance.
 
         """
+        self.lang = lang
         try:
-            self.config = j_loads_ns(gs.path.endpoints / 'emil' / 'emil.json')
+            self.config = j_loads_ns(gs.path.endpoints / ENDPOINT / f'{ENDPOINT}.json')
         except Exception as ex:
             logger.error(f"Error loading configuration: {ex}")
             return  # or raise an exception, depending on your error handling strategy
 
         self.timestamp = gs.now
-        self.driver = driver
+        self.driver = driver if driver else Driver(Firefox)
+        self.model = self.initialise_ai_model(self.lang)
 
+    async def get_languages_indexes(self) -> int:
+        """У каждого магазина на prestashop своя нумерация языков"""
         try:
-            storage = gs.path.external_storage if self.config.storage == 'external_storage' else gs.path.data if self.config.storage == 'data' else gs.path.goog
-            self.export_path = storage / 'emil' 
+            cat = PrestaCategoryAsync()
+            lang_indexes:list = await cat.get_data()
+            return lang_indexes 
         except Exception as ex:
-            logger.error(f"Error constructing export path: {ex}")
-            return
-
-
+            logger.error(f"Не получилось получить схему языков")
+            ...
+        
+    def initialise_ai_model(self):
+        """Инициализация модели Gemini"""
         try:
-            system_instruction = (gs.path.endpoints / 'emil' / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
-            
-            api_key = gs.credentials.gemini.emil
-            self.model = GoogleGenerativeAI(
-                api_key=api_key,
+            system_instruction = (gs.path.endpoints / 'emil' / 'instructions' / f'system_instruction_mexiron.{self.lang}.md').read_text(encoding='UTF-8')
+            return GoogleGenerativeAI(
+                api_key=gs.credentials.gemini.emil,
                 system_instruction=system_instruction,
                 generation_config={'response_mime_type': 'application/json'}
             )
         except Exception as ex:
-            logger.error(f"Error loading instructions or API key:", ex)
+            logger.error(f"Error loading instructions", ex)
             return
-
 
     async def run_scenario(
         self, 
-        update: Update, 
-        context: CallbackContext,
         urls: list[str],
         price: Optional[str] = '', 
         mexiron_name: Optional[str] = '', 
@@ -137,8 +133,6 @@ class SupplierToPrestashopProvider:
             Важно! модель ошибается. 
 
         """
-        self.update = update
-        self.context = context
 
         # Не все поля товара надо заполнять. Вот кортеж необходимых полей:
         required_fields:tuple = ('id_product',
@@ -160,8 +154,7 @@ class SupplierToPrestashopProvider:
                 continue
 
             try:
-                await update.message.reply_text(f"""Process: 
-                {url}""")
+
                 f = await graber.grab_page(*required_fields)
 
                 ...
@@ -190,34 +183,6 @@ class SupplierToPrestashopProvider:
                 continue
             products_list.append(product_data)    
 
-
-
-    async def convert_product_fields(self, f: ProductFields) -> dict:
-        """
-        Converts product fields into a dictionary. 
-        Функция конвертирует поля из объекта `ProductFields` в простой словарь для модели ии.
-
-
-        Args:
-            f (ProductFields): Object containing parsed product data.
-
-        Returns:
-            dict: Formatted product data dictionary.
-
-        .. note:: Правила построения полей определяются в `ProductFields`
-        """
-        if not f.id_product:
-            return {} # <- сбой при получении полей товара. Такое может произойти если вместо страницы товара попалась страница категории, при невнимательном составлении мехирона из комплектующих
-        ...
-        return {
-            'product_title': f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
-            'product_id': f.id_product,
-            'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
-            'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
-            'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
-            'local_image_path': str(f.local_image_path),
-        }
-
     async def save_product_data(self, product_data: dict):
         """
         Saves individual product data to a file.
@@ -227,7 +192,7 @@ class SupplierToPrestashopProvider:
         """
         file_path = self.export_path / 'products' / f"{product_data['product_id']}.json"
         if not j_dumps(product_data, file_path, ensure_ascii=False):
-            logger.error(f'Ошибка сохранения словаря {pprint(product_data)}\n Путь: {file_path}')
+            logger.error(f'Ошибка сохранения словаря {print(product_data)}\n Путь: {file_path}')
             ...
             return
         return True
@@ -270,6 +235,22 @@ class SupplierToPrestashopProvider:
             return {}
         return  response_dict
 
+    async def read_data_from_json(self):
+        """Загружаю JSON файлы и фотки, которые я сделал через телеграм"""
+
+        # 1. Get from JSON
+        raw_data =  j_loads_ns(self.local_images_path)
+        print(raw_data)
+
+    async def save_in_prestashop(self, products_list:ProductFields | list[ProductFields]) -> bool:
+        """Функция, которая сохраняет товары в Prestashop emil-design.com """
+
+        products_list: list = products_list if isinstance(products_list, list) else [products_list]
+
+        p = PrestaProductAsync()
+
+        for f in products_list:
+            p.add_new_product(f)
  
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
         """Функция исполняет сценарий рекламного модуля `facvebook`."""
@@ -299,9 +280,9 @@ class SupplierToPrestashopProvider:
         отправить его боту
         """
 
-        generator = ReportGenerator()
+        report_generator = ReportGenerator()
 
-        if await generator.create_report(data, lang, html_file, pdf_file):
+        if await report_generator.create_report(data, lang, html_file, pdf_file):
             # Проверка, существует ли файл и является ли он файлом
             if pdf_file.exists() and pdf_file.is_file():
                 # Отправка боту PDF-файл через reply_document()
@@ -310,4 +291,24 @@ class SupplierToPrestashopProvider:
             else:
                 logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
                 return
+
+async def main(suppier_to_presta):
+        
+    f = suppier_to_presta.read_data_from_json()
+    ...
+    print(f)
+
+    l = suppier_to_presta.get_languages_indexes()
+    ...
+    print(l)
+
+if __name__ == '__main__':
+
+    lang = 'he'
+
+    suppier_to_presta = SupplierToPrestashopProvider(lang)
+
+    asyncio.run(main(suppier_to_presta))
+
+
 

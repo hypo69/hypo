@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from src.utils.jjson import j_dumps
 # -*- coding: utf-8 -*-
 """
 .. module:: src.product.product 
@@ -16,17 +15,17 @@ from typing import List, Dict, Any, Optional
 import header
 from src import gs
 from src.endpoints.prestashop.api import PrestaShopAsync 
-from src.endpoints.prestashop.category import PrestaCategoryAsync
+from src.endpoints.prestashop.category_async import PrestaCategoryAsync
 
 from src.endpoints.prestashop.product_fields import ProductFields
 from src.utils.convertors.any import any2dict
+
+from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint as print
 from src.logger import logger
 
 
-
-
-class ProductAsync(PrestaShopAsync):
+class PrestaProductAsync(PrestaShopAsync):
     """Manipulations with the product.
     Initially, I instruct the grabber to fetch data from the product page,
     and then work with the PrestaShop API.
@@ -76,11 +75,10 @@ class ProductAsync(PrestaShopAsync):
             return
         ...
 
-
     
 async def main():
     # Example usage
-    product = Product()
+    product = ProductAsync()
     product_fields = ProductFields(
         lang_index = 1,
         name='Test Product Async',

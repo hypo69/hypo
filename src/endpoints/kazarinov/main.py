@@ -10,8 +10,7 @@
 """
 import asyncio
 import header
-from src.endpoints.kazarinov.kazarinov_bot import KazarinovTelegramBot
+from src.endpoints.kazarinov.minibot import main 
 
 if __name__ == "__main__":
-	bot = KazarinovTelegramBot()
-	asyncio.run(bot.run())
+	main()

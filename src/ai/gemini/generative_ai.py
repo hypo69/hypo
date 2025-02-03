@@ -218,13 +218,13 @@ class GoogleGenerativeAI:
 
 
 
-    async def ask(self, q: str, attempts: int = 15, save_history:bool = False) -> Optional[str]:
+    def ask(self, q: str, attempts: int = 15, save_history:bool = False) -> Optional[str]:
         """
         Метод отправляет текстовый запрос модели и возвращает ответ.
         """
         for attempt in range(attempts):
             try:
-                response = await self.model.generate_content_async(q)
+                response = self.model.generate_content(q)
                
                 if not response.text:
                     logger.debug(
@@ -238,7 +238,7 @@ class GoogleGenerativeAI:
                 response_text = normalize_text(response.text)
               
                 if save_history:
-                    await self._save_dialogue([
+                     self._save_dialogue([
                     {"role": "user", "content": q},
                     {"role": "model", "content": response_text},
                     ])

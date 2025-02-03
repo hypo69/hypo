@@ -29,6 +29,11 @@ from src.endpoints.kazarinov.scenarios.scenario import fetch_target_urls_onetab,
 from src.utils.url import is_url
 from src.utils.printer import pprint as print
 
+##############################################################
+
+ENDPOINT = 'kazarinov'
+
+#############################################################
 
 class BotHandler:
     """Исполнитель команд, полученных ботом."""
@@ -91,17 +96,15 @@ class BotHandler:
             return
 
         try:
-            if asyncio.run(
+            asyncio.run(
                 self.scenario.run_scenario(
                         bot=bot,
                         chat_id=message.chat.id,
-                        urls=list(urls) , 
+                        urls=list(urls), 
                         price=price,
                         mexiron_name=mexiron_name
-                )):
-                bot.send_message(message.chat.id, 'Готово!')
-            else:
-                bot.send_message(message.chat.id, 'Ошибка. Попробуй ещё раз.')
+                ))
+
         except Exception as ex:
             logger.error(f"Error during scenario execution: {ex}")
             bot.send_message(message.chat.id, f"Произошла ошибка при выполнении сценария. {print(ex.args)}")
@@ -255,5 +258,6 @@ def handle_unknown_command(message):
     logger.info(f"User {message.from_user.username} send unknown command: {message.text}")
     bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
 
-bot.polling(none_stop=True)
-# --- bot.py end ---
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
+    # --- bot.py end ---

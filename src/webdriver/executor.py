@@ -306,7 +306,7 @@ class ExecuteLocator:
                     condition((locator.by, locator.selector)),
                 )
 
-            return await _parse_elements_list(web_elements, locator)
+            return await _parse_elements_list(web_elements, locator) if web_elements else None
 
         except TimeoutException as ex:
             logger.error(f"Timeout for locator: {print(locator.__dict__, text_color='yellow')}", ex)

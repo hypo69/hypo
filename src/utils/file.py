@@ -36,8 +36,6 @@ from pathlib import Path
 from typing import List, Optional, Union, Generator
 from src.logger.logger import logger
 
-MODE = 'dev' # Константа режима
-
 
 def save_text_file(
     file_path: str | Path,

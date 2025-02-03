@@ -1,8 +1,7 @@
 from __future__ import annotations
-from typing import Optional
+
 ## \file /src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -16,12 +15,11 @@ import asyncio
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Optional
 
 import header
-
 # Сторонние библиотеки
 from src import gs
-
 
 # Веб-драйверы
 from src.webdriver.driver import Driver
@@ -34,8 +32,8 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
 
 # Обработка товаров
-from src.endpoints.prestashop.product_fields import ProductFields
-from src.endpoints.prestashop.product_async import ProductAsync
+from src.endpoints.prestashop.product_async import PrestaProductAsync
+from src.endpoints.prestashop.language_async import PrestaLanguageAync
 from src.endpoints.prestashop.product_fields import ProductFields
 
 # Работа с соцсетями
@@ -54,20 +52,19 @@ from src.utils.convertors.ns import ns2dict
 # Логирование
 from src.logger.logger import logger
 
+# ---------------------------------
+ENDPOINT:str = 'emil'
+# ---------------------------------
 
 class EmilDesign:
     """ Class for designing and promoting images through various platforms. """
 
-    # ---------------------------------
-    ENDPOINT:str = 'emil'
-    # ---------------------------------
+
 
     gemini:'GoogleGenerativeAI'
     openai:'OpenAIModel'
-
     base_path:Path = gs.path.endpoints / ENDPOINT
     config:SimpleNamespace = j_loads_ns( base_path / f'{ENDPOINT}.json')
-    
     data_path:Path = getattr( gs.path , config.storage , 'external_storage')  / ENDPOINT
     
     
@@ -117,7 +114,7 @@ class EmilDesign:
 
         # 3. Define images paths
         images_dir = self.data_path  / 'images' / 'furniture_images'
-        images_files_list: list = get_filenames( images_dir ) 
+        images_files_list: list = get_filenames_from_directory( images_dir ) 
 
         # 4. Subtract described images from the list of all images
         images_to_process = [img for img in images_files_list if str(images_dir / img) not in described_images]
@@ -192,12 +189,11 @@ class EmilDesign:
 
         This function initializes a product and PrestaShop instance for uploading data.
         """
-        products_list: SimpleNamespace | list[SimpleNamespace] = products_list if products_list else  j_loads_ns(self.data_path / "out_250108230345305_he.json")
+        products_list: SimpleNamespace | list[SimpleNamespace] = products_list if products_list else  j_loads_ns(self.external_storage / ENDPOINT / "out_250108230345305_he.json")
 
         ...
         
-        lang_ns = j_loads_ns (self.base_path / 'shop_locales' / 'locales.json' )
-
+        lang_ns = j_loads_ns (self. / / 'shop_locales' / 'locales.json' )
         lang_index = getattr(lang_ns , lang )
 
 
@@ -215,7 +211,7 @@ class EmilDesign:
             f.description = product_ns.description
             f.images_urls = product_ns.local_image_path
             
-            p: ProductAsync = ProductAsync (api_domain = host, api_key = api_key)
+            p: PrestaProductAsync = PrestaProductAsync (api_domain = host, api_key = api_key)
             product_id = await p.add_new_product(f)
 
 

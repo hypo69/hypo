@@ -48,7 +48,7 @@ import header
 from src import gs
 
 from src.endpoints.prestashop.product_fields import ProductFields
-from src.category import Category
+from src.endpoints.prestashop.category_async import PrestaCategoryAsync
 # from src.webdriver.driver import Driver  # не требуется импортировать здесь
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_image_from_url, save_image
@@ -59,7 +59,6 @@ from src.utils.string.normalizer import( normalize_string,
                                         normalize_sql_date, 
                                         normalize_sku )
 from src.logger.exceptions import ExecuteLocatorException
-#from src.endpoints.prestashop import PrestaShop
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
@@ -185,9 +184,6 @@ class Graber:
         await fetch_all_data(*args, **kwards)
         return self.fields
 
-    def error(self, field: str):
-        """Error handler for fields."""
-        logger.debug(f"Ошибка заполнения поля {field}")
 
 
 
@@ -201,6 +197,10 @@ class Graber:
         try:
             # Получаем значение через execute_locator
             self.fields.additional_shipping_cost = normalize_string(value or  await self.driver.execute_locator(self.locator.additional_shipping_cost) or '')
+            if not  self.fields.additional_shipping_cost:
+                logger.error(f"Поле `additional_shipping_cost` не получиле значения")
+                return
+
             return True
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
@@ -219,6 +219,9 @@ class Graber:
         try:
             # Получаем значение через execute_locator
             self.fields.delivery_in_stock = normalize_string( value or  await self.driver.execute_locator(self.locator.delivery_in_stock) or '' )
+            if not  self.fields.delivery_in_stock:
+                logger.error(f"Поле `delivery_in_stock` не получиле значения")
+                return
             return True
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `delivery_in_stock`", ex)
@@ -237,7 +240,9 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = normalize_int( value or  await self.driver.execute_locator(self.locator.active) or 1)
+            self.fields.active = normalize_int( value or  await self.driver.execute_locator(self.locator.active) or 1)
+            if not self.fields.active:
+                return
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `active`", ex)
             ...
@@ -1515,7 +1520,7 @@ class Graber:
             # Получаем значение через execute_locator
             raw_data = await self.driver.execute_locator(self.locator.name)
             if not raw_data:
-                logger.error(f'Нет данных для поля `name`', None, False)
+                logger.error(f'Нет данных для поля `name` {self.locator=}', None, False)
                 ...
                 return
 
@@ -2014,12 +2019,13 @@ class Graber:
         """
         try:
             
-            value = normalize_string( value or  await self.driver.execute_locator(self.locator.specification) or '')
-            if value:
+            self.fields.specification = normalize_string( value or  await self.driver.execute_locator(self.locator.specification) or '')
+            if not self.fields.specification:
                 self.fields.specification = value
-                return True
+                logger.error(f"Не запольнилось поле self.fields.specification {print(self.locator.specification)}")
+                return False
             ...
-            return
+            return True
         except Exception as ex:
             logger.error('Ошибка получения значения в поле `specification`', ex)
             ...
@@ -2133,6 +2139,10 @@ class Graber:
         
             # Получаем результат из локатора как `bytes` или `str`(url)
             raw_image = await self.driver.execute_locator(self.locator.default_image_url)
+            if not raw_image:
+                logger.error(f"Not image grabed. locator: {print(self.locator.default_image_url)}")
+                return False
+
             raw_image = raw_image[0] if isinstance(raw_image, list) else raw_image
 
             if isinstance(raw_image, bytes):

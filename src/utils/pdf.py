@@ -1,7 +1,5 @@
-from __future__ import annotations
 ## \file /src/utils/pdf.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -15,7 +13,7 @@ from __future__ import annotations
 - https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
 - https://habr.com/ru/companies/bothub/articles/853490/
 """
-
+from __future__ import annotations
 import sys
 import os
 import json
@@ -23,48 +21,12 @@ import json
 from pathlib import Path
 import pdfkit
 from reportlab.pdfgen import canvas
-from fpdf import FPDF
-from weasyprint import HTML
-from xhtml2pdf import pisa
-from pdfminer.high_level import extract_text
+
+import header
+from header import __root__
+
 from src.logger.logger import logger
 from src.utils.printer import pprint
-
-def set_project_root(marker_files=('__root__','.git')) -> Path:
-    """
-    Finds the root directory of the project starting from the current file's directory,
-    searching upwards and stopping at the first directory containing any of the marker files.
-
-    Args:
-        marker_files (tuple): Filenames or directory names to identify the project root.
-    
-    Returns:
-        Path: Path to the root directory if found, otherwise the directory where the script is located.
-    """
-    __root__:Path
-    current_path:Path = Path(__file__).resolve().parent
-    __root__ = current_path
-    for parent in [current_path] + list(current_path.parents):
-        if any((parent / marker).exists() for marker in marker_files):
-            __root__ = parent
-            break
-    if __root__ not in sys.path:
-        sys.path.insert(0, str(__root__))
-    return __root__
-
-
-# Get the root directory of the project
-__root__: Path = set_project_root()
-"""__root__ (Path): Path to the root directory of the project"""
-
-
-wkhtmltopdf_exe = __root__ / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' /  'wkhtmltopdf.exe'
-
-if not wkhtmltopdf_exe.exists():
-    logger.error("Не найден wkhtmltopdf.exe по указанному пути.")
-    raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
-
-
 
 
 class PDFUtils:
@@ -88,6 +50,11 @@ class PDFUtils:
             pdfkit.PDFKitError: Ошибка генерации PDF через `pdfkit`.
             OSError: Ошибка доступа к файлу.
         """
+        wkhtmltopdf_exe = __root__ / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' /  'wkhtmltopdf.exe'
+
+        if not wkhtmltopdf_exe.exists():
+            logger.error("Не найден wkhtmltopdf.exe по указанному пути.")
+            raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
 
         try:
             configuration = pdfkit.configuration(
@@ -124,6 +91,7 @@ class PDFUtils:
             bool: `True`, если PDF успешно сохранен, иначе `False`.
         """
         try:
+            from fpdf import FPDF
             pdf = FPDF()
             pdf.add_page()
             pdf.set_auto_page_break(auto = True, margin = 15)
@@ -184,6 +152,7 @@ class PDFUtils:
             bool: `True` если PDF успешно сохранен, иначе `False`.
         """
         try:
+            from weasyprint import HTML
             if isinstance(data, str):
                 HTML(string=data).write_pdf(pdf_file)
             else:
@@ -207,6 +176,7 @@ class PDFUtils:
             bool: `True` если PDF успешно сохранен, иначе `False`.
         """
         try:
+            from xhtml2pdf import pisa
             with open(pdf_file, "w+b") as result_file:
                 if isinstance(data, str):
                     # Убедимся, что строка имеет кодировку UTF-8
@@ -237,6 +207,8 @@ class PDFUtils:
     def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
         """Converts HTML content to a PDF file using WeasyPrint."""
         try:
+
+            from weasyprint import HTML
             HTML(string=html_str).write_pdf(pdf_file)
             return True
         except Exception as e:
@@ -259,6 +231,7 @@ class PDFUtils:
         """
         try:
             # Извлечение текста из PDF
+            from pdfminer.high_level import extract_text
             text = extract_text(str(pdf_file))
 
             # Создание HTML-файла

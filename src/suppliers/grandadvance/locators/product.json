@@ -1,15 +1,15 @@
 {
-  "close_pop_up": {
+  "click_to_specifications": {
     "attribute": null,
     "by": "XPATH",
-    "selector": "//button[@class='close']",
+    "selector": "//div[@id = 'p_full_specifications_tab']",
     "if_list": "first",
     "use_mouse": false,
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": "click()",
     "mandatory": true,
-    "locator_description": "Закрыти попап окна"
+    "locator_description": ""
   },
   "id": {
     "attribute": null,

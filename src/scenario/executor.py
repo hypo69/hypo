@@ -1,6 +1,5 @@
 # \file hypotez/src/scenario/executor.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -30,7 +29,7 @@ import header
 from src import gs
 from src.utils.printer import pprint
 from src.utils.jjson import j_loads, j_dumps
-from src.endpoints.prestashop.product_async import ProductAsync, ProductFields
+from src.endpoints.prestashop.product_async import PrestaProductAsync, ProductFields
 from src.db import ProductCampaignsManager
 from src.logger.logger import logger
 from src.logger.exceptions import ProductFieldException

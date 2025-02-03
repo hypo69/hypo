@@ -23,34 +23,7 @@ ZOOP:
 4. Вывести сообщение "YOU BLEW IT!".
 5. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializePreviousNumber["<p align='left'>Инициализация:
-    <code><b>previousNumber = 0</b></code></p>"]
-    InitializePreviousNumber --> LoopStart{"Начало цикла"}
-    LoopStart --> GenerateRandomNumber["Сгенерировать случайное число: <code><b>currentNumber = random(0, 7)</b></code>"]
-    GenerateRandomNumber --> CheckQuit{"Проверка: <code><b>currentNumber == 0</b></code>?"}
-    CheckQuit -- Да --> OutputBlowIt["Вывод: <b>YOU BLEW IT!</b>"]
-    OutputBlowIt --> End["Конец"]
-    CheckQuit -- Нет --> CheckSame{"Проверка: <code><b>currentNumber == previousNumber</b></code>?"}
-    CheckSame -- Да --> OutputBlowIt
-    CheckSame -- Нет --> OutputCurrentNumber["Вывод: <code><b>currentNumber</b></code>"]
-    OutputCurrentNumber --> SetPreviousNumber["<code><b>previousNumber = currentNumber</b></code>"]
-    SetPreviousNumber --> LoopStart
-```
 
-Legenda:
-    Start - Начало программы.
-    InitializePreviousNumber - Инициализация переменной previousNumber (предыдущее число) значением 0.
-    LoopStart - Начало основного цикла игры.
-    GenerateRandomNumber - Генерация случайного числа currentNumber в диапазоне от 0 до 7.
-    CheckQuit - Проверка, равно ли сгенерированное число currentNumber 0.
-    OutputBlowIt - Вывод сообщения "YOU BLEW IT!", если игрок проиграл.
-    End - Конец программы.
-    CheckSame - Проверка, равно ли сгенерированное число currentNumber предыдущему числу previousNumber.
-    OutputCurrentNumber - Вывод текущего сгенерированного числа currentNumber.
-    SetPreviousNumber - Установка значения переменной previousNumber равным значению переменной currentNumber.
 """
 import random
 

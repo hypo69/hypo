@@ -2,7 +2,7 @@
   "supplier": "grandadvance",
   "supplier_id": "2789",
   "supplier_prefix": "grandadvance",
-  "start_url": "https://www.grandadvance.co.il/",
+  "start_url": "https://grandadvance.co.il/heb",
   "price_rule": "+0",
   "if_login": false,
   "login_url": "https://www.login.grandadvance.co.il",

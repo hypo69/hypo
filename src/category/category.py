@@ -1,7 +1,6 @@
 from __future__ import annotations
 ## \file /src/category/category.py
 # -*- coding: utf-8 -*-\
-
 #! .pyenv/bin/python3
 """
 Module for working with categories, primarily for PrestaShop.
@@ -16,7 +15,7 @@ processing product category data, particularly relevant for PrestaShop.
 	:synopsis: Module for working with categories, primarily for PrestaShop.
 ```
 """
-
+from __future__ import annotations
 import asyncio
 from pathlib import Path
 import os
@@ -28,7 +27,7 @@ import header
 from src import gs
 from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_dumps
-from src.endpoints.prestashop.category import PrestaCategory, PrestaCategoryAsync
+from src.endpoints.prestashop.category_async import PrestaCategoryAsync
 
 
 class Category(PrestaCategoryAsync):

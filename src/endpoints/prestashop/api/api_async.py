@@ -158,7 +158,7 @@ class PrestaShopAsync:
         ) as response:
             return await self._check_response(response.status, response)
 
-    async def _check_response(self, status_code: int, response, method: Optional[str] = None, url: Optional[str] = None,
+    def _check_response(self, status_code: int, response, method: Optional[str] = None, url: Optional[str] = None,
                         headers: Optional[dict] = None, data: Optional[dict] = None) -> bool:
         """! Check the response status code and handle errors asynchronously.
 
@@ -176,10 +176,10 @@ class PrestaShopAsync:
         if status_code in (200, 201):
             return True
         else:
-            await self._parse_response_error(response, method, url, headers, data)
+            self._parse_response_error(response, method, url, headers, data)
             return False
 
-    async def _parse_response_error(self, response, method: Optional[str] = None, url: Optional[str] = None,
+    def _parse_response_error(self, response, method: Optional[str] = None, url: Optional[str] = None,
                               headers: Optional[dict] = None, data: Optional[dict] = None):
         """! Parse the error response from PrestaShop API asynchronously.
 
@@ -193,7 +193,7 @@ class PrestaShopAsync:
         if self.data_format == 'JSON':
             status_code = response.status
             if not status_code in (200, 201):
-                text = await response.text()
+                text = response.text()
                 logger.critical(f"""response status code: {status_code}
                     url: {response.request_info.url}
                     --------------
@@ -202,7 +202,7 @@ class PrestaShopAsync:
                     response text: {text}""")
             return response
         else:
-            error_answer = await self._parse(await response.text())
+            error_answer = self._parse(response.text())
             if isinstance(error_answer, dict):
                 error_content = (error_answer
                                  .get('PrestaShop', {})
@@ -290,8 +290,10 @@ class PrestaShopAsync:
                 data=request_data,
                 headers=headers,
             ) as response:
+
                 sys.stderr = original_stderr
-                if not await self._check_response(response.status, response, method, prepared_url, headers, request_data):
+
+                if not self._check_response(response.status, response, method, prepared_url, headers, request_data):
                     return False
 
                 if io_format == 'JSON':
@@ -316,16 +318,16 @@ class PrestaShopAsync:
                 data=request_data,
                 headers=headers,
             ) as response:
-                if not await self._check_response(response.status, response, method, prepared_url, headers, request_data):
+                if not self._check_response(response.status, response, method, prepared_url, headers, request_data):
                     return False
 
                 if io_format == 'JSON':
-                    return await response.json()
+                    return response.json()
                 else:
-                    return await self._parse(await response.text())
+                    return self._parse(await response.text())
 
 
-    async def _parse(self, text: str) -> Union[dict, ElementTree.Element, bool]:
+    def _parse(self, text: str) -> dict | ElementTree.Element | bool:
         """! Parse XML or JSON response from the API asynchronously.
 
         Args:
@@ -336,7 +338,7 @@ class PrestaShopAsync:
         """
         try:
             if self.data_format == 'JSON':
-              data = await j_loads(text)
+              data = j_loads(text)
               return data.get('PrestaShop', {}) if 'PrestaShop' in data else data
             else:
                 tree = ElementTree.fromstring(text)
@@ -424,7 +426,8 @@ class PrestaShopAsync:
                 headers=headers,
                 data=file.read()
             ) as response:
-               return await response.json()
+
+               return response.json()
 
     def _save(self, file_name: str, data: dict):
         """! Save data to a file.

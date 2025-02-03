@@ -20,45 +20,30 @@
 
 from typing import Any
 import header
+from header import __root__
+from src import gs
 from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
+from src.utils.jjson import j_loads_ns
 from src.webdriver.driver import Driver
+from types import SimpleNamespace
 from src.logger.logger import logger
 
+#############################################################
 
-#
-#
-#           DECORATOR TEMPLATE. 
-#
-# def close_pop_up(value: Any = None) -> Callable:
-#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+ENDPOINT = 'grandadvance'
 
-#     Args:
-#         value (Any): Дополнительное значение для декоратора.
-
-#     Returns:
-#         Callable: Декоратор, оборачивающий функцию.
-#     """
-#     def decorator(func: Callable) -> Callable:
-#         @wraps(func)
-#         async def wrapper(*args, **kwargs):
-#             try:
-#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
-#                 ... 
-#             except ExecuteLocatorException as e:
-#                 logger.debug(f'Ошибка выполнения локатора: {e}')
-#             return await func(*args, **kwargs)  # Await the main function
-#         return wrapper
-#     return decorator
+#############################################################
 
 class Graber(Grbr):
-    """Класс для операций захвата Morlevi."""
-    supplier_prefix: str
+    """Класс населедутет Graber. 
+    все поля 
+    товара устана
+   вливвв модуле `src.supplier."""
 
     def __init__(self, driver: Driver, lang_index:int):
-        """Инициализация класса сбора полей товара."""
-        self.supplier_prefix = 'grandadvance'
-        super().__init__(supplier_prefix=self.supplier_prefix, driver=driver, lang_index=lang_index)
-        # Устанавливаем глобальные настройки через Context
-        
-        Context.locator_for_decorator = None
+        config:SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / ENDPOINT / f'{ENDPOINT}.json')
+        locator: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / ENDPOINT / 'locators' / 'product.json')
+        super().__init__(supplier_prefix=ENDPOINT, driver=driver, lang_index=lang_index)
+        driver.execute_locator(locator.click_to_specifications)
+        Context.locator_for_decorator = None # <- if locator not definded decorator 
 
