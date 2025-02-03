@@ -30,7 +30,7 @@ def html_to_docx(html_file: str, output_docx: Path | str) -> bool:
             "soffice",
             "--headless",  # Run LibreOffice in headless mode
             "--convert-to",
-            "docx",
+            "docx:HTML", # Specify that input is HTML
             html_file, # use html_file as is
             "--outdir",
             str(output_dir)

@@ -258,6 +258,9 @@ def handle_unknown_command(message):
     logger.info(f"User {message.from_user.username} send unknown command: {message.text}")
     bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
 
-if __name__ == '__main__':
+def main():
     bot.polling(none_stop=True)
     # --- bot.py end ---
+
+if __name__ == '__main__':
+    main()

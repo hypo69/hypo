@@ -26,6 +26,7 @@ from pathlib import Path
 from typing import Optional, List, Any
 from types import SimpleNamespace
 from dataclasses import field
+import telebot
 
 import header
 from header import __root__
@@ -223,6 +224,8 @@ class QuotationBuilder:
 
 
     async def create_reports(self, 
+                            bot: telebot.TeleBot,
+                            chat_id: int,
                             data: dict,
                             mexiron_name:str,
                             lang:str, 
@@ -234,9 +237,9 @@ class QuotationBuilder:
         отправить его боту
         """
 
-        report_generator = ReportGenerator(if_need_pdf = False, if_need_docx = True)
+        report_generator = ReportGenerator(if_need_pdf = True, if_need_docx = False)
 
-        html, pdf, docx = await report_generator.create_reports(data, mexiron_name, lang, html_path, pdf_path, docx_path)
+        await report_generator.create_reports(bot, chat_id,  data,  mexiron_name, lang, html_path, pdf_path, docx_path)
         ...
 
  

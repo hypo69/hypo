@@ -26,7 +26,7 @@
 from argparse import OPTIONAL
 import asyncio
 from dataclasses import dataclass, field
-
+import telebot
 from itertools import filterfalse
 from types import SimpleNamespace
 from typing import Optional
@@ -77,7 +77,9 @@ class ReportGenerator:
         self.if_need_docx = if_need_docx
         
 
-    async def create_reports(self, 
+    async def create_reports(self,
+                             bot: telebot.TeleBot,
+                             chat_id: int,
                              data:dict,
                              maxiron_name:str,
                              lang:str, 
@@ -89,25 +91,22 @@ class ReportGenerator:
         self.html_path = html_path
         self.pdf_path = pdf_path
         self.docx_path = docx_path
+        self.bot = bot
+        self.chat_id = chat_id
 
-        html, pdf, docx = '','',''
-
-        # 
         self.html_content = await self.create_html_report(data, lang, self.html_path)
 
-        if self.html_content:
-            html = True
-        else:
-            return False, False, False 
+        if not self.html_content:
+            return False
 
 
         if self.if_need_pdf:
-            pdf = await self.create_pdf_report(self.html_content, lang, self.pdf_path)
+            await self.create_pdf_report(self.html_content, lang, self.pdf_path)
 
         if self.if_need_docx:
-            docx = await self.create_docx_report(self.html_path, self.docx_path)
+            await self.create_docx_report(self.html_path, self.docx_path)
 
-        return html, pdf, docx 
+      
          
     def service_apendix(self, lang:str) -> dict:
         return  {
@@ -176,7 +175,10 @@ class ReportGenerator:
             logger.error(f"Не скопмилировался PDF. Попробую docx")
             ...
             return False
-        return True
+        
+        with open(pdf_path, 'rb') as f:
+            self.bot.send_document(self.chat_id, f)
+            
 
 
     async def create_docx_report(self, html_path:str|Path, docx_path:str|Path) -> bool :

@@ -171,30 +171,18 @@ class Scenario(QuotationBuilder):
             # -----------------------------------------------------------------
             # 3. Report creating
 
-            bot.send_message(chat_id, f"Создаю docx файл")
-
+            bot.send_message(chat_id, f"Создаю файл")
+            data = data[lang]
             data["price"] = price
             data["currency"] = getattr(self.translations.currency, lang, "ש''ח")
 
-            if not j_dumps(data, self.export_path / f"{self.mexiron_name}_{lang}.json"):
-                logger.error("Ошибка JSON")
-                ...
-                continue
+            await self.create_reports(bot,
+                                        chat_id,
+                                        data, 
+                                        self.mexiron_name, 
+                                        lang, 
+                                        self.html_file, 
+                                        self.pdf_file, 
+                                        self.docx_file)
 
-            if not await self.create_report(data, self.mexiron_name, lang, self.html_file, self.pdf_file, self.docx_file):
-                logger.error("Ошибка создания отчета")
-                ...
-                continue
 
-            # Проверка, существует ли файл и является ли он файлом
-            if not self.docx_file.exists():
-                logger.error(f"Ошибка создания docx_")
-                ...
-                continue
-
-            try:
-                with open(self.docx_file, "rb") as f:
-                    bot.send_document(chat_id, f)
-            except Exception as ex:
-                logger.error(f"Ошибка при отправке файла: {self.docx_file}", ex)
-                bot.send_message(chat_id, f"Произошла ошибка при отправке {self.docx_file}-файла. ")
