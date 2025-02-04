@@ -1,5 +1,13 @@
-
+## \file /src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-
+#! .pyenv/bin/python3
+
+"""
+.. module:: src.endpoints.prestashop.category 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 
 from typing import List, Dict, Optional, Union
 from types import SimpleNamespace
@@ -22,7 +30,7 @@ class PrestaCategory(PrestaShop):
 
         super().__init__(api_domain, api_key)
 
-    def get_parent_categories_list(self, id_category: Union[str, int], parent_categories_list: List[int] = []) -> List[int]:
+    def get_parent_categories_list(self, id_category: str | int, parent_categories_list: List[int, str] = []) -> List[int]:
         """! Retrieve parent categories from PrestaShop for a given category."""
         if not id_category:
             logger.error("Missing category ID.")

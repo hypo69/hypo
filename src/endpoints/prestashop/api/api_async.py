@@ -112,7 +112,7 @@ class PrestaShopAsync:
 
     """
     client: ClientSession = None
-    debug = True
+    debug = False
     lang_index: Optional[int] = 1
     data_format:str = 'JSON'
     ps_version = ''
@@ -267,39 +267,41 @@ class PrestaShopAsync:
         Returns:
             dict | None: The response from the API or `False` on failure.
         """
+        self.debug = False
         if self.debug:
-            import sys
-            original_stderr = sys.stderr
-            f = open('stderr.log', 'w')
-            sys.stderr = f
+            # import sys
+            # original_stderr = sys.stderr
+            # f = open('stderr.log', 'w')
+            # sys.stderr = f
             
-            prepared_url = self._prepare(f'{self.API_DOMAIN}/api/{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}/api/{resource}',
-                                  {'filter': search_filter,
-                                   'display': display,
-                                   'schema': schema,
-                                   'sort': sort,
-                                   'limit': limit,
-                                   'language': language,
-                                   'output_format': io_format})
+            # prepared_url = self._prepare(f'{self.API_DOMAIN}/api/{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}/api/{resource}',
+            #                       {'filter': search_filter,
+            #                        'display': display,
+            #                        'schema': schema,
+            #                        'sort': sort,
+            #                        'limit': limit,
+            #                        'language': language,
+            #                        'output_format': io_format})
             
-            request_data = dict2xml(data) if data and io_format == 'XML' else data
+            # request_data = dict2xml(data) if data and io_format == 'XML' else data
             
-            async with self.client.request(
-                method=method,
-                url=prepared_url,
-                data=request_data,
-                headers=headers,
-            ) as response:
+            # with self.client.request(
+            #     method=method,
+            #     url=prepared_url,
+            #     data=request_data,
+            #     headers=headers,
+            # ) as response:
 
-                sys.stderr = original_stderr
+            #     sys.stderr = original_stderr
 
-                if not self._check_response(response.status, response, method, prepared_url, headers, request_data):
-                    return False
+            #     if not self._check_response(response.status, response, method, prepared_url, headers, request_data):
+            #         return False
 
-                if io_format == 'JSON':
-                    return await response.json()
-                else:
-                    return await self._parse(await response.text())
+            #     if io_format == 'JSON':
+            #         return response.json()
+            #     else:
+            #         return self._parse(await response.text())
+            ...
         else:
             prepared_url = self._prepare(f'{self.API_DOMAIN}{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}{resource}',
                                   {'filter': search_filter,
@@ -312,12 +314,13 @@ class PrestaShopAsync:
             
             request_data = dict2xml(data) if data and io_format == 'XML' else data
             
-            async with self.client.request(
+            with self.client.request(
                 method=method,
                 url=prepared_url,
                 data=request_data,
                 headers=headers,
             ) as response:
+
                 if not self._check_response(response.status, response, method, prepared_url, headers, request_data):
                     return False
 

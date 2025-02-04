@@ -8,8 +8,7 @@ and uploading images, with error handling for responses.
 
 Example usage
 -------------
-
-.. code-block:: python
+```python
 
     from src.endpoints.prestashop.api.api import PrestaShop
 
@@ -68,6 +67,7 @@ Example usage
 
     # Create binary (product image)
     api.create_binary('images/products/22', 'img.jpeg', 'image')
+    ```
 """
 # -*- coding: utf-8 -*-
 
@@ -100,16 +100,16 @@ from src.utils.printer import pprint
 
 
 
-class Format(Enum):
-    """Data types return (JSON, XML)
+# class Format(Enum):
+#     """Data types return (JSON, XML)
 
-    .. deprecated::
-        I prefer JSON 👍 :))
+#     .. deprecated::
+#         I prefer JSON 👍 :))
 
-    :param Enum: (int): 1 => JSON, 2 => XML
-    """
-    JSON = 'JSON'
-    XML = 'XML'
+#     :param Enum: (int): 1 => JSON, 2 => XML
+#     """
+#     JSON = 'JSON'
+#     XML = 'XML'
 
 
 class PrestaShop:
@@ -138,11 +138,15 @@ class PrestaShop:
     language: Optional[int] = None
     data_format = 'JSON'
     ps_version = ''
+    API_DOMAIN:str
+    API_KEY:str
 
     def __init__(self,
-                 data_format: str = 'JSON',
-                 default_lang: int = 1,
-                 debug: bool = True) -> None:
+                api_key:str,
+                api_domain:str,
+                data_format: str = 'JSON',
+                default_lang: int = 1,
+                debug: bool = False) -> None:
         """Initialize the PrestaShop class.
 
         :param data_format: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
@@ -152,8 +156,8 @@ class PrestaShop:
         :param debug: Activate debug mode. Defaults to True.
         :type debug: bool
         """
-        self.API_DOMAIN = gs.credentials.presta.client.api_key.rstrip('/') + '/api/'
-        self.API_KEY = gs.credentials.presta.client.api_key
+        self.API_DOMAIN = api_domain
+        self.API_KEY = api_key
         self.debug = debug
         self.language = default_lang
         self.data_format = data_format

@@ -36,6 +36,7 @@ from src.webdriver.firefox import Firefox
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.emil.report_generator import ReportGenerator
 from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
+from src.suppliers.get_graber_by_supplier import get_graber_by_supplier_url
 
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
@@ -146,7 +147,7 @@ class SupplierToPrestashopProvider:
         # 1. Сбор товаров
         for url in urls:
 
-            graber = self.get_graber_by_supplier_url(url) 
+            graber = get_graber_by_supplier_url(url) 
             
             if not graber:
                 logger.debug(f"Нет грабера для: {url}", None, False)

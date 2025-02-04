@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 
 # -*- coding: utf-8 -*-
 """
@@ -8,6 +8,7 @@ from __future__ import annotations
 Defines the behavior of a product in the project.
 
 """
+from __future__ import annotations
 import asyncio
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
@@ -44,7 +45,7 @@ class PrestaProductAsync(PrestaShopAsync):
 
 
 
-    async def add_new_product(self, f: ProductFields) -> ProductFields | None:
+    async def add_new_product_async(self, f: ProductFields) -> ProductFields | None:
         """
         Add a new product to PrestaShop.
 
@@ -56,10 +57,10 @@ class PrestaProductAsync(PrestaShopAsync):
         """
 
         f.additional_categories = await self.presta_category_async.get_parent_categories_list(f.id_category_default)
-        f_dict: dict = any2dict(f)
-        j_dumps(f_dict, gs.path.external_data / 'prestahop' / 'dit.json', f_dict)
         
-        new_f:ProductFields = await self.create('products', f_dict)
+        presta_product_dict:dict = f.to_dict()
+        
+        new_f:ProductFields = await self.create('products', presta_product_dict)
 
         if not new_f:
             logger.error(f"Товар не был добавлен в базу данных Presyashop")

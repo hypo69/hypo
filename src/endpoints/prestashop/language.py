@@ -15,14 +15,14 @@ from types import SimpleNamespace
 import header
 
 from src import gs
-from src.endpoints.prestashop.api import PrestaShopAsync
+from src.endpoints.prestashop.api import PrestaShop
 from src.logger.exceptions import PrestaShopException
 from src.utils.printer import  pprint as print
 from src.logger.logger import logger
 
 from typing import Optional
 
-class PrestaLanguageAync(PrestaShopAsync):
+class PrestaLanguage(PrestaShop):
     """ 
     Класс, отвечающий за настройки языков магазина PrestaShop.
 
@@ -44,7 +44,7 @@ class PrestaLanguageAync(PrestaShopAsync):
         """
         ...
 
-    async def get_lang_name_by_index(self, lang_index:int|str ) -> str:
+    def get_lang_name_by_index(self, lang_index:int|str ) -> str:
         """Возвращает имя языка ISO по его индексу в таблице Prestashop"""
         try:
             return super().get('languagaes', resource_id=str(lang_index), display='full', io_format='JSON')
@@ -55,7 +55,7 @@ class PrestaLanguageAync(PrestaShopAsync):
         """Возвращает номер языка из таблицы Prestashop по его имени ISO """
         ...
         
-    async def get_languages_schema(self) -> dict:
+    def get_languages_schema(self) -> dict:
         lang_dict = super().get_languages_schema()
         print(lang_dict) 
 

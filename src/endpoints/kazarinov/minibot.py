@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 ## \file /src/endpoints/kazarinov/minibot.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
@@ -6,9 +6,10 @@ from __future__ import annotations
 """
 .. module:: src.endpoints.kazarinov.minibot 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: минибот для обслуживания запросов от казаринова
 
 """
+from __future__ import annotations
 import telebot
 import os
 import datetime
@@ -32,6 +33,7 @@ from src.utils.printer import pprint as print
 ##############################################################
 
 ENDPOINT = 'kazarinov'
+USE_ENV:bool = True # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
 
 #############################################################
 
@@ -180,7 +182,7 @@ class BotHandler:
 
 # --- config.py -----------------
 class Config:
-    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_kazarinov_bot
     CHANNEL_ID = '@onela'
     PHOTO_DIR = Path(__root__ / 'endpoints' / 'kazarinov' / 'assets')
     COMMAND_INFO = 'This is a simple bot. Use /help to see commands.'

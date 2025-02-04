@@ -1,6 +1,5 @@
 ## \file /src/endpoints/prestashop/customer.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """

@@ -10,14 +10,16 @@ from __future__ import annotations
 	:synopsis: Module for managing and processing images and promoting to Facebook and PrestaShop.
 
 """
-
+import os
 import asyncio
 import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional
-
+from dotenv import load_dotenv
+load_dotenv()
 import header
+from header import __root__
 # Сторонние библиотеки
 from src import gs
 
@@ -32,8 +34,8 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
 
 # Обработка товаров
-from src.endpoints.prestashop.product_async import PrestaProductAsync
-from src.endpoints.prestashop.language_async import PrestaLanguageAync
+from src.endpoints.prestashop.product import PrestaProduct
+from src.endpoints.prestashop.language import PrestaLanguage
 from src.endpoints.prestashop.product_fields import ProductFields
 
 # Работа с соцсетями
@@ -54,6 +56,7 @@ from src.logger.logger import logger
 
 # ---------------------------------
 ENDPOINT:str = 'emil'
+USE_ENV:bool = True # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
 # ---------------------------------
 
 class EmilDesign:
@@ -159,8 +162,7 @@ class EmilDesign:
             # Add the processed image path to the list and save to file
             described_images.append(img_path)
             await save_text_file(described_images_path, described_images)
-
-        
+    
     async def promote_to_facebook(self):
         """ Promote images and their descriptions to Facebook.
 
@@ -189,38 +191,40 @@ class EmilDesign:
 
         This function initializes a product and PrestaShop instance for uploading data.
         """
-        products_list: SimpleNamespace | list[SimpleNamespace] = products_list if products_list else  j_loads_ns(self.external_storage / ENDPOINT / "out_250108230345305_he.json")
+        products_list: SimpleNamespace | list[SimpleNamespace] = products_list if products_list else  j_loads_ns( Path(gs.path.external_storage, ENDPOINT, "out_250108230345305_he.json") )
 
         ...
         
-        lang_ns = j_loads_ns (self. / / 'shop_locales' / 'locales.json' )
+        lang_ns = j_loads_ns (__root__ / 'src' / 'endpoints' / ENDPOINT / 'shop_locales' / 'locales.json' )
         lang_index = getattr(lang_ns , lang )
 
 
         # convert to ProductFields
-        f:ProductFields = ProductFields(lang_index = lang_index or lang_ns.he)
-        host = gs.credentials.presta.client.emil_design.api_domain
-        api_key = gs.credentials.presta.client.emil_design.api_key
+        
+
+        host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
+        api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
+
+        p: PrestaProduct = PrestaProduct (api_domain = host, api_key = api_key)
 
         for product_ns in products_list:
-
             # convert to prestashop fields
+            f:ProductFields = ProductFields(lang_index = lang_index or lang_ns.he)
             f.name = product_ns.name
             f.id_category_default = product_ns.id_category_default	
             f.id_supplier = 11366 #  https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
             f.description = product_ns.description
-            f.images_urls = product_ns.local_image_path
-            
-            p: PrestaProductAsync = PrestaProductAsync (api_domain = host, api_key = api_key)
-            product_id = await p.add_new_product(f)
+            f.local_image_path = product_ns.local_image_path
+
+            # addidng product to prestashop
+            new_product_dict:dict = p.add_new_product(f)
 
 
-        
-        
-
-if __name__ == "__main__":
+def main():
     emil = EmilDesign()
     asyncio.run( emil.upload_to_prestashop(lang = 'he') )
-
     #asyncio.run( emil.describe_images(lang='he')  )
-    # emil.promote_to_facebook()
+    # emil.promote_to_facebook(
+
+if __name__ == "__main__":
+    main()

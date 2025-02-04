@@ -1,5 +1,13 @@
-
+## \file /src/endpoints/prestashop/category_async.py
 # -*- coding: utf-8 -*-
+#! .pyenv/bin/python3
+
+"""
+.. module:: src.endpoints.prestashop.category_async 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
 
 from typing import List, Dict, Optional, Union
 from types import SimpleNamespace
@@ -24,10 +32,10 @@ class PrestaCategoryAsync(PrestaShopAsync):
 
         super().__init__(api_domain, api_key)
 
-    async def get_parent_categories_list(self, id_category: int|str , additional_categories_list: Optional[List[int] | int] = []) -> List[int]:
+    async def get_parent_categories_list_async(self, id_category: int|str , additional_categories_list: Optional[List[int] | int] = []) -> List[int]:
         """! Asynchronously retrieve parent categories for a given category."""
         try:
-            id_category:list = id_category if isinstance(id_category, int) else int(id_category)
+            id_category:int = id_category if isinstance(id_category, int) else int(id_category)
         except Exception as ex:
             logger.error(f"Недопустимый формат категории{id_category}", ex)
 
@@ -35,29 +43,20 @@ class PrestaCategoryAsync(PrestaShopAsync):
         additional_categories_list.append(id_category)
 
         out_categories_list:list = []
-        try:
-            for c in additional_categories_list:
-                try:
-                    c = c if isinstance(c, int) else int(c)
-                    out_categories_list.аppend(c)
-                except Exception as ex:
-                    logger.error(f"Недопустимый формат категории{id_category}", ex)
-                    continue
 
-                try:
-                    parent:int = await super().read('categories', resource_id=c, display='full', io_format='JSON')
-                except Exception as ex:
-                    logger.error(f"Недопустимый формат категории{parent}", ex)
-                    continue            
+        for c in additional_categories_list:
+
+            try:
+                parent:int = await super().read('categories', resource_id=c, display='full', io_format='JSON')
+            except Exception as ex:
+                logger.error(f"Недопустимый формат категории", ex)
+                continue            
                 
-                if parent <=2:
-                    return out_categories_list # Дошли до верха. Дерево категорий начинается с 2
+            if parent <=2:
+                return out_categories_list # Дошли до верха. Дерево категорий начинается с 2
 
-                out_categories_list.append(parent)
+            out_categories_list.append(parent)
 
-        except Exception as ex:
-            logger.error(f"Ошибка получения родительских категорий ", ex)
-            return
 
 
 async def main():
