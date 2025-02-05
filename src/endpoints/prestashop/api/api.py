@@ -8,7 +8,8 @@ and uploading images, with error handling for responses.
 
 Example usage
 -------------
-```python
+
+.. code-block:: python
 
     from src.endpoints.prestashop.api.api import PrestaShop
 
@@ -67,12 +68,12 @@ Example usage
 
     # Create binary (product image)
     api.create_binary('images/products/22', 'img.jpeg', 'image')
-    ```
 """
 # -*- coding: utf-8 -*-
 
 #! .pyenv/bin/python3
 
+from math import e
 import os
 import sys
 from enum import Enum
@@ -156,7 +157,7 @@ class PrestaShop:
         :param debug: Activate debug mode. Defaults to True.
         :type debug: bool
         """
-        self.API_DOMAIN = api_domain
+        self.API_DOMAIN = api_domain + '/api/'
         self.API_KEY = api_key
         self.debug = debug
         self.language = default_lang
@@ -307,35 +308,38 @@ class PrestaShop:
         :return: The response from the API or `False` on failure.
         :rtype: dict | None
         """
-        if self.debug:
-            import sys
-            original_stderr = sys.stderr
-            f = open('stderr.log', 'w')
-            sys.stderr = f
+
+        try:
+            url=self._prepare(f'{self.API_DOMAIN}{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}{resource}',
+                                    {'filter': search_filter,
+                                    'display': display,
+                                    'schema': schema,
+                                    'sort': sort,
+                                    'limit': limit,
+                                    'language': language,
+                                    'output_format': io_format})
+
 
             response = self.client.request(
                 method=method,
-                url=self._prepare(f'{self.API_DOMAIN}{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}{resource}',
-                                  {'filter': search_filter,
-                                   'display': display,
-                                   'schema': schema,
-                                   'sort': sort,
-                                   'limit': limit,
-                                   'language': language,
-                                   'output_format': io_format}),
+                url=url,
                 data=dict2xml(data) if data and io_format == 'XML' else data,
                 headers=headers,
             )
 
-            sys.stderr = original_stderr
+        
 
-        if not self._check_response(response.status_code, response, method, url, headers, data):
-            return False
+            if not self._check_response(response.status_code, response, method, url, headers, data):
+                return False
 
-        if io_format == 'JSON':
-            return response.json()
-        else:
-            return self._parse(response.text)
+            if io_format == 'JSON':
+                return response.json()
+            else:
+                return self._parse(response.text)
+
+        except Exception as ex:
+            logger .error(f'Error:',ex)
+            return
 
     def _parse(self, text: str) -> Union[dict, ElementTree.Element, bool]:
         """Parse XML or JSON response from the API.
@@ -357,7 +361,7 @@ class PrestaShop:
             logger.error(f'Parsing Error: {str(ex)}')
             return False
 
-    def create(self, resource: str, data: dict) -> Optional[dict]:
+    def create(self, resource: str, data: dict, io_format:Optional[str] = 'JSON') -> Optional[dict]:
         """Create a new resource in PrestaShop API.
 
         :param resource: API resource (e.g., 'products').
@@ -368,7 +372,8 @@ class PrestaShop:
         :return: Response from the API.
         :rtype: dict
         """
-        return self._exec(resource=resource, method='POST', data=data, io_format=self.data_format)
+        return self._exec(resource=resource, method='POST', data=data, io_format = io_format)
+        
 
     def read(self, resource: str, resource_id: Union[int, str], **kwargs) -> Optional[dict]:
         """Read a resource from the PrestaShop API.
@@ -381,7 +386,7 @@ class PrestaShop:
         :return: Response from the API.
         :rtype: dict
         """
-        return self._exec(resource=resource, resource_id=resource_id, method='GET', io_format=self.data_format, **kwargs)
+        return self._exec(resource=resource, resource_id=resource_id, method='GET', **kwargs)
 
     def write(self, resource: str, data: dict) -> Optional[dict]:
         """Update an existing resource in the PrestaShop API.
@@ -445,15 +450,6 @@ class PrestaShop:
             )
             return response.json()
 
-    def _save(self, file_name: str, data: dict):
-        """Save data to a file.
-
-        :param file_name: Name of the file.
-        :type file_name: str
-        :param data: Data to be saved.
-        :type data: dict
-        """
-        save_text_file(file_name, j_dumps(data, indent=4, ensure_ascii=False))
 
     def get_data(self, resource: str, **kwargs) -> Optional[dict]:
         """Fetch data from a PrestaShop API resource and save it.
@@ -465,11 +461,7 @@ class PrestaShop:
         :return: Data from the API or `False` on failure.
         :rtype: dict | None
         """
-        data = self._exec(resource=resource, method='GET', io_format=self.data_format, **kwargs)
-        if data:
-            self._save(f'{resource}.json', data)
-            return data
-        return False
+        return self._exec(resource=resource, method='GET', **kwargs)
 
     def remove_file(self, file_path: str):
         """Remove a file from the filesystem.

@@ -70,9 +70,6 @@ class EmilDesign:
     config:SimpleNamespace = j_loads_ns( base_path / f'{ENDPOINT}.json')
     data_path:Path = getattr( gs.path , config.storage , 'external_storage')  / ENDPOINT
     
-    
-
-
     def __init__(self):
         """ Initialize the EmilDesign class. """
         ...
@@ -182,7 +179,7 @@ class EmilDesign:
             post_message(d, message, without_captions=True)
             ...
 
-    async def upload_to_prestashop(self, products_list: Optional[ SimpleNamespace | list[SimpleNamespace] ]= None, lang: Optional [str] = None) -> bool:
+    async def upload_described_products_to_prestashop(self, products_list: Optional[ SimpleNamespace | list[SimpleNamespace] ]= None, lang: Optional [str] = None) -> bool:
         """
         Поднимаю на сервер изображения из сохраненного файла описаний.
         Файл описаний мне делает телеграм
@@ -191,27 +188,32 @@ class EmilDesign:
 
         This function initializes a product and PrestaShop instance for uploading data.
         """
-        products_list: SimpleNamespace | list[SimpleNamespace] = products_list if products_list else  j_loads_ns( Path(gs.path.external_storage, ENDPOINT, "out_250108230345305_he.json") )
+        products_list_file:Path = Path(gs.path.external_storage, ENDPOINT, "out_250108230345305_he.json")
+        products_list: SimpleNamespace | list[SimpleNamespace] = products_list if products_list else  j_loads_ns( products_list_file)
 
         ...
         
-        lang_ns = j_loads_ns (__root__ / 'src' / 'endpoints' / ENDPOINT / 'shop_locales' / 'locales.json' )
-        lang_index = getattr(lang_ns , lang )
 
-
-        # convert to ProductFields
-        
 
         host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
         api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
         p: PrestaProduct = PrestaProduct (api_domain = host, api_key = api_key)
 
+        # Получаю словарь с полями продукта
+        # products:dict = p.get_data('products/2191', display='full', io_format='JSON')
+        # schema = j_dumps(products, gs.path.endpoints / ENDPOINT / '_experiments' / 'product_schema.json')
+
+        lang_ns = j_loads_ns (__root__ / 'src' / 'endpoints' / ENDPOINT / 'shop_locales' / 'locales.json' )
+        lang_index = getattr(lang_ns , lang )
+
         for product_ns in products_list:
             # convert to prestashop fields
             f:ProductFields = ProductFields(lang_index = lang_index or lang_ns.he)
             f.name = product_ns.name
-            f.id_category_default = product_ns.id_category_default	
+            f.price = 100
+            f.id_category_default = product_ns.id_category_default
+            f.additional_categories = product_ns.parent
             f.id_supplier = 11366 #  https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
             f.description = product_ns.description
             f.local_image_path = product_ns.local_image_path
@@ -222,7 +224,7 @@ class EmilDesign:
 
 def main():
     emil = EmilDesign()
-    asyncio.run( emil.upload_to_prestashop(lang = 'he') )
+    asyncio.run( emil.upload_described_products_to_prestashop(lang = 'he') )
     #asyncio.run( emil.describe_images(lang='he')  )
     # emil.promote_to_facebook(
 

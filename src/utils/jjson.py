@@ -66,7 +66,7 @@ def _merge_data(
 def j_dumps(
     data: Union[Dict, SimpleNamespace, List[Dict], List[SimpleNamespace]],
     file_path: Optional[Path] = None,
-    ensure_ascii: bool = True,
+    ensure_ascii: bool = False,
     mode: str = MODE_WRITE,
     exc_info: bool = True,
 ) -> Optional[Dict]:
@@ -110,7 +110,8 @@ def j_dumps(
     if path:
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(json.dumps(data, ensure_ascii=ensure_ascii, indent=4), encoding='utf-8')
+            json.dump(data, path.open(mode, encoding="utf-8"), ensure_ascii=ensure_ascii, indent=4)
+            #path.write_text(json.dumps(data, ensure_ascii=ensure_ascii, indent=4), encoding='utf-8')
         except Exception as ex:
              logger.error(f"Failed to write to {path}: ", ex, exc_info=exc_info)
              return None

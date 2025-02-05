@@ -66,14 +66,13 @@ class ProductFields:
             ...
             return
 
-        data_ns: SimpleNamespace = j_loads_ns (self.base_path  / 'product_fields' / 'product_fields_default_values.json')
-        if not data_ns:
+        data_dict: dict = j_loads (self.base_path  / 'product_fields' / 'product_fields_default_values.json')
+        if not data_dict:
             logger.debug(f"Ошибка загрузки полей из файла product_fields_default_values.json")
             ...
             return False
         try:
-            for name in data_ns.__dict__: # используем __dict__ для итерации по атрибутам
-                value = getattr(data_ns, name)
+            for name, value in data_dict.items():
                 setattr(self.presta_fields, name, value )  # Use setattr on presta_fields
             return True
         except Exception as ex:
@@ -157,7 +156,9 @@ class ProductFields:
         """  <sub>*[property]*</sub> 
         возвращает словарь категорий товара восстановленный из файла сценария таблица `ps_category_product`"""
 
-        return self.presta_fields.associations.categories or None
+        if hasattr(self.presta_fields, 'associations') and isinstance(self.presta_fields.associations, dict) and 'categories' in self.presta_fields.associations:
+            return self.presta_fields.associations['categories']
+        return None
 
     
     @additional_categories.setter    
@@ -176,16 +177,21 @@ class ProductFields:
                 logger.error(f'недопустимое значение для категории {v=}, Должен быть `int`')
                 ...
                 continue
-                
-            try:
-                if not hasattr(self.presta_fields.associations, 'categories'):
-                    setattr(self.presta_fields.associations.categories , 'category', [{'id':v}])
-                    continue
 
-                self.presta_fields.associations.categories.category.append({'id':v})
-            
+            try:
+                if not hasattr(self.presta_fields, 'associations'):
+                    self.presta_fields.associations = {}
+                if not isinstance(self.presta_fields.associations, dict):
+                    logger.error(f"""Ошибка заполнения поля: 'additional_categories' - ожидался dict, получен {type(self.presta_fields.associations)} """)
+                    return
+                
+                if 'categories' not in self.presta_fields.associations:
+                    self.presta_fields.associations['categories'] = {'category': []}
+
+                self.presta_fields.associations['categories']['category'].append({'id': v})
+
             except Exception as ex:
-                logger.error(f"""Ошибка заполнения поля: 'additional_categories' данными {v}""", ex)  
+                logger.error(f"""Ошибка заполнения поля: 'additional_categories' данными {v}""", ex)
                 return
    
     @property
@@ -1129,123 +1135,210 @@ class ProductFields:
 
 
 
-########################################## Преобразование в слловарь ##########################################
-
     def to_dict(self) -> Dict[str, Any]:
         """
-        Преобразует объект ProductFields в словарь для PrestaShop API.
-        
+        Преобразует объект ProductFields в словарь для PrestaShop API,
+        исключая ключи, значения которых равны None или пустой строке,
+        и формирует мультиязычные поля в нужном формате.
+
         Returns:
             Dict[str, Any]: Словарь с полями, готовый для PrestaShop API.
         """
         product_dict = {}
 
         # -- ps_product fields --
-        
-        #product_dict["associations"] = self.associations  if self.associations else None # <- Сложное поле взаимосвязей с другими сущностями
 
-        product_dict["id_product"] = self.id_product if self.id_product else ""
-        product_dict["id_supplier"] = self.id_supplier if self.id_supplier else ""
-        product_dict["id_manufacturer"] = self.id_manufacturer if self.id_manufacturer else ""
-        product_dict["id_category_default"] = self.id_category_default if self.id_category_default else ""
-        product_dict["id_shop_default"] = self.id_shop_default if self.id_shop_default else ""
-        product_dict["id_shop"] = self.id_shop if self.id_shop else None
-        product_dict["id_tax"] = self.id_tax if self.id_tax else ""
-        product_dict["on_sale"] = self.on_sale if self.on_sale else ""
-        product_dict["online_only"] = self.online_only if self.online_only else ""
-        product_dict["ean13"] = self.ean13 if self.ean13 else ""
-        product_dict["isbn"] = self.isbn if self.isbn else ""
-        product_dict["upc"] = self.upc if self.upc else ""
-        product_dict["mpn"] = self.mpn if self.mpn else ""
-        product_dict["ecotax"] = self.ecotax if self.ecotax else ""
-        product_dict["minimal_quantity"] = self.minimal_quantity if self.minimal_quantity else ""
-        product_dict["low_stock_threshold"] = self.low_stock_threshold if self.low_stock_threshold else ""
-        product_dict["low_stock_alert"] = self.low_stock_alert if self.low_stock_alert else ""
-        product_dict["price"] = self.price if self.price else None
-        product_dict["wholesale_price"] = self.wholesale_price if self.wholesale_price else "False"
-        product_dict["unity"] = self.unity if self.unity else ""
-        product_dict["unit_price_ratio"] = self.unit_price_ratio if self.unit_price_ratio else ""
-        product_dict["additional_shipping_cost"] = self.additional_shipping_cost if self.additional_shipping_cost else ""
-        product_dict["reference"] = self.reference if self.reference else ""
-        product_dict["supplier_reference"] = self.supplier_reference if self.supplier_reference else ""
-        product_dict["location"] = self.location if self.location else ""
-        product_dict["width"] = self.width if self.width else ""
-        product_dict["height"] = self.height if self.height else ""
-        product_dict["depth"] = self.depth if self.depth else ""
-        product_dict["weight"] = self.weight if self.weight else ""
-        product_dict["volume"] = self.volume if self.volume else None
-        product_dict["out_of_stock"] = self.out_of_stock if self.out_of_stock else ""
-        product_dict["additional_delivery_times"] = self.additional_delivery_times if self.additional_delivery_times else ""
-        product_dict["quantity_discount"] = self.quantity_discount if self.quantity_discount else ""
-        product_dict["customizable"] = self.customizable if self.customizable else ""
-        product_dict["uploadable_files"] = self.uploadable_files if self.uploadable_files else ""
-        product_dict["text_fields"] = self.text_fields if self.text_fields else ""
-        product_dict["active"] = self.active if self.active else ""
-        product_dict["redirect_type"] = self.redirect_type if self.redirect_type else ""
-        product_dict["id_type_redirected"] = self.id_type_redirected if self.id_type_redirected else ""
-        product_dict["available_for_order"] = self.available_for_order if self.available_for_order else ""
-        product_dict["available_date"] = self.available_date if self.available_date else ""
-        product_dict["show_condition"] = self.show_condition if self.show_condition else ""
-        product_dict["condition"] = self.condition if self.condition else ""
-        product_dict["show_price"] = self.show_price if self.show_price else ""
-        product_dict["indexed"] = self.indexed if self.indexed else ""
-        product_dict["visibility"] = self.visibility if self.visibility else 1
-        product_dict["cache_is_pack"] = self.cache_is_pack if self.cache_is_pack else ""
-        product_dict["cache_has_attachments"] = self.cache_has_attachments if self.cache_has_attachments else ""
-        product_dict["is_virtual"] = self.is_virtual if self.is_virtual else 0
-        product_dict["cache_default_attribute"] = self.cache_default_attribute if self.cache_default_attribute else ""
-        product_dict["date_add"] = self.date_add if self.date_add else ""
-        product_dict["date_upd"] = self.date_upd if self.date_upd else ""
-        product_dict["advanced_stock_management"] = self.advanced_stock_management if self.advanced_stock_management else ""
-        product_dict["pack_stock_type"] = self.pack_stock_type if self.pack_stock_type else ""
-        product_dict["state"] = self.state if self.state else ""
-        product_dict["product_type"] = self.product_type if self.product_type else ""
-        
+        # product_dict["associations"] = self.associations if self.associations else None  # <- Сложное поле взаимосвязей с другими сущностями
+
+        if self.id_product:
+            product_dict["id_product"] = self.id_product
+        if self.id_supplier:
+            product_dict["id_supplier"] = self.id_supplier
+        if self.id_manufacturer:
+            product_dict["id_manufacturer"] = self.id_manufacturer
+        if self.id_category_default:
+            product_dict["id_category_default"] = self.id_category_default
+        if self.id_shop_default:
+            product_dict["id_shop_default"] = self.id_shop_default
+        if self.id_shop:
+            product_dict["id_shop"] = self.id_shop
+        if self.id_tax:
+            product_dict["id_tax"] = self.id_tax
+        if self.on_sale is not None:  # Explicitly check for None
+            product_dict["on_sale"] = self.on_sale
+        if self.online_only is not None:
+            product_dict["online_only"] = self.online_only
+        if self.ean13:
+            product_dict["ean13"] = self.ean13
+        if self.isbn:
+            product_dict["isbn"] = self.isbn
+        if self.upc:
+            product_dict["upc"] = self.upc
+        if self.mpn:
+            product_dict["mpn"] = self.mpn
+        if self.ecotax:
+            product_dict["ecotax"] = self.ecotax
+        if self.minimal_quantity:
+            product_dict["minimal_quantity"] = self.minimal_quantity
+        if self.low_stock_threshold:
+            product_dict["low_stock_threshold"] = self.low_stock_threshold
+        if self.low_stock_alert:
+            product_dict["low_stock_alert"] = self.low_stock_alert
+        if self.price:
+            product_dict["price"] = self.price
+        if self.wholesale_price:
+            product_dict["wholesale_price"] = self.wholesale_price
+        if self.unity:
+            product_dict["unity"] = self.unity
+        if self.unit_price_ratio:
+            product_dict["unit_price_ratio"] = self.unit_price_ratio
+        if self.additional_shipping_cost:
+            product_dict["additional_shipping_cost"] = self.additional_shipping_cost
+        if self.reference:
+            product_dict["reference"] = self.reference
+        if self.supplier_reference:
+            product_dict["supplier_reference"] = self.supplier_reference
+        if self.location:
+            product_dict["location"] = self.location
+        if self.width:
+            product_dict["width"] = self.width
+        if self.height:
+            product_dict["height"] = self.height
+        if self.depth:
+            product_dict["depth"] = self.depth
+        if self.weight:
+            product_dict["weight"] = self.weight
+        if self.volume:
+            product_dict["volume"] = self.volume
+        if self.out_of_stock:
+            product_dict["out_of_stock"] = self.out_of_stock
+        if self.additional_delivery_times:
+            product_dict["additional_delivery_times"] = self.additional_delivery_times
+        if self.quantity_discount:
+            product_dict["quantity_discount"] = self.quantity_discount
+        if self.customizable:
+            product_dict["customizable"] = self.customizable
+        if self.uploadable_files:
+            product_dict["uploadable_files"] = self.uploadable_files
+        if self.text_fields:
+            product_dict["text_fields"] = self.text_fields
+        if self.active is not None:  # Explicitly check for None
+            product_dict["active"] = self.active
+        if self.redirect_type:
+            product_dict["redirect_type"] = self.redirect_type
+        if self.id_type_redirected:
+            product_dict["id_type_redirected"] = self.id_type_redirected
+        if self.available_for_order is not None:  # Explicitly check for None
+            product_dict["available_for_order"] = self.available_for_order
+        if self.available_date:
+            product_dict["available_date"] = self.available_date
+        if self.show_condition is not None:  # Explicitly check for None
+            product_dict["show_condition"] = self.show_condition
+        if self.condition:
+            product_dict["condition"] = self.condition
+        if self.show_price is not None:  # Explicitly check for None
+            product_dict["show_price"] = self.show_price
+        if self.indexed is not None:  # Explicitly check for None
+            product_dict["indexed"] = self.indexed
+        if self.visibility:
+            product_dict["visibility"] = self.visibility
+        if self.cache_is_pack is not None:  # Explicitly check for None
+            product_dict["cache_is_pack"] = self.cache_is_pack
+        if self.cache_has_attachments is not None:  # Explicitly check for None
+            product_dict["cache_has_attachments"] = self.cache_has_attachments
+        if self.is_virtual is not None:  # Explicitly check for None
+            product_dict["is_virtual"] = self.is_virtual
+        if self.cache_default_attribute:
+            product_dict["cache_default_attribute"] = self.cache_default_attribute
+        if self.date_add:
+            product_dict["date_add"] = self.date_add
+        if self.date_upd:
+            product_dict["date_upd"] = self.date_upd
+        if self.advanced_stock_management is not None:  # Explicitly check for None
+            product_dict["advanced_stock_management"] = self.advanced_stock_management
+        if self.pack_stock_type:
+            product_dict["pack_stock_type"] = self.pack_stock_type
+        if self.state:
+            product_dict["state"] = self.state
+        if self.product_type:
+            product_dict["product_type"] = self.product_type
+
         # -- ps_product_lang fields --
-        product_dict["description"] = self._get_multilang_value(self.description) if self.description else ""
-        product_dict["description_short"] = self._get_multilang_value(self.description_short) if self.description_short else ""
-        product_dict["link_rewrite"] = self._get_multilang_value(self.link_rewrite) if self.link_rewrite else ""
-        product_dict["meta_description"] = self._get_multilang_value(self.meta_description) if self.meta_description else ""
-        product_dict["meta_keywords"] = self._get_multilang_value(self.meta_keywords) if self.meta_keywords else ""
-        product_dict["meta_title"] = self._get_multilang_value(self.meta_title) if self.meta_title else ""
-        product_dict["name"] = self._get_multilang_value(self.name) if self.name else ""
-        product_dict["available_now"] = self._get_multilang_value(self.available_now) if self.available_now else ""
-        product_dict["available_later"] = self._get_multilang_value(self.available_later) if self.available_later else ""
-        product_dict["delivery_in_stock"] = self._get_multilang_value(self.delivery_in_stock) if self.delivery_in_stock else ""
-        product_dict["delivery_out_stock"] = self._get_multilang_value(self.delivery_out_stock) if self.delivery_out_stock else ""
-        product_dict["delivery_additional_message"] = self._get_multilang_value(self.delivery_additional_message) if self.delivery_additional_message else ""
-        product_dict["affiliate_short_link"] = self._get_multilang_value(self.affiliate_short_link) if self.affiliate_short_link else ""
-        product_dict["affiliate_text"] = self._get_multilang_value(self.affiliate_text) if self.affiliate_text else ""
-        product_dict["affiliate_summary"] = self._get_multilang_value(self.affiliate_summary) if self.affiliate_summary else ""
-        product_dict["affiliate_summary_2"] = self._get_multilang_value(self.affiliate_summary_2) if self.affiliate_summary_2 else ""
-        product_dict["affiliate_image_small"] = self._get_multilang_value(self.affiliate_image_small) if self.affiliate_image_small else ""
-        product_dict["affiliate_image_medium"] = self._get_multilang_value(self.affiliate_image_medium) if self.affiliate_image_medium else ""
-        product_dict["affiliate_image_large"] = self._get_multilang_value(self.affiliate_image_large) if self.affiliate_image_large else ""
-        product_dict["ingredients"] = self._get_multilang_value(self.ingredients) if self.ingredients else ""
-        product_dict["specification"] = self._get_multilang_value(self.specification) if self.specification else ""
-        product_dict["how_to_use"] = self._get_multilang_value(self.how_to_use) if self.how_to_use else ""
-
+        if self.description:
+            product_dict["description"] = self._format_multilang_value(self.description)
+        if self.description_short:
+            product_dict["description_short"] = self._format_multilang_value(self.description_short)
+        if self.link_rewrite:
+            product_dict["link_rewrite"] = self._format_multilang_value(self.link_rewrite)
+        if self.meta_description:
+            product_dict["meta_description"] = self._format_multilang_value(self.meta_description)
+        if self.meta_keywords:
+            product_dict["meta_keywords"] = self._format_multilang_value(self.meta_keywords)
+        if self.meta_title:
+            product_dict["meta_title"] = self._format_multilang_value(self.meta_title)
+        if self.name:
+            product_dict["name"] = self._format_multilang_value(self.name)
+        if self.available_now:
+            product_dict["available_now"] = self._format_multilang_value(self.available_now)
+        if self.available_later:
+            product_dict["available_later"] = self._format_multilang_value(self.available_later)
+        if self.delivery_in_stock:
+            product_dict["delivery_in_stock"] = self._format_multilang_value(self.delivery_in_stock)
+        if self.delivery_out_stock:
+            product_dict["delivery_out_stock"] = self._format_multilang_value(self.delivery_out_stock)
+        if self.delivery_additional_message:
+            product_dict["delivery_additional_message"] = self._format_multilang_value(self.delivery_additional_message)
+        if self.affiliate_short_link:
+            product_dict["affiliate_short_link"] = self._format_multilang_value(self.affiliate_short_link)
+        if self.affiliate_text:
+            product_dict["affiliate_text"] = self._format_multilang_value(self.affiliate_text)
+        if self.affiliate_summary:
+            product_dict["affiliate_summary"] = self._format_multilang_value(self.affiliate_summary)
+        if self.affiliate_summary_2:
+            product_dict["affiliate_summary_2"] = self._format_multilang_value(self.affiliate_summary_2)
+        if self.affiliate_image_small:
+            product_dict["affiliate_image_small"] = self._format_multilang_value(self.affiliate_image_small)
+        if self.affiliate_image_medium:
+            product_dict["affiliate_image_medium"] = self._format_multilang_value(self.affiliate_image_medium)
+        if self.affiliate_image_large:
+            product_dict["affiliate_image_large"] = self._format_multilang_value(self.affiliate_image_large)
+        if self.ingredients:
+            product_dict["ingredients"] = self._format_multilang_value(self.ingredients)
+        if self.specification:
+            product_dict["specification"] = self._format_multilang_value(self.specification)
+        if self.how_to_use:
+            product_dict["how_to_use"] = self._format_multilang_value(self.how_to_use)
 
         # -- service fields
-        product_dict["id_default_image"] = self.id_default_image if self.id_default_image else ""
-        product_dict["images_urls"] = self.images_urls if self.images_urls else None
-        product_dict["default_image_url"] = self.assist_fields_dict.get('default_image_url', None)
-        product_dict["position_in_category"] = self.position_in_category if self.position_in_category else ""
-        
-        product_dict["link_to_video"] = self.link_to_video if self.link_to_video else ""
+        if self.id_default_image:
+            product_dict["id_default_image"] = self.id_default_image
+        if self.images_urls:
+            product_dict["images_urls"] = self.images_urls
+        if self.assist_fields_dict.get('default_image_url'):
+            product_dict["default_image_url"] = self.assist_fields_dict.get('default_image_url')
+        if self.position_in_category:
+            product_dict["position_in_category"] = self.position_in_category
+        if self.link_to_video:
+            product_dict["link_to_video"] = self.link_to_video
         return product_dict
 
+    def _format_multilang_value(self, data: Any) -> List[Dict[str, Any]]:
+        """
+        Форматирует мультиязычные значения в список словарей для PrestaShop API.
 
-    def _get_multilang_value(self, data: dict) -> dict:
-        """
-        Извлекает и форматирует мультиязычные значения для PrestaShop.
-        
         Args:
-           data (dict): Словарь с данными о мультиязычных значениях
-        
+            data (Any): Значение поля. Если это словарь, ожидается структура {'language': [{'attrs': {'id': lang_id}, 'value': value}]}
+
         Returns:
-           dict: Структурированный словарь для PrestaShop API
+            List[Dict[str, Any]]: Список словарей, где каждый словарь содержит 'id' и 'value' для каждого языка.
         """
+        result = []
         if isinstance(data, dict) and 'language' in data:
-            return data
-        return  {'language':[{'attrs':{'id':str(self.lang_index)}, 'value':str(data)},]}
+            for lang_data in data['language']:
+                lang_id = lang_data['attrs']['id']
+                lang_value = lang_data['value']
+                result.append({"id": lang_id, "value": lang_value})
+        else:
+            # Fallback: Create a list with one entry for the current language
+            result.append({"id": str(self.lang_index), "value": str(data)}) # Added "str" conversion
+        return result
