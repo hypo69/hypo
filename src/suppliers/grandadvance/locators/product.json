@@ -22,17 +22,17 @@
     "timeout_for_event": "presence_of_element_located",
     "event": null
   },
-  "id_manufacturer": {
-    "attribute": "innerText",
-    "by": "XPATH",
-    "selector": "//span[@class = 'ltr sku-copy']",
-    "if_list": "first",
+  "id_product": {
+    "attribute": "product_id",
+    "by": "URL",
+    "selector": null,
+    "if_list": null,
     "use_mouse": false,
     "mandatory": true,
     "timeout": 0,
-    "timeout_for_event": "presence_of_element_located",
+    "timeout_for_event": 0,
     "event": null,
-    "locator_description": "SKU morlevi"
+    "locator_description": "SKU Grandadvance. Извлекается из строки url"
   },
   "id_supplier": {
     "attribute": 2789,
@@ -44,9 +44,9 @@
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "SKU morlevi"
+    "locator_description": "Grandadvance supplier id = 2789 "
   },
-  "id_product": {
+  "id_manufacturer": {
     "attribute": "innerText",
     "by": "XPATH",
     "selector": "//span[@class = 'part_number']",
@@ -56,14 +56,12 @@
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "SKU morlevi"
+    "locator_description": "ID произвoдителя. (TOSHIBA, INTEL, stc...)"
   },
   "id_category_default": {
     "attribute": null,
-
     "by": null,
     "selector": null,
-
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,

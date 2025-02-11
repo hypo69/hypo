@@ -7,6 +7,7 @@ from typing import Optional, List
 
 import header
 from src import gs
+from src.endpoints.kazarinov.report_generator.report_generator import ReportGenerator
 from src.endpoints.kazarinov.scenarios.quotation_builder import QuotationBuilder
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.prestashop.product_fields.product_fields import ProductFields
@@ -23,13 +24,17 @@ ENDPOINT = "kazarinov"
 
 def fetch_target_urls_onetab(one_tab_url: str) -> tuple[str, str, list[str]] | bool:
     """
-    Извлечение целевых URL с указанного URL OneTab.
+    Функция паресит целевые URL из полученного OneTab.
 
     Args:
         one_tab_url (str): URL страницы OneTab.
 
     Returns:
-        list[str] | bool: Список целевых URL или False при ошибке.
+        price, mexiron_name, urls (tuple):
+            price (str): Цена.
+            mexiron_name (str): Имя Mexiron.
+            urls (list): Список целевых URL.
+
     """
     try:
         response = requests.get(one_tab_url, timeout=10)
@@ -56,8 +61,9 @@ def fetch_target_urls_onetab(one_tab_url: str) -> tuple[str, str, list[str]] | b
         return price, mexiron_name, urls
 
     except requests.exceptions.RequestException as ex:
-        logger.error("Ошибка при выполнении запроса: %s", ex)
-        return False
+        logger.error(f"Ошибка при выполнении запроса: {one_tab_url=}", ex)
+        ...
+        return False, False, False
 
 
 class Scenario(QuotationBuilder):
@@ -65,29 +71,19 @@ class Scenario(QuotationBuilder):
     one-tab.com -> telegram -> ai  -> pdf(docx,html)
     """
 
-    base_path = Path(gs.path.external_storage,  ENDPOINT )
-
-    html_file: str | Path
-    pdf_file: str | Path
-    docx_file: str | Path
-    mexiron_name:str
-
     def __init__(self, mexiron_name: Optional[str] = gs.now):
         """Сценарий сбора информации. Результат уходит в конструктор ценового предложения `QuotationBuilder`
         Сценарий возвращает боту ответы о процессе исполненения
         """
         self.mexiron_name = mexiron_name
-
-
         super().__init__(self.mexiron_name)
 
-    async def run_scenario(
+    def run_scenario(
         self,
         bot: telebot.TeleBot,
         chat_id: int,
         urls: list[str,str],
         price: Optional[str] = '',
-        mexiron_name: Optional[str] = gs.now,
     ) -> bool:
         """
         Executes the scenario: parses products, processes them via AI, and stores data.
@@ -107,41 +103,39 @@ class Scenario(QuotationBuilder):
 
         """
 
-        self.mexiron_name = mexiron_name if mexiron_name else self.mexiron_name
-
         products_list = []
 
         # -------------------------------------------------
         # 1. Сбор товаров
 
-        lang_index: int = 3  # индекс, указывающий ID языка в магазине Prstashop
+        lang_index: int = 2  # <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEV. индекс, указывающий ID языка в магазине Prstashop
         for url in urls:
-            graber: "Graber" = get_graber_by_supplier_url(self.driver, url, lang_index)
+            graber: 'Graber' = get_graber_by_supplier_url(self.driver, url, lang_index)
 
             if not graber:
                 logger.debug(f"Нет грабера для: {url}")
                 continue
 
             f: ProductFields = None
+            bot.send_message(chat_id, f"Process: {url}")
             try:
-                bot.send_message(chat_id, f"Process: {url}")
-                f: ProductFields = await graber.grab_page(*self.required_fields)
+                f = graber.grab_page(*self.required_fields)
             except Exception as ex:
-                logger.error(f"Ошибка получения полей товара {url}: {ex}")
+                logger.error(f"Failed... Ошибка получения полей товара {url}:", ex)
                 continue
 
             if not f:
-                logger.debug(f"Failed to parse product fields for URL: {url}")
-                bot.send_message(chat_id, f"Failed to parse product fields for URL:: {url}")
+                logger.error(f"Failed to parse product fields for URL: {url}")
+                bot.send_message(chat_id, f"Failed to parse product fields for URL: {url}")
                 continue
 
             product_data = self.convert_product_fields(f)
             if not product_data:
-                logger.debug(f"Failed to convert product fields: {product_data}")
+                logger.error(f"Failed to convert product fields: {product_data}")
                 bot.send_message(chat_id, f"Failed to convert product fields {url}")
                 continue
 
-            await self.save_product_data(product_data)
+            asyncio.run( self.save_product_data(product_data))
             products_list.append(product_data)
 
         # -----------------------------------------------------
@@ -152,19 +146,15 @@ class Scenario(QuotationBuilder):
         Внимание! модель может ошибаться"""
 
         langs_list: list = ["he", "ru"]
-        for lang in langs_list:
-            self.html_file = Path(self.base_path / f"{self.mexiron_name}_{lang}.html")
-            self.pdf_file = Path(self.base_path / f"{self.mexiron_name}_{lang}.pdf")
-            self.docx_file = Path(self.base_path / f"{self.mexiron_name}_{lang}.docx")
-            
+
+        for lang in langs_list:            
             bot.send_message(
                 chat_id,
-                f"""AI processing lang = {lang}.
-           Это может занять время. Зависит от загрузки модели""",
+                f"""AI processing {lang=}""",
             )
             data: dict = self.process_ai(products_list, lang)
             if not data:
-                bot.send_message(chat_id, f"Ошибка модели для языка {lang}")
+                bot.send_message(chat_id, f"Ошибка модели для {lang=}")
                 continue
 
 
@@ -176,13 +166,16 @@ class Scenario(QuotationBuilder):
             data["price"] = price
             data["currency"] = getattr(self.translations.currency, lang, "ש''ח")
 
-            await self.create_reports(bot,
-                                        chat_id,
-                                        data, 
-                                        self.mexiron_name, 
-                                        lang, 
-                                        self.html_file, 
-                                        self.pdf_file, 
-                                        self.docx_file)
+            j_dumps(data, self.export_path / f'{self.mexiron_name}_{lang}.json')
+
+            reporter = ReportGenerator(if_need_docx=False)
+            reporter.create_reports(bot = bot,
+                                chat_id = chat_id,
+                                data = data, 
+                                lang = lang,
+                                mexiron_name = self.mexiron_name
+                                    )
+                
+        ...
 
 

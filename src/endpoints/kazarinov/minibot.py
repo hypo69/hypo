@@ -16,9 +16,8 @@ import datetime
 import random
 from pathlib import Path
 import asyncio
-
 from dotenv import load_dotenv
-load_dotenv()
+
 
 import header
 from header import __root__
@@ -26,7 +25,6 @@ from src import gs
 from src.logger import logger
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.scenarios.scenario import fetch_target_urls_onetab, Scenario
-
 from src.utils.url import is_url
 from src.utils.printer import pprint as print
 
@@ -34,8 +32,13 @@ from src.utils.printer import pprint as print
 
 ENDPOINT = 'kazarinov'
 USE_ENV:bool = True # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
+MODE:str = 'PRODUCTION' # <- Определяет режим разработчика. Если MODE=='PRODUCTION' будет запущен kazarionaov бот, иначе тестбот
 
 #############################################################
+
+if USE_ENV:
+    load_dotenv()
+    
 
 class BotHandler:
     """Исполнитель команд, полученных ботом."""
@@ -44,10 +47,8 @@ class BotHandler:
 
     def __init__(self):
         """Инициализация обработчика событий телеграм-бота."""
-        self.scenario = Scenario()
-        self.model = GoogleGenerativeAI(os.getenv('GEMINI_API')) 
         self.questions_list = ['Я не понял?', 'Объясни пожалуйста']
-
+        self.model = GoogleGenerativeAI(os.getenv('GEMINI_API') if USE_ENV else gs.credentials.gemini.kazarinov)
 
     def handle_message(self, bot:telebot, message:'message'):
         """Обработка текстовых сообщений."""
@@ -85,7 +86,7 @@ class BotHandler:
             bot.send_message(message.chat.id, 'Мне на вход нужен URL `https://one-tab.com` Проверь, что ты мне посылаешь')
             return
 
-        # Parsing https//one-tab.com/XXXXXXXXX page
+        # Parsing https//one-tab.com/XXXXXXXXX 
         try:
            price, mexiron_name, urls = fetch_target_urls_onetab(url)
            bot.send_message(message.chat.id, f'Получил мехирон {mexiron_name} - {price} шек')
@@ -98,14 +99,14 @@ class BotHandler:
             return
 
         try:
-            asyncio.run(
-                self.scenario.run_scenario(
-                        bot=bot,
-                        chat_id=message.chat.id,
-                        urls=list(urls), 
-                        price=price,
-                        mexiron_name=mexiron_name
-                ))
+            self.scenario = Scenario(mexiron_name = mexiron_name)
+             
+            self.scenario.run_scenario(
+                    bot=bot,
+                    chat_id=message.chat.id,
+                    urls=list(urls), 
+                    price=price,
+            )
 
         except Exception as ex:
             logger.error(f"Error during scenario execution: {ex}")
@@ -181,8 +182,14 @@ class BotHandler:
             return False
 
 # --- config.py -----------------
+
+
 class Config:
-    BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_kazarinov_bot
+    if MODE=='PRODUCTION':
+        BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_kazarinov_bot
+    else:
+        BOT_TOKEN = os.getenv('TEST_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_test_bot
+
     CHANNEL_ID = '@onela'
     PHOTO_DIR = Path(__root__ / 'endpoints' / 'kazarinov' / 'assets')
     COMMAND_INFO = 'This is a simple bot. Use /help to see commands.'
@@ -197,6 +204,7 @@ class Config:
     /photo - Sends a random photo.
     """
 # --- config.py end -----------------
+
 
 # --- bot.py ---
 config = Config()
@@ -261,8 +269,13 @@ def handle_unknown_command(message):
     bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
 
 def main():
-    bot.polling(none_stop=True)
-    # --- bot.py end ---
+    try:
+        bot.polling(none_stop=True)
+        # --- bot.py end ---
+    except Exception as ex:
+        logger.error(f"Error during bot polling: ", ex)
+        ...
+        main()
 
 if __name__ == '__main__':
     main()

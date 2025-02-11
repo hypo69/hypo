@@ -161,8 +161,10 @@ class Graber:
         await self.error(field_name)
         return default
 
+    def grab_page(self, *args, **kwards) -> ProductFields:
+        return asyncio.run(self.grab_page_async(*args, **kwards))
 
-    async def grab_page(self, *args, **kwards) -> ProductFields:
+    async def grab_page_async(self, *args, **kwards) -> ProductFields:
         """Асинхронная функция для сбора полей продукта.
 
         Args:
@@ -871,7 +873,7 @@ class Graber:
         return True
 
     @close_pop_up()
-    async def id_product(self, value:Optional[Any] = None) -> bool:
+    async def id_product(self, value:Optional[Any] = None):
         """Fetch and set product ID.
         
         Args:
@@ -880,7 +882,6 @@ class Graber:
         """
         if value:
             self.fields.id_product = value
-            return True
 
         if not self.fields.id_supplier:
             await self.id_supplier()

@@ -10,7 +10,7 @@
 """
 import asyncio
 import header
-from src.endpoints.kazarinov.minibot import main 
+from src.endpoints.kazarinov.minibot import main, MODE # <- Определяет режим разработчика. Если MODE=='PRODUCTION' будет запущен kazarionaov бот, иначе тестбот
 
 if __name__ == "__main__":
 	main()

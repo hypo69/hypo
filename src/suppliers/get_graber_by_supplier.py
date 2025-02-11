@@ -1,7 +1,5 @@
-from __future__ import annotations
 ## \file /src/suppliers/get_graber_by_supplier.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -31,8 +29,9 @@ Example usage
         # Handle the case where no grabber is found
         pass
 """
+from __future__ import annotations
 import header
-
+from src.suppliers.graber import Graber
 from src.suppliers.aliexpress.graber import Graber as AliexpressGraber
 from src.suppliers.amazon.graber import Graber as AmazonGraber
 from src.suppliers.bangood.graber import Graber as BangoodGraber
@@ -52,10 +51,7 @@ from src.suppliers.wallmart.graber import Graber as WallmartGraber
 from src.logger.logger import logger
 
 
-MODE = 'dev'
-
-
-def get_graber_by_supplier_url(driver: 'Driver', url: str, lang_index:int ) -> 'Graber' | None:
+def get_graber_by_supplier_url(driver: 'Driver', url: str, lang_index:int ) -> Graber | None:
     """
     Function that returns the appropriate grabber for a given supplier URL.
 

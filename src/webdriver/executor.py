@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from typing import BinaryIO, List, Optional
 from types import SimpleNamespace
 from itertools import zip_longest
-
+from urllib.parse import urlparse, parse_qs
 from selenium.common.exceptions import (
     ElementClickInterceptedException,
     TimeoutException,
@@ -91,8 +91,20 @@ class ExecuteLocator:
                     locator.by = locator.by.lower()
                     if locator.attribute:
                         locator.attribute = self._evaluate_locator(locator.attribute)
+
                         if locator.by == "value":
                             return locator.attribute
+
+                        if locator.by == 'url':
+                            if not locator.attribute:
+                                logger.error(f"Attribute is missing for 'URL' locator: {print(locator.__dict__, text_color='yellow')}")
+                                return False
+
+                            url = self.driver.current_url
+                            parsed_url = urlparse(url)
+                            query_params = parse_qs(parsed_url.query)
+                            return query_params.get(locator.attribute, None)[0]
+
                 except Exception as ex:
                     logger.error(f"Error getting attribute by 'VALUE': {print(locator.__dict__, text_color='yellow')}, error:",ex)
                     return None

@@ -74,7 +74,7 @@ class PDFUtils:
         #     logger.error("Ошибка генерации PDF: ", ex)
         #     return False
         except Exception as ex:
-            logger.error("Неожиданная ошибка: ", ex)
+            logger.error("Неожиданная ошибка: ", ex, False)
             ...
             return False
 

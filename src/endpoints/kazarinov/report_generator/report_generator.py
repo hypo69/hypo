@@ -36,6 +36,7 @@ from jinja2 import Environment, FileSystemLoader
 import pdfkit
 
 import header
+from header import __root__
 from src import gs
 from src.utils.jjson import j_loads
 from src.utils.file import read_text_file, save_text_file    
@@ -60,12 +61,14 @@ class ReportGenerator:
     if_need_html: bool
     if_need_pdf: bool
     if_need_docx: bool
-    base_path:Path =  gs.path.external_storage / ENDPOINT
-    html_path: Path|str = base_path / f'{gs.now}.html'
-    pdf_path: Path|str = base_path / f'{gs.now}.pdf'
-    docs_path: Path|str = base_path / f'{gs.now}.docx'
+    storage_path:Path =  Path(gs.path.external_storage, ENDPOINT)
+    html_path: Path|str
+    pdf_path: Path|str
+    docs_path: Path|str
     html_content:str
     data:dict
+    lang:str
+    mexiron_name:str
     env: Environment = Environment(loader=FileSystemLoader('.'))
 
     def __init__(self, 
@@ -77,34 +80,35 @@ class ReportGenerator:
         self.if_need_docx = if_need_docx
         
 
-    async def create_reports(self,
+    def create_reports(self,
                              bot: telebot.TeleBot,
                              chat_id: int,
                              data:dict,
-                             maxiron_name:str,
-                             lang:str, 
-                             html_path:str|Path, 
-                             pdf_path:str|Path, 
-                             docx_path:str|Path) -> tuple:
+                             lang:str,
+                             mexiron_name:str,
+                             ) -> tuple:
         """Create ALL types: HTML, PDF, DOCX"""
         ...
-        self.html_path = html_path
-        self.pdf_path = pdf_path
-        self.docx_path = docx_path
+        self.mexiron_name = mexiron_name 
+        export_path = self.storage_path / 'mexironim' / self.mexiron_name
+
+        self.html_path = export_path / f"{self.mexiron_name}_{lang}.html"
+        self.pdf_path = export_path / f"{self.mexiron_name}_{lang}.pdf"
+        self.docx_path = export_path / f"{self.mexiron_name}_{lang}.docx"
         self.bot = bot
         self.chat_id = chat_id
 
-        self.html_content = await self.create_html_report(data, lang, self.html_path)
+        self.html_content = self.create_html_report(data, lang, self.html_path)
 
         if not self.html_content:
             return False
 
 
         if self.if_need_pdf:
-            await self.create_pdf_report(self.html_content, lang, self.pdf_path)
+            asyncio.run( self.create_pdf_report(self.html_content, lang, self.pdf_path))
 
         if self.if_need_docx:
-            await self.create_docx_report(self.html_path, self.docx_path)
+            asyncio.run(self.create_docx_report(self.html_path, self.docx_path))
 
       
          
@@ -112,13 +116,13 @@ class ReportGenerator:
         return  {
                 "product_id":"00000",
                 "product_name":"Сервис" if lang == 'ru' else "שירות",
-                "specification":Path(gs.path.src / 'endpoints' / ENDPOINT / 'report_generator' / 'templates' / f'service_as_product_{lang}.html').read_text(encoding='UTF-8').replace('/n','<br>'),
-                "image_local_saved_path":random_image(gs.path.external_storage / ENDPOINT / 'converted_images' )
+                "specification":Path(__root__ / 'src' / 'endpoints' / ENDPOINT / 'report_generator' / 'templates' / f'service_as_product_{lang}.html').read_text(encoding='UTF-8').replace('/n','<br>'),
+                "image_local_saved_path":random_image(self.storage_path / 'converted_images' )
                 }
 
         ...
 
-    async def create_html_report(self, data:dict, lang:str, html_path:Optional[ str|Path] ) -> str | None:
+    def create_html_report(self, data:dict, lang:str, html_path:Optional[ str|Path] ) -> str | None:
         """
         Генерирует HTML-контент на основе шаблона и данных.
 
@@ -171,18 +175,20 @@ class ReportGenerator:
         from src.utils.pdf import PDFUtils
         pdf = PDFUtils()
 
-        if not pdf.save_pdf_pdfkit(self.html_content, pdf_path):
-            logger.error(f"Не скопмилировался PDF. Попробую docx")
-            ...
-            return False
+        pdf.save_pdf_pdfkit(self.html_content, pdf_path)
         
-        with open(pdf_path, 'rb') as f:
-            self.bot.send_document(self.chat_id, f)
+        try:
+            with open(pdf_path, 'rb') as f:
+                self.bot.send_document(self.chat_id, f)
+                return True
+        except Exception as ex:
+            self.bot.send_message(self.chat_id, f"Не удалось отправить файл {pdf_path} по причине: {ex}")
+            return False
             
 
 
     async def create_docx_report(self, html_path:str|Path, docx_path:str|Path) -> bool :
-        """Создаю мсйкрософт docx файл """
+        """Создаю docx файл """
 
         if not html_to_docx(self.html_path, docx_path):
             logger.error(f"Не скопмилировался DOCX.")

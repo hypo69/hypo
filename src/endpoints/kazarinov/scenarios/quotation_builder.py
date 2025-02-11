@@ -4,7 +4,7 @@ from __future__ import annotations
 #! .pyenv/bin/python3
 
 """
-Модуль исполнения сценария создания мехирона для Сергея Казаринова
+Модуль создания мехирона для Сергея Казаринова
 ==================================================================
 
 ```rst
@@ -51,8 +51,7 @@ from src.endpoints.kazarinov.report_generator import ReportGenerator
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
 from src.utils.image import save_image_from_url, save_image
-from src.utils.convertors.unicode import decode_unicode_escape
-from src.utils.printer import pprint
+from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
 ##############################################################
@@ -152,11 +151,15 @@ class QuotationBuilder:
         .. note:: Правила построения полей определяются в `ProductFields`
         """
         if not f.id_product:
+            logger.error(f"Сбой при получении полей товара. ")
             return {} # <- сбой при получении полей товара. Такое может произойти если вместо страницы товара попалась страница категории, при невнимательном составлении мехирона из комплектующих
         ...
+
+        # Конвертация ProductFields  в словарь 
+        # Я не использую функцию конвертации f.to_dict(), так как мне нужно обработать не все поля
         product_name = '' if not f.name else  f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
-        description = '' if not f.description else f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
-        description_short = '' if not f.description_short else f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
+        description = '' if not f.description else f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
+        description_short = '' if not f.description_short else f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
         specification = '' if not f.specification else f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
         
         return {
@@ -167,7 +170,6 @@ class QuotationBuilder:
             'specification': specification,
             'local_image_path': str(f.local_image_path),
         }
-
 
     def process_ai(self, products_list: List[str], lang:str,  attempts: int = 3) -> tuple | bool:
         """
@@ -182,7 +184,7 @@ class QuotationBuilder:
             bool: False if unable to get a valid response after retries.
 
         .. note::
-            Модель может возвращать невелидный результат.
+            Модель может возвращать невалидный результат.
             В таком случае я переспрашиваю модель разумное количество раз.
         """
         if attempts < 1:
@@ -217,30 +219,10 @@ class QuotationBuilder:
         """
         file_path = self.export_path / 'products' / f"{product_data['product_id']}.json"
         if not j_dumps(product_data, file_path, ensure_ascii=False):
-            logger.error(f'Ошибка сохранения словаря {pprint(product_data)}\n Путь: {file_path}')
+            logger.error(f'Ошибка сохранения словаря {print(product_data)}\n Путь: {file_path}')
             ...
             return
         return True
-
-
-    async def create_reports(self, 
-                            bot: telebot.TeleBot,
-                            chat_id: int,
-                            data: dict,
-                            mexiron_name:str,
-                            lang:str, 
-                            html_path: Optional[ Path|str], 
-                            pdf_path: Optional[Path|str], 
-                            docx_path: Optional[Path|str], ) -> bytes|None:
-        """Функция отправляет задание на создание мехирона в формате `html` и `pdf`.
-        Если мехорон в pdf создался (`generator.create_report()` вернул True) - 
-        отправить его боту
-        """
-
-        report_generator = ReportGenerator(if_need_pdf = True, if_need_docx = False)
-
-        await report_generator.create_reports(bot, chat_id,  data,  mexiron_name, lang, html_path, pdf_path, docx_path)
-        ...
 
  
     async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
@@ -271,13 +253,12 @@ def main():
     lang:str = 'he'
     
     mexiron_name: str = '250203025325520'
-    export_path = gs.path.external_storage / ENDPOINT / 'mexironim' / mexiron_name
-
-    data = j_loads(export_path / f'{mexiron_name}_{lang}.json')
-
+    base_path:Path = Path(gs.path.external_storage)
+    export_path = base_path / ENDPOINT / 'mexironim' / mexiron_name
     html_path: Path = export_path / f'{mexiron_name}_{lang}.html'
     pdf_path: Path = export_path / f'{mexiron_name}_{lang}.pdf'
     docx_path:Path = export_path / f'{mexiron_name}_{lang}.doc'
+    data = j_loads(export_path / f'{mexiron_name}_{lang}.json')
 
     quotation = QuotationBuilder(mexiron_name)
     asyncio.run(quotation.create_reports(data[lang], mexiron_name, lang, html_path, pdf_path, docx_path))
