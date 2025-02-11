@@ -18,10 +18,13 @@ and integration with Prestashop for product posting.
 """
 
 from __future__ import annotations
+import os
+
 import asyncio
 import random
 import shutil
 from pathlib import Path
+from tkinter import SEL
 from typing import Optional, List
 from types import SimpleNamespace
 
@@ -29,8 +32,8 @@ import header
 from src import gs
 
 from src.endpoints.prestashop.product_fields import ProductFields
-from src.endpoints.prestashop.product_async import PrestaProductAsync
-from src.endpoints.prestashop.category import PrestaCategoryAsync
+from src.endpoints.prestashop.product import PrestaProduct
+
 from src.webdriver.driver import Driver
 from src.webdriver.firefox import Firefox
 from src.ai.gemini import GoogleGenerativeAI
@@ -45,7 +48,18 @@ from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
+
+##############################################################
+
 ENDPOINT = 'emil'
+USE_ENV:bool = True # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
+
+if USE_ENV:
+    from dotenv import load_dotenv
+    load_dotenv()
+
+#############################################################
+
 
 class SupplierToPrestashopProvider:
     """Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
@@ -57,18 +71,28 @@ class SupplierToPrestashopProvider:
         products_list (List[dict]): Список обработанных данных о продуктах.
     """
 
-    driver: 'Driver'
+    driver: Driver
     export_path: Path
     mexiron_name: str
     price: float
     timestamp: str
     products_list: list
-    model: 'GoogleGenerativeAI'
+    model: GoogleGenerativeAI
     config: SimpleNamespace
     local_images_path:Path = gs.path.external_storage / ENDPOINT / 'images' / 'furniture_images'
     lang: str
+    gemini_api: str
+    presta_api: str
+    presta_url: str
 
-    def __init__(self, lang:str, driver: Optional [Driver] = None):
+
+    def __init__(self, 
+                 lang:str, 
+                 gemini_api: str,
+                 presta_api: str,
+                 presta_url: str,
+                 driver: Optional [Driver] = None,
+                 ):
         """
         Initializes SupplierToPrestashopProvider class with required components.
 
@@ -76,6 +100,9 @@ class SupplierToPrestashopProvider:
             driver (Driver): Selenium WebDriver instance.
 
         """
+        self.gemini_api = gemini_api
+        self.presta_api = presta_api
+        self.presta_url = presta_url
         self.lang = lang
         try:
             self.config = j_loads_ns(gs.path.endpoints / ENDPOINT / f'{ENDPOINT}.json')
@@ -87,15 +114,6 @@ class SupplierToPrestashopProvider:
         self.driver = driver if driver else Driver(Firefox)
         self.model = self.initialise_ai_model(self.lang)
 
-    async def get_languages_indexes(self) -> int:
-        """У каждого магазина на prestashop своя нумерация языков"""
-        try:
-            cat = PrestaCategoryAsync()
-            lang_indexes:list = await cat.get_data()
-            return lang_indexes 
-        except Exception as ex:
-            logger.error(f"Не получилось получить схему языков")
-            ...
         
     def initialise_ai_model(self):
         """Инициализация модели Gemini"""
@@ -248,7 +266,7 @@ class SupplierToPrestashopProvider:
 
         products_list: list = products_list if isinstance(products_list, list) else [products_list]
 
-        p = PrestaProductAsync()
+        p = PrestaProduct(api_key=self.presta_api, api_domain=self.presta_url)
 
         for f in products_list:
             p.add_new_product(f)
@@ -294,22 +312,20 @@ class SupplierToPrestashopProvider:
                 return
 
 async def main(suppier_to_presta):
-        
-    f = suppier_to_presta.read_data_from_json()
-    ...
-    print(f)
-
-    l = suppier_to_presta.get_languages_indexes()
-    ...
-    print(l)
-
-if __name__ == '__main__':
-
+    """"""    
     lang = 'he'
+    products_ns = j_loads_ns(gs.path.external_storage / ENDPOINT / 'out_250108230345305_he.json')
 
     suppier_to_presta = SupplierToPrestashopProvider(lang)
+    products_list:list = [f for f in products_ns]
+    await suppier_to_presta.run_scenario(products_list)
+    
 
-    asyncio.run(main(suppier_to_presta))
+
+if __name__ == '__main__':
+    asyncio.run( main() )
+
+
 
 
 

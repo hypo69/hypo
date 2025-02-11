@@ -69,6 +69,9 @@ class EmilDesign:
     base_path:Path = gs.path.endpoints / ENDPOINT
     config:SimpleNamespace = j_loads_ns( base_path / f'{ENDPOINT}.json')
     data_path:Path = getattr( gs.path , config.storage , 'external_storage')  / ENDPOINT
+    gemini_api:str = os.getenv('GEMINI_API') if USE_ENV else gs.credentials.gemini.emil
+    presta_api:str = os.getenv('PRESTA_API') if USE_ENV else gs.credentials.prestashop.emil_design.api_key
+    presta_url:str = os.getenv('PRESTA_URL') if USE_ENV else gs.credentials.prestashop.emil_design.url
     
     def __init__(self):
         """ Initialize the EmilDesign class. """
@@ -190,10 +193,6 @@ class EmilDesign:
         """
         products_list_file:Path = Path(gs.path.external_storage, ENDPOINT, "out_250108230345305_he.json")
         products_list: SimpleNamespace | list[SimpleNamespace] = products_list if products_list else  j_loads_ns( products_list_file)
-
-        ...
-        
-
 
         host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
         api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')

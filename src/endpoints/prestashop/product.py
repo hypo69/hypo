@@ -38,7 +38,7 @@ class PrestaProduct(PrestaShop):
 
         """
                                     
-        super().__init__( api_key = api_key ,api_domain = api_domain, *args, **kwargs)
+        super().__init__( api_key = api_key, api_domain = api_domain, *args, **kwargs)
 
 
     def get_parent_categories(self, id_category: int, _parents:list[dict] = []) -> List[Dict[str, int]]:

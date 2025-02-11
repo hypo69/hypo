@@ -16,7 +16,7 @@ import datetime
 import random
 from pathlib import Path
 import asyncio
-from dotenv import load_dotenv
+
 
 
 import header
@@ -37,6 +37,7 @@ MODE:str = 'PRODUCTION' # <- Определяет режим разработч�
 #############################################################
 
 if USE_ENV:
+    from dotenv import load_dotenv
     load_dotenv()
     
 
