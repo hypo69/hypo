@@ -57,6 +57,7 @@ from src.logger.logger import logger
 # ---------------------------------
 ENDPOINT:str = 'emil'
 USE_ENV:bool = True # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
+
 # ---------------------------------
 
 class EmilDesign:
@@ -196,6 +197,18 @@ class EmilDesign:
 
         host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
         api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
+
+        MODE:str = 'dev'
+
+        if MODE == 'dev':
+            host = gs.credentials.presta.client.dev_emil_design.api_domain
+            api_key = gs.credentials.presta.client.dev_emil_design.api_key
+        if MODE == 'dev8':
+            host = gs.credentials.presta.client.dev8_emil_design.api_domain
+            api_key = gs.credentials.presta.client.dev8_emil_design.api_key
+
+
+
 
         p: PrestaProduct = PrestaProduct (api_domain = host, api_key = api_key)
 

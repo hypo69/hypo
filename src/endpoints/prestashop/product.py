@@ -103,11 +103,11 @@ class PrestaProduct(PrestaShop):
 
 
         presta_product_dict:dict = f.to_dict()
-
-        schema = j_dumps(presta_product_dict, gs.path.endpoints / 'emil' / '_experiments' / 'product_schema_new.json')
-
         presta_product_dict['name'] = presta_product_dict['name'][0]['value']
         presta_product_dict['description'] = presta_product_dict['description'][0]['value']
+
+        # ~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~
+        schema = j_dumps(presta_product_dict, gs.path.endpoints / 'emil' / '_experiments' / 'product_schema_new.json')
 
         response = self.create('products', data={'product': presta_product_dict}, io_format='JSON')
         if response:

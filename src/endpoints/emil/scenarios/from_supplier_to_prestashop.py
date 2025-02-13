@@ -98,6 +98,7 @@ class SupplierToPrestashopProvider:
 
         Args:
             driver (Driver): Selenium WebDriver instance.
+            
 
         """
         self.gemini_api = gemini_api
