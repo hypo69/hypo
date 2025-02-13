@@ -96,21 +96,9 @@ from src.utils.convertors.xml2dict import xml2dict
 from src.utils.file import save_text_file
 from src.utils.image import save_image_from_url
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
-from src.utils.printer import pprint
+from src.utils.printer import pprint as print
 
 
-
-
-# class Format(Enum):
-#     """Data types return (JSON, XML)
-
-#     .. deprecated::
-#         I prefer JSON 👍 :))
-
-#     :param Enum: (int): 1 => JSON, 2 => XML
-#     """
-#     JSON = 'JSON'
-#     XML = 'XML'
 
 
 class PrestaShop:
@@ -137,7 +125,7 @@ class PrestaShop:
     client: Session = Session()
     debug = True
     language: Optional[int] = None
-    data_format = 'JSON'
+    data_format = 'JSON' # Default data format ('JSON' or 'XML')
     ps_version = ''
     API_DOMAIN:str
     API_KEY:str
@@ -222,12 +210,15 @@ class PrestaShop:
         if self.data_format == 'JSON':
             status_code = response.status_code
             if not status_code in (200, 201):
-                logger.critical(f"""response status code: {status_code}
+                logger.error(f"""
+                response status code: {status_code}
                     url: {response.request.url}
                     --------------
                     headers: {response.headers}
                     --------------
-                    response text: {response.text}""")
+                    response: {print(response)}
+                    --------------
+                    response text: {print(response.text)}""", None, False)
             return response
         else:
             error_answer = self._parse(response.text)
@@ -338,10 +329,10 @@ class PrestaShop:
                 return self._parse(response.text)
 
         except Exception as ex:
-            logger .error(f'Error:',ex)
+            logger.error(f'Error:',ex)
             return
 
-    def _parse(self, text: str) -> Union[dict, ElementTree.Element, bool]:
+    def _parse(self, response: str | 'response') -> dict | ElementTree.Element | bool:
         """Parse XML or JSON response from the API.
 
         :param text: Response text.
@@ -361,7 +352,7 @@ class PrestaShop:
             logger.error(f'Parsing Error: {str(ex)}')
             return False
 
-    def create(self, resource: str, data: dict, io_format:Optional[str] = 'JSON') -> Optional[dict]:
+    def create(self, resource: str, data: dict, io_format:Optional[str] = 'JSON', *args, **kwards) -> Optional[dict]:
         """Create a new resource in PrestaShop API.
 
         :param resource: API resource (e.g., 'products').
@@ -372,7 +363,7 @@ class PrestaShop:
         :return: Response from the API.
         :rtype: dict
         """
-        return self._exec(resource=resource, method='POST', data=data, io_format = io_format)
+        return self._exec(resource=resource, method='POST', data=data, io_format = io_format, *args, **kwards)
         
 
     def read(self, resource: str, resource_id: Union[int, str], **kwargs) -> Optional[dict]:

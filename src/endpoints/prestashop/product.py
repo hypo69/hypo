@@ -19,7 +19,7 @@ from src.endpoints.prestashop.api import PrestaShop
 from src.endpoints.prestashop.category import PrestaCategory
 from src.endpoints.prestashop.product_fields import ProductFields
 from src.utils.convertors.any import any2dict
-from src.utils.jjson import j_dumps
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
@@ -103,16 +103,23 @@ class PrestaProduct(PrestaShop):
 
 
         presta_product_dict:dict = f.to_dict()
-        presta_product_dict['name'] = presta_product_dict['name'][0]['value']
-        presta_product_dict['description'] = presta_product_dict['description'][0]['value']
-
+       
         # ~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~
-        schema = j_dumps(presta_product_dict, gs.path.endpoints / 'emil' / '_experiments' / 'product_schema_new.json')
+        # presta_product_dict['name'] = presta_product_dict['name'][0]['value']
+        # presta_product_dict['description'] = presta_product_dict['description'][0]['value']
+        j_dumps(presta_product_dict, gs.path.endpoints / 'emil' / '_experiments' / 'product_schema_new.json')
+        
+        kwards = {
+            'io_format':'XML',
+            'language':2,
+            }
+        response = self.create('products', data={'product': presta_product_dict}, **kwards)
+        #response = self.create('products', data={'product': presta_product_dict}, io_format='JSON')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        response = self.create('products', data={'product': presta_product_dict}, io_format='JSON')
         if response:
             try:
-                f.id_product = int(response['product']['id'])
+                f.reference = int(response['product']['reference'])
                 logger.info(f"Product added: {presta_product_dict.get('name')}")
                 return f
             except (KeyError, TypeError) as ex:
@@ -122,6 +129,48 @@ class PrestaProduct(PrestaShop):
             logger.error(f"Ошибка при добавлении товара:\n{print(print_data=presta_product_dict, text_color='yellow')}", exc_info=True)
             return {}
 
+
+
+def example_add_new_product():
+    """ Пример для добавления товара в Prestashop """
+
+    # 1. Конфигурация API
+    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass 
+
+    MODE:str = 'dev8'
+
+    if MODE == 'dev':
+        host = gs.credentials.presta.client.dev_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev_emil_design.api_key
+    if MODE == 'dev8':
+        host = gs.credentials.presta.client.dev8_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
+    else:
+        host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
+        api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
+
+    # 2. Создаю объект класса PrestaProduct
+    p = PrestaProduct(api_key=api_key, api_domain=host)
+
+    # 3. Добавляю новый товар
+    presta_product_dict:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'exmple_input.json')
+    kwards = {
+    'io_format':'XML',
+    'language':2,
+    }                                                          
+
+    response = p.create('products', data={'product': presta_product_dict}, **kwards)
+    print(response)
+    ...
+
+
+
+if __name__ == '__main__':
+    """"""
+    example_add_new_product()
+
+
+# --- executor.py --- from scenario module
 
 async def execute_prestashop_insert(dict_presta_fields: Dict, dict_assist_fields: Dict) -> bool:
     """!
@@ -159,7 +208,7 @@ async def execute_prestashop_insert(dict_presta_fields: Dict, dict_assist_fields
         logger.info(f"""Presta client: {api_credentials['API_DOMAIN']}""")
 
         # 5.2.1 Get response from prestashop.
-        check_prod_presence: Union[None, dict] = presta_client.get('products', search_filter=search_filter)
+        check_prod_presence: dict = presta_client.get('products', search_filter=search_filter)
         """! 
         - If the product does not yet exist in the database, an empty value will be returned.  (None)
         - If the product already exists, I get a dictionary of fields and edit the fields if they have changed (price, description, etc.)
@@ -167,12 +216,7 @@ async def execute_prestashop_insert(dict_presta_fields: Dict, dict_assist_fields
         @todo - write the logic for saving price history
         """
 
-        """! @debug """
-        def create_debug_files():
-            j_dumps(dict_presta_fields, Path(gs.dir_tmp, f'{dict_presta_fields["reference"]}_dict_presta_fields.json'))
-            j_dumps(dict_assist_fields, Path(gs.dir_tmp, f'{dict_presta_fields["reference"]}_dict_assist_fields.json'))
-        create_debug_files()
-        ...
+
 
         if not check_prod_presence or len(check_prod_presence) == 0:  
             """! An empty response came back from the server. Adding a new product to the client's database """
@@ -194,7 +238,7 @@ async def execute_prestashop_insert(dict_presta_fields: Dict, dict_assist_fields
                 I get a dictionary with the parameters of the added product in response
                 - get a dictionary of fields of the newly added product
                 - If there was an error adding the product to prestashop, False will be returned"""
-                new_product_dict: Union[dict, False] = presta_client.add(resource='products', data={'product': dict_presta_fields}, io_format='JSON')[0]
+                new_product_dict: dict = presta_client.add(resource='products', data={'product': dict_presta_fields}, io_format='JSON')[0]
                 logger.success(f"""Product successfully added reference: - {new_product_dict['reference']}""")
                 ...
 
@@ -256,25 +300,3 @@ async def execute_prestashop_insert(dict_presta_fields: Dict, dict_assist_fields
 
 
 
-async def main():
-    # Example usage
-    product = PrestaProduct()
-    product_fields = ProductFields(
-        lang_index = 1,
-        name='Test Product Async',
-        price=19.99,
-        description='This is an asynchronous test product.',
-    )
-    
-
-
-    new_product = product.add_new_product(product_fields)
-    if new_product:
-        print(f'New product id = {new_product.id_product}')
-    else:
-        print(f'Error add new product')
-
-    product.fetch_data_async()
-
-if __name__ == '__main__':
-    asyncio.run(main())

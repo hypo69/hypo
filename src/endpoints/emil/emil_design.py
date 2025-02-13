@@ -198,7 +198,7 @@ class EmilDesign:
         host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
         api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
-        MODE:str = 'dev'
+        MODE:str = 'dev8'
 
         if MODE == 'dev':
             host = gs.credentials.presta.client.dev_emil_design.api_domain
@@ -212,9 +212,11 @@ class EmilDesign:
 
         p: PrestaProduct = PrestaProduct (api_domain = host, api_key = api_key)
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Получаю словарь с полями продукта
-        # products:dict = p.get_data('products/2191', display='full', io_format='JSON')
-        # schema = j_dumps(products, gs.path.endpoints / ENDPOINT / '_experiments' / 'product_schema.json')
+        products:dict = p.get_data('products/2191', display='full', io_format='JSON')
+        schema = j_dumps(products, gs.path.endpoints / ENDPOINT / '_experiments' / 'product_schema.json')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         lang_ns = j_loads_ns (__root__ / 'src' / 'endpoints' / ENDPOINT / 'shop_locales' / 'locales.json' )
         lang_index = getattr(lang_ns , lang )

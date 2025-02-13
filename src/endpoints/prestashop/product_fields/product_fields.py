@@ -1134,12 +1134,11 @@ class ProductFields:
             self.assist_fields_dict['page_lang'] = value
 
 
-
     def to_dict(self) -> Dict[str, Any]:
         """
         Преобразует объект ProductFields в словарь для PrestaShop API,
         исключая ключи, значения которых равны None или пустой строке,
-        и формирует мультиязычные поля в нужном формате.
+        и формирует мультиязычные поля в нужном формате. Все поля должны быть представлены как строки.
 
         Returns:
             Dict[str, Any]: Словарь с полями, готовый для PrestaShop API.
@@ -1147,121 +1146,122 @@ class ProductFields:
         product_dict = {}
 
         # -- ps_product fields --
+        def str_val(value: Any) -> Optional[str]:
+            """Helper function to convert values to strings, handling None."""
+            return str(value) if value is not None else None
 
-        # product_dict["associations"] = self.associations if self.associations else None  # <- Сложное поле взаимосвязей с другими сущностями
-
-        if self.id_product:
-            product_dict["id_product"] = self.id_product
-        if self.id_supplier:
-            product_dict["id_supplier"] = self.id_supplier
-        if self.id_manufacturer:
-            product_dict["id_manufacturer"] = self.id_manufacturer
-        if self.id_category_default:
-            product_dict["id_category_default"] = self.id_category_default
-        if self.id_shop_default:
-            product_dict["id_shop_default"] = self.id_shop_default
-        if self.id_shop:
-            product_dict["id_shop"] = self.id_shop
-        if self.id_tax:
-            product_dict["id_tax"] = self.id_tax
-        if self.on_sale is not None:  # Explicitly check for None
-            product_dict["on_sale"] = self.on_sale
+        if self.id_product is not None:
+            product_dict["id_product"] = str_val(self.id_product)
+        if self.id_supplier is not None:
+            product_dict["id_supplier"] = str_val(self.id_supplier)
+        if self.id_manufacturer is not None:
+            product_dict["id_manufacturer"] = str_val(self.id_manufacturer)
+        if self.id_category_default is not None:
+            product_dict["id_category_default"] = str_val(self.id_category_default)
+        if self.id_shop_default is not None:
+            product_dict["id_shop_default"] = str_val(self.id_shop_default)
+        if self.id_shop is not None:
+            product_dict["id_shop"] = str_val(self.id_shop)
+        if self.id_tax is not None:
+            product_dict["id_tax"] = str_val(self.id_tax)
+        if self.on_sale is not None:
+            product_dict["on_sale"] = str_val(self.on_sale)
         if self.online_only is not None:
-            product_dict["online_only"] = self.online_only
+            product_dict["online_only"] = str_val(self.online_only)
         if self.ean13:
-            product_dict["ean13"] = self.ean13
+            product_dict["ean13"] = str_val(self.ean13)
         if self.isbn:
-            product_dict["isbn"] = self.isbn
+            product_dict["isbn"] = str_val(self.isbn)
         if self.upc:
-            product_dict["upc"] = self.upc
+            product_dict["upc"] = str_val(self.upc)
         if self.mpn:
-            product_dict["mpn"] = self.mpn
+            product_dict["mpn"] = str_val(self.mpn)
         if self.ecotax:
-            product_dict["ecotax"] = self.ecotax
+            product_dict["ecotax"] = str_val(self.ecotax)
         if self.minimal_quantity:
-            product_dict["minimal_quantity"] = self.minimal_quantity
+            product_dict["minimal_quantity"] = str_val(self.minimal_quantity)
         if self.low_stock_threshold:
-            product_dict["low_stock_threshold"] = self.low_stock_threshold
+            product_dict["low_stock_threshold"] = str_val(self.low_stock_threshold)
         if self.low_stock_alert:
-            product_dict["low_stock_alert"] = self.low_stock_alert
+            product_dict["low_stock_alert"] = str_val(self.low_stock_alert)
         if self.price:
-            product_dict["price"] = self.price
+            product_dict["price"] = str_val(self.price)
         if self.wholesale_price:
-            product_dict["wholesale_price"] = self.wholesale_price
+            product_dict["wholesale_price"] = str_val(self.wholesale_price)
         if self.unity:
-            product_dict["unity"] = self.unity
+            product_dict["unity"] = str_val(self.unity)
         if self.unit_price_ratio:
-            product_dict["unit_price_ratio"] = self.unit_price_ratio
+            product_dict["unit_price_ratio"] = str_val(self.unit_price_ratio)
         if self.additional_shipping_cost:
-            product_dict["additional_shipping_cost"] = self.additional_shipping_cost
+            product_dict["additional_shipping_cost"] = str_val(self.additional_shipping_cost)
         if self.reference:
-            product_dict["reference"] = self.reference
+            product_dict["reference"] = str_val(self.reference)
         if self.supplier_reference:
-            product_dict["supplier_reference"] = self.supplier_reference
+            product_dict["supplier_reference"] = str_val(self.supplier_reference)
         if self.location:
-            product_dict["location"] = self.location
+            product_dict["location"] = str_val(self.location)
         if self.width:
-            product_dict["width"] = self.width
+            product_dict["width"] = str_val(self.width)
         if self.height:
-            product_dict["height"] = self.height
+            product_dict["height"] = str_val(self.height)
         if self.depth:
-            product_dict["depth"] = self.depth
+            product_dict["depth"] = str_val(self.depth)
         if self.weight:
-            product_dict["weight"] = self.weight
+            product_dict["weight"] = str_val(self.weight)
         if self.volume:
-            product_dict["volume"] = self.volume
+            product_dict["volume"] = str_val(self.volume)
         if self.out_of_stock:
-            product_dict["out_of_stock"] = self.out_of_stock
+            product_dict["out_of_stock"] = str_val(self.out_of_stock)
         if self.additional_delivery_times:
-            product_dict["additional_delivery_times"] = self.additional_delivery_times
+            product_dict["additional_delivery_times"] = str_val(self.additional_delivery_times)
         if self.quantity_discount:
-            product_dict["quantity_discount"] = self.quantity_discount
+            product_dict["quantity_discount"] = str_val(self.quantity_discount)
         if self.customizable:
-            product_dict["customizable"] = self.customizable
+            product_dict["customizable"] = str_val(self.customizable)
         if self.uploadable_files:
-            product_dict["uploadable_files"] = self.uploadable_files
+            product_dict["uploadable_files"] = str_val(self.uploadable_files)
         if self.text_fields:
-            product_dict["text_fields"] = self.text_fields
-        if self.active is not None:  # Explicitly check for None
-            product_dict["active"] = self.active
+            product_dict["text_fields"] = str_val(self.text_fields)
+        if self.active is not None:
+            product_dict["active"] = str_val(self.active)
         if self.redirect_type:
-            product_dict["redirect_type"] = self.redirect_type
+            product_dict["redirect_type"] = str_val(self.redirect_type)
         if self.id_type_redirected:
-            product_dict["id_type_redirected"] = self.id_type_redirected
-        if self.available_for_order is not None:  # Explicitly check for None
-            product_dict["available_for_order"] = self.available_for_order
+            product_dict["id_type_redirected"] = str_val(self.id_type_redirected)
+        if self.available_for_order is not None:
+            product_dict["available_for_order"] = str_val(self.available_for_order)
         if self.available_date:
-            product_dict["available_date"] = self.available_date
-        if self.show_condition is not None:  # Explicitly check for None
-            product_dict["show_condition"] = self.show_condition
+            product_dict["available_date"] = str_val(self.available_date.isoformat() if isinstance(self.available_date,datetime) else self.available_date)
+        if self.show_condition is not None:
+            product_dict["show_condition"] = str_val(self.show_condition)
         if self.condition:
-            product_dict["condition"] = self.condition
-        if self.show_price is not None:  # Explicitly check for None
-            product_dict["show_price"] = self.show_price
-        if self.indexed is not None:  # Explicitly check for None
-            product_dict["indexed"] = self.indexed
+            product_dict["condition"] = str_val(self.condition)
+        if self.show_price is not None:
+            product_dict["show_price"] = str_val(self.show_price)
+        if self.indexed is not None:
+            product_dict["indexed"] = str_val(self.indexed)
         if self.visibility:
-            product_dict["visibility"] = self.visibility
-        if self.cache_is_pack is not None:  # Explicitly check for None
-            product_dict["cache_is_pack"] = self.cache_is_pack
-        if self.cache_has_attachments is not None:  # Explicitly check for None
-            product_dict["cache_has_attachments"] = self.cache_has_attachments
-        if self.is_virtual is not None:  # Explicitly check for None
-            product_dict["is_virtual"] = self.is_virtual
+            product_dict["visibility"] = str_val(self.visibility)
+        if self.cache_is_pack is not None:
+            product_dict["cache_is_pack"] = str_val(self.cache_is_pack)
+        if self.cache_has_attachments is not None:
+            product_dict["cache_has_attachments"] = str_val(self.cache_has_attachments)
+        if self.is_virtual is not None:
+            product_dict["is_virtual"] = str_val(self.is_virtual)
         if self.cache_default_attribute:
-            product_dict["cache_default_attribute"] = self.cache_default_attribute
+            product_dict["cache_default_attribute"] = str_val(self.cache_default_attribute)
         if self.date_add:
-            product_dict["date_add"] = self.date_add
+           product_dict["date_add"] = str_val(self.date_add.isoformat() if isinstance(self.date_add,datetime) else self.date_add)
         if self.date_upd:
-            product_dict["date_upd"] = self.date_upd
-        if self.advanced_stock_management is not None:  # Explicitly check for None
-            product_dict["advanced_stock_management"] = self.advanced_stock_management
+           product_dict["date_upd"] = str_val(self.date_upd.isoformat()  if isinstance(self.date_upd,datetime) else self.date_upd)
+        if self.advanced_stock_management is not None:
+            product_dict["advanced_stock_management"] = str_val(self.advanced_stock_management)
         if self.pack_stock_type:
-            product_dict["pack_stock_type"] = self.pack_stock_type
+            product_dict["pack_stock_type"] = str_val(self.pack_stock_type)
         if self.state:
-            product_dict["state"] = self.state
+            product_dict["state"] = str_val(self.state)
         if self.product_type:
-            product_dict["product_type"] = self.product_type
+            product_dict["product_type"] = str_val(self.product_type)
 
         # -- ps_product_lang fields --
         if self.description:
@@ -1311,34 +1311,34 @@ class ProductFields:
 
         # -- service fields
         if self.id_default_image:
-            product_dict["id_default_image"] = self.id_default_image
+            product_dict["id_default_image"] = str_val(self.id_default_image)
         if self.images_urls:
-            product_dict["images_urls"] = self.images_urls
+            product_dict["images_urls"] = [str_val(url) for url in self.images_urls] if isinstance(self.images_urls, list) else str_val(self.images_urls)
         if self.assist_fields_dict.get('default_image_url'):
-            product_dict["default_image_url"] = self.assist_fields_dict.get('default_image_url')
+            product_dict["default_image_url"] = str_val(self.assist_fields_dict.get('default_image_url'))
         if self.position_in_category:
-            product_dict["position_in_category"] = self.position_in_category
+            product_dict["position_in_category"] = str_val(self.position_in_category)
         if self.link_to_video:
-            product_dict["link_to_video"] = self.link_to_video
+            product_dict["link_to_video"] = str_val(self.link_to_video)
         return product_dict
 
-    def _format_multilang_value(self, data: Any) -> List[Dict[str, Any]]:
+    def _format_multilang_value(self, data: Any) -> List[Dict[str, str]]:
         """
-        Форматирует мультиязычные значения в список словарей для PrestaShop API.
+        Форматирует мультиязычные значения в список словарей для PrestaShop API. Все значения представляются как строки.
 
         Args:
             data (Any): Значение поля. Если это словарь, ожидается структура {'language': [{'attrs': {'id': lang_id}, 'value': value}]}
 
         Returns:
-            List[Dict[str, Any]]: Список словарей, где каждый словарь содержит 'id' и 'value' для каждого языка.
+            List[Dict[str, str]]: Список словарей, где каждый словарь содержит 'id' и 'value' (все как строки) для каждого языка.
         """
         result = []
         if isinstance(data, dict) and 'language' in data:
             for lang_data in data['language']:
                 lang_id = lang_data['attrs']['id']
                 lang_value = lang_data['value']
-                result.append({"id": lang_id, "value": lang_value})
+                result.append({"id": str(lang_id), "value": str(lang_value)})
         else:
             # Fallback: Create a list with one entry for the current language
-            result.append({"id": str(self.lang_index), "value": str(data)}) # Added "str" conversion
+            result.append({"id": str(self.lang_index), "value": str(data)})
         return result
