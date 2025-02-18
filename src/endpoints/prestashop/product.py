@@ -48,7 +48,7 @@ class PrestaProduct(PrestaShop):
             id_category (int): The category ID.
 
         Returns:
-            parent category id (int) .
+            parent category id (int).
         """
         try:
             category_response: dict = self.read(
