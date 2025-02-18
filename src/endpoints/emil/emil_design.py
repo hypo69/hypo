@@ -86,31 +86,17 @@ class EmilDesign:
         """
         ...
         
+        # 1. Initialize  the system instructions
 
-        # 1. Initialize the AI model with the system instructions
-
-        system_instruction: str = Path( self.base_path  / 'instructions' / f'hand_made_furniture_{lang}.md' ).read_text(encoding='UTF-8')
-
-        use_openai:bool = False
-        if use_openai:
-            self.openai = OpenAIModel(system_instruction = system_instruction, assistant_id = 'asst_uDr5aVY3qRByRwt5qFiMDk43')
-
-        use_gemini:bool = True
-        if use_gemini:
-            self.gemini = GoogleGenerativeAI(
-                    api_key= gs.credentials.gemini.emil ,                        
-                    model_name = 'gemini-1.5-flash',
-                    system_instruction = system_instruction,
-                    generation_config = {'response_mime_type': 'application/json'}
-                )
-
+        system_instruction: str = Path( self.base_path  / 'instructions' / f'system_instruction.{lang}.md' ).read_text(encoding='UTF-8') 
+        prompt: str = Path( self.base_path  / 'instructions' / f'hand_made_furniture.{lang}.md' ).read_text(encoding='UTF-8')
 
         # 2. Define paths for examples, images directory, and output file
         
         furniture_categories: str = Path( self.base_path  / 'categories' / 'main_categories_furniture.json' ).read_text(encoding='UTF-8').replace(r'\n','').replace(r'\t','')
-        system_instruction += furniture_categories
+        system_instruction = system_instruction + furniture_categories + prompt
         
-        output_file: Path = ( self.data_path /  f"described_images_{lang}.json" )
+        output_file: Path = ( self.data_path /  f"described_images_{gs.now}.{lang}.json" )
 
         described_images_path:Path = self.data_path / 'described_images.txt'
         described_images:list = read_text_file(described_images_path, as_list=True) or []
@@ -128,7 +114,25 @@ class EmilDesign:
         output_json: Path = Path(self.data_path  / f'out_{gs.now}_{lang}.json')
 
 
-        data: list = [] # <- список всех обработанных данных
+        data: list = [] # <- список всех обработанных данных          
+
+
+
+        #########################  AI processing ###############################
+        
+        use_openai:bool = False
+        if use_openai:
+            self.openai = OpenAIModel(system_instruction = system_instruction, assistant_id = 'asst_uDr5aVY3qRByRwt5qFiMDk43')
+
+        use_gemini:bool = True
+        if use_gemini:
+            self.gemini = GoogleGenerativeAI(
+                    api_key= gs.credentials.gemini.emil ,                        
+                    model_name = 'gemini-1.5-flash',
+                    system_instruction = system_instruction,
+                    generation_config = {'response_mime_type': 'application/json'}
+                )
+
         for img in images_to_process:
             
             print(f"starting process file {img}\nsleep for 20 sec")
@@ -144,10 +148,11 @@ class EmilDesign:
             # - raw binary data of a file
             raw_img_data = get_raw_image_data (images_dir / img)
             
-            response = await self.gemini.describe_image(image = raw_img_data, mime_type = 'image/jpeg', prompt = system_instruction)  
+            response = await self.gemini.describe_image(image = raw_img_data, mime_type = 'image/jpeg')  
 
             if not response:
                 ...
+                logger.debug(f"Не удалось получить описание к {img=}")
                 continue
 
             # Process the response into a structured format
@@ -214,8 +219,8 @@ class EmilDesign:
 
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # Получаю словарь с полями продукта
-        products:dict = p.get_data('products/2191', display='full', io_format='JSON')
-        schema = j_dumps(products, gs.path.endpoints / ENDPOINT / '_experiments' / 'product_schema.json')
+        # products:dict = p.get_data('products', display='full', io_format='JSON')
+        # schema = j_dumps(products, gs.path.endpoints / ENDPOINT / '_experiments' / 'product_schema.json')
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         lang_ns = j_loads_ns (__root__ / 'src' / 'endpoints' / ENDPOINT / 'shop_locales' / 'locales.json' )
@@ -227,8 +232,8 @@ class EmilDesign:
             f.name = product_ns.name
             f.price = 100
             f.id_category_default = product_ns.id_category_default
-            f.additional_categories = product_ns.parent
-            f.id_supplier = 11366 #  https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
+            f.additional_category_append(product_ns.id_category_parent)
+            f.id_supplier = 11366 # <-  https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ
             f.description = product_ns.description
             f.local_image_path = product_ns.local_image_path
 

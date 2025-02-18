@@ -41,37 +41,50 @@ class PrestaProduct(PrestaShop):
         super().__init__( api_key = api_key, api_domain = api_domain, *args, **kwargs)
 
 
-    def get_parent_categories(self, id_category: int, _parents:list[dict] = []) -> List[Dict[str, int]]:
+    def get_parent_category(self, id_category: int) -> Optional[int]:
         """Retrieve parent categories from PrestaShop for a given category recursively.
 
         Args:
             id_category (int): The category ID.
 
         Returns:
-            List[Dict[str, int]]: A list of parent category dictionaries (each with an 'id' key),
-                                   excluding root categories (ID 1 and 2).
+            parent category id (int) .
         """
         try:
             category_response: dict = self.read(
                 'categories', resource_id=id_category, display='full', io_format='JSON'
             )['categories'][0]
-        except Exception as e:
-            logger.error(f"Error retrieving category with ID {id_category}: {e}")
-            return []
+
+            return int(category_response['id_parent'])
+        except Exception as ex:
+            logger.error(f"Error retrieving category with ID {id_category}: ",ex)
+            return 
 
         if not category_response:
             logger.error(f"No category found with ID {id_category}.")
-            return []
+            return 
 
-        _parent_category = int(category_response['id_parent']) or 0
+        
+    
 
-        if _parent_category <= 2:  # Categories with id 1 and 2 are root categories
-            return _parents  # Base case: stop recursion at root categories
-        else:
-            _parents.append({'id': _parent_category})
-            self.get_parent_categories(_parent_category, _parents)  # Recursive call
+    def _add_parent_categories(self, f: ProductFields) -> None:
+            """Calculates and appends all parent categories for a list of category IDs to the ProductFields object.
 
-        return _parents
+            Args:
+                f (ProductFields): The ProductFields object to append parent categories to.
+                category_ids (List[int]): List of category IDs.
+            """
+      
+            for _c in f.additional_categories :
+
+                cat_id = int(_c['id']) #   {'id':'value'} 
+
+                if cat_id in (1,2): # <-- корневые категории prestashop Здесь можно добавить другие фильтры
+                    continue
+
+                parent_id = self.get_parent_category(cat_id)
+                f.additional_category_append(parent_id) if parent_id else continue
+
 
     def add_new_product(self, f: ProductFields) -> dict:
         """
@@ -83,39 +96,19 @@ class PrestaProduct(PrestaShop):
         Returns:
             ProductFields | None: Returns the `ProductFields` object with `id_product` set, if the product was added successfully, `None` otherwise.
         """
-        
-        # Дополняю категории в поле `additional_categories`
-        calculated_categories:list = []
-        additional_categories:list[dict] = f.additional_categories['category']
-        additional_categories.append({"id":f.id_category_default})  # <- -- Добавляю основную категорию
-        for c in additional_categories:
-            for key, cat_id in c.items():
-                try:
-                    cat_id=int(cat_id)
-                    parents = self.get_parent_categories(cat_id)
-                    if parents:
-                        calculated_categories.extend(parents)
 
-                except ValueError as ex:
-                    logger.error(f"Ошибка формата категории. Должно быть число. Плучил {cat_id}",ex)
-                    continue
+        #  Дополняю id_category_default в поле `additional_categories` для поиска её родительских категорий
+        f.additional_category_append(f.id_category_default)
 
+        self._add_parent_categories(f)
 
+        presta_product_dict: dict = f.to_dict()
 
-        presta_product_dict:dict = f.to_dict()
-       
-        # ~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~
-        # presta_product_dict['name'] = presta_product_dict['name'][0]['value']
-        # presta_product_dict['description'] = presta_product_dict['description'][0]['value']
-        j_dumps(presta_product_dict, gs.path.endpoints / 'emil' / '_experiments' / 'product_schema_new.json')
-        
         kwards = {
-            'io_format':'XML',
-            'language':2,
-            }
+            'io_format': 'JSON',
+            'language': 2,
+        }
         response = self.create('products', data={'product': presta_product_dict}, **kwards)
-        #response = self.create('products', data={'product': presta_product_dict}, io_format='JSON')
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         if response:
             try:
@@ -128,6 +121,22 @@ class PrestaProduct(PrestaShop):
         else:
             logger.error(f"Ошибка при добавлении товара:\n{print(print_data=presta_product_dict, text_color='yellow')}", exc_info=True)
             return {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -152,14 +161,21 @@ def example_add_new_product():
     # 2. Создаю объект класса PrestaProduct
     p = PrestaProduct(api_key=api_key, api_domain=host)
 
+    schema = p.get_schema('products')
+    j_dumps(schema, gs.path.endpoints / 'emil' / '_experiments' / 'product_schema.json')
+
     # 3. Добавляю новый товар
-    presta_product_dict:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'exmple_input.json')
-    kwards = {
+    presta_product_dict:dict =  j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'exmple_input.json')
+    #presta_product_dict['name'] = 'TEST'
+
+
+    kwards:dict = {
     'io_format':'XML',
     'language':2,
-    }                                                          
-
-    response = p.create('products', data={'product': presta_product_dict}, **kwards)
+    }
+    #kwards:dict = {}                                                          
+    data:dict = {'product':presta_product_dict}
+    response = p.create('products', data=data, **kwards)
     print(response)
     ...
 
@@ -168,6 +184,15 @@ def example_add_new_product():
 if __name__ == '__main__':
     """"""
     example_add_new_product()
+
+
+
+
+
+
+
+
+
 
 
 # --- executor.py --- from scenario module

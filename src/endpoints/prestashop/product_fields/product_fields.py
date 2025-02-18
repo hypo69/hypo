@@ -28,23 +28,22 @@ from src.logger.exceptions import ProductFieldException  # If you have this exce
 class ProductFields:
     """Класс, описывающий поля товара в формате API PrestaShop."""
 
-    lang_index: int
-    product_fields_list: List[str] = field(init=False)
+    
+    #product_fields_list: List[str] = field(init=False)
     presta_fields: SimpleNamespace = field(init=False)
+    lang_index: int
 
-    assist_fields_dict: Dict[str, any] = field(default_factory=lambda: {
-        'default_image_url': '',
-        'images_urls': []
-    })
     base_path:Path = __root__ / 'src' / 'endpoints' / 'prestashop' 
 
-    def __post_init__(self):
+    def __post_init__(self, lang_index:Optional[int] = 0):
         """Инициализация класса после создания экземпляра. Загружаются данные полей, языков и их идентификаторов."""
-        
+        if lang_index:
+            self.lang_index = lang_index
+
         if not self._payload():
-             logger.debug(f"Ошибка загрузки полей")
+             logger.error(f"Ошибка загрузки полей")
              ...
-             return 
+             
 
     def _payload(self) -> bool:
         """
@@ -73,474 +72,437 @@ class ProductFields:
             return False
         try:
             for name, value in data_dict.items():
-                setattr(self.presta_fields, name, value )  # Use setattr on presta_fields
+                setattr(self.presta_fields, name, value )
             return True
         except Exception as ex:
             logger.error(f"Exception ", ex)
             ...
             return False 
 
-    @property
-    def associations(self) -> Optional[Dict]:
-        """Возвращает словарь ключей ассоциаций."""
-        return self.presta_fields.associations or None
 
-    @associations.setter
-    def associations(self, value: Dict[str, Optional[str]]):
-        """Устанавливает словарь ассоциаций."""
-        self.presta_fields.associations = value
+    # --------------------------------------------------------------------------
+    #                  Язык
+    # --------------------------------------------------------------------------
+
+    @property
+    def id_lang(self) -> int:
+        """ property `id_lang: int(10)` 
+        Индех языка для мультиязычных полей товара.
+        """
+        return self.lang_index
+
+    @id_lang.setter
+    def id_lang(self, value: int = 1):
+        """ setter Индекс языка для мультиязычных полей товара."""
+        self.lang_index = value
+
+
 
     # --------------------------------------------------------------------------
     #                  Поля таблицы ps_product
     # --------------------------------------------------------------------------
 
+
+
+
     @property
     def id_product(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_product: int(10) unsigned` """
+        """ property `ps_product.id_product: int(10) unsigned` """
         return self.presta_fields.id_product
 
     @id_product.setter
     def id_product(self, value: int = None):
-        """ <sub>*[setter]*</sub> `ID` товара. Для нового товара id назначается из `PrestaShop`. """
+        """ setter `ID` товара. Для нового товара id назначается из `PrestaShop`. """
         try:
             self.presta_fields.id_product = value
         except Exception as ex:
-            logger.error(f"Ошибка при установке id_product: {ex}")
+            logger.error(f"Ошибка при установке id_product:",ex)
 
     @property
     def id_supplier(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_supplier: int(10) unsigned` """
+        """ property `ps_product.id_supplier: int(10) unsigned` """
         return self.presta_fields.id_supplier
 
     @id_supplier.setter
     def id_supplier(self, value: int = None):
-        """ <sub>*[setter]*</sub> `ID` поставщика."""
+        """ setter `ID` поставщика."""
         try:
             self.presta_fields.id_supplier = value
         except Exception as ex:
-           logger.error(f"Ошибка при установке id_supplier: {ex}")
+           logger.error(f"Ошибка при установке id_supplier:",ex)
 
 
     @property
     def id_manufacturer(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_manufacturer: int(10) unsigned` """
+        """ property `ps_product.id_manufacturer: int(10) unsigned` """
         return self.presta_fields.id_manufacturer
 
     @id_manufacturer.setter
     def id_manufacturer(self, value: int = None):
-        """ <sub>*[setter]*</sub> `ID` бренда."""
+        """ setter `ID` бренда."""
         try:
              self.presta_fields.id_manufacturer = value
         except Exception as ex:
-             logger.error(f"Ошибка при установке id_manufacturer: {ex}")
+             logger.error(f"Ошибка при установке id_manufacturer:",ex)
 
     @property
     def id_category_default(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_category_default: int(10) unsigned` """
+        """ property `ps_product.id_category_default: int(10) unsigned` """
         return self.presta_fields.id_category_default
 
     @id_category_default.setter
     def id_category_default(self, value: int):
-        """ <sub>*[setter]*</sub> `ID` главной категории товара."""
+        """ setter `ID` главной категории товара."""
         try:
             self.presta_fields.id_category_default = value
-            
-        except ProductFieldException as ex:
-            """ @todo - требуется валидатор"""
-            logger.critical(f"""Ошибка заполнения поля: 'id_category_default' данными {value}
-            Ошибка: """, ex)
-            return        
+        except Exception as ex:
+            logger.error(f"Ошибка при установке id_shop_default:",ex)
 
-    @property
-    def additional_categories(self) -> dict | None:
-        """  <sub>*[property]*</sub> 
-        возвращает словарь категорий товара восстановленный из файла сценария таблица `ps_category_product`"""
-
-        if hasattr(self.presta_fields, 'associations') and isinstance(self.presta_fields.associations, dict) and 'categories' in self.presta_fields.associations:
-            return self.presta_fields.associations['categories']
-        return None
-
-    
-    @additional_categories.setter    
-    def additional_categories(self, value: int | list[int]):
-        """  <sub>*[setter]*</sub>   Дополнительные к основной категории.
-        При задании доп ключей прдеыдущие значения заменяются новыми из `additional_categories`.
-        Для добавления новых к уже существующим используй  функцию additional_categories_append()
-        """
-        
-        value = value if isinstance(value, list) else [value]
-        
-        for v in value:
-            try:
-                v:int = int(v)
-            except Exception as ex:
-                logger.error(f'недопустимое значение для категории {v=}, Должен быть `int`')
-                ...
-                continue
-
-            try:
-                if not hasattr(self.presta_fields, 'associations'):
-                    self.presta_fields.associations = {}
-                if not isinstance(self.presta_fields.associations, dict):
-                    logger.error(f"""Ошибка заполнения поля: 'additional_categories' - ожидался dict, получен {type(self.presta_fields.associations)} """)
-                    return
-                
-                if 'categories' not in self.presta_fields.associations:
-                    self.presta_fields.associations['categories'] = {'category': []}
-
-                self.presta_fields.associations['categories']['category'].append({'id': v})
-
-            except Exception as ex:
-                logger.error(f"""Ошибка заполнения поля: 'additional_categories' данными {v}""", ex)
-                return
    
     @property
     def id_shop_default(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_shop_default: int(10) unsigned` """
+        """ property `ps_product.id_shop_default: int(10) unsigned` """
         return self.presta_fields.id_shop_default
 
     @id_shop_default.setter
-    def id_shop_default(self, value: int = None):
-        """ <sub>*[setter]*</sub> `ID` магазина по умолчанию."""
+    def id_shop_default(self, value: int ):
+        """ setter `ID` магазина по умолчанию."""
         try:
             self.presta_fields.id_shop_default = value or 1
         except Exception as ex:
-            logger.error(f"Ошибка при установке id_shop_default: {ex}")
+            logger.error(f"Ошибка при установке id_shop_default:",ex)
 
     @property
     def id_shop(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_shop: int(10) unsigned` """
+        """ property `ps_product.id_shop: int(10) unsigned` """
         return self.presta_fields.id_shop
 
     @id_shop.setter
-    def id_shop(self, value: int = None):
-        """ <sub>*[setter]*</sub> `ID` магазина (для multishop)."""
+    def id_shop(self, value: int):
+        """ setter `ID` магазина (для multishop)."""
         try:
             self.presta_fields.id_shop = value or 1
         except Exception as ex:
-             logger.error(f"Ошибка при установке id_shop: {ex}")
+             logger.error(f"Ошибка при установке id_shop:",ex)
 
     @property
     def id_tax(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_tax: int(11) unsigned` """
+        """ property `ps_product.id_tax: int(11) unsigned` """
         return self.presta_fields.id_tax
     
     @id_tax.setter
     def id_tax(self, value: int):
-         """ <sub>*[setter]*</sub> `ID` налога."""
+         """ setter `ID` налога."""
         
          try:
             self.presta_fields.id_tax = value
          except Exception as ex:
-            logger.error(f"Ошибка при установке id_tax: {ex}")
+            logger.error(f"Ошибка при установке id_tax:",ex)
 
 
     @property
     def on_sale(self) -> int:
-        """ <sub>*[property]*</sub> `ps_product.on_sale: tinyint(1) unsigned` """
+        """ property `ps_product.on_sale: tinyint(1) unsigned` """
         return self.presta_fields.on_sale
     
     @on_sale.setter
-    def on_sale(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Флаг распродажи."""
+    def on_sale(self, value: int ):
+        """ setter Флаг распродажи."""
         self.presta_fields.on_sale = value
 
     @property
     def online_only(self) -> int:
-        """ <sub>*[property]*</sub> `ps_product.online_only: tinyint(1) unsigned` """
+        """ property `ps_product.online_only: tinyint(1) unsigned` """
         return self.presta_fields.online_only
 
     @online_only.setter
-    def online_only(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Флаг "только онлайн". """
-        self.presta_fields.online_only = 1 if value else 0
+    def online_only(self, value: int|bool ):
+        """ setter Флаг "только онлайн". """
+        self.presta_fields.online_only = int(value)
 
     @property
     def ean13(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.ean13: varchar(13)` """
+        """ property `ps_product.ean13: varchar(13)` """
         return self.presta_fields.ean13
 
     @ean13.setter
-    def ean13(self, value: str = None):
-        """ <sub>*[setter]*</sub> EAN13 код товара."""
+    def ean13(self, value: str):
+        """ setter EAN13 код товара."""
         self.presta_fields.ean13 = value
 
     @property
     def isbn(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.isbn: varchar(32)` """
+        """ property `ps_product.isbn: varchar(32)` """
         return self.presta_fields.isbn
     
     @isbn.setter
-    def isbn(self, value: str = None):
-        """ <sub>*[setter]*</sub> ISBN код товара."""
+    def isbn(self, value: str):
+        """ setter ISBN код товара."""
         self.presta_fields.isbn = value
 
     @property
     def upc(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.upc: varchar(12)` """
+        """ property `ps_product.upc: varchar(12)` """
         return self.presta_fields.upc
     
     @upc.setter
-    def upc(self, value: str = None):
-        """ <sub>*[setter]*</sub> UPC код товара."""
+    def upc(self, value: str):
+        """ setter UPC код товара."""
         self.presta_fields.upc = value
 
     @property
     def mpn(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.mpn: varchar(40)` """
+        """ property `ps_product.mpn: varchar(40)` """
         return self.presta_fields.mpn
     
     @mpn.setter
-    def mpn(self, value: str = None):
-        """ <sub>*[setter]*</sub> MPN код товара."""
+    def mpn(self, value: str):
+        """ setter MPN код товара."""
         self.presta_fields.mpn = value
    
 
     @property
     def ecotax(self) -> Optional[float]:
-        """ <sub>*[property]*</sub> `ps_product.ecotax: decimal(17,6)` """
+        """ property `ps_product.ecotax: decimal(17,6)` """
         return self.presta_fields.ecotax
 
     @ecotax.setter
     def ecotax(self, value: float = None):
-        """ <sub>*[setter]*</sub> Эко налог."""
+        """ setter Эко налог."""
         self.presta_fields.ecotax = value
 
     @property
     def minimal_quantity(self) -> int:
-         """ <sub>*[property]*</sub> `ps_product.minimal_quantity: int(10) unsigned` """
+         """ property `ps_product.minimal_quantity: int(10) unsigned` """
          return self.presta_fields.minimal_quantity
 
     @minimal_quantity.setter
     def minimal_quantity(self, value: int = 1):
-        """ <sub>*[setter]*</sub> Минимальное количество товара для заказа."""
+        """ setter Минимальное количество товара для заказа."""
         self.presta_fields.minimal_quantity = value
    
     @property
     def low_stock_threshold(self) -> int:
-        """ <sub>*[property]*</sub> `ps_product.low_stock_threshold: int(10)` """
+        """ property `ps_product.low_stock_threshold: int(10)` """
         return self.presta_fields.low_stock_threshold
 
     @low_stock_threshold.setter
-    def low_stock_threshold(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Пороговое значение для уведомления о низком запасе."""
+    def low_stock_threshold(self, value: int):
+        """ setter Пороговое значение для уведомления о низком запасе."""
         self.presta_fields.low_stock_threshold = value
 
     @property
     def low_stock_alert(self) -> int:
-        """ <sub>*[property]*</sub> `ps_product.low_stock_alert: tinyint(1)` """
+        """ property `ps_product.low_stock_alert: tinyint(1)` """
         return self.presta_fields.low_stock_alert
 
     @low_stock_alert.setter
-    def low_stock_alert(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Флаг уведомления о низком запасе."""
+    def low_stock_alert(self, value: int):
+        """ setter Флаг уведомления о низком запасе."""
         self.presta_fields.low_stock_alert = value
   
     @property
     def price(self) -> float:
-        """ <sub>*[property]*</sub> `ps_product.price: decimal(20,6)` """
+        """ property `ps_product.price: decimal(20,6)` """
         return self.presta_fields.price
     
     @price.setter
-    def price(self, value: Union[str, int, float]):
-        """ <sub>*[setter]*</sub> Цена товара."""
+    def price(self, value: str | int | float):
+        """ setter Цена товара."""
         try:
-            if not value:
-                self.presta_fields.price = 0
-                return
             self.presta_fields.price = float(value)
         except ValueError as ex:
-            logger.error(f"Недопустимое значение для цены: {value}. Ошибка: {ex}")
+            logger.error(f"Недопустимое значение для цены: {value}. Ошибка:",ex)
             return
 
     @property
     def wholesale_price(self) -> Optional[float]:
-        """ <sub>*[property]*</sub> `ps_product.wholesale_price: decimal(20,6)` """
+        """ property `ps_product.wholesale_price: decimal(20,6)` """
         return self.presta_fields.wholesale_price
     
     @wholesale_price.setter
-    def wholesale_price(self, value: float = None):
-        """ <sub>*[setter]*</sub> Оптовая цена."""
-        self.presta_fields.wholesale_price = value
+    def wholesale_price(self, value: str | int | float):
+        """ setter Оптовая цена."""
+        self.presta_fields.wholesale_price = float(value)
     
     @property
     def unity(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.unity: varchar(255)` """
+        """ property `ps_product.unity: varchar(255)` """
         return self.presta_fields.unity
     
     @unity.setter
-    def unity(self, value: str = None):
-        """ <sub>*[setter]*</sub> Единица измерения."""
+    def unity(self, value: str):
+        """ setter Единица измерения."""
         self.presta_fields.unity = value
 
     @property
     def unit_price_ratio(self) -> float:
-        """ <sub>*[property]*</sub> `ps_product.unit_price_ratio: decimal(20,6)` """
+        """ property `ps_product.unit_price_ratio: decimal(20,6)` """
         return self.presta_fields.unit_price_ratio
 
     @unit_price_ratio.setter
-    def unit_price_ratio(self, value: float = 0):
-        """ <sub>*[setter]*</sub> Соотношение цены за единицу."""
+    def unit_price_ratio(self, value: float):
+        """ setter Соотношение цены за единицу."""
         self.presta_fields.unit_price_ratio = value
    
     @property
     def additional_shipping_cost(self) -> float:
-         """ <sub>*[property]*</sub> `ps_product.additional_shipping_cost: decimal(20,6)` """
+         """ property `ps_product.additional_shipping_cost: decimal(20,6)` """
          return self.presta_fields.additional_shipping_cost
     
     @additional_shipping_cost.setter
-    def additional_shipping_cost(self, value: float = 0):
-        """ <sub>*[setter]*</sub> Дополнительная стоимость доставки."""
+    def additional_shipping_cost(self, value: float):
+        """ setter Дополнительная стоимость доставки."""
         self.presta_fields.additional_shipping_cost = value
 
     @property
     def reference(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.reference: varchar(64)` """
+        """ property `ps_product.reference: varchar(64)` """
         return self.presta_fields.reference
 
     @reference.setter
-    def reference(self, value: str = None):
-        """ <sub>*[setter]*</sub> Артикул товара."""
+    def reference(self, value: str):
+        """ setter Артикул товара."""
         self.presta_fields.reference = value
     
     @property
     def supplier_reference(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.supplier_reference: varchar(64)` """
+        """ property `ps_product.supplier_reference: varchar(64)` """
         return self.presta_fields.supplier_reference
 
     @supplier_reference.setter
-    def supplier_reference(self, value: str = None):
-        """ <sub>*[setter]*</sub> Артикул поставщика."""
+    def supplier_reference(self, value: str):
+        """ setter Артикул поставщика."""
         self.presta_fields.supplier_reference = value
 
     @property
     def location(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.location: varchar(255)` """
+        """ property `ps_product.location: varchar(255)` """
         return self.presta_fields.location
 
     @location.setter
-    def location(self, value: str = None):
-        """ <sub>*[setter]*</sub> Местоположение товара на складе."""
+    def location(self, value: str):
+        """ setter Местоположение товара на складе."""
         self.presta_fields.location = value
 
     @property
     def width(self) -> Optional[float]:
-        """ <sub>*[property]*</sub> `ps_product.width: decimal(20,6)` """
+        """ property `ps_product.width: decimal(20,6)` """
         return self.presta_fields.width
     
     @width.setter
     def width(self, value: float = None):
-        """ <sub>*[setter]*</sub> Ширина товара."""
+        """ setter Ширина товара."""
         self.presta_fields.width = value
 
     @property
     def height(self) -> Optional[float]:
-        """ <sub>*[property]*</sub> `ps_product.height: decimal(20,6)` """
+        """ property `ps_product.height: decimal(20,6)` """
         return self.presta_fields.height
     
     @height.setter
     def height(self, value: float = None):
-        """ <sub>*[setter]*</sub> Высота товара."""
+        """ setter Высота товара."""
         self.presta_fields.height = value
     
     @property
     def depth(self) -> Optional[float]:
-        """ <sub>*[property]*</sub> `ps_product.depth: decimal(20,6)` """
+        """ property `ps_product.depth: decimal(20,6)` """
         return self.presta_fields.depth
     
     @depth.setter
     def depth(self, value: float = None):
-        """ <sub>*[setter]*</sub> Глубина товара."""
+        """ setter Глубина товара."""
         self.presta_fields.depth = value
 
     @property
     def weight(self) -> Optional[float]:
-        """ <sub>*[property]*</sub> `ps_product.weight: decimal(20,6)` """
+        """ property `ps_product.weight: decimal(20,6)` """
         return self.presta_fields.weight
    
     @weight.setter
     def weight(self, value: float = None):
-        """ <sub>*[setter]*</sub> Вес товара."""
+        """ setter Вес товара."""
         self.presta_fields.weight = value
     
     @property
     def volume(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.volume: varchar(100)` """
+        """ property `ps_product.volume: varchar(100)` """
         return self.presta_fields.volume
     
     @volume.setter
-    def volume(self, value: str = None):
-        """ <sub>*[setter]*</sub> Объем товара."""
+    def volume(self, value: str):
+        """ setter Объем товара."""
         self.presta_fields.volume = value
     
     @property
     def out_of_stock(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.out_of_stock: int(10) unsigned` """
+        """ property `ps_product.out_of_stock: int(10) unsigned` """
         return self.presta_fields.out_of_stock
     
     @out_of_stock.setter
     def out_of_stock(self, value: int = None):
-        """ <sub>*[setter]*</sub> Действие при отсутствии товара на складе."""
+        """ setter Действие при отсутствии товара на складе."""
         self.presta_fields.out_of_stock = value
     
     @property
     def additional_delivery_times(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.additional_delivery_times: tinyint(1) unsigned` """
+        """ property `ps_product.additional_delivery_times: tinyint(1) unsigned` """
         return self.presta_fields.additional_delivery_times
    
     @additional_delivery_times.setter
-    def additional_delivery_times(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Дополнительное время доставки."""
+    def additional_delivery_times(self, value: int):
+        """ setter Дополнительное время доставки."""
         self.presta_fields.additional_delivery_times = value
     
     @property
     def quantity_discount(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.quantity_discount: tinyint(1)` """
+        """ property `ps_product.quantity_discount: tinyint(1)` """
         return self.presta_fields.quantity_discount
 
     @quantity_discount.setter
-    def quantity_discount(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Флаг скидки на количество."""
+    def quantity_discount(self, value: int):
+        """ setter Флаг скидки на количество."""
         self.presta_fields.quantity_discount = value
     
     @property
     def customizable(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.customizable: tinyint(2)` """
+        """ property `ps_product.customizable: tinyint(2)` """
         return self.presta_fields.customizable
 
     @customizable.setter
-    def customizable(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Флаг возможности кастомизации."""
+    def customizable(self, value: int):
+        """ setter Флаг возможности кастомизации."""
         self.presta_fields.customizable = value
 
     @property
     def uploadable_files(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.uploadable_files: tinyint(4)` """
+        """ property `ps_product.uploadable_files: tinyint(4)` """
         return self.presta_fields.uploadable_files
 
     @uploadable_files.setter
-    def uploadable_files(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Флаг возможности загрузки файлов."""
+    def uploadable_files(self, value: int):
+        """ setter Флаг возможности загрузки файлов."""
         self.presta_fields.uploadable_files = value
     
     @property
     def text_fields(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.text_fields: tinyint(4)` """
+        """ property `ps_product.text_fields: tinyint(4)` """
         return self.presta_fields.text_fields
 
     @text_fields.setter
-    def text_fields(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Количество текстовых полей."""
+    def text_fields(self, value: int):
+        """ setter Количество текстовых полей."""
         self.presta_fields.text_fields = value
 
     @property
     def active(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.active: tinyint(1) unsigned` """
+        """ property `ps_product.active: tinyint(1) unsigned` """
         return self.presta_fields.active
 
     @active.setter
     def active(self, value: int = 1):
-        """ <sub>*[setter]*</sub> Флаг активности товара."""
+        """ setter Флаг активности товара."""
         self.presta_fields.active = value
 
     class EnumRedirect(Enum):
@@ -553,52 +515,52 @@ class ProductFields:
 
     @property
     def redirect_type(self) -> Optional[str]:
-       """ <sub>*[property]*</sub> `ps_product.redirect_type: enum('404','301-product','302-product','301-category','302-category')` """
+       """ property `ps_product.redirect_type: enum('404','301-product','302-product','301-category','302-category')` """
        return self.presta_fields.redirect_type
 
     @redirect_type.setter
     def redirect_type(self, value: EnumRedirect | str):
-        """ <sub>*[setter]*</sub> Тип редиректа. """
+        """ setter Тип редиректа. """
         self.presta_fields.redirect_type = str(value)
 
     @property
     def id_type_redirected(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_type_redirected: int(10) unsigned` """
+        """ property `ps_product.id_type_redirected: int(10) unsigned` """
         return self.presta_fields.id_type_redirected
 
     @id_type_redirected.setter
-    def id_type_redirected(self, value: int = 0):
-        """ <sub>*[setter]*</sub> ID связанного редиректа."""
+    def id_type_redirected(self, value: int):
+        """ setter ID связанного редиректа."""
         self.presta_fields.id_type_redirected = value
 
     @property
     def available_for_order(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.available_for_order: tinyint(1)` """
+        """ property `ps_product.available_for_order: tinyint(1)` """
         return self.presta_fields.available_for_order
     
     @available_for_order.setter
-    def available_for_order(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Флаг доступности для заказа."""
+    def available_for_order(self, value: int):
+        """ setter Флаг доступности для заказа."""
         self.presta_fields.available_for_order = value
 
     @property
     def available_date(self) -> Optional[datetime]:
-        """ <sub>*[property]*</sub> `ps_product.available_date: date` """
+        """ property `ps_product.available_date: date` """
         return self.presta_fields.available_date
 
     @available_date.setter
     def available_date(self, value: datetime = datetime.now()):
-         """ <sub>*[setter]*</sub> Дата доступности товара."""
+         """ setter Дата доступности товара."""
          self.presta_fields.available_date = value
     
     @property
     def show_condition(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.show_condition: tinyint(1)` """
+        """ property `ps_product.show_condition: tinyint(1)` """
         return self.presta_fields.show_condition
     
     @show_condition.setter
     def show_condition(self, value: int = 1):
-        """ <sub>*[setter]*</sub> Флаг отображения состояния товара."""
+        """ setter Флаг отображения состояния товара."""
         self.presta_fields.show_condition = value
 
     class EnumCondition(Enum):
@@ -609,32 +571,32 @@ class ProductFields:
 
     @property
     def condition(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.condition: enum('new','used','refurbished')` """
+        """ property `ps_product.condition: enum('new','used','refurbished')` """
         return self.presta_fields.condition
     
     @condition.setter
     def condition(self, value: EnumCondition | str = EnumCondition.NEW):
-         """ <sub>*[setter]*</sub> Состояние товара."""
+         """ setter Состояние товара."""
          self.presta_fields.condition = str(value)
 
     @property
     def show_price(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.show_price: tinyint(1)` """
+        """ property `ps_product.show_price: tinyint(1)` """
         return self.presta_fields.show_price
     
     @show_price.setter
     def show_price(self, value: int = 1):
-        """ <sub>*[setter]*</sub> Флаг отображения цены."""
+        """ setter Флаг отображения цены."""
         self.presta_fields.show_price = value
     
     @property
     def indexed(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.indexed: tinyint(1)` """
+        """ property `ps_product.indexed: tinyint(1)` """
         return self.presta_fields.indexed
 
     @indexed.setter
     def indexed(self, value: int = 1):
-        """ <sub>*[setter]*</sub> Флаг индексации товара."""
+        """ setter Флаг индексации товара."""
         self.presta_fields.indexed = value
 
     class EnumVisibity(Enum):
@@ -646,102 +608,102 @@ class ProductFields:
 
     @property
     def visibility(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product.visibility: enum('both','catalog','search','none')` """
+         """ property `ps_product.visibility: enum('both','catalog','search','none')` """
          return self.presta_fields.visibility
     
     @visibility.setter
     def visibility(self, value: EnumVisibity | str = EnumVisibity.BOTH):
-        """ <sub>*[setter]*</sub> Видимость товара."""
+        """ setter Видимость товара."""
         self.presta_fields.visibility = str(value)
     
     @property
     def cache_is_pack(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.cache_is_pack: tinyint(1)` """
+        """ property `ps_product.cache_is_pack: tinyint(1)` """
         return self.presta_fields.cache_is_pack
     
     @cache_is_pack.setter
     def cache_is_pack(self, value: int = 1):
-         """ <sub>*[setter]*</sub> Флаг кэширования как пакет товара."""
+         """ setter Флаг кэширования как пакет товара."""
          self.presta_fields.cache_is_pack = value
     
     @property
     def cache_has_attachments(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.cache_has_attachments: tinyint(1)` """
+        """ property `ps_product.cache_has_attachments: tinyint(1)` """
         return self.presta_fields.cache_has_attachments
 
     @cache_has_attachments.setter
     def cache_has_attachments(self, value: int = 1):
-         """ <sub>*[setter]*</sub> Флаг кэширования вложений."""
+         """ setter Флаг кэширования вложений."""
          self.presta_fields.cache_has_attachments = value
 
     @property
     def is_virtual(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.is_virtual: tinyint(1)` """
+        """ property `ps_product.is_virtual: tinyint(1)` """
         return self.presta_fields.is_virtual
     
     @is_virtual.setter
     def is_virtual(self, value: int = 1):
-        """ <sub>*[setter]*</sub> Флаг виртуального товара."""
+        """ setter Флаг виртуального товара."""
         self.presta_fields.is_virtual = value
     
     @property
     def cache_default_attribute(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.cache_default_attribute: int(10) unsigned` """
+        """ property `ps_product.cache_default_attribute: int(10) unsigned` """
         return self.presta_fields.cache_default_attribute
 
     @cache_default_attribute.setter
     def cache_default_attribute(self, value: int = 1):
-        """ <sub>*[setter]*</sub> ID атрибута по умолчанию для кэширования."""
+        """ setter ID атрибута по умолчанию для кэширования."""
         self.presta_fields.cache_default_attribute = value
     
     @property
     def date_add(self) -> Optional[datetime]:
-        """ <sub>*[property]*</sub> `ps_product.date_add: datetime` """
+        """ property `ps_product.date_add: datetime` """
         return self.presta_fields.date_add
     
     @date_add.setter
     def date_add(self, value: datetime = datetime.now()):
-        """ <sub>*[setter]*</sub> Дата добавления товара."""
+        """ setter Дата добавления товара."""
         self.presta_fields.date_add = value
 
     @property
     def date_upd(self) -> Optional[datetime]:
-        """ <sub>*[property]*</sub> `ps_product.date_upd: datetime` """
+        """ property `ps_product.date_upd: datetime` """
         return self.presta_fields.date_upd
     
     @date_upd.setter
     def date_upd(self, value: datetime = datetime.now()):
-         """ <sub>*[setter]*</sub> Дата обновления товара."""
+         """ setter Дата обновления товара."""
          self.presta_fields.date_upd = value
 
     @property
     def advanced_stock_management(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.advanced_stock_management: tinyint(1)` """
+        """ property `ps_product.advanced_stock_management: tinyint(1)` """
         return self.presta_fields.advanced_stock_management
     
     @advanced_stock_management.setter
-    def advanced_stock_management(self, value: int = 0):
-         """ <sub>*[setter]*</sub> Флаг расширенного управления запасами."""
+    def advanced_stock_management(self, value: int):
+         """ setter Флаг расширенного управления запасами."""
          self.presta_fields.advanced_stock_management = value
     
     @property
     def pack_stock_type(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.pack_stock_type: int(11) unsigned` """
+        """ property `ps_product.pack_stock_type: int(11) unsigned` """
         return self.presta_fields.pack_stock_type
 
     @pack_stock_type.setter
-    def pack_stock_type(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Тип управления запасами пакета товаров."""
+    def pack_stock_type(self, value: int):
+        """ setter Тип управления запасами пакета товаров."""
         self.presta_fields.pack_stock_type = value
     
     @property
     def state(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.state: int(11) unsigned` """
+        """ property `ps_product.state: int(11) unsigned` """
         return self.presta_fields.state
    
     @state.setter
-    def state(self, value: int = 0):
-        """ <sub>*[setter]*</sub> Состояние товара."""
+    def state(self, value: int):
+        """ setter Состояние товара."""
         self.presta_fields.state = value
 
     class EnumProductType(Enum):
@@ -754,12 +716,12 @@ class ProductFields:
 
     @property
     def product_type(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.product_type: enum('standard', 'pack', 'virtual', 'combinations', '')` """
+        """ property `ps_product.product_type: enum('standard', 'pack', 'virtual', 'combinations', '')` """
         return self.presta_fields.product_type
 
     @product_type.setter
     def product_type(self, value: EnumProductType | str = EnumProductType.STANDARD):
-        """ <sub>*[setter]*</sub> Тип товара."""
+        """ setter Тип товара."""
         self.presta_fields.product_type = str(value)
     
     # --------------------------------------------------------------------------
@@ -768,371 +730,605 @@ class ProductFields:
 
     @property
     def description(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.description: text` """
+        """ property `ps_product_lang.description: text` """
         return self.presta_fields.description
 
     @description.setter
-    def description(self, value: str = None):
-        """ <sub>*[setter]*</sub> Описание товара. Мультиязычное поле. """
+    def description(self, value: str):
+        """ setter Описание товара. Мультиязычное поле. """
         try:
             self.presta_fields.description = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-            logger.error(f"Ошибка при установке description: {ex}")
+            logger.error(f"Ошибка при установке description:",ex)
 
     @property
     def description_short(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.description_short: text` """
+         """ property `ps_product_lang.description_short: text` """
          return self.presta_fields.description_short
     
     @description_short.setter
-    def description_short(self, value: str = None):
-        """ <sub>*[setter]*</sub> Краткое описание товара. Мультиязычное поле."""
+    def description_short(self, value: str):
+        """ setter Краткое описание товара. Мультиязычное поле."""
         try:
             self.presta_fields.description_short = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-            logger.error(f"Ошибка при установке description_short: {ex}")
+            logger.error(f"Ошибка при установке description_short:",ex)
 
     @property
     def link_rewrite(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.link_rewrite: varchar(128)` """
+         """ property `ps_product_lang.link_rewrite: varchar(128)` """
          return self.presta_fields.link_rewrite
     
     @link_rewrite.setter
-    def link_rewrite(self, value: str = None):
-        """ <sub>*[setter]*</sub> URL товара. Мультиязычное поле."""
+    def link_rewrite(self, value: str):
+        """ setter URL товара. Мультиязычное поле."""
         try:
              self.presta_fields.link_rewrite = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке link_rewrite: {ex}")
+             logger.error(f"Ошибка при установке link_rewrite:",ex)
 
     @property
     def meta_description(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.meta_description: varchar(512)` """
+        """ property `ps_product_lang.meta_description: varchar(512)` """
         return self.presta_fields.meta_description
    
     @meta_description.setter
-    def meta_description(self, value: str = None):
-        """ <sub>*[setter]*</sub> Meta описание товара. Мультиязычное поле."""
+    def meta_description(self, value: str):
+        """ setter Meta описание товара. Мультиязычное поле."""
         try:
              self.presta_fields.meta_description = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке meta_description: {ex}")
+             logger.error(f"Ошибка при установке meta_description:",ex)
     
     @property
     def meta_keywords(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.meta_keywords: varchar(255)` """
+        """ property `ps_product_lang.meta_keywords: varchar(255)` """
         return self.presta_fields.meta_keywords
    
     @meta_keywords.setter
-    def meta_keywords(self, value: str = None):
-         """ <sub>*[setter]*</sub> Meta ключевые слова товара. Мультиязычное поле."""
+    def meta_keywords(self, value: str):
+         """ setter Meta ключевые слова товара. Мультиязычное поле."""
          try:
             self.presta_fields.meta_keywords = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
          except Exception as ex:
-             logger.error(f"Ошибка при установке meta_keywords: {ex}")
+             logger.error(f"Ошибка при установке meta_keywords:",ex)
 
     @property
     def meta_title(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.meta_title: varchar(128)` """
+        """ property `ps_product_lang.meta_title: varchar(128)` """
         return self.presta_fields.meta_title
     
     @meta_title.setter
-    def meta_title(self, value: str = None):
-        """ <sub>*[setter]*</sub> Meta заголовок товара. Мультиязычное поле."""
+    def meta_title(self, value: str):
+        """ setter Meta заголовок товара. Мультиязычное поле."""
         try:
             self.presta_fields.meta_title = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-            logger.error(f"Ошибка при установке meta_title: {ex}")
+            logger.error(f"Ошибка при установке meta_title:",ex)
 
     @property
     def name(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.name: varchar(128)` """
+         """ property `ps_product_lang.name: varchar(128)` """
          return self.presta_fields.name
     
     @name.setter
-    def name(self, value: str = None):
-        """ <sub>*[setter]*</sub> Название товара. Мультиязычное поле."""
+    def name(self, value: str):
+        """ setter Название товара. Мультиязычное поле."""
         try:
             self.presta_fields.name = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке name: {ex}")
+             logger.error(f"Ошибка при установке name:",ex)
 
     @property
     def available_now(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.available_now: varchar(255)` """
+        """ property `ps_product_lang.available_now: varchar(255)` """
         return self.presta_fields.available_now
 
     @available_now.setter
-    def available_now(self, value: str = None):
-        """ <sub>*[setter]*</sub> Текст "в наличии". Мультиязычное поле."""
+    def available_now(self, value: str):
+        """ setter Текст "в наличии". Мультиязычное поле."""
         try:
             self.presta_fields.available_now = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке available_now: {ex}")
+             logger.error(f"Ошибка при установке available_now:",ex)
 
     @property
     def available_later(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.available_later: varchar(255)` """
+         """ property `ps_product_lang.available_later: varchar(255)` """
          return self.presta_fields.available_later
 
     @available_later.setter
-    def available_later(self, value: str = None):
-        """ <sub>*[setter]*</sub> Текст "ожидается". Мультиязычное поле."""
+    def available_later(self, value: str):
+        """ setter Текст "ожидается". Мультиязычное поле."""
         try:
              self.presta_fields.available_later = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-            logger.error(f"Ошибка при установке available_later: {ex}")
+            logger.error(f"Ошибка при установке available_later:",ex)
 
     @property
     def delivery_in_stock(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.delivery_in_stock: varchar(255)` """
+        """ property `ps_product_lang.delivery_in_stock: varchar(255)` """
         return self.presta_fields.delivery_in_stock
     
     @delivery_in_stock.setter
-    def delivery_in_stock(self, value: str = None):
-        """ <sub>*[setter]*</sub> Текст доставки при наличии. Мультиязычное поле."""
+    def delivery_in_stock(self, value: str):
+        """ setter Текст доставки при наличии. Мультиязычное поле."""
         try:
             self.presta_fields.delivery_in_stock = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке delivery_in_stock: {ex}")
+             logger.error(f"Ошибка при установке delivery_in_stock:",ex)
 
     @property
     def delivery_out_stock(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.delivery_out_stock: varchar(255)` """
+        """ property `ps_product_lang.delivery_out_stock: varchar(255)` """
         return self.presta_fields.delivery_out_stock
     
     @delivery_out_stock.setter
-    def delivery_out_stock(self, value: str = None):
-        """ <sub>*[setter]*</sub> Текст доставки при отсутствии. Мультиязычное поле."""
+    def delivery_out_stock(self, value: str):
+        """ setter Текст доставки при отсутствии. Мультиязычное поле."""
         try:
             self.presta_fields.delivery_out_stock = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке delivery_out_stock: {ex}")
+             logger.error(f"Ошибка при установке delivery_out_stock:",ex)
 
     @property
     def delivery_additional_message(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.delivery_additional_message: tinytext` """
+         """ property `ps_product_lang.delivery_additional_message: tinytext` """
          return self.presta_fields.delivery_additional_message
    
     @delivery_additional_message.setter
-    def delivery_additional_message(self, value: str = None):
-        """ <sub>*[setter]*</sub> Дополнительное сообщение о доставке. Мультиязычное поле."""
+    def delivery_additional_message(self, value: str):
+        """ setter Дополнительное сообщение о доставке. Мультиязычное поле."""
         try:
             self.presta_fields.delivery_additional_message = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке delivery_additional_message: {ex}")
+             logger.error(f"Ошибка при установке delivery_additional_message:",ex)
 
     @property
     def affiliate_short_link(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.affiliate_short_link: tinytext` """
+        """ property `ps_product_lang.affiliate_short_link: tinytext` """
         return self.presta_fields.affiliate_short_link
 
     @affiliate_short_link.setter
-    def affiliate_short_link(self, value: str = None):
-        """ <sub>*[setter]*</sub> Короткая ссылка аффилиата. Мультиязычное поле."""
+    def affiliate_short_link(self, value: str):
+        """ setter Короткая ссылка аффилиата. Мультиязычное поле."""
         try:
             self.presta_fields.affiliate_short_link = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке affiliate_short_link: {ex}")
+             logger.error(f"Ошибка при установке affiliate_short_link:",ex)
 
     @property
     def affiliate_text(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.affiliate_text: tinytext` """
+        """ property `ps_product_lang.affiliate_text: tinytext` """
         return self.presta_fields.affiliate_text
     
     @affiliate_text.setter
-    def affiliate_text(self, value: str = None):
-         """ <sub>*[setter]*</sub> Текст аффилиата. Мультиязычное поле."""
+    def affiliate_text(self, value: str):
+         """ setter Текст аффилиата. Мультиязычное поле."""
          try:
             self.presta_fields.affiliate_text = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
          except Exception as ex:
-             logger.error(f"Ошибка при установке affiliate_text: {ex}")
+             logger.error(f"Ошибка при установке affiliate_text:",ex)
     
     @property
     def affiliate_summary(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.affiliate_summary: tinytext` """
+         """ property `ps_product_lang.affiliate_summary: tinytext` """
          return self.presta_fields.affiliate_summary
     
     @affiliate_summary.setter
-    def affiliate_summary(self, value: str = None):
-        """ <sub>*[setter]*</sub> Краткое описание аффилиата. Мультиязычное поле."""
+    def affiliate_summary(self, value: str):
+        """ setter Краткое описание аффилиата. Мультиязычное поле."""
         try:
            self.presta_fields.affiliate_summary = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-            logger.error(f"Ошибка при установке affiliate_summary: {ex}")
+            logger.error(f"Ошибка при установке affiliate_summary:",ex)
     
     @property
     def affiliate_summary_2(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.affiliate_summary_2: tinytext` """
+        """ property `ps_product_lang.affiliate_summary_2: tinytext` """
         return self.presta_fields.affiliate_summary_2
 
     @affiliate_summary_2.setter
-    def affiliate_summary_2(self, value: str = None):
-        """ <sub>*[setter]*</sub> Второе краткое описание аффилиата. Мультиязычное поле."""
+    def affiliate_summary_2(self, value: str):
+        """ setter Второе краткое описание аффилиата. Мультиязычное поле."""
         try:
            self.presta_fields.affiliate_summary_2 = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-            logger.error(f"Ошибка при установке affiliate_summary_2: {ex}")
+            logger.error(f"Ошибка при установке affiliate_summary_2:",ex)
   
     @property
     def affiliate_image_small(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.affiliate_image_small: varchar(512)` """
+        """ property `ps_product_lang.affiliate_image_small: varchar(512)` """
         return self.presta_fields.affiliate_image_small
   
     @affiliate_image_small.setter
-    def affiliate_image_small(self, value: str = None):
-        """ <sub>*[setter]*</sub> Маленькое изображение аффилиата. Мультиязычное поле."""
+    def affiliate_image_small(self, value: str):
+        """ setter Маленькое изображение аффилиата. Мультиязычное поле."""
         try:
            self.presta_fields.affiliate_image_small = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-           logger.error(f"Ошибка при установке affiliate_image_small: {ex}")
+           logger.error(f"Ошибка при установке affiliate_image_small:",ex)
     
     @property
     def affiliate_image_medium(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.affiliate_image_medium: varchar(512)` """
+        """ property `ps_product_lang.affiliate_image_medium: varchar(512)` """
         return self.presta_fields.affiliate_image_medium
 
     @affiliate_image_medium.setter
-    def affiliate_image_medium(self, value: str = None):
-        """ <sub>*[setter]*</sub> Среднее изображение аффилиата. Мультиязычное поле."""
+    def affiliate_image_medium(self, value: str):
+        """ setter Среднее изображение аффилиата. Мультиязычное поле."""
         try:
             self.presta_fields.affiliate_image_medium = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-            logger.error(f"Ошибка при установке affiliate_image_medium: {ex}")
+            logger.error(f"Ошибка при установке affiliate_image_medium:",ex)
 
     @property
     def affiliate_image_large(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.affiliate_image_large: varchar(512)` """
+         """ property `ps_product_lang.affiliate_image_large: varchar(512)` """
          return self.presta_fields.affiliate_image_large
    
     @affiliate_image_large.setter
-    def affiliate_image_large(self, value: str = None):
-        """ <sub>*[setter]*</sub> Большое изображение аффилиата. Мультиязычное поле."""
+    def affiliate_image_large(self, value: str):
+        """ setter Большое изображение аффилиата. Мультиязычное поле."""
         try:
             self.presta_fields.affiliate_image_large = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке affiliate_image_large: {ex}")
+             logger.error(f"Ошибка при установке affiliate_image_large:",ex)
 
     @property
     def ingredients(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.ingredients: tinytext` """
+        """ property `ps_product_lang.ingredients: tinytext` """
         return self.presta_fields.ingredients
 
     @ingredients.setter
-    def ingredients(self, value: str = None):
-        """ <sub>*[setter]*</sub> Список ингридиентов. Мультиязычное поле."""
+    def ingredients(self, value: str):
+        """ setter Список ингридиентов. Мультиязычное поле."""
         try:
             self.presta_fields.ingredients = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке ingredients: {ex}")
+             logger.error(f"Ошибка при установке ingredients:",ex)
     
     @property
     def specification(self) -> Optional[str]:
-         """ <sub>*[property]*</sub> `ps_product_lang.specification: tinytext` """
+         """ property `ps_product_lang.specification: tinytext` """
          return self.presta_fields.specification
 
     @specification.setter
-    def specification(self, value: str = None):
-        """ <sub>*[setter]*</sub> Спецификация товара. Мультиязычное поле."""
+    def specification(self, value: str):
+        """ setter Спецификация товара. Мультиязычное поле."""
         try:
             self.presta_fields.specification = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке specification: {ex}")
+             logger.error(f"Ошибка при установке specification:",ex)
     
     @property
     def how_to_use(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product_lang.how_to_use: tinytext` """
+        """ property `ps_product_lang.how_to_use: tinytext` """
         return self.presta_fields.how_to_use
     
     @how_to_use.setter
-    def how_to_use(self, value: str = None):
-        """ <sub>*[setter]*</sub> Как использовать товар. Мультиязычное поле."""
+    def how_to_use(self, value: str):
+        """ setter Как использовать товар. Мультиязычное поле."""
         try:
              self.presta_fields.how_to_use = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
         except Exception as ex:
-             logger.error(f"Ошибка при установке how_to_use: {ex}")
+             logger.error(f"Ошибка при установке how_to_use:",ex)
 
     @property
     def id_default_image(self) -> Optional[int]:
-        """ <sub>*[property]*</sub> `ps_product.id_default_image: int(10) unsigned` """
+        """ property `ps_product.id_default_image: int(10) unsigned` """
         return self.presta_fields.id_default_image
    
     @id_default_image.setter
     def id_default_image(self, value: int = None):
-        """ <sub>*[setter]*</sub> ID изображения по умолчанию."""
+        """ setter ID изображения по умолчанию."""
         try:
            self.presta_fields.id_default_image = value
         except Exception as ex:
-            logger.error(f"Ошибка при установке id_default_image: {ex}")
+            logger.error(f"Ошибка при установке id_default_image:",ex)
     
     @property
     def link_to_video(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> `ps_product.link_to_video: varchar(255)` """
+        """ property `ps_product.link_to_video: varchar(255)` """
         return self.presta_fields.link_to_video if hasattr(self.presta_fields, 'link_to_video') else ""
     
     @link_to_video.setter
-    def link_to_video(self, value: str = None):
-         """ <sub>*[setter]*</sub> Ссылка на видео."""
+    def link_to_video(self, value: str):
+         """ setter Ссылка на видео."""
          self.presta_fields.link_to_video = value
 
-    @property
-    def images_urls(self) -> Optional[List[str]]:
-        """ <sub>*[property]*</sub> Список URL дополнительных изображений."""
-        return self.assist_fields_dict.get('images_urls') if hasattr(self.presta_fields, 'images_urls') else ""
 
-    @images_urls.setter
-    def images_urls(self, value: List[str] = None):
-        """ <sub>*[setter]*</sub> Устанавливает список URL дополнительных изображений."""
-        self.assist_fields_dict['images_urls'] = value
 
     @property
     def local_image_path(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> Путь к локальному изображению."""
-        return self.assist_fields_dict.get('local_image_path')
+        """ property Путь к локальному изображению."""
+        return self.local_image_path.local_image_path
    
     @local_image_path.setter
-    def local_image_path(self, value: str = None):
-        """ <sub>*[setter]*</sub> Устанавливает путь к локальному изображению."""
-        self.assist_fields_dict['local_image_path'] = value
+    def local_image_path(self, value: str):
+        """ setter Устанавливает путь к локальному изображению."""
+        self.presta_fields.local_image_path = value
 
     @property
     def local_video_path(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> Путь к локальному видео."""
-        return self.assist_fields_dict.get('local_video_path')
+        """ property Путь к локальному видео."""
+        return self.presta_fields.local_video_path
 
     @local_video_path.setter
-    def local_video_path(self, value: str = None):
-        """ <sub>*[setter]*</sub> Устанавливает путь к локальному видео."""
-        self.assist_fields_dict['local_video_path'] = value
+    def local_video_path(self, value: str):
+        """ setter Устанавливает путь к локальному видео."""
+        self.presta_fields.local_video_path = value
 
     @property
     def position_in_category(self) -> Optional[int]:
-         """ <sub>*[property]*</sub> `ps_category_product.position: int(10) unsigned` """
+         """ property `ps_category_product.position: int(10) unsigned` """
          return self.presta_fields.position_in_category
     
     @position_in_category.setter
     def position_in_category(self, value:int = None):
-        """ <sub>*[setter]*</sub>  Позиция товара в категории."""
+        """ setter  Позиция товара в категории."""
         try:
             self.presta_fields.position_in_category = value
         except Exception as ex:
-           logger.error(f'Ошибка при установке `position_in_category` {value} : {ex}')
+           logger.error(f'Ошибка при установке `position_in_category` {value} : ',ex)
 
-    # --------------------------------------------------------------------------
-    #                        Служебные поля
-    # --------------------------------------------------------------------------
-   
+
+
+
+
+
+
+
+
+    ########################################################################
+
+    # self.presta_fields.associations
+
+    ########################################################################
+
+    def _ensure_associations(self):
+        """Убеждается, что структура associations существует в presta_fields."""
+        if not hasattr(self.presta_fields, 'associations'):
+            self.presta_fields.associations = {}
+
+
+
     @property
-    def page_lang(self) -> Optional[str]:
-        """ <sub>*[property]*</sub> Код языка страницы."""
-        return self.assist_fields_dict.get('page_lang')
+    def additional_categories(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('categories') if hasattr(self.presta_fields, 'associations') else []
 
-    @page_lang.setter
-    def page_lang(self, value: str = None):
-        """ <sub>*[setter]*</sub> Устанавливает код языка страницы."""
-        if value:
-            self.assist_fields_dict['page_lang'] = value
+    def additional_category_append(self, category_id: int | str):
+        """Добавляет связь с категорией, если ее еще нет."""
+        
+        self._ensure_associations()
+        try:
+            category_id = int(category_id)
+        except (ValueError, Exception) as ex:
+            logger.error("`category_id` должен быть `int`",ex)
+            return
 
+
+        if 'categories' not in self.presta_fields.associations:
+            self.presta_fields.associations['categories']:list[dict] = []
+        
+        category_id_str = str(category_id)
+        
+        # проверяем есть ли уже такая категория
+        if not any(d['id'] == category_id_str for d in self.presta_fields.associations['categories']):
+            self.presta_fields.associations['categories'].append({'id': category_id_str})
+
+    def additional_categories_clear(self):
+        """Очищает все связи с категориями."""
+        self._ensure_associations()
+        if 'categories' in self.presta_fields.associations:
+            del self.presta_fields.associations['categories']
+
+
+    @property
+    def product_images(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('images') if hasattr(self.presta_fields, 'images') else []
+
+    def product_image_append(self, image_id: int):
+        """Добавляет связь с изображением."""
+        self._ensure_associations()
+        if 'images' not in self.presta_fields.associations:
+            self.presta_fields.associations['images'] = []
+        self.presta_fields.associations['images'].append({'id': str(image_id)})
+
+    def product_images_clear(self):
+        """Очищает все связи с изображениями."""
+        self._ensure_associations()
+        if 'images' in self.presta_fields.associations:
+            del self.presta_fields.associations['images']
+
+
+    @property
+    def images_urls(self) -> Optional[List[str]]:
+        """ property Список URL дополнительных изображений."""
+        return self.presta_fields.images_urls if hasattr(self.presta_fields, 'images_urls') else ""
+
+    def images_urls_append(self, value: List[str] = None):
+        """Устанавливает список URL, откуда скачать дополнительные изображения."""
+        if value is None:
+            return
+
+        if not isinstance(value, list):
+            logger.warning("images_urls_append: value должен быть списком строк.")
+            return
+
+        valid_urls = [url for url in value if isinstance(url, str) and url]  # Filter for valid strings
+
+        if 'images_urls' not in self.assist_fields_dict:
+             self.presta_fields.images_urls = []
+
+        for url in valid_urls:
+            if url not in self.assist_fields_dict['images_urls']: #  проверка на уникальность
+                self.presta_fields.images_urls.append(url)
+
+    def product_images_clear(self):
+        """Очищает все связи с изображениями."""
+        self._ensure_associations()
+        if 'images_urls' in self.presta_fields.associations:
+            del self.presta_fields.images_urls
+
+    @property
+    def product_combinations(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('combinations') if hasattr(self.presta_fields, 'combinations') else []
+
+    def product_combination_append(self, combination_id: int):
+        """Добавляет связь с комбинацией."""
+        self._ensure_associations()
+        if 'combinations' not in self.presta_fields.associations:
+            self.presta_fields.associations['combinations'] = []
+        self.presta_fields.associations['combinations'].append({'id': str(combination_id)})
+
+
+    def product_combinations_clear(self):
+        """Очищает все связи с комбинациями."""
+        self._ensure_associations()
+        if 'combinations' in self.presta_fields.associations:
+            del self.presta_fields.associations['combinations']
+
+
+
+    @property
+    def product_options(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('product_option_values') if hasattr(self.presta_fields, 'product_option_values') else []
+
+    def product_options_append(self, product_option_value_id: int):
+        """Добавляет связь со значением опции продукта."""
+        self._ensure_associations()
+        if 'product_option_values' not in self.presta_fields.associations:
+            self.presta_fields.associations['product_option_values'] = []
+        self.presta_fields.associations['product_option_values'].append({'id': str(product_option_value_id)})
+
+    def product_options_clear(self):
+        """Очищает все связи со значениями опций продукта."""
+        self._ensure_associations()
+        if 'product_option_values' in self.presta_fields.associations:
+            del self.presta_fields.associations['product_option_values']
+
+
+    @property
+    def product_product_features(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('product_features') if hasattr(self.presta_fields, 'product_features') else []
+
+    def product_features_append(self, feature_id: int, feature_value_id: int):
+        """Добавляет связь с характеристикой продукта."""
+        self._ensure_associations()
+        if 'product_features' not in self.presta_fields.associations:
+            self.presta_fields.associations['product_features'] = []
+        self.presta_fields.associations['product_features'].append(
+            {'id': str(feature_id), 'id_feature_value': str(feature_value_id)}
+        )
+
+    def product_features_clear(self):
+        """Очищает все связи с характеристиками продукта."""
+        self._ensure_associations()
+        if 'product_features' in self.presta_fields.associations:
+            del self.presta_fields.associations['product_features']
+
+
+    @property
+    def product_product_tags(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('tags') if hasattr(self.presta_fields, 'tags') else []
+
+    def product_tag_append(self, tag_id: int):
+        """Добавляет связь с тегом."""
+        self._ensure_associations()
+        if 'tags' not in self.presta_fields.associations:
+            self.presta_fields.associations['tags'] = []
+        self.presta_fields.associations['tags'].append({'id': str(tag_id)})
+
+    def product_tags_clear(self):
+        """Очищает все связи с тегами."""
+        self._ensure_associations()
+        if 'tags' in self.presta_fields.associations:
+            del self.presta_fields.associations['tags']
+
+    @property
+    def product_stock_availables(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('stock_availables') if hasattr(self.presta_fields, 'stock_availables') else []
+
+
+    def product_stock_available_append(self, stock_available_id: int, product_attribute_id: int):
+        """Добавляет связь с доступностью на складе."""
+        self._ensure_associations()
+        if 'stock_availables' not in self.presta_fields.associations:
+            self.presta_fields.associations['stock_availables'] = []
+        self.presta_fields.associations['stock_availables'].append(
+            {'id': str(stock_available_id), 'id_product_attribute': str(product_attribute_id)}
+        )
+
+    def product_stock_availables_clear(self):
+        """Очищает все связи с доступностью на складе."""
+        self._ensure_associations()
+        if 'stock_availables' in self.presta_fields.associations:
+            del self.presta_fields.associations['stock_availables']
+
+    @property
+    def product_attachments(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('attachments') if hasattr(self.presta_fields, 'attachments') else []
+
+
+    def product_attachment_append(self, attachment_id: int):
+        """Добавляет связь с вложением."""
+        self._ensure_associations()
+        if 'attachments' not in self.presta_fields.associations:
+            self.presta_fields.associations['attachments'] = []
+        self.presta_fields.associations['attachments'].append({'id': str(attachment_id)})
+
+    def product_attachments_clear(self):
+        """Очищает все связи с вложениями."""
+        self._ensure_associations()
+        if 'attachments' in self.presta_fields.associations:
+            del self.presta_fields.associations['attachments']
+
+    @property
+    def product_accessories(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('accessories') if hasattr(self.presta_fields, 'accessories') else []
+
+    def product_accessory_append(self, accessory_id: int):
+        """Добавляет связь с аксессуаром."""
+        self._ensure_associations()
+        if 'accessories' not in self.presta_fields.associations:
+            self.presta_fields.associations['accessories'] = []
+        self.presta_fields.associations['accessories'].append({'id': str(accessory_id)})
+
+    def product_accessories_clear(self):
+        """Очищает все связи с аксессуарами."""
+        self._ensure_associations()
+        if 'accessories' in self.presta_fields.associations:
+            del self.presta_fields.associations['accessories']
+
+    @property
+    def product_bundle(self) -> Optional[List[dict]]:
+        """"""
+        return self.presta_fields.associations.get('product_bundle') if hasattr(self.presta_fields, 'product_bundle') else []
+
+    def product_bundle_append(self, bundle_id: int, product_attribute_id: int, quantity: int):
+        """Добавляет связь с бандлом продукта."""
+        self._ensure_associations()
+        if 'product_bundle' not in self.presta_fields.associations:
+            self.presta_fields.associations['product_bundle'] = []
+        self.presta_fields.associations['product_bundle'].append(
+            {'id': str(bundle_id), 'id_product_attribute': str(product_attribute_id), 'quantity': str(quantity)}
+        )
+
+    def product_bundle_clear(self):
+        """Очищает все связи с бандлами продуктов."""
+        self._ensure_associations()
+        if 'product_bundle' in self.presta_fields.associations:
+            del self.presta_fields.associations['product_bundle']
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -1262,6 +1458,8 @@ class ProductFields:
             product_dict["state"] = str_val(self.state)
         if self.product_type:
             product_dict["product_type"] = str_val(self.product_type)
+        if self.id_default_image:
+            product_dict["id_default_image"] = str_val(self.id_default_image)
 
         # -- ps_product_lang fields --
         if self.description:
@@ -1310,16 +1508,45 @@ class ProductFields:
             product_dict["how_to_use"] = self._format_multilang_value(self.how_to_use)
 
         # -- service fields
-        if self.id_default_image:
-            product_dict["id_default_image"] = str_val(self.id_default_image)
-        if self.images_urls:
-            product_dict["images_urls"] = [str_val(url) for url in self.images_urls] if isinstance(self.images_urls, list) else str_val(self.images_urls)
-        if self.assist_fields_dict.get('default_image_url'):
-            product_dict["default_image_url"] = str_val(self.assist_fields_dict.get('default_image_url'))
-        if self.position_in_category:
-            product_dict["position_in_category"] = str_val(self.position_in_category)
-        if self.link_to_video:
-            product_dict["link_to_video"] = str_val(self.link_to_video)
+
+        # if self.images_urls:
+        #     product_dict["images_urls"] = [str_val(url) for url in self.images_urls] if isinstance(self.images_urls, list) else str_val(self.images_urls)
+        # if self.position_in_category:
+        #     product_dict["position_in_category"] = str_val(self.position_in_category)
+        # if self.link_to_video:
+        #     product_dict["link_to_video"] = str_val(self.link_to_video)
+
+
+
+
+        # Добавление associations, если они есть
+        associations_dict = {}
+        if hasattr(self.presta_fields, 'associations') and self.presta_fields.associations:
+
+            if 'categories' in self.presta_fields.associations and self.presta_fields.associations['categories']:
+                associations_dict['categories'] = [{'id': str_val(cat['id'])} for cat in self.presta_fields.associations['categories']]
+            if 'images' in self.presta_fields.associations and self.presta_fields.associations['images']:
+                associations_dict['images'] = [{'id': str_val(img['id'])} for img in self.presta_fields.associations['images']]
+            if 'combinations' in self.presta_fields.associations and self.presta_fields.associations['combinations']:
+                associations_dict['combinations'] = [{'id': str_val(comb['id'])} for comb in self.presta_fields.associations['combinations']]
+            if 'product_option_values' in self.presta_fields.associations and self.presta_fields.associations['product_option_values']:
+                associations_dict['product_option_values'] = [{'id': str_val(val['id'])} for val in self.presta_fields.associations['product_option_values']]
+            if 'product_features' in self.presta_fields.associations and self.presta_fields.associations['product_features']:
+                associations_dict['product_features'] = [{'id': str_val(feat['id']), 'id_feature_value': str_val(feat['id_feature_value'])} for feat in self.presta_fields.associations['product_features']]
+            if 'tags' in self.presta_fields.associations and self.presta_fields.associations['tags']:
+                associations_dict['tags'] = [{'id': str_val(tag['id'])} for tag in self.presta_fields.associations['tags']]
+            if 'stock_availables' in self.presta_fields.associations and self.presta_fields.associations['stock_availables']:
+                associations_dict['stock_availables'] = [{'id': str_val(stock['id']), 'id_product_attribute': str_val(stock['id_product_attribute'])} for stock in self.presta_fields.associations['stock_availables']]
+            if 'attachments' in self.presta_fields.associations and self.presta_fields.associations['attachments']:
+                associations_dict['attachments'] = [{'id': str_val(attach['id'])} for attach in self.presta_fields.associations['attachments']]
+            if 'accessories' in self.presta_fields.associations and self.presta_fields.associations['accessories']:
+                associations_dict['accessories'] = [{'id': str_val(acc['id'])} for acc in self.presta_fields.associations['accessories']]
+            if 'product_bundle' in self.presta_fields.associations and self.presta_fields.associations['product_bundle']:
+                associations_dict['product_bundle'] = [{'id': str_val(bundle['id']), 'id_product_attribute': str_val(bundle['id_product_attribute']), 'quantity': str_val(bundle['quantity'])} for bundle in self.presta_fields.associations['product_bundle']]
+
+            if associations_dict:  # Только если есть что добавлять, добавляем ключ associations
+                product_dict["associations"] = associations_dict
+
         return product_dict
 
     def _format_multilang_value(self, data: Any) -> List[Dict[str, str]]:

@@ -1,5 +1,21 @@
 {
-	"main_categories_for_furniture": [
+	"main_categories_for_emil_furniture": [
+
+		{
+			"id_category_default": 11036,
+			"name": "Home and Interior",
+			"parent_id": 2
+		},
+		{
+			"id_category_default": 11342,
+			"name": "Home and Interior Emil Design works",
+			"parent_id": 2
+		},
+		{
+			"id_category_default": 11167,
+			"name": "Home and Interior",
+			"parent_id": 11342
+		},
 		{
 			"id_category_default": 11344,
 			"name": "Living room",

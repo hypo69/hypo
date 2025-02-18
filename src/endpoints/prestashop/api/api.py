@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#! .pyenv/bin/python3
 """
 Module for interacting with the PrestaShop API
 =========================================================================================
@@ -14,8 +16,8 @@ Example usage
     from src.endpoints.prestashop.api.api import PrestaShop
 
     api = PrestaShop(
-        API_DOMAIN='https://your-prestashop-domain.com',
-        API_KEY='your_api_key',
+        api_domain='https://your-prestashop-domain.com',
+        api_key='your_api_key',
         default_lang=1,
         debug=True,
         data_format='JSON',
@@ -69,13 +71,12 @@ Example usage
     # Create binary (product image)
     api.create_binary('images/products/22', 'img.jpeg', 'image')
 """
-# -*- coding: utf-8 -*-
 
-#! .pyenv/bin/python3
 
 from math import e
 import os
 import sys
+import json
 from enum import Enum
 from http.client import HTTPConnection
 from pathlib import Path
@@ -99,8 +100,6 @@ from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint as print
 
 
-
-
 class PrestaShop:
     """ Interact with PrestaShop webservice API, using JSON and XML for message
 
@@ -108,10 +107,10 @@ class PrestaShop:
     operations, searching, and uploading images. It also provides error handling
     for responses and methods to handle the API's data.
 
-    :param API_KEY: The API key generated from PrestaShop.
-    :type API_KEY: str
-    :param API_DOMAIN: The domain of the PrestaShop shop (e.g., https://myPrestaShop.com).
-    :type API_DOMAIN: str
+    :param api_key: The API key generated from PrestaShop.
+    :type api_key: str
+    :param api_domain: The domain of the PrestaShop shop (e.g., https://myPrestaShop.com).
+    :type api_domain: str
     :param data_format: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
     :type data_format: str
     :param default_lang: Default language ID. Defaults to 1.
@@ -123,12 +122,12 @@ class PrestaShop:
     :raises PrestaShopException: For generic PrestaShop WebServices errors.
     """
     client: Session = Session()
-    debug = True
+    debug = False
     language: Optional[int] = None
     data_format = 'JSON' # Default data format ('JSON' or 'XML')
     ps_version = ''
-    API_DOMAIN:str
-    API_KEY:str
+    api_domain:str
+    api_key:str
 
     def __init__(self,
                 api_key:str,
@@ -145,20 +144,22 @@ class PrestaShop:
         :param debug: Activate debug mode. Defaults to True.
         :type debug: bool
         """
-        self.API_DOMAIN = api_domain + '/api/'
-        self.API_KEY = api_key
+        self.api_domain = api_domain + '/api/'
+        self.api_key = api_key
         self.debug = debug
         self.language = default_lang
         self.data_format = data_format
 
         if not self.client.auth:
-            self.client.auth = (self.API_KEY, '')
+            self.client.auth = (self.api_key, '')
 
         response = self.client.request(
             method='HEAD',
-            url=self.API_DOMAIN
+            url=self.api_domain
         )
-
+        if not response.ok:
+            logger.error(f"Нет соединения. {response.reason=}")
+            ...
         self.ps_version = response.headers.get('psws-version')
 
     def ping(self) -> bool:
@@ -169,7 +170,7 @@ class PrestaShop:
         """
         response = self.client.request(
             method='HEAD',
-            url=self.API_DOMAIN
+            url=self.api_domain
         )
 
         return self._check_response(response.status_code, response)
@@ -238,7 +239,7 @@ class PrestaShop:
             logger.error(f'XML response error: {message} \n Code: {code}')
             return code, message
 
-    def _prepare(self, url: str, params: dict) -> str:
+    def _prepare_url(self, url: str, params: dict) -> str:
         """Prepare the URL for the request.
 
         :param url: The base URL.
@@ -254,54 +255,24 @@ class PrestaShop:
         return req.url
 
     def _exec(self,
-              resource: str,
-              resource_id: Optional[Union[int, str]] = None,
-              resource_ids: Optional[Union[int, Tuple[int]]] = None,
-              method: str = 'GET',
-              data: Optional[dict] = None,
-              headers: Optional[dict] = None,
-              search_filter: Optional[Union[str, dict]] = None,
-              display: Optional[Union[str, list]] = 'full',
-              schema: Optional[str] = None,
-              sort: Optional[str] = None,
-              limit: Optional[str] = None,
-              language: Optional[int] = None,
-              io_format: str = 'JSON') -> Optional[dict]:
-        """Execute an HTTP request to the PrestaShop API.
-
-        :param resource: The API resource (e.g., 'products', 'categories').
-        :type resource: str
-        :param resource_id: The ID of the resource.
-        :type resource_id: int | str, optional
-        :param resource_ids: The IDs of multiple resources.
-        :type resource_ids: int | tuple, optional
-        :param method: The HTTP method (GET, POST, PUT, DELETE).
-        :type method: str, optional
-        :param data: The data to be sent with the request.
-        :type data: dict, optional
-        :param headers: Additional headers for the request.
-        :type headers: dict, optional
-        :param search_filter: Filter for the request.
-        :type search_filter: str | dict, optional
-        :param display: Fields to display in the response.
-        :type display: str | list, optional
-        :param schema: The schema of the data.
-        :type schema: str, optional
-        :param sort: Sorting parameter for the request.
-        :type sort: str, optional
-        :param limit: Limit of results for the request.
-        :type limit: str, optional
-        :param language: The language ID for the request.
-        :type language: int, optional
-        :param io_format: The data format ('JSON' or 'XML').
-        :type io_format: str, optional
-
-        :return: The response from the API or `False` on failure.
-        :rtype: dict | None
-        """
+          resource: str,
+          resource_id: Optional[Union[int, str]] = None,
+          resource_ids: Optional[Union[int, Tuple[int]]] = None,
+          method: str = 'GET',
+          data: Optional[dict] = None,
+          headers: Optional[dict] = None,
+          search_filter: Optional[Union[str, dict]] = None,
+          display: Optional[Union[str, list]] = 'full',
+          schema: Optional[str] = None,
+          sort: Optional[str] = None,
+          limit: Optional[str] = None,
+          language: Optional[int] = None,
+          io_format: str = 'JSON') -> Optional[dict]:
+        """Execute an HTTP request to the PrestaShop API."""
 
         try:
-            url=self._prepare(f'{self.API_DOMAIN}{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}{resource}',
+            HTTPConnection.debuglevel = 1 # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
+            url=self._prepare_url(f'{self.api_domain}{resource}/{resource_id}' if resource_id else f'{self.api_domain}{resource}',
                                     {'filter': search_filter,
                                     'display': display,
                                     'schema': schema,
@@ -310,17 +281,25 @@ class PrestaShop:
                                     'language': language,
                                     'output_format': io_format})
 
+            # устанавливаем Content-Type: application/json
+            request_headers = {'Content-Type': 'application/json','Accept': 'application/json'} if io_format == 'JSON' else {'Content-Type': 'application/xml','Accept': 'application/xml'}
+
+            if headers:
+                request_headers.update(headers)
+
+            self.data_format = io_format 
+            # Преобразуем данные в JSON / XML, только если они есть
+            request_data = json.dumps(data) if data and io_format == 'JSON'  else dict2xml(data) if data else None
+
 
             response = self.client.request(
                 method=method,
                 url=url,
-                data=dict2xml(data) if data and io_format == 'XML' else data,
-                headers=headers,
+                data=request_data, # Используем преобразованные данные
+                headers=request_headers, # Используем заголовок Content-Type
             )
 
-        
-
-            if not self._check_response(response.status_code, response, method, url, headers, data):
+            if not self._check_response(response.status_code, response, method, url, request_headers, data):
                 return False
 
             if io_format == 'JSON':
@@ -332,7 +311,7 @@ class PrestaShop:
             logger.error(f'Error:',ex)
             return
 
-    def _parse(self, response: str | 'response') -> dict | ElementTree.Element | bool:
+    def _parse(self, response) -> dict | ElementTree.Element | bool:
         """Parse XML or JSON response from the API.
 
         :param text: Response text.
@@ -352,6 +331,8 @@ class PrestaShop:
             logger.error(f'Parsing Error: {str(ex)}')
             return False
 
+
+
     def create(self, resource: str, data: dict, io_format:Optional[str] = 'JSON', *args, **kwards) -> Optional[dict]:
         """Create a new resource in PrestaShop API.
 
@@ -363,6 +344,7 @@ class PrestaShop:
         :return: Response from the API.
         :rtype: dict
         """
+        data  = {'prestashop' : data}
         return self._exec(resource=resource, method='POST', data=data, io_format = io_format, *args, **kwards)
         
 
@@ -435,11 +417,27 @@ class PrestaShop:
         with open(file_path, 'rb') as file:
             headers = {'Content-Type': 'application/octet-stream'}
             response = self.client.post(
-                url=f'{self.API_DOMAIN}{resource}',
+                url=f'{self.api_domain}{resource}',
                 headers=headers,
                 data=file.read()
             )
             return response.json()
+
+    def get_schema(self, resource: str, **kwards) -> dict | None:
+        """! Retrieve the schema of a given resource from PrestaShop API.
+
+        Args:
+            resource (str): The name of the resource (e.g., 'products', 'customers').
+
+        Returns:
+            dict | None: The schema of the requested resource or `None` in case of an error.
+        """
+
+        if not hasattr(kwards, 'schema'):
+            kwards['schema'] = 'blank'
+
+        return self._exec(resource=resource, method= "GET", **kwards)
+
 
 
     def get_data(self, resource: str, **kwargs) -> Optional[dict]:
