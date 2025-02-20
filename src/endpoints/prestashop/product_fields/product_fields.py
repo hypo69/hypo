@@ -31,18 +31,20 @@ class ProductFields:
     
     #product_fields_list: List[str] = field(init=False)
     presta_fields: SimpleNamespace = field(init=False)
-    lang_index: int
+
+    """ Индексы языков, которые я устанавливаю в бд престашоп:
+    1. Английский
+    2. Иврит
+    3. Русский
+    """
+    id_lang: int
 
     base_path:Path = __root__ / 'src' / 'endpoints' / 'prestashop' 
 
-    def __post_init__(self, lang_index:Optional[int] = 0):
-        """Инициализация класса после создания экземпляра. Загружаются данные полей, языков и их идентификаторов."""
-        if lang_index:
-            self.lang_index = lang_index
+    def __post_init__(self):
+        """Инициализация класса после создания экземпляра. 
+       """
 
-        if not self._payload():
-             logger.error(f"Ошибка загрузки полей")
-             ...
              
 
     def _payload(self) -> bool:
@@ -89,12 +91,12 @@ class ProductFields:
         """ property `id_lang: int(10)` 
         Индех языка для мультиязычных полей товара.
         """
-        return self.lang_index
+        return self.id_lang
 
     @id_lang.setter
     def id_lang(self, value: int = 1):
         """ setter Индекс языка для мультиязычных полей товара."""
-        self.lang_index = value
+        self.id_lang = value
 
 
 
@@ -737,7 +739,7 @@ class ProductFields:
     def description(self, value: str):
         """ setter Описание товара. Мультиязычное поле. """
         try:
-            self.presta_fields.description = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.description = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
             logger.error(f"Ошибка при установке description:",ex)
 
@@ -750,7 +752,7 @@ class ProductFields:
     def description_short(self, value: str):
         """ setter Краткое описание товара. Мультиязычное поле."""
         try:
-            self.presta_fields.description_short = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.description_short = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
             logger.error(f"Ошибка при установке description_short:",ex)
 
@@ -763,7 +765,7 @@ class ProductFields:
     def link_rewrite(self, value: str):
         """ setter URL товара. Мультиязычное поле."""
         try:
-             self.presta_fields.link_rewrite = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+             self.presta_fields.link_rewrite = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке link_rewrite:",ex)
 
@@ -776,7 +778,7 @@ class ProductFields:
     def meta_description(self, value: str):
         """ setter Meta описание товара. Мультиязычное поле."""
         try:
-             self.presta_fields.meta_description = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+             self.presta_fields.meta_description = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке meta_description:",ex)
     
@@ -789,7 +791,7 @@ class ProductFields:
     def meta_keywords(self, value: str):
          """ setter Meta ключевые слова товара. Мультиязычное поле."""
          try:
-            self.presta_fields.meta_keywords = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.meta_keywords = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
          except Exception as ex:
              logger.error(f"Ошибка при установке meta_keywords:",ex)
 
@@ -802,7 +804,7 @@ class ProductFields:
     def meta_title(self, value: str):
         """ setter Meta заголовок товара. Мультиязычное поле."""
         try:
-            self.presta_fields.meta_title = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.meta_title = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
             logger.error(f"Ошибка при установке meta_title:",ex)
 
@@ -815,7 +817,7 @@ class ProductFields:
     def name(self, value: str):
         """ setter Название товара. Мультиязычное поле."""
         try:
-            self.presta_fields.name = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.name = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке name:",ex)
 
@@ -828,7 +830,7 @@ class ProductFields:
     def available_now(self, value: str):
         """ setter Текст "в наличии". Мультиязычное поле."""
         try:
-            self.presta_fields.available_now = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.available_now = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке available_now:",ex)
 
@@ -841,7 +843,7 @@ class ProductFields:
     def available_later(self, value: str):
         """ setter Текст "ожидается". Мультиязычное поле."""
         try:
-             self.presta_fields.available_later = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+             self.presta_fields.available_later = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
             logger.error(f"Ошибка при установке available_later:",ex)
 
@@ -854,7 +856,7 @@ class ProductFields:
     def delivery_in_stock(self, value: str):
         """ setter Текст доставки при наличии. Мультиязычное поле."""
         try:
-            self.presta_fields.delivery_in_stock = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.delivery_in_stock = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке delivery_in_stock:",ex)
 
@@ -867,7 +869,7 @@ class ProductFields:
     def delivery_out_stock(self, value: str):
         """ setter Текст доставки при отсутствии. Мультиязычное поле."""
         try:
-            self.presta_fields.delivery_out_stock = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.delivery_out_stock = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке delivery_out_stock:",ex)
 
@@ -880,7 +882,7 @@ class ProductFields:
     def delivery_additional_message(self, value: str):
         """ setter Дополнительное сообщение о доставке. Мультиязычное поле."""
         try:
-            self.presta_fields.delivery_additional_message = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.delivery_additional_message = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке delivery_additional_message:",ex)
 
@@ -893,7 +895,7 @@ class ProductFields:
     def affiliate_short_link(self, value: str):
         """ setter Короткая ссылка аффилиата. Мультиязычное поле."""
         try:
-            self.presta_fields.affiliate_short_link = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.affiliate_short_link = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке affiliate_short_link:",ex)
 
@@ -906,7 +908,7 @@ class ProductFields:
     def affiliate_text(self, value: str):
          """ setter Текст аффилиата. Мультиязычное поле."""
          try:
-            self.presta_fields.affiliate_text = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.affiliate_text = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
          except Exception as ex:
              logger.error(f"Ошибка при установке affiliate_text:",ex)
     
@@ -919,7 +921,7 @@ class ProductFields:
     def affiliate_summary(self, value: str):
         """ setter Краткое описание аффилиата. Мультиязычное поле."""
         try:
-           self.presta_fields.affiliate_summary = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+           self.presta_fields.affiliate_summary = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
             logger.error(f"Ошибка при установке affiliate_summary:",ex)
     
@@ -932,7 +934,7 @@ class ProductFields:
     def affiliate_summary_2(self, value: str):
         """ setter Второе краткое описание аффилиата. Мультиязычное поле."""
         try:
-           self.presta_fields.affiliate_summary_2 = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+           self.presta_fields.affiliate_summary_2 = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
             logger.error(f"Ошибка при установке affiliate_summary_2:",ex)
   
@@ -945,7 +947,7 @@ class ProductFields:
     def affiliate_image_small(self, value: str):
         """ setter Маленькое изображение аффилиата. Мультиязычное поле."""
         try:
-           self.presta_fields.affiliate_image_small = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+           self.presta_fields.affiliate_image_small = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
            logger.error(f"Ошибка при установке affiliate_image_small:",ex)
     
@@ -958,7 +960,7 @@ class ProductFields:
     def affiliate_image_medium(self, value: str):
         """ setter Среднее изображение аффилиата. Мультиязычное поле."""
         try:
-            self.presta_fields.affiliate_image_medium = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.affiliate_image_medium = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
             logger.error(f"Ошибка при установке affiliate_image_medium:",ex)
 
@@ -971,7 +973,7 @@ class ProductFields:
     def affiliate_image_large(self, value: str):
         """ setter Большое изображение аффилиата. Мультиязычное поле."""
         try:
-            self.presta_fields.affiliate_image_large = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.affiliate_image_large = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке affiliate_image_large:",ex)
 
@@ -984,7 +986,7 @@ class ProductFields:
     def ingredients(self, value: str):
         """ setter Список ингридиентов. Мультиязычное поле."""
         try:
-            self.presta_fields.ingredients = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.ingredients = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке ingredients:",ex)
     
@@ -997,7 +999,7 @@ class ProductFields:
     def specification(self, value: str):
         """ setter Спецификация товара. Мультиязычное поле."""
         try:
-            self.presta_fields.specification = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+            self.presta_fields.specification = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке specification:",ex)
     
@@ -1010,7 +1012,7 @@ class ProductFields:
     def how_to_use(self, value: str):
         """ setter Как использовать товар. Мультиязычное поле."""
         try:
-             self.presta_fields.how_to_use = {'language': [{'attrs': {'id': self.lang_index}, 'value': value}]}
+             self.presta_fields.how_to_use = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
         except Exception as ex:
              logger.error(f"Ошибка при установке how_to_use:",ex)
 
@@ -1567,5 +1569,5 @@ class ProductFields:
                 result.append({"id": str(lang_id), "value": str(lang_value)})
         else:
             # Fallback: Create a list with one entry for the current language
-            result.append({"id": str(self.lang_index), "value": str(data)})
+            result.append({"id": str(self.id_lang), "value": str(data)})
         return result

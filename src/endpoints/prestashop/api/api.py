@@ -325,10 +325,10 @@ class PrestaShop:
                 data = response.json()
                 return data.get('PrestaShop', {}) if 'PrestaShop' in data else data
             else:
-                tree = ElementTree.fromstring(text)
+                tree = ElementTree.fromstring(response)
                 return tree
         except (ExpatError, ValueError) as ex:
-            logger.error(f'Parsing Error: {str(ex)}')
+            logger.error(f'Parsing Error:',ex)
             return False
 
 

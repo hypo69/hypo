@@ -40,6 +40,12 @@ class PrestaProduct(PrestaShop):
                                     
         super().__init__( api_key = api_key, api_domain = api_domain, *args, **kwargs)
 
+    def get_schema(self):
+        """Get the schema for the product resource from PrestaShop.
+        Returns:
+            dict: The schema for the product resource.
+        """
+        return self.get('products', schema=True)
 
     def get_parent_category(self, id_category: int) -> Optional[int]:
         """Retrieve parent categories from PrestaShop for a given category recursively.
@@ -76,14 +82,16 @@ class PrestaProduct(PrestaShop):
             """
       
             for _c in f.additional_categories :
-
-                cat_id = int(_c['id']) #   {'id':'value'} 
-
+                cat_id:int = int(_c['id']) #   {'id':'value'}
                 if cat_id in (1,2): # <-- корневые категории prestashop Здесь можно добавить другие фильтры
                     continue
 
-                parent_id = self.get_parent_category(cat_id)
-                f.additional_category_append(parent_id) if parent_id else continue
+                while cat_id > 2:
+                    cat_id:Optional[int] = self.get_parent_category(cat_id)
+                    if cat_id:
+                       f.additional_category_append(cat_id) 
+                    else:
+                        break
 
 
     def add_new_product(self, f: ProductFields) -> dict:
@@ -105,7 +113,7 @@ class PrestaProduct(PrestaShop):
         presta_product_dict: dict = f.to_dict()
 
         kwards = {
-            'io_format': 'JSON',
+            'io_format': 'XML',
             'language': 2,
         }
         response = self.create('products', data={'product': presta_product_dict}, **kwards)
@@ -121,23 +129,6 @@ class PrestaProduct(PrestaShop):
         else:
             logger.error(f"Ошибка при добавлении товара:\n{print(print_data=presta_product_dict, text_color='yellow')}", exc_info=True)
             return {}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def example_add_new_product():
@@ -161,11 +152,11 @@ def example_add_new_product():
     # 2. Создаю объект класса PrestaProduct
     p = PrestaProduct(api_key=api_key, api_domain=host)
 
-    schema = p.get_schema('products')
-    j_dumps(schema, gs.path.endpoints / 'emil' / '_experiments' / 'product_schema.json')
+    # schema = p.get_schema()
+    # j_dumps(schema, gs.path.endpoints / 'emil' / '_experiments' / f'product_schema.{gs.now}.json')
 
     # 3. Добавляю новый товар
-    presta_product_dict:dict =  j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'exmple_input.json')
+    presta_product_dict:dict =  j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input.json')
     #presta_product_dict['name'] = 'TEST'
 
 
