@@ -1,25 +1,55 @@
-## \file /src/utils/convertors/xml2dict.py
+## \file /src/endpoints/prestashop/utils/xml_json_convertor.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
 
 """
-.. module:: src.utils.convertors 
+.. module:: src.endpoints.prestashop.utils.xml_json_convertor
 	:platform: Windows, Unix
 	:synopsis: provides utilities for converting XML data into dictionaries. It includes functions for parsing XML strings and converting XML element trees into dictionary representations.
-
-Functions:
-- `_parse_node`: Parses an XML node into a dictionary.
-- `_make_dict`: Generates a dictionary with the tag name and value.
-- `xml2dict`: Parses an XML string into a dictionary.
-- `ET2dict`: Converts an XML element tree into a dictionary.
 """
-
+import json
 import re
+import xml.etree.ElementTree as ET
 
-try:
-    import xml.etree.cElementTree as ET
-except ImportError as err:
-    import xml.etree.ElementTree as ET
+def dict2xml(json_obj: dict, root_name: str = "product") -> str:
+    """! Converts a JSON dictionary to an XML string.
+
+    Args:
+        json_obj (dict): JSON dictionary to convert.
+        root_name (str, optional): Root element name. Defaults to "product".
+
+    Returns:
+        str: XML string representation of the JSON.
+    """
+    
+    def build_xml_element(parent, data):
+        """Recursively constructs XML elements from JSON data."""
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if key.startswith("@"):  # Attribute
+                    parent.set(key[1:], value)
+                elif key == "#text":  # Text value
+                    parent.text = value
+                else:
+                    if isinstance(value, list):
+                        for item in value:
+                            child = ET.SubElement(parent, key)
+                            build_xml_element(child, item)
+                    else:
+                        child = ET.SubElement(parent, key)
+                        build_xml_element(child, value)
+        elif isinstance(data, list):
+            for item in data:
+                build_xml_element(parent, item)
+        else:
+            parent.text = str(data)
+
+    # Create root element
+    root = ET.Element(root_name)
+    build_xml_element(root, json_obj[root_name])
+
+    # Convert XML tree to string
+    return ET.tostring(root, encoding="utf-8").decode("utf-8")
 
 def _parse_node(node: ET.Element) -> dict | str:
     """Parse an XML node into a dictionary.
@@ -113,3 +143,4 @@ def ET2dict(element_tree: ET.Element) -> dict:
         dict: The dictionary representation of the XML element tree.
     """
     return _make_dict(element_tree.tag, _parse_node(element_tree))
+

@@ -28,10 +28,12 @@ Functions:
 
 
 import json
+import xml.etree.ElementTree as ET
 from types import SimpleNamespace
 from typing import Any, Dict, List
 from pathlib import Path
 from xml.dom.minidom import getDOMImplementation
+
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from src.utils.xls import save_xls_file
@@ -78,10 +80,10 @@ def replace_key_in_dict(data, old_key, new_key) -> dict:
             if key == old_key:
                 data[new_key] = data.pop(old_key)
             if isinstance(data[key], (dict, list)):
-                replace_key_in_json(data[key], old_key, new_key)
+                replace_key_in_dict(data[key], old_key, new_key)
     elif isinstance(data, list):
         for item in data:
-            replace_key_in_json(item, old_key, new_key)
+            replace_key_in_dict(item, old_key, new_key)
     
     return data
 
@@ -245,6 +247,7 @@ def dict2xml(data: Dict[str, Any], encoding: str = 'UTF-8') -> str:
     doc.appendChild(root[0])
     return doc.toxml(encoding)
 
+
 def dict2csv(data: dict | SimpleNamespace, file_path: str | Path) -> bool:
     """
     Save dictionary or SimpleNamespace data to a CSV file.
@@ -323,5 +326,43 @@ def dict2html(data: dict | SimpleNamespace, encoding: str = 'UTF-8') -> str:
     
     html_content = dict_to_html_table(data)
     return f'<!DOCTYPE html>\n<html>\n<head>\n<meta charset="{encoding}">\n<title>Dictionary to HTML</title>\n</head>\n<body>\n{html_content}\n</body>\n</html>'
+
+
+
+
+def example_json2xml():
+
+    # Example usage
+    json_data = {
+        "product": {
+            "name": {
+                "language": [
+                    {
+                        "@id": "1",
+                        "#text": "Test Product"
+                    },
+                    {
+                        "@id": "2",
+                        "#text": "Test Product"
+                    },
+                    {
+                        "@id": "3",
+                        "#text": "Test Product"
+                    }
+                ]
+            },
+            "price": "10.00",
+            "id_tax_rules_group": "13",
+            "id_category_default": "2"
+        }
+    }
+
+    xml_output = json2xml(json_data)
+    print(xml_output)
+
+
+if __name__ ==  '__main__':
+    ...
+    #example_json2xml()
 
 

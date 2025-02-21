@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <prestashop xmlns:ns0="http://www.w3.org/1999/xlink">
   <product>
-    <id>14</id>
+    <id>15</id>
     <id_category_default ns0:href="https://dev8.emil-design.com/api/categories/2">2</id_category_default>
     <id_default_image notFilterable="true"/>
     <id_default_combination notFilterable="true">0</id_default_combination>
@@ -24,8 +24,8 @@
     <price>10.00</price>
     <condition>new</condition>
     <visibility>both</visibility>
-    <date_add>2025-02-21 13:17:22</date_add>
-    <date_upd>2025-02-21 13:17:22</date_upd>
+    <date_add>2025-02-21 14:26:31</date_add>
+    <date_upd>2025-02-21 14:26:31</date_upd>
     <meta_description>
       <language id="1"/>
       <language id="2"/>
@@ -79,8 +79,8 @@
       <product_features nodeType="product_feature" api="product_features"/>
       <tags nodeType="tag" api="tags"/>
       <stock_availables nodeType="stock_available" api="stock_availables">
-        <stock_available ns0:href="https://dev8.emil-design.com/api/stock_availables/14">
-          <id>14</id>
+        <stock_available ns0:href="https://dev8.emil-design.com/api/stock_availables/15">
+          <id>15</id>
           <id_product_attribute>0</id_product_attribute>
         </stock_available>
       </stock_availables>

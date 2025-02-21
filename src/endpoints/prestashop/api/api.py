@@ -267,7 +267,7 @@ class PrestaShop:
           resource_id: Optional[int| str] = None,
           resource_ids: Optional[int | Tuple[int]] = None,
           method: str = 'GET',
-          data: Optional[dict] = None,
+          data: Optional[dict | str] = None,
           headers: Optional[dict] = None,
           search_filter: Optional[str | dict] = None,
           display: Optional[str | list] = 'full',
@@ -296,14 +296,11 @@ class PrestaShop:
                 request_headers.update(headers)
 
             self.data_format = io_format 
-            # Преобразуем данные в JSON / XML, только если они есть
-            request_data = json.dumps(data) if data and io_format == 'JSON'  else dict2xml(data) if data else None
-
 
             response = self.client.request(
                 method=method,
                 url=url,
-                data=request_data,
+                data=data,
                 headers=request_headers, # Как минимум заголовок Content-Type JSON/XML
             )
 
@@ -332,13 +329,13 @@ class PrestaShop:
         :rtype: dict 
         """
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~
-        if self.data_format == 'XML':
-            save_xml(response.text, gs.path.endpoints / 'emil' / '_experiments' / 'output.xml')
+        save_xml(response.text if self.data_format == 'XML' else dict2xml(response.json()), gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_output.{'xml' if self.data_format == 'XML' else 'json'}")
+
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         try:
             data:dict = response.json() if self.data_format == 'JSON' else xml2dict(response.text)    
-            return data.get('PrestaShop', {}) if 'PrestaShop' in data else data
+            return data.get('prestashop', {}) if 'prestashop' in data else data
 
         except Exception as ex:
             logger.error(f'Parsing Error:',ex)

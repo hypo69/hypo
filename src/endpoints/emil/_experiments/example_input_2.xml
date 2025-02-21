@@ -1,17 +1,13 @@
 <?xml version="1.0" ?>
 <product>
-  <name>
-    <language id="1">
-      <value>Test Product</value>
-    </language>
-    <language id="2">
-      <value>Test Product</value>
-    </language>
-    <language id="3">
-      <value>Test Product</value>
-    </language>
-  </name>
-  <price>10.00</price>
-  <id_tax_rules_group>13</id_tax_rules_group>
-  <id_category_default>2</id_category_default>
+  <product>
+    <name>
+      <language id="1">Test Product</language>
+      <language id="2">Test Product</language>
+      <language id="3">Test Product</language>
+    </name>
+    <price>10.00</price>
+    <id_tax_rules_group>13</id_tax_rules_group>
+    <id_category_default>2</id_category_default>
+  </product>
 </product>

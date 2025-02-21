@@ -1,27 +1,21 @@
 {
-  "name": {
-    "language": [
-      {
-        "attrs": {
-          "id": "1"
+    "name": {
+      "language": [
+        {
+          "@id": "1",
+          "#text": "Test Product"
         },
-        "value": "Test Product"
-      },
-      {
-        "attrs": {
-          "id": "2"
+        {
+          "@id": "2",
+          "#text": "Test Product"
         },
-        "value": "Test Product"
-      },
-      {
-        "attrs": {
-          "id": "3"
-        },
-        "value": "Test Product"
-      }
-    ]
-  },
-  "price": "10.00",
-  "id_tax_rules_group": "13",
-  "id_category_default": "2"
-}
+        {
+          "@id": "3",
+          "#text": "Test Product"
+        }
+      ]
+    },
+    "price": "10.00",
+    "id_tax_rules_group": "13",
+    "id_category_default": "2"
+  }
