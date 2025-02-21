@@ -1,21 +1,21 @@
 {
-    "name": {
-      "language": [
-        {
-          "@id": "1",
-          "#text": "Test Product"
-        },
-        {
-          "@id": "2",
-          "#text": "Test Product"
-        },
-        {
-          "@id": "3",
-          "#text": "Test Product"
-        }
-      ]
-    },
-    "price": "10.00",
-    "id_tax_rules_group": "13",
-    "id_category_default": "2"
-  }
+  "name": {
+    "language": [
+      {
+        "@id": "1",
+        "#text": "Test Product"
+      },
+      {
+        "@id": "2",
+        "#text": "מוצר לבדיקה"
+      },
+      {
+        "@id": "3",
+        "#text": "Проверка"
+      }
+    ]
+  },
+  "price": "10.00",
+  "id_tax_rules_group": "13",
+  "id_category_default": "2"
+}

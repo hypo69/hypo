@@ -144,3 +144,80 @@ def ET2dict(element_tree: ET.Element) -> dict:
     """
     return _make_dict(element_tree.tag, _parse_node(element_tree))
 
+
+import xml.etree.ElementTree as ET
+
+def presta_fields_to_xml(presta_fields_dict: dict) -> str:
+    """! Converts a JSON dictionary to an XML string with a fixed root name 'prestashop'.
+
+    Args:
+        presta_fields_dict (dict): JSON dictionary containing the data (without 'prestashop' key).
+
+    Returns:
+        str: XML string representation of the JSON.
+    """
+
+    def build_xml_element(parent, data):
+        """Recursively constructs XML elements from JSON data."""
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if key.startswith("@"):  # Attribute
+                    parent.set(key[1:], value)
+                elif key == "#text":  # Text value
+                    parent.text = value
+                else:
+                    if isinstance(value, list):
+                        for item in value:
+                            child = ET.SubElement(parent, key)
+                            build_xml_element(child, item)
+                    else:
+                        child = ET.SubElement(parent, key)
+                        build_xml_element(child, value)
+        elif isinstance(data, list):
+            for item in data:
+                build_xml_element(parent, item)
+        else:
+            parent.text = str(data)
+
+    if not presta_fields_dict:
+        return ""
+
+    dynamic_key = next(iter(presta_fields_dict))  # Берём первый ключ (например, 'product', 'category' и т. д.)
+
+    # Создаём корневой элемент "prestashop"
+    root = ET.Element("prestashop")
+    dynamic_element = ET.SubElement(root, dynamic_key)
+    build_xml_element(dynamic_element, presta_fields_dict[dynamic_key])
+
+    # Конвертируем в строку
+    return ET.tostring(root, encoding="utf-8").decode("utf-8")
+
+# Пример JSON 
+"""
+json_data = {
+    "product": {
+        "name": {
+            "language": [
+                {
+                    "@id": "1",
+                    "#text": "Test Product"
+                },
+                {
+                    "@id": "2",
+                    "#text": "Test Product"
+                },
+                {
+                    "@id": "3",
+                    "#text": "Test Product"
+                }
+            ]
+        },
+        "price": "10.00",
+        "id_tax_rules_group": "13",
+        "id_category_default": "2"
+    }
+}
+
+xml_output = presta_fields_to_xml(json_data)
+print(xml_output)
+"""

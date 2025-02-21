@@ -19,7 +19,7 @@ from src.endpoints.prestashop.api import PrestaShop
 from src.endpoints.prestashop.category import PrestaCategory
 from src.endpoints.prestashop.product_fields import ProductFields
 
-from src.endpoints.prestashop.utils.xml_json_convertor import dict2xml, xml2dict
+from src.endpoints.prestashop.utils.xml_json_convertor import dict2xml, xml2dict, presta_fields_to_xml
 from src.utils.xml import save_xml
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.printer import pprint as print
@@ -121,7 +121,8 @@ class PrestaProduct(PrestaShop):
             'io_format': 'XML',
             'language': 2,
         }
-        response = self.create('products', data={'product': presta_product_dict}, **kwards)
+        response = self._exec(resource='products', method='POST', data=data, io_format = io_format, *args, **kwards)
+        #response = self.create('products', data={'product': presta_product_dict}, **kwards)
 
         if response:
             try:
@@ -160,17 +161,24 @@ def example_add_new_product():
     # schema = p.get_schema()
     # j_dumps(schema, gs.path.endpoints / 'emil' / '_experiments' / f'product_schema.{gs.now}.json')
 
-    example_data:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input_2.json')
-    presta_product_dict:dict = {'product':example_data} 
-    presta_product_xml = dict2xml(presta_product_dict)
-    #save_xml(presta_product_xml, gs.path.endpoints / 'emil' / '_experiments' / 'example_input_2.xml')
     
+    #example_data:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input.json')
+    example_data:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input_2.json') # <- XML like
+    
+    if not example_data:
+        logger.error(f"Файл не существует или неправильный формат файла")
+        ...
+        return 
+    presta_product_dict:dict = {'product':example_data} 
+    presta_product_xml = presta_fields_to_xml(presta_product_dict) # <- XML 
+
     # 1. JSON
     kwards:dict = {
     'io_format':'XML',
     }
-    response = p.create('products', data=presta_product_dict  if kwards['io_format'] == 'JSON' else presta_product_xml, **kwards)
-    j_dumps(response if kwards['io_format'] == 'JSON' else xml2dict(response), gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_response_new_product_added.json")
+    response = p._exec(resource='products', method='POST', data= presta_product_dict  if kwards['io_format'] == 'JSON' else presta_product_xml,  **kwards)
+    #response = p.create('products', data=presta_product_dict  if kwards['io_format'] == 'JSON' else presta_product_xml, **kwards)
+    #j_dumps(response if kwards['io_format'] == 'JSON' else xml2dict(response), gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_response_new_product_added.json")
     
     print(response)
     ...
