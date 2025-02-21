@@ -18,7 +18,9 @@ from src import gs
 from src.endpoints.prestashop.api import PrestaShop
 from src.endpoints.prestashop.category import PrestaCategory
 from src.endpoints.prestashop.product_fields import ProductFields
-from src.utils.convertors.any import any2dict
+from src.utils.convertors.dict import dict2xml
+from src.utils.convertors.xml2dict import xml2dict
+from src.utils.xml import save_xml
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
@@ -93,6 +95,9 @@ class PrestaProduct(PrestaShop):
                     else:
                         break
 
+    def get_product(self, id_product:int, **kwards):
+        """"""
+        return self.read(resource = 'products', resource_id = id_product, **kwards)
 
     def add_new_product(self, f: ProductFields) -> dict:
         """
@@ -149,32 +154,64 @@ def example_add_new_product():
         host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
         api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
-    # 2. Создаю объект класса PrestaProduct
+
     p = PrestaProduct(api_key=api_key, api_domain=host)
 
     # schema = p.get_schema()
     # j_dumps(schema, gs.path.endpoints / 'emil' / '_experiments' / f'product_schema.{gs.now}.json')
 
-    # 3. Добавляю новый товар
-    presta_product_dict:dict =  j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input.json')
-    #presta_product_dict['name'] = 'TEST'
-
+    presta_product_dict:dict =  j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input_2.json')
+    presta_product_xml = dict2xml({'product':presta_product_dict})
+    save_xml(presta_product_xml, gs.path.endpoints / 'emil' / '_experiments' / 'example_input_2.xml')
+    
 
     kwards:dict = {
-    'io_format':'XML',
+    'io_format':'JSON',
     'language':2,
+    }
+    kwards:dict = {
+    'io_format':'XML',
+    
     }
     #kwards:dict = {}                                                          
     data:dict = {'product':presta_product_dict}
     response = p.create('products', data=data, **kwards)
+    #j_dumps(gs.path.endpoints / 'emil' / '_experiments' / 'presta_response_new_product_added.json')
     print(response)
     ...
 
+def example_get_product(id_product:int, **kwards):
+    """"""
+    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass 
+    MODE:str = 'dev8'
+
+    if MODE == 'dev':
+        host = gs.credentials.presta.client.dev_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev_emil_design.api_key
+    if MODE == 'dev8':
+        host = gs.credentials.presta.client.dev8_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
+    else:
+        host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
+        api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
+
+
+    p = PrestaProduct(api_key=api_key, api_domain=host)
+    kwards:dict = {
+    'io_format':'XML',
+    
+    }
+    presta_product = p.get_product(1, **kwards)
+    ...
+    #save_xml()
 
 
 if __name__ == '__main__':
     """"""
-    example_add_new_product()
+    #example_add_new_product()
+
+    example_get_product(1)
+    
 
 
 

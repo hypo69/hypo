@@ -73,14 +73,14 @@ Example usage
 """
 
 
-from math import e
+#from math import e
 import os
 import sys
 import json
 from enum import Enum
 from http.client import HTTPConnection
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
@@ -94,6 +94,7 @@ from src.logger.logger import logger
 from src.utils.convertors.base64 import base64_to_tmpfile
 from src.utils.convertors.dict import dict2xml
 from src.utils.convertors.xml2dict import xml2dict
+from src.utils.xml import save_xml
 from src.utils.file import save_text_file
 from src.utils.image import save_image_from_url
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
@@ -208,20 +209,27 @@ class PrestaShop:
         :param response: HTTP response object from the server.
         :type response: requests.Response
         """
+
+
+
         if self.data_format == 'JSON':
             status_code = response.status_code
             if not status_code in (200, 201):
+                
+                j_dumps(response.json(), )
+
                 logger.error(f"""
                 response status code: {status_code}
-                    url: {response.request.url}
+                    {response.request.url=}
                     --------------
-                    headers: {response.headers}
+                    response.headers {print(response.headers)}
                     --------------
                     response: {print(response)}
                     --------------
-                    response text: {print(response.text)}""", None, False)
+                    response text: {print(response.json())}""", None, False)
             return response
         else:
+
             error_answer = self._parse(response.text)
             if isinstance(error_answer, dict):
                 error_content = (error_answer
@@ -256,13 +264,13 @@ class PrestaShop:
 
     def _exec(self,
           resource: str,
-          resource_id: Optional[Union[int, str]] = None,
-          resource_ids: Optional[Union[int, Tuple[int]]] = None,
+          resource_id: Optional[int| str] = None,
+          resource_ids: Optional[int | Tuple[int]] = None,
           method: str = 'GET',
           data: Optional[dict] = None,
           headers: Optional[dict] = None,
-          search_filter: Optional[Union[str, dict]] = None,
-          display: Optional[Union[str, list]] = 'full',
+          search_filter: Optional[str | dict] = None,
+          display: Optional[str | list] = 'full',
           schema: Optional[str] = None,
           sort: Optional[str] = None,
           limit: Optional[str] = None,
@@ -271,7 +279,7 @@ class PrestaShop:
         """Execute an HTTP request to the PrestaShop API."""
 
         try:
-            HTTPConnection.debuglevel = 1 # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
+            HTTPConnection.debuglevel = self.debug # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ debug
             url=self._prepare_url(f'{self.api_domain}{resource}/{resource_id}' if resource_id else f'{self.api_domain}{resource}',
                                     {'filter': search_filter,
                                     'display': display,
@@ -295,40 +303,46 @@ class PrestaShop:
             response = self.client.request(
                 method=method,
                 url=url,
-                data=request_data, # Используем преобразованные данные
-                headers=request_headers, # Используем заголовок Content-Type
+                data=request_data,
+                headers=request_headers, # Как минимум заголовок Content-Type JSON/XML
             )
 
             if not self._check_response(response.status_code, response, method, url, request_headers, data):
+                ...
                 return False
 
-            if io_format == 'JSON':
-                return response.json()
-            else:
-                return self._parse(response.text)
+            return self._parse_dict(response)
+
+            # if io_format == 'JSON':
+            #     return response.json()
+            # else:
+            #     return self._parse(response.text)
 
         except Exception as ex:
             logger.error(f'Error:',ex)
             return
 
-    def _parse(self, response) -> dict | ElementTree.Element | bool:
-        """Parse XML or JSON response from the API.
+    def _parse_dict(self, response) -> Optional[ dict ]:
+        """Parse XML or JSON response from the API to dict structure
 
         :param text: Response text.
         :type text: str
 
         :return: Parsed data or `False` on failure.
-        :rtype: dict | ElementTree.Element | bool
+        :rtype: dict 
         """
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~
+        if self.data_format == 'XML':
+            save_xml(response.text, gs.path.endpoints / 'emil' / '_experiments' / 'output.xml')
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         try:
-            if self.data_format == 'JSON':
-                data = response.json()
-                return data.get('PrestaShop', {}) if 'PrestaShop' in data else data
-            else:
-                tree = ElementTree.fromstring(response)
-                return tree
-        except (ExpatError, ValueError) as ex:
+            data:dict = response.json() if self.data_format == 'JSON' else xml2dict(response.text)    
+            return data.get('PrestaShop', {}) if 'PrestaShop' in data else data
+
+        except Exception as ex:
             logger.error(f'Parsing Error:',ex)
+            ...
             return False
 
 
@@ -348,7 +362,7 @@ class PrestaShop:
         return self._exec(resource=resource, method='POST', data=data, io_format = io_format, *args, **kwards)
         
 
-    def read(self, resource: str, resource_id: Union[int, str], **kwargs) -> Optional[dict]:
+    def read(self, resource: str, resource_id: int | str, **kwargs) -> Optional[dict]:
         """Read a resource from the PrestaShop API.
 
         :param resource: API resource (e.g., 'products').
@@ -375,7 +389,7 @@ class PrestaShop:
         return self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data,
                           io_format=self.data_format)
 
-    def unlink(self, resource: str, resource_id: Union[int, str]) -> bool:
+    def unlink(self, resource: str, resource_id: int | str) -> bool:
         """Delete a resource from the PrestaShop API.
 
         :param resource: API resource (e.g., 'products').
@@ -388,7 +402,7 @@ class PrestaShop:
         """
         return self._exec(resource=resource, resource_id=resource_id, method='DELETE', io_format=self.data_format)
 
-    def search(self, resource: str, filter: Optional[Union[str, dict]] = None, **kwargs) -> List[dict]:
+    def search(self, resource: str, filter: Optional[str | dict] = None, **kwargs) -> List[dict]:
         """Search for resources in the PrestaShop API.
 
         :param resource: API resource (e.g., 'products').
@@ -423,20 +437,17 @@ class PrestaShop:
             )
             return response.json()
 
-    def get_schema(self, resource: str, **kwards) -> dict | None:
+    def get_schema(self, resource: Optional[str] = None, schema:Optional[str] = 'blank', **kwards) -> dict | None:
         """! Retrieve the schema of a given resource from PrestaShop API.
 
         Args:
             resource (str): The name of the resource (e.g., 'products', 'customers').
+            Если не указана - вернется список всех схем сущностей доступных для API ключа
 
         Returns:
             dict | None: The schema of the requested resource or `None` in case of an error.
         """
-
-        if not hasattr(kwards, 'schema'):
-            kwards['schema'] = 'blank'
-
-        return self._exec(resource=resource, method= "GET", **kwards)
+        return self._exec(resource=resource, method= "GET", schema=schema, **kwards)
 
 
 

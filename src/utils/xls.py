@@ -1,10 +1,9 @@
 ## \file /src/utils/xls.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
-.. module:: src.utils 
+.. module:: src.utils.xls 
 	:platform: Windows, Unix
 	:synopsis: Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`)
 

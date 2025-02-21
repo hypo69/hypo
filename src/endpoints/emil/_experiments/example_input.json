@@ -1,15 +1,15 @@
 {
   "name": {
-    "language": [
+    "language": 
       {
         "attrs": {
           "id": "1"
         },
         "value": "Test Product"
       }
-    ]
+    
   },
   "price": "10.00",
-  "id_tax_rules_group": "0",
+  "id_tax_rules_group": "13",
   "id_category_default": "2"
 }

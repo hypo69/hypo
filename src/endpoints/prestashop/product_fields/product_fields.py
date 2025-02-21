@@ -739,9 +739,28 @@ class ProductFields:
     def description(self, value: str):
         """ setter Описание товара. Мультиязычное поле. """
         try:
-            self.presta_fields.description = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
+            _lang_index = str(self.lang_index)
+            lang_dict = {'attrs': {'id': _lang_index}, 'value': value}
+
+            if not hasattr(self.presta_fields, 'description') or not isinstance(self.presta_fields.description, dict) or 'language' not in self.presta_fields.description:
+                # Если структура отсутствует, создаем ее в виде словаря
+                self.presta_fields.description = {'language': lang_dict}
+            else:
+                language_list = self.presta_fields.description['language']
+                
+                # Проверяем, есть ли уже язык с таким ID
+                found = False
+                for i, lang_dict_existing in enumerate(language_list):
+                    if lang_dict_existing['attrs']['id'] == _lang_index:
+                        language_list[i]['value'] = value  # Заменяем значение
+                        found = True
+                        break
+                
+                # Если язык с таким ID не найден, добавляем его в список
+                if not found:
+                    language_list.append(lang_dict)
         except Exception as ex:
-            logger.error(f"Ошибка при установке description:",ex)
+            logger.error(f"Ошибка при установке description: {ex}", exc_info=True)
 
     @property
     def description_short(self) -> Optional[str]:
@@ -817,9 +836,34 @@ class ProductFields:
     def name(self, value: str):
         """ setter Название товара. Мультиязычное поле."""
         try:
-            self.presta_fields.name = {'language': [{'attrs': {'id': self.id_lang}, 'value': value}]}
+            _lang_index:str = str(self.id_lang)
+            lang_dict:dict = {'attrs': {'id': _lang_index}, 'value': value}
+
+            if not hasattr(self.presta_fields, 'name') or not isinstance(self.presta_fields.name, dict) or 'language' not in self.presta_fields.name:
+                # Если структура отсутствует, создаем ее в виде списка
+                self.presta_fields.name:dict | list = {'language': lang_dict}
+            else:
+                language_list = self.presta_fields.name['language']
+
+                if not language_list:  # Проверка на пустой список
+                    self.presta_fields.name['language'] = lang_dict
+                    return
+                
+                # Проверяем, есть ли уже язык с таким ID
+                found = False
+                for i, lang_dict_existing in enumerate(language_list):
+                    if lang_dict_existing['attrs']['id'] == _lang_index:
+                        language_list[i]['value'] = value  # Заменяем значение
+                        found = True
+                        break
+                
+                # Если язык с таким ID не найден, добавляем его в список
+                if not found:
+                    language_list.append(lang_dict)
+
         except Exception as ex:
-             logger.error(f"Ошибка при установке name:",ex)
+            logger.error(f"Ошибка при установке name: {ex}", exc_info=True)
+
 
     @property
     def available_now(self) -> Optional[str]:
@@ -1563,9 +1607,9 @@ class ProductFields:
         """
         result = []
         if isinstance(data, dict) and 'language' in data:
-            for lang_data in data['language']:
-                lang_id = lang_data['attrs']['id']
-                lang_value = lang_data['value']
+            for lang_dict in data['language']:
+                lang_id = lang_dict['attrs']['id']
+                lang_value = lang_dict['value']
                 result.append({"id": str(lang_id), "value": str(lang_value)})
         else:
             # Fallback: Create a list with one entry for the current language
