@@ -310,11 +310,6 @@ class PrestaShop:
 
             return self._parse_dict(response)
 
-            # if io_format == 'JSON':
-            #     return response.json()
-            # else:
-            #     return self._parse(response.text)
-
         except Exception as ex:
             logger.error(f'Error:',ex)
             return
@@ -328,9 +323,9 @@ class PrestaShop:
         :return: Parsed data or `False` on failure.
         :rtype: dict 
         """
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~
-        save_xml(response.text if self.data_format == 'XML' else dict2xml(response.json()), gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_output.{'xml' if self.data_format == 'XML' else 'json'}")
 
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~
+        #save_xml(response.text if self.data_format == 'XML' else dict2xml(response.json()), gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_output.{'xml' if self.data_format == 'XML' else 'json'}")
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         try:
@@ -410,7 +405,7 @@ class PrestaShop:
         :return: List of resources matching the search criteria.
         :rtype: List[dict]
         """
-        return self._exec(resource=resource, search_filter=filter, method='GET', io_format=self.data_format, **kwargs)
+        return self._exec(resource=resource, search_filter=filter, method='GET', **kwargs)
 
     def create_binary(self, resource: str, file_path: str, file_name: str) -> dict:
         """Upload a binary file to a PrestaShop API resource.
@@ -460,16 +455,6 @@ class PrestaShop:
         """
         return self._exec(resource=resource, method='GET', **kwargs)
 
-    def remove_file(self, file_path: str):
-        """Remove a file from the filesystem.
-
-        :param file_path: Path to the file.
-        :type file_path: str
-        """
-        try:
-            os.remove(file_path)
-        except Exception as e:
-            logger.error(f'Error removing file {file_path}: {e}')
 
     def get_apis(self) -> Optional[dict]:
         """Get a list of all available APIs.
@@ -479,18 +464,7 @@ class PrestaShop:
         """
         return self._exec('apis', method='GET', io_format=self.data_format)
 
-    def get_languages_schema(self) -> Optional[dict]:
-        """Get the schema for languages.
 
-        :return: Language schema or `None` on failure.
-        :rtype: dict
-        """
-        try:
-            response = self._exec('languages', display='full', io_format='JSON')
-            return response
-        except Exception as ex:
-            logger.error(f'Error: {ex}')
-            return
 
     def upload_image_async(self, resource: str, resource_id: int, img_url: str,
                            img_name: Optional[str] = None) -> Optional[dict]:

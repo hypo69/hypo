@@ -192,6 +192,7 @@ def presta_fields_to_xml(presta_fields_dict: dict) -> str:
     # Конвертируем в строку
     return ET.tostring(root, encoding="utf-8").decode("utf-8")
 
+
 # Пример JSON 
 """
 json_data = {

@@ -204,7 +204,8 @@ def example_get_product(id_product:int, **kwards):
     'io_format':'JSON',
     
     }
-    presta_product = p.get_product(1, **kwards)
+    presta_product = p.get_product(id_product, **kwards)
+    presta_product = presta_product[0] if isinstance(presta_product, list) else presta_product
     ...
     j_dumps(presta_product, gs.path.endpoints / 'emil' / '_experiments' / f'presta_response_product_{id_product}.json')
     ...
@@ -215,7 +216,7 @@ if __name__ == '__main__':
     """"""
     example_add_new_product()
 
-    example_get_product(1)
+    #example_get_product(4)
     ...
 
     

@@ -1,12 +1,52 @@
 {
   "name": [
     {
-      "id": "1",
-      "value": "Test Product"
-
+      "id": 1,
+      "value": "Название товара"
     }
   ],
-  "price": "10.00",
-  "id_tax_rules_group": "13",
-  "id_category_default": "2"
+  "description": [
+    {
+      "id": 1,
+      "value": "Полное описание товара..."
+    }
+  ],
+  "description_short": [
+    {
+      "id": 1,
+      "value": "Краткое описание..."
+    }
+  ],
+  "price": "29.99",
+  "active": 1,
+  "categories": [
+    {
+      "id": 2
+    }
+  ],
+  "id_shop_default": 1,
+  "link_rewrite": [
+    {
+      "id": 1,
+      "value": "product-url"
+    }
+  ],
+  "id_tax_rules_group": 1,
+  "reference": "PROD123",
+  "ean13": "1234567890123",
+  "weight": "0.500",
+  "available_for_order": 1,
+  "show_price": 1,
+  "meta_title": [
+    {
+      "id": 1,
+      "value": "Мета-заголовок"
+    }
+  ],
+  "meta_description": [
+    {
+      "id": 1,
+      "value": "Мета-описание"
+    }
+  ]
 }

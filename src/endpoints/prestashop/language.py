@@ -55,9 +55,18 @@ class PrestaLanguage(PrestaShop):
         """Возвращает номер языка из таблицы Prestashop по его имени ISO """
         ...
         
-    def get_languages_schema(self) -> dict:
-        lang_dict = super().get_languages_schema()
-        print(lang_dict) 
+    def get_languages_schema(self) -> Optional[dict]:
+        """Get the schema for languages.
+
+        :return: Language schema or `None` on failure.
+        :rtype: dict
+        """
+        try:
+            response = self._exec('languages', display='full', io_format='JSON')
+            return response
+        except Exception as ex:
+            logger.error(f'Error:', ex)
+            return
 
 
 async def main():
