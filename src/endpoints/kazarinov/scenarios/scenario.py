@@ -84,6 +84,7 @@ class Scenario(QuotationBuilder):
         chat_id: int,
         urls: list[str,str],
         price: Optional[str] = '',
+        attempts: int = 3,
     ) -> bool:
         """
         Executes the scenario: parses products, processes them via AI, and stores data.
@@ -113,7 +114,8 @@ class Scenario(QuotationBuilder):
             graber: 'Graber' = get_graber_by_supplier_url(self.driver, url, lang_index)
 
             if not graber:
-                logger.debug(f"Нет грабера для: {url}")
+                logger.error(f"Нет грабера для: {url}")
+                bot.send_message(chat_id, f"Нет грабера для: {url}")
                 continue
 
             f: ProductFields = None
@@ -122,6 +124,7 @@ class Scenario(QuotationBuilder):
                 f = graber.grab_page(*self.required_fields)
             except Exception as ex:
                 logger.error(f"Failed... Ошибка получения полей товара {url}:", ex)
+                bot.send_message(chat_id, f"Failed... Ошибка получения полей товара {url}\n{ex}" )
                 continue
 
             if not f:
@@ -132,7 +135,7 @@ class Scenario(QuotationBuilder):
             product_data = self.convert_product_fields(f)
             if not product_data:
                 logger.error(f"Failed to convert product fields: {product_data}")
-                bot.send_message(chat_id, f"Failed to convert product fields {url}")
+                bot.send_message(chat_id, f"Failed to convert product fields {url} \n {product_data}")
                 continue
 
             asyncio.run( self.save_product_data(product_data))
@@ -155,6 +158,14 @@ class Scenario(QuotationBuilder):
             data: dict = self.process_ai(products_list, lang)
             if not data:
                 bot.send_message(chat_id, f"Ошибка модели для {lang=}")
+                if attempts > 0:
+                    self.run_scenario(
+                        bot = bot,
+                        chat_id = chat_id,
+                        urls = urls,
+                        price = price,
+                        attempts = attempts -1
+                    )
                 continue
 
 

@@ -33,11 +33,10 @@ from src.logger.logger import logger
 
 class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
-    supplier_prefix: str
+    supplier_prefix: str  = 'morlevi'
 
     def __init__(self, driver: Driver, lang_index:int):
         """Инициализация класса сбора полей товара."""
-        self.supplier_prefix = 'morlevi'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver, lang_index=lang_index)
         Context.locator_for_decorator = self.locator.close_pop_up 
 

@@ -206,17 +206,13 @@ class Driver:
             InvalidArgumentException: Если URL некорректен.
             Exception: Для любых других ошибок при переходе.
         """
-        try:
-            _previous_url = copy.copy(self.current_url)
-        except Exception as ex:
-            logger.error("Ошибка при получении текущего URL", ex)
-            #return False
-        
+        _previous_url:str = copy.copy(self.current_url)
+
         try:
             self.driver.get(url)
             
             while self.ready_state != 'complete':
-                """ Ожидаем завершения загрузки страницы """
+                """ Ожидание завершения загрузки страницы """
 
             if url != _previous_url:
                 self.previous_url = _previous_url

@@ -108,13 +108,15 @@ def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = ""
         >>> pprint("text example", text_color="yellow", bg_color="bg_red", font_style="underline")
         \033[4m\033[33m\033[41mtext example\033[0m
     """
-    text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
-    bg_color = BG_COLORS.get(bg_color.lower(), "")
-    font_style = FONT_STYLES.get(font_style.lower(), "")
-
-    if print_data is None:
-        print(_color_text("No data to print!", text_color=TEXT_COLORS["red"]))
+    if not print_data:
         return
+    if isinstance(text_color, str):
+        text_color = TEXT_COLORS.get(text_color.lower(), TEXT_COLORS["white"])
+    if isinstance(bg_color, str):
+        bg_color = BG_COLORS.get(bg_color.lower(), "")
+    if isinstance(font_style, str):
+        font_style = FONT_STYLES.get(font_style.lower(), "")
+
 
     try:
         if isinstance(print_data, dict):

@@ -164,7 +164,7 @@ class Firefox(WebDriver):
                     - Обновление Firefox
                     - Отсутствие Firefox на ОС
                 ----------------------------------""", ex)
-            return  # Явный возврат при ошибке
+            sys.exit(1)
         except Exception as ex:
             logger.critical('Ошибка работы Firefox WebDriver:', ex)
             return  # Явный возврат при ошибке

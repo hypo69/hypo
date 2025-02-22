@@ -110,8 +110,8 @@ class BotHandler:
             )
 
         except Exception as ex:
-            logger.error(f"Error during scenario execution: {ex}")
-            bot.send_message(message.chat.id, f"Произошла ошибка при выполнении сценария. {print(ex.args)}")
+            logger.error(f"Error during scenario execution:", ex)
+            bot.send_message(message.chat.id, f"Произошла ошибка при выполнении сценария. {ex}")
 
 
 
@@ -272,7 +272,7 @@ def handle_unknown_command(message):
 def main():
     try:
         bot.polling(none_stop=True)
-        # --- bot.py end ---
+        
     except Exception as ex:
         logger.error(f"Error during bot polling: ", ex)
         ...
@@ -280,3 +280,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+   

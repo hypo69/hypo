@@ -1,6 +1,5 @@
 ## \file /src/suppliers/aliexpress/campaign/ali_promo_campaign.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -61,7 +60,7 @@ from src.suppliers.aliexpress.campaign.html_generators import (
 )
 from src.logger.logger import logger
 
-from src.utils.file_async import (read_text_file,
+from src.utils.file import (read_text_file,
                         get_filenames_from_directory,
                         get_directory_names,
                         )

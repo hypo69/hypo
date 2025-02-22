@@ -76,7 +76,7 @@ from src.suppliers.aliexpress.utils import extract_prod_ids, ensure_https
 from src.utils.jjson import j_loads_ns, j_loads, j_dumps
 from src.utils.convertors.csv import csv2dict
 from src.utils.printer import pprint
-from src.utils.file_async import (read_text_file,
+from src.utils.file import (read_text_file,
                         get_filenames_from_directory,
                         get_directory_names,
                         )

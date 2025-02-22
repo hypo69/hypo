@@ -41,6 +41,7 @@ from src.utils.date_time import TimeoutCheck
 from src.utils.jjson import j_loads, j_dumps
 from src.utils.image import get_image_bytes
 from src.utils.printer import pprint as print
+from src.logger import logger
 
 timeout_check = TimeoutCheck()
 
@@ -297,7 +298,7 @@ class GoogleGenerativeAI:
         return
 
 
-    async def describe_image(
+    def describe_image(
         self, image: Path | bytes, mime_type: Optional[str] = 'image/jpeg', prompt: Optional[str] = ''
     ) -> Optional[str]:
         """
@@ -332,22 +333,34 @@ class GoogleGenerativeAI:
 
 
             # Отправка запроса и получение ответа
-            response = self.model.generate_content(
-                str(
-                    {
-                        'text': prompt,
-                        'data': image
-                    }
-                ))
+            try:
+                response = self.model.generate_content(
+                    str(
+                        {
+                            'text': prompt,
+                            'data': image
+                        }
+                    ))
+
+            except DefaultCredentialsError as ex:
+                logger.error(f"Ошибка аутентификации: ", print(ex))
+                return None
+
+            except (InvalidArgument, RpcError) as ex:
+                logger.error("API error:", ex, False)
+                return
+            except Exception as ex:
+                logger.error(f"Ошибка при отправке запроса модели: ", ex)
+                return None
            
             if response.text:
                 return response.text
             else:
-                print("Модель вернула пустой ответ.")
+                print(f"{{Модель вернула:{response}}}")
                 return None
 
         except Exception as ex:
-            print(f"Произошла ошибка: ", ex)
+            logger.error(f"Произошла ошибка: ", ex)
             ...
             return None
 

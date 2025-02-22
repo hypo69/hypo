@@ -27,7 +27,7 @@ from src.suppliers.aliexpress.utils.ensure_https import ensure_https
 from src.endpoints.prestashop.product_fields import ProductFields as f
 from src.utils.image import save_image_from_url 
 from src.utils.video import save_video_from_url
-from src.utils.file_async import (read_text_file,
+from src.utils.file import (read_text_file,
                         get_filenames_from_directory,
                         get_directory_names,
                         save_text_file

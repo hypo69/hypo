@@ -8,7 +8,7 @@
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": "click()",
-    "mandatory": true,
+    "mandatory": false,
     "locator_description": "Кнопка закрытия попап окна"
   },
   "id": {
@@ -884,7 +884,7 @@
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "mandatory": true,
+    "mandatory": false,
     "locator_description": "Morlevi - краткое Описание товара. "
   },
   "description": {
