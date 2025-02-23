@@ -2124,10 +2124,13 @@ class Graber:
             self.fields.local_image_path = value
             return True
 
+        img_path:str = Path(gs.path.tmp / f'{self.fields.id_supplier}_{self.fields.id_product}.png')
+
+        self.fields.local_image_path = img_path  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG
+
         try:
             if not self.fields.id_supplier:
-                await self.id_supplier()  # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwargs` функции `grab_product_page(**kwargs)`?
-        
+                await self.id_supplier()
             # Получаем результат из локатора как `bytes` или `str`(url)
             raw_image = await self.driver.execute_locator(self.locator.default_image_url)
             if not raw_image:
@@ -2138,14 +2141,15 @@ class Graber:
 
             if isinstance(raw_image, bytes):
                 # Если это байты, вызываем save_image для сохранения изображения
-                img_tmp_path = await save_image(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
+                await save_image(raw_image, img_path)
             elif isinstance(raw_image, str):  # если это строка, предполагаем, что это URL изображения
-                img_tmp_path = await save_image_from_url(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
+                await save_image_from_url(raw_image,img_path)
             else:
                 logger.debug("Неизвестный тип данных для изображения", None, False)
                 ...
                 return
-            self.fields.local_image_path = img_tmp_path
+
+            
             return True
         except Exception as ex:
             logger.error(f'Ошибка сохранения изображения в поле `local_image_path`', ex)

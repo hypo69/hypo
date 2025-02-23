@@ -199,7 +199,8 @@ class ExecuteLocator:
 
         web_element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
         if not web_element:
-            logger.debug(f"Element not found: {print(locator, text_color='yellow')}")
+            if locator.mandatory: 
+                logger.debug(f"Element not found: {print(locator, text_color='yellow')}")
             return None
 
         def _parse_dict_string(attr_string: str) -> dict | None:
@@ -407,16 +408,19 @@ class ExecuteLocator:
                     webelement.click()
                     continue
                 except ElementClickInterceptedException as ex:
-                    logger.error(f"Element click intercepted: {locator=}", ex)
-                    return False
+                    if locator.mandatory:
+                        logger.error(f"Element click intercepted: {locator=}", ex)
+                        return False
                 except Exception as ex:
-                    logger.error(f"Element click error:\n {print(locator)} \n", ex)
-                    # try:
-                    #     self.driver.execute_script("arguments[0].click();", webelement)
-                    #     continue
-                    # except Exception as ex:
-                    #     logger.error(f"Element click error after javascript execution: {locator=}", ex)
-                    #     return False
+                    if locator.mandatory:
+                        logger.error(f"Element click error:\n {print(locator)} \n", ex)
+                        # try:
+                        #     self.driver.execute_script("arguments[0].click();", webelement)
+                        #     continue
+                        # except Exception as ex:
+                        #     logger.error(f"Element click error after javascript execution: {locator=}", ex)
+                        #     return False
+                        return False
 
             elif event.startswith("pause("):
                 match = re.match(r"pause\((\d+)\)", event)
@@ -425,11 +429,12 @@ class ExecuteLocator:
                     await asyncio.sleep(pause_duration)
                     result.append(True)
                     continue
-                logger.debug(f"Pause event parsing failed: {locator=}")
-                return False
+                if locator.mandatory:
+                    logger.debug(f"Pause event parsing failed: {locator=}")
+                    return False
 
             elif event == "upload_media()":
-                if not message:
+                if not message and locator.mandatory:
                     logger.debug(f"Message is required for upload_media event. Message: {message!r}")
                     return False
                 try:
@@ -437,8 +442,9 @@ class ExecuteLocator:
                     result.append(True)
                     continue
                 except Exception as ex:
-                    logger.debug(f"Error uploading media: {message=}", ex)
-                    return False
+                    if locator.mandatory:
+                        logger.debug(f"Error uploading media: {message=}", ex)
+                        return False
 
             elif event == "screenshot()":
                 try:

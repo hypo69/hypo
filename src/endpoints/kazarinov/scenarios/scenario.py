@@ -101,23 +101,23 @@ class Scenario(QuotationBuilder):
                 continue
 
             f: ProductFields = None
-            bot.send_message(chat_id, f"Process: {url}")  
+            if bot: bot.send_message(chat_id, f"Process: {url}")  
             try:
                 f = graber.grab_page(*self.required_fields)
             except Exception as ex:
                 logger.error(f"Failed... Ошибка получения полей товара {url}:", ex)
-                bot.send_message(chat_id, f"Failed... Ошибка получения полей товара {url}\n{ex}") 
+                if bot: bot.send_message(chat_id, f"Failed... Ошибка получения полей товара {url}\n{ex}") 
                 continue
 
             if not f:
                 logger.error(f"Failed to parse product fields for URL: {url}")
-                bot.send_message(chat_id, f"Failed to parse product fields for URL: {url}")  
+                if bot: bot.send_message(chat_id, f"Failed to parse product fields for URL: {url}")  
                 continue
 
             product_data = self.convert_product_fields(f)
             if not product_data:
                 logger.error(f"Failed to convert product fields: {product_data}")
-                bot.send_message(chat_id, f"Failed to convert product fields {url} \n {product_data}")  
+                if bot: bot.send_message(chat_id, f"Failed to convert product fields {url} \n {product_data}")  
                 continue
 
             self.save_product_data(product_data) 
@@ -133,7 +133,7 @@ class Scenario(QuotationBuilder):
         langs_list: list = ["he", "ru"]
 
         for lang in langs_list:
-            bot.send_message( 
+            if bot: bot.send_message( 
                 chat_id,
                 f"""AI processing {lang=}""",
             )
@@ -145,14 +145,14 @@ class Scenario(QuotationBuilder):
                     continue
             except Exception as ex:
                 logger.exception(f"AI processing failed for {lang=}")
-                bot.send_message(chat_id, f"AI processing failed for {lang=}: {ex}")
+                if bot: bot.send_message(chat_id, f"AI processing failed for {lang=}: {ex}")
                 continue
 
 
             # -----------------------------------------------------------------
             # 3. Report creating
 
-            bot.send_message(chat_id, f"Создаю файл")  
+            if bot: bot.send_message(chat_id, f"Создаю файл")  
             data = data[lang]
             data["price"] = price
             data["currency"] = getattr(self.translations.currency, lang, "ש''ח")
@@ -173,7 +173,15 @@ class Scenario(QuotationBuilder):
 def run_sample_scenario():
     """"""
     ...
-    urls_list:list[str] = []
+    urls_list:list[str] = ['https://www.morlevi.co.il/product/21039',
+                           'https://www.morlevi.co.il/product/21018',
+                           'https://www.ivory.co.il/catalog.php?id=85473'
+                           'https://ksp.co.il/web/item/309113',
+                           'https://grandadvance.co.il/eng/?go=products&action=view&ties_ids=801&product_id=28457--SAMSUNG-SSD-1TB-990-EVO-PCle-4.0-x4--5.0-x2-NVMe',
+                           'https://www.ivory.co.il/catalog.php?id=85473',
+                           'https://www.morlevi.co.il/product/21018']
+    s = Scenario('test price quotation')
+    s.run_scenario(urls = urls_list, )
 
 
 

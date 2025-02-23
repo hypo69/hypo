@@ -1,4 +1,3 @@
-## \file /src/logger/logger.py
 # -*- coding: utf-8 -*-
 
 #! .pyenv/bin/python3
@@ -7,7 +6,7 @@
 .. module:: src.logger.logger
     :platform: Windows, Unix
     :synopsis: Модуль логгера
-   
+
 """
 
 
@@ -23,8 +22,6 @@ from types import SimpleNamespace
 
 import header
 from header import __root__
-
-
 
 
 TEXT_COLORS = {
@@ -64,9 +61,19 @@ BG_COLORS = {
     "light_cyan": colorama.Back.LIGHTCYAN_EX,
 }
 
+LOG_SYMBOLS = {
+    logging.INFO: "ℹ️",  # Information
+    logging.WARNING: "⚠️",  # Warning
+    logging.ERROR: "❌",  # Error
+    logging.CRITICAL: "🔥",  # Critical
+    logging.DEBUG: "🐛",  # Debug
+    "EXCEPTION": "🚨",  # Exception
+    "SUCCESS": "✅" # Success
+}
+
 
 class SingletonMeta(type):
-    """ Metaclass for Singleton pattern implementation."""
+    """Metaclass for Singleton pattern implementation."""
 
     _instances = {}
     _lock = threading.Lock()
@@ -81,10 +88,10 @@ class SingletonMeta(type):
 
 
 class JsonFormatter(logging.Formatter):
-    """ Custom formatter for logging in JSON format."""
+    """Custom formatter for logging in JSON format."""
 
     def format(self, record):
-        """ Format the log record as JSON."""
+        """Format the log record as JSON."""
         log_entry = {
             "asctime": self.formatTime(record, self.datefmt),
             "levelname": record.levelname,
@@ -98,7 +105,8 @@ class JsonFormatter(logging.Formatter):
 
 
 class Logger(metaclass=SingletonMeta):
-    """ Logger class implementing Singleton pattern with console, file, and JSON logging."""
+    """Logger class implementing Singleton pattern with console, file, and JSON logging."""
+
     log_files_path: Path
     info_log_path: Path
     debug_log_path: Path
@@ -112,7 +120,7 @@ class Logger(metaclass=SingletonMeta):
         errors_log_path: Optional[str] = None,
         json_log_path: Optional[str] = None,
     ):
-        """ Initialize the Logger instance."""
+        """Initialize the Logger instance."""
         # Define file paths
         config = SimpleNamespace(
             **json.loads(Path(__root__ / "src" / "config.json").read_text(encoding="UTF-8"))
@@ -160,31 +168,32 @@ class Logger(metaclass=SingletonMeta):
         errors_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
         self.logger_file_errors.addHandler(errors_handler)
 
-
         # JSON file logger
-        self.logger_file_json = logging.getLogger(name='logger_json')
+        self.logger_file_json = logging.getLogger(name="logger_json")
         self.logger_file_json.setLevel(logging.DEBUG)
         json_handler = logging.FileHandler(self.json_log_path)
         json_handler.setFormatter(JsonFormatter())  # Используем наш кастомный форматтер
         self.logger_file_json.addHandler(json_handler)
-
 
         # Удаляем все обработчики, которые выводят в консоль
         for handler in self.logger_file_json.handlers:
             if isinstance(handler, logging.StreamHandler):
                 self.logger_file_json.removeHandler(handler)
 
-    def _format_message(self, message, ex=None, color: Optional[Tuple[str, str]] = None):
-        """ Returns formatted message with optional color and exception information."""
+    def _format_message(self, message, ex=None, color: Optional[Tuple[str, str]] = None, level=None):
+        """Returns formatted message with optional color and exception information."""
+        log_symbol = LOG_SYMBOLS.get(level, "")  # Get log symbol based on level
         if color:
             text_color, bg_color = color
             text_color = TEXT_COLORS.get(text_color, colorama.Fore.RESET)
             bg_color = BG_COLORS.get(bg_color, colorama.Back.RESET)
-            message = f"{text_color}{bg_color}{message} {ex or ''}{colorama.Style.RESET_ALL}"
+            message = f"{log_symbol} {text_color}{bg_color}{message} {ex or ''}{colorama.Style.RESET_ALL}"
+        else:
+            message = f"{log_symbol} {message} {ex or ''}"
         return message
 
     def _ex_full_info(self, ex):
-        """ Returns full exception information along with the previous function, file, and line details."""
+        """Returns full exception information along with the previous function, file, and line details."""
         frame_info = inspect.stack()[3]
         file_name = frame_info.filename
         function_name = frame_info.function
@@ -193,62 +202,52 @@ class Logger(metaclass=SingletonMeta):
         return f"\nFile: {file_name}, \n |\n  -Function: {function_name}, \n   |\n    --Line: {line_number}\n{ex if ex else ''}"
 
     def log(self, level, message, ex=None, exc_info=False, color: Optional[Tuple[str, str]] = None):
-        """ General method to log messages at specified level with optional color."""
-        formatted_message = self._format_message(message, ex, color)
-        if exc_info:
-            formatted_message += self._ex_full_info(ex)
+        """General method to log messages at specified level with optional color."""
+        formatted_message = self._format_message(message, ex, color, level=level)
 
         if self.logger_console:
-            self.logger_console.log(level, formatted_message, exc_info=exc_info)
-
-#######################################################################################################
-#
-#           Запись логов в файл. Проблема - двойной вывод в косоль
-
-        # if self.logger_file_json:
-        #     self.logger_file_json.log(level, message, exc_info=exc_info)
-
-        # if level == logging.INFO and self.logger_file_info:
-        #     self.logger_file_info.log(level, formatted_message)
-
-        # if level == logging.DEBUG and self.logger_file_debug:
-        #     self.logger_file_debug.log(level, formatted_message)
-
-
-        # if level in [logging.ERROR, logging.CRITICAL] and self.logger_file_errors:
-        #     self.logger_file_errors.log(level, formatted_message)
-########################################################################################################
+            #self.logger_console.log(level, formatted_message, exc_info=exc_info) # Old code
+            if exc_info and ex:
+                self.logger_console.exception(formatted_message)
+            else:
+                self.logger_console.log(level, formatted_message, exc_info=exc_info)
 
     def info(self, message, ex=None, exc_info=False, text_color: str = "green", bg_color: str = ""):
-        """ Logs an info message with optional text and background colors."""
+        """Logs an info message with optional text and background colors."""
         color = (text_color, bg_color)
         self.log(logging.INFO, message, ex, exc_info, color)
 
     def success(self, message, ex=None, exc_info=False, text_color: str = "yellow", bg_color: str = ""):
-        """ Logs a success message with optional text and background colors."""
+        """Logs a success message with optional text and background colors."""
         color = (text_color, bg_color)
         self.log(logging.INFO, message, ex, exc_info, color)
 
-    def warning(self, message, ex=None, exc_info=False, text_color: str = "black", bg_color: str = "yellow"):
-        """ Logs a warning message with optional text and background colors."""
+    def warning(self, message, ex=None, exc_info=False, text_color: str = "light_red", bg_color: str = ""):
+        """Logs a warning message with optional text and background colors."""
         color = (text_color, bg_color)
         self.log(logging.WARNING, message, ex, exc_info, color)
 
     def debug(self, message, ex=None, exc_info=True, text_color: str = "cyan", bg_color: str = ""):
-        """ Logs a debug message with optional text and background colors."""
+        """Logs a debug message with optional text and background colors."""
         color = (text_color, bg_color)
         self.log(logging.DEBUG, message, ex, exc_info, color)
 
+    def exception(self, message, ex=None, exc_info=True, text_color: str = "cyan", bg_color: str = "light_gray"):
+        """Logs an exception message with optional text and background colors."""
+        color = (text_color, bg_color)
+        self.log(logging.ERROR, message, ex, exc_info, color) #Log as error
+
     def error(self, message, ex=None, exc_info=True, text_color: str = "red", bg_color: str = ""):
-        """ Logs an error message with optional text and background colors."""
+        """Logs an error message with optional text and background colors."""
         color = (text_color, bg_color)
         self.log(logging.ERROR, message, ex, exc_info, color)
 
     def critical(self, message, ex=None, exc_info=True, text_color: str = "red", bg_color: str = "white"):
-        """ Logs a critical message with optional text and background colors."""
+        """Logs a critical message with optional text and background colors."""
         color = (text_color, bg_color)
         self.log(logging.CRITICAL, message, ex, exc_info, color)
 
+
 # Initialize logger with file paths
-#logger = Logger(info_log_path='info.log', debug_log_path='debug.log', errors_log_path='errors.log', json_log_path='log.json')
+# logger = Logger(info_log_path='info.log', debug_log_path='debug.log', errors_log_path='errors.log', json_log_path='log.json')
 logger: Logger = Logger()

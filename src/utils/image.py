@@ -52,13 +52,13 @@ async def save_image_from_url(image_url: str, filename: Union[str, Path]) -> Opt
                 response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
                 image_data = await response.read()
     except Exception as ex:
-        logger.error(f"Error downloading image from {image_url}", exc_info=True)
-        raise ImageError(f"Failed to download image from {image_url}") from ex
+        logger.error(f"Error downloading image from {image_url}", ex, exc_info=True)
+        # raise ImageError(f"Failed to download image from {image_url}") from ex
 
     return await save_image(image_data, filename)
 
 
-async def save_image(image_data: bytes, file_name: Union[str, Path], format: str = 'PNG') -> Optional[str]:
+async def save_image(image_data: bytes, file_name: str | Path, format: str = 'PNG') -> Optional[str]:
     """
     Saves image data to a file in the specified format asynchronously.
 
@@ -76,29 +76,46 @@ async def save_image(image_data: bytes, file_name: Union[str, Path], format: str
     file_path = Path(file_name)
 
     try:
-        file_path.parent.mkdir(parents=True, exist_ok=True)  # Create parent directories if they don't exist
+        # Create the directory asynchronously
+        await asyncio.to_thread(file_path.parent.mkdir, parents=True, exist_ok=True)
+
+        # ~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~
+        # Write the UNFORMATED image data to the file asynchronously
         async with aiofiles.open(file_path, "wb") as file:
             await file.write(image_data)
+        return str(file_path)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        if not file_path.exists():
-            logger.error(f"File {file_path} was not created.")
-            raise ImageError(f"File {file_path} was not created.")
 
-        img = Image.open(file_path)
-        img.save(file_path, format=format)
+        # Use BytesIO to avoid writing to disk twice
+        with BytesIO(image_data) as img_io:
+            img = Image.open(img_io)
+            img_io.seek(0)  # Reset buffer position before saving
+            img.save(img_io, format=format)
+            img_bytes = img_io.getvalue()
 
-        if file_path.stat().st_size == 0:
-            logger.error(f"File {file_path} saved, but its size is 0 bytes.")
-            raise ImageError(f"File {file_path} saved, but its size is 0 bytes.")
+        # Write the formatted image data to the file asynchronously
+        async with aiofiles.open(file_path, "wb") as file:
+            await file.write(img_bytes)
+
+        # Verify that the file was created and is not empty asynchronously
+        if not await aiofiles.os.path.exists(file_path):
+            logger.error(f"File {file_path} was not created.", ex, exc_info=True)
+            # raise ImageError(f"File {file_path} was not created.")
+
+        file_size = await aiofiles.os.path.getsize(file_path)
+        if file_size == 0:
+            logger.error(f"File {file_path} saved, but its size is 0 bytes.", ex, exc_info=True)
+            # raise ImageError(f"File {file_path} saved, but its size is 0 bytes.")
 
         return str(file_path)
 
     except Exception as ex:
-        logger.critical(f"Failed to save file {file_path}", exc_info=True)
-        raise ImageError(f"Failed to save file {file_path}") from ex
+        logger.exception(f"Failed to save file {file_path}", ex, exc_info=True)
+        # raise ImageError(f"Failed to save file {file_path}") from ex
 
 
-def get_image_bytes(image_path: Path, raw: bool = True) -> Optional[Union[BytesIO, bytes]]:
+def get_image_bytes(image_path: Path, raw: bool = True) -> Optional[BytesIO | bytes]:
     """
     Reads an image using Pillow and returns its bytes in JPEG format.
 
@@ -115,7 +132,7 @@ def get_image_bytes(image_path: Path, raw: bool = True) -> Optional[Union[BytesI
         img.save(img_byte_arr, format="JPEG")
         return img_byte_arr if raw else img_byte_arr.getvalue()
     except Exception as ex:
-        logger.error("Error reading image with Pillow:", exc_info=True)
+        logger.error("Error reading image with Pillow:", ex, exc_info=True)
         return None
 
 
@@ -138,7 +155,7 @@ def get_raw_image_data(file_name: Union[str, Path]) -> Optional[bytes]:
     try:
         return file_path.read_bytes()
     except Exception as ex:
-        logger.error(f"Error reading file {file_path}", exc_info=True)
+        logger.error(f"Error reading file {file_path}", ex, exc_info=True)
         return None
 
 
@@ -164,7 +181,7 @@ def random_image(root_path: Union[str, Path]) -> Optional[str]:
     return str(random.choice(image_files))
 
 
-def add_text_watermark(image_path: Union[str, Path], watermark_text: str, output_path: Optional[Union[str, Path]] = None) -> Optional[str]:
+def add_text_watermark(image_path: str | Path, watermark_text: str, output_path: Optional[str | Path] = None) -> Optional[str]:
     """
     Adds a text watermark to an image.
 
@@ -208,7 +225,7 @@ def add_text_watermark(image_path: Union[str, Path], watermark_text: str, output
         return str(output_path)
 
     except Exception as ex:
-        logger.error(f"Failed to add watermark to {image_path}", exc_info=True)
+        logger.error(f"Failed to add watermark to {image_path}", ex, exc_info=True)
         return None
 
 
@@ -266,7 +283,7 @@ def add_image_watermark(input_image_path: Path, watermark_image_path: Path, outp
         return output_image_path
 
     except Exception as ex:
-        logger.error(f"Failed to add watermark to {input_image_path}: {ex}", exc_info=True)
+        logger.error(f"Failed to add watermark to {input_image_path}: {ex}", ex, exc_info=True)
         return None
 
 
@@ -293,7 +310,7 @@ def resize_image(image_path: Union[str, Path], size: Tuple[int, int], output_pat
         return str(output_path)
 
     except Exception as ex:
-        logger.error(f"Failed to resize image {image_path}", exc_info=True)
+        logger.error(f"Failed to resize image {image_path}", ex, exc_info=True)
         return None
 
 
@@ -318,7 +335,7 @@ def convert_image(image_path: Union[str, Path], format: str, output_path: Option
         img.save(output_path, format=format)
         return str(output_path)
     except Exception as ex:
-        logger.error(f"Failed to convert image {image_path}", exc_info=True)
+        logger.error(f"Failed to convert image {image_path}", ex, exc_info=True)
         return None
 
 
