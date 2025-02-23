@@ -1,3 +1,13 @@
+## \file /src/endpoints/kazarinov/scenarios/scenario.py
+# -*- coding: utf-8 -*-
+#! .pyenv/bin/python3
+"""
+.. module:: src.endpoints.kazarinov.scenarios.scenario 
+	:platform: Windows, Unix
+	:synopsis: Сценарий для Казаринова
+
+"""
+
 from bs4 import BeautifulSoup
 import requests
 import telebot
@@ -25,16 +35,6 @@ ENDPOINT = "kazarinov"
 def fetch_target_urls_onetab(one_tab_url: str) -> tuple[str, str, list[str]] | bool:
     """
     Функция паресит целевые URL из полученного OneTab.
-
-    Args:
-        one_tab_url (str): URL страницы OneTab.
-
-    Returns:
-        price, mexiron_name, urls (tuple):
-            price (str): Цена.
-            mexiron_name (str): Имя Mexiron.
-            urls (list): Список целевых URL.
-
     """
     try:
         response = requests.get(one_tab_url, timeout=10)
@@ -67,41 +67,23 @@ def fetch_target_urls_onetab(one_tab_url: str) -> tuple[str, str, list[str]] | b
 
 
 class Scenario(QuotationBuilder):
-    """Исполнитель сценария для Казаринова
-    one-tab.com -> telegram -> ai  -> pdf(docx,html)
-    """
+    """Исполнитель сценария для Казаринова"""
 
     def __init__(self, mexiron_name: Optional[str] = gs.now):
-        """Сценарий сбора информации. Результат уходит в конструктор ценового предложения `QuotationBuilder`
-        Сценарий возвращает боту ответы о процессе исполненения
-        """
+        """Сценарий сбора информации."""
         self.mexiron_name = mexiron_name
         super().__init__(self.mexiron_name)
 
     def run_scenario(
         self,
-        bot: telebot.TeleBot,
-        chat_id: int,
-        urls: list[str,str],
+        urls: List[str],  
         price: Optional[str] = '',
+        bot: Optional[telebot.TeleBot] = None,
+        chat_id: Optional[int] = 0,
         attempts: int = 3,
     ) -> bool:
         """
         Executes the scenario: parses products, processes them via AI, and stores data.
-
-        Args:
-            system_instruction (Optional[str]): System instructions for the AI model.
-            price (Optional[str]): Price to process.
-            mexiron_name (Optional[str]): Custom Mexiron name.
-            urls (Optional[str | List[str]]): Product page URLs.
-
-        Returns:
-            bool: True if the scenario executes successfully, False otherwise.
-
-        .. todo:
-            сделать логер перед отрицательным выходом из функции.
-            Важно! модель ошибается.
-
         """
 
         products_list = []
@@ -109,36 +91,36 @@ class Scenario(QuotationBuilder):
         # -------------------------------------------------
         # 1. Сбор товаров
 
-        lang_index: int = 2  # <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEV. индекс, указывающий ID языка в магазине Prstashop
+        lang_index: int = 2
         for url in urls:
             graber: 'Graber' = get_graber_by_supplier_url(self.driver, url, lang_index)
 
             if not graber:
                 logger.error(f"Нет грабера для: {url}")
-                bot.send_message(chat_id, f"Нет грабера для: {url}")
+                bot.send_message(chat_id, f"Нет грабера для: {url}") 
                 continue
 
             f: ProductFields = None
-            bot.send_message(chat_id, f"Process: {url}")
+            bot.send_message(chat_id, f"Process: {url}")  
             try:
                 f = graber.grab_page(*self.required_fields)
             except Exception as ex:
                 logger.error(f"Failed... Ошибка получения полей товара {url}:", ex)
-                bot.send_message(chat_id, f"Failed... Ошибка получения полей товара {url}\n{ex}" )
+                bot.send_message(chat_id, f"Failed... Ошибка получения полей товара {url}\n{ex}") 
                 continue
 
             if not f:
                 logger.error(f"Failed to parse product fields for URL: {url}")
-                bot.send_message(chat_id, f"Failed to parse product fields for URL: {url}")
+                bot.send_message(chat_id, f"Failed to parse product fields for URL: {url}")  
                 continue
 
             product_data = self.convert_product_fields(f)
             if not product_data:
                 logger.error(f"Failed to convert product fields: {product_data}")
-                bot.send_message(chat_id, f"Failed to convert product fields {url} \n {product_data}")
+                bot.send_message(chat_id, f"Failed to convert product fields {url} \n {product_data}")  
                 continue
 
-            asyncio.run( self.save_product_data(product_data))
+            self.save_product_data(product_data) 
             products_list.append(product_data)
 
         # -----------------------------------------------------
@@ -150,29 +132,27 @@ class Scenario(QuotationBuilder):
 
         langs_list: list = ["he", "ru"]
 
-        for lang in langs_list:            
-            bot.send_message(
+        for lang in langs_list:
+            bot.send_message( 
                 chat_id,
                 f"""AI processing {lang=}""",
             )
-            data: dict = self.process_ai(products_list, lang)
-            if not data:
-                bot.send_message(chat_id, f"Ошибка модели для {lang=}")
-                if attempts > 0:
-                    self.run_scenario(
-                        bot = bot,
-                        chat_id = chat_id,
-                        urls = urls,
-                        price = price,
-                        attempts = attempts -1
-                    )
+            try:
+                data: dict = self.process_ai(products_list, lang)
+                if not data:
+                    bot.send_message(chat_id, f"Ошибка модели для {lang=}")  
+                    # Альтернатива рекурсии: просто пропустить этот язык
+                    continue
+            except Exception as ex:
+                logger.exception(f"AI processing failed for {lang=}")
+                bot.send_message(chat_id, f"AI processing failed for {lang=}: {ex}")
                 continue
 
 
             # -----------------------------------------------------------------
             # 3. Report creating
 
-            bot.send_message(chat_id, f"Создаю файл")
+            bot.send_message(chat_id, f"Создаю файл")  
             data = data[lang]
             data["price"] = price
             data["currency"] = getattr(self.translations.currency, lang, "ש''ח")
@@ -180,13 +160,22 @@ class Scenario(QuotationBuilder):
             j_dumps(data, self.export_path / f'{self.mexiron_name}_{lang}.json')
 
             reporter = ReportGenerator(if_need_docx=False)
-            reporter.create_reports(bot = bot,
+            reporter.create_reports(bot = bot, 
                                 chat_id = chat_id,
-                                data = data, 
+                                data = data,
                                 lang = lang,
                                 mexiron_name = self.mexiron_name
                                     )
-                
-        ...
+
+        return True # Возвращаем True в конце
 
 
+def run_sample_scenario():
+    """"""
+    ...
+    urls_list:list[str] = []
+
+
+
+if __name__ == '__main__':
+    run_sample_scenario()

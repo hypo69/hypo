@@ -101,13 +101,14 @@ class BotHandler:
 
         try:
             self.scenario = Scenario(mexiron_name = mexiron_name)
-             
             self.scenario.run_scenario(
-                    bot=bot,
-                    chat_id=message.chat.id,
-                    urls=list(urls), 
-                    price=price,
+                urls = list(urls), 
+                price = price,
+                bot = bot,
+                chat_id = message.chat.id,
+
             )
+        
 
         except Exception as ex:
             logger.error(f"Error during scenario execution:", ex)

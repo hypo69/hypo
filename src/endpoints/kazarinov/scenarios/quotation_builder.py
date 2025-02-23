@@ -4,7 +4,7 @@ from __future__ import annotations
 #! .pyenv/bin/python3
 
 """
-Модуль создания мехирона для Сергея Казаринова
+The module handles data preparation, AI processing, and integration with Facebook for product posting.
 ==================================================================
 
 ```rst
@@ -16,7 +16,7 @@ and integration with Facebook for product posting.
 ```
 
 """
-
+import re
 from bs4 import BeautifulSoup
 import requests
 import asyncio
@@ -157,10 +157,27 @@ class QuotationBuilder:
 
         # Конвертация ProductFields  в словарь 
         # Я не использую функцию конвертации f.to_dict(), так как мне нужно обработать не все поля
-        product_name = '' if not f.name else  f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
-        description = '' if not f.description else f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
-        description_short = '' if not f.description_short else f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
-        specification = '' if not f.specification else f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
+        # product_name = '' if not f.name else  f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
+        # description = '' if not f.description else f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
+        # description_short = '' if not f.description_short else f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
+        # specification = '' if not f.specification else f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
+
+
+        def escape_and_strip(text: str) -> str:
+            """
+            Очищает и экранирует строку, заменяя символы "'" и '"' на "\'" и '\"',
+            удаляя пробелы в начале и конце.
+            """
+            if not text:
+                return ''
+            # Экранируем "'" и '"', заменяем ";" на "<br>", удаляем лишние пробелы
+            escaped_text = re.sub(r"['\"]", lambda match: '\\' + match.group(0), text.strip()).replace(';', '<br>')
+            return escaped_text
+
+        product_name = escape_and_strip(f.name['language'][0]['value']) if f.name and f.name['language'] and len(f.name['language']) > 0 and 'value' in f.name['language'][0] else ''
+        description = escape_and_strip(f.description['language'][0]['value']) if f.description and f.description['language'] and len(f.description['language']) > 0 and 'value' in f.description['language'][0] else ''
+        description_short = escape_and_strip(f.description_short['language'][0]['value']) if f.description_short and f.description_short['language'] and len(f.description_short['language']) > 0 and 'value' in f.description_short['language'][0] else ''
+        specification = escape_and_strip(f.specification['language'][0]['value']) if f.specification and f.specification['language'] and len(f.specification['language']) > 0 and 'value' in f.specification['language'][0] else ''
         
         return {
             'product_name':product_name,

@@ -84,7 +84,7 @@ class Context:
 # Определение декоратора для закрытия всплывающих окон
 # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
 # Общее название декоратора `@close_pop_up` можно изменить 
-# Если декоратор не используется в поставщике - поставь 
+# Если декоратор не используется в поставщике - Установи `Context.locator_for_decorator = None` 
 
 def close_pop_up() -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
@@ -106,7 +106,7 @@ def close_pop_up() -> Callable:
                     logger.debug(f'Ошибка выполнения локатора:', ex, False)
 
                 finally:
-                    Context.locator_for_decorator = None
+                    Context.locator_for_decorator = None # Отмена после первого срабатывания
 
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
@@ -165,24 +165,14 @@ class Graber:
         return asyncio.run(self.grab_page_async(*args, **kwards))
 
     async def grab_page_async(self, *args, **kwards) -> ProductFields:
-        """Асинхронная функция для сбора полей продукта.
-
-        Args:
-            args (tuple): Кортеж с названиями полей для сбора.
-            kwards (dict): Словарь с ключами и значениями для каждого поля.
-
-        Returns:
-            ProductFields: Собранные поля продукта.
-        """
+        """Асинхронная функция для сбора полей продукта."""
         async def fetch_all_data(*args, **kwards):
             # Динамическое вызовы функций для каждого поля из args
             for filed_name in args:
-                #method_name = method_name.replace('_', '')  # Преобразуем имя поля в метод
-                function = getattr(self, filed_name, None)  # Получаем метод по имени
+                function = getattr(self, filed_name, None)
                 if function:
-                    await function(kwards.get(filed_name, ''))
+                    await function(kwards.get(filed_name, '')) # Просто вызываем с await, так как все функции асинхронные
 
-        # Вызов функции для получения всех данных
         await fetch_all_data(*args, **kwards)
         return self.fields
 
