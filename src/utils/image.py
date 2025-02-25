@@ -32,7 +32,7 @@ class ImageError(Exception):
     pass
 
 
-async def save_image_from_url(image_url: str, filename: Union[str, Path]) -> Optional[str]:
+async def save_image_from_url_async(image_url: str, filename: Union[str, Path]) -> Optional[str]:
     """
     Downloads an image from a URL and saves it locally asynchronously.
 
@@ -55,10 +55,58 @@ async def save_image_from_url(image_url: str, filename: Union[str, Path]) -> Opt
         logger.error(f"Error downloading image from {image_url}", ex, exc_info=True)
         # raise ImageError(f"Failed to download image from {image_url}") from ex
 
-    return await save_image(image_data, filename)
+    return await save_image_async(image_data, filename)
 
 
-async def save_image(image_data: bytes, file_name: str | Path, format: str = 'PNG') -> Optional[str]:
+def save_image(image_data: bytes, file_name: str | Path, format: str = 'PNG') -> Optional[str]:
+    """
+    Saves image data to a file in the specified format.
+
+    Args:
+        image_data (bytes): The binary image data.
+        file_name (Union[str, Path]): The name of the file to save the image to.
+        format (str): The format to save the image in, default is PNG.
+
+    Returns:
+        Optional[str]: The path to the saved file, or None if the operation failed.
+
+    Raises:
+        ImageError: If the file cannot be created, saved, or if the saved file is empty.
+    """
+    file_path = Path(file_name)
+
+    try:
+        # Create the directory
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Use BytesIO to avoid writing to disk twice
+        with BytesIO(image_data) as img_io:
+            img = Image.open(img_io)
+            img_io.seek(0)  # Reset buffer position before saving
+            img.save(img_io, format=format)
+            img_bytes = img_io.getvalue()
+
+        # Write the formatted image data to the file
+        with open(file_path, "wb") as file:
+            file.write(img_bytes)
+
+        # Verify that the file was created and is not empty
+        if not file_path.exists():
+            logger.error(f"File {file_path} was not created.")
+            # raise ImageError(f"File {file_path} was not created.")
+
+        file_size = file_path.stat().st_size
+        if file_size == 0:
+            logger.error(f"File {file_path} saved, but its size is 0 bytes.")
+            # raise ImageError(f"File {file_path} saved, but its size is 0 bytes.")
+
+        return str(file_path)
+
+    except Exception as ex:
+        logger.exception(f"Failed to save file {file_path}", ex, exc_info=True)
+        # raise ImageError(f"Failed to save file {file_path}") from ex
+
+async def save_image_async(image_data: bytes, file_name: str | Path, format: str = 'PNG') -> Optional[str]:
     """
     Saves image data to a file in the specified format asynchronously.
 

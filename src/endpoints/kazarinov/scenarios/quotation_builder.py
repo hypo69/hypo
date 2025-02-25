@@ -50,7 +50,7 @@ from src.endpoints.kazarinov.report_generator import ReportGenerator
 
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
-from src.utils.image import save_image_from_url, save_image
+from src.utils.image import save_image_from_url_async, save_image
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
@@ -162,6 +162,7 @@ class QuotationBuilder:
         # description_short = '' if not f.description_short else f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
         # specification = '' if not f.specification else f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
 
+        print(f.local_image_path)
 
         def escape_and_strip(text: str) -> str:
             """

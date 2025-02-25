@@ -1023,12 +1023,12 @@ class ProductFields:
     @property
     def local_image_path(self) -> Optional[str]:
         """ property Путь к локальному изображению."""
-        return self.local_image_path.local_image_path
+        return self.presta_fields.local_image_path
    
     @local_image_path.setter
     def local_image_path(self, value: str):
         """ setter Устанавливает путь к локальному изображению."""
-        self.presta_fields.local_image_path = value
+        self.presta_fields.local_image_path = str(value)
 
     @property
     def local_video_path(self) -> Optional[str]:

@@ -270,7 +270,9 @@ def handle_unknown_command(message):
     logger.info(f"User {message.from_user.username} send unknown command: {message.text}")
     bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
 
-def main():
+def main(mode:str = 'PRODUCTION'):
+    global MODE
+    MODE = mode
     try:
         bot.polling(none_stop=True)
         
@@ -280,5 +282,5 @@ def main():
         main()
 
 if __name__ == '__main__':
-    main()
+    main(mode = 'DEV')
    

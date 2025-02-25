@@ -96,7 +96,7 @@ from src.utils.convertors.dict import dict2xml
 from src.utils.convertors.xml2dict import xml2dict
 from src.utils.xml import save_xml
 from src.utils.file import save_text_file
-from src.utils.image import save_image_from_url
+from src.utils.image import save_image_from_url_async
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint as print
 

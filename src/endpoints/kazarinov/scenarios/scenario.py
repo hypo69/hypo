@@ -103,7 +103,7 @@ class Scenario(QuotationBuilder):
             f: ProductFields = None
             if bot: bot.send_message(chat_id, f"Process: {url}")  
             try:
-                f = graber.grab_page(*self.required_fields)
+                f = await graber.grab_page_async(*self.required_fields)
             except Exception as ex:
                 logger.error(f"Failed... Ошибка получения полей товара {url}:", ex)
                 if bot: bot.send_message(chat_id, f"Failed... Ошибка получения полей товара {url}\n{ex}") 
@@ -120,7 +120,7 @@ class Scenario(QuotationBuilder):
                 if bot: bot.send_message(chat_id, f"Failed to convert product fields {url} \n {product_data}")  
                 continue
 
-            self.save_product_data(product_data) 
+            await self.save_product_data(product_data)
             products_list.append(product_data)
 
         # -----------------------------------------------------
@@ -138,7 +138,7 @@ class Scenario(QuotationBuilder):
                 f"""AI processing {lang=}""",
             )
             try:
-                data: dict = self.process_ai(products_list, lang)
+                data: dict = await self.process_ai_async(products_list, lang)
                 if not data:
                     bot.send_message(chat_id, f"Ошибка модели для {lang=}")  
                     # Альтернатива рекурсии: просто пропустить этот язык

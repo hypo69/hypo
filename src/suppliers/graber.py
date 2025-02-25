@@ -51,7 +51,8 @@ from src.endpoints.prestashop.product_fields import ProductFields
 from src.endpoints.prestashop.category_async import PrestaCategoryAsync
 # from src.webdriver.driver import Driver  # не требуется импортировать здесь
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_image_from_url, save_image
+from src.utils.image import save_image, save_image_async, save_image_from_url_async
+
 from src.utils.string.normalizer import( normalize_string, 
                                         normalize_int, 
                                         normalize_float, 
@@ -2140,10 +2141,13 @@ class Graber:
             raw_image = raw_image[0] if isinstance(raw_image, list) else raw_image
 
             if isinstance(raw_image, bytes):
-                # Если это байты, вызываем save_image для сохранения изображения
-                await save_image(raw_image, img_path)
-            elif isinstance(raw_image, str):  # если это строка, предполагаем, что это URL изображения
-                await save_image_from_url(raw_image,img_path)
+                # Если это байты, они передаются в save_image для сохранения изображения
+                await save_image_async(raw_image, img_path)
+                #save_image(raw_image, img_path)  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  DEBUG
+
+            elif isinstance(raw_image, str):
+                # если это строка, предполагаем, что это URL изображения
+                await save_image_from_url_async(raw_image,img_path)
             else:
                 logger.debug("Неизвестный тип данных для изображения", None, False)
                 ...
