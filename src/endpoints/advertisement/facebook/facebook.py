@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 ## \file /src/endpoints/advertisement/facebook/facebook.py
 # -*- coding: utf-8 -*-
 

@@ -1,6 +1,5 @@
-## \file /src/endpoints/hypo69/code_assistant/assistant.py
+## \file /src/endpoints/hypo69/code_assistant/code_assistant.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 """
 Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
@@ -20,7 +19,7 @@
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
     assistant.process_files()
 
-.. module:: src.endpoints.hypo69.code_assistant 
+.. module:: src.endpoints.hypo69.code_assistant.code_assistant 
     :platform: Windows, Unix
     :synopsis: Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
 
@@ -45,6 +44,7 @@ import re
 import fnmatch
 
 import header
+from header import __root__
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.ai.gemini import GoogleGenerativeAI
@@ -63,54 +63,61 @@ class CodeAssistant:
 
     role: str
     lang: str
-
-    config: SimpleNamespace
+    base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
+    config: SimpleNamespace =  = j_loads_ns(base_path / 'code_assistant.json')
     gemini_model: GoogleGenerativeAI
     openai_model: OpenAIModel
 
 
-    def __init__(self, role:Optional[str] = 'doc_writer_md', lang: Optional[str] = 'en', models: Optional[list[str,str] | str] = ["gemini"], **kwargs):
+    def __init__(self, 
+                 role:Optional[str] = 'doc_writer_md', 
+                 lang: Optional[str] = 'en', 
+                 models: Optional[list[str,str] | str] = ["gemini"],
+                 system_instruction:Optional[str] = None,
+                 system_instruction_path:Optional[Path | str] = None,
+                 **kwards):
         """Инициализация ассистента с заданными параметрами."""
-        self.config: SimpleNamespace = j_loads_ns(gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json")
         self.role:str = role 
         self.lang:str = lang
-        self.models_list:list = kwargs.get("model", ["gemini"])
-        self._initialize_models(**kwargs)
+        self.models_list:list = list( models )
+        if system_instruction:
+                if isinstance(system_instruction, str):
+                    kwards['system_instruction'] = system_instruction
+                else:
+                    logger.error(f"Ошибка формата инструкции\n {system_instruction=}\n system_instruction type {type(system_instruction)}", None, False)
+                    ...
+        if  system_instruction_path:
+            try:
+                kwards['system_instruction'] = Path(system_instruction_path).read_text(encoding='UTF-8')
+            except Exception as ex:
+                logger.error(f"Ошибка чтения инструкции из файла {system_instruction_path=}", ex, False)
+                ...
 
-    def _initialize_models(self, **kwargs):
+        self._initialize_models(**kwards)
+
+    def _initialize_models(self, **kwards):
         """Инициализация моделей на основе заданных параметров."""
+        
 
-        system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')
+        if self.role == 'code_translator':
+
+        else:
+            system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')
 
         if "gemini" in self.models_list:
             self.gemini_model = GoogleGenerativeAI(
                 model_name=self.config.gemini_model_name,
                 api_key=gs.credentials.gemini.onela,
                 system_instruction = system_instruction,
-                **kwargs,
+                **kwards,
             )
         if "openai" in self.models_list:
             self.openai_model = OpenAIModel(
                 model_name="gpt-4o-mini",
                 assistant_id=gs.credentials.openai.assistant_id.code_assistant,
-                **kwargs,
+                **kwards,
             )
 
-   
-    @property
-    def system_instruction(self) -> str | bool:
-        """Чтение инструкции из файла."""
-        try:
-            return Path(
-                gs.path.src
-                / "ai"
-                / "prompts"
-                / "developer"
-                / f"CODE_RULES.{self.lang}.md"
-            ).read_text(encoding="UTF-8")
-        except Exception as ex:
-            logger.error(f"Error reading instruction file", ex)
-            return False
 
     @property
     def code_instruction(self) -> str | bool:
@@ -187,10 +194,9 @@ class CodeAssistant:
                 if file_path and content:
                     # send_file(file_path) # <- отправить в модель файл
                     content_request = self._create_request(file_path, content)
-                    response = await self.gemini_model.ask(content_request)
+                    response = await self.gemini_model.ask_async(content_request)
 
                     if response:
-                        response = self._remove_outer_quotes(response)
 
                         if not await self._save_response(file_path, response, "gemini"):
                             logger.error(f"Файл {file_path} \n НЕ сохранился")
@@ -293,41 +299,6 @@ class CodeAssistant:
 
             ...
 
-
-    def _remove_outer_quotes(self, response: str) -> str:
-        """
-        Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
-
-        :param response: Ответ модели, который необходимо обработать.
-        :type response: str
-        :return: Очищенный контент как строка.
-        :rtype: str
-
-        :example:
-            Если строка '```md some content ```' будет передана в функцию,
-            результат будет ' some content '.
-
-        """
-        try:
-            response = response.strip()
-        except Exception as ex:
-            logger.error("Exception in `remove_outer_quotes()`", ex) 
-            ...
-            return ''
-
-        # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений
-        if response.startswith(('```python', '```mermaid')):
-            return response
-
-        # Удаляем маркер для известных форматов, если строка обрамлена в '```'
-        config = j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json')
-        for prefix in config.remove_prefixes:
-            # Сравниваем с префиксом без учёта регистра
-            if response.lower().startswith(prefix.lower()):
-                return response.removeprefix(prefix).removesuffix("```").strip()
-
-        # Возвращаем строку без изменений, если условия не выполнены
-        return response
 
      
 

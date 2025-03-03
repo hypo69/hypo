@@ -29,7 +29,7 @@ Example usage
         # Handle the case where no grabber is found
         pass
 """
-from __future__ import annotations
+
 import header
 from src.suppliers.graber import Graber
 from src.suppliers.aliexpress.graber import Graber as AliexpressGraber
@@ -76,7 +76,7 @@ def get_graber_by_supplier_url(driver: 'Driver', url: str, lang_index:int ) -> G
     if url.startswith(('https://cdata.co.il', 'https://wwww.cdata.co.il')):
         return CdataGraber(driver,lang_index)
 
-    if url.startswith(('https://ebay.', 'https://wwww.ebay.c')):
+    if url.startswith(('https://ebay.', 'https://wwww.ebay.')):
         return EbayGraber(driver,lang_index)
 
     if url.startswith(('https://etzmaleh.co.il','https://www.etzmaleh.co.il')):

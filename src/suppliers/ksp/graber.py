@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 ## \file /src/suppliers/ksp/graber.py
 # -*- coding: utf-8 -*-
 

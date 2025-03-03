@@ -23,8 +23,8 @@ import asyncio
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from types import SimpleNamespace
-from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
-#from crawlee.crawlers import PlaywrightCrawler, PlaywrightCrawlingContext
+#from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
+from crawlee.crawlers import PlaywrightCrawler, PlaywrightCrawlingContext
 
 import header
 from header import __root__

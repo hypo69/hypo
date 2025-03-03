@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 ## \file /src/utils/convertors/any.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3

@@ -44,6 +44,5 @@ class Graber(Grbr):
         config:SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / ENDPOINT / f'{ENDPOINT}.json')
         locator: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / ENDPOINT / 'locators' / 'product.json')
         super().__init__(supplier_prefix=ENDPOINT, driver=driver, lang_index=lang_index)
-        driver.execute_locator(locator.click_to_specifications)
-        Context.locator_for_decorator = None # <- if locator not definded decorator 
+        Context.locator_for_decorator = locator.click_to_specifications # <- if locator not definded decorator 
 

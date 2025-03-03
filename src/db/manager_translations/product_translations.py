@@ -18,6 +18,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import or_
 
+import header
 from src import gs
 from src.logger.logger import logger
 ...
@@ -69,8 +70,9 @@ class ProductTranslationsManager:
 
     These examples demonstrate how to use the `ProductTranslationsManager` class to interact with product translation records in the database. Adjust the field values and conditions according to your specific use case.
     """
-    
-    def __init__(self, credentials = gs.credentials.presta.translations, *args, **kwargs):
+    credentials = gs.credentials.presta.client
+
+    def __init__(self, credentials:credentials, *args, **kwargs):
         # Initialize the manager
         connection_string = "mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}".format(
             **{

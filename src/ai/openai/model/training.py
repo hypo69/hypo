@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 
 ## \file /src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-

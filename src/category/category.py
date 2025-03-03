@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 ## \file /src/category/category.py
 # -*- coding: utf-8 -*-\
 #! .pyenv/bin/python3
@@ -15,7 +15,7 @@ processing product category data, particularly relevant for PrestaShop.
 	:synopsis: Module for working with categories, primarily for PrestaShop.
 ```
 """
-from __future__ import annotations
+
 import asyncio
 from pathlib import Path
 import os

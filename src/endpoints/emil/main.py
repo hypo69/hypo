@@ -8,7 +8,7 @@
 	:synopsis:  обработчики сценариев  emil-design.com
 
 """
-from __future__ import annotations
+
 from .emil_design import main
 
 if __name__ == "__main__":

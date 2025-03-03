@@ -1,6 +1,5 @@
 ## \file /src/db/manager_translations/category_translations.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -16,9 +15,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import or_
 ...
+import header
 from src import gs
-credentials = gs.credentials.presta.translations
-
+from src.logger.logger import logger
 
 class CategoryTranslationsManager:
     """Пример использования:
@@ -28,7 +27,7 @@ class CategoryTranslationsManager:
     manager.update_record(1, 'en', {'description': 'Updated description'})
     manager.delete_record(1, 'en')
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, credentials, **kwargs):
         
         connection_string = "mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}".format(
         **{

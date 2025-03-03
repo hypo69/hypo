@@ -1,4 +1,4 @@
-from __future__ import annotations
+
 ## \file /src/suppliers/graber.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
@@ -1512,7 +1512,7 @@ class Graber:
             # Получаем значение через execute_locator
             raw_data = await self.driver.execute_locator(self.locator.name)
             if not raw_data:
-                logger.error(f'Нет данных для поля `name` {self.locator=}', None, False)
+                logger.error(f'Нет данных для поля `name` {self.locator.name=}', None, False)
                 ...
                 return
 

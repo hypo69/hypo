@@ -27,8 +27,9 @@ from src import gs
 from src.logger.logger import logger
 from src.utils.printer import pprint
 
-# Получение учетных данных для подключения к базе данных davidka.net 
-credentials = gs.credentials.presta.translations  
+import header
+from src import gs
+from src.logger.logger import logger
 
 # Создание базового класса для определения моделей таблиц
 Base = declarative_base()

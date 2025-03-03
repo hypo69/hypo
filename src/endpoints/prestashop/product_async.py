@@ -8,7 +8,7 @@
 Defines the behavior of a product in the project.
 
 """
-from __future__ import annotations
+
 import asyncio
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional

@@ -80,7 +80,7 @@ class ReportGenerator:
         self.if_need_docx = if_need_docx
         
 
-    def create_reports(self,
+    async def create_reports_async(self,
                              bot: telebot.TeleBot,
                              chat_id: int,
                              data:dict,
@@ -98,17 +98,17 @@ class ReportGenerator:
         self.bot = bot
         self.chat_id = chat_id
 
-        self.html_content = self.create_html_report(data, lang, self.html_path)
+        self.html_content = await self.create_html_report_async(data, lang, self.html_path)
 
         if not self.html_content:
             return False
 
 
         if self.if_need_pdf:
-            asyncio.run( self.create_pdf_report(self.html_content, lang, self.pdf_path))
+            await self.create_pdf_report_async(self.html_content, lang, self.pdf_path)
 
         if self.if_need_docx:
-            asyncio.run(self.create_docx_report(self.html_path, self.docx_path))
+            await self.create_pdf_report_async(self.html_content, lang, self.pdf_path)
 
       
          
@@ -122,7 +122,7 @@ class ReportGenerator:
 
         ...
 
-    def create_html_report(self, data:dict, lang:str, html_path:Optional[ str|Path] ) -> str | None:
+    async def create_html_report_async(self, data:dict, lang:str, html_path:Optional[ str|Path] ) -> str | None:
         """
         Генерирует HTML-контент на основе шаблона и данных.
 
@@ -158,7 +158,7 @@ class ReportGenerator:
             logger.error(f"Не удалось сгенерирпвать HTML файл {html_path}", ex)
             return 
 
-    async def create_pdf_report(self, 
+    async def create_pdf_report_async(self, 
                                 data: dict, 
                                 lang:str, 
                                 pdf_path:str |Path) -> bool:
@@ -175,19 +175,23 @@ class ReportGenerator:
         from src.utils.pdf import PDFUtils
         pdf = PDFUtils()
 
-        pdf.save_pdf_pdfkit(self.html_content, pdf_path)
-        
-        try:
-            with open(pdf_path, 'rb') as f:
-                self.bot.send_document(self.chat_id, f)
-                return True
-        except Exception as ex:
-            self.bot.send_message(self.chat_id, f"Не удалось отправить файл {pdf_path} по причине: {ex}")
+        if not pdf.save_pdf_pdfkit(self.html_content, pdf_path):
+            logger.error(f"Не удалось сохранить PDF файл {pdf_path}")
+            if self.bot: self.bot.send_message(self.chat_id, f"Не удалось отправить файл {pdf_path} по причине: {ex}")
+            ...
             return False
-            
+        
 
+        if self.bot:
+            try:
+                with open(pdf_path, 'rb') as f:
+                    self.bot.send_document(self.chat_id, f)
+                    return True
+            except Exception as ex:
+                self.bot.send_message(self.chat_id, f"Не удалось отправить файл {pdf_path} по причине: {ex}")
+                return False
 
-    async def create_docx_report(self, html_path:str|Path, docx_path:str|Path) -> bool :
+    async def create_docx_report_async(self, html_path:str|Path, docx_path:str|Path) -> bool :
         """Создаю docx файл """
 
         if not html_to_docx(self.html_path, docx_path):
@@ -208,7 +212,7 @@ def main(maxiron_name:str, lang:str) ->bool:
     if_need_docx: bool = True 
     r = ReportGenerator(if_need_html, if_need_pdf, if_need_docx, html_path, pdf_path, docx_path)
 
-    asyncio.run( r.create_reports( data,
+    asyncio.run( r.create_reports_async( data,
                                     maxiron_name,
                                     lang, 
                                     html_path, 

@@ -1,5 +1,4 @@
-from __future__ import annotations
-## \file /src/endpoints/kazarinov/scenarios/scenario_pricelist.py
+## \file /src/endpoints/kazarinov/scenarios/quotation_builder.py
 # -*- coding: utf-8 -*-\
 #! .pyenv/bin/python3
 
@@ -8,7 +7,7 @@ The module handles data preparation, AI processing, and integration with Faceboo
 ==================================================================
 
 ```rst
-.. module:: src.endpoints.kazarinov.scenarios 
+.. module:: src.endpoints.kazarinov.scenarios.quotation_builder 
 	:platform: Windows, Unix
 	:synopsis: Provides functionality for extracting, parsing, and processing product data from 
 various suppliers. The module handles data preparation, AI processing, 
@@ -18,6 +17,8 @@ and integration with Facebook for product posting.
 """
 import re
 from bs4 import BeautifulSoup
+from jinja2.utils import F
+from pydantic.type_adapter import P
 import requests
 import asyncio
 import random
@@ -36,7 +37,6 @@ from src.endpoints.prestashop.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.webdriver.firefox import Firefox
 from src.webdriver.playwright import Playwrid
-
 
 from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.advertisement.facebook.scenarios import (
@@ -83,7 +83,7 @@ class QuotationBuilder:
     docx_path:str|Path
 
     #driver: Playwrid = Playwrid()
-    driver = Driver(Firefox)
+    driver:'Driver'
     export_path: Path
     mexiron_name: str
     price: float
@@ -91,7 +91,6 @@ class QuotationBuilder:
     products_list: List = field(default_factory=list)
     model: 'GoogleGenerativeAI'
     translations: 'SimpleNamespace' =  j_loads_ns(base_path / 'translations' / 'mexiron.json')
-
 
     # Не все поля товара надо заполнять. Вот кортеж необходимых полей:
     required_fields:tuple = ('id_product',
@@ -102,19 +101,18 @@ class QuotationBuilder:
                                 'local_image_path')
 
 
-    def __init__(self, mexiron_name: str):
+    def __init__(self, mexiron_name:Optional[str] = gs.now, driver:Optional[Firefox | Playwrid | str] = None,  **kwards):
         """
         Initializes Mexiron class with required components.
 
         Args:
             driver (Driver): Selenium WebDriver instance.
             mexiron_name (Optional[str]): Custom name for the Mexiron process.
+            webdriver_name (Optional[str]): Name of the WebDriver to use. Defaults to 'firefox'. call to Firefox or Playwrid
+            window_mode (Optional[str]): Оконный режим вебдрайвера. Может быть 'maximized', 'headless', 'minimized', 'fullscreen', 'normal', 'hidden', 'kiosk'
+
         """
-
-
-       
         self.mexiron_name = mexiron_name
-
         try:
             self.export_path = gs.path.external_storage / ENDPOINT / 'mexironim' / self.mexiron_name
         except Exception as ex:
@@ -122,6 +120,30 @@ class QuotationBuilder:
             ...
             return
 
+        # 1. Initialize webdriver
+
+        if driver:
+
+           if isinstance(driver, Driver):
+                self.driver = driver
+
+           elif isinstance(driver, (Firefox, Playwrid, )):  # Chrome, Edge
+                self.driver = Driver(driver, **kwards)
+
+           elif isinstance(driver, str):
+               if driver.lower() == 'firefox':
+                    self.driver = Driver(Firefox, **kwards)
+
+               elif driver.lower() == 'playwright':
+                    self.driver = Driver(Playwrid, **kwards)
+
+        else:
+            self.driver = Driver(Firefox, **kwards)
+
+
+
+                
+        # 2. Initialize Gemini model
 
         try:
             system_instruction:str = (gs.path.endpoints / ENDPOINT / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
@@ -132,8 +154,9 @@ class QuotationBuilder:
                 generation_config={'response_mime_type': 'application/json'}
             )
         except Exception as ex:
-            logger.error(f"Error loading instructions or API key:", ex)
-            return
+            logger.error(f"Error loading model, or instructions or API key:", ex)
+            ...
+            
 
 
     def convert_product_fields(self, f: ProductFields) -> dict:
@@ -155,15 +178,6 @@ class QuotationBuilder:
             return {} # <- сбой при получении полей товара. Такое может произойти если вместо страницы товара попалась страница категории, при невнимательном составлении мехирона из комплектующих
         ...
 
-        # Конвертация ProductFields  в словарь 
-        # Я не использую функцию конвертации f.to_dict(), так как мне нужно обработать не все поля
-        # product_name = '' if not f.name else  f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
-        # description = '' if not f.description else f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
-        # description_short = '' if not f.description_short else f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"')
-        # specification = '' if not f.specification else f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>')
-
-        print(f.local_image_path)
-
         def escape_and_strip(text: str) -> str:
             """
             Очищает и экранирует строку, заменяя символы "'" и '"' на "\'" и '\"',
@@ -180,6 +194,8 @@ class QuotationBuilder:
         description_short = escape_and_strip(f.description_short['language'][0]['value']) if f.description_short and f.description_short['language'] and len(f.description_short['language']) > 0 and 'value' in f.description_short['language'][0] else ''
         specification = escape_and_strip(f.specification['language'][0]['value']) if f.specification and f.specification['language'] and len(f.specification['language']) > 0 and 'value' in f.specification['language'][0] else ''
         
+        if not product_name:
+            return {}
         return {
             'product_name':product_name,
             'product_id': f.id_product,
@@ -218,13 +234,55 @@ class QuotationBuilder:
             ...
             return {}
 
-        response_dict:dict = j_loads(response)
+
+        response_dict:dict = j_loads(response) # <- если будет ошибка , то вернется пустой словарь
 
         if not response_dict:
-            logger.error("Ошибка парсинга ответа модели", None, False)
+            logger.error(f"Ошибка парсинга ответа модели", None, False)
             if attempts > 1:
                 ...
                 self.process_ai(products_list, lang, attempts -1 )
+            return {}
+        return  response_dict
+
+    async def process_ai_async(self, products_list: List[str], lang:str,  attempts: int = 3) -> tuple | bool:
+        """
+        Processes the product list through the AI model.
+
+        Args:
+            products_list (str): List of product data dictionaries as a string.
+            attempts (int, optional): Number of attempts to retry in case of failure. Defaults to 3.
+
+        Returns:
+            tuple: Processed response in `ru` and `he` formats.
+            bool: False if unable to get a valid response after retries.
+
+        .. note::
+            Модель может возвращать невалидный результат.
+            В таком случае я переспрашиваю модель разумное количество раз.
+        """
+        if attempts < 1:
+            ...
+            return {}  # return early if no attempts are left
+
+        model_command = Path(gs.path.endpoints / ENDPOINT / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
+        # Request response from the AI model
+        q = model_command + '\n' + str(products_list)
+
+        response = await self.model.ask_async(q) # CORRECT
+
+        if not response:
+            logger.error(f"Нет ответа от модели")
+            ...
+            return {}
+
+        response_dict:dict = j_loads(response) # <- если будет ошибка , то вернется пустой словарь
+
+        if not response_dict:
+            logger.error(f'Ошибка {attempts} парсинга ответа модели', None, False)
+            if attempts > 1:
+                ...
+                return await self.process_ai_async(products_list, lang, attempts - 1) 
             return {}
         return  response_dict
 
@@ -243,7 +301,7 @@ class QuotationBuilder:
         return True
 
  
-    async def post_facebook(self, mexiron:SimpleNamespace) -> bool:
+    async def post_facebook_async(self, mexiron:SimpleNamespace) -> bool:
         """Функция исполняет сценарий рекламного модуля `facvebook`."""
         ...
         self.driver.get_url(r'https://www.facebook.com/profile.php?id=61566067514123')

@@ -12,4 +12,4 @@
 
 
 
-from .generative_ai import GoogleGenerativeAI
+from .gemini import GoogleGenerativeAI

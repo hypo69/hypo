@@ -4,9 +4,10 @@ Testing utilities.
 import os
 import sys
 from time import sleep
-sys.path.append('../../tinytroupe/')
-sys.path.append('../../')
-sys.path.append('..')
+
+sys.path.insert(0, '../../tinytroupe/')
+sys.path.insert(0, '../../')
+sys.path.insert(0, '..')
 
 import tinytroupe.openai_utils as openai_utils
 from tinytroupe.agent import TinyPerson
@@ -14,9 +15,47 @@ from tinytroupe.environment import TinyWorld, TinySocialNetwork
 import pytest
 import importlib
 
-# force caching, in order to save on API usage
-openai_utils.force_api_cache(True, "tests_cache.pickle")
+import conftest
 
+##################################################
+# global constants
+##################################################
+CACHE_FILE_NAME = "tests_cache.pickle"
+EXPORT_BASE_FOLDER = os.path.join(os.path.dirname(__file__), "outputs/exports")
+TEMP_SIMULATION_CACHE_FILE_NAME = os.path.join(os.path.dirname(__file__), "simulation_test_case.cache.json")
+
+
+##################################################
+# Caching, in order to save on API usage
+##################################################
+if conftest.refresh_cache:
+    # DELETE the cache file tests_cache.pickle
+    os.remove(CACHE_FILE_NAME)
+
+if conftest.use_cache:
+    openai_utils.force_api_cache(True, CACHE_FILE_NAME)
+else:
+    openai_utils.force_api_cache(False, CACHE_FILE_NAME)
+
+
+##################################################
+# File management
+##################################################
+
+def remove_file_if_exists(file_path):
+    """
+    Removes the file at the given path if it exists.
+    """
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+# remove temporary files
+remove_file_if_exists(TEMP_SIMULATION_CACHE_FILE_NAME)
+
+
+##################################################
+# Simulation checks utilities
+##################################################
 def contains_action_type(actions, action_type):
     """
     Checks if the given list of actions contains an action of the given type.
@@ -123,7 +162,7 @@ def create_test_system_user_message(user_prompt, system_prompt="You are a helpfu
     
     return messages
 
-def agents_configs_are_equal(agent1, agent2, ignore_name=False):
+def agents_personas_are_equal(agent1, agent2, ignore_name=False):
     """
     Checks if the configurations of two agents are equal.
     """
@@ -132,25 +171,23 @@ def agents_configs_are_equal(agent1, agent2, ignore_name=False):
     if ignore_name:
         ignore_keys.append("name")
     
-    for key in agent1._configuration.keys():
+    for key in agent1._persona.keys():
         if key in ignore_keys:
             continue
         
-        if agent1._configuration[key] != agent2._configuration[key]:
+        if agent1._persona[key] != agent2._persona[key]:
             return False
     
     return True
+
+def agent_first_name(agent):
+    """
+    Returns the first name of the agent.
+    """
+    return agent.name.split()[0]
 ############################################################################################################
 # I/O utilities
 ############################################################################################################
-
-def remove_file_if_exists(file_path):
-    """
-    Removes the file at the given path if it exists.
-    """
-    
-    if os.path.exists(file_path):
-        os.remove(file_path)
 
 def get_relative_to_test_path(path_suffix):
     """

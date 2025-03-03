@@ -92,13 +92,6 @@ class ProgramSettings:
             password=None
         ),
         presta=SimpleNamespace(
-            translations=SimpleNamespace(
-                server=None,
-                port=None,
-                database=None,
-                user=None,
-                password=None,
-            ),
             client=SimpleNamespace(
                 server=None,
                 port=None,
@@ -108,22 +101,32 @@ class ProgramSettings:
             )
         ),
         openai=SimpleNamespace(
+            owner = SimpleNamespace(
             api_key=None, 
-            assistant_id=SimpleNamespace(), 
+            assistants= [SimpleNamespace()], 
             project_api=None
+            )
         ),
-        gemini=SimpleNamespace(api_key=None),
-        rev_com=SimpleNamespace(client_api=None,
-                                user_api=None),
-        shutter_stock=SimpleNamespace(token=None),
+
+        gemini=SimpleNamespace(owner = SimpleNamespace(api_key=None)),
+
+        rev_com=SimpleNamespace(owner = SimpleNamespace(client_api=None,
+                                user_api=None)),
+
+        shutter_stock=SimpleNamespace(owner = SimpleNamespace(token=None)),
+
         discord=SimpleNamespace(
-            application_id=None, 
-            public_key=None, 
-            bot_token=None
+                owner = SimpleNamespace(
+                application_id=None, 
+                public_key=None, 
+                bot_token=None)
         ),
+
         telegram=SimpleNamespace(
             bot=SimpleNamespace()
         ),
+
+        serpapi=SimpleNamespace(owner = SimpleNamespace(api_key=None,)),
         smtp=[],
         facebook=[],
         gapi={}
@@ -155,18 +158,17 @@ class ProgramSettings:
         self.config.timestamp_format = getattr(self.config, 'timestamp_format', '%y_%m_%d_%H_%M_%S_%f')
         self.config.project_name = self.base_dir.name
         self.host = getattr( self.config,'host', '127.0.0.1')
-        self.path = SimpleNamespace(
+        self.path:SimpleNamespace = SimpleNamespace(
             root = Path(self.base_dir),
             bin = Path(self.base_dir / 'bin'), # <- тут бинарники (chrome, firefox, ffmpeg, ...)
             src = Path(self.base_dir) / 'src', # <- тут весь код
             endpoints = Path(self.base_dir) / 'src' / 'endpoints', # <- тут все клиенты
             secrets = Path(self.base_dir / 'secrets'),  # <- это папка с паролями и базой данных ! Ей нельзя попадать в гит!!!
             toolbox = Path(self.base_dir / 'toolbox'), # <- служебные утилиты
-
-            log = Path(getattr(self.config.path, 'log', self.base_dir / 'log')), 
-            tmp = Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
-            data = Path(getattr(self.config.path, 'data', self.base_dir / 'data')), # <- дата от endpoints (hypo69, kazarinov, prestashop, etc ...)
-            google_drive = Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')), # <- GOOGLE DRIVE ЧЕРЕЗ ЛОКАЛЬНЫЙ ДИСК (NOT API) 
+            log = Path( getattr(self.config.path, 'log', self.base_dir / 'log')), 
+            tmp = Path( getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
+            data = Path( getattr(self.config.path, 'data', self.base_dir / 'data')), # <- дата от endpoints (hypo69, kazarinov, prestashop, etc ...)
+            google_drive = Path( getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')), # <- GOOGLE DRIVE ЧЕРЕЗ ЛОКАЛЬНЫЙ ДИСК (NOT API) 
             external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') ), # <- Внешний диск 
         )
 
@@ -224,11 +226,12 @@ class ProgramSettings:
         if not self._load_facebook_credentials(kp):
             print('Failed to load Facebook credentials')
 
-        if not self._load_presta_translations_credentials(kp):
-            print('Failed to load Translations credentials')
-
         if not self._load_gapi_credentials(kp):
             print('Failed to load GAPI credentials')
+
+        if not self._load_serpapi_credentials(kp):
+            print('Failed to load https://serpapi.com credentials')
+            
 
     def _open_kp(self, retry: int = 3) -> PyKeePass | None:
         """ Open KeePass database
@@ -286,16 +289,31 @@ class ProgramSettings:
         """
         try:
             openai_api_keys = kp.find_groups(path=['openai']).entries
-            assistants = kp.find_groups(path=['openai','assistants']).entries
+            assistants:list = kp.find_groups(path=['openai','assistants']).entries
 
             for entry in openai_api_keys:
-                setattr(self.credentials.openai, entry.title, entry.custom_properties.get('api_key', None))
-                setattr(self.credentials.openai, entry.title, entry.custom_properties.get('project_api', None))
-            for assistant in assistants:
-                setattr(self.credentials.openai.assistant_id, assistant.title, assistant.custom_properties.get('assistant_id', None))
+
+
+                try:
+                    # Создание нового SimpleNamespace для каждого API ключа (по умолчанию `hypotez`)
+                    entry_ns = SimpleNamespace()
+        
+                    # Установка атрибута в self.credentials.presta.client с именем entry.title
+                    setattr(self.credentials.openai, entry.title, entry_ns)
+        
+                    # Ссылка на созданный объект через entry.title
+                    _entry = getattr(self.credentials.openai, entry.title)
+
+                    setattr(_entry, 'api_key', entry.custom_properties.get('api_key', None))
+                    setattr(_entry, 'project_api', entry.custom_properties.get('project_api', None))
+                
+                except Exception as ex:
+                    logger.error(f"Failed to extract OpenAI API key from KeePass ", ex)
+                    ...                 
+
             return True
         except Exception as ex:
-            print(f"Failed to extract OpenAI credentials from KeePass {ex}" )
+            print(f"Failed to extract OpenAI credentials from KeePass ",ex )
             ...
             return False
 
@@ -383,14 +401,14 @@ class ProgramSettings:
                 setattr(current_client, 'db_password', entry.custom_properties.get('db_password', None))
 
             except Exception as ex:
-                print(f"Failed to extract prestashop credentials from KeePass {ex}")
+                print(f"Failed to extract prestashop credentials from KeePass ",ex)
                 ...
                 return False
 
          return True
 
-    def _load_presta_translations_credentials(self, kp: PyKeePass) -> bool:
-        """ Load Translations credentials from KeePass
+    def _load_serpapi_credentials(self, kp: PyKeePass) -> bool:
+        """ Load OpenAI credentials from KeePass
         Args:
             kp (PyKeePass): The KeePass database instance.
 
@@ -398,15 +416,28 @@ class ProgramSettings:
             bool: True if loading was successful, False otherwise.
         """
         try:
-            entry = kp.find_groups(path=['prestashop','translation']).entries[0]
-            self.credentials.presta.translations.server = entry.custom_properties.get('server', None)
-            self.credentials.presta.translations.port = entry.custom_properties.get('port', None)
-            self.credentials.presta.translations.database = entry.custom_properties.get('database', None)
-            self.credentials.presta.translations.user = entry.custom_properties.get('user', None)
-            self.credentials.presta.translations.password = entry.custom_properties.get('password', None)
+            serpapi_credentials = kp.find_groups(path=['serpapi.com']).entries
+           
+            for entry in serpapi_credentials:
+
+
+                try:
+                    # Создание нового SimpleNamespace для каждого API ключа (по умолчанию `hypotez`)
+                    entry_ns = SimpleNamespace()
+        
+                    # Установка атрибута в self.credentials.presta.client с именем entry.title
+                    setattr(self.credentials.serpapi, entry.title, entry_ns)
+        
+                    # Ссылка на созданный объект через entry.title
+                    _entry = getattr(self.credentials.serpapi, entry.title)
+                    setattr(_entry, 'api_key', entry.custom_properties.get('api_key', None))
+                
+                except Exception as ex:
+                    logger.error(f"Failed to extract serpapi.com API key from KeePass ", ex)
+                    ...                 
             return True
         except Exception as ex:
-            print(f"Failed to extract Translations credentials from KeePass {ex}")
+            print(f"Failed to extract OpenAI credentials from KeePass {ex}" )
             ...
             return False
         

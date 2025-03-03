@@ -25,7 +25,7 @@ The `GoogleGenerativeAI` class is designed to facilitate interaction with Google
 **Purpose**: Retrieves the configuration from a settings file.
 
 **Details**:
-- Reads and parses the configuration file located at `gs.path.src / 'ai' / 'gemini' / 'generative_ai.json'`.
+- Reads and parses the configuration file located at `gs.path.src / 'ai' / 'gemini' / 'gemini.json'`.
 
 ### `_start_chat(self)`
 

@@ -17,9 +17,12 @@ from typing import Optional, List
 
 import header
 from src import gs
+from src.webdriver.driver import Driver
+from src.webdriver.firefox import Firefox
+from src.webdriver.playwright import Playwrid
+from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.report_generator.report_generator import ReportGenerator
 from src.endpoints.kazarinov.scenarios.quotation_builder import QuotationBuilder
-from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.prestashop.product_fields.product_fields import ProductFields
 from src.suppliers.get_graber_by_supplier import get_graber_by_supplier_url
 from src.utils.jjson import j_dumps
@@ -69,15 +72,22 @@ def fetch_target_urls_onetab(one_tab_url: str) -> tuple[str, str, list[str]] | b
 class Scenario(QuotationBuilder):
     """Исполнитель сценария для Казаринова"""
 
-    def __init__(self, mexiron_name: Optional[str] = gs.now):
+    def __init__(self, mexiron_name:Optional[str] = gs.now, driver:Optional[Firefox | Playwrid | str] = None, **kwards):
         """Сценарий сбора информации."""
-        self.mexiron_name = mexiron_name
-        super().__init__(self.mexiron_name)
 
-    def run_scenario(
+        if 'window_mode' not in kwards:
+            kwards['window_mode'] = 'normal'
+
+        self.driver = Driver(Firefox,**kwards) if not driver else driver
+
+
+        super().__init__(mexiron_name = mexiron_name, driver = self.driver, **kwards)
+
+    async def run_scenario_async(
         self,
         urls: List[str],  
         price: Optional[str] = '',
+        mexiron_name: Optional[str] = gs.now, 
         bot: Optional[telebot.TeleBot] = None,
         chat_id: Optional[int] = 0,
         attempts: int = 3,
@@ -93,11 +103,13 @@ class Scenario(QuotationBuilder):
 
         lang_index: int = 2
         for url in urls:
-            graber: 'Graber' = get_graber_by_supplier_url(self.driver, url, lang_index)
+            kwards:dict = {}
+            graber: 'Graber' = get_graber_by_supplier_url(self.driver, url, lang_index, **kwards)
 
             if not graber:
                 logger.error(f"Нет грабера для: {url}")
-                bot.send_message(chat_id, f"Нет грабера для: {url}") 
+                bot.send_message(chat_id, f"Нет грабера для: {url}")
+                ...
                 continue
 
             f: ProductFields = None
@@ -160,7 +172,7 @@ class Scenario(QuotationBuilder):
             j_dumps(data, self.export_path / f'{self.mexiron_name}_{lang}.json')
 
             reporter = ReportGenerator(if_need_docx=False)
-            reporter.create_reports(bot = bot, 
+            await reporter.create_reports_async(bot = bot, 
                                 chat_id = chat_id,
                                 data = data,
                                 lang = lang,
@@ -175,13 +187,13 @@ def run_sample_scenario():
     ...
     urls_list:list[str] = ['https://www.morlevi.co.il/product/21039',
                            'https://www.morlevi.co.il/product/21018',
-                           'https://www.ivory.co.il/catalog.php?id=85473'
-                           'https://ksp.co.il/web/item/309113',
+                           'https://www.ivory.co.il/catalog.php?id=85473',
                            'https://grandadvance.co.il/eng/?go=products&action=view&ties_ids=801&product_id=28457--SAMSUNG-SSD-1TB-990-EVO-PCle-4.0-x4--5.0-x2-NVMe',
                            'https://www.ivory.co.il/catalog.php?id=85473',
                            'https://www.morlevi.co.il/product/21018']
-    s = Scenario('test price quotation')
-    s.run_scenario(urls = urls_list, )
+
+    s = Scenario(window_mode = 'headless')
+    asyncio.run(s.run_scenario_async(urls = urls_list, mexiron_name = 'test price quotation', ))
 
 
 

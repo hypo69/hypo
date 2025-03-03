@@ -13,4 +13,5 @@
 
 from .translator import translate
 from .model import OpenAIModel
+from .chat_open_ai.browser_agent import AIBrowserAgent 
 

@@ -1,6 +1,5 @@
 ## \file /src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -39,11 +38,7 @@ WebDriver Firefox
         browser.quit()
 """
 
-# -*- coding: utf-8 -*-
-
-#! .pyenv/bin/python3
-
-import os
+import os, sys
 import random
 from pathlib import Path
 from typing import Optional, List
@@ -85,7 +80,7 @@ class Firefox(WebDriver):
     :type window_mode: Optional[str]
     """
     driver_name: str = 'firefox'
-
+    service: 'Service'
     def __init__(self, profile_name: Optional[str] = None,
                  geckodriver_version: Optional[str] = None,
                  firefox_version: Optional[str] = None,
@@ -94,34 +89,29 @@ class Firefox(WebDriver):
                  options: Optional[List[str]] = None,
                  window_mode: Optional[str] = None,
                  *args, **kwargs) -> None:
+        """"""
+        logger.info('Запуск Firefox WebDriver')
         #  объявление переменных
-        service = None
         profile = None
         options_obj = None
         #  Загрузка настроек Firefox
-        settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'firefox' / 'firefox.json'))
+        config = j_loads_ns(Path(gs.path.src / 'webdriver' / 'firefox' / 'firefox.json'))
         #  Путь к geckodriver и бинарнику Firefox
-        geckodriver_path: str = str(Path(gs.path.root, settings.executable_path.geckodriver))
-        firefox_binary_path: str = str(Path(gs.path.root, settings.executable_path.firefox_binary))
+        geckodriver_path: str = str(Path(gs.path.root, config.executable_path.geckodriver))
+        firefox_binary_path: str = str(Path(gs.path.root, config.executable_path.firefox_binary))
         #  Инициализация сервиса
         service = Service(geckodriver_path)
         #  Настройка опций Firefox
         options_obj = Options()
         
         #  Добавление опций из файла настроек
-        if hasattr(settings, 'options') and settings.options:
-            for option in settings.options:
+        if hasattr(config, 'options') and config.options:
+            for option in config.options:
                 options_obj.add_argument(option)
-        
-        #  Установка режима окна из конфига
-        if hasattr(settings, 'window_mode') and settings.window_mode:
-            window_mode = window_mode or settings.window_mode
+
         #  Установка режима окна из параметров
         if window_mode:
-            if window_mode == 'kiosk':
-                options_obj.add_argument("--kiosk")
-            elif window_mode == 'windowless':
-               options_obj.add_argument("--headless")
+            options_obj.add_argument(f'--{window_mode}')
 
         #  Добавление опций, переданных при инициализации
         if options:
@@ -129,8 +119,8 @@ class Firefox(WebDriver):
                 options_obj.add_argument(option)
 
         #  Добавление заголовков из настроек
-        if hasattr(settings, 'headers') and settings.headers:
-            for key, value in vars(settings.headers).items():
+        if hasattr(config, 'headers') and config.headers:
+            for key, value in vars(config.headers).items():
                  options_obj.add_argument(f'--{key}={value}')
 
         #  Установка пользовательского агента
@@ -138,24 +128,24 @@ class Firefox(WebDriver):
         options_obj.set_preference('general.useragent.override', user_agent)
 
         #  Установка прокси, если включены
-        if hasattr(settings, 'proxy_enabled') and settings.proxy_enabled:
+        if hasattr(config, 'proxy_enabled') and config.proxy_enabled:
             self.set_proxy(options_obj)
 
         #  Настройка директории профиля
-        profile_directory = settings.profile_directory.os if settings.profile_directory.default == 'os' else str(Path(gs.path.src, settings.profile_directory.internal))
+        profile_directory = config.profile_directory.os if config.profile_directory.default == 'os' else str(Path(gs.path.src, config.profile_directory.internal))
 
         if profile_name:
             profile_directory = str(Path(profile_directory).parent / profile_name)
         if '%LOCALAPPDATA%' in profile_directory:
              profile_directory = Path(profile_directory.replace('%LOCALAPPDATA%', os.environ.get('LOCALAPPDATA')))
 
-        profile = FirefoxProfile(profile_directory=profile_directory)
+        #profile = FirefoxProfile(profile_directory=profile_directory) <- @debug не грузится профиль
 
         try:
-            logger.info('Запуск Firefox WebDriver')
+            
             super().__init__(service=service, options=options_obj)
-            #  Выполнение пользовательских действий после инициализации драйвера
             self._payload()
+            logger.success(f'Браузер запустился {window_mode=}')
         except WebDriverException as ex:
             logger.critical("""
                 ---------------------------------
@@ -164,10 +154,11 @@ class Firefox(WebDriver):
                     - Обновление Firefox
                     - Отсутствие Firefox на ОС
                 ----------------------------------""", ex)
+            ...
             sys.exit(1)
         except Exception as ex:
-            logger.critical('Ошибка работы Firefox WebDriver:', ex)
-            return  # Явный возврат при ошибке
+            logger.critical('Ошибка Firefox WebDriver:', ex)
+            return 
 
     def set_proxy(self, options: Options) -> None:
         """

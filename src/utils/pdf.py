@@ -13,12 +13,13 @@
 - https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
 - https://habr.com/ru/companies/bothub/articles/853490/
 """
-from __future__ import annotations
+
 import sys
 import os
 import json
 
 from pathlib import Path
+from typing import Any
 import pdfkit
 from reportlab.pdfgen import canvas
 
@@ -246,7 +247,7 @@ class PDFUtils:
 
     # Функция для конвертации словаря в PDF
     @staticmethod
-    def dict2pdf(data: dict | 'SimpleNamespace', file_path: str | Path) -> None:
+    def dict2pdf(data: Any, file_path: str | Path) -> None:
         """
         Save dictionary data to a PDF file.
 

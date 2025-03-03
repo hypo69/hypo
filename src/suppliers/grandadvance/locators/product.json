@@ -865,7 +865,7 @@
     "attribute": "innerText",
     "by": "XPATH",
     "selector": "//h1[@itemprop = 'name']",
-    "if_list": "first",
+    "if_list": "last",
     "use_mouse": false,
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
@@ -883,7 +883,7 @@
     "timeout_for_event": "presence_of_element_located",
     "event": null,
     "mandatory": true,
-    "locator_description": "краткое Описание товара. Оно нахосится в спанах под див"
+    "locator_description": "GRANADVANCE - краткое описание товара."
   },
   "description": {
     "attribute": "innerText",
@@ -895,7 +895,7 @@
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "Технические характеристики."
+    "locator_description": "GRANADVANCE - Технические характеристики."
   },
   "specification": {
     "attribute": "innerText",

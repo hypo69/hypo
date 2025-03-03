@@ -17,6 +17,7 @@ from sqlalchemy import Column, Integer, DateTime, String, MetaData, Table, Forei
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+import header
 from src import gs
 from src.logger.logger import logger
 

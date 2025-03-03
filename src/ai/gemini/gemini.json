@@ -1,0 +1,20 @@
+{
+
+  "model": "gemini-2.0-flash-exp",
+  "avaiable_models": [
+
+    "gemini-2.0-flash-exp",
+    "gemini-1.5-flash-8b-exp-0924",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
+    "gemini-2-13b",
+    "gemini-3-20b"
+  ],
+  "response_mime_types": [ "plain/text", "application/json", "image/png" ],
+  "storage": "external_storage",
+  "avaiable_storages": [
+    "external_storage",
+    "data",
+    "google_drive"
+  ]
+} 

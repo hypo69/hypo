@@ -6,7 +6,7 @@
 	:platform: Windows, Unix
 	:synopsis: Расписано каждое поле товара для таблиц престашоп"""
 
-from __future__ import annotations
+
 import asyncio
 from datetime import datetime
 from enum import Enum

@@ -8,7 +8,7 @@
 	:synopsis: Module for managing and processing images and promoting to Facebook and PrestaShop.
 
 """
-from __future__ import annotations
+
 import os
 import asyncio
 import time

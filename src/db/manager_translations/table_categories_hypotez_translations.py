@@ -1,6 +1,5 @@
 ## \file /src/db/manager_translations/table_categories_hypotez_translations.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -17,8 +16,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import or_
 ...
+import header
 from src import gs
-#credentials = gs.db_translations_credentials
+from src.logger.logger import logger
 
 class CategoriesHypotezFullListManager:
     """Пример использования:

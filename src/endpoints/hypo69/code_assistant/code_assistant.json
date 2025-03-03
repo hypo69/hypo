@@ -42,7 +42,8 @@
     "getting_started_in_classroom_computing",
     "more_basic_computer_games",
     "Understanding_Mathematics_And_Logic_Using_BASIC_Computer_Games",
-    "projecteuler"
+    "projecteuler",
+    "TinyTroupe"
 
   ],
   "exclude_files": [
@@ -94,6 +95,8 @@
     "```md\n",
     "```markdown",
     "```markdown\n",
+    "```html",
+    "```html\n",
     "```",
     "```\n"
   ],
@@ -135,7 +138,6 @@
     "code_checker_md",
     "code_explainer_md",
     "doc_writer_md",
-
     "how_to_writer_md"
   ],
   "exclude-roles": [

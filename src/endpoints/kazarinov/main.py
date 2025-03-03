@@ -13,4 +13,4 @@ import header
 from src.endpoints.kazarinov.minibot import main
 
 if __name__ == "__main__":
-	main('DEV')
+	main()

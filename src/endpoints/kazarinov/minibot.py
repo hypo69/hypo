@@ -9,7 +9,7 @@
 	:synopsis: минибот для обслуживания запросов от казаринова
 
 """
-from __future__ import annotations
+
 import telebot
 import os
 import datetime
@@ -33,7 +33,7 @@ from src.utils.printer import pprint as print
 ENDPOINT = 'kazarinov'
 USE_ENV:bool = True # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
 MODE:str = 'PRODUCTION' # <- Определяет режим разработчика. Если MODE=='PRODUCTION' будет запущен kazarionaov бот, иначе тестбот
-
+MODE:str = 'DEV'
 #############################################################
 
 if USE_ENV:
@@ -92,7 +92,7 @@ class BotHandler:
            price, mexiron_name, urls = fetch_target_urls_onetab(url)
            bot.send_message(message.chat.id, f'Получил мехирон {mexiron_name} - {price} шек')
         except Exception as ex:
-            logger.error(f"Error fetching URLs from OneTab: {ex}")
+            logger.error(f"Error fetching URLs from OneTab: ",ex)
             bot.send_message(message.chat.id, "Произошла ошибка при получении данных из OneTab.")
             return
         if not urls:
@@ -100,14 +100,16 @@ class BotHandler:
             return
 
         try:
-            self.scenario = Scenario(mexiron_name = mexiron_name)
-            self.scenario.run_scenario(
+            #self.scenario = Scenario(window_mode = 'headless' if MODE == 'PRODUCTION' else 'normal' )
+            self.scenario = Scenario(window_mode = 'headless' ) # debug
+            asyncio.run(
+                self.scenario.run_scenario_async(
+                mexiron_name = mexiron_name,
                 urls = list(urls), 
                 price = price,
                 bot = bot,
-                chat_id = message.chat.id,
+                chat_id = message.chat.id,))
 
-            )
         
 
         except Exception as ex:
@@ -184,7 +186,6 @@ class BotHandler:
             return False
 
 # --- config.py -----------------
-
 
 class Config:
     if MODE=='PRODUCTION':
@@ -270,9 +271,8 @@ def handle_unknown_command(message):
     logger.info(f"User {message.from_user.username} send unknown command: {message.text}")
     bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
 
-def main(mode:str = 'PRODUCTION'):
-    global MODE
-    MODE = mode
+def main():
+
     try:
         bot.polling(none_stop=True)
         
@@ -282,5 +282,5 @@ def main(mode:str = 'PRODUCTION'):
         main()
 
 if __name__ == '__main__':
-    main(mode = 'DEV')
+    main()
    

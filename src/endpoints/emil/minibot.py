@@ -8,7 +8,7 @@
 	:synopsis: Простой бот для телеграма, обслуживаююий запросы для emil-design.com
 
 """
-from __future__ import annotations
+
 import telebot
 import os
 import datetime

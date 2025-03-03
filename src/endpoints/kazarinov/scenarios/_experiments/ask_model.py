@@ -21,7 +21,7 @@ from pathlib import Path
 import re
 import header
 from src import gs, logger
-from src.ai.gemini.generative_ai import GoogleGenerativeAI
+from src.ai.gemini.gemini import GoogleGenerativeAI
 from src.utils.jjson import j_dumps, j_loads_ns,j_loads
 from src.logger.logger import logger
 

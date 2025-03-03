@@ -30,7 +30,7 @@ class Simulation:
         self.name_to_environment = {} # {environment_name: environment, ...}
         self.status = Simulation.STATUS_STOPPED
 
-        self.cache_path = f"./tinytroupe-cache-{id}.json" # default cache path
+        self.cache_path = f"./tinytroupe-{id}.cache.json" # default cache path
         
         # should we always automatically checkpoint at the every transaction?
         self.auto_checkpoint = False
@@ -52,6 +52,9 @@ class Simulation:
             self.cached_trace = []
         else:
             self.cached_trace = cached_trace
+        
+        self.cache_misses = 0
+        self.cache_hits = 0
 
         # Execution chain mechanism.
         #
@@ -69,10 +72,13 @@ class Simulation:
                     defaults to the default cache path defined in the class.
             auto_checkpoint (bool, optional): Whether to automatically checkpoint at the end of each transaction. Defaults to False.
         """
+
+        logger.debug(f"Starting simulation, cache_path={cache_path}, auto_checkpoint={auto_checkpoint}.")
+
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
         from tinytroupe.environment import TinyWorld
-        from tinytroupe.factory import TinyFactory
+        from tinytroupe.factory.tiny_factory import TinyFactory
 
         if self.status == Simulation.STATUS_STOPPED:
             self.status = Simulation.STATUS_STARTED
@@ -91,7 +97,7 @@ class Simulation:
         TinyFactory.clear_factories()
 
         # All automated fresh ids will start from 0 again for this simulation
-        utils._fresh_id_counter = 0
+        utils.reset_fresh_id()
 
         # load the cache file, if any
         if self.cache_path is not None:
@@ -101,6 +107,7 @@ class Simulation:
         """
         Marks the end of the simulation being controlled.
         """
+        logger.debug("Ending simulation.")
         if self.status == Simulation.STATUS_STARTED:
             self.status = Simulation.STATUS_STOPPED
             self.checkpoint()
@@ -111,6 +118,7 @@ class Simulation:
         """
         Saves current simulation trace to a file.
         """
+        logger.debug("Checkpointing simulation state.")
         # save the cache file
         if self.has_unsaved_cache_changes:
             self._save_cache_file(self.cache_path)
@@ -379,7 +387,7 @@ class Transaction:
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
         from tinytroupe.environment import TinyWorld
-        from tinytroupe.factory import TinyFactory
+        from tinytroupe.factory.tiny_factory import TinyFactory
 
         self.obj_under_transaction = obj_under_transaction
         self.simulation = simulation
@@ -432,6 +440,8 @@ class Transaction:
 
             # Check if the event hash is in the cache
             if self.simulation._is_transaction_event_cached(event_hash):
+                self.simulation.cache_hits += 1
+
                 # Restore the full state and return the cached output
                 logger.info(f"Skipping execution of {self.function_name} with args {self.args} and kwargs {self.kwargs} because it is already cached.")
 
@@ -446,6 +456,7 @@ class Transaction:
                 output = self._decode_function_output(encoded_output)
 
             else: # not cached
+                self.simulation.cache_misses += 1
                 
                 # reentrant transactions are not cached, since what matters is the final result of
                 # the top-level transaction
@@ -484,7 +495,7 @@ class Transaction:
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
         from tinytroupe.environment import TinyWorld
-        from tinytroupe.factory import TinyFactory
+        from tinytroupe.factory.tiny_factory import TinyFactory
 
 
         # if the output is a TinyPerson, encode it
@@ -512,7 +523,7 @@ class Transaction:
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
         from tinytroupe.environment import TinyWorld
-        from tinytroupe.factory import TinyFactory
+        from tinytroupe.factory.tiny_factory import TinyFactory
 
         if encoded_output is None:
             return None
@@ -617,5 +628,17 @@ def current_simulation():
         return _simulation(_current_simulation_id)
     else:
         return None
+
+def cache_hits(id="default"):
+    """
+    Returns the number of cache hits.
+    """
+    return _simulation(id).cache_hits
+
+def cache_misses(id="default"):
+    """
+    Returns the number of cache misses.
+    """
+    return _simulation(id).cache_misses
     
 reset() # initialize the control state

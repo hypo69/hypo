@@ -210,9 +210,16 @@ class Driver:
 
         try:
             self.driver.get(url)
-            
-            while self.ready_state != 'complete':
+           
+            attempts = 5
+            while self.ready_state not in ('complete','interactive'):
                 """ Ожидание завершения загрузки страницы """
+                attempts -= 5
+                if attempts < 0: # Если страница не загрузилась за 5 попыток, то цикл прерывается с выводом сообщения об ошибке
+                    logger.error(f'Страница не загрузилась за 5 попыток: {url=}')
+                    ...
+                    break
+                time.sleep(1)
 
             if url != _previous_url:
                 self.previous_url = _previous_url
