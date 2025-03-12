@@ -15,10 +15,10 @@ import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional, List
-from dotenv import load_dotenv
+
 from dataclasses import dataclass, field
 
-load_dotenv()
+
 import header
 from header import __root__
 
@@ -41,7 +41,13 @@ from src.logger.logger import logger
 
 # ---------------------------------
 ENDPOINT: str = 'emil'
-USE_ENV: bool = True
+
+from src import USE_ENV
+if USE_ENV:
+    from dotenv import load_dotenv
+    load_dotenv()
+
+
 
 class EmilDesign:
     """Dataclass for designing and promoting images through various platforms."""
@@ -52,8 +58,8 @@ class EmilDesign:
     config: SimpleNamespace = j_loads_ns(base_path / f'{ENDPOINT}.json')
     data_path: Path = getattr(gs.path, config.storage, 'external_storage') / ENDPOINT
     gemini_api: str = os.getenv('GEMINI_API') if USE_ENV else gs.credentials.gemini.emil
-    presta_api: str = os.getenv('PRESTA_API') if USE_ENV else gs.credentials.prestashop.emil_design.api_key
-    presta_url: str = os.getenv('PRESTA_URL') if USE_ENV else gs.credentials.prestashop.emil_design.url
+    presta_api: str = os.getenv('PRESTA_API') if USE_ENV else gs.credentials.presta.client.emil_design.api_key
+    presta_url: str = os.getenv('PRESTA_URL') if USE_ENV else gs.credentials.presta.client.emil_design.api_domain
 
     def describe_images(self, 
                               lang: str,
@@ -67,6 +73,7 @@ class EmilDesign:
         system_instruction += furniture_categories + prompt
 
         output_json = self.data_path / f'out_{gs.now}_{lang}.json'
+
         described_images_path = self.data_path / 'described_images.txt'
         described_images: list = read_text_file(described_images_path, as_list=True) or []
         images_dir = self.data_path / 'images' / 'furniture_images'
@@ -89,7 +96,8 @@ class EmilDesign:
             )
 
         for img in images_to_process:
-            print(f"Starting process file {img}\n")
+            ouptut_dicts_list:dict = j_loads(output_json)
+            logger.info(f"Starting process file {img}\n")
             
             raw_img_data = get_raw_image_data(images_dir / img)
             response = self.gemini.describe_image(image=raw_img_data, mime_type='image/jpeg', prompt = prompt)
@@ -97,11 +105,13 @@ class EmilDesign:
             if not response:
                 logger.debug(f"Failed to get description for {img}")
             else:
-                res_ns: SimpleNamespace = j_loads_ns(response)[0] if isinstance(j_loads_ns(response), list) else j_loads_ns(response)
-                setattr(res_ns, 'local_image_path', str(images_dir / img))
+                response_dict: dict = j_loads(response)[0] if isinstance(j_loads(response), list) else j_loads(response)
+                response_dict['local_image_path'] = str(images_dir / img)
+                ouptut_dicts_list.append(response_dict)
+                j_dumps(ouptut_dicts_list, output_json)
+                # Список уже обработанных изображений
                 described_images.append(str(images_dir / img))
                 j_dumps(described_images, described_images_path)
-                j_dumps([res_ns], output_json)
                 
             time.sleep(15)
 

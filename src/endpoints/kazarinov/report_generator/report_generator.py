@@ -177,7 +177,7 @@ class ReportGenerator:
 
         if not pdf.save_pdf_pdfkit(self.html_content, pdf_path):
             logger.error(f"Не удалось сохранить PDF файл {pdf_path}")
-            if self.bot: self.bot.send_message(self.chat_id, f"Не удалось отправить файл {pdf_path} по причине: {ex}")
+            if self.bot: self.bot.send_message(self.chat_id, f"Не удалось сохранить файл {pdf_path}")
             ...
             return False
         

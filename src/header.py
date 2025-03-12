@@ -1,9 +1,9 @@
-## \file /src/webdriver/header.py
+## \file /src/header.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
 
 """
-.. module:: src.webdriver 
+.. module:: src.header 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -21,7 +21,7 @@ from typing import Optional
 from src import gs
 from src.endpoints.advertisement import facebook
 from src.webdriver.driver import Driver
-from src.suppliers.aliexpress.campaign import AliCampaignEditor
+
 from src.endpoints.advertisement.facebook.scenarios import (post_message, 
                                                   post_event, 
                                                   post_message_title, 
@@ -186,6 +186,7 @@ class FacebookPromoter:
     def get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> SimpleNamespace:
         """Fetches the category item for promotion based on the campaign and promoter."""    
         if self.promoter == 'aliexpress':
+            from src.suppliers.aliexpress.campaign import AliCampaignEditor
             ce = AliCampaignEditor(campaign_name=campaign_name, language=group.language, currency=group.currency)
             list_categories = ce.list_categories
             random.shuffle(list_categories)

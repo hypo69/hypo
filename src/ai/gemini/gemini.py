@@ -407,15 +407,23 @@ class GoogleGenerativeAI:
 
             except DefaultCredentialsError as ex:
                 logger.error(f"Ошибка аутентификации: ", print(ex))
-                return None
+                return 
 
             except (InvalidArgument, RpcError) as ex:
                 logger.error("API error:", ex, False)
                 return
             except Exception as ex:
                 logger.error(f"Ошибка при отправке запроса модели: ", ex)
-                return None
+                return 
            
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~
+            try:
+                response_dict:dict = response.to_dict()
+                print(response_dict)
+            except Exception as ex:
+                print(ex)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
             if response.text:
                 return response.text
             else:

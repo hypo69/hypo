@@ -1,6 +1,5 @@
 ## \file /src/__init__.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
@@ -10,17 +9,15 @@
 
 Root of the project.
 ========================================================================================
-
-This module provides a structured overview of various modules within the project,
-detailing their primary functionalities and roles.
-
-Usage Example
---------------------
-
-.. code-block:: python
-
-    # No usage example available for this module.
+•	USE_ENV:bool: Переменная, которая определяет, откуда читать секреты: API-ключи и т.д. 
+•	Если USE_ENV равно True, модуль gs будет импортирован из gs.py, а секреты будут читаться из файлов .env.
+•	Если USE_ENV равно False, модуль gs будет импортирован из credentials.py. и секреты будут читаться из объекта gs. (например, `token = gs.path.telegram.kazarinov_bot`)
 """
 
 
-from .credentials import gs
+USE_ENV:bool = False
+
+if USE_ENV:
+	from .gs import gs
+else:
+	from .credentials import gs

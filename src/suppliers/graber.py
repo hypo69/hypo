@@ -1,4 +1,3 @@
-
 ## \file /src/suppliers/graber.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
@@ -41,15 +40,15 @@ from pathlib import Path
 from typing import Optional, Any
 from types import SimpleNamespace
 from typing import Callable
-from langdetect import detect
+# from langdetect import detect
 from functools import wraps
 
 import header
 from src import gs
 
 from src.endpoints.prestashop.product_fields import ProductFields
-from src.endpoints.prestashop.category_async import PrestaCategoryAsync
-# from src.webdriver.driver import Driver  # не требуется импортировать здесь
+# from src.endpoints.prestashop.category_async import PrestaCategoryAsync
+
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_image, save_image_async, save_image_from_url_async
 
@@ -76,7 +75,7 @@ class Context:
     :vartype supplier_prefix: str
     """
 
-    # Атрибуты класса
+    # Аттрибуты класса
     driver: 'Driver' = None
     locator_for_decorator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
     supplier_prefix: str = None

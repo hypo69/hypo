@@ -25,7 +25,7 @@ from src.logger import logger
 ##############################################################
 
 ENDPOINT = 'openai.browser_agent'
-USE_ENV: bool = True  # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
+from src import USE_ENV
 MODE: str = 'PRODUCTION'  # <- Определяет режим разработчика. Если MODE=='PRODUCTION' будет запущен kazarionaov бот, иначе тестбот
 MODE: str = 'DEV'
 #############################################################

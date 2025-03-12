@@ -23,7 +23,6 @@ from pykeepass import PyKeePass
 from src.check_release import check_latest_release
 from src.logger.logger import logger
 from src.logger.exceptions import (
-    BinaryError,
     CredentialsError,
     DefaultSettingsException,
     HeaderChecksumError,

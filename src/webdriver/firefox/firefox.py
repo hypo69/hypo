@@ -95,7 +95,7 @@ class Firefox(WebDriver):
         profile = None
         options_obj = None
         #  Загрузка настроек Firefox
-        config = j_loads_ns(Path(gs.path.src / 'webdriver' / 'firefox' / 'firefox.json'))
+        config = j_loads_ns(Path(gs.path.src, 'webdriver', 'firefox', 'firefox.json'))
         #  Путь к geckodriver и бинарнику Firefox
         geckodriver_path: str = str(Path(gs.path.root, config.executable_path.geckodriver))
         firefox_binary_path: str = str(Path(gs.path.root, config.executable_path.firefox_binary))
