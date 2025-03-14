@@ -13,6 +13,7 @@ import re
 import asyncio
 import time
 import json
+import requests
 from io import IOBase
 from pathlib import Path
 from typing import Optional, Dict, List, Any
@@ -21,20 +22,23 @@ from dataclasses import dataclass, field
 import base64
 
 import google.generativeai as genai
-import requests
+
 
 from grpc import RpcError
 from google.api_core.exceptions import (
     GatewayTimeout,
+    RetryError,
     ServiceUnavailable,
     ResourceExhausted,
     InvalidArgument,
 )
-from google.auth.exceptions import DefaultCredentialsError, RefreshError
+from google.auth.exceptions import (
+    DefaultCredentialsError, 
+    RefreshError,
+)
 
 import header
 from header import __root__
-from src.logger.logger import logger
 from src import gs
 
 from src.utils.file import read_text_file, save_text_file
@@ -285,7 +289,7 @@ class GoogleGenerativeAI:
 
     async def ask_async(self, q: str, attempts: int = 15, save_history: bool = False, clean_response:bool = True) -> Optional[str]:
         """
-        Метод отправляет текстовый запрос модели и возвращает ответ.
+        Метод асинхронно отправляет текстовый запрос модели и возвращает ответ.
         """
         for attempt in range(attempts):
             try:
@@ -397,6 +401,7 @@ class GoogleGenerativeAI:
 
             # Отправка запроса и получение ответа
             try:
+                start_time = time.time()
                 response = self.model.generate_content(
                     str(
                         {
@@ -412,22 +417,21 @@ class GoogleGenerativeAI:
             except (InvalidArgument, RpcError) as ex:
                 logger.error("API error:", ex, False)
                 return
+            except RetryError as ex:
+                logger.error(f"Модель перегружена. Подожди час - другой: ", ex)
+                return 
             except Exception as ex:
                 logger.error(f"Ошибка при отправке запроса модели: ", ex)
                 return 
-           
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~
-            try:
-                response_dict:dict = response.to_dict()
-                print(response_dict)
-            except Exception as ex:
-                print(ex)
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            finally:
+                print(f'\nΔ = {time.time() - start_time }\n',text_color='yellow',bg_color='red')
 
-            if response.text:
-                return response.text
+
+            _t:str | None = response.text 
+            if _t:
+                return _t
             else:
-                print(f"{{Модель вернула:{response}}}")
+                print(f"{{Модель вернула:{response}}}",text_color='cyan')
                 return None
 
         except Exception as ex:

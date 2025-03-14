@@ -326,7 +326,7 @@ def _read_file_lines_generator(file_path: Path, chunk_size: int) -> Generator[st
 
 
 def get_filenames_from_directory(
-    directory: str | Path, extensions: str | list[str] = '*'
+    directory: str | Path, ext: str | list[str] = '*'
 ) -> list[str]:
     """
     Возвращает список имен файлов в директории, опционально отфильтрованных по расширению.
@@ -346,10 +346,10 @@ def get_filenames_from_directory(
         ['example.txt', 'readme.md']
     """
     try:
-        path = Path(directory)
-        if isinstance(extensions, str):
-            extensions = [extensions] if extensions != '*' else []
-        extensions = [ext if ext.startswith('.') else f'.{ext}' for ext in extensions]
+        path:Path = Path(directory)
+        if isinstance(ext, str):
+            extensions = [ext] if ext != '*' else []
+        extensions = [e if e.startswith('.') else f'.{e}' for e in ext]
 
         return [
             file.name

@@ -94,6 +94,7 @@ class CodeAssistant:
                 ...
 
         self._initialize_models(**kwards)
+        
 
     def _initialize_models(self, **kwards):
         """Инициализация моделей на основе заданных параметров."""

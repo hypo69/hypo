@@ -15,9 +15,7 @@ import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional, List
-
 from dataclasses import dataclass, field
-
 
 import header
 from header import __root__
@@ -48,7 +46,6 @@ if USE_ENV:
     load_dotenv()
 
 
-
 class EmilDesign:
     """Dataclass for designing and promoting images through various platforms."""
 
@@ -67,13 +64,13 @@ class EmilDesign:
                                              'openai': {'model_name':'gpt-4o-mini',
                                                         'assistant_id':'asst_uDr5aVY3qRByRwt5qFiMDk43'}}):
         """Describe images based on the provided instruction and examples."""
+        
         system_instruction = Path(self.base_path / 'instructions' / f'system_instruction.{lang}.md').read_text(encoding='UTF-8')
         prompt = Path(self.base_path / 'instructions' / f'hand_made_furniture.{lang}.md').read_text(encoding='UTF-8')
         furniture_categories = Path(self.base_path / 'categories' / 'main_categories_furniture.json').read_text(encoding='UTF-8').replace(r'\n', '').replace(r'\t', '')
         system_instruction += furniture_categories + prompt
 
         output_json = self.data_path / f'out_{gs.now}_{lang}.json'
-
         described_images_path = self.data_path / 'described_images.txt'
         described_images: list = read_text_file(described_images_path, as_list=True) or []
         images_dir = self.data_path / 'images' / 'furniture_images'
@@ -96,24 +93,25 @@ class EmilDesign:
             )
 
         for img in images_to_process:
-            ouptut_dicts_list:dict = j_loads(output_json)
+            
             logger.info(f"Starting process file {img}\n")
             
             raw_img_data = get_raw_image_data(images_dir / img)
             response = self.gemini.describe_image(image=raw_img_data, mime_type='image/jpeg', prompt = prompt)
-
+            ...
             if not response:
                 logger.debug(f"Failed to get description for {img}")
+                ...
             else:
                 response_dict: dict = j_loads(response)[0] if isinstance(j_loads(response), list) else j_loads(response)
                 response_dict['local_image_path'] = str(images_dir / img)
-                ouptut_dicts_list.append(response_dict)
-                j_dumps(ouptut_dicts_list, output_json)
+                j_dumps(response_dict, self.data_path / f'{img}.json')
                 # Список уже обработанных изображений
                 described_images.append(str(images_dir / img))
-                j_dumps(described_images, described_images_path)
+                save_text_file(described_images_path, described_images)
                 
-            time.sleep(15)
+                
+            time.sleep(15) # Задержка между запросами
 
     async def promote_to_facebook(self):
         """Promote images and their descriptions to Facebook."""
@@ -125,16 +123,22 @@ class EmilDesign:
             message = SimpleNamespace(title=f"{m.parent}\n{m.category}", description=m.description, products=SimpleNamespace(local_image_path=[m.local_image_path]))
             post_message(d, message, without_captions=True)
 
-    async def upload_described_products_to_prestashop(self, products_list: Optional[List[SimpleNamespace]] = None, lang: Optional[str] = None) -> bool:
+    def upload_described_products_to_prestashop(self, 
+                                                      products_list: Optional[List[SimpleNamespace]] = None, 
+                                                      lang: Optional[str] = None,
+                                                      *args, **kwards) -> bool:
         """Upload product information to PrestaShop."""
         products_list_file = self.data_path / "out_250108230345305_he.json"
-        products_list = products_list if products_list else j_loads_ns(products_list_file)
+        json_files_list = get_filenames_from_directory(self.data_path, ext='json')
+        products_list = [j_loads_ns(self.data_path / f) for f in json_files_list]
+        lang = lang or 'he'
 
         host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
         api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
-        MODE: str = 'dev8'
 
-        if MODE == 'dev8':
+        SUB_DOMAIN: str = 'dev8'
+
+        if SUB_DOMAIN == 'dev8':
             host = gs.credentials.presta.client.dev8_emil_design.api_domain
             api_key = gs.credentials.presta.client.dev8_emil_design.api_key
 
@@ -143,7 +147,7 @@ class EmilDesign:
         lang_index = getattr(lang_ns, lang)
 
         for product_ns in products_list:
-            f = ProductFields(lang_index=lang_index or lang_ns.he)
+            f:ProductFields = ProductFields(lang_index=lang_index or lang_ns.he)
             f.name=product_ns.name,
             f.description=product_ns.description
             f.price=100,
@@ -152,9 +156,11 @@ class EmilDesign:
             f.id_supplier = 11366
             f.local_image_path=product_ns.local_image_path
             p.add_new_product(f)
+            
 
 if __name__ == "__main__":
     emil = EmilDesign()
-    #asyncio.run(emil.upload_described_products_to_prestashop(lang='he'))
-    emil.describe_images('he')
+    emil.upload_described_products_to_prestashop(lang='he')
+    #asyncio.run(emil.upload_described_products_to_prestashop_async(lang='he'))
+    #emil.describe_images('he')
 

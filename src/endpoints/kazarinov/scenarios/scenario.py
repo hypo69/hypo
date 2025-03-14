@@ -75,9 +75,9 @@ class Scenario(QuotationBuilder):
     def __init__(self, mexiron_name:Optional[str] = gs.now, driver:Optional[Firefox | Playwrid | str] = None, **kwards):
         """Сценарий сбора информации."""
 
-        if 'window_mode' not in kwards:
-            kwards['window_mode'] = 'normal'
-
+        # if 'window_mode' not in kwards:
+        #     kwards['window_mode'] = 'normal'
+        kwards['window_mode'] = 'normal'
         self.driver = Driver(Firefox,**kwards) if not driver else driver
 
 
