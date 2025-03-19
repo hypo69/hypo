@@ -333,7 +333,7 @@ def get_filenames_from_directory(
 
     Args:
         directory (str | Path): Путь к директории для поиска.
-        extensions (str | list[str], optional): Расширения для фильтрации.
+        ext (str | list[str], optional): Расширения для фильтрации.
             По умолчанию '*'.
 
     Returns:
@@ -345,15 +345,18 @@ def get_filenames_from_directory(
         >>> get_filenames_from_directory(directory, ['.txt', '.md'])
         ['example.txt', 'readme.md']
     """
+    if not Path(directory).is_dir():
+        logger.error(f'Указанный путь \'{directory}\' не является директорией.')
+        return []
+
     try:
-        path:Path = Path(directory)
         if isinstance(ext, str):
             extensions = [ext] if ext != '*' else []
-        extensions = [e if e.startswith('.') else f'.{e}' for e in ext]
+        extensions = [e if e.startswith('.') else f'.{e}' for e in extensions]
 
         return [
             file.name
-            for file in path.iterdir()
+            for file in directory.iterdir()
             if file.is_file() and (not extensions or file.suffix in extensions)
         ]
     except Exception as ex:

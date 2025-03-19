@@ -33,6 +33,7 @@ from src.endpoints.advertisement.facebook.scenarios.post_message import (
     post_message,
 )
 from src.utils.file import read_text_file, save_text_file, get_filenames_from_directory
+
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import get_image_bytes, get_raw_image_data
 from src.logger.logger import logger
@@ -128,30 +129,53 @@ class EmilDesign:
                                                       lang: Optional[str] = None,
                                                       *args, **kwards) -> bool:
         """Upload product information to PrestaShop."""
-        products_list_file = self.data_path / "out_250108230345305_he.json"
-        json_files_list = get_filenames_from_directory(self.data_path, ext='json')
-        products_list = [j_loads_ns(self.data_path / f) for f in json_files_list]
-        lang = lang or 'he'
+        json_files_list:list[str] = get_filenames_from_directory(self.data_path, ext='json')
+        products_list:list[SimpleNamespace] = [j_loads_ns(self.data_path / f) for f in json_files_list]
+        lang:str = lang or 'he'
+        host:str = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
+        api_key:str = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
-        host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
-        api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
-        SUB_DOMAIN: str = 'dev8'
+        # DEVELOPMENT ENVIRONMENT !!!
+        """Список доменов для разных окружений
+        dev - prestashop 1.7 https://dev.emil-design.com/api
+        dev8 - prestashop 8  https://dev8.emil-design.com/api
+        """
+        SUB_DOMAIN: str = 'dev'
+        host:str=''
+        api_key:str=''
 
         if SUB_DOMAIN == 'dev8':
             host = gs.credentials.presta.client.dev8_emil_design.api_domain
             api_key = gs.credentials.presta.client.dev8_emil_design.api_key
 
+        elif SUB_DOMAIN == 'dev':
+            host = gs.credentials.presta.client.dev_emil_design.api_domain
+            api_key = gs.credentials.presta.client.dev_emil_design.api_key
+        
+            ... # другие окружения (f.e. production)
+
+        if not host or not api_key:
+            logger.error("PrestaShop credentials not found.", None, False)
+            ...
+            return False
+
         p = PrestaProduct(api_domain=host, api_key=api_key)
-        lang_ns = j_loads_ns(__root__ / 'src' / 'endpoints' / ENDPOINT / 'shop_locales' / 'locales.json')
-        lang_index = getattr(lang_ns, lang)
+
+        """Важно! При загрузке товаров в PrestaShop, необходимо указать язык, на котором будут отображаться названия и характеристики товара.
+        в данном случае, язык по умолчанию - иврит (he), но также можно указать английский (en) или русский (ru)
+        индексы могут меняться в зависимости от настроек магазина. Обычно я выставляю индекс `1` для английского, `2` для иврита и `3` для русского.
+        таблица с индексами для` emil-design.com` находится в файле `locales.json` в папке `shop_locales`
+        """
+        lang_ns: SimpleNamespace = j_loads_ns(Path(__root__ , 'src' , 'endpoints' , ENDPOINT , 'shop_locales' , 'locales.json'))
+        lang_index = getattr(lang_ns, lang) 
 
         for product_ns in products_list:
-            f:ProductFields = ProductFields(lang_index=lang_index or lang_ns.he)
-            f.name=product_ns.name,
-            f.description=product_ns.description
-            f.price=100,
-            f.id_category_default=product_ns.id_category_default,
+            f:ProductFields = ProductFields( lang_index )
+            f.name=product_ns.name
+            f.description = product_ns.description
+            f.price = '100'
+            f.id_category_default=product_ns.id_category_default
             f.additional_category_append(product_ns.id_category_parent)
             f.id_supplier = 11366
             f.local_image_path=product_ns.local_image_path

@@ -20,6 +20,12 @@ from header import __root__
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.file import read_text_file
+from src.utils.string.normalizer import ( 
+                                        normalize_boolean,
+                                        normalize_float,
+                                        normalize_sql_date,
+                                        normalize_int,
+)
 from src.logger import logger
 from src.logger.exceptions import ProductFieldException  # If you have this exception class
 
@@ -343,7 +349,7 @@ class ProductFields:
     def price(self, value: str | int | float):
         """ setter Цена товара."""
         try:
-            self.presta_fields.price = float(value)
+            self.presta_fields.price = normalize_float (value)
         except ValueError as ex:
             logger.error(f"Недопустимое значение для цены: {value}. Ошибка:",ex)
             return
@@ -1430,6 +1436,7 @@ class ProductFields:
         if self.id_default_image:
             product_dict["id_default_image"] = str_val(self.id_default_image)
 
+            
         # -- ps_product_lang fields --
         if self.description:
             product_dict["description"] = self._format_multilang_value(self.description)
@@ -1476,24 +1483,14 @@ class ProductFields:
         if self.how_to_use:
             product_dict["how_to_use"] = self._format_multilang_value(self.how_to_use)
 
-        # -- service fields
-
-        # if self.images_urls:
-        #     product_dict["images_urls"] = [str_val(url) for url in self.images_urls] if isinstance(self.images_urls, list) else str_val(self.images_urls)
-        # if self.position_in_category:
-        #     product_dict["position_in_category"] = str_val(self.position_in_category)
-        # if self.link_to_video:
-        #     product_dict["link_to_video"] = str_val(self.link_to_video)
-
-
-
 
         # Добавление associations, если они есть
         associations_dict = {}
         if hasattr(self.presta_fields, 'associations') and self.presta_fields.associations:
 
             if 'categories' in self.presta_fields.associations and self.presta_fields.associations['categories']:
-                associations_dict['categories'] = [{'id': str_val(cat['id'])} for cat in self.presta_fields.associations['categories']]
+            #if self.additional_categories:
+                associations_dict['categories'] = [{'id': str_val(cat['id'])} for cat in self.additional_categories]
             if 'images' in self.presta_fields.associations and self.presta_fields.associations['images']:
                 associations_dict['images'] = [{'id': str_val(img['id'])} for img in self.presta_fields.associations['images']]
             if 'combinations' in self.presta_fields.associations and self.presta_fields.associations['combinations']:
@@ -1503,6 +1500,7 @@ class ProductFields:
             if 'product_features' in self.presta_fields.associations and self.presta_fields.associations['product_features']:
                 associations_dict['product_features'] = [{'id': str_val(feat['id']), 'id_feature_value': str_val(feat['id_feature_value'])} for feat in self.presta_fields.associations['product_features']]
             if 'tags' in self.presta_fields.associations and self.presta_fields.associations['tags']:
+            #if self.tags:
                 associations_dict['tags'] = [{'id': str_val(tag['id'])} for tag in self.presta_fields.associations['tags']]
             if 'stock_availables' in self.presta_fields.associations and self.presta_fields.associations['stock_availables']:
                 associations_dict['stock_availables'] = [{'id': str_val(stock['id']), 'id_product_attribute': str_val(stock['id_product_attribute'])} for stock in self.presta_fields.associations['stock_availables']]

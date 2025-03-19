@@ -116,16 +116,21 @@ class PrestaProduct(PrestaShop):
 
         presta_product_dict: dict = f.to_dict()
 
+        ...
         kwards = {
-            'io_format': 'XML',
+            'io_format': 'JSON', # may be 'XML' or 'JSON'
             'language': 2,
         }
 
-        # Convert the dictionary to XML format for PrestaShop.
-        data: str = presta_fields_to_xml({"product": presta_product_dict})
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG Try sending data in XML format ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        #          Convert the dictionary to XML format for PrestaShop.
+        # j_dumps(presta_product_dict, gs.path.endpoints / 'emil' / '_experiments' / f'presta_product_dict.{gs.now}.json')
+        # xml_data: str = presta_fields_to_xml({"product": presta_product_dict})
+        # kwards['io_format'] = 'XML'
+        # response = self._exec(resource='products', method='POST', data=xml_data, **kwards)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        response = self._exec(resource='products', method='POST', data=data, io_format = kwards['io_format'], **kwards)
-        #response = self.create('products', data={'product': presta_product_dict}, **kwards)
+        response = self.create('products', data={'products': presta_product_dict}, **kwards)
 
         if response:
             try:

@@ -1,0 +1,48 @@
+{
+    "id_supplier": "11366",
+    "id_category_default": "11345",
+    "id_shop_default": "1",
+    "id_shop": "1",
+    "id_tax": "13",
+    "on_sale": "1",
+    "online_only": "0",
+    "minimal_quantity": "1",
+    "price": "100.0",
+    "active": "1",
+    "available_for_order": "1",
+    "show_condition": "1",
+    "condition": "new",
+    "show_price": "1",
+    "visibility": "1",
+    "is_virtual": "0",
+    "state": "1",
+    "product_type": "standard",
+    "description": [
+        {
+            "id": "2",
+            "value": "סט מיטה אלגנטי בצבע לבן, כולל מיטה עם ראש מיטה מעוטר בפאנלים דקורטיביים ומגירות נשלפות בבסיס.  עיצוב נקי ומינימליסטי המשלב פונקציונליות ואסתטיקה."
+        }
+    ],
+    "name": [
+        {
+            "id": "2",
+            "value": "סט מיטה לבן אלגנטי"
+        }
+    ],
+    "associations": {
+        "categories": [
+            {
+                "id": "2"
+            },
+            {
+                "id": "11167"
+            },
+            {
+                "id": "11345"
+            },
+            {
+                "id": "11342"
+            }
+        ]
+    }
+}
