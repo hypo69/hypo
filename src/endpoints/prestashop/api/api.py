@@ -232,7 +232,7 @@ class PrestaShop:
             return response
         else:
 
-            error_answer = self._parse(response.text)
+            error_answer = self._parse_response(text)
             if isinstance(error_answer, dict):
                 error_content = (error_answer
                                  .get('PrestaShop', {})
@@ -277,7 +277,7 @@ class PrestaShop:
           sort: Optional[str] = None,
           limit: Optional[str] = None,
           language: Optional[int] = None,
-          io_format: str = 'JSON') -> Optional[dict]:
+          data_format: str = 'JSON') -> Optional[dict]:
         """Execute an HTTP request to the PrestaShop API."""
 
         try:
@@ -289,15 +289,15 @@ class PrestaShop:
                                     'sort': sort,
                                     'limit': limit,
                                     'language': language,
-                                    'output_format': io_format})
+                                    'output_format': data_format})
 
             # устанавливаем Content-Type: application/json
-            request_headers = {'Content-Type': 'application/json','Accept': 'application/json'} if io_format == 'JSON' else {'Content-Type': 'application/xml','Accept': 'application/xml'}
+            request_headers = {'Content-Type': 'application/json','Accept': 'application/json'} if data_format == 'JSON' else {'Content-Type': 'application/xml','Accept': 'application/xml'}
 
             if headers:
                 request_headers.update(headers)
 
-            self.data_format = io_format 
+            self.data_format = data_format 
 
 
             response = self.client.request(
@@ -321,7 +321,7 @@ class PrestaShop:
             logger.error(f'Error:',ex)
             return
 
-    def _parse_response(self, response:Response, io_format:Optional[str] = 'JSON' ) -> dict|None:
+    def _parse_response(self, response:Response, data_format:Optional[str] = 'JSON' ) -> dict|None:
         """Parse XML or JSON response from the API to dict structure
 
         :param text: Response text.
@@ -383,7 +383,7 @@ class PrestaShop:
         :rtype: dict
         """
         return self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data,
-                          io_format=self.data_format)
+                          data_format=self.data_format)
 
     def unlink(self, resource: str, resource_id: int | str) -> bool:
         """Delete a resource from the PrestaShop API.
@@ -396,7 +396,7 @@ class PrestaShop:
         :return: `True` if successful, `False` otherwise.
         :rtype: bool
         """
-        return self._exec(resource=resource, resource_id=resource_id, method='DELETE', io_format=self.data_format)
+        return self._exec(resource=resource, resource_id=resource_id, method='DELETE', data_format=self.data_format)
 
     def search(self, resource: str, filter: Optional[str | dict] = None, **kwargs) -> List[dict]:
         """Search for resources in the PrestaShop API.
@@ -427,7 +427,7 @@ class PrestaShop:
                 response.raise_for_status()  # Проверка на HTTP-ошибки
 
                 #return response.json()
-                return self._parse_response(response=response, io_format='XML')
+                return self._parse_response(response=response, data_format='XML')
 
         except RequestException as ex:
             logger.error(f"Ошибка при загрузке изображения:",ex)
@@ -488,7 +488,7 @@ class PrestaShop:
         :return: List of available APIs.
         :rtype: dict
         """
-        return self._exec('apis', method='GET', io_format=self.data_format)
+        return self._exec('apis', method='GET', data_format=self.data_format)
 
     def upload_image_async(self, resource: str, resource_id: int, img_url: str,
                            img_name: Optional[str] = None) -> Optional[dict]:
@@ -549,4 +549,4 @@ class PrestaShop:
         :return: List of product images or `False` on failure.
         :rtype: dict | None
         """
-        return self._exec(f'products/{product_id}/images', method='GET', io_format=self.data_format)
+        return self._exec(f'products/{product_id}/images', method='GET', data_format=self.data_format)

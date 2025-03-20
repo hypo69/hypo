@@ -93,11 +93,13 @@ class ProductFields:
         try:
             _lang_index = str(self.id_lang)
             #lang_data = {'attrs': {'id': _lang_index}, 'value': value}
-            lang_data_dict:dict = dict( {'language': { 'attrs':{'id': _lang_index}, 'value': value} })
+            lang_data_dict:dict = dict( {'language': [{ 'attrs':{'id': _lang_index}, 'value': value} ]})
+            lang_data_dict:dict = {'id': _lang_index, 'value': value}
 
             field = getattr(self.presta_fields, field_name, None)
 
-            if not hasattr(self.presta_fields, field_name) or not isinstance(field, dict) or 'language' not in field:
+            #if not hasattr(self.presta_fields, field_name) or not isinstance(field, dict) or 'language' not in field:
+            if not hasattr(self.presta_fields, field_name) or not isinstance(field, dict):
                 # Если структура отсутствует, создаем ее в виде списка
                 #setattr(self.presta_fields, field_name, {'language': [lang_data]})
                 setattr(self.presta_fields, field_name, lang_data_dict)

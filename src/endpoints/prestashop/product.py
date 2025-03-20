@@ -31,7 +31,25 @@ from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
 
+class Config:
+    
+    # 1. Конфигурация API
+    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass
 
+    MODE:str = 'prod'
+
+    if USE_ENV:
+        api_domain = os.getenv('HOST')
+        api_key = os.getenv('API_KEY')
+    elif MODE == 'dev':
+        api_domain = gs.credentials.presta.client.dev_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev_emil_design.api_key
+    elif MODE == 'dev8':
+        api_domain = gs.credentials.presta.client.dev8_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
+    else:
+        api_domain = gs.credentials.presta.client.emil_design.api_domain
+        api_key = gs.credentials.presta.client.emil_design.api_key
 
 class PrestaProduct(PrestaShop):
     """Manipulations with the product.
@@ -65,7 +83,7 @@ class PrestaProduct(PrestaShop):
         """
         try:
             category_response: dict = self.read(
-                'categories', resource_id=id_category, display='full', io_format='JSON'
+                'categories', resource_id=id_category, display='full', data_format='JSON'
             )['categories'][0]
 
             return int(category_response['id_parent'])
@@ -101,6 +119,8 @@ class PrestaProduct(PrestaShop):
 
     def get_product(self, id_product:int, **kwards):
         """"""
+        kwards = {'data_format': 'JSON', 'language': 2}
+        kwards = {'data_format': 'JSON',}
         return self.read(resource = 'products', resource_id = id_product, **kwards)
 
     def add_new_product(self, f: ProductFields) -> dict:
@@ -123,16 +143,16 @@ class PrestaProduct(PrestaShop):
 
         ...
         kwards = {
-            'io_format': 'JSON', # may be 'XML' or 'JSON'
+            'data_format': 'JSON', # may be 'XML' or 'JSON'
             'language': 2,
         }      
         
-        """ PRESTASHOP не любит JSON. Отправяю XML""" 
+        """  XML""" 
         # Convert the dictionary to XML format for PrestaShop.
-        # xml_data: str = presta_fields_to_xml({"product": presta_product_dict})
-        # save_xml(xml_data, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_product.xml")
-        # kwards['io_format'] = 'XML'
-        # response = self.create('products', data=xml_data, **kwards)
+        xml_data: str = presta_fields_to_xml({"product": presta_product_dict})
+        save_xml(xml_data, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_product.xml")
+        kwards['data_format'] = 'XML'
+        #response = self.create('products', data=xml_data, **kwards)
 
         response = self.create('products', data={'product': presta_product_dict}, **kwards)
 
@@ -157,27 +177,8 @@ class PrestaProduct(PrestaShop):
 
 
 
-class Config:
-    
-    # 1. Конфигурация API
-    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass
-
-    MODE:str = 'prod'
-
-    if USE_ENV:
-        host = os.getenv('HOST')
-        api_key = os.getenv('API_KEY')
-    elif MODE == 'dev':
-        host = gs.credentials.presta.client.dev_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev_emil_design.api_key
-    elif MODE == 'dev8':
-        host = gs.credentials.presta.client.dev8_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
-    else:
-        host = gs.credentials.presta.client.emil_design.api_domain # if USE_ENV else os.getenv('HOST')
-        api_key = gs.credentials.presta.client.emil_design.api_key # if USE_ENV else os.getenv('API_KEY')
-
-
+# ##################################################
+# ##################################################
 
 def example_add_new_product():
     """ Пример для добавления товара в Prestashop """
@@ -215,24 +216,13 @@ def example_add_new_product():
 
 def example_get_product(id_product:int, **kwards):
     """"""
-    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass
-    MODE:str = 'dev8'
-
-    if MODE == 'dev':
-        host = gs.credentials.presta.client.dev_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev_emil_design.api_key
-    if MODE == 'dev8':
-        host = gs.credentials.presta.client.dev8_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
-    else:
-        host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
-        api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
 
-    p = PrestaProduct(api_key=api_key, api_domi=ot)
+    p = PrestaProduct(api_key=Config.api_key, api_domain=Config.api_domain)
     kwards:dict = {
-    'io_format':'JSON',
-
+    'data_format':'JSON',
+    'display' :'full',
+    'schema' : 'blank',
     }
     presta_product = p.get_product(id_product, **kwards)
     presta_product = presta_product[0] if isinstance(presta_product, list) else presta_product
@@ -240,149 +230,12 @@ def example_get_product(id_product:int, **kwards):
     j_dumps(presta_product, gs.path.endpoints / 'emil' / '_experiments' / f'presta_response_product_{id_product}.json')
     ...
 
-
-
 if __name__ == '__main__':
     """"""
     example_add_new_product()
-
-    #example_get_product(4)
+    #example_get_product(2191)
     ...
 
 
 
 
-
-
-
-
-
-
-
-# --- executor.py --- from scenario module
-
-async def execute_prestashop_insert(dict_presta_fields: Dict, dict_assist_fields: Dict) -> bool:
-    """!
-    Adds or checks for the existence of a product. Makes sequential connection to the PrestaShop API.
-
-    @param dict_presta_fields Dictionary of product fields for addition.
-    @param dict_assist_fields Dictionary of auxiliary fields.
-
-    @return True if the product was successfully added or checked, False in case of an error.
-
-     This is a very bad solution. But this is not a hack, but a check of operability.
-    @note In this solution, I sequentially connect to the prestashop connectors emil-design.com / e-cat.co.il.
-    @todo Make multithreading (or asynchronous) here.
-    @todo The nose for the caribou.
-    """
-
-    """! For each product, I redefine the `Product` class anew, otherwise garbage (data from the previous product) may end up """
-    ...
-
-    # 5.1 build API request filter
-    reference = dict_presta_fields["reference"]
-    search_filter: Dict = {'filter[reference]': '[' + reference + ']'}
-    """! For `V3` I can pass the filter as a string `filter[id] = [5]` and as a dictionary `{'filter[id]':'[5]'}`.
-    By default, I use a dictionary."""
-    display: Dict = {'display': 'full'}
-    search_filter.update(display)
-
-    # 5.2 check for the presence of the product in the client's database
-    """! @todo Bad solution. I'm making too many connections """
-    for api_credentials in gs.list_prestashop_api_credentials:  ## <- I'm working with several clients (emil-design, e-cat, sergey.mymaster)
-        """! Connecting to each!!! client in turn. @todo Good only for testing, bad in production """
-
-        #p = Product (api_credentials)
-        presta_client = PrestaClient(api_credentials)
-        logger.info(f"""Presta client: {api_credentials['API_DOMAIN']}""")
-
-        # 5.2.1 Get response from prestashop.
-        check_prod_presence: dict = presta_client.get('products', search_filter=search_filter)
-        """!
-        - If the product does not yet exist in the database, an empty value will be returned.  (None)
-        - If the product already exists, I get a dictionary of fields and edit the fields if they have changed (price, description, etc.)
-        - If there was an error adding the product to prestashop, False will be returned.
-        @todo - write the logic for saving price history
-        """
-
-
-
-        if not check_prod_presence or len(check_prod_presence) == 0:
-            """! An empty response came back from the server. Adding a new product to the client's database """
-
-            # 6.1 Translations
-            try:
-                """! I get a dictionary with all translations of product fields into all client languages """
-                ...
-                client_languages_schema = presta_client.get_languages_schema()
-                dict_presta_fields = translate_dict_presta_fields(dict_presta_fields, dict_assist_fields['page_lang'], client_languages_schema)
-                ...
-
-            except Exception as ex:
-                logger.error(f'Error translating product fields', ex)
-                ...
-
-            try:
-                """! Add a new product to the client's prestashop database
-                I get a dictionary with the parameters of the added product in response
-                - get a dictionary of fields of the newly added product
-                - If there was an error adding the product to prestashop, False will be returned"""
-                new_product_dict: dict = presta_client.add(resource='products', data={'product': dict_presta_fields}, io_format='JSON')[0]
-                logger.success(f"""Product successfully added reference: - {new_product_dict['reference']}""")
-                ...
-
-            except Exception as ex:
-                logger.error(f""" Error adding a new product """, ex, True)
-                return False
-
-            #############################################################################
-            #                                                                           #
-            #                   IMAGES                                                  #
-            #                                                                           #
-            #############################################################################
-
-            _start_time = int(time.time())
-            uploaded_image_dict: dict = presta_client.upload_image('products', product_id, dict_assist_fields['product_image_default_url'], f"{new_product_dict['reference']}_main")
-            """! @code
-            {
-                'product_id':'int',
-                'image_id':'int',
-                'cover':'int',
-                'position':'int',
-                'legend':'{dict}'}
-
-            @endcode
-            """
-            if not uploaded_image_dict:
-                logger.error(f"Image did not add\n{dict_assist_fields['product_image_default_url']}")
-                ...
-            logger.warning(f""" ... one image was added in {int(time.time()) - _start_time} seconds """)
-            # 7.2.2 add the default image id to the product
-            new_product_dict['id_default_image'] = uploaded_image_dict['id']
-            ...
-            i = 0  # <- counter
-            # 7.2.3 Save other images
-            for url in dict_assist_fields['product_images_additional_urls']:
-                i += 1
-                # saved_img_dict: dict = presta_client.upload_image(product_id, url, f"{dict_presta_fields['referense']}_{i}")
-
-                # if not 'images' in  new_product_dict['associations'].keys():
-                #     new_product_dict['associations'].update({'images':{'image':[]}})
-
-                # new_product_dict['associations']['images']['image'].append({'id': saved_img_dict['id']})
-                uploaded_image_dict: dict = presta_client.upload_image('products', product_id, url, f"{dict_presta_fields['reference']}_{i}")
-                new_product_dict['associations']['images']['image'].append({'id': uploaded_image_dict['id']})
-            ...
-
-            """! @debug """
-            logger.warning(f"""Images successfully uploaded in {int(time.time()) - _start_time} seconds """)
-            if os.path.exists(f'{dict_presta_fields["reference"]}_dict_presta_fields.json'):  # Check if the file exists
-                os.remove(f'{dict_presta_fields["reference"]}_dict_presta_fields.json')
-            if os.path.exists(f'{dict_presta_fields["reference"]}_dict_assist_fields.json'):  # Check if the file exists
-                os.remove(f'{dict_presta_fields["reference"]}_dict_assist_fields.json')
-            ...
-    # 8. The product already exists in the prestashop db
-    else:
-        logger.success("The product is already in the client's database")
-        """! @todo The product is in the db. Implement editing """
-        ...
