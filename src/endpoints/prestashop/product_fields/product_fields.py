@@ -92,22 +92,24 @@ class ProductFields:
         """
         try:
             _lang_index = str(self.id_lang)
-            lang_data = {'attrs': {'id': _lang_index}, 'value': value}
+            #lang_data = {'attrs': {'id': _lang_index}, 'value': value}
+            lang_data_dict:dict = dict( {'language': { 'attrs':{'id': _lang_index}, 'value': value} })
 
             field = getattr(self.presta_fields, field_name, None)
 
             if not hasattr(self.presta_fields, field_name) or not isinstance(field, dict) or 'language' not in field:
                 # Если структура отсутствует, создаем ее в виде списка
-                setattr(self.presta_fields, field_name, {'language': [lang_data]})
+                #setattr(self.presta_fields, field_name, {'language': [lang_data]})
+                setattr(self.presta_fields, field_name, lang_data_dict)
             else:
                 language_list = field['language']
 
                 if not isinstance(language_list, list):
-                    setattr(self.presta_fields, field_name, {'language': [lang_data]})
+                    setattr(self.presta_fields, field_name, lang_data_dict)
                     return
 
                 if not language_list:  # Проверка на пустой список
-                    setattr(self.presta_fields, field_name, {'language': [lang_data]})
+                    setattr(self.presta_fields, field_name, lang_data_dict)
                     return
                 
                 # Проверяем, есть ли уже язык с таким ID
@@ -1526,13 +1528,14 @@ class ProductFields:
         Returns:
             List[Dict[str, str]]: Список словарей, где каждый словарь содержит 'id' и 'value' (все как строки) для каждого языка.
         """
-        result = []
-        if isinstance(data, dict) and 'language' in data:
-            for lang_dict in data['language']:
-                lang_id = lang_dict['attrs']['id']
-                lang_value = lang_dict['value']
-                result.append({"id": str(lang_id), "value": str(lang_value)})
-        else:
-            # Fallback: Create a list with one entry for the current language
-            result.append({"id": str(self.id_lang), "value": str(data)})
-        return result
+        # result = []
+        # if isinstance(data, dict) and 'language' in data:
+        #     for lang_dict in data['language']:
+        #         lang_id = lang_dict['attrs']['id']
+        #         lang_value = lang_dict['value']
+        #         result.append({"id": str(lang_id), "value": str(lang_value)})
+        # else:
+        #     # Fallback: Create a list with one entry for the current language
+        #     result.append({"language":{"id": str(self.id_lang)}, "value": str(data)})
+        # return result
+        return data

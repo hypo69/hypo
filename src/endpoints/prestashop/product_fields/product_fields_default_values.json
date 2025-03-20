@@ -86,7 +86,7 @@
   "unity": null,
   "upc": null,
   "uploadable_files": null,
-  "visibility": 1,
+  "visibility": "both",
   "volume": null,
   "weight": null,
   "wholesale_price": null,

@@ -9,6 +9,6 @@
     "log": "E:\\hypo69\\log",
     "tmp": "E:\\hypo69\\tmp"
   },
-  "timestamp_format": "%y%m%d%H%M%S%f"
- 
+  "timestamp_format": "%y%m_%H%M_%S%f"
+
 }

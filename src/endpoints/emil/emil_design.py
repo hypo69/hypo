@@ -141,7 +141,7 @@ class EmilDesign:
         dev - prestashop 1.7 https://dev.emil-design.com/api
         dev8 - prestashop 8  https://dev8.emil-design.com/api
         """
-        SUB_DOMAIN: str = 'dev'
+        SUB_DOMAIN: str = 'prod' # prod | dev | dev8
         host:str=''
         api_key:str=''
 
@@ -153,7 +153,11 @@ class EmilDesign:
             host = gs.credentials.presta.client.dev_emil_design.api_domain
             api_key = gs.credentials.presta.client.dev_emil_design.api_key
         
-            ... # другие окружения (f.e. production)
+            ... # другие окружения 
+
+        elif SUB_DOMAIN == 'prod':
+            host = gs.credentials.presta.client.emil_design.api_domain
+            api_key = gs.credentials.presta.client.emil_design.api_key
 
         if not host or not api_key:
             logger.error("PrestaShop credentials not found.", None, False)

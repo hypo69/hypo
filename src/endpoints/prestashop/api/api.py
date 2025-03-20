@@ -72,20 +72,22 @@ Example usage
     api.create_binary('images/products/22', 'img.jpeg', 'image')
 """
 
-
-#from math import e
 import os
 import sys
 import json
 from enum import Enum
 from http.client import HTTPConnection
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
+
 from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
+from httpx import Response
+import requests
 from requests import Session
 from requests.models import PreparedRequest
+from requests.exceptions import RequestException, HTTPError, ConnectionError, Timeout, TooManyRedirects
 
 import header
 from src import gs
@@ -297,6 +299,7 @@ class PrestaShop:
 
             self.data_format = io_format 
 
+
             response = self.client.request(
                 method=method,
                 url=url,
@@ -305,16 +308,20 @@ class PrestaShop:
             )
 
             if not self._check_response(response.status_code, response, method, url, request_headers, data):
+                logger.error(f"""Ошибка ответа: {response.status_code}
+                response = 
+                {print(response.headers)}
+                {print(response.text)}""")
                 ...
                 return False
 
-            return self._parse_dict(response)
+            return self._parse_response(response)
 
         except Exception as ex:
             logger.error(f'Error:',ex)
             return
 
-    def _parse_dict(self, response) -> Optional[ dict ]:
+    def _parse_response(self, response:Response, io_format:Optional[str] = 'JSON' ) -> dict|None:
         """Parse XML or JSON response from the API to dict structure
 
         :param text: Response text.
@@ -324,10 +331,7 @@ class PrestaShop:
         :rtype: dict 
         """
 
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~
-        #save_xml(response.text if self.data_format == 'XML' else dict2xml(response.json()), gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_output.{'xml' if self.data_format == 'XML' else 'json'}")
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+     
         try:
             data:dict = response.json() if self.data_format == 'JSON' else xml2dict(response.text)    
             return data.get('prestashop', {}) if 'prestashop' in data else data
@@ -335,11 +339,11 @@ class PrestaShop:
         except Exception as ex:
             logger.error(f'Parsing Error:',ex)
             ...
-            return False
+            return {}
 
 
 
-    def create(self, resource: str, data: dict, io_format:Optional[str] = 'JSON', *args, **kwards) -> Optional[dict]:
+    def create(self, resource: str, data: dict, *args, **kwards) -> Optional[dict]:
         """Create a new resource in PrestaShop API.
 
         :param resource: API resource (e.g., 'products').
@@ -350,8 +354,8 @@ class PrestaShop:
         :return: Response from the API.
         :rtype: dict
         """
-        data  = {'prestashop' : data}
-        return self._exec(resource=resource, method='POST', data=data, io_format = io_format, *args, **kwards)
+        #data  = {'prestashop' : data}
+        return self._exec(resource=resource, method='POST', data=data,  *args, **kwards)
         
 
     def read(self, resource: str, resource_id: int | str, **kwargs) -> Optional[dict]:
@@ -407,41 +411,64 @@ class PrestaShop:
         """
         return self._exec(resource=resource, search_filter=filter, method='GET', **kwargs)
 
+
     def create_binary(self, resource: str, file_path: str, file_name: str) -> dict:
-        """Upload a binary file to a PrestaShop API resource.
+        """Upload a binary file to a PrestaShop API resource."""
 
-        :param resource: API resource (e.g., 'images/products/22').
-        :type resource: str
-        :param file_path: Path to the binary file.
-        :type file_path: str
-        :param file_name: File name.
-        :type file_name: str
+        try:
+            with open(file_path, 'rb') as file:
+                files = {'image': (file_name, file, 'image/jpeg')}  # Замените 'image/jpeg' на правильный MIME-тип
+                response = self.client.post (
+                    url=f'{self.api_domain}/images/{resource}',
+                    files=files,
+                    auth=self.client.auth, # Важно передавать аутентификацию,
+                )
 
-        :return: Response from the API.
-        :rtype: dict
-        """
-        with open(file_path, 'rb') as file:
-            headers = {'Content-Type': 'application/octet-stream'}
-            response = self.client.post(
-                url=f'{self.api_domain}{resource}',
-                headers=headers,
-                data=file.read()
-            )
-            return response.json()
+                response.raise_for_status()  # Проверка на HTTP-ошибки
 
-    def get_schema(self, resource: Optional[str] = None, schema:Optional[str] = 'blank', **kwards) -> dict | None:
+                #return response.json()
+                return self._parse_response(response=response, io_format='XML')
+
+        except RequestException as ex:
+            logger.error(f"Ошибка при загрузке изображения:",ex)
+            return {'error': str(ex)}
+
+        except Exception as ex:
+            logger.error(f'Error:', ex)
+            return {'error': str(ex)}
+
+    def get_schema(self, resource: Optional[str] = None, resource_id: Optional[int] = None, schema:Optional[str] = 'blank', **kwards) -> dict | None:
         """! Retrieve the schema of a given resource from PrestaShop API.
 
         Args:
-            resource (str): The name of the resource (e.g., 'products', 'customers').
+            `resource` (str): The name of the resource (e.g., 'products', 'customers').
             Если не указана - вернется список всех схем сущностей доступных для API ключа
+
+            `resource_id` (Optinal[str]): 
+
+            `schema` (Optional[str]): обычно подразумеваются следующие опции:
+
+                -   blank: (Самая распространенная опция, как и в вашем коде) 
+                Возвращает пустую схему ресурса. Это полезно для определения минимального набора полей, 
+                необходимых для создания нового объекта. То есть возвращает структуру XML или JSON с пустыми полями, 
+                которые можно заполнить данными.
+
+                -   synopsis (или simplified): В некоторых версиях и для некоторых ресурсов может существовать опция, 
+                возвращающая упрощенную схему. Она может содержать только основные поля ресурса и их типы. 
+                Это может быть удобнее, чем полная схема, если вам не нужны все детали.
+
+                -   full (или без указания schema): Часто, если параметр schema не указан, 
+                или если он указан как full, возвращается полная схема ресурса. Она включает все поля, их типы, 
+                возможные значения, описания и другие метаданные. Это самый подробный вид схемы.
+
+                -   form (или что-то подобное): Реже, но может быть опция, возвращающая схему,  
+                оптимизированную для отображения в форме редактирования. Она может включать информацию о валидации 
+                полей, порядке отображения и т.п.
 
         Returns:
             dict | None: The schema of the requested resource or `None` in case of an error.
         """
-        return self._exec(resource=resource, method= "GET", schema=schema, **kwards)
-
-
+        return self._exec(resource=resource, resource_id=resource_id, schema=schema, method= "GET", **kwards)
 
     def get_data(self, resource: str, **kwargs) -> Optional[dict]:
         """Fetch data from a PrestaShop API resource and save it.
@@ -455,7 +482,6 @@ class PrestaShop:
         """
         return self._exec(resource=resource, method='GET', **kwargs)
 
-
     def get_apis(self) -> Optional[dict]:
         """Get a list of all available APIs.
 
@@ -463,8 +489,6 @@ class PrestaShop:
         :rtype: dict
         """
         return self._exec('apis', method='GET', io_format=self.data_format)
-
-
 
     def upload_image_async(self, resource: str, resource_id: int, img_url: str,
                            img_name: Optional[str] = None) -> Optional[dict]:
@@ -491,7 +515,7 @@ class PrestaShop:
         self.remove_file(png_file_path)
         return response
 
-    def upload_image(self, resource: str, resource_id: int, img_url: str,
+    def upload_image_from_url(self, resource: str, resource_id: int, img_url: str,
                      img_name: Optional[str] = None) -> Optional[dict]:
         """Upload an image to PrestaShop API.
 

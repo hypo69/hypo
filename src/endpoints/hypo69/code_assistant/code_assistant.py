@@ -64,7 +64,7 @@ class CodeAssistant:
     role: str
     lang: str
     base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
-    config: SimpleNamespace =  = j_loads_ns(base_path / 'code_assistant.json')
+    config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
     gemini_model: GoogleGenerativeAI
     openai_model: OpenAIModel
 
@@ -101,6 +101,7 @@ class CodeAssistant:
         
 
         if self.role == 'code_translator':
+            ...
 
         else:
             system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')

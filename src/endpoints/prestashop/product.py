@@ -10,8 +10,13 @@ Defines the behavior of a product in the project.
 
 """
 import asyncio
+import os
 from dataclasses import dataclass, field
+from re import U
+from types import SimpleNamespace
 from typing import List, Dict, Any, Optional
+
+from pytest import Config
 
 import header
 from src import gs
@@ -42,12 +47,12 @@ class PrestaProduct(PrestaShop):
 
         super().__init__( api_key = api_key, api_domain = api_domain, *args, **kwargs)
 
-    def get_schema(self):
+    def get_product_schema(self, resource_id:Optional[str | int] = None, schema: Optional[str] = 'blank') -> dict:
         """Get the schema for the product resource from PrestaShop.
         Returns:
             dict: The schema for the product resource.
         """
-        return self.get('products', schema=True)
+        return self.get_schema(resource = 'products', resource_id=resource_id, schema=schema, display='full')
 
     def get_parent_category(self, id_category: int) -> Optional[int]:
         """Retrieve parent categories from PrestaShop for a given category recursively.
@@ -120,23 +125,28 @@ class PrestaProduct(PrestaShop):
         kwards = {
             'io_format': 'JSON', # may be 'XML' or 'JSON'
             'language': 2,
-        }
-
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG Try sending data in XML format ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        #          Convert the dictionary to XML format for PrestaShop.
-        # j_dumps(presta_product_dict, gs.path.endpoints / 'emil' / '_experiments' / f'presta_product_dict.{gs.now}.json')
+        }      
+        
+        """ PRESTASHOP не любит JSON. Отправяю XML""" 
+        # Convert the dictionary to XML format for PrestaShop.
         # xml_data: str = presta_fields_to_xml({"product": presta_product_dict})
+        # save_xml(xml_data, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_product.xml")
         # kwards['io_format'] = 'XML'
-        # response = self._exec(resource='products', method='POST', data=xml_data, **kwards)
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # response = self.create('products', data=xml_data, **kwards)
 
-        response = self.create('products', data={'products': presta_product_dict}, **kwards)
+        response = self.create('products', data={'product': presta_product_dict}, **kwards)
 
+
+        # Upload the product image to PrestaShop.
         if response:
+            added_product_ns:SimpleNamespace = j_loads_ns(response)
+            added_product_ns = added_product_ns.product
+            ...
             try:
-                f.reference = response['product']['reference'] if isinstance(response['product']['reference'], str) else int(response['product']['reference'])
+                #f.reference = response['product']['reference'] if isinstance(response['product']['reference'], str) else int(response['product']['reference'])
+                img_data = self.create_binary(resource=f'products/{added_product_ns.id}', file_path = f.local_image_path, file_name = f'{gs.now}.png')
 
-                logger.info(f"Product added: {presta_product_dict.get('name')}")
+                logger.info(f"Product added: /n {print(added_product_ns)}")
                 return f
             except (KeyError, TypeError) as ex:
                 logger.error(f"Ошибка при разборе ответа от сервера: {ex}", exc_info=True)
@@ -145,93 +155,58 @@ class PrestaProduct(PrestaShop):
             logger.error(f"Ошибка при добавлении товара:\n{print(print_data=presta_product_dict, text_color='yellow')}", exc_info=True)
             return {}
 
-    async def add_new_product_async(self, f: ProductFields) -> dict:
-        """
-        Asynchronously add a new product to PrestaShop.
 
-        Args:
-            f (ProductFields): An instance of the ProductFields data class containing the product information.
 
-        Returns:
-            ProductFields | None: Returns the `ProductFields` object with `id_product` set, if the product was added successfully, `None` otherwise.
-        """
+class Config:
+    
+    # 1. Конфигурация API
+    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass
 
-        #  Дополняю id_category_default в поле `additional_categories` для поиска её родительских категорий
-        f.additional_category_append(f.id_category_default)
+    MODE:str = 'prod'
 
-        self._add_parent_categories(f)
+    if USE_ENV:
+        host = os.getenv('HOST')
+        api_key = os.getenv('API_KEY')
+    elif MODE == 'dev':
+        host = gs.credentials.presta.client.dev_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev_emil_design.api_key
+    elif MODE == 'dev8':
+        host = gs.credentials.presta.client.dev8_emil_design.api_domain
+        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
+    else:
+        host = gs.credentials.presta.client.emil_design.api_domain # if USE_ENV else os.getenv('HOST')
+        api_key = gs.credentials.presta.client.emil_design.api_key # if USE_ENV else os.getenv('API_KEY')
 
-        presta_product_dict: dict = f.to_dict()
-
-        kwards = {
-            'io_format': 'XML',
-            'language': 2,
-        }
-
-        # Convert the dictionary to XML format for PrestaShop.
-        data: str = presta_fields_to_xml({"product": presta_product_dict})
-
-        try:
-            response = await self._exec_async(resource='products', method='POST', data=data, io_format = kwards['io_format'], **kwards)
-            #response = self.create('products', data={'product': presta_product_dict}, **kwards)
-
-            if response:
-                try:
-                    f.reference = response['product']['reference'] if isinstance(response['product']['reference'], str) else int(response['product']['reference'])
-                    logger.info(f"Product added: {presta_product_dict.get('name')}")
-                    return f
-                except (KeyError, TypeError) as ex:
-                    logger.error(f"Ошибка при разборе ответа от сервера: {ex}", exc_info=True)
-                    return {}
-            else:
-                logger.error(f"Ошибка при добавлении товара:\n{print(print_data=presta_product_dict, text_color='yellow')}", exc_info=True)
-                return {}
-
-        except Exception as e:
-            logger.exception(f"An exception occurred while adding product asynchronously: {e}")
-            return {}
 
 
 def example_add_new_product():
     """ Пример для добавления товара в Prestashop """
 
-    # 1. Конфигурация API
-    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass
-
-    MODE:str = 'dev8'
-
-    if MODE == 'dev':
-        host = gs.credentials.presta.client.dev_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev_emil_design.api_key
-    if MODE == 'dev8':
-        host = gs.credentials.presta.client.dev8_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
-    else:
-        host = gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
-        api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
 
-    p = PrestaProduct(api_key=api_key, api_domain=host)
+    p = PrestaProduct(api_key=Config.api_key, api_domain=Config.host)
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # resource_id = 2191
+    # schema = p.get_product_schema(resource_id = resource_id) 
+    # j_dumps(schema, gs.path.endpoints / 'emil' / '_experiments' / f'product_schema.{resource_id}_{gs.now}.json')
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    # schema = p.get_schema()
-    # j_dumps(schema, gs.path.endpoints / 'emil' / '_experiments' / f'product_schema.{gs.now}.json')
-
-
-    #example_data:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input.json')
-    example_data:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'example_input_2.json') # <- XML like
-
+    example_data:dict = j_loads(gs.path.endpoints / 'emil' / '_experiments' / 'product_schema.2191_250319224027026.json') # <- XML like
+    """"""
     if not example_data:
         logger.error(f"Файл не существует или неправильный формат файла")
         ...
         return
-    presta_product_dict:dict = {'product':example_data}
-    presta_product_xml = presta_fields_to_xml(presta_product_dict) # <- XML
+    
+    presta_product_xml = presta_fields_to_xml(example_data) # <- XML
+    save_xml(presta_product_xml, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_product.xml")
 
-    # 1. JSON
+    # 1. JSON | XML
     kwards:dict = {
-    'io_format':'XML',
+    'io_format':'JSON',
     }
-    response = p._exec(resource='products', method='POST', data= presta_product_dict  if kwards['io_format'] == 'JSON' else presta_product_xml,  **kwards)
+
+    response = p._exec(resource='products', method='POST', data= example_data  if kwards['io_format'] == 'JSON' else presta_product_xml,  **kwards)
     #response = p.create('products', data=presta_product_dict  if kwards['io_format'] == 'JSON' else presta_product_xml, **kwards)
     #j_dumps(response if kwards['io_format'] == 'JSON' else xml2dict(response), gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_response_new_product_added.json")
 
@@ -254,7 +229,7 @@ def example_get_product(id_product:int, **kwards):
         api_key = gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
 
 
-    p = PrestaProduct(api_key=api_key, api_domain=host)
+    p = PrestaProduct(api_key=api_key, api_domi=ot)
     kwards:dict = {
     'io_format':'JSON',
 
