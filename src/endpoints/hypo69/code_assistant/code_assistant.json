@@ -135,10 +135,10 @@
   },
 
   "roles": [
-    "code_checker_md",
-    "code_explainer_md",
     "doc_writer_md",
-    "how_to_writer_md"
+    "code_explainer_md",
+    "how_to_writer_md",
+    "code_checker_md"
   ],
   "exclude-roles": [
     "code_explainer_html",

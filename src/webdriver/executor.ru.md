@@ -52,7 +52,7 @@
   IsSimpleNamespace -->|Нет| ConvertDictToSimpleNamespace[Преобразовать dict в SimpleNamespace]
   ConvertDictToSimpleNamespace --> UseLocatorAsIs
   UseLocatorAsIs --> DefineParseLocator[Определить асинхронную функцию _parse_locator]
-  DefineParseLocator --> CheckEventAttributeMandatory[Проверить, есть ли у локатора событие, атрибут или обязательное поле]
+  DefineParseLocator --> CheckEventAttributeMandatory{Проверить, есть ли у локатора событие, атрибут или обязательное поле}
   CheckEventAttributeMandatory -->|Нет| ReturnNone[Вернуть None]
   CheckEventAttributeMandatory -->|Да| TryMapByEvaluateAttribute[Попробовать сопоставить by и оценить атрибут]
   TryMapByEvaluateAttribute --> CatchExceptionsAndLog[Перехватить исключения и залогировать при необходимости]
@@ -61,10 +61,10 @@
   HasEvent -->|Нет| HasAttribute{Есть ли у локатора атрибут?}
   HasAttribute -->|Да| GetAttributeByLocator[Получить атрибут по локатору]
   HasAttribute -->|Нет| GetWebElementByLocator[Получить веб-элемент по локатору]
-  ExecuteEvent --> ReturnEventResult[Вернуть результат события]
+  ExecuteEvent --> HasEvent
+  HasEvent --> ReturnFinalResult[Вернуть окончательный результат _parse_locator]
   GetAttributeByLocator --> ReturnAttributeResult[Вернуть результат атрибута]
   GetWebElementByLocator --> ReturnWebElementResult[Вернуть результат веб-элемента]
-  ReturnEventResult --> ReturnFinalResult[Вернуть окончательный результат _parse_locator]
   ReturnAttributeResult --> ReturnFinalResult
   ReturnWebElementResult --> ReturnFinalResult
   ReturnFinalResult --> ReturnExecuteLocatorResult[Вернуть результат execute_locator]
@@ -90,16 +90,16 @@
   Start[Начало] --> CheckIfLocatorIsSimpleNamespaceOrDict[Проверка, является ли локатор SimpleNamespace или dict]
   CheckIfLocatorIsSimpleNamespaceOrDict -->|Да| ConvertLocatorToSimpleNamespaceIfNeeded[Преобразовать локатор в SimpleNamespace, если необходимо]
   ConvertLocatorToSimpleNamespaceIfNeeded --> CallGetWebElementByLocator[Вызов get_webelement_by_locator]
-  CallGetWebElementByLocator --> CheckIfWebElementIsFound[Проверка, найден ли web_element]
+  CallGetWebElementByLocator --> CheckIfWebElementIsFound{Проверка, найден ли web_element}
   CheckIfWebElementIsFound -->|Нет| LogDebugMessageAndReturn[Залогировать сообщение отладки и вернуть]
-  CheckIfWebElementIsFound -->|Да| CheckIfAttributeIsDictionaryLikeString[Проверка, является ли locator.attribute строкой, похожей на словарь]
+  CheckIfWebElementIsFound -->|Да| CheckIfAttributeIsDictionaryLikeString{Проверка, является ли locator.attribute строкой, похожей на словарь}
   CheckIfAttributeIsDictionaryLikeString -->|Да| ParseAttributeStringToDict[Разбор строки locator.attribute в словарь]
-  ParseAttributeStringToDict --> CheckIfWebElementIsList[Проверка, является ли web_element списком]
+  ParseAttributeStringToDict --> CheckIfWebElementIsList{Проверка, является ли web_element списком}
   CheckIfWebElementIsList -->|Да| RetrieveAttributesForEachElementInList[Получение атрибутов для каждого элемента в списке]
   RetrieveAttributesForEachElementInList --> ReturnListOfAttributes[Вернуть список атрибутов]
   CheckIfWebElementIsList -->|Нет| RetrieveAttributesForSingleWebElement[Получение атрибутов для одного web_element]
   RetrieveAttributesForSingleWebElement --> ReturnListOfAttributes
-  CheckIfAttributeIsDictionaryLikeString -->|Нет| CheckIfWebElementIsListAgain[Проверка, является ли web_element списком]
+  CheckIfAttributeIsDictionaryLikeString -->|Нет| CheckIfWebElementIsListAgain{Проверка, является ли web_element списком}
   CheckIfWebElementIsListAgain -->|Да| RetrieveAttributesForEachElementInListAgain[Получение атрибутов для каждого элемента в списке]
   RetrieveAttributesForEachElementInListAgain --> ReturnListOfAttributesOrSingleAttribute[Вернуть список атрибутов или один атрибут]
   CheckIfWebElementIsListAgain -->|Нет| RetrieveAttributeForSingleWebElementAgain[Получение атрибута для одного web_element]

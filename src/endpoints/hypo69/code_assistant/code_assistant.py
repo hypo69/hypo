@@ -52,7 +52,9 @@ from src.ai.openai import OpenAIModel
 from src.utils.path import get_relative_path
 from src.logger.logger import logger
 from src.endpoints.hypo69.code_assistant.make_summary import make_summary 
-# from toolbox import 
+
+class Config:
+    ...
 
 
 class CodeAssistant:
@@ -72,14 +74,14 @@ class CodeAssistant:
     def __init__(self, 
                  role:Optional[str] = 'doc_writer_md', 
                  lang: Optional[str] = 'en', 
-                 models: Optional[list[str,str] | str] = ["gemini"],
+                 models_list: Optional[list[str,str] | str] = ["gemini"],
                  system_instruction:Optional[str] = None,
                  system_instruction_path:Optional[Path | str] = None,
                  **kwards):
         """Инициализация ассистента с заданными параметрами."""
         self.role:str = role 
         self.lang:str = lang
-        self.models_list:list = list( models )
+        self.models_list:list = list( models_list )
         if system_instruction:
                 if isinstance(system_instruction, str):
                     kwards['system_instruction'] = system_instruction
@@ -108,9 +110,10 @@ class CodeAssistant:
 
         if "gemini" in self.models_list:
             self.gemini_model = GoogleGenerativeAI(
-                model_name=self.config.gemini_model_name,
-                api_key=gs.credentials.gemini.onela,
+                model_name = self.config.gemini_model_name,
+                api_key = gs.credentials.gemini.onela,
                 system_instruction = system_instruction,
+                generation_config={'response_mime_type': 'application/json'},
                 **kwards,
             )
         if "openai" in self.models_list:
@@ -408,13 +411,7 @@ class CodeAssistant:
         sys.exit(0)
 
 
-def main():
-    """Основная функция для запуска."""
-    args = parse_args()
 
-    assistant = CodeAssistant(**args)
-
-    assistant.run(start_file_number=args["start_file_number"])
 
 
 def parse_args():
@@ -450,20 +447,18 @@ def parse_args():
         return vars(parser.parse_args())
 
 
-if __name__ == "__main__":
+
+def main():
     """
-    Код запускает бесконечный цикл, в котором выполняется обработка файлов с учетом ролей и языков, указанных в конфигурации.
-    Конфигурация обновляется в каждом цикле, что позволяет динамически изменять настройки во время работы программы.
+    Функция запускает бесконечный цикл, в котором выполняется обработка файлов с учетом ролей и языков, указанных в конфигурации.
+    Конфигурация обновляется в каждом цикле, что позволяет динамически изменять настройки в файле `code_assistant.json` во время работы программы.
     Для каждой комбинации языка и роли создается экземпляр класса :class:`CodeAssistant`, который обрабатывает файлы, используя заданную модель ИИ.
     """
-    
-    ########################################################################################
-    #                               Запуск через конфигурацию 
-    # 
 
     config_path: Path = (
         gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json"
     )
+
 
     while True:
         # Загрузка конфигурации
@@ -478,7 +473,7 @@ if __name__ == "__main__":
                 assistant_direct = CodeAssistant(
                     role = role,
                     lang = lang,
-                    model = ["gemini"],
+                    models_list = ["gemini"],
                    
                 )
                 asyncio.run( assistant_direct.process_files( start_dirs=config.start_dirs) )
@@ -487,3 +482,10 @@ if __name__ == "__main__":
                 config: SimpleNamespace = j_loads_ns(config_path)
 
 
+
+
+
+if __name__ == "__main__":
+     main()
+
+    
