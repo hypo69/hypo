@@ -35,6 +35,7 @@
 import asyncio
 import argparse
 import sys
+import os
 from pathlib import Path
 from typing import Iterator, List, Optional
 from types import SimpleNamespace
@@ -51,20 +52,22 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
 from src.utils.path import get_relative_path
 from src.logger.logger import logger
-from src.endpoints.hypo69.code_assistant.make_summary import make_summary 
+from src.endpoints.hypo69.code_assistant.make_summary import make_summary
+from src import USE_ENV
 
 class Config:
     ...
     base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
     config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
+    role: str = 'doc_writer_md'
+    lang: str = 'ru'
+    system_instruction:str = ''
 
-    class Gemini:
-        model_name: str
-        api_key: str
-        response_mime_type: str
-        system_instruction: str
-        ...
-
+    gemini:SimpleNamespace = SimpleNamespace(**{
+        'model_name': os.getenv('GEMINI_MODEL') if USE_ENV else config.gemini_model_name or None,
+        'api_key': os.getenv('GEMINI_API_KEY') if USE_ENV else gs.credentials.gemini.onela or None,
+        'response_mime_type': 'text/plain',
+    })
 
 class CodeAssistant:
     """ 
@@ -85,57 +88,55 @@ class CodeAssistant:
                  role:Optional[str] = 'doc_writer_md', 
                  lang: Optional[str] = 'en', 
                  models_list: Optional[list[str,str] | str] = ["gemini"],
-                 system_instruction:Optional[str] = None,
-                 system_instruction_path:Optional[Path | str] = None,
+                 system_instruction:Optional[str | Path] = None,
                  **kwards):
-        """Инициализация ассистента с заданными параметрами."""
-        self.role:str = role 
-        self.lang:str = lang
-        self.models_list:list = list( models_list )
+        """Инициализация ассистента с заданными параметрами.
+        Args:
+            role (str): Роль для выполнения задачи.
+            lang (str): Язык выполнения.
+            models_list (list[str]): Список моделей для инициализации.
+            system_instruction (str|Path): Инструкция для системы. Можно отправить текст или путь к файлу.
+            **kwards: Дополнительные аргументы для инициализации моделей.
+        """
+        Config.role = role
+        Config.lang = lang
+
         if system_instruction:
                 if isinstance(system_instruction, str):
-                    kwards['system_instruction'] = system_instruction
+                    Config.system_instruction = system_instruction
+
+                elif isinstance(system_instruction, Path):
+                    try:
+                        Config.system_instruction = Path(system_instruction).read_text(encoding='UTF-8')
+                    except Exception as ex:
+                        logger.error(f"Ошибка чтения инструкции из файла {system_instruction}", ex, False)
+                        ...
                 else:
-                    logger.error(f"Ошибка формата инструкции\n {system_instruction=}\n system_instruction type {type(system_instruction)}", None, False)
+                    logger.error(f"Ошибка формата инструкции\n {print(system_instruction)}\n system_instruction type {type(system_instruction)}", None, False)
                     ...
-        if  system_instruction_path:
-            try:
-                kwards['system_instruction'] = Path(system_instruction_path).read_text(encoding='UTF-8')
-            except Exception as ex:
-                logger.error(f"Ошибка чтения инструкции из файла {system_instruction_path=}", ex, False)
-                ...
-
-        self._initialize_models(**kwards)
-        
-    def _initialize_models(self, **kwards):
-        """Инициализация моделей на основе заданных параметров."""
-
-        if self.role == 'code_translator':
-            ...  # Здесь должен быть ваш код для role == 'code_translator'
         else:
-            try:
-                system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')
-            except Exception as e:
-                logger.error(f"Ошибка при чтении system_instruction: {e}", None)
-                system_instruction = None  # Или какое-то другое значение по умолчанию
+             Config.system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'CODE_RULES.{lang}.MD').read_text(encoding='UTF-8')
 
-        if "gemini" in self.models_list:
+        self._initialize_models( list( models_list ), **kwards)
+        
+    def _initialize_models(self, models_list:list, **kwards) -> bool:
+        """Инициализация моделей на основе заданных параметров.
+        Args:
+            models_list (list[str]): Список моделей для инициализации.
+            **kwards: Дополнительные аргументы для инициализации моделей.
+        Returns:
+            bool: Успешность инициализации моделей.
+        Raises: 
+            Exception: Если произошла ошибка при инициализации моделей.
+        """
+
+        if "gemini" in models_list:
             # Определение значений по умолчанию
-            default_model_name = self.config.gemini_model_name or None
-            default_api_key = gs.credentials.gemini.onela
-            default_response_mime_type = 'plain/text'
+ 
+            default_response_mime_type = 'text/plain'
 
             try:
-                # Получение значений из kwards с приоритетом
-                model_name = kwards.get('model_name', default_model_name)
-                api_key = kwards.get('api_key', default_api_key)
-
-                # Обработка system_instruction: kwards -> ранее прочитанный файл -> None
-                system_instruction = kwards.get('system_instruction', system_instruction)  # Значение из kwards имеет приоритет
-
-                # Обработка generation_config: kwards -> значение по умолчанию
-                generation_config = kwards.get('generation_config', {'response_mime_type': default_response_mime_type})
-
+ 
                 # Фильтрация kwards для удаления известных аргументов
                 filtered_kwargs = {
                     k: v for k, v in kwards.items()
@@ -144,16 +145,17 @@ class CodeAssistant:
 
                 # Создание экземпляра модели Gemini
                 self.gemini_model = GoogleGenerativeAI(
-                    model_name=model_name,
-                    api_key=api_key,
-                    system_instruction=system_instruction,
-                    generation_config=generation_config,
+                    model_name = kwards.get('model_name', Config.gemini.model_name),   # Значение из kwards имеет приоритет,
+                    api_key = kwards.get('api_key', Config.gemini.api_key),
+                    system_instruction = kwards.get('system_instruction', Config.system_instruction), 
+                    generation_config = kwards.get('generation_config', {'response_mime_type': default_response_mime_type}),
                     **filtered_kwargs,
                 )
                 ...
-            except Exception as e:
-                logger.error(f"Ошибка при инициализации Gemini: {e}", None)
-                self.gemini_model = None
+                return True
+            except Exception as ex:
+                logger.error(f"Ошибка при инициализации Gemini:",ex,  None)
+                return False
 
     @property
     def code_instruction(self) -> str | bool:
@@ -164,7 +166,7 @@ class CodeAssistant:
                 / "hypo69" 
                 / "code_assistant" 
                 / "instructions"
-                / f"instruction_{self.role}_{self.lang}.md"
+                / f"instruction_{Config.role}_{Config.lang}.md"
             ).read_text(encoding="UTF-8")
         except Exception as ex:
             logger.error(f"Error reading instruction file", ex, False)
@@ -233,7 +235,7 @@ class CodeAssistant:
                     response = await self.gemini_model.ask_async(content_request)
 
                     if response:
-
+                        response:str = self._remove_outer_quotes(response)
                         if not await self._save_response(file_path, response, "gemini"):
                             logger.error(f"Файл {file_path} \n НЕ сохранился")
                             ...
@@ -251,13 +253,13 @@ class CodeAssistant:
         """Создание запроса с учетом роли и языка."""
         content_request = content
         try:
-            roles_translations:SimpleNamespace = getattr(self.translations.roles, self.role, 'doc_writer_md')
-            role_description_translated:str = getattr(roles_translations, self.lang, 'Your specialization is documentation creation in the `MD` format')
-            file_location_translated:str = getattr(self.translations.file_location_translated, self.lang, 'Path to file: ')
+            roles_translations:SimpleNamespace = getattr(self.translations.roles, Config.role, 'doc_writer_md')
+            role_description_translated:str = getattr(roles_translations, Config.lang, 'Your specialization is documentation creation in the `MD` format')
+            file_location_translated:str = getattr(self.translations.file_location_translated, Config.lang, 'Path to file: ')
             
             content_request: dict = {
                 "role": f"{role_description_translated}",
-                "output_language": self.lang,
+                "output_language": Config.lang,
                 f"{file_location_translated}": get_relative_path(file_path, "hypotez"),
                 "instruction": self.code_instruction or '',
                 "input_code": f"```{content}```",
@@ -352,14 +354,16 @@ class CodeAssistant:
             OSError: Если не удаётся создать директорию или записать в файл.
         """
         try:
+            
+
             # Получаем директорию для вывода в зависимости от роли
-            output_directory = getattr(self.config.output_directory, self.role)
+            output_directory = getattr(self.config.output_directory, Config.role)
 
             # Формируем целевую директорию с учётом подстановки параметров <model> и <lang>
             target_dir = (
                 f'docs/{output_directory}'
                 .replace('<model>', model_name)
-                .replace('<lang>', self.lang)
+                .replace('<lang>', Config.lang)
             )
 
             # Заменяем часть пути на целевую директорию
@@ -375,7 +379,7 @@ class CodeAssistant:
                 'code_explainer_html': '.html',
                 'pytest': '.md',
             }
-            suffix = suffix_map.get(self.role, '.md')  # По умолчанию используется .md
+            suffix = suffix_map.get(Config.role, '.md')  # По умолчанию используется .md
         
             export_path = Path(file_path)
             if export_path.suffix == '.md' and suffix == '.md':
@@ -389,11 +393,11 @@ class CodeAssistant:
             return True
 
         except Exception as ex:
-            logger.critical(f'Ошибка сохранения файла: {export_path=}', exc_info=ex)
+            logger.critical(f'Ошибка сохранения файла: {export_path=}', ex)
             #sys.exit(0)
             return False
 
-        def _remove_outer_quotes(self, response: str) -> str:
+    def _remove_outer_quotes(self, response: str) -> str:
             """
             Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
 
@@ -410,11 +414,11 @@ class CodeAssistant:
             try:
                 response = response.strip()
             except Exception as ex:
-                logger.error("Exception in `remove_outer_quotes()`", ex)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG
+                logger.error("Exception in `remove_outer_quotes()`", ex, False)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG
                 ...
                 return ''
 
-            # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений
+            # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений. Это годный код
             if response.startswith(('```python', '```mermaid')):
                 return response
 
@@ -489,6 +493,7 @@ def main():
     config_path: Path = (
         gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json"
     )
+    
 
 
     while True:
@@ -498,13 +503,16 @@ def main():
 
         # Обработка файлов для каждой комбинации языков и ролей
         for lang in config.languages:
+            
             for role in config.roles:
                 logger.debug(f"Start role: {role}, lang: {lang}", None, False)
+
 
                 assistant_direct = CodeAssistant(
                     role = role,
                     lang = lang,
                     models_list = ["gemini"],
+                    #system_instruction = Config.system_instruction,
                    
                 )
                 asyncio.run( assistant_direct.process_files( start_dirs=config.start_dirs) )

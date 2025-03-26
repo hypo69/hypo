@@ -93,7 +93,7 @@
   ],
   "include_files": [
     "*.py",
-    "*.md"
+    "*.md <-- Пока не читать"
   ],
   "remove_prefixes": [
     "```md",
@@ -142,8 +142,8 @@
   "roles": [
     "doc_writer_md",
     "code_explainer_md",
-    "how_to_writer_md",
-    "code_checker_md"
+    "code_checker_md",
+    "how_to_writer_md"
   ],
   "exclude-roles": [
     "code_explainer_html",

@@ -62,6 +62,14 @@ class GoogleGenerativeAI:
 
     api_key: str
     model_name: str = field(default="gemini-2.0-flash-exp")
+    dialogue_txt_path: Path = field(init=False)
+
+    """generation_config.response_mime_type: allowed mimetypes are 
+    `text/plain`, 
+    `application/json`, 
+    `application/xml`, 
+    `application/yaml` and 
+    `text/x.enum`."""
     generation_config: Dict = field(default_factory=lambda: {"response_mime_type": "text/plain"})
     system_instruction: Optional[str] = None
     history_dir: Path = field(init=False)
