@@ -274,11 +274,13 @@ def handle_unknown_command(message):
 def main():
 
     try:
+        logger.info(f"Starting bot in {MODE} mode")
         bot.polling(none_stop=True)
         
     except Exception as ex:
         logger.error(f"Error during bot polling: ", ex)
         ...
+        bot.stop_bot()
         main()
 
 if __name__ == '__main__':

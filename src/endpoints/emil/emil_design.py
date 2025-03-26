@@ -38,26 +38,45 @@ from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import get_image_bytes, get_raw_image_data
 from src.logger.logger import logger
 
-# ---------------------------------
-ENDPOINT: str = 'emil'
+from src import USE_ENV # <- True - использую переменные окружения, False - использую параметры из keepass
 
-from src import USE_ENV
-if USE_ENV:
-    from dotenv import load_dotenv
-    load_dotenv()
+class Config:
 
+    ENDPOINT: str = 'emil'
+    MODE:str = 'dev'
+    POST_FORMAT = 'XML'
+    API_DOMAIN:str = ''
+    API_KEY:str = ''
+
+    if USE_ENV:
+        from dotenv import load_dotenv
+        load_dotenv()
+        API_DOMAIN = os.getenv('HOST')
+        API_KEY = os.getenv('API_KEY')
+
+    elif MODE == 'dev':
+        API_DOMAIN = gs.credentials.presta.client.dev_emil_design.api_domain
+        API_KEY = gs.credentials.presta.client.dev_emil_design.api_key
+
+    elif MODE == 'dev8':
+        API_DOMAIN = gs.credentials.presta.client.dev8_emil_design.api_domain
+        API_KEY = gs.credentials.presta.client.dev8_emil_design.api_key
+
+    else:
+        API_DOMAIN = gs.credentials.presta.client.emil_design.api_domain
+        API_KEY = gs.credentials.presta.client.emil_design.api_key
 
 class EmilDesign:
     """Dataclass for designing and promoting images through various platforms."""
 
     gemini: Optional[GoogleGenerativeAI] = None
     openai: Optional[OpenAIModel] = None
-    base_path: Path = gs.path.endpoints / ENDPOINT
-    config: SimpleNamespace = j_loads_ns(base_path / f'{ENDPOINT}.json')
-    data_path: Path = getattr(gs.path, config.storage, 'external_storage') / ENDPOINT
+    base_path: Path = gs.path.endpoints / Config.ENDPOINT
+    config: SimpleNamespace = j_loads_ns(base_path / f'{Config.ENDPOINT}.json')
+    data_path: Path = getattr(gs.path, config.storage, 'external_storage') / Config.ENDPOINT
     gemini_api: str = os.getenv('GEMINI_API') if USE_ENV else gs.credentials.gemini.emil
     presta_api: str = os.getenv('PRESTA_API') if USE_ENV else gs.credentials.presta.client.emil_design.api_key
-    presta_url: str = os.getenv('PRESTA_URL') if USE_ENV else gs.credentials.presta.client.emil_design.api_domain
+    presta_domain: str = os.getenv('PRESTA_URL') if USE_ENV else gs.credentials.presta.client.emil_design.api_domain
 
     def describe_images(self, 
                               lang: str,

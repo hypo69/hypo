@@ -12,11 +12,9 @@
 import csv
 import json
 from pathlib import Path
-from types import SimpleNamespace
 from typing import List, Dict, Union
 import pandas as pd
 from src.logger.logger import logger
-
 
 def save_csv_file(
     data: List[Dict[str, str]],
@@ -24,19 +22,20 @@ def save_csv_file(
     mode: str = 'a',
     exc_info: bool = True,
 ) -> bool:
-    """Saves a list of dictionaries to a CSV file.
+    """    Saves a list of dictionaries to a CSV file.
 
-    :param data: List of dictionaries to save.
-    :type data: List[Dict[str, str]]
-    :param file_path: Path to the CSV file.
-    :type file_path: Union[str, Path]
-    :param mode: File mode ('a' to append, 'w' to overwrite). Default is 'a'.
-    :type mode: str
-    :param exc_info: Include traceback information in logs.
-    :type exc_info: bool
-    :raises TypeError: If input data is not a list of dictionaries.
-    :raises ValueError: If input data is empty.
-    :returns: True if successful, otherwise False.
+    Args:
+        data (List[Dict[str, str]]): List of dictionaries to save.
+        file_path (Union[str, Path]): Path to the CSV file.
+        mode (str): File mode ('a' to append, 'w' to overwrite). Default is 'a'.
+        exc_info (bool): Include traceback information in logs.
+
+    Returns:
+        bool: True if successful, otherwise False.
+
+    Raises:
+        TypeError: If input data is not a list of dictionaries.
+        ValueError: If input data is empty.
     """
     if not isinstance(data, list):
         raise TypeError("Input data must be a list of dictionaries.")
@@ -57,16 +56,18 @@ def save_csv_file(
         logger.error(f"Failed to save CSV to {file_path}", exc_info=exc_info)
         return False
 
-
 def read_csv_file(file_path: Union[str, Path], exc_info: bool = True) -> List[Dict[str, str]] | None:
-    """Reads CSV content as a list of dictionaries.
+    """    Reads CSV content as a list of dictionaries.
 
-    :param file_path: Path to the CSV file.
-    :type file_path: Union[str, Path]
-    :param exc_info: Include traceback information in logs.
-    :type exc_info: bool
-    :raises FileNotFoundError: If file not found.
-    :returns: List of dictionaries or None if failed.
+    Args:
+        file_path (Union[str, Path]): Path to the CSV file.
+        exc_info (bool): Include traceback information in logs.
+
+    Returns:
+        List[Dict[str, str]] | None: List of dictionaries or None if failed.
+
+    Raises:
+        FileNotFoundError: If file not found.
     """
     try:
         with Path(file_path).open('r', encoding='utf-8') as file:
@@ -80,17 +81,15 @@ def read_csv_file(file_path: Union[str, Path], exc_info: bool = True) -> List[Di
         return None
 
 def read_csv_as_json(csv_file_path: Union[str, Path], json_file_path: Union[str, Path], exc_info: bool = True) -> bool:
-    """
-    Convert a CSV file to JSON format and save it.
+    """    Convert a CSV file to JSON format and save it.
 
-    :param csv_file_path: Path to the CSV file.
-    :type csv_file_path: str | Path
-    :param json_file_path: Path to save the JSON file.
-    :type json_file_path: str | Path
-    :param exc_info: Include traceback information in logs. Defaults to True.
-    :type exc_info: bool, optional
-    :returns: True if conversion is successful, else False.
-    :rtype: bool
+    Args:
+        csv_file_path (Union[str, Path]): Path to the CSV file.
+        json_file_path (Union[str, Path]): Path to save the JSON file.
+        exc_info (bool): Include traceback information in logs.
+
+    Returns:
+        bool: True if conversion is successful, else False.
     """
     try:
         data = read_csv_file(csv_file_path, exc_info=exc_info)
@@ -103,15 +102,14 @@ def read_csv_as_json(csv_file_path: Union[str, Path], json_file_path: Union[str,
         logger.error(f"Failed to convert CSV to JSON at {json_file_path}", exc_info=exc_info)
         return False
 
-
 def read_csv_as_dict(csv_file: Union[str, Path]) -> dict | None:
-    """
-    Convert CSV content to a dictionary.
+    """    Convert CSV content to a dictionary.
 
-    :param csv_file: Path to the CSV file.
-    :type csv_file: str | Path
-    :returns: Dictionary representation of CSV content, or None if failed.
-    :rtype: dict | None
+    Args:
+        csv_file (Union[str, Path]): Path to the CSV file.
+
+    Returns:
+        dict | None: Dictionary representation of CSV content, or None if failed.
     """
     try:
         with Path(csv_file).open('r', encoding='utf-8') as f:
@@ -121,14 +119,18 @@ def read_csv_as_dict(csv_file: Union[str, Path]) -> dict | None:
         logger.error("Failed to read CSV as dictionary", exc_info=True)
         return None
 
-
 def read_csv_as_ns(file_path: Union[str, Path]) -> List[dict]:
-    """Load CSV data into a list of dictionaries using Pandas.
+    """!
+    Load CSV data into a list of dictionaries using Pandas.
 
-    :param file_path: Path to the CSV file.
-    :type file_path: Union[str, Path]
-    :returns: List of dictionaries representing the CSV content.
-    :raises FileNotFoundError: If file not found.
+    Args:
+        file_path (Union[str, Path]): Path to the CSV file.
+
+    Returns:
+        List[dict]: List of dictionaries representing the CSV content.
+
+    Raises:
+        FileNotFoundError: If file not found.
     """
     try:
         df = pd.read_csv(file_path)

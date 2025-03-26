@@ -2,36 +2,55 @@
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
 """
-.. module:: src.utils.get_free_port
-    :platform: Windows, Unix
-    :synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
+Module for finding a free port.
+
+Agrs:
+    host (str): The host address to check for available ports.
+    port_range (Optional[str | List[str]], optional): A port range specified as a string "min-max" or a list of strings.
+           E.g.: "3000-3999", ["3000-3999", "8000-8010"], None. Defaults to `None`.
+
+Returns:
+    int: An available port number.
+
+Raises:
+    ValueError: If no free port can be found within the specified range, or if the port range is invalid.
+
+Example:
+    >>> get_free_port('localhost', '3000-3005')
+    3001
 """
 
 import socket
 from typing import Optional, Tuple, List
 
-
-import header # Not used
+import header  # Not used
 from src.logger import logger
-
 
 def get_free_port(host: str, port_range: Optional[str | List[str]] = None) -> int:
     """
     Finds and returns a free port within the specified range, or the first available port if no range is given.
 
-    :param host: The host address to check for available ports.
-    :type host: str
-    :param port_range: (Optional) A port range specified as a string "min-max" or a list of strings.
-           E.g.: "3000-3999", ["3000-3999", "8000-8010"], None
-    :type port_range: Optional[str | List[str]]
-    :return: An available port number.
-    :rtype: int
-    :raises ValueError: If no free port can be found within the specified range, or if the port range is invalid.
-    """
+    Args:
+        host (str): The host address to check for available ports.
+        port_range (Optional[str | List[str]], optional): A port range specified as a string "min-max" or a list of strings.
+               E.g.: "3000-3999", ["3000-3999", "8000-8010"], None. Defaults to `None`.
 
+    Returns:
+        int: An available port number.
+
+    Raises:
+        ValueError: If no free port can be found within the specified range, or if the port range is invalid.
+    """
     def _is_port_in_use(host: str, port: int) -> bool:
         """
         Checks if a given port is in use on the specified host.
+
+        Args:
+            host (str): The host address.
+            port (int): The port number to check.
+
+        Returns:
+            bool: True if the port is in use, False otherwise.
         """
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             try:
@@ -41,7 +60,18 @@ def get_free_port(host: str, port_range: Optional[str | List[str]] = None) -> in
                 return True  # Port is in use
 
     def _parse_port_range(port_range_str: str) -> Tuple[int, int]:
-        """Parses port range string "min-max" into a tuple (min_port, max_port)."""
+        """
+        Parses port range string "min-max" into a tuple (min_port, max_port).
+
+        Args:
+            port_range_str (str): The port range string.
+
+        Returns:
+            Tuple[int, int]: A tuple containing minimum and maximum port numbers.
+
+        Raises:
+            ValueError: If the port range string format is invalid.
+        """
         try:
             parts = port_range_str.split('-')
             if len(parts) != 2:
@@ -104,47 +134,3 @@ def get_free_port(host: str, port_range: Optional[str | List[str]] = None) -> in
             if port > 65535:
                 logger.error(f'Error: No free port found')
                 raise ValueError('No free port found')
-
-
-if __name__ == '__main__':
-    host = 'localhost'
-
-    # Пример с одним диапазоном:
-    try:
-        port = get_free_port(host, '3000-3005')
-        print(f'Свободный порт: {port}')
-    except ValueError as e:
-        print(f'Ошибка: {e}')
-
-    # Пример со списком диапазонов:
-    try:
-        port = get_free_port(host, ['3000-3005', '8000-8005'])
-        print(f'Свободный порт: {port}')
-    except ValueError as e:
-        print(f'Ошибка: {e}')
-
-    # Пример без диапазона (первый свободный):
-    try:
-        port = get_free_port(host)
-        print(f'Свободный порт: {port}')
-    except ValueError as e:
-        print(f'Ошибка: {e}')
-
-    # Пример с некорректным форматом
-    try:
-        port = get_free_port(host, '3000-')
-        print(f'Свободный порт: {port}')
-    except ValueError as e:
-        print(f'Ошибка: {e}')
-
-    # Пример с некорректными портами
-    try:
-        port = get_free_port(host, '5000-4000')
-        print(f'Свободный порт: {port}')
-    except ValueError as e:
-        print(f'Ошибка: {e}')
-    try:
-        port = get_free_port(host, [5000, 4000])
-        print(f'Свободный порт: {port}')
-    except ValueError as e:
-        print(f'Ошибка: {e}')

@@ -322,11 +322,11 @@ class ExecuteLocator:
             return await _parse_elements_list(web_elements, locator) if web_elements else None
 
         except TimeoutException as ex:
-            logger.error(f"Timeout for locator: {print(locator.__dict__, text_color='yellow')}", ex)
+            logger.error(f"Timeout for locator: {print(locator.__dict__, text_color='yellow')}", ex, False)
             return None
 
         except Exception as ex:
-            logger.error(f"Error locating element: {print(locator.__dict__, text_color='yellow')}", ex)
+            logger.error(f"Error locating element: {print(locator.__dict__, text_color='yellow')}", ex, False)
             return None
 
     async def get_webelement_as_screenshot(
@@ -409,11 +409,11 @@ class ExecuteLocator:
                     continue
                 except ElementClickInterceptedException as ex:
                     if locator.mandatory:
-                        logger.error(f"Element click intercepted: {locator=}", ex)
+                        logger.error(f"Element click intercepted: {print(locator)}", ex, False)
                         return False
                 except Exception as ex:
                     if locator.mandatory:
-                        logger.error(f"Element click error:\n {print(locator)} \n", ex)
+                        logger.error(f"Element click error:\n {print(locator)} \n", ex, False)
                         # try:
                         #     self.driver.execute_script("arguments[0].click();", webelement)
                         #     continue
@@ -430,12 +430,12 @@ class ExecuteLocator:
                     result.append(True)
                     continue
                 if locator.mandatory:
-                    logger.debug(f"Pause event parsing failed: {locator=}")
+                    logger.debug(f"Pause event parsing failed: {print(locator)}")
                     return False
 
             elif event == "upload_media()":
                 if not message and locator.mandatory:
-                    logger.debug(f"Message is required for upload_media event. Message: {message!r}")
+                    logger.debug(f"Message is required for upload_media event. Message: {print(message)}")
                     return False
                 try:
                     await asyncio.to_thread(webelement.send_keys, message)
@@ -450,14 +450,14 @@ class ExecuteLocator:
                 try:
                     result.append(await self.get_webelement_as_screenshot(locator, webelement=webelement))
                 except Exception as ex:
-                    logger.error(f"Error taking screenshot: {locator=}", ex)
+                    logger.error(f"Error taking screenshot: {locator=}", ex, False)
                     return False
 
             elif event == "clear()":
                 try:
                     await asyncio.to_thread(webelement.clear)
                 except Exception as ex:
-                    logger.error(f"Error clearing element: {locator=}", ex)
+                    logger.error(f"Error clearing element: {locator=}", ex, False)
                     return False
 
             elif event.startswith("send_keys("):
@@ -471,7 +471,7 @@ class ExecuteLocator:
                             actions.send_keys(key_to_send)
                     await asyncio.to_thread(actions.perform)
                 except Exception as ex:
-                    logger.error(f"Error sending keys: {locator=}", ex)
+                    logger.error(f"Error sending keys: {locator=}", ex, False)
                     return False
 
             elif event.startswith("type("):
@@ -531,7 +531,7 @@ class ExecuteLocator:
                             self.actions.pause(typing_speed)
                             self.actions.perform()
                 except Exception as ex:
-                    logger.error(f"Error typing message: {message=}, {word=}, {letter=}", ex)
+                    logger.error(f"Error typing message:/n message={print(message)},/n word={print(letter)},/n letter={print(letter)}/n", ex, False)
                     continue
             return True
 

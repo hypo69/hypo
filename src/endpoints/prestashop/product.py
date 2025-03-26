@@ -12,44 +12,48 @@ Defines the behavior of a product in the project.
 import asyncio
 import os
 from dataclasses import dataclass, field
-from re import U
+#from re import U
 from types import SimpleNamespace
 from typing import List, Dict, Any, Optional
-
-from pytest import Config
 
 import header
 from src import gs
 from src.endpoints.prestashop.api import PrestaShop
 from src.endpoints.prestashop.category import PrestaCategory
 from src.endpoints.prestashop.product_fields import ProductFields
-
 from src.endpoints.prestashop.utils.xml_json_convertor import dict2xml, xml2dict, presta_fields_to_xml
+
 from src.utils.xml import save_xml
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
-
+from src import USE_ENV # <- True - использую переменные окружения, False - использую параметры из keepass
 
 class Config:
     
     # 1. Конфигурация API
-    USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass
+    USE_ENV:bool = False 
 
     MODE:str = 'dev'
     POST_FORMAT = 'XML'
+    API_DOMAIN:str = ''
+    API_KEY:str = ''
+
     if USE_ENV:
-        api_domain = os.getenv('HOST')
-        api_key = os.getenv('API_KEY')
+        API_DOMAIN = os.getenv('HOST')
+        API_KEY = os.getenv('API_KEY')
+
     elif MODE == 'dev':
-        api_domain = gs.credentials.presta.client.dev_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev_emil_design.api_key
+        API_DOMAIN = gs.credentials.presta.client.dev_emil_design.api_domain
+        API_KEY = gs.credentials.presta.client.dev_emil_design.api_key
+
     elif MODE == 'dev8':
-        api_domain = gs.credentials.presta.client.dev8_emil_design.api_domain
-        api_key = gs.credentials.presta.client.dev8_emil_design.api_key
+        API_DOMAIN = gs.credentials.presta.client.dev8_emil_design.api_domain
+        API_KEY = gs.credentials.presta.client.dev8_emil_design.api_key
+
     else:
-        api_domain = gs.credentials.presta.client.emil_design.api_domain
-        api_key = gs.credentials.presta.client.emil_design.api_key
+        API_DOMAIN = gs.credentials.presta.client.emil_design.api_domain
+        API_KEY = gs.credentials.presta.client.emil_design.api_key
 
 class PrestaProduct(PrestaShop):
     """Manipulations with the product.
@@ -57,13 +61,13 @@ class PrestaProduct(PrestaShop):
     and then work with the PrestaShop API.
     """
 
-    def __init__(self, api_key:str, api_domain:str, *args, **kwargs):
+    def __init__(self, API_KEY:str, API_DOMAIN:str, *args, **kwargs):
         """
         Initializes a Product object.
 
         """
 
-        super().__init__( api_key = api_key, api_domain = api_domain, *args, **kwargs)
+        super().__init__( api_key = API_KEY, api_domain = API_DOMAIN, *args, **kwargs)
 
     def get_product_schema(self, resource_id:Optional[str | int] = None, schema: Optional[str] = 'blank') -> dict:
         """Get the schema for the product resource from PrestaShop.
@@ -153,13 +157,15 @@ class PrestaProduct(PrestaShop):
         if Config.POST_FORMAT == 'XML':
             # Convert the dictionary to XML format for PrestaShop.
             xml_data: str = presta_fields_to_xml({"product": presta_product_dict})
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             save_xml(xml_data, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_product.xml")
             kwards['data_format'] = 'XML'
             response = self.create('products', data=xml_data, **kwards)
         else: #elif post_format == 'JSON':
             response = self.create('products', data={'product': presta_product_dict}, **kwards)
 
-
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        j_dumps(response, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_response_new_product_added.json")
 
         # Upload the product image to PrestaShop.
         if response:
@@ -189,7 +195,7 @@ def example_add_new_product():
 
 
 
-    p = PrestaProduct(api_key=Config.api_key, api_domain=Config.host)
+    p = PrestaProduct(API_KEY=Config.API_KEY, API_DOMAIN=Config.host)
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # resource_id = 2191
     # schema = p.get_product_schema(resource_id = resource_id) 
@@ -222,7 +228,7 @@ def example_get_product(id_product:int, **kwards):
     """"""
 
 
-    p = PrestaProduct(api_key=Config.api_key, api_domain=Config.api_domain)
+    p = PrestaProduct(API_KEY=Config.API_KEY, API_DOMAIN=Config.API_DOMAIN)
     kwards:dict = {
     'data_format':'JSON',
     'display' :'full',

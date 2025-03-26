@@ -15,10 +15,10 @@ from src.logger.logger import logger
 from .convertors.dict import dict2ns
 
 
-
-MODE_WRITE = "w"
-MODE_APPEND_START = "a+"
-MODE_APPEND_END = "+a"
+class Config:
+    MODE_WRITE:str = "w"
+    MODE_APPEND_START:str = "a+"
+    MODE_APPEND_END:str = "+a"
 
 def _convert_to_dict(value: Any) -> Any:
     """Convert SimpleNamespace and lists to dict."""
@@ -46,13 +46,13 @@ def _merge_data(
 ) -> Dict:
     """Merge new data with existing data based on mode."""
     try:
-        if mode == MODE_APPEND_START:
+        if mode == Config.MODE_APPEND_START:
             if isinstance(data, list) and isinstance(existing_data, list):
                return data + existing_data
             if isinstance(data, dict) and isinstance(existing_data, dict):
                  existing_data.update(data)
             return existing_data
-        elif mode == MODE_APPEND_END:
+        elif mode == Config.MODE_APPEND_END:
             if isinstance(data, list) and isinstance(existing_data, list):
                 return existing_data + data
             if isinstance(data, dict) and isinstance(existing_data, dict):
@@ -67,7 +67,7 @@ def j_dumps(
     data: Union[Dict, SimpleNamespace, List[Dict], List[SimpleNamespace]],
     file_path: Optional[Path] = None,
     ensure_ascii: bool = False,
-    mode: str = MODE_WRITE,
+    mode: str = Config.MODE_WRITE,
     exc_info: bool = True,
 ) -> Optional[Dict]:
     """
@@ -98,11 +98,11 @@ def j_dumps(
 
     data = _convert_to_dict(data)
 
-    if mode not in {MODE_WRITE, MODE_APPEND_START, MODE_APPEND_END}:
-        mode = MODE_WRITE
+    if mode not in {Config.MODE_WRITE, Config.MODE_APPEND_START, Config.MODE_APPEND_END}:
+        mode = Config.MODE_WRITE
 
     existing_data = {}
-    if path and path.exists() and mode in {MODE_APPEND_START, MODE_APPEND_END}:
+    if path and path.exists() and mode in {Config.MODE_APPEND_START, Config.MODE_APPEND_END}:
         existing_data = _read_existing_data(path, exc_info)
     
     data = _merge_data(data, existing_data, mode)
