@@ -57,10 +57,10 @@ class Chrome(WebDriver):
         options_obj = None
 
         # Загрузка настроек Chrome
-        settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'chrome' / 'chrome.json'))
+        config = j_loads_ns(Path(gs.path.src / 'webdriver' / 'chrome' / 'chrome.json'))
 
         # Путь к chromedriver
-        chromedriver_path: str = str(Path(gs.path.root, settings.executable_path.chromedriver))
+        chromedriver_path: str = str(Path(gs.path.root, config.executable_path.chromedriver))
 
          # Инициализация сервиса
         service = Service(chromedriver_path)
@@ -69,13 +69,13 @@ class Chrome(WebDriver):
         options_obj = Options()
 
         #  Добавление опций из файла настроек
-        if hasattr(settings, 'options') and settings.options:
-            for option in settings.options:
+        if hasattr(config, 'options') and config.options:
+            for option in config.options:
                 options_obj.add_argument(option)
 
         #  Установка режима окна из конфига
-        if hasattr(settings, 'window_mode') and settings.window_mode:
-            window_mode = window_mode or settings.window_mode
+        if hasattr(config, 'window_mode') and config.window_mode:
+            window_mode = window_mode or config.window_mode
         #  Установка режима окна из параметров
         if window_mode:
             if window_mode == 'kiosk':
@@ -97,12 +97,12 @@ class Chrome(WebDriver):
         options_obj.add_argument(f'--user-agent={user_agent}')
 
         # Установка прокси, если включены
-        if hasattr(settings, 'proxy_enabled') and settings.proxy_enabled:
+        if hasattr(config, 'proxy_enabled') and config.proxy_enabled:
              self.set_proxy(options_obj)
 
 
         # Настройка директории профиля
-        profile_directory = settings.profile_directory.os if settings.profile_directory.default == 'os' else str(Path(gs.path.src, settings.profile_directory.internal))
+        profile_directory = config.profile_directory.os if config.profile_directory.default == 'os' else str(Path(gs.path.src, config.profile_directory.internal))
 
         if profile_name:
              profile_directory = str(Path(profile_directory).parent / profile_name)

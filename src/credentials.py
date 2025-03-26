@@ -239,20 +239,20 @@ class ProgramSettings:
         """
         while retry > 0:
             try:
-                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~ ФАЙЛ ПАРОЛЯ В ОТКРЫТОМ ВИДЕ ~~~~~~~~~~~~~~~~~~~~~~~
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~ ⚠️ ФАЙЛ ПАРОЛЯ В ОТКРЫТОМ ВИДЕ ⚠️ ~~~~~~~~~~~~~~~~~~~~~~~
                 password:str = Path( self.path.secrets / 'password.txt').read_text(encoding="utf-8") or None
-                """password: содержит строку пароля в открытом виде. Можно удалить или сам файл или вытереть его содржимое """
+                """password: содержит строку пароля в ⚠️ открытом ⚠️ виде. Можно удалить или сам файл или вытереть его содржимое """
                 
                 kp = PyKeePass(str(self.path.secrets / 'credentials.kdbx'), 
-                               password = password or getpass.getpass(print('Enter KeePass master password: ').lower()))
+                               password = password or getpass.getpass(print('🔐 Enter KeePass master password: ').lower()))
                
                 return kp
             except Exception as ex:
-                print(f"Failed to open KeePass database Exception: {ex}, {retry-1} retries left.")
+                print(f"😔 Failed to open KeePass database Exception: {ex}\n {retry-1} retries left.")
                 ...
                 retry -= 1
                 if retry < 1:
-                    logger.critical('Failed to open KeePass database after multiple attempts', exc_info=True)
+                    logger.critical('🚨 Failed to open KeePass database after multiple attempts', None, False)
                     ...
                     sys.exit()
 

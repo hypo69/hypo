@@ -56,7 +56,7 @@ def main():
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    token_path = gs.path.tmp / 'e-cat-346312-137284f4419e.json'
+    token_path = gs.path.secrets / 'e-cat-346312-137284f4419e.json'
     if token_path.exists():
         creds = Credentials.from_authorized_user_file(token_path, SCOPES)
     # If there are no (valid) credentials available, let the user log in.

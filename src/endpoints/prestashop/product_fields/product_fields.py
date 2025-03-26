@@ -82,7 +82,7 @@ class ProductFields:
             return False 
 
 
-    def _set_multilang_value(self, field_name: str, value: str) -> None:
+    def _set_multilang_value(self, field_name: str, value: str) -> bool:
         """
         Устанавливает мультиязычное значение для заданного поля.
 
@@ -92,43 +92,35 @@ class ProductFields:
         """
         try:
             _lang_index = str(self.id_lang)
-            #lang_data = {'attrs': {'id': _lang_index}, 'value': value}
-            lang_data_dict:dict = dict( {'language': [{ 'attrs':{'id': _lang_index}, 'value': value} ]})
-            lang_data_dict:dict = {'id': _lang_index, 'value': value}
 
+            # Create the language-specific data structure
+            lang_data = {
+                'language': {
+                    'id': _lang_index
+                },
+                'value': value
+            }
+
+            # Get the existing field value, or None if it doesn't exist
             field = getattr(self.presta_fields, field_name, None)
 
-            #if not hasattr(self.presta_fields, field_name) or not isinstance(field, dict) or 'language' not in field:
-            if not hasattr(self.presta_fields, field_name) or not isinstance(field, dict):
-                # Если структура отсутствует, создаем ее в виде списка
-                #setattr(self.presta_fields, field_name, {'language': [lang_data]})
-                setattr(self.presta_fields, field_name, lang_data_dict)
+            if field is None:
+                # If the field doesn't exist, create a list with the new language data
+                setattr(self.presta_fields, field_name, [lang_data])
             else:
-                language_list = field['language']
+                # If the field exists, append the new language data to the existing list
+                if not isinstance(field, list):
+                   #Если вдруг там не список, то создадим список
+                   setattr(self.presta_fields, field_name, [lang_data])
+                else:
+                    field.append(lang_data)
 
-                if not isinstance(language_list, list):
-                    setattr(self.presta_fields, field_name, lang_data_dict)
-                    return
-
-                if not language_list:  # Проверка на пустой список
-                    setattr(self.presta_fields, field_name, lang_data_dict)
-                    return
-                
-                # Проверяем, есть ли уже язык с таким ID
-                found = False
-                for i, lang_data_existing in enumerate(language_list):
-                    if lang_data_existing['attrs']['id'] == _lang_index:
-                        language_list[i]['value'] = value  # Заменяем значение
-                        found = True
-                        break
-                
-                # Если язык с таким ID не найден, добавляем его в список
-                if not found:
-                    language_list.append(lang_data)
+            return True
 
         except Exception as ex:
-            logger.error(f"Ошибка при установке {field_name}: {ex}", exc_info=True)
-
+            logger.error(f"""Ошибка установки значения в мультиязычное поле {field_name}
+            Значение {value}:\n""", ex)
+            return 
 
 
     # --------------------------------------------------------------------------
@@ -1215,7 +1207,7 @@ class ProductFields:
 
     @property
     def product_product_tags(self) -> Optional[List[dict]]:
-        """"""
+        """Возвращает список тегов для поисковиков"""
         return self.presta_fields.associations.get('tags') if hasattr(self.presta_fields, 'tags') else []
 
     def product_tag_append(self, tag_id: int):

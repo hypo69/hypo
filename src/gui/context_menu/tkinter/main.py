@@ -6,38 +6,8 @@
 """
 .. module:: src.gui.context_menu.tkinter 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis:  Module to add or remove context menu items for the desktop and folder background.
 
-"""
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-  
-""" module: src.gui.context_menu.tkinter """
-
-
-
-"""Module to add or remove context menu items for the desktop and folder background.
 
 This module provides functions to add or remove a custom context menu item called 
 'hypo AI assistant' for the background of directories and the desktop in Windows Explorer.

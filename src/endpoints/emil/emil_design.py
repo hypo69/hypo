@@ -164,7 +164,7 @@ class EmilDesign:
             ...
             return False
 
-        p = PrestaProduct(api_domain=host, api_key=api_key)
+        p:PrestaProduct = PrestaProduct(api_domain=host, api_key=api_key)
 
         """Важно! При загрузке товаров в PrestaShop, необходимо указать язык, на котором будут отображаться названия и характеристики товара.
         в данном случае, язык по умолчанию - иврит (he), но также можно указать английский (en) или русский (ru)

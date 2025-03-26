@@ -36,8 +36,8 @@ class Config:
     # 1. Конфигурация API
     USE_ENV:bool = False # <- True - использую переменные окружения, False - использую параметры из keepass
 
-    MODE:str = 'prod'
-
+    MODE:str = 'dev'
+    POST_FORMAT = 'XML'
     if USE_ENV:
         api_domain = os.getenv('HOST')
         api_key = os.getenv('API_KEY')
@@ -140,21 +140,25 @@ class PrestaProduct(PrestaShop):
         self._add_parent_categories(f)
 
         presta_product_dict: dict = f.to_dict()
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        #presta_product_dict['name'] = {'language':[presta_product_dict['name']]}
 
         ...
         kwards = {
-            'data_format': 'JSON', # may be 'XML' or 'JSON'
+            'data_format': Config.POST_FORMAT,
             'language': 2,
         }      
         
-        """  XML""" 
-        # Convert the dictionary to XML format for PrestaShop.
-        xml_data: str = presta_fields_to_xml({"product": presta_product_dict})
-        save_xml(xml_data, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_product.xml")
-        kwards['data_format'] = 'XML'
-        #response = self.create('products', data=xml_data, **kwards)
+        """  XML"""
+        if Config.POST_FORMAT == 'XML':
+            # Convert the dictionary to XML format for PrestaShop.
+            xml_data: str = presta_fields_to_xml({"product": presta_product_dict})
+            save_xml(xml_data, gs.path.endpoints / 'emil' / '_experiments' / f"{gs.now}_presta_product.xml")
+            kwards['data_format'] = 'XML'
+            response = self.create('products', data=xml_data, **kwards)
+        else: #elif post_format == 'JSON':
+            response = self.create('products', data={'product': presta_product_dict}, **kwards)
 
-        response = self.create('products', data={'product': presta_product_dict}, **kwards)
 
 
         # Upload the product image to PrestaShop.

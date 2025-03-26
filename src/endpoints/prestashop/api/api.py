@@ -232,7 +232,7 @@ class PrestaShop:
             return response
         else:
 
-            error_answer = self._parse_response(text)
+            error_answer = self._parse_response(response)
             if isinstance(error_answer, dict):
                 error_content = (error_answer
                                  .get('PrestaShop', {})

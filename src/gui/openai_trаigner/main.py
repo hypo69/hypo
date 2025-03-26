@@ -11,31 +11,6 @@
 """
 
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-  
-""" module: src.gui.openai_trаigner """
-
-
 import sys
 import os
 from PyQt6.QtCore import Qt, QUrl
