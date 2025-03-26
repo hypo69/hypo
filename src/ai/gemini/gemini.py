@@ -51,6 +51,8 @@ from src.logger import logger
 
 timeout_check = TimeoutCheck()
 
+class Config:
+    ...
 
 @dataclass
 class GoogleGenerativeAI:

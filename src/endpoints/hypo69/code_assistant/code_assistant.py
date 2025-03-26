@@ -55,17 +55,27 @@ from src.endpoints.hypo69.code_assistant.make_summary import make_summary
 
 class Config:
     ...
+    base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
+    config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
+
+    class Gemini:
+        model_name: str
+        api_key: str
+        response_mime_type: str
+        system_instruction: str
+        ...
 
 
 class CodeAssistant:
     """ 
     .. :class:`CodeAssistant`
         :synopsis: Класс для работы ассистента программиста с моделями ИИ
+        :TODO: перенести установли в класс Config
     """
 
     role: str
     lang: str
-    base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
+    base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant' 
     config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
     gemini_model: GoogleGenerativeAI
     openai_model: OpenAIModel
@@ -97,32 +107,53 @@ class CodeAssistant:
 
         self._initialize_models(**kwards)
         
-
     def _initialize_models(self, **kwards):
         """Инициализация моделей на основе заданных параметров."""
-        
 
         if self.role == 'code_translator':
-            ...
-
+            ...  # Здесь должен быть ваш код для role == 'code_translator'
         else:
-            system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')
+            try:
+                system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / 'CODE_RULES.MD').read_text(encoding='UTF-8')
+            except Exception as e:
+                logger.error(f"Ошибка при чтении system_instruction: {e}", None)
+                system_instruction = None  # Или какое-то другое значение по умолчанию
 
         if "gemini" in self.models_list:
-            self.gemini_model = GoogleGenerativeAI(
-                model_name = self.config.gemini_model_name,
-                api_key = gs.credentials.gemini.onela,
-                system_instruction = system_instruction,
-                generation_config={'response_mime_type': 'application/json'},
-                **kwards,
-            )
-        if "openai" in self.models_list:
-            self.openai_model = OpenAIModel(
-                model_name="gpt-4o-mini",
-                assistant_id=gs.credentials.openai.assistant_id.code_assistant,
-                **kwards,
-            )
+            # Определение значений по умолчанию
+            default_model_name = self.config.gemini_model_name or None
+            default_api_key = gs.credentials.gemini.onela
+            default_response_mime_type = 'plain/text'
 
+            try:
+                # Получение значений из kwards с приоритетом
+                model_name = kwards.get('model_name', default_model_name)
+                api_key = kwards.get('api_key', default_api_key)
+
+                # Обработка system_instruction: kwards -> ранее прочитанный файл -> None
+                system_instruction = kwards.get('system_instruction', system_instruction)  # Значение из kwards имеет приоритет
+
+                # Обработка generation_config: kwards -> значение по умолчанию
+                generation_config = kwards.get('generation_config', {'response_mime_type': default_response_mime_type})
+
+                # Фильтрация kwards для удаления известных аргументов
+                filtered_kwargs = {
+                    k: v for k, v in kwards.items()
+                    if k not in ('model_name', 'api_key', 'generation_config', 'system_instruction')
+                }
+
+                # Создание экземпляра модели Gemini
+                self.gemini_model = GoogleGenerativeAI(
+                    model_name=model_name,
+                    api_key=api_key,
+                    system_instruction=system_instruction,
+                    generation_config=generation_config,
+                    **filtered_kwargs,
+                )
+                ...
+            except Exception as e:
+                logger.error(f"Ошибка при инициализации Gemini: {e}", None)
+                self.gemini_model = None
 
     @property
     def code_instruction(self) -> str | bool:
