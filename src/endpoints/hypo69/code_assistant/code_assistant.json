@@ -4,9 +4,16 @@
   "model": [ "gemini" ],
   "start_dirs": [
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\webdriver",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop\\api",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop\\product_fields",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil"
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gemini_simplechat",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers"
   ],
+
   "gemini_generation_config": {
     "response_mime_type": "text/plain"
   },
@@ -81,7 +88,8 @@
     "CHANGELOG*",
     "CONTRIBUTING*",
     "CODE_OF_CONDUCT*",
-    "conf.py"
+    "conf.py",
+    "header.py"
   ],
 
   "exclude_file_patterns": [

@@ -317,12 +317,12 @@ class CodeAssistant:
 
             # Проверка исключенных файлов по паттерну
             if any(
-                exclude.match(str(file_path)) for exclude in exclude_file_patterns
+                exclude.match(str(file_path.name)) for exclude in exclude_file_patterns
             ): 
                 continue
 
             # Проверка конкретных исключенных файлов
-            if str(file_path) in self.config.exclude_files:
+            if str(file_path.name) in self.config.exclude_files:
                 continue
 
             # Чтение содержимого файла

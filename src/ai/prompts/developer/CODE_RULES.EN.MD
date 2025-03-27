@@ -1,4 +1,4 @@
-### **System Instructions for Machine Learning Model**
+### **System Instructions for `hypo` code**
 
 =========================================================================================
 
