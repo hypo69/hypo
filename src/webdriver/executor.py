@@ -5,8 +5,12 @@
 """
 .. module:: src.webdriver.executor
     :platform: Windows, Unix
-    :synopsis: This module provides functionalities to interact with web elements using Selenium based on provided locators. 
-               It handles parsing locators, interacting with elements, and error handling.
+    :synopsis: This module provides functionalities to interact with web elements using Selenium based on provided locators. It handles parsing locators, interacting with elements, and error handling.
+
+               Этот модуль является ключевым компонентом для автоматизированного взаимодействия с веб-страницами. 
+               Он позволяет находить элементы на странице по различным локаторам (например, id, class, xpath), 
+               выполнять с ними различные действия (например, клик, ввод текста) и получать значения их атрибутов. 
+               Модуль также включает механизмы ожидания появления элементов и обработки возможных ошибок, таких как таймауты и перехваты кликов.
 """
 
 import asyncio

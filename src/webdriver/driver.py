@@ -8,18 +8,11 @@
    :synopsis: Модуль для работы с веб-драйверами Selenium.
 
    Основное назначение класса `Driver` — обеспечение унифицированного интерфейса для работы с веб-драйверами Selenium.
-
-   Основные функции:
-   
-   1. **Инициализация драйвера**: создание экземпляра Selenium WebDriver.
-   2. **Навигация**: переход по URL, прокрутка и извлечение контента.
-   3. **Работа с куки**: сохранение и управление куки.
-   4. **Обработка исключений**: логирование ошибок.
-
-Пример использования:
-    >>> from selenium.webdriver import Chrome
-    >>> driver = Driver(Chrome, executable_path='/path/to/chromedriver')
-    >>> driver.get_url('https://example.com')
+Модуль driver.py предназначен для работы с веб-драйверами Selenium. 
+Он предоставляет унифицированный интерфейс для взаимодействия с различными веб-браузерами, 
+такими как Chrome, Firefox и Edge. Драйверы находятся в подмодулях `chrome\chrome.py`, `firefox\firefox.py`, `edge\edge.py`, `playwright\playwright.py` .
+Файлы настроек для веб-браузеров находятся в: `chrome\chrome.json`, `firefox\firefox.json`, `edge\edge.json`, `playwright\playwright.json`.
+Класс Driver упрощает задачи инициализации драйвера, навигации по URL, управления куками и обработки исключений.
 """
 
 

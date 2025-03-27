@@ -2,11 +2,13 @@
 
 ## Обзор
 
-Модуль предназначен для перевода полей товара на языки клиентской базы данных. Он содержит функции для адаптации идентификаторов языка в данных о товарах, полученных от поставщика, к схеме, используемой в базе данных клиента PrestaShop. Это необходимо, поскольку соответствие идентификаторов языков может различаться между поставщиком и клиентом.
+Модуль предназначен для перевода полей товара на языки клиентской базы данных PrestaShop. Он обеспечивает соответствие идентификаторов языков в данных о товаре, полученных от поставщика, с идентификаторами, используемыми в базе данных клиента.
 
-## Подробнее
+## Подробней
 
-Этот модуль играет важную роль в процессе синхронизации данных о товарах между поставщиком и клиентской платформой PrestaShop. Он гарантирует, что мультиязычные поля товара правильно отображаются на клиентском сайте, используя соответствующую схему идентификаторов языков. Модуль также включает функциональность для работы с переводами товаров, полученными из базы данных клиента.
+Этот модуль решает задачу сопоставления мультиязычных данных о товарах между системой поставщика и клиентской базой данных PrestaShop. Проблема заключается в том, что идентификаторы языков (`id`) в данных поставщика не всегда соответствуют идентификаторам, используемым в клиентской базе данных. Это может привести к неправильному отображению информации о товаре на разных языках на стороне клиента.
+
+Модуль содержит функции для переупорядочивания идентификаторов языков в соответствии со схемой клиента, а также для получения и вставки переводов из/в таблицу переводов PrestaShop. Он использует схему языков клиента для точного сопоставления и обеспечивает правильное отображение мультиязычных полей товара.
 
 ## Функции
 
@@ -15,17 +17,20 @@
 ```python
 def rearrange_language_keys(presta_fields_dict: dict, client_langs_schema: dict | List[dict], page_lang: str) -> dict:
     """
+    Функция обновляет идентификатор языка в словаре presta_fields_dict на соответствующий идентификатор
+    из схемы клиентских языков при совпадении языка страницы.
+
     Args:
         presta_fields_dict (dict): Словарь полей товара.
         page_lang (str): Язык страницы.
         client_langs_schema (list | dict): Схема языков клиента.
 
     Returns:
-        dict: Обновленный словарь `presta_fields_dict`.
+        dict: Обновленный словарь presta_fields_dict.
     """
 ```
 
-**Описание**: Обновляет идентификатор языка в словаре `presta_fields_dict` на соответствующий идентификатор из схемы клиентских языков при совпадении языка страницы.
+**Описание**: Обновляет идентификаторы языков в словаре `presta_fields_dict` на основе схемы языков клиента.
 
 **Параметры**:
 - `presta_fields_dict` (dict): Словарь полей товара.
@@ -36,10 +41,11 @@ def rearrange_language_keys(presta_fields_dict: dict, client_langs_schema: dict 
 - `dict`: Обновленный словарь `presta_fields_dict`.
 
 **Пример**:
+
 ```python
-client_langs_schema = [{'locale': 'en-US', 'id': '2'}, {'locale': 'ru-RU', 'id': '3'}]
 presta_fields_dict = {'name': {'language': [{'attrs': {'id': '1'}, 'value': 'Product Name'}]}}
-page_lang = 'en-US'
+client_langs_schema = [{'id': 2, 'locale': 'ru-RU'}]
+page_lang = 'ru-RU'
 result = rearrange_language_keys(presta_fields_dict, client_langs_schema, page_lang)
 print(result)
 # {'name': {'language': [{'attrs': {'id': '2'}, 'value': 'Product Name'}]}}
@@ -51,45 +57,47 @@ print(result)
 def translate_presta_fields_dict (presta_fields_dict: dict, 
                                   client_langs_schema: list | dict, 
                                   page_lang: str = None) -> dict:
-    """
-    Args:
-        presta_fields_dict (dict): словарь полей товара собранный со страницы поставщика
-        client_langs_schema (dict): словарь актуальных языков на клиенте
-        page_lang (str): язык страницы поставщика в коде en-US, ru-RU, he_HE. Если не задан - функция пытается определить п тексту
-
-    Returns:
-        dict: переведенный словарь полей товара
+    """ @Перевод мультиязычных полей в соответствии со схемой значений `id` языка в базе данных клиента
+	    Функция получает на вход заполненный словарь полей. Мультиязычные поля содржат значения,
+	    полученные с сайта поставщика в виде словаря 
+	    ```
+	    {
+		    'language':[
+					    {'attrs':{'id':'1'}, 'value':value},
+					    ]
+	    }
+	    ```
+	    У клиента язык с ключом `id=1` Может быть любым в зависимости от того на каком языке была 
+	    изначально установлена PrestaShop. Чаще всего это английский, но это не правило.
+	    Точные соответствия я получаю в схеме языков клиента 
+	    locator_description
+	    Самый быстрый способ узнать схему API языков - набрать в адресной строке браузера
+	    https://API_KEY@mypresta.com/api/languages?display=full&io_format=JSON
+	  
+    @param client_langs_schema `dict` словарь актуальных языков на клиенте
+    @param presta_fields_dict `dict` словарь полей товара собранный со страницы поставщика
+    @param page_lang `str` язык страницы поставщика в коде en-US, ru-RU, he_HE. 
+    Если не задан - функция пытается определить п тексту
+    @returns presta_fields_dict переведенный словарь полей товара
     """
 ```
 
-**Описание**: Переводит мультиязычные поля в соответствии со схемой значений `id` языка в базе данных клиента.
+**Описание**: Переводит мультиязычные поля в словаре `presta_fields_dict` в соответствии со схемой языков клиента.
 
 **Параметры**:
-- `presta_fields_dict` (dict): Словарь полей товара, собранный со страницы поставщика.
-- `client_langs_schema` (list | dict): Словарь актуальных языков на клиенте.
-- `page_lang` (str, optional): Язык страницы поставщика в коде `en-US`, `ru-RU`, `he_HE`. Если не задан, функция пытается определить его по тексту. По умолчанию `None`.
+- `presta_fields_dict` (dict): Словарь полей товара.
+- `client_langs_schema` (list | dict): Схема языков клиента.
+- `page_lang` (str, optional): Язык страницы поставщика. По умолчанию `None`.
 
 **Возвращает**:
-- `dict`: Переведенный словарь полей товара.
+- `dict`: Переведенный словарь `presta_fields_dict`.
 
-**Вызывает исключения**:
-- `Exception`: Возникает в случае ошибки при обработке перевода.
+**Пример**:
 
-**Примеры**:
 ```python
-client_langs_schema = [{'iso_code': 'en', 'id': '2'}, {'iso_code': 'ru', 'id': '3'}]
 presta_fields_dict = {'name': {'language': [{'attrs': {'id': '1'}, 'value': 'Product Name'}], 'reference': '123'}}
-page_lang = 'en-US'
-# Mocking functions to avoid actual database calls
-def get_translations_from_presta_translations_table(reference: str):
-    #Return empty list to simulate missing translations
-    return []
-
-def insert_new_translation_to_presta_translations_table(record: dict):
-    print('Record to insert:', record)
-    return {}
-
-enabled_product_translations = get_translations_from_presta_translations_table(presta_fields_dict['reference'])   
+client_langs_schema = [{'id': 2, 'iso_code': 'ru'}]
+page_lang = 'ru-RU'
 result = translate_presta_fields_dict(presta_fields_dict, client_langs_schema, page_lang)
 print(result)
 # {'name': {'language': [{'attrs': {'id': '2'}, 'value': 'Product Name'}], 'reference': '123'}}

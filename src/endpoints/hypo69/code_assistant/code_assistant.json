@@ -3,15 +3,41 @@
   "lang": "EN",
   "model": [ "gemini" ],
   "start_dirs": [
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\logger",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\webdriver",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\fast_api",
+
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\anthropic",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\deepseek",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\dialogflow",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\gemini",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\gradio",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\helicone",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\llama",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\magenta",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\myai",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\openai",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\openai\\assistants",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\openai\\assistants\\quickstart",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\revai",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\suno",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\tiny_troupe",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\xai",
+
+
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\advertisement",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop\\api",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop\\product_fields",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\code_assistant",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\desktop_assistant",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gemini_simplechat",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers"
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario"
   ],
 
   "gemini_generation_config": {
