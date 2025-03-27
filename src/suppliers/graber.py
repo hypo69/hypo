@@ -88,6 +88,7 @@ class Context:
 
 def close_pop_up() -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+    Функция `driver.execute_locator()` будет вызвана только если был указан `Context.locator_for_decorator` при инициализации экземляра класса.
 
     Args:
         value ('Driver'): Дополнительное значение для декоратора.
@@ -129,6 +130,7 @@ class Graber:
         self.fields: ProductFields = ProductFields(lang_index) # <- установка базового языка. Тип - `int`
         Context.driver = self.driver
         Context.supplier_prefix = None
+        """Если установлен Context.locator_for_decorator - выполнится декоратор `@close_pop_up`"""
         Context.locator_for_decorator = None
 
     async def error(self, field: str):
