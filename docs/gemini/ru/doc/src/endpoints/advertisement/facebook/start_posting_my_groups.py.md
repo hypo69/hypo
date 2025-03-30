@@ -1,76 +1,51 @@
-# Модуль `start_posting_my_groups.py`
+# Модуль для запуска рекламных кампаний в Facebook группах
 
 ## Обзор
 
-Модуль `start_posting_my_groups.py` предназначен для автоматической отправки рекламных объявлений в группы Facebook. Он использует веб-драйвер для взаимодействия с Facebook, считывает информацию о группах из JSON-файлов и запускает рекламные кампании, определенные в списке.
+Модуль предназначен для автоматизации процесса размещения рекламных объявлений в группах Facebook. Он использует веб-драйвер для взаимодействия с Facebook и `FacebookPromoter` для управления рекламными кампаниями.
 
 ## Подробней
 
-Этот скрипт является частью системы автоматизации рекламы в Facebook. Он выполняет следующие шаги:
-
-1.  Инициализирует веб-драйвер Chrome.
-2.  Авторизуется на сайте Facebook.
-3.  Загружает списки групп из JSON-файлов.
-4.  Запускает рекламные кампании, используя информацию о группах и текстах объявлений.
-5.  Повторяет процесс до прерывания пользователем.
+Этот модуль автоматизирует процесс публикации рекламных объявлений в группах Facebook. Он инициализирует веб-драйвер Chrome, переходит на сайт Facebook, определяет список файлов с группами и список рекламных кампаний. Затем он создает экземпляр класса `FacebookPromoter` и запускает рекламные кампании в цикле, пока процесс не будет прерван вручную. Модуль использует логирование для записи информации о процессе выполнения и обработки возможных ошибок.
 
 ## Классы
 
 ### `FacebookPromoter`
 
-**Описание**: Класс `FacebookPromoter` отвечает за продвижение рекламных кампаний в Facebook.
+**Описание**: Класс, отвечающий за управление рекламными кампаниями в Facebook.
 
 **Методы**:
-
-*   `run_campaigns`: Запускает рекламные кампании.
-
-**Параметры**:
-
-*   `d`: Экземпляр веб-драйвера.
-*   `group_file_paths`: Список путей к файлам JSON со списками групп.
-*   `no_video`: Флаг, указывающий на отсутствие видео в рекламных материалах.
-
-**Примеры**
-
-```python
-promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = True)
-```
+- `run_campaigns`: Запускает рекламные кампании.
 
 ## Функции
 
 ### `FacebookPromoter.run_campaigns`
 
 ```python
-def run_campaigns(campaigns:list = copy.copy(campaigns), group_file_paths:list = filenames) -> None:
+def run_campaigns(campaigns: list, group_file_paths: list) -> None:
     """
     Args:
-        campaigns (list): Список названий рекламных кампаний.
-        group_file_paths (list): Список путей к файлам JSON со списками групп.
+        campaigns (list): Список названий кампаний для запуска.
+        group_file_paths (list): Список путей к файлам, содержащим информацию о группах.
+
     Returns:
-        None
+        None:
+
     Raises:
-        Exception: Если возникает ошибка во время выполнения кампании.
-    Example:
-        >>> promoter.run_campaigns(campaigns = copy.copy(campaigns), group_file_paths = filenames)
+        Exception: Возникает при ошибках в процессе выполнения кампании.
     """
 ```
 
-**Описание**: Запускает рекламные кампании в Facebook.
+**Описание**: Запускает рекламные кампании в группах Facebook.
 
 **Параметры**:
-
-*   `campaigns`: Список названий рекламных кампаний.
-*   `group_file_paths`: Список путей к файлам JSON со списками групп.
-
-**Возвращает**:
-
-*   `None`
-
-**Вызывает исключения**:
-
-*   `Exception`: Если возникает ошибка во время выполнения кампании.
+- `campaigns` (list): Список названий кампаний для запуска.
+- `group_file_paths` (list): Список путей к файлам, содержащим информацию о группах.
 
 **Примеры**:
 
 ```python
-promoter.run_campaigns(campaigns = copy.copy(campaigns), group_file_paths = filenames)
+promoter.run_campaigns(campaigns=['brands', 'mom_and_baby'], group_file_paths=['my_managed_groups.json'])
+```
+```python
+promoter.run_campaigns(campaigns=copy.copy(campaigns), group_file_paths = filenames)

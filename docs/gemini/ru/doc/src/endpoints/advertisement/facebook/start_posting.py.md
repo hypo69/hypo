@@ -2,77 +2,107 @@
 
 ## Обзор
 
-Модуль предназначен для автоматической отправки рекламных объявлений в группы Facebook. Он использует веб-драйвер для взаимодействия с Facebook и выполняет циклический запуск рекламных кампаний, выбирая группы из указанных файлов.
+Модуль предназначен для отправки рекламных объявлений в группы Facebook. Он использует веб-драйвер для автоматизации процесса публикации рекламы.
 
-## Подорбней
+## Подробней
 
-Этот скрипт автоматизирует процесс публикации рекламных объявлений в группах Facebook. Он инициализирует веб-драйвер, выполняет вход на сайт Facebook и затем циклически запускает рекламные кампании. Кампании настраиваются через список файлов, содержащих информацию о группах, и список категорий кампаний. Скрипт предназначен для работы в долгосрочном режиме, автоматически повторяя запуск кампаний через заданный интервал времени.
+Этот модуль является частью системы автоматизации маркетинга и позволяет автоматически публиковать рекламные объявления в различных группах Facebook.  Он использует класс `FacebookPromoter` для управления кампаниями и веб-драйвер `Driver` для взаимодействия с Facebook через браузер Chrome. Модуль поддерживает запуск кампаний с использованием различных наборов групп, определенных в JSON-файлах. Кроме того, он обрабатывает исключения, позволяя процессу работать непрерывно, если возникают ошибки. Расположение файла в структуре проекта указывает на его роль в управлении рекламными кампаниями в Facebook.
 
 ## Классы
 
 ### `FacebookPromoter`
 
-**Описание**: Класс, отвечающий за продвижение контента в Facebook.
+**Описание**: Класс для управления рекламными кампаниями Facebook.
 
 **Методы**:
 - `run_campaigns`: Запускает рекламные кампании.
 
 **Параметры**:
-- `d` (Driver): Экземпляр веб-драйвера.
-- `group_file_paths` (list[str]): Список путей к файлам, содержащим информацию о группах.
-- `no_video` (bool): Флаг, указывающий на отсутствие видео в рекламных материалах.
-
-**Примеры**
-```python
-from src.webdriver.driver import Driver, Chrome
-from src.endpoints.advertisement.facebook import FacebookPromoter
-
-d = Driver(Chrome)
-d.get_url(r"https://facebook.com")
-
-filenames:list[str] = [
-                        "usa.json",
-                        "he_ils.json",
-                        "ru_ils.json",
-                        "katia_homepage.json",
-                        "my_managed_groups.json",
-          
-                        ]
-promoter:FacebookPromoter = FacebookPromoter(d, group_file_paths=filenames, no_video = True)
-```
+- `d`: Объект веб-драйвера.
+- `group_file_paths` (list[str]): Список путей к файлам JSON, содержащим информацию о группах.
+- `no_video` (bool): Флаг, указывающий на отсутствие видео в объявлениях.
 
 ## Функции
 
-### `time.sleep`
+### `Driver`
 
 ```python
-time.sleep(180)
+def Driver(Chrome):
+    """
+    Args:
+        Chrome: Драйвер для браузера Chrome.
+
+    Returns:
+        None
+
+    Raises:
+        None
+
+    Example:
+        Пример использования:
+        >>> from src.webdriver.driver import Driver, Chrome
+        >>> d = Driver(Chrome)
+    """
 ```
 
-**Описание**: Приостанавливает выполнение программы на указанное количество секунд.
+**Описание**: Инициализирует веб-драйвер для управления браузером Chrome.
 
 **Параметры**:
-- Количество секунд для приостановки выполнения.
+- `Chrome`: Класс, представляющий драйвер Chrome.
 
-**Примеры**:
-```python
-import time
-time.sleep(180) # Приостанавливает выполнение программы на 180 секунд.
-```
-
-### `logger.info`
+### `FacebookPromoter`
 
 ```python
-logger.info("Campaign promotion interrupted.")
+def FacebookPromoter(d, group_file_paths: list[str], no_video: bool = True):
+    """
+    Args:
+        d: Объект веб-драйвера.
+        group_file_paths (list[str]): Список путей к файлам JSON, содержащим информацию о группах.
+        no_video (bool): Флаг, указывающий на отсутствие видео в объявлениях. По умолчанию True.
+
+    Returns:
+        None
+
+    Raises:
+        None
+
+    Example:
+        Пример использования:
+        >>> from src.endpoints.advertisement.facebook import FacebookPromoter
+        >>> promoter = FacebookPromoter(d, group_file_paths=filenames, no_video = True)
+    """
 ```
 
-**Описание**: Регистрирует информационное сообщение в лог.
+**Описание**: Инициализирует объект `FacebookPromoter` для управления рекламными кампаниями в Facebook.
 
 **Параметры**:
-- Сообщение для записи в лог.
+- `d`: Объект веб-драйвера.
+- `group_file_paths` (list[str]): Список путей к файлам JSON, содержащим информацию о группах.
+- `no_video` (bool): Флаг, указывающий на отсутствие видео в объявлениях. По умолчанию `True`.
 
-**Примеры**:
+### `run_campaigns`
+
 ```python
-from src.logger.logger import logger
-logger.info("Campaign promotion interrupted.") # Записывает информационное сообщение о прерывании кампании.
+def promoter.run_campaigns(campaigns: list, group_file_paths: list[str]):
+    """
+    Args:
+        campaigns (list): Список кампаний для запуска.
+        group_file_paths (list[str]): Список путей к файлам JSON, содержащим информацию о группах.
+
+    Returns:
+        None
+
+    Raises:
+        None
+
+    Example:
+        Пример использования:
+        >>> promoter.run_campaigns(campaigns = copy.copy(campaigns), group_file_paths = filenames)
+    """
 ```
+
+**Описание**: Запускает рекламные кампании в Facebook.
+
+**Параметры**:
+- `campaigns` (list): Список кампаний для запуска.
+- `group_file_paths` (list[str]): Список путей к файлам JSON, содержащим информацию о группах.

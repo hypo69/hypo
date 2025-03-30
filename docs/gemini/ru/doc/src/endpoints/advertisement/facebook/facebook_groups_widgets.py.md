@@ -1,37 +1,36 @@
-# Модуль facebook_groups_widgets
+# Модуль `facebook_groups_widgets`
 
 ## Обзор
 
-Модуль `facebook_groups_widgets.py` предназначен для создания интерактивного выпадающего списка с группами Facebook на основе данных, хранящихся в JSON-файле. Этот модуль облегчает выбор целевой группы для размещения рекламы.
+Модуль `facebook_groups_widgets` предоставляет класс `FacebookGroupsWidget`, который создает выпадающий список с URL групп Facebook на основе данных из JSON-файла. Этот модуль предназначен для использования в интерфейсах, где требуется выбор группы Facebook для, например, размещения объявлений.
 
 ## Подробней
 
-Этот модуль предоставляет класс `FacebookGroupsWidget`, который инициализируется путем загрузки данных о группах из JSON-файла. Данные о группах затем используются для создания виджета `Dropdown` (выпадающий список), отображающего URL групп Facebook.  Модуль использует `j_loads_ns` для чтения JSON-файла, что позволяет избежать стандартных проблем с обработкой файлов и обеспечивает удобный доступ к данным.
+Этот модуль облегчает выбор групп Facebook, отображая их в виде выпадающего списка. Он использует `ipywidgets` для создания интерактивного элемента интерфейса, который позволяет пользователю выбирать нужную группу из списка, загруженного из JSON-файла. Класс `FacebookGroupsWidget` инициализируется путем указания пути к JSON-файлу, содержащему информацию о группах.
 
 ## Классы
 
 ### `FacebookGroupsWidget`
 
-**Описание**: Класс для создания и отображения выпадающего списка групп Facebook.
+**Описание**: Класс `FacebookGroupsWidget` создает и управляет выпадающим списком групп Facebook на основе данных из JSON-файла.
 
 **Методы**:
-- `__init__`: Инициализирует виджет, загружает данные о группах из JSON-файла и создает выпадающий список.
-- `create_dropdown`: Создает виджет выпадающего списка на основе данных групп.
+- `__init__`: Инициализирует виджет, загружает данные из JSON и создает выпадающий список.
+- `create_dropdown`: Создает виджет выпадающего списка на основе данных о группах.
 - `display_widget`: Отображает виджет выпадающего списка.
 
 **Параметры**:
 - `json_file_path` (Path): Путь к JSON-файлу, содержащему информацию о группах Facebook.
 
-**Примеры**
-
+**Примеры**:
 ```python
 from pathlib import Path
 from src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
 
-# Предположим, что 'groups.json' содержит данные о группах Facebook
-json_file_path = Path('groups.json')
-widget = FacebookGroupsWidget(json_file_path)
-widget.display_widget()
+# Пример использования класса FacebookGroupsWidget
+json_file_path = Path('path/to/your/groups.json')
+groups_widget = FacebookGroupsWidget(json_file_path)
+groups_widget.display_widget()
 ```
 
 ## Функции
@@ -51,6 +50,15 @@ def __init__(self, json_file_path: Path):
 **Параметры**:
 - `json_file_path` (Path): Путь к JSON-файлу, содержащему информацию о группах Facebook.
 
+**Примеры**:
+```python
+from pathlib import Path
+from src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
+
+json_file_path = Path('path/to/your/groups.json')
+groups_widget = FacebookGroupsWidget(json_file_path)
+```
+
 ### `create_dropdown`
 
 ```python
@@ -66,6 +74,20 @@ def create_dropdown(self) -> Dropdown:
 **Возвращает**:
 - `Dropdown`: Виджет выпадающего списка с URL групп Facebook.
 
+**Примеры**:
+```python
+from pathlib import Path
+from src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
+from ipywidgets import Dropdown
+
+json_file_path = Path('path/to/your/groups.json')
+groups_widget = FacebookGroupsWidget(json_file_path)
+dropdown = groups_widget.create_dropdown()
+
+if isinstance(dropdown, Dropdown):
+    print("Dropdown created successfully")
+```
+
 ### `display_widget`
 
 ```python
@@ -75,3 +97,12 @@ def display_widget(self):
 ```
 
 **Описание**: Отображает виджет выпадающего списка.
+
+**Примеры**:
+```python
+from pathlib import Path
+from src.endpoints.advertisement.facebook.facebook_groups_widgets import FacebookGroupsWidget
+
+json_file_path = Path('path/to/your/groups.json')
+groups_widget = FacebookGroupsWidget(json_file_path)
+groups_widget.display_widget()

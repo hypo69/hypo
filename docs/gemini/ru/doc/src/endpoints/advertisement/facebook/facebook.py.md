@@ -1,12 +1,12 @@
-# Модуль рекламы на Facebook
+# Модуль `facebook`
 
 ## Обзор
 
-Модуль `facebook.py` предназначен для автоматизации взаимодействия с Facebook, включая вход в систему, отправку сообщений и загрузку медиафайлов. Он предоставляет класс `Facebook`, который использует веб-драйвер для выполнения различных сценариев, связанных с рекламой и продвижением контента.
+Модуль `facebook` предназначен для автоматизации работы с Facebook через веб-драйвер. Он предоставляет классы и функции для выполнения различных сценариев, таких как вход в систему, публикация сообщений, загрузка медиафайлов и продвижение постов. Модуль взаимодействует с Facebook для автоматизации маркетинговых и рекламных задач.
 
 ## Подробней
 
-Этот модуль является частью проекта `hypotez` и отвечает за автоматизацию задач, связанных с рекламой на платформе Facebook. Он включает в себя сценарии для входа в систему, переключения между аккаунтами, продвижения постов и загрузки медиафайлов. Модуль использует веб-драйвер для имитации действий пользователя в браузере, что позволяет автоматизировать рутинные операции и повысить эффективность рекламных кампаний.
+Этот модуль является частью проекта `hypotez` и предназначен для управления рекламными кампаниями в Facebook. Он позволяет автоматизировать такие задачи, как вход в аккаунт, публикация контента и продвижение постов. Код использует веб-драйвер для взаимодействия с Facebook, что позволяет имитировать действия пользователя и автоматизировать рутинные операции.
 
 ## Классы
 
@@ -18,33 +18,25 @@
 - `__init__`: Инициализирует экземпляр класса `Facebook`.
 - `login`: Выполняет вход в Facebook.
 - `promote_post`: Отправляет текст в форму сообщения для продвижения поста.
-- `promote_event`: Пример функции для продвижения события.
+- `promote_event`: Функция для продвижения события.
 
 **Параметры**:
-- `driver` (\'Driver\'): Экземпляр веб-драйвера.
+- `driver` ('Driver'): Экземпляр веб-драйвера для управления браузером.
 - `promoter` (str): Имя промоутера.
 - `group_file_paths` (list[str]): Список путей к файлам групп.
+- `start_page` (str): URL страницы, с которой начинается работа (по умолчанию 'https://www.facebook.com/hypotez.promocodes').
 
 **Примеры**
-- Пример инициализации класса `Facebook`:
-
 ```python
+# Пример создания экземпляра класса Facebook
 from selenium import webdriver
 from src.endpoints.advertisement.facebook.facebook import Facebook
-from types import SimpleNamespace
 
-# Инициализация драйвера (пример)
+# Инициализация веб-драйвера (пример для Chrome)
 driver = webdriver.Chrome()
 
-# Пример данных для промоушена поста
-item = SimpleNamespace()
-item.message = "Текст сообщения"
-
-# Инициализация класса Facebook
-facebook = Facebook(driver=driver, promoter="Имя промоутера", group_file_paths=[])
-
-# Продвижение поста
-facebook.promote_post(item)
+# Создание экземпляра класса Facebook
+facebook_instance = Facebook(driver=driver, promoter='my_promoter', group_file_paths=['path/to/group_file.txt'])
 ```
 
 ## Функции
@@ -54,52 +46,32 @@ facebook.promote_post(item)
 ```python
 def login(self) -> bool:
     """
-    Args:
-        self: Объект класса.
+    Выполняет вход в Facebook.
 
     Returns:
-        bool: Возвращает `True`, если вход выполнен успешно, иначе `False`.
-
-    Raises:
-        None
-
-    Example:
-        >>> from selenium import webdriver
-        >>> from src.endpoints.advertisement.facebook.facebook import Facebook
-        >>> driver = webdriver.Chrome()
-        >>> facebook = Facebook(driver=driver, promoter="Имя промоутера", group_file_paths=[])
-        >>> facebook.login()
-        True
+        bool: `True`, если вход выполнен успешно, иначе `False`.
     """
 ```
 
-**Описание**: Выполняет вход в Facebook.
-
-**Параметры**:
-- `self`: Экземпляр класса `Facebook`.
+**Описание**: Функция выполняет вход в Facebook.
 
 **Возвращает**:
 - `bool`: `True`, если вход выполнен успешно, иначе `False`.
 
-**Вызывает исключения**:
-- Отсутствуют.
-
 **Примеры**:
-- Пример вызова функции `login`:
-
 ```python
+# Пример вызова функции login
 from selenium import webdriver
 from src.endpoints.advertisement.facebook.facebook import Facebook
 
-# Инициализация драйвера (пример)
+# Инициализация веб-драйвера
 driver = webdriver.Chrome()
+facebook_instance = Facebook(driver=driver, promoter='my_promoter', group_file_paths=['path/to/group_file.txt'])
 
-# Инициализация класса Facebook
-facebook = Facebook(driver=driver, promoter="Имя промоутера", group_file_paths=[])
-
-# Выполнение входа в Facebook
-success = facebook.login()
-print(f"Вход выполнен успешно: {success}")
+if facebook_instance.login():
+    print('Вход выполнен успешно')
+else:
+    print('Ошибка при входе')
 ```
 
 ### `promote_post`
@@ -107,61 +79,38 @@ print(f"Вход выполнен успешно: {success}")
 ```python
 def promote_post(self, item: SimpleNamespace) -> bool:
     """
-    Args:
-        item (SimpleNamespace): Объект с данными для публикации.
-
-    Returns:
-        bool: Возвращает `True`, если отправка выполнена успешно, иначе `False`.
-
-    Raises:
-        None
-
-    Example:
-        >>> from selenium import webdriver
-        >>> from src.endpoints.advertisement.facebook.facebook import Facebook
-        >>> from types import SimpleNamespace
-        >>> driver = webdriver.Chrome()
-        >>> facebook = Facebook(driver=driver, promoter="Имя промоутера", group_file_paths=[])
-        >>> item = SimpleNamespace()
-        >>> item.message = "Текст сообщения"
-        >>> facebook.promote_post(item)
-        True
+    Функция отправляет текст в форму сообщения для продвижения поста.
+    @param message: сообщение текстом. Знаки `;` будут заменеы на `SHIFT+ENTER`
+    @returns `True`, если успешно, иначе `False`
     """
 ```
 
-**Описание**: Отправляет текст в форму сообщения для продвижения поста.
+**Описание**: Функция отправляет текст в форму сообщения для продвижения поста.
 
 **Параметры**:
-- `self`: Экземпляр класса `Facebook`.
-- `item` (SimpleNamespace): Объект с данными для публикации.
+- `item` (SimpleNamespace): Объект с данными для продвижения поста.
 
 **Возвращает**:
 - `bool`: `True`, если отправка выполнена успешно, иначе `False`.
 
-**Вызывает исключения**:
-- Отсутствуют.
-
 **Примеры**:
-- Пример вызова функции `promote_post`:
-
 ```python
+# Пример вызова функции promote_post
 from selenium import webdriver
-from src.endpoints.advertisement.facebook.facebook import Facebook
 from types import SimpleNamespace
+from src.endpoints.advertisement.facebook.facebook import Facebook
 
-# Инициализация драйвера (пример)
+# Инициализация веб-драйвера
 driver = webdriver.Chrome()
+facebook_instance = Facebook(driver=driver, promoter='my_promoter', group_file_paths=['path/to/group_file.txt'])
 
-# Инициализация класса Facebook
-facebook = Facebook(driver=driver, promoter="Имя промоутера", group_file_paths=[])
+# Создание объекта SimpleNamespace с данными для поста
+item = SimpleNamespace(message='Текст сообщения для продвижения')
 
-# Пример данных для промоушена поста
-item = SimpleNamespace()
-item.message = "Текст сообщения"
-
-# Продвижение поста
-success = facebook.promote_post(item)
-print(f"Отправка выполнена успешно: {success}")
+if facebook_instance.promote_post(item):
+    print('Пост успешно отправлен')
+else:
+    print('Ошибка при отправке поста')
 ```
 
 ### `promote_event`
@@ -169,38 +118,26 @@ print(f"Отправка выполнена успешно: {success}")
 ```python
 def promote_event(self, event: SimpleNamespace):
     """ Пример функции для продвижения события """
-    ...
 ```
 
-**Описание**: Пример функции для продвижения события.
+**Описание**: Функция для продвижения события.
 
 **Параметры**:
-- `self`: Экземпляр класса `Facebook`.
-- `event` (SimpleNamespace): Объект с данными о событии.
-
-**Возвращает**:
-- Отсутствует.
-
-**Вызывает исключения**:
-- Отсутствуют.
+- `event` (SimpleNamespace): Объект с данными о событии для продвижения.
 
 **Примеры**:
-- Пример вызова функции `promote_event`:
-
 ```python
+# Пример вызова функции promote_event
 from selenium import webdriver
-from src.endpoints.advertisement.facebook.facebook import Facebook
 from types import SimpleNamespace
+from src.endpoints.advertisement.facebook.facebook import Facebook
 
-# Инициализация драйвера (пример)
+# Инициализация веб-драйвера
 driver = webdriver.Chrome()
+facebook_instance = Facebook(driver=driver, promoter='my_promoter', group_file_paths=['path/to/group_file.txt'])
 
-# Инициализация класса Facebook
-facebook = Facebook(driver=driver, promoter="Имя промоутера", group_file_paths=[])
+# Создание объекта SimpleNamespace с данными о событии
+event = SimpleNamespace(name='Название события', description='Описание события')
 
-# Пример данных о событии
-event = SimpleNamespace()
-event.name = "Название события"
-
-# Продвижение события
-facebook.promote_event(event)
+facebook_instance.promote_event(event)
+print('Запрос на продвижение события отправлен')

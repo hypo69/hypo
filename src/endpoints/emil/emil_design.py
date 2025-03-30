@@ -11,7 +11,9 @@
     - Описание изображений с использованием Gemini AI.
     - Загрузка описаний продуктов в PrestaShop.
     - .....
-Примеры, как можно взаимодействовать с модулем
+Классы:
+    `Config` - <инструкция для модели: Дай краткое описание и назначение этого класса>
+    `EmilDesign` - <инструкция для модели: Дай краткое описание и назначение этого класса>
 """
 
 import os
@@ -222,45 +224,12 @@ class EmilDesign:
             Exception: If any error occurs during PrestaShop upload.
         """
         try:
+
             json_files_list: list[str] = get_filenames_from_directory(self.data_path, ext='json')
             products_list: list[SimpleNamespace] = [j_loads_ns(self.data_path / f) for f in json_files_list]
-            lang: str = lang or 'he'
-            host: str = (
-                gs.credentials.presta.client.emil_design.api_domain if USE_ENV else os.getenv('HOST')
-            )
-            api_key: str = (
-                gs.credentials.presta.client.emil_design.api_key if USE_ENV else os.getenv('API_KEY')
-            )
 
-            # DEVELOPMENT ENVIRONMENT !!!
-            """Список доменов для разных окружений
-            dev - prestashop 1.7 https://dev.emil-design.com/api
-            dev8 - prestashop 8  https://dev8.emil-design.com/api
-            """
-            SUB_DOMAIN: str = 'prod'  # prod | dev | dev8
-            host: str = ''
-            api_key: str = ''
 
-            if SUB_DOMAIN == 'dev8':
-                host = gs.credentials.presta.client.dev8_emil_design.api_domain
-                api_key = gs.credentials.presta.client.dev8_emil_design.api_key
-
-            elif SUB_DOMAIN == 'dev':
-                host = gs.credentials.presta.client.dev_emil_design.api_domain
-                api_key = gs.credentials.presta.client.dev_emil_design.api_key
-
-            ...  # другие окружения
-
-            elif SUB_DOMAIN == 'prod':
-                host = gs.credentials.presta.client.emil_design.api_domain
-                api_key = gs.credentials.presta.client.emil_design.api_key
-
-            if not host or not api_key:
-                logger.error('PrestaShop credentials not found.', None, False)
-                ...
-                return False
-
-            p: PrestaProduct = PrestaProduct(api_domain=host, api_key=api_key)
+            p: PrestaProduct = PrestaProduct(api_domain=Config.API_DOMAIN , api_key=api_key)
 
             """Важно! При загрузке товаров в PrestaShop, необходимо указать язык, на котором будут отображаться названия и характеристики товара.
             в данном случае, язык по умолчанию - иврит (he), но также можно указать английский (en) или русский (ru)

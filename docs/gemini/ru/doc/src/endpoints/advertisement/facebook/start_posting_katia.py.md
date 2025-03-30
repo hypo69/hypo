@@ -2,59 +2,110 @@
 
 ## Обзор
 
-Модуль предназначен для автоматической отправки рекламных объявлений в группы Facebook. В частности, он использует класс `FacebookPromoter` для управления рекламными кампаниями.
+Модуль предназначен для отправки рекламных объявлений в группы Facebook. Он использует веб-драйвер для автоматизации действий в браузере и класс `FacebookPromoter` для управления процессом продвижения.
 
 ## Подробней
 
-Этот модуль автоматизирует процесс размещения рекламы в группах Facebook. Он использует веб-драйвер для взаимодействия с сайтом Facebook и класс `FacebookPromoter` для выполнения задач продвижения. Модуль позволяет запускать несколько рекламных кампаний, определенных в списке `campaigns`. В случае прерывания процесса пользователем, регистрируется соответствующее сообщение.
+Этот скрипт автоматизирует процесс публикации рекламных объявлений в группах Facebook. Он инициализирует веб-драйвер Chrome, переходит на сайт Facebook, определяет список кампаний и файлов с группами, а затем запускает продвижение. Скрипт обрабатывает прерывание с клавиатуры для завершения процесса.
 
 ## Классы
 
 ### `FacebookPromoter`
 
-**Описание**: Класс предназначен для управления рекламными кампаниями в Facebook. Более подробное описание класса и его методов можно найти в документации к модулю `src.endpoints.advertisement.facebook.promoter`.
+**Описание**: Класс для управления процессом продвижения в Facebook.
 
 **Методы**:
-- `run_campaigns`: Запускает указанные рекламные кампании.
+- `run_campaigns`: Запускает кампании продвижения.
 
 **Параметры**:
-- `d`: Экземпляр класса `Driver`, представляющий веб-драйвер.
-- `group_file_paths`: Список путей к файлам, содержащим информацию о группах для размещения рекламы.
-- `no_video`: Флаг, указывающий на отсутствие видео в рекламных материалах.
+- `d`: Объект веб-драйвера.
+- `group_file_paths`: Список путей к файлам с информацией о группах.
+- `no_video`: Флаг, указывающий на необходимость исключения видео из продвижения.
+
+**Примеры**
+
+```python
+# Пример использования класса FacebookPromoter
+from src.webdriver.driver import Driver, Chrome
+from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
+from src.logger.logger import logger
+
+d = Driver(Chrome)
+d.get_url(r"https://facebook.com")
+
+filenames:list = ['katia_homepage.json',]
+campaigns:list = [ 'sport_and_activity',
+                  'bags_backpacks_suitcases',
+                    'pain',
+                    'brands',
+                    'mom_and_baby',
+                    'house',
+                ]
+promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = False)
+
+try:
+    promoter.run_campaigns(campaigns)
+except KeyboardInterrupt as ex:
+    logger.info("Campaign promotion interrupted.", ex, exc_info = True)
+```
 
 ## Функции
 
-В данном коде напрямую не определены функции, но используются методы класса `FacebookPromoter`.
+### `Driver`
+
+```python
+from src.webdriver.driver import Driver, Chrome
+d = Driver(Chrome)
+d.get_url(r"https://facebook.com")
+```
+
+**Описание**: Инициализирует веб-драйвер Chrome и открывает сайт Facebook.
+
+**Параметры**:
+- Отсутствуют явные параметры. Использует `Chrome` из `src.webdriver.driver`.
+
+**Возвращает**:
+- Отсутствует явное возвращаемое значение.
+
+**Вызывает исключения**:
+- Возможные исключения при инициализации и управлении веб-драйвером.
+
+**Примеры**:
+
+```python
+from src.webdriver.driver import Driver, Chrome
+d = Driver(Chrome)
+d.get_url(r"https://facebook.com")
+```
 
 ### `FacebookPromoter.run_campaigns`
 
 ```python
-def run_campaigns(campaigns: list) -> None:
-    """
-    Args:
-        campaigns (list): Список кампаний для запуска.
-
-    Returns:
-        None
-
-    Raises:
-        Exception: В случае возникновения ошибок при выполнении кампании.
-    """
+promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = False)
+try:
+    promoter.run_campaigns(campaigns)
+except KeyboardInterrupt:
+    logger.info("Campaign promotion interrupted.")
 ```
 
-**Описание**: Запускает рекламные кампании, перечисленные в списке `campaigns`.
+**Описание**: Запускает кампании продвижения в Facebook.
 
 **Параметры**:
-- `campaigns` (list): Список строк, представляющих названия кампаний для запуска.
+- `campaigns` (list): Список кампаний для запуска.
 
 **Возвращает**:
-- `None`: Функция ничего не возвращает.
+- Отсутствует явное возвращаемое значение.
 
 **Вызывает исключения**:
-- `Exception`: В случае возникновения ошибок при выполнении кампании.
+- `KeyboardInterrupt`: Возникает при прерывании с клавиатуры.
+- Другие исключения, возникающие в процессе выполнения кампаний.
 
 **Примеры**:
+
 ```python
 promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = False)
-promoter.run_campaigns(['sport_and_activity', 'bags_backpacks_suitcases'])
+try:
+    promoter.run_campaigns(campaigns)
+except KeyboardInterrupt as ex:
+    logger.info("Campaign promotion interrupted.", ex, exc_info = True)
 ```
