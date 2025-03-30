@@ -1,21 +1,18 @@
+### **Улучшенный код**
+
 ## \file /src/webdriver/driver.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
-
 """
-.. module::  src.webdriver.driver
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с веб-драйверами Selenium.
+Модуль для работы с веб-драйверами Selenium.
+==============================================
+Основное назначение класса `Driver` — обеспечение унифицированного интерфейса для работы с веб-драйверами Selenium.
 
-   Основное назначение класса `Driver` — обеспечение унифицированного интерфейса для работы с веб-драйверами Selenium.
-Модуль driver.py предназначен для работы с веб-драйверами Selenium. 
-Он предоставляет унифицированный интерфейс для взаимодействия с различными веб-браузерами, 
-такими как Chrome, Firefox и Edge. Драйверы находятся в подмодулях `chrome\chrome.py`, `firefox\firefox.py`, `edge\edge.py`, `playwright\playwright.py` .
+Он предоставляет интерфейс для взаимодействия с  веб-браузерами, 
+такими как Chrome, Firefox и Edge. Код вебдрайверов находится в подмодулях `chrome`, `firefox`, `edge`, `playwright` .
 Файлы настроек для веб-браузеров находятся в: `chrome\chrome.json`, `firefox\firefox.json`, `edge\edge.json`, `playwright\playwright.json`.
 Класс Driver упрощает задачи инициализации драйвера, навигации по URL, управления куками и обработки исключений.
 """
-
-
 
 import copy
 import pickle
@@ -39,47 +36,41 @@ from src.logger.exceptions import ExecuteLocatorException, WebDriverException
 
 class Driver:
     """
-    .. class:: Driver
-       :platform: Windows, Unix
-       :synopsis: Унифицированный класс для взаимодействия с Selenium WebDriver.
-
     Класс обеспечивает удобный интерфейс для работы с различными драйверами, такими как Chrome, Firefox и Edge.
 
-    Атрибуты:
+    Attributes:
         driver (selenium.webdriver): Экземпляр Selenium WebDriver.
     """
 
     def __init__(self, webdriver_cls, *args, **kwargs):
         """
-        .. method:: __init__(self, webdriver_cls, *args, **kwargs)
-        
         Инициализирует экземпляр класса Driver.
 
-        :param webdriver_cls: Класс WebDriver, например Chrome или Firefox.
-        :type webdriver_cls: type
-        :param args: Позиционные аргументы для драйвера.
-        :param kwargs: Ключевые аргументы для драйвера.
+        Args:
+            webdriver_cls: Класс WebDriver, например Chrome или Firefox.
+            args: Позиционные аргументы для драйвера.
+            kwargs: Ключевые аргументы для драйвера.
 
-        Пример:
+        Raises:
+            TypeError: Если `webdriver_cls` не является допустимым классом WebDriver.
+
+        Example:
             >>> from selenium.webdriver import Chrome
             >>> driver = Driver(Chrome, executable_path='/path/to/chromedriver')
         """
-        
         if not hasattr(webdriver_cls, 'get'):
             raise TypeError('`webdriver_cls` должен быть допустимым классом WebDriver.')
         self.driver = webdriver_cls(*args, **kwargs)
 
-    def __init_subclass__(cls, *, browser_name=None, **kwargs):
+    def __init_subclass__(cls, *, browser_name: Optional[str] = None, **kwargs):
         """
-        .. method:: __init_subclass__(cls, *, browser_name=None, **kwargs)
-
         Автоматически вызывается при создании подкласса `Driver`.
 
-        :param browser_name: Имя браузера.
-        :type browser_name: str
-        :param kwargs: Дополнительные аргументы.
+        Args:
+            browser_name: Имя браузера.
+            kwargs: Дополнительные аргументы.
 
-        Исключение:
+        Raises:
             ValueError: Если browser_name не указан.
         """
         super().__init_subclass__(**kwargs)
@@ -87,56 +78,46 @@ class Driver:
             raise ValueError(f'Класс {cls.__name__} должен указать аргумент `browser_name`.')
         cls.browser_name = browser_name
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str):
         """
-        .. method:: __getattr__(self, item)
-
         Прокси для доступа к атрибутам драйвера.
 
-        :param item: Имя атрибута.
-        :type item: str
+        Args:
+            item: Имя атрибута.
 
-        Пример:
+        Example:
             >>> driver.current_url
         """
         return getattr(self.driver, item)
 
     def scroll(self, scrolls: int = 1, frame_size: int = 600, direction: str = 'both', delay: float = .3) -> bool:
         """
-        .. method:: scroll(self, scrolls=1, frame_size=600, direction='both', delay=.3)
-
         Прокручивает страницу в указанном направлении.
 
-        :param scrolls: Количество прокруток, по умолчанию 1.
-        :type scrolls: int
-        :param frame_size: Размер прокрутки в пикселях, по умолчанию 600.
-        :type frame_size: int
-        :param direction: Направление ('both', 'down', 'up'), по умолчанию 'both'.
-        :type direction: str
-        :param delay: Задержка между прокрутками, по умолчанию 0.3.
-        :type delay: float
-        :return: True, если успешно, иначе False.
-        :rtype: bool
+        Args:
+            scrolls: Количество прокруток, по умолчанию 1.
+            frame_size: Размер прокрутки в пикселях, по умолчанию 600.
+            direction: Направление ('both', 'down', 'up'), по умолчанию 'both'.
+            delay: Задержка между прокрутками, по умолчанию 0.3.
 
-        Пример:
+        Returns:
+            True, если успешно, иначе False.
+
+        Example:
             >>> driver.scroll(scrolls=3, direction='down')
         """
         def carousel(direction: str = '', scrolls: int = 1, frame_size: int = 600, delay: float = .3) -> bool:
             """
-            .. method:: carousel(direction='', scrolls=1, frame_size=600, delay=.3)
-
             Локальный метод для прокрутки экрана.
 
-            :param direction: Направление ('down', 'up').
-            :type direction: str
-            :param scrolls: Количество прокруток.
-            :type scrolls: int
-            :param frame_size: Размер прокрутки.
-            :type frame_size: int
-            :param delay: Задержка между прокрутками.
-            :type delay: float
-            :return: True, если успешно, иначе False.
-            :rtype: bool
+            Args:
+                direction: Направление ('down', 'up').
+                scrolls: Количество прокруток.
+                frame_size: Размер прокрутки.
+                delay: Задержка между прокрутками.
+
+            Returns:
+                True, если успешно, иначе False.
             """
             try:
                 for _ in range(scrolls):
@@ -161,14 +142,12 @@ class Driver:
     @property
     def locale(self) -> Optional[str]:
         """
-        .. method:: locale(self)
-
         Определяет язык страницы на основе мета-тегов или JavaScript.
 
-        :return: Код языка, если найден, иначе None.
-        :rtype: Optional[str]
+        Returns:
+            Код языка, если найден, иначе None.
 
-        Пример:
+        Example:
             >>> lang = driver.locale
             >>> print(lang)  # 'en' или None
         """
@@ -183,23 +162,22 @@ class Driver:
                 logger.debug('Не удалось определить язык сайта из JavaScript', ex)
                 return
 
-
     def get_url(self, url: str) -> bool:
         """
         Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
 
         Args:
-            url (str): URL для перехода.
+            url: URL для перехода.
 
-        Возвращает:
-            bool: `True`, если переход успешен и текущий URL совпадает с ожидаемым, `False` в противном случае.
+        Returns:
+            `True`, если переход успешен и текущий URL совпадает с ожидаемым, `False` в противном случае.
 
-        Исключения:
+        Raises:
             WebDriverException: Если возникает ошибка с WebDriver.
             InvalidArgumentException: Если URL некорректен.
             Exception: Для любых других ошибок при переходе.
         """
-        _previous_url:str = copy.copy(self.current_url)
+        _previous_url: str = copy.copy(self.current_url)
 
         try:
             self.driver.get(url)
@@ -235,7 +213,7 @@ class Driver:
         """Open a new tab in the current browser window and switch to it.
 
         Args:
-            url (Optional[str]): URL to open in the new tab. Defaults to `None`.
+            url: URL to open in the new tab. Defaults to `None`.
         """
         self.execute_script('window.open();')
         self.switch_to.window(self.window_handles[-1])
@@ -247,7 +225,7 @@ class Driver:
         Ожидает указанное количество времени.
 
         Args:
-            delay (float, optional): Время задержки в секундах. По умолчанию 0.3.
+            delay: Время задержки в секундах. По умолчанию 0.3.
 
         Returns:
             None
@@ -276,10 +254,10 @@ class Driver:
         Извлекает HTML-контент из файла или веб-страницы.
 
         Args:
-            url (str): Путь к файлу или URL для извлечения HTML-контента.
+            url: Путь к файлу или URL для извлечения HTML-контента.
 
         Returns:
-            Optional[bool]: Возвращает `True`, если контент успешно получен, иначе `None`.
+            Возвращает `True`, если контент успешно получен, иначе `None`.
 
         Raises:
             Exception: Если возникает ошибка при извлечении контента.

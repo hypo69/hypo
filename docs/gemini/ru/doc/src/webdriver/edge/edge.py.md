@@ -2,24 +2,37 @@
 
 ## Обзор
 
-Модуль `edge` предоставляет кастомный класс `Edge` для управления веб-драйвером Microsoft Edge с расширенными возможностями конфигурации, такими как установка случайного User-Agent и управление профилями пользователей. Он упрощает настройку WebDriver, используя библиотеку `fake_useragent` для генерации User-Agent и позволяет настраивать различные параметры запуска Edge, включая режим окна и профили пользователей.
+Модуль `edge` предоставляет кастомный класс `Edge` для управления веб-драйвером Edge с расширенными возможностями. Он упрощает настройку Edge WebDriver, используя `fake_useragent` для генерации случайных user-agent, а также позволяет задавать различные параметры запуска, такие как режим окна и профиль пользователя.
 
 ## Подробнее
 
-Этот модуль предназначен для автоматизации тестирования и сбора данных с использованием веб-браузера Edge. Он обеспечивает более гибкую настройку WebDriver по сравнению со стандартным, позволяя эмулировать различных пользователей и управлять поведением браузера. Класс `Edge` наследуется от `selenium.webdriver.Edge`, что позволяет использовать все стандартные функции WebDriver, а также добавляет новые методы для упрощения работы с элементами DOM и выполнения JavaScript. Модуль использует конфигурационный файл `edge.json` для получения дополнительных параметров запуска Edge.
+Этот модуль предназначен для автоматизации взаимодействия с браузером Edge в проекте `hypotez`. Он позволяет управлять экземпляром браузера Edge, задавая различные параметры запуска, такие как user-agent, режим окна (например, kiosk или headless) и профиль пользователя. Модуль использует библиотеку `selenium` для управления браузером и `fake_useragent` для генерации случайных user-agent. Конфигурация драйвера, включая путь к исполняемому файлу и дополнительные опции, загружается из JSON-файла. Класс `Edge` предоставляет методы для выполнения JavaScript на странице, поиска элементов и выполнения действий с ними.
 
 ## Классы
 
 ### `Edge`
 
-**Описание**: Кастомный класс WebDriver для Edge с расширенными функциями.
+**Описание**: Кастомный класс Edge WebDriver для расширенной функциональности.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр веб-драйвера Edge с заданными параметрами.
-- `_payload`: Загружает исполнителей для локаторов и сценариев JavaScript.
-- `set_options`: Создает и настраивает параметры запуска для Edge WebDriver.
+- `__init__`: Инициализирует Edge WebDriver с указанным user-agent и опциями.
+- `_payload`: Загружает исполнители для локаторов и JavaScript сценариев.
+- `set_options`: Создает и конфигурирует параметры запуска для Edge WebDriver.
 
-#### `__init__`
+**Параметры**:
+- `driver_name` (str): Имя используемого WebDriver, по умолчанию 'edge'.
+
+**Примеры**
+```python
+from src.webdriver.edge.edge import Edge
+# Инициализация Edge WebDriver с режимом полного окна
+driver = Edge(window_mode='full_window')
+driver.get("https://www.example.com")
+```
+
+## Функции
+
+### `__init__`
 
 ```python
 def __init__(self,  profile_name: Optional[str] = None,
@@ -37,77 +50,61 @@ def __init__(self,  profile_name: Optional[str] = None,
     :param window_mode: Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.)
     :type window_mode: Optional[str]
     """
-    ...
 ```
 
-**Описание**: Инициализирует веб-драйвер Edge с заданным user-agent и другими параметрами.
+**Описание**: Инициализирует Edge WebDriver с указанным user-agent и опциями.
 
 **Параметры**:
 - `profile_name` (Optional[str], optional): Имя профиля пользователя. По умолчанию `None`.
-- `user_agent` (Optional[str], optional): User-agent для использования. Если `None`, генерируется случайный user-agent. По умолчанию `None`.
-- `options` (Optional[List[str]], optional): Список опций Edge для передачи при инициализации. По умолчанию `None`.
-- `window_mode` (Optional[str], optional): Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.). По умолчанию `None`.
-- `*args`: Дополнительные аргументы, передаваемые в конструктор родительского класса.
-- `**kwargs`: Дополнительные именованные аргументы, передаваемые в конструктор родительского класса.
+- `user_agent` (Optional[str], optional): User-agent, который будет использоваться. Если `None`, генерируется случайный user-agent.
+- `options` (Optional[List[str]], optional): Список опций Edge, передаваемых при инициализации.
+- `window_mode` (Optional[str], optional): Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.).
 
 **Примеры**:
 ```python
-# Инициализация Edge WebDriver с пользовательским user-agent и опциями
-driver = Edge(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3')
-
-# Инициализация Edge WebDriver в режиме kiosk
-driver = Edge(window_mode='kiosk')
-
-# Инициализация Edge WebDriver с использованием определенного профиля
-driver = Edge(profile_name='MyProfile')
+# Инициализация Edge WebDriver с user-agent и опциями
+driver = Edge(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36', options=['--disable-gpu', '--disable-extensions'])
 ```
 
-#### `_payload`
+### `_payload`
 
 ```python
 def _payload(self) -> None:
     """
     Load executors for locators and JavaScript scenarios.
     """
-    ...
 ```
 
-**Описание**: Загружает исполнителей для локаторов и JavaScript-сценариев.
+**Описание**: Загружает исполнители для локаторов и JavaScript сценариев.
 
 **Примеры**:
 ```python
-# Этот метод вызывается внутри __init__, поэтому прямого примера вызова нет.
+# Загрузка исполнителей для locators и JavaScript сценариев
+driver._payload()
 ```
 
-#### `set_options`
+### `set_options`
 
 ```python
-def set_options(self, opts: Optional[List[str]] = None) -> EdgeOptions:
-    """
-    Create and configure launch options for the Edge WebDriver.
+def set_options(self, opts: Optional[List[str]] = None) -> EdgeOptions:  
+    """  
+    Create and configure launch options for the Edge WebDriver.  
 
-    :param opts: A list of options to add to the Edge WebDriver. Defaults to `None`.
-    :return: Configured `EdgeOptions` object.
-    """
-    ...
+    :param opts: A list of options to add to the Edge WebDriver. Defaults to `None`.  
+    :return: Configured `EdgeOptions` object.  
+    """  
 ```
 
-**Описание**: Создает и настраивает параметры запуска для Edge WebDriver.
+**Описание**: Создает и конфигурирует параметры запуска для Edge WebDriver.
 
 **Параметры**:
 - `opts` (Optional[List[str]], optional): Список опций для добавления в Edge WebDriver. По умолчанию `None`.
 
 **Возвращает**:
-- `EdgeOptions`: Настроенный объект `EdgeOptions`.
+- `EdgeOptions`: Сконфигурированный объект `EdgeOptions`.
 
 **Примеры**:
 ```python
-# Создание Edge WebDriver с дополнительными опциями
-options = ['--disable-extensions', '--mute-audio']
-driver = Edge()
-edge_options = driver.set_options(options)
+# Создание и конфигурирование параметров запуска
+options = driver.set_options(opts=['--disable-gpu', '--disable-extensions'])
 ```
-
-## Функции
-
-В данном модуле функции отсутствуют.

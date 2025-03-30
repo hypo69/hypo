@@ -2,47 +2,38 @@
 
 ## Обзор
 
-Модуль `driver.py` предназначен для работы с веб-драйверами Selenium. Он предоставляет унифицированный интерфейс для взаимодействия с различными веб-браузерами, такими как Chrome, Firefox и Edge. Класс `Driver` упрощает задачи инициализации драйвера, навигации по URL, управления куками и обработки исключений.
+Модуль `driver.py` предоставляет класс `Driver`, который обеспечивает унифицированный интерфейс для работы с веб-драйверами Selenium. Это упрощает взаимодействие с веб-браузерами, такими как Chrome, Firefox и Edge. Класс `Driver` упрощает инициализацию драйвера, навигацию по URL, управление куками и обработку исключений. Код веб-драйверов находится в подмодулях `chrome`, `firefox`, `edge`, `playwright`, а файлы настроек для веб-браузеров находятся в: `chrome\\chrome.json`, `firefox\\firefox.json`, `edge\\edge.json`, `playwright\\playwright.json`.
 
 ## Подробней
 
-Основной целью данного модуля является абстрагирование от конкретной реализации веб-драйвера, предоставляя удобный и гибкий интерфейс для автоматизации веб-тестов и сбора данных. Он включает методы для прокрутки страниц, определения языка страницы и сохранения кук.
+Основное назначение класса `Driver` — обеспечение унифицированного интерфейса для работы с веб-драйверами Selenium. Он предоставляет интерфейс для взаимодействия с веб-браузерами, такими как Chrome, Firefox и Edge. Код вебдрайверов находится в подмодулях `chrome`, `firefox`, `edge`, `playwright`. Файлы настроек для веб-браузеров находятся в: `chrome\\chrome.json`, `firefox\\firefox.json`, `edge\\edge.json`, `playwright\\playwright.json`. Класс Driver упрощает задачи инициализации драйвера, навигации по URL, управления куками и обработки исключений.
 
 ## Классы
 
 ### `Driver`
 
-**Описание**: Унифицированный класс для взаимодействия с Selenium WebDriver.
+**Описание**:
+Класс обеспечивает удобный интерфейс для работы с различными драйверами, такими как Chrome, Firefox и Edge.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр класса `Driver`.
+- `__init__`: Инициализирует экземпляр класса Driver.
 - `__init_subclass__`: Автоматически вызывается при создании подкласса `Driver`.
 - `__getattr__`: Прокси для доступа к атрибутам драйвера.
 - `scroll`: Прокручивает страницу в указанном направлении.
 - `locale`: Определяет язык страницы на основе мета-тегов или JavaScript.
 - `get_url`: Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
-- `window_open`: Открывает новую вкладку в текущем браузере и переключается на неё.
+- `window_open`: Открывает новую вкладку в текущем окне браузера и переключается на нее.
 - `wait`: Ожидает указанное количество времени.
 - `_save_cookies_localy`: Сохраняет текущие куки веб-драйвера в локальный файл.
 - `fetch_html`: Извлекает HTML-контент из файла или веб-страницы.
 
 **Параметры**:
-- `webdriver_cls` (type): Класс WebDriver, например `Chrome` или `Firefox`.
-- `*args`: Позиционные аргументы для драйвера.
-- `**kwargs`: Ключевые аргументы для драйвера.
-- `item` (str): Имя атрибута.
-- `scrolls` (int): Количество прокруток, по умолчанию 1.
-- `frame_size` (int): Размер прокрутки в пикселях, по умолчанию 600.
-- `direction` (str): Направление ('both', 'down', 'up'), по умолчанию 'both'.
-- `delay` (float): Задержка между прокрутками, по умолчанию 0.3.
-- `url` (str): URL для перехода.
+- `driver` (selenium.webdriver): Экземпляр Selenium WebDriver.
 
-**Примеры**
+**Примеры**:
 ```python
 from selenium.webdriver import Chrome
-
 driver = Driver(Chrome, executable_path='/path/to/chromedriver')
-driver.get_url('https://example.com')
 ```
 
 ## Функции
@@ -52,27 +43,26 @@ driver.get_url('https://example.com')
 ```python
 def __init__(self, webdriver_cls, *args, **kwargs):
     """
-    Инициализирует экземпляр класса Driver.
-
     Args:
         webdriver_cls: Класс WebDriver, например Chrome или Firefox.
-        type: type
         args: Позиционные аргументы для драйвера.
         kwargs: Ключевые аргументы для драйвера.
+
+    Raises:
+        TypeError: Если `webdriver_cls` не является допустимым классом WebDriver.
 
     Example:
         >>> from selenium.webdriver import Chrome
         >>> driver = Driver(Chrome, executable_path='/path/to/chromedriver')
     """
-    ...
 ```
 
 **Описание**: Инициализирует экземпляр класса `Driver`.
 
 **Параметры**:
-- `webdriver_cls` (type): Класс WebDriver, например `Chrome` или `Firefox`.
-- `*args`: Позиционные аргументы для драйвера.
-- `**kwargs`: Ключевые аргументы для драйвера.
+- `webdriver_cls`: Класс WebDriver, например Chrome или Firefox.
+- `args`: Позиционные аргументы для драйвера.
+- `kwargs`: Ключевые аргументы для драйвера.
 
 **Вызывает исключения**:
 - `TypeError`: Если `webdriver_cls` не является допустимым классом WebDriver.
@@ -86,26 +76,22 @@ driver = Driver(Chrome, executable_path='/path/to/chromedriver')
 ### `__init_subclass__`
 
 ```python
-def __init_subclass__(cls, *, browser_name=None, **kwargs):
+def __init_subclass__(cls, *, browser_name: Optional[str] = None, **kwargs):
     """
-    Автоматически вызывается при создании подкласса `Driver`.
-
     Args:
         browser_name: Имя браузера.
-        type: str
         kwargs: Дополнительные аргументы.
 
     Raises:
         ValueError: Если browser_name не указан.
     """
-    ...
 ```
 
 **Описание**: Автоматически вызывается при создании подкласса `Driver`.
 
 **Параметры**:
-- `browser_name` (str): Имя браузера.
-- `**kwargs`: Дополнительные аргументы.
+- `browser_name`: Имя браузера.
+- `kwargs`: Дополнительные аргументы.
 
 **Вызывает исключения**:
 - `ValueError`: Если `browser_name` не указан.
@@ -113,24 +99,20 @@ def __init_subclass__(cls, *, browser_name=None, **kwargs):
 ### `__getattr__`
 
 ```python
-def __getattr__(self, item):
+def __getattr__(self, item: str):
     """
-    Прокси для доступа к атрибутам драйвера.
-
     Args:
         item: Имя атрибута.
-        type: str
 
     Example:
         >>> driver.current_url
     """
-    ...
 ```
 
 **Описание**: Прокси для доступа к атрибутам драйвера.
 
 **Параметры**:
-- `item` (str): Имя атрибута.
+- `item`: Имя атрибута.
 
 **Примеры**:
 ```python
@@ -142,34 +124,27 @@ driver.current_url
 ```python
 def scroll(self, scrolls: int = 1, frame_size: int = 600, direction: str = 'both', delay: float = .3) -> bool:
     """
-    Прокручивает страницу в указанном направлении.
-
     Args:
         scrolls: Количество прокруток, по умолчанию 1.
-        type: int
         frame_size: Размер прокрутки в пикселях, по умолчанию 600.
-        type: int
         direction: Направление ('both', 'down', 'up'), по умолчанию 'both'.
-        type: str
         delay: Задержка между прокрутками, по умолчанию 0.3.
-        type: float
+
     Returns:
-        bool: True, если успешно, иначе False.
-    rtype: bool
+        True, если успешно, иначе False.
 
     Example:
         >>> driver.scroll(scrolls=3, direction='down')
     """
-    ...
 ```
 
 **Описание**: Прокручивает страницу в указанном направлении.
 
 **Параметры**:
-- `scrolls` (int): Количество прокруток, по умолчанию 1.
-- `frame_size` (int): Размер прокрутки в пикселях, по умолчанию 600.
-- `direction` (str): Направление ('both', 'down', 'up'), по умолчанию 'both'.
-- `delay` (float): Задержка между прокрутками, по умолчанию 0.3.
+- `scrolls`: Количество прокруток, по умолчанию 1.
+- `frame_size`: Размер прокрутки в пикселях, по умолчанию 600.
+- `direction`: Направление ('both', 'down', 'up'), по умолчанию 'both'.
+- `delay`: Задержка между прокрутками, по умолчанию 0.3.
 
 **Возвращает**:
 - `bool`: `True`, если успешно, иначе `False`.
@@ -182,19 +157,16 @@ driver.scroll(scrolls=3, direction='down')
 ### `locale`
 
 ```python
+@property
 def locale(self) -> Optional[str]:
     """
-    Определяет язык страницы на основе мета-тегов или JavaScript.
-
     Returns:
-        Optional[str]: Код языка, если найден, иначе None.
-    rtype: Optional[str]
+        Код языка, если найден, иначе None.
 
     Example:
         >>> lang = driver.locale
         >>> print(lang)  # 'en' или None
     """
-    ...
 ```
 
 **Описание**: Определяет язык страницы на основе мета-тегов или JavaScript.
@@ -213,29 +185,26 @@ print(lang)  # 'en' или None
 ```python
 def get_url(self, url: str) -> bool:
     """
-    Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
-
     Args:
-        url (str): URL для перехода.
+        url: URL для перехода.
 
     Returns:
-        bool: `True`, если переход успешен и текущий URL совпадает с ожидаемым, `False` в противном случае.
+        `True`, если переход успешен и текущий URL совпадает с ожидаемым, `False` в противном случае.
 
     Raises:
         WebDriverException: Если возникает ошибка с WebDriver.
         InvalidArgumentException: Если URL некорректен.
         Exception: Для любых других ошибок при переходе.
     """
-    ...
 ```
 
 **Описание**: Переходит по указанному URL и сохраняет текущий URL, предыдущий URL и куки.
 
 **Параметры**:
-- `url` (str): URL для перехода.
+- `url`: URL для перехода.
 
 **Возвращает**:
-- `bool`: `True`, если переход успешен, иначе `False`.
+- `bool`: `True`, если переход успешен и текущий URL совпадает с ожидаемым, `False` в противном случае.
 
 **Вызывает исключения**:
 - `WebDriverException`: Если возникает ошибка с WebDriver.
@@ -249,54 +218,53 @@ def window_open(self, url: Optional[str] = None) -> None:
     """Open a new tab in the current browser window and switch to it.
 
     Args:
-        url (Optional[str]): URL to open in the new tab. Defaults to `None`.
+        url: URL to open in the new tab. Defaults to `None`.
     """
-    ...
 ```
 
-**Описание**: Открывает новую вкладку в текущем браузере и переключается на неё.
+**Описание**: Открывает новую вкладку в текущем окне браузера и переключается на нее.
 
 **Параметры**:
-- `url` (Optional[str]): URL для открытия в новой вкладке. По умолчанию `None`.
+- `url`: URL для открытия в новой вкладке. По умолчанию `None`.
 
 ### `wait`
 
 ```python
 def wait(self, delay: float = .3) -> None:
     """
-    Ожидает указанное количество времени.
-
     Args:
-        delay (float, optional): Время задержки в секундах. По умолчанию 0.3.
+        delay: Время задержки в секундах. По умолчанию 0.3.
 
     Returns:
         None
     """
-    ...
 ```
 
 **Описание**: Ожидает указанное количество времени.
 
 **Параметры**:
-- `delay` (float, optional): Время задержки в секундах. По умолчанию 0.3.
+- `delay`: Время задержки в секундах. По умолчанию 0.3.
+
+**Возвращает**:
+- `None`
 
 ### `_save_cookies_localy`
 
 ```python
 def _save_cookies_localy(self) -> None:
     """
-    Сохраняет текущие куки веб-драйвера в локальный файл.
-
     Returns:
         None
 
     Raises:
         Exception: Если возникает ошибка при сохранении куки.
     """
-    ...
 ```
 
 **Описание**: Сохраняет текущие куки веб-драйвера в локальный файл.
+
+**Возвращает**:
+- `None`
 
 **Вызывает исключения**:
 - `Exception`: Если возникает ошибка при сохранении куки.
@@ -306,24 +274,21 @@ def _save_cookies_localy(self) -> None:
 ```python
 def fetch_html(self, url: str) -> Optional[bool]:
     """
-    Извлекает HTML-контент из файла или веб-страницы.
-
     Args:
-        url (str): Путь к файлу или URL для извлечения HTML-контента.
+        url: Путь к файлу или URL для извлечения HTML-контента.
 
     Returns:
-        Optional[bool]: Возвращает `True`, если контент успешно получен, иначе `None`.
+        Возвращает `True`, если контент успешно получен, иначе `None`.
 
     Raises:
         Exception: Если возникает ошибка при извлечении контента.
     """
-    ...
 ```
 
 **Описание**: Извлекает HTML-контент из файла или веб-страницы.
 
 **Параметры**:
-- `url` (str): Путь к файлу или URL для извлечения HTML-контента.
+- `url`: Путь к файлу или URL для извлечения HTML-контента.
 
 **Возвращает**:
 - `Optional[bool]`: Возвращает `True`, если контент успешно получен, иначе `None`.

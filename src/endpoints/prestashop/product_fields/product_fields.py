@@ -82,45 +82,80 @@ class ProductFields:
             return False 
 
 
-    def _set_multilang_value(self, field_name: str, value: str) -> bool:
+    def _set_multilang_value(self, field_name: str, value: str, id_lang: Optional[Union[int, str]] = None) -> bool:
         """
         Устанавливает мультиязычное значение для заданного поля.
 
         Args:
             field_name (str): Имя поля (например, 'name', 'description').
             value (str): Значение для установки.
+            id_lang (Optional[Union[int, str]]): ID языка. Если не указан, используется self.id_lan.
+
+        Описание:
+            Функция устанавливает мультиязычное значение для указанного поля объекта.  
+            Поле может хранить значения для разных языков.  Значения хранятся в виде списка словарей,
+            где каждый словарь представляет собой значение для определенного языка и имеет структуру:
+
+            {'attrs': {'id': 'language_id'}, 'value': 'language_value'}
+
+            - 'attrs': Словарь, содержащий атрибуты значения.  В данном случае, обязательным атрибутом является 'id',
+                       который представляет собой идентификатор языка.
+            - 'value': Значение поля для указанного языка.
+
+            Если поле с указанным именем не существует, оно создается. Если поле существует, но не имеет
+            ожидаемой структуры (словарь с ключом 'language', содержащим список), поле перезаписывается.
+            Если поле существует и имеет правильную структуру, функция пытается обновить значение для
+            указанного языка. Если язык уже существует в списке, его значение обновляется. Если язык
+            не существует, добавляется новая запись в список.
+
+        Returns:
+            bool: True, если значение успешно установлено, False в случае ошибки.
         """
+        id_lang_str: str = str(id_lang) if id_lang else str(self.id_lan)
+        lang_data: dict = {'attrs': {'id': id_lang_str}, 'value': value}
+
         try:
-            _lang_index = str(self.id_lang)
-
-            # Create the language-specific data structure
-            lang_data = {
-                'language': {
-                    'id': _lang_index
-                },
-                'value': value
-            }
-
             # Get the existing field value, or None if it doesn't exist
             field = getattr(self.presta_fields, field_name, None)
 
             if field is None:
-                # If the field doesn't exist, create a list with the new language data
-                setattr(self.presta_fields, field_name, [lang_data])
+                # If the field doesn't exist, create a dictionary with the new language data
+                setattr(self.presta_fields, field_name, {'language': [lang_data]})
             else:
-                # If the field exists, append the new language data to the existing list
-                if not isinstance(field, list):
-                   #Если вдруг там не список, то создадим список
-                   setattr(self.presta_fields, field_name, [lang_data])
+                # If the field exists, update or append the new language data to the existing list
+                if not isinstance(field, dict) or 'language' not in field or not isinstance(field['language'], list):
+                    # Если поле не является словарем с ключом 'language', содержащим список, то создаем словарь
+                    setattr(self.presta_fields, field_name, {'language': [lang_data]})
                 else:
-                    field.append(lang_data)
+                    language_list = field['language']
+                    found = False
+                    for i, lang_item in enumerate(language_list):
+                        if 'attrs' in lang_item and 'id' in lang_item['attrs'] and str(lang_item['attrs']['id']) == id_lang_str:
+                            # Language already exists, update the value
+                            language_list[i]['value'] = value
+                            found = True
+                            break
+                    if not found:
+                        # Language doesn't exist, append the new language data
+                        language_list.append(lang_data)
 
             return True
 
         except Exception as ex:
             logger.error(f"""Ошибка установки значения в мультиязычное поле {field_name}
-            Значение {value}:\n""", ex)
-            return 
+            Значение {value}:\n{ex}""")  # Include exception details in the log
+            return False
+
+
+
+
+
+
+
+
+
+
+
 
 
     # --------------------------------------------------------------------------

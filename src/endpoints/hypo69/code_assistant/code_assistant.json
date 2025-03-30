@@ -3,12 +3,20 @@
   "lang": "EN",
   "model": [ "gemini" ],
   "start_dirs": [
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\convertors",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\logger",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\webdriver",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\webdriver\\chrome",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\webdriver\\firefox",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\webdriver\\playwright",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\fast_api",
 
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\anthropic",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\deepseek",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\dialogflow",
@@ -26,18 +34,54 @@
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\tiny_troupe",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\ai\\xai",
 
-
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\advertisement",
+
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop\\api",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop\\product_fields",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\prestashop\\utils",
+
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\chat_gpt_nodejs",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\discord",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\google_dirve",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\telegram",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\google_dirve",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\code_assistant",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\desktop_assistant",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil\\report_generator",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil\\scenarios",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gemini_simplechat",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov\\scenarios",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\code_assistant",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\whatsapp",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario"
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\skd",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\models",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\helplers",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\tools",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\errors",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\amazon",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\bangood",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\cdata",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\chat_gpt",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\ebay",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\etzmaleh",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\gearbest",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\granadvance",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\hb",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\ivory",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\ksp",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\kualastyle",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\morlevi",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\visualdg",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\wallashop",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\waallmart"
   ],
 
   "gemini_generation_config": {
@@ -51,16 +95,20 @@
     ".ipynb_checkpoints",
     "resources",
     "profiles",
+    "docs",
+    "assests",
+    "instructions",
     "sdk",
     "skd",
     "quickstart",
     "quick_start",
-    "_experiments",
+    " В раздумьях. Пока не включаю  _experiments",
+    "templates",
     "db",
     "node_modules",
     "__pycache__",
     "_examples",
-    "_experiments",
+
     ".git",
     ".venv",
     "venv",
@@ -85,7 +133,6 @@
   ],
   "exclude_files": [
     "version.py",
-    "header.py",
     "__init__.py",
     "*.js",
     "*.js",
@@ -127,39 +174,34 @@
   ],
   "include_files": [
     "*.py",
-    "*.md <-- Пока не читать"
+    "*.md"
   ],
   "remove_prefixes": [
     "```md",
     "```md\n",
-    "```markdown",
-    "```markdown\n",
-    "```html",
-    "```html\n",
-    "```",
-    "```\n"
-  ],
-  "known_prefixes": [
-    " --------------------------- DEPRECTAED KEY --------------",
-    "```md",
-    "```md\n",
-    "```markdown",
-    "```markdown\n",
-    "```",
-    "```\n"
-  ],
-  "other_prefixes": [
-    "```rst",
-    "```rst\n",
-    "```plaintext",
-    "```html",
     "```MD",
     "```MD\n",
+    "```markdown",
+    "```markdown\n",
     "```MARKDOWN",
     "```MARKDOWN\n",
+    "```html",
+    "```html\n",
+    "```HTML",
+    "```HTML\n",
+    "``` ",
+    "```\n",
+    "```rst",
+    "```rst\n",
     "```RST",
+    "```RST\n",
+    "```plaintext",
+    "```plaintext\n",
     "```PALINTEXT",
-    "```HTML"
+    "```PALINTEXT\n"
+
+
+
   ],
 
   "output_directory": {

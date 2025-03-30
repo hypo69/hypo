@@ -1,3 +1,4 @@
+
 ## \file /src/endpoints/hypo69/code_assistant/code_assistant.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
@@ -55,22 +56,24 @@ from src.logger.logger import logger
 from src.endpoints.hypo69.code_assistant.make_summary import make_summary
 from src import USE_ENV
 
+
 class Config:
     ...
-    base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
+    base_path: Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
     config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
     role: str = 'doc_writer_md'
     lang: str = 'ru'
-    system_instruction:str = ''
+    system_instruction: str = ''
 
-    gemini:SimpleNamespace = SimpleNamespace(**{
+    gemini: SimpleNamespace = SimpleNamespace(**{
         'model_name': os.getenv('GEMINI_MODEL') if USE_ENV else config.gemini_model_name or None,
         'api_key': os.getenv('GEMINI_API_KEY') if USE_ENV else gs.credentials.gemini.onela or None,
         'response_mime_type': 'text/plain',
     })
 
+
 class CodeAssistant:
-    """ 
+    """
     .. :class:`CodeAssistant`
         :synopsis: Класс для работы ассистента программиста с моделями ИИ
         :TODO: перенести установли в класс Config
@@ -78,19 +81,22 @@ class CodeAssistant:
 
     role: str
     lang: str
-    base_path:Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant' 
+    base_path: Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
     config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
     gemini_model: GoogleGenerativeAI
     openai_model: OpenAIModel
 
+    def __init__(
+        self,
+        role: Optional[str] = 'doc_writer_md',
+        lang: Optional[str] = 'en',
+        models_list: Optional[list[str, str] | str] = ['gemini'],
+        system_instruction: Optional[str | Path] = None,
+        **kwards,
+    ) -> None:
+        """
+        Инициализация ассистента с заданными параметрами.
 
-    def __init__(self, 
-                 role:Optional[str] = 'doc_writer_md', 
-                 lang: Optional[str] = 'en', 
-                 models_list: Optional[list[str,str] | str] = ["gemini"],
-                 system_instruction:Optional[str | Path] = None,
-                 **kwards):
-        """Инициализация ассистента с заданными параметрами.
         Args:
             role (str): Роль для выполнения задачи.
             lang (str): Язык выполнения.
@@ -102,59 +108,77 @@ class CodeAssistant:
         Config.lang = lang
 
         if system_instruction:
-                if isinstance(system_instruction, str):
-                    Config.system_instruction = system_instruction
+            if isinstance(system_instruction, str):
+                Config.system_instruction = system_instruction
 
-                elif isinstance(system_instruction, Path):
-                    try:
-                        Config.system_instruction = Path(system_instruction).read_text(encoding='UTF-8')
-                    except Exception as ex:
-                        logger.error(f"Ошибка чтения инструкции из файла {system_instruction}", ex, False)
-                        ...
-                else:
-                    logger.error(f"Ошибка формата инструкции\n {print(system_instruction)}\n system_instruction type {type(system_instruction)}", None, False)
+            elif isinstance(system_instruction, Path):
+                try:
+                    Config.system_instruction = Path(system_instruction).read_text(
+                        encoding='UTF-8'
+                    )
+                except Exception as ex:
+                    logger.error(
+                        f'Ошибка чтения инструкции из файла {system_instruction}', ex, False
+                    )
                     ...
+            else:
+                logger.error(
+                    f'Ошибка формата инструкции\n {print(system_instruction)}\n system_instruction type {type(system_instruction)}',
+                    None,
+                    False,
+                )
+                ...
         else:
-             Config.system_instruction = Path(gs.path.src / 'ai' / 'prompts' / 'developer' / f'CODE_RULES.{lang}.MD').read_text(encoding='UTF-8')
+            Config.system_instruction = Path(
+                gs.path.src / 'ai' / 'prompts' / 'developer' / f'CODE_RULES.{lang}.MD'
+            ).read_text(encoding='UTF-8')
 
-        self._initialize_models( list( models_list ), **kwards)
-        
-    def _initialize_models(self, models_list:list, **kwards) -> bool:
-        """Инициализация моделей на основе заданных параметров.
+        self._initialize_models(list(models_list), **kwards)
+
+    def _initialize_models(self, models_list: list, **kwards) -> bool:
+        """
+        Инициализация моделей на основе заданных параметров.
+
         Args:
             models_list (list[str]): Список моделей для инициализации.
             **kwards: Дополнительные аргументы для инициализации моделей.
+
         Returns:
             bool: Успешность инициализации моделей.
-        Raises: 
+
+        Raises:
             Exception: Если произошла ошибка при инициализации моделей.
         """
 
-        if "gemini" in models_list:
+        if 'gemini' in models_list:
             # Определение значений по умолчанию
- 
+
             default_response_mime_type = 'text/plain'
 
             try:
- 
                 # Фильтрация kwards для удаления известных аргументов
                 filtered_kwargs = {
-                    k: v for k, v in kwards.items()
+                    k: v
+                    for k, v in kwards.items()
                     if k not in ('model_name', 'api_key', 'generation_config', 'system_instruction')
                 }
 
                 # Создание экземпляра модели Gemini
                 self.gemini_model = GoogleGenerativeAI(
-                    model_name = kwards.get('model_name', Config.gemini.model_name),   # Значение из kwards имеет приоритет,
-                    api_key = kwards.get('api_key', Config.gemini.api_key),
-                    system_instruction = kwards.get('system_instruction', Config.system_instruction), 
-                    generation_config = kwards.get('generation_config', {'response_mime_type': default_response_mime_type}),
+                    model_name=kwards.get('model_name', Config.gemini.model_name),  # Значение из kwards имеет приоритет,
+                    api_key=kwards.get('api_key', Config.gemini.api_key),
+                    system_instruction=kwards.get(
+                        'system_instruction', Config.system_instruction
+                    ),
+                    generation_config=kwards.get(
+                        'generation_config', {'response_mime_type': default_response_mime_type}
+                    ),
                     **filtered_kwargs,
                 )
                 ...
                 return True
             except Exception as ex:
-                logger.error(f"Ошибка при инициализации Gemini:",ex,  None)
+                logger.error(f'Ошибка при инициализации Gemini:', ex, None)
                 return False
 
     @property
@@ -162,14 +186,14 @@ class CodeAssistant:
         """Чтение инструкции для кода."""
         try:
             return Path(
-                gs.path.endpoints 
-                / "hypo69" 
-                / "code_assistant" 
-                / "instructions"
-                / f"instruction_{Config.role}_{Config.lang}.md"
-            ).read_text(encoding="UTF-8")
+                gs.path.endpoints
+                / 'hypo69'
+                / 'code_assistant'
+                / 'instructions'
+                / f'instruction_{Config.role}_{Config.lang}.md'
+            ).read_text(encoding='UTF-8')
         except Exception as ex:
-            logger.error(f"Error reading instruction file", ex, False)
+            logger.error(f'Error reading instruction file', ex, False)
             ...
             return ''
 
@@ -178,56 +202,66 @@ class CodeAssistant:
         """Загрузка переводов для ролей и языков."""
         return j_loads_ns(
             gs.path.endpoints
-            / "hypo69"
-            / "code_assistant"
-            / "translations"
-            / "translations.json"
+            / 'hypo69'
+            / 'code_assistant'
+            / 'translations'
+            / 'translations.json'
         )
 
-    def send_file(self, file_path: Path) -> bool:
-            """
-            Отправка файла в модель.
-
-            Args:
-                file_path (Path): Абсолютный путь к файлу, который нужно отправить.
-                file_name (Optional[str]): Имя файла для отправки. Если не указано и 'src' отсутствует, используется имя файла без изменений.
-
-            Returns:
-                bool: Успешность выполнения операции.
-            """
-            try:
-                #Отправка файла в модель
-                response = self.gemini_model.upload_file(file_path)
-
-                if response:
-                    if hasattr(response, 'url'):
-                        return response.url
-
-                return 
-            except Exception as ex:
-                logger.error('Ошибка при отправке файла: ', ex)
-                ...
-                return 
-
-
-    async def process_files(self, start_dirs:str|Path|list[str,str]|list[Path,Path] = None, start_file_number: Optional[int] = 1 ) -> bool:
-        """компиляция, отправка запроса и сохранение результата.
-       
+    def send_file(self, file_path: Path) -> Optional[str | None]:
         """
-        if not start_dirs:
-           start_dirs = self.config.start_dirs
-        if not start_dirs:
-            logger.error("Ошибка иницаилизации стартовой директории")
+        Отправка файла в модель.
+
+        Args:
+            file_path (Path): Абсолютный путь к файлу, который нужно отправить.
+            file_name (Optional[str]): Имя файла для отправки. Если не указано и 'src' отсутствует, используется имя файла без изменений.
+
+        Returns:
+            Optional[str | None]: URL файла, если успешно отправлен, иначе None.
+        """
+        try:
+            # Отправка файла в модель
+            response = self.gemini_model.upload_file(file_path)
+
+            if response:
+                if hasattr(response, 'url'):
+                    return response.url
+
+            return None
+        except Exception as ex:
+            logger.error('Ошибка при отправке файла: ', ex)
             ...
-            return 
-        start_dirs = start_dirs if isinstance(start_dirs,list) else [start_dirs]
+            return None
+
+
+    async def process_files(
+        self, start_dirs: str | Path | list[str, str] | list[Path, Path] = None, start_from_file: Optional[int] = 1
+    ) -> bool:
+        """компиляция, отправка запроса и сохранение результата."""
+        if not start_dirs:
+            start_dirs = self.config.start_dirs
+        if not start_dirs:
+            logger.error('Ошибка иницаилизации стартовой директории')
+            ...
+            return False
+        start_dirs = start_dirs if isinstance(start_dirs, list) else [start_dirs]
         for process_driectory in start_dirs:
-            logger.info(f"Start {process_driectory=}")
+            process_driectory = Path(process_driectory)  # Преобразуем в Path для удобства
+            logger.info(f'Start {process_driectory=}')
+
+            if not process_driectory.exists():
+                logger.error(f"Директория не существует: {process_driectory}")
+                continue  # Переходим к следующей директории, если текущая не существует
+
+            if not process_driectory.is_dir():
+                logger.error(f"Это не директория: {process_driectory}")
+                continue  # Переходим к следующей директории, если текущая не является директорией
 
             for i, (file_path, content) in enumerate(self._yield_files_content(process_driectory)):
-                if not any((file_path, content)):    # <- ошибка чтения файла
+                if not any((file_path, content)):  # <- ошибка чтения файла
+                    logger.error(f'Ошибка чтения содержимого файла {file_path}/Content {content} ')
                     continue
-                if i < start_file_number: # <- старт с номера файла
+                if i < start_from_file:  # <- старт с номера файла
                     continue
                 if file_path and content:
                     # send_file(file_path) # <- отправить в модель файл
@@ -235,37 +269,43 @@ class CodeAssistant:
                     response = await self.gemini_model.ask_async(content_request)
 
                     if response:
-                        response:str = self._remove_outer_quotes(response)
-                        if not await self._save_response(file_path, response, "gemini"):
-                            logger.error(f"Файл {file_path} \n НЕ сохранился")
+                        response: str = self._remove_outer_quotes(response)
+                        if not await self._save_response(file_path, response, 'gemini'):
+                            logger.error(f'Файл {file_path} \n НЕ сохранился')
                             ...
                             continue
-                        logger.debug(f"Processed file number: {i + 1}", None, False)
+                        logger.debug(f'Processed file number: {i + 1}', None, False)
                         ...
                     else:
-                        logger.error("Ошибка ответа модели", None, False)
+                        logger.error('Ошибка ответа модели', None, False)
                         ...
                         continue
 
-                await asyncio.sleep(20) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
+                await asyncio.sleep(20)  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
 
     def _create_request(self, file_path: str, content: str) -> str:
         """Создание запроса с учетом роли и языка."""
         content_request = content
         try:
-            roles_translations:SimpleNamespace = getattr(self.translations.roles, Config.role, 'doc_writer_md')
-            role_description_translated:str = getattr(roles_translations, Config.lang, 'Your specialization is documentation creation in the `MD` format')
-            file_location_translated:str = getattr(self.translations.file_location_translated, Config.lang, 'Path to file: ')
-            
+            roles_translations: SimpleNamespace = getattr(
+                self.translations.roles, Config.role, 'doc_writer_md'
+            )
+            role_description_translated: str = getattr(
+                roles_translations, Config.lang, 'Your specialization is documentation creation in the `MD` format'
+            )
+            file_location_translated: str = getattr(
+                self.translations.file_location_translated, Config.lang, 'Path to file: '
+            )
+
             content_request: dict = {
-                "role": f"{role_description_translated}",
-                "output_language": Config.lang,
-                f"{file_location_translated}": get_relative_path(file_path, "hypotez"),
-                "instruction": self.code_instruction or '',
-                "input_code": f"```{content}```",
+                'role': f'{role_description_translated}',
+                'output_language': Config.lang,
+                f'{file_location_translated}': get_relative_path(file_path, 'hypotez'),
+                'instruction': self.code_instruction or '',
+                'input_code': f'```{content}```',
             }
         except Exception as ex:
-            logger.error(f"Ошибка в составлении запроса ", ex, False)
+            logger.error(f'Ошибка в составлении запроса ', ex, False)
             ...
             return content
 
@@ -273,20 +313,21 @@ class CodeAssistant:
 
     def _yield_files_content(
         self,
-        process_driectory: str| Path,
+        process_driectory: str | Path,
     ) -> Iterator[tuple[Path, str]]:
         """
         Генерирует пути файлов и их содержимое по указанным шаблонам.
 
         Args:
             process_driectory (Path | str): Абсолютный путь к стартовой директории
-          
+
         Returns:
             bool: Iterator
-
         """
 
-        process_driectory:Path = process_driectory if isinstance(process_driectory, Path) else Path(process_driectory)
+        process_driectory: Path = (
+            process_driectory if isinstance(process_driectory, Path) else Path(process_driectory)
+        )
         # Компиляция паттернов исключаемых файлов
         try:
             exclude_file_patterns = [
@@ -294,31 +335,26 @@ class CodeAssistant:
             ]
 
         except Exception as ex:
-            logger.error(f"Не удалось скомпилировать регулярки из списка:/n{self.config.exclude_file_patterns=}\n ",ex)
+            logger.error(
+                f'Не удалось скомпилировать регулярки из списка:/n{self.config.exclude_file_patterns=}\n ', ex
+            )
             ...
         include_file_patterns = self.config.include_files
 
-
         # Итерация по всем файлам в директории
-        for file_path in process_driectory.rglob("*"):
+        for file_path in process_driectory.rglob('*'):
             # Проверка на соответствие шаблонам включения
             if not any(
-                fnmatch.fnmatch(file_path.name, pattern)
-                for pattern in include_file_patterns
-            ): 
+                fnmatch.fnmatch(file_path.name, pattern) for pattern in include_file_patterns
+            ):
                 continue
 
             # Прверка исключенных директорий
-            if any(
-                exclude_dir in file_path.parts
-                for exclude_dir in self.config.exclude_dirs
-            ):
-               continue
+            if any(exclude_dir in file_path.parts for exclude_dir in self.config.exclude_dirs):
+                continue
 
             # Проверка исключенных файлов по паттерну
-            if any(
-                exclude.match(str(file_path.name)) for exclude in exclude_file_patterns
-            ): 
+            if any(exclude.match(str(file_path.name)) for exclude in exclude_file_patterns):
                 continue
 
             # Проверка конкретных исключенных файлов
@@ -327,24 +363,23 @@ class CodeAssistant:
 
             # Чтение содержимого файла
             try:
-                content = file_path.read_text(encoding="utf-8")
+                content = file_path.read_text(encoding='utf-8')
                 yield file_path, content
                 # make_summary( docs_dir = start_dir.parent / 'docs' )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  (create `summary.md`)
             except Exception as ex:
-                logger.error(f"Ошибка при чтении файла {file_path}",ex)
+                logger.error(f'Ошибка при чтении файла {file_path}', ex)
                 ...
                 yield None, None
 
             ...
 
-
-     
-
     async def _save_response(self, file_path: Path, response: str, model_name: str) -> bool:
-        """Сохранение ответа модели в файл с добавлением суффикса.
+        """
+        Сохранение ответа модели в файл с добавлением суффикса.
 
         Метод сохраняет ответ модели в файл, добавляя к текущему расширению файла
-        дополнительный суффикс, определяемый ролью. 
+        дополнительный суффикс, определяемый ролью.
+
         Args:
             file_path (Path): Исходный путь к файлу, в который будет записан ответ.
             response (str): Ответ модели, который необходимо сохранить.
@@ -354,16 +389,12 @@ class CodeAssistant:
             OSError: Если не удаётся создать директорию или записать в файл.
         """
         try:
-            
-
             # Получаем директорию для вывода в зависимости от роли
             output_directory = getattr(self.config.output_directory, Config.role)
 
             # Формируем целевую директорию с учётом подстановки параметров <model> и <lang>
             target_dir = (
-                f'docs/{output_directory}'
-                .replace('<model>', model_name)
-                .replace('<lang>', Config.lang)
+                f'docs/{output_directory}'.replace('<model>', model_name).replace('<lang>', Config.lang)
             )
 
             # Заменяем часть пути на целевую директорию
@@ -380,110 +411,112 @@ class CodeAssistant:
                 'pytest': '.md',
             }
             suffix = suffix_map.get(Config.role, '.md')  # По умолчанию используется .md
-        
+
             export_path = Path(file_path)
             if export_path.suffix == '.md' and suffix == '.md':
-              export_path = Path(f"{file_path}")
+                export_path = Path(f'{file_path}')
             else:
-                export_path = Path(f"{file_path}{suffix}")
+                export_path = Path(f'{file_path}{suffix}')
 
             export_path.parent.mkdir(parents=True, exist_ok=True)
             export_path.write_text(response, encoding='utf-8')
-            logger.success(f"{export_path.name}")
+            logger.success(f'{export_path.name}')
             return True
 
         except Exception as ex:
             logger.critical(f'Ошибка сохранения файла: {export_path=}', ex)
-            #sys.exit(0)
+            # sys.exit(0)
             return False
 
     def _remove_outer_quotes(self, response: str) -> str:
-            """
-            Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
+        """
+        Удаляет внешние кавычки в начале и в конце строки, если они присутствуют.
 
-            :param response: Ответ модели, который необходимо обработать.
-            :type response: str
-            :return: Очищенный контент как строка.
-            :rtype: str
+        Args:
+            response (str): Ответ модели, который необходимо обработать.
 
-            :example:
-                Если строка '```md some content ```' будет передана в функцию,
-                результат будет ' some content '.
+        Returns:
+            str: Очищенный контент как строка.
 
-            """
-            try:
-                response = response.strip()
-            except Exception as ex:
-                logger.error("Exception in `remove_outer_quotes()`", ex, False)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG
-                ...
-                return ''
+        Example:
+            >>> _remove_outer_quotes('```md some content ```')
+            'some content'
+            >>> _remove_outer_quotes('some content')
+            'some content'
+            >>> _remove_outer_quotes('```python def hello(): print("Hello") ```')
+            '```python def hello(): print("Hello") ```'
+        """
+        try:
+            response = response.strip()
+        except Exception as ex:
+            logger.error('Exception in `_remove_outer_quotes()`', ex, False)
+            return ''
 
-            # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений. Это годный код
-            if response.startswith(('```python', '```mermaid')):
-                return response
-
-            # Удаление маркера для известных форматов, если строка обрамлена в '```'
-            config = j_loads_ns(gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json')
-            for prefix in config.remove_prefixes:
-                # Сравнение с префиксом без учёта регистра
-                if response.lower().startswith(prefix.lower()):
-                    return response.removeprefix(prefix).removesuffix("```").strip()
-
-            # Возврат строки без изменений, если условия не выполнены
+        # Если строка начинается с '```python' или '```mermaid', возвращаем её без изменений. Это годный код
+        if response.startswith(('```python', '```mermaid')):
             return response
 
-    
-    def run(self, start_file_number: int = 1):
-        """Запуск процесса обработки файлов."""
-        signal.signal(
-            signal.SIGINT, self._signal_handler
-        )  # Обработка прерывания (Ctrl+C)
-        self.process_files(start_file_number)
+        # Удаление маркера для известных форматов, если строка обрамлена в '```'
+        config = j_loads_ns(
+            gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json'
+        )
+        for prefix in config.remove_prefixes:
+            # Сравнение с префиксом без учёта регистра
+            if response.lower().startswith(prefix.lower()):
+                # Удаляем префикс и суффикс "```", если он есть
+                cleaned_response = response[len(prefix) :].strip()
+                if cleaned_response.endswith('```'):
+                    cleaned_response = cleaned_response[: -len('```')].strip()
+                return cleaned_response
 
-    def _signal_handler(self, signal, frame):
+        # Возврат строки без изменений, если условия не выполнены
+        return response
+
+    def run(self, start_from_file: int = 1) -> None:
+        """Запуск процесса обработки файлов."""
+        signal.signal(signal.SIGINT, self._signal_handler)  # Обработка прерывания (Ctrl+C)
+        asyncio.run(self.process_files(start_from_file))
+
+    def _signal_handler(self, signal, frame) -> None:
         """Обработка прерывания выполнения."""
-        logger.debug("Процесс был прерван", text_color="red")
+        logger.debug('Процесс был прерван', text_color='red')
         sys.exit(0)
 
 
+def parse_args() -> dict:
+    """Разбор аргументов командной строки."""
+    parser = argparse.ArgumentParser(description='Ассистент для программистов')
+    parser.add_argument(
+        '--role',
+        type=str,
+        default='code_checker',
+        help='Роль для выполнения задачи',
+    )
+    parser.add_argument('--lang', type=str, default='ru', help='Язык выполнения')
+    parser.add_argument(
+        '--model',
+        nargs='+',
+        type=str,
+        default=['gemini'],
+        help='Список моделей для инициализации',
+    )
+    parser.add_argument(
+        '--start-dirs',
+        nargs='+',
+        type=str,
+        default=[],
+        help='Список директорий для обработки',
+    )
+    parser.add_argument(
+        '--start-file-number',
+        type=int,
+        default=1,
+        help='С какого файла делать обработку. Полезно при сбоях',
+    )
+    return vars(parser.parse_args())
 
 
-
-def parse_args():
-        """Разбор аргументов командной строки."""
-        parser = argparse.ArgumentParser(description="Ассистент для программистов")
-        parser.add_argument(
-            "--role",
-            type=str,
-            default="code_checker",
-            help="Роль для выполнения задачи",
-        )
-        parser.add_argument("--lang", type=str, default="ru", help="Язык выполнения")
-        parser.add_argument(
-            "--model",
-            nargs="+",
-            type=str,
-            default=["gemini"],
-            help="Список моделей для инициализации",
-        )
-        parser.add_argument(
-            "--start-dirs",
-            nargs="+",
-            type=str,
-            default=[],
-            help="Список директорий для обработки",
-        )
-        parser.add_argument(
-            "--start-file-number",
-            type=int,
-            default=1,
-            help="С какого файла делать обработку. Полезно при сбоях",
-        )
-        return vars(parser.parse_args())
-
-
-
-def main():
+def main() -> None:
     """
     Функция запускает бесконечный цикл, в котором выполняется обработка файлов с учетом ролей и языков, указанных в конфигурации.
     Конфигурация обновляется в каждом цикле, что позволяет динамически изменять настройки в файле `code_assistant.json` во время работы программы.
@@ -491,40 +524,29 @@ def main():
     """
 
     config_path: Path = (
-        gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json"
+        gs.path.endpoints / 'hypo69' / 'code_assistant' / 'code_assistant.json'
     )
-    
-
 
     while True:
         # Загрузка конфигурации
         config: SimpleNamespace = j_loads_ns(config_path)
-       
 
         # Обработка файлов для каждой комбинации языков и ролей
         for lang in config.languages:
-            
             for role in config.roles:
-                logger.debug(f"Start role: {role}, lang: {lang}", None, False)
-
+                logger.debug(f'Start role: {role}, lang: {lang}', None, False)
 
                 assistant_direct = CodeAssistant(
-                    role = role,
-                    lang = lang,
-                    models_list = ["gemini"],
-                    #system_instruction = Config.system_instruction,
-                   
+                    role=role,
+                    lang=lang,
+                    models_list=['gemini'],
+                    # system_instruction = Config.system_instruction,
                 )
-                asyncio.run( assistant_direct.process_files( start_dirs=config.start_dirs) )
+                asyncio.run(assistant_direct.process_files(start_dirs=config.start_dirs))
 
                 # Обновление конфигурации для учёта изменений во время выполнения
                 config: SimpleNamespace = j_loads_ns(config_path)
 
 
-
-
-
-if __name__ == "__main__":
-     main()
-
-    
+if __name__ == '__main__':
+    main()

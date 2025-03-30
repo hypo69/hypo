@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
  # <- venv win
 ## ~~~~~~~~~~~~~
-""" module: src.suppliers.aliexpress.api """
+""" module: src.suppliers.aliexpress.api 
 """ AliExpress API wrapper for Python
 
 A simple Python wrapper for the AliExpress Open Platform API. This module allows
@@ -11,7 +11,6 @@ API in an easier way.
 """
 ...
 
-...
 
 from typing import List, Union
 
@@ -39,14 +38,7 @@ from .helpers import api_request, parse_products, get_list_as_string, get_produc
 
 
 class AliexpressApi:
-    """Provides methods to get information from AliExpress using your API credentials.
-
-    @param key (str): Your API key.
-    @param secret (str): Your API secret.
-    @param language (str): Language code. Defaults to EN.
-    @param currency (str): Currency code. Defaults to USD.
-    @param tracking_id (str): The tracking id for link generator. Defaults to None.
-    """
+    """Provides methods to get information from AliExpress using your API credentials."""
 
     def __init__(self,
         key: str,
@@ -56,6 +48,14 @@ class AliexpressApi:
         tracking_id: str = None,
         app_signature: str = None,
         **kwargs):
+        """
+        Args:
+            key (str): Your API key.
+            secret (str): Your API secret.
+            language (str): Language code. Defaults to EN.
+            currency (str): Currency code. Defaults to USD.
+            tracking_id (str): The tracking id for link generator. Defaults to None.
+    """
         self._key = key
         self._secret = secret
         self._tracking_id = tracking_id

@@ -1,25 +1,30 @@
-# Модуль `src.webdriver.js`
+# Модуль `js`
 
 ## Обзор
 
-Модуль `src.webdriver.js` предоставляет набор JavaScript-утилитных функций для взаимодействия с веб-страницей с использованием Selenium WebDriver. Он расширяет возможности Selenium WebDriver, добавляя общие JavaScript-функции для манипулирования видимостью элементов DOM, получения информации о странице и управления фокусом браузера.
+Модуль `js` предоставляет JavaScript утилиты для взаимодействия с веб-страницей через Selenium WebDriver. Он расширяет возможности Selenium, добавляя JavaScript-функции для управления видимостью элементов, получения информации о странице и управления фокусом браузера.
 
 ## Подробней
 
-Этот модуль предназначен для упрощения автоматизации задач, связанных с веб-страницами, где требуется динамическое взаимодействие с элементами DOM через JavaScript. Он позволяет выполнять такие действия, как изменение видимости элементов, получение информации о состоянии документа и управление фокусом окна браузера. Модуль предназначен для работы в окружении Selenium WebDriver и требует наличия экземпляра WebDriver для выполнения JavaScript-кода.
+Этот модуль предназначен для расширения возможностей Selenium WebDriver путем добавления общих функций на основе JavaScript для взаимодействия с веб-страницами, включая манипуляции с видимостью, получение информации о странице и управление фокусом браузера.
+
+Ключевые особенности:
+    1. Обеспечение видимости невидимых элементов DOM для взаимодействия.
+    2. Получение метаданных, таких как состояние готовности документа, реферер или язык страницы.
+    3. Программное управление фокусом окна браузера.
 
 ## Классы
 
 ### `JavaScript`
 
-**Описание**: Предоставляет JavaScript-утилитные функции для взаимодействия с веб-страницей.
+**Описание**: Предоставляет JavaScript утилиты для взаимодействия с веб-страницей.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр класса `JavaScript` с использованием экземпляра Selenium WebDriver.
-- `unhide_DOM_element`: Делает невидимый элемент DOM видимым, изменяя его свойства стиля.
+- `__init__`: Инициализирует экземпляр класса `JavaScript`.
+- `unhide_DOM_element`: Делает невидимый DOM-элемент видимым.
 - `ready_state`: Возвращает статус загрузки документа.
 - `window_focus`: Устанавливает фокус на окно браузера.
-- `get_referrer`: Возвращает URL-адрес источника текущего документа.
+- `get_referrer`: Возвращает URL реферера текущего документа.
 - `get_page_lang`: Возвращает язык текущей страницы.
 
 #### `__init__`
@@ -34,17 +39,17 @@ def __init__(self, driver: WebDriver):
     ...
 ```
 
-**Описание**: Инициализирует класс `JavaScript` с экземпляром `WebDriver`.
+**Описание**: Инициализирует класс `JavaScript` с экземпляром `WebDriver` из Selenium.
 
 **Параметры**:
-- `driver` (WebDriver): Экземпляр `WebDriver` для выполнения JavaScript.
+- `driver` (WebDriver): Экземпляр `WebDriver` Selenium для выполнения JavaScript.
 
-**Примеры**:
+**Примеры**
 ```python
 from selenium import webdriver
 from src.webdriver.js import JavaScript
 
-driver = webdriver.Chrome()
+driver = webdriver.Chrome()  # или другой браузер
 js_utils = JavaScript(driver)
 ```
 
@@ -63,26 +68,20 @@ def unhide_DOM_element(self, element: WebElement) -> bool:
     ...
 ```
 
-**Описание**: Делает невидимый элемент DOM видимым, изменяя его свойства стиля.
+**Описание**: Делает невидимый DOM-элемент видимым, изменяя его свойства стиля.
 
 **Параметры**:
-- `element` (WebElement): Элемент `WebElement`, который нужно сделать видимым.
+- `element` (WebElement): DOM-элемент, который нужно сделать видимым.
 
 **Возвращает**:
 - `bool`: `True`, если скрипт выполнен успешно, `False` в противном случае.
 
 **Примеры**:
 ```python
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from src.webdriver.js import JavaScript
-
-driver = webdriver.Chrome()
-driver.get("https://example.com")
-js_utils = JavaScript(driver)
-element = driver.find_element(By.ID, "some_element")
-if not element.is_displayed():
-    js_utils.unhide_DOM_element(element)
+element = driver.find_element(By.ID, 'hiddenElement')
+result = js_utils.unhide_DOM_element(element)
+print(f"Element unhidden: {result}")
 ```
 
 #### `ready_state`
@@ -105,13 +104,8 @@ def ready_state(self) -> str:
 
 **Примеры**:
 ```python
-from selenium import webdriver
-from src.webdriver.js import JavaScript
-
-driver = webdriver.Chrome()
-driver.get("https://example.com")
-js_utils = JavaScript(driver)
-print(js_utils.ready_state)
+ready = js_utils.ready_state
+print(f"Ready state: {ready}")
 ```
 
 #### `window_focus`
@@ -125,16 +119,10 @@ def window_focus(self) -> None:
     ...
 ```
 
-**Описание**: Устанавливает фокус на окно браузера.
+**Описание**: Устанавливает фокус на окно браузера, переводя его на передний план.
 
 **Примеры**:
 ```python
-from selenium import webdriver
-from src.webdriver.js import JavaScript
-
-driver = webdriver.Chrome()
-driver.get("https://example.com")
-js_utils = JavaScript(driver)
 js_utils.window_focus()
 ```
 
@@ -150,20 +138,15 @@ def get_referrer(self) -> str:
     ...
 ```
 
-**Описание**: Возвращает URL-адрес источника текущего документа.
+**Описание**: Возвращает URL реферера текущего документа.
 
 **Возвращает**:
-- `str`: URL-адрес источника или пустая строка, если он недоступен.
+- `str`: URL реферера или пустая строка, если он недоступен.
 
 **Примеры**:
 ```python
-from selenium import webdriver
-from src.webdriver.js import JavaScript
-
-driver = webdriver.Chrome()
-driver.get("https://example.com")
-js_utils = JavaScript(driver)
-print(js_utils.get_referrer())
+referrer = js_utils.get_referrer()
+print(f"Referrer URL: {referrer}")
 ```
 
 #### `get_page_lang`
@@ -185,11 +168,6 @@ def get_page_lang(self) -> str:
 
 **Примеры**:
 ```python
-from selenium import webdriver
-from src.webdriver.js import JavaScript
-
-driver = webdriver.Chrome()
-driver.get("https://example.com")
-js_utils = JavaScript(driver)
-print(js_utils.get_page_lang())
+page_lang = js_utils.get_page_lang()
+print(f"Page language: {page_lang}")
 ```
