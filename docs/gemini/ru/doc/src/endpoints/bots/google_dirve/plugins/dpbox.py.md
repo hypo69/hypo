@@ -1,12 +1,12 @@
-# Модуль для работы с ссылками Dropbox
+# Модуль `dpbox.py`
 
 ## Обзор
 
-Модуль содержит функцию `DPBOX`, которая преобразует ссылки Dropbox для прямого скачивания файлов. Функция обрабатывает различные форматы URL, чтобы обеспечить корректную ссылку для скачивания.
+Модуль `dpbox.py` содержит функцию `DPBOX`, предназначенную для преобразования URL-адресов Dropbox в прямые ссылки для скачивания файлов. Функция анализирует URL и изменяет его таким образом, чтобы файл можно было скачать напрямую.
 
 ## Подробней
 
-Функция `DPBOX` анализирует предоставленный URL и модифицирует его таким образом, чтобы ссылка вела непосредственно к файлу, размещенному на Dropbox. Это необходимо для автоматизации скачивания файлов с Dropbox, когда исходная ссылка может требовать дополнительных действий для начала загрузки. Функция проверяет наличие определенных подстрок в URL и заменяет их или добавляет необходимые параметры, чтобы обеспечить прямую ссылку на скачивание.
+Функция `DPBOX` важна для обеспечения возможности прямого скачивания файлов из Dropbox, что может быть полезно для автоматизации процессов и интеграции с другими сервисами. Функция обрабатывает различные форматы URL Dropbox, включая те, которые содержат параметры `dl=0` или `dl=1`, а также URL, начинающиеся с `www.dropbox.com` или `dl.dropbox.com`.
 
 ## Функции
 
@@ -15,51 +15,52 @@
 ```python
 def DPBOX(url: str) -> str:
     """
-    Преобразует URL Dropbox для прямого скачивания файлов.
+    Преобразует URL-адрес Dropbox в прямую ссылку для скачивания файла.
 
     Args:
-        url (str): URL Dropbox для преобразования.
+        url (str): URL-адрес Dropbox.
 
     Returns:
-        str: Преобразованный URL для прямого скачивания.
-
-    Raises:
-        None
+        str: Прямая ссылка для скачивания файла.
 
     Example:
-        >>> DPBOX("https://www.dropbox.com/s/example/file.txt?dl=0")
+        >>> DPBOX('https://www.dropbox.com/s/example/file.txt?dl=0')
         'https://dl.dropbox.com/s/example/file.txt?dl=1'
 
-        >>> DPBOX("https://dl.dropbox.com/s/example/file.txt")
+        >>> DPBOX('https://dl.dropbox.com/s/example/file.txt?dl=0')
+        'https://dl.dropbox.com/s/example/file.txt?dl=1'
+
+        >>> DPBOX('https://www.dropbox.com/s/example/file.txt')
         'https://dl.dropbox.com/s/example/file.txt?dl=1'
     """
     ...
 ```
 
-**Описание**: Функция принимает URL Dropbox и преобразует его в ссылку для прямого скачивания. Она проверяет, содержит ли URL подстроки `dl.dropbox.com` или `www.dropbox.com`, и соответственно изменяет URL.
+**Описание**: Функция `DPBOX` принимает URL-адрес Dropbox в качестве входного параметра и возвращает прямую ссылку для скачивания файла. Функция обрабатывает три основных случая:
+
+1.  URL содержит `dl.dropbox.com`.
+2.  URL содержит `www.dropbox.com`.
+3.  URL не содержит ни `dl.dropbox.com`, ни `www.dropbox.com`.
+
+В каждом из этих случаев функция проверяет наличие параметров `?dl=0` или `?dl=1` и, если необходимо, заменяет `?dl=0` на `?dl=1` или добавляет `?dl=1` в конец URL.
 
 **Параметры**:
-- `url` (str): URL Dropbox для преобразования.
+
+*   `url` (str): URL-адрес Dropbox, который необходимо преобразовать.
 
 **Возвращает**:
-- `str`: Преобразованный URL для прямого скачивания.
+
+*   `str`: Прямая ссылка для скачивания файла из Dropbox.
 
 **Примеры**:
 
-- Преобразование URL с `www.dropbox.com` в `dl.dropbox.com` и добавление параметра `?dl=1`:
-  ```python
-  DPBOX("https://www.dropbox.com/s/example/file.txt?dl=0")
-  # 'https://dl.dropbox.com/s/example/file.txt?dl=1'
-  ```
+```python
+DPBOX('https://www.dropbox.com/s/example/file.txt?dl=0')
+# 'https://dl.dropbox.com/s/example/file.txt?dl=1'
 
-- Добавление параметра `?dl=1` к URL, если он отсутствует:
-  ```python
-  DPBOX("https://dl.dropbox.com/s/example/file.txt")
-  # 'https://dl.dropbox.com/s/example/file.txt?dl=1'
-  ```
+DPBOX('https://dl.dropbox.com/s/example/file.txt?dl=0')
+# 'https://dl.dropbox.com/s/example/file.txt?dl=1'
 
-- Замена параметра `?dl=0` на `?dl=1`:
-  ```python
-  DPBOX("https://dl.dropbox.com/s/example/file.txt?dl=0")
-  # 'https://dl.dropbox.com/s/example/file.txt?dl=1'
-  ```
+DPBOX('https://www.dropbox.com/s/example/file.txt')
+# 'https://dl.dropbox.com/s/example/file.txt?dl=1'
+```

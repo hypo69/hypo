@@ -2,11 +2,12 @@
 
 ## Обзор
 
-Модуль `xml_json_convertor` предоставляет утилиты для преобразования данных XML в словари и наоборот. Он включает функции для разбора XML-строк и преобразования деревьев элементов XML в представления словарей. Модуль предназначен для работы с данными в формате PrestaShop.
+Модуль `xml_json_convertor` предоставляет утилиты для преобразования данных XML в словари и JSON в XML. Он включает функции для разбора XML строк и преобразования деревьев элементов XML в словарные представления, а также для преобразования JSON в XML.
 
 ## Подробней
 
-Этот модуль содержит набор функций для преобразования данных между форматами XML и JSON, что полезно при взаимодействии с API PrestaShop. Основные функции включают преобразование JSON в XML и XML в словарь Python. Он включает функции для разбора XML-строк и преобразования деревьев элементов XML в представления словарей.
+Этот модуль используется для преобразования данных между форматами XML и JSON, что может быть полезно при взаимодействии с API, которые работают с этими форматами данных. Модуль содержит функции для преобразования JSON в XML и XML в словари.
+`xml_json_convertor` играет важную роль в процессах обработки и интеграции данных, обеспечивая совместимость и удобство работы с различными источниками и системами.
 
 ## Функции
 
@@ -14,8 +15,7 @@
 
 ```python
 def dict2xml(json_obj: dict, root_name: str = "product") -> str:
-    """! Converts a JSON dictionary to an XML string.
-
+    """
     Args:
         json_obj (dict): JSON dictionary to convert.
         root_name (str, optional): Root element name. Defaults to "product".
@@ -25,31 +25,27 @@ def dict2xml(json_obj: dict, root_name: str = "product") -> str:
     """
 ```
 
-**Описание**: Преобразует словарь JSON в строку XML.
+**Описание**: Преобразует JSON-словарь в XML-строку.
 
 **Параметры**:
-
--   `json_obj` (dict): Словарь JSON для преобразования.
--   `root_name` (str, optional): Имя корневого элемента. По умолчанию `"product"`.
+- `json_obj` (dict): JSON-словарь для преобразования.
+- `root_name` (str, optional): Имя корневого элемента. По умолчанию "product".
 
 **Возвращает**:
+- `str`: XML-строковое представление JSON.
 
--   `str`: Строковое представление XML JSON.
-
-**Примеры**:
-
+**Пример**:
 ```python
-json_data = {"product": {"name": "Test Product", "price": "10.00"}}
-xml_output = dict2xml(json_data)
-print(xml_output)
+    json_data = {"product": {"name": "Test Product", "price": "10.00"}}
+    xml_output = dict2xml(json_data)
+    print(xml_output)
 ```
 
 ### `_parse_node`
 
 ```python
 def _parse_node(node: ET.Element) -> dict | str:
-    """Parse an XML node into a dictionary.
-
+    """
     Args:
         node (ET.Element): The XML element to parse.
 
@@ -61,29 +57,24 @@ def _parse_node(node: ET.Element) -> dict | str:
 **Описание**: Преобразует XML-узел в словарь.
 
 **Параметры**:
-
--   `node` (ET.Element): XML-элемент для анализа.
+- `node` (ET.Element): XML-элемент для преобразования.
 
 **Возвращает**:
+- `dict | str`: Словарное представление XML-узла или строка, если у узла нет атрибутов или дочерних элементов.
 
--   `dict | str`: Представление XML-узла в виде словаря или строка, если у узла нет атрибутов или дочерних элементов.
-
-**Примеры**:
-
+**Пример**:
 ```python
-import xml.etree.ElementTree as ET
-xml_string = "<product><name>Test Product</name></product>"
-element_tree = ET.fromstring(xml_string)
-parsed_node = _parse_node(element_tree)
-print(parsed_node)
+    xml_string = '<product name="Test Product" price="10.00"></product>'
+    root = ET.fromstring(xml_string)
+    dict_output = _parse_node(root)
+    print(dict_output)
 ```
 
 ### `_make_dict`
 
 ```python
 def _make_dict(tag: str, value: any) -> dict:
-    """Generate a new dictionary with tag and value.
-
+    """
     Args:
         tag (str): The tag name of the XML element.
         value (any): The value associated with the tag.
@@ -93,32 +84,28 @@ def _make_dict(tag: str, value: any) -> dict:
     """
 ```
 
-**Описание**: Создает новый словарь с тегом и значением.
+**Описание**: Генерирует новый словарь с тегом и значением.
 
 **Параметры**:
-
--   `tag` (str): Имя тега XML-элемента.
--   `value` (any): Значение, связанное с тегом.
+- `tag` (str): Имя тега XML-элемента.
+- `value` (any): Значение, связанное с тегом.
 
 **Возвращает**:
+- `dict`: Словарь с именем тега в качестве ключа и значением в качестве значения словаря.
 
--   `dict`: Словарь с именем тега в качестве ключа и значением в качестве значения словаря.
-
-**Примеры**:
-
+**Пример**:
 ```python
-tag = "name"
-value = "Test Product"
-new_dict = _make_dict(tag, value)
-print(new_dict)
+    tag = 'product'
+    value = {'name': 'Test Product'}
+    dict_output = _make_dict(tag, value)
+    print(dict_output)
 ```
 
 ### `xml2dict`
 
 ```python
 def xml2dict(xml: str) -> dict:
-    """Parse XML string into a dictionary.
-
+    """
     Args:
         xml (str): The XML string to parse.
 
@@ -130,27 +117,23 @@ def xml2dict(xml: str) -> dict:
 **Описание**: Преобразует XML-строку в словарь.
 
 **Параметры**:
-
--   `xml` (str): XML-строка для анализа.
+- `xml` (str): XML-строка для преобразования.
 
 **Возвращает**:
+- `dict`: Словарное представление XML.
 
--   `dict`: Представление XML в виде словаря.
-
-**Примеры**:
-
+**Пример**:
 ```python
-xml_string = "<product><name>Test Product</name></product>"
-xml_dict = xml2dict(xml_string)
-print(xml_dict)
+    xml_string = '<product name="Test Product" price="10.00"></product>'
+    dict_output = xml2dict(xml_string)
+    print(dict_output)
 ```
 
 ### `ET2dict`
 
 ```python
 def ET2dict(element_tree: ET.Element) -> dict:
-    """Convert an XML element tree into a dictionary.
-
+    """
     Args:
         element_tree (ET.Element): The XML element tree.
 
@@ -162,29 +145,24 @@ def ET2dict(element_tree: ET.Element) -> dict:
 **Описание**: Преобразует дерево элементов XML в словарь.
 
 **Параметры**:
-
--   `element_tree` (ET.Element): Дерево элементов XML.
+- `element_tree` (ET.Element): Дерево элементов XML.
 
 **Возвращает**:
+- `dict`: Словарное представление дерева элементов XML.
 
--   `dict`: Представление дерева элементов XML в виде словаря.
-
-**Примеры**:
-
+**Пример**:
 ```python
-import xml.etree.ElementTree as ET
-xml_string = "<product><name>Test Product</name></product>"
-element_tree = ET.fromstring(xml_string)
-xml_dict = ET2dict(element_tree)
-print(xml_dict)
+    xml_string = '<product name="Test Product" price="10.00"></product>'
+    root = ET.fromstring(xml_string)
+    dict_output = ET2dict(root)
+    print(dict_output)
 ```
 
 ### `presta_fields_to_xml`
 
 ```python
 def presta_fields_to_xml(presta_fields_dict: dict) -> str:
-    """! Converts a JSON dictionary to an XML string with a fixed root name 'prestashop'.
-
+    """
     Args:
         presta_fields_dict (dict): JSON dictionary containing the data (without 'prestashop' key).
 
@@ -193,19 +171,16 @@ def presta_fields_to_xml(presta_fields_dict: dict) -> str:
     """
 ```
 
-**Описание**: Преобразует словарь JSON в строку XML с фиксированным корневым элементом "prestashop".
+**Описание**: Преобразует JSON-словарь в XML-строку с фиксированным корневым именем 'prestashop'.
 
 **Параметры**:
-
--   `presta_fields_dict` (dict): Словарь JSON, содержащий данные (без ключа "prestashop").
+- `presta_fields_dict` (dict): JSON-словарь, содержащий данные (без ключа 'prestashop').
 
 **Возвращает**:
+- `str`: XML-строковое представление JSON.
 
--   `str`: Строковое представление XML JSON.
-
-**Примеры**:
-
+**Пример**:
 ```python
-json_data = {"product": {"name": "Test Product", "price": "10.00"}}
-xml_output = presta_fields_to_xml(json_data)
-print(xml_output)
+    json_data = {"product": {"name": "Test Product", "price": "10.00"}}
+    xml_output = presta_fields_to_xml(json_data)
+    print(xml_output)

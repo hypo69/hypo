@@ -6,16 +6,16 @@
 
 ## Содержание
 
-1.  [Введение](#введение)
-2.  [Инициализация класса](#инициализация-класса)
-3.  [Поля товара](#поля-товара)
-    *   [Одноязычные поля](#одноязычные-поля)
-    *   [Многоязычные поля](#многоязычные-поля)
-4.  [Ассоциации](#ассоциации)
-5.  [Значения по умолчанию](#значения-по-умолчанию)
-6.  [Обработка ошибок](#обработка-ошибок)
-7.  [Примеры использования](#примеры-использования)
-8.  [Заключение](#заключение)
+1. [Введение](#введение)
+2. [Инициализация класса](#инициализация-класса)
+3. [Поля товара](#поля-товара)
+   - [Одноязычные поля](#одноязычные-поля)
+   - [Многоязычные поля](#многоязычные-поля)
+4. [Ассоциации](#ассоциации)
+5. [Значения по умолчанию](#значения-по-умолчанию)
+6. [Обработка ошибок](#обработка-ошибок)
+7. [Примеры использования](#примеры-использования)
+8. [Заключение](#заключение)
 
 ## Введение
 
@@ -27,106 +27,89 @@
 
 ### Метод `__init__`
 
-Метод `__init__` инициализирует класс `ProductFields`, загружая список полей товаров и настраивая значения по умолчанию для полей. Он также инициализирует объект `SimpleNamespace` для хранения полей товаров и вспомогательный словарь для дополнительных полей.
-
-#### `__init__`
-
 ```python
 def __init__(self):
-    """
-    Инициализирует класс ProductFields, загружая список полей товаров и настраивая значения по умолчанию для полей.
-    Он также инициализирует объект SimpleNamespace для хранения полей товаров и вспомогательный словарь для дополнительных полей.
-    """
-    ...
+    self.product_fields_list = self._load_product_fields_list()
+    self.language = {'en': 1, 'he': 2, 'ru': 3}
+    self.presta_fields = SimpleNamespace(**{key: None for key in self.product_fields_list})
+    self.assist_fields_dict = {
+        'default_image_url': '', 
+        'images_urls': []
+    }
+    self._payload()
 ```
 
-**Описание**: Инициализация класса `ProductFields`.
-
-**Методы**:
-- `_load_product_fields_list`: Загружает список полей товаров.
-- `_payload`: Загружает значения по умолчанию для полей товаров.
+**Описание**: Метод `__init__` инициализирует класс `ProductFields`, загружая список полей товаров и настраивая значения по умолчанию для полей. Он также инициализирует объект `SimpleNamespace` для хранения полей товаров и вспомогательный словарь для дополнительных полей.
 
 **Параметры**:
-- Отсутствуют.
+- Отсутствуют
+
+**Возвращает**:
+- Отсутствует
+
+**Вызывает исключения**:
+- Отсутствуют
 
 **Примеры**:
-
 ```python
 product = ProductFields()
+print(product.language)
 ```
 
 ### Метод `_load_product_fields_list`
 
-Этот метод загружает список полей товаров из текстового файла. Файл должен содержать одно имя поля на строку.
-
-#### `_load_product_fields_list`
-
 ```python
 def _load_product_fields_list(self) -> List[str]:
-    """
-    Загружает список полей товаров из текстового файла. Файл должен содержать одно имя поля на строку.
-
-    Returns:
-        List[str]: Список полей товаров.
-
-    Raises:
-        FileNotFoundError: Если файл не найден.
-        IOError: Если произошла ошибка при чтении файла.
-    """
-    ...
+    return read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True)
 ```
 
-**Описание**: Загружает список полей товаров из файла.
+**Описание**: Этот метод загружает список полей товаров из текстового файла. Файл должен содержать одно имя поля на строку.
 
 **Параметры**:
-- Отсутствуют.
+- Отсутствуют
 
 **Возвращает**:
 - `List[str]`: Список полей товаров.
 
-**Примеры**:
+**Вызывает исключения**:
+- Отсутствуют
 
+**Примеры**:
 ```python
-product_fields = ProductFields()
-fields_list = product_fields._load_product_fields_list()
-print(fields_list)
+product = ProductFields()
+fields = product._load_product_fields_list()
+print(fields[:5])
 ```
 
 ### Метод `_payload`
 
-Этот метод загружает значения по умолчанию для полей товаров из JSON-файла. Если файл не найден или не может быть загружен, выводится сообщение об ошибке.
-
-#### `_payload`
-
 ```python
 def _payload(self) -> bool:
-    """
-    Загружает значения по умолчанию для полей товаров из JSON-файла.
-
-    Returns:
-        bool: True, если загрузка прошла успешно, иначе False.
-    
-    Raises:
-        FileNotFoundError: Если JSON-файл не найден.
-        json.JSONDecodeError: Если JSON-файл имеет неверный формат.
-    """
-    ...
+    data = j_loads(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
+    if not data:
+        logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
+        return False
+    for name, value in data.items():
+        setattr(self, name, value)
+    return True
 ```
 
-**Описание**: Загружает значения по умолчанию для полей товаров из JSON-файла.
+**Описание**: Этот метод загружает значения по умолчанию для полей товаров из JSON-файла. Если файл не найден или не может быть загружен, выводится сообщение об ошибке.
 
 **Параметры**:
-- Отсутствуют.
+- Отсутствуют
 
 **Возвращает**:
-- `bool`: `True`, если загрузка прошла успешно, иначе `False`.
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- Отсутствуют
 
 **Примеры**:
-
 ```python
-product_fields = ProductFields()
-is_loaded = product_fields._payload()
-print(is_loaded)
+product = ProductFields()
+result = product._payload()
+print(result)
 ```
 
 ## Поля товара
@@ -140,35 +123,25 @@ print(is_loaded)
 ```python
 @property
 def id_product(self) -> Optional[int]:
-    """
-    Возвращает id_product.
-
-    Returns:
-        Optional[int]: id_product.
-    """
-    ...
+    return self.presta_fields.id_product
 
 @id_product.setter
 def id_product(self, value: int = None):
-    """
-    Устанавливает значение для id_product.
-
-    Args:
-        value (int, optional): Значение для id_product. По умолчанию None.
-    
-    Raises:
-        ProductFieldException: Если происходит ошибка при установке значения.
-    """
-    ...
+    try:
+        self.presta_fields.id_product = value
+    except ProductFieldException as ex:
+        logger.error(f"""Ошибка заполнения поля: 'ID' данными {value}
+        Ошибка: """, ex)
+        return
 ```
 
-**Описание**: Получение и установка значения `id_product`.
+**Описание**: Свойство `id_product` позволяет получить или установить идентификатор товара.
 
 **Параметры**:
-- `value` (int, optional): Значение `id_product`. По умолчанию `None`.
+- `value` (int, optional): Идентификатор товара. По умолчанию `None`.
 
 **Возвращает**:
-- `Optional[int]`: Значение `id_product`.
+- `Optional[int]`: Идентификатор товара или `None`, если значение не установлено.
 
 **Вызывает исключения**:
 - `ProductFieldException`: Если возникает ошибка при установке значения.
@@ -190,40 +163,31 @@ print(product.id_product)
 ```python
 @property
 def name(self):
-    """
-    Возвращает name.
-
-    Returns:
-        str: name.
-    """
-    ...
+    return self.presta_fields.name or ''
 
 @name.setter
 def name(self, value: str, lang:str = 'en') -> bool:
-    """
-    Устанавливает значение для name на определенном языке.
-
-    Args:
-        value (str): Значение для name.
-        lang (str, optional): Язык. По умолчанию 'en'.
-
-    Returns:
-        bool: True, если установка прошла успешно, иначе False.
-
-    Raises:
-        ProductFieldException: Если происходит ошибка при установке значения.
-    """
-    ...
+    try:
+        self.presta_fields.name: dict = {'language':
+                                                    [
+                                                        {'attrs':{'id':self.language[lang]}, 'value': value},
+                                                    ]
+                                                 }
+        return True
+    except ProductFieldException as ex:
+        logger.error(f"""Ошибка заполнения поля: 'name' данными {value}
+        Ошибка: """, ex)
+        return
 ```
 
-**Описание**: Получение и установка многоязычного значения `name`.
+**Описание**: Свойство `name` позволяет получить или установить имя товара на определенном языке.
 
 **Параметры**:
-- `value` (str): Значение для `name`.
-- `lang` (str, optional): Язык. По умолчанию `'en'`.
+- `value` (str): Имя товара.
+- `lang` (str, optional): Язык, на котором устанавливается имя товара. По умолчанию `'en'`.
 
 **Возвращает**:
-- `str`: Значение `name`.
+- `bool`: `True`, если установка прошла успешно, `False` в противном случае.
 
 **Вызывает исключения**:
 - `ProductFieldException`: Если возникает ошибка при установке значения.
@@ -245,32 +209,23 @@ print(product.name)
 ```python
 @property
 def associations(self) -> Optional[Dict]:
-    """
-    Возвращает associations.
-
-    Returns:
-        Optional[Dict]: associations.
-    """
-    ...
+    return self.presta_fields.associations or None
 
 @associations.setter
 def associations(self, value: Dict[str, Optional[str]]):
-    """
-    Устанавливает значение для associations.
-
-    Args:
-        value (Dict[str, Optional[str]]): Значение для associations.
-    """
-    ...
+    self.presta_fields.associations = value
 ```
 
-**Описание**: Получение и установка ассоциаций продукта.
+**Описание**: Свойство `associations` позволяет получить или установить ассоциации товара с другими сущностями.
 
 **Параметры**:
-- `value` (Dict[str, Optional[str]]): Значение для `associations`.
+- `value` (Dict[str, Optional[str]]): Словарь ассоциаций.
 
 **Возвращает**:
-- `Optional[Dict]`: Значение `associations`.
+- `Optional[Dict]`: Словарь ассоциаций или `None`, если значение не установлено.
+
+**Вызывает исключения**:
+- Отсутствуют
 
 **Примеры**:
 
@@ -293,25 +248,34 @@ print(product.associations)
 ```python
 @id_product.setter
 def id_product(self, value: int = None):
-    """
-    Устанавливает значение для id_product.
-
-    Args:
-        value (int, optional): Значение для id_product. По умолчанию None.
-    
-    Raises:
-        ProductFieldException: Если происходит ошибка при установке значения.
-    """
-    ...
+    try:
+        self.presta_fields.id_product = value
+    except ProductFieldException as ex:
+        logger.error(f"""Ошибка заполнения поля: 'ID' данными {value}
+        Ошибка: """, ex)
+        return
 ```
 
-**Описание**: Обработка ошибок при установке значения `id_product`.
+**Описание**: В блоке `try...except` происходит попытка установить значение поля `id_product`. Если во время этой операции возникает исключение `ProductFieldException`, оно перехватывается, и в лог записывается сообщение об ошибке.
 
 **Параметры**:
-- `value` (int, optional): Значение `id_product`. По умолчанию `None`.
+- `value` (int, optional): Идентификатор товара. По умолчанию `None`.
+
+**Возвращает**:
+- Отсутствует
 
 **Вызывает исключения**:
 - `ProductFieldException`: Если возникает ошибка при установке значения.
+
+**Примеры**:
+
+```python
+product = ProductFields()
+try:
+    product.id_product = "abc"  # Попытка установить некорректное значение
+except Exception as e:
+    print(f"Произошла ошибка: {e}")
+```
 
 ## Примеры использования
 

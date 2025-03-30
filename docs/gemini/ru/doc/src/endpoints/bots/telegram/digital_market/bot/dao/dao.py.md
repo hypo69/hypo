@@ -1,22 +1,24 @@
-# Модуль `dao.py`
+# Модуль dao.py
 
 ## Обзор
 
-Модуль `dao.py` содержит Data Access Objects (DAO) для работы с моделями базы данных, такими как `User`, `Purchase`, `Category` и `Product`. Он предоставляет методы для выполнения операций CRUD (создание, чтение, обновление, удаление) и других запросов к базе данных, специфичных для каждой модели.
+Модуль `dao.py` содержит классы для доступа к данным (DAO) для моделей `User`, `Purchase`, `Category` и `Product`.
+Он предоставляет методы для выполнения операций с базой данных, таких как получение статистики покупок пользователей, информации о покупках и общей статистики.
 
 ## Подробней
 
-Этот модуль обеспечивает абстракцию доступа к данным, упрощая взаимодействие с базой данных и позволяя избежать дублирования кода. DAO классы используют SQLAlchemy для выполнения запросов к базе данных асинхронно.
+Этот модуль является частью системы управления цифровым рынком Telegram-бота. Он обеспечивает взаимодействие с базой данных для выполнения различных операций, связанных с пользователями, покупками, категориями и продуктами.
+DAO классы абстрагируют логику доступа к данным, что упрощает взаимодействие с базой данных и обеспечивает гибкость при изменении схемы базы данных.
 
 ## Классы
 
 ### `UserDAO`
 
-**Описание**: DAO для работы с моделью `User`. Предоставляет методы для получения статистики покупок пользователя, получения списка приобретенных продуктов и общей статистики пользователей.
+**Описание**: DAO для работы с моделью `User`.
 
 **Методы**:
 - `get_purchase_statistics`: Получает статистику покупок пользователя.
-- `get_purchased_products`: Получает список приобретенных продуктов пользователя.
+- `get_purchased_products`: Получает информацию о покупках пользователя.
 - `get_statistics`: Получает общую статистику пользователей.
 
 #### `get_purchase_statistics`
@@ -30,32 +32,33 @@ async def get_purchase_statistics(cls, session: AsyncSession, telegram_id: int) 
         telegram_id (int): Telegram ID пользователя.
 
     Returns:
-        Optional[Dict[str, int]]: Словарь со статистикой покупок пользователя, содержащий общее количество покупок и общую сумму покупок. Возвращает `None` в случае ошибки или отсутствия данных.
+        Optional[Dict[str, int]]: Словарь со статистикой покупок пользователя или `None` в случае ошибки.
+        Содержит ключи 'total_purchases' (общее количество покупок) и 'total_amount' (общая сумма покупок).
 
     Raises:
-        SQLAlchemyError: В случае ошибки при работе с базой данных.
+        SQLAlchemyError: Если возникает ошибка при работе с базой данных.
 
     Example:
         >>> session = AsyncSession()
         >>> telegram_id = 123456789
         >>> stats = await UserDAO.get_purchase_statistics(session, telegram_id)
         >>> if stats:
-        ...     print(f"Total purchases: {stats['total_purchases']}")
-        ...     print(f"Total amount: {stats['total_amount']}")
+        ...     print(f"Total purchases: {stats['total_purchases']}, Total amount: {stats['total_amount']}")
     """
 ```
 
-**Описание**: Получает статистику покупок пользователя, такую как общее количество покупок и общая сумма покупок.
+**Описание**: Получает статистику покупок пользователя, включая общее количество покупок и общую сумму покупок.
 
 **Параметры**:
 - `session` (AsyncSession): Асинхронная сессия базы данных.
 - `telegram_id` (int): Telegram ID пользователя.
 
 **Возвращает**:
-- `Optional[Dict[str, int]]`: Словарь со статистикой покупок пользователя, содержащий общее количество покупок (`total_purchases`) и общую сумму покупок (`total_amount`). Возвращает `None` в случае ошибки или отсутствия данных.
+- `Optional[Dict[str, int]]`: Словарь со статистикой покупок пользователя или `None` в случае ошибки.
+  Содержит ключи `'total_purchases'` (общее количество покупок) и `'total_amount'` (общая сумма покупок).
 
 **Вызывает исключения**:
-- `SQLAlchemyError`: В случае ошибки при работе с базой данных.
+- `SQLAlchemyError`: Если возникает ошибка при работе с базой данных.
 
 #### `get_purchased_products`
 
@@ -68,10 +71,10 @@ async def get_purchased_products(cls, session: AsyncSession, telegram_id: int) -
         telegram_id (int): Telegram ID пользователя.
 
     Returns:
-        Optional[List[Purchase]]: Список покупок пользователя. Возвращает `None` в случае ошибки или отсутствия данных.
+        Optional[List[Purchase]]: Список покупок пользователя или `None` в случае ошибки.
 
     Raises:
-        SQLAlchemyError: В случае ошибки при работе с базой данных.
+        SQLAlchemyError: Если возникает ошибка при работе с базой данных.
 
     Example:
         >>> session = AsyncSession()
@@ -79,21 +82,21 @@ async def get_purchased_products(cls, session: AsyncSession, telegram_id: int) -
         >>> purchases = await UserDAO.get_purchased_products(session, telegram_id)
         >>> if purchases:
         ...     for purchase in purchases:
-        ...         print(f"Purchase ID: {purchase.id}, Product: {purchase.product.name}, Price: {purchase.price}")
+        ...         print(f"Purchase ID: {purchase.id}, Product ID: {purchase.product_id}")
     """
 ```
 
-**Описание**: Получает список приобретенных продуктов пользователя.
+**Описание**: Получает информацию о покупках пользователя.
 
 **Параметры**:
 - `session` (AsyncSession): Асинхронная сессия базы данных.
 - `telegram_id` (int): Telegram ID пользователя.
 
 **Возвращает**:
-- `Optional[List[Purchase]]`: Список покупок пользователя. Возвращает `None` в случае ошибки или отсутствия данных.
+- `Optional[List[Purchase]]`: Список покупок пользователя или `None` в случае ошибки.
 
 **Вызывает исключения**:
-- `SQLAlchemyError`: В случае ошибки при работе с базой данных.
+- `SQLAlchemyError`: Если возникает ошибка при работе с базой данных.
 
 #### `get_statistics`
 
@@ -105,41 +108,41 @@ async def get_statistics(cls, session: AsyncSession):
         session (AsyncSession): Асинхронная сессия базы данных.
 
     Returns:
-        statistics (Dict[str, int]): Cловарь со статистикой пользователей, содержащий общее количество, новых за сегодня, за неделю, за месяц.
+        statistics (Dict[str, int]): Словарь со статистикой пользователей.
+        Содержит ключи 'total_users' (общее количество пользователей), 'new_today' (новых пользователей сегодня),
+        'new_week' (новых пользователей за последнюю неделю) и 'new_month' (новых пользователей за последний месяц).
 
     Raises:
-        SQLAlchemyError: В случае ошибки при работе с базой данных.
+        SQLAlchemyError: Если возникает ошибка при работе с базой данных.
 
     Example:
         >>> session = AsyncSession()
-        >>> statistics = await UserDAO.get_statistics(session)
-        >>> if statistics:
-        ...     print(f"Total users: {statistics['total_users']}")
-        ...     print(f"New users today: {statistics['new_today']}")
-        ...     print(f"New users this week: {statistics['new_week']}")
-        ...     print(f"New users this month: {statistics['new_month']}")
+        >>> stats = await UserDAO.get_statistics(session)
+        >>> print(f"Total users: {stats['total_users']}, New today: {stats['new_today']}")
     """
 ```
 
-**Описание**: Получает общую статистику пользователей, такую как общее количество пользователей, количество новых пользователей за сегодня, за неделю и за месяц.
+**Описание**: Получает общую статистику пользователей, такую как общее количество пользователей, новых пользователей сегодня, новых пользователей за последнюю неделю и новых пользователей за последний месяц.
 
 **Параметры**:
 - `session` (AsyncSession): Асинхронная сессия базы данных.
 
 **Возвращает**:
-- `Dict[str, int]`: Словарь со статистикой пользователей, содержащий общее количество пользователей (`total_users`), количество новых пользователей за сегодня (`new_today`), за неделю (`new_week`) и за месяц (`new_month`).
+- `Dict[str, int]`: Словарь со статистикой пользователей.
+  Содержит ключи `'total_users'` (общее количество пользователей), `'new_today'` (новых пользователей сегодня),
+  `'new_week'` (новых пользователей за последнюю неделю) и `'new_month'` (новых пользователей за последний месяц).
 
 **Вызывает исключения**:
-- `SQLAlchemyError`: В случае ошибки при работе с базой данных.
+- `SQLAlchemyError`: Если возникает ошибка при работе с базой данных.
 
 ### `PurchaseDao`
 
-**Описание**: DAO для работы с моделью `Purchase`. Предоставляет методы для получения статистики платежей, общей суммы покупок и следующего свободного ID для новой записи.
+**Описание**: DAO для работы с моделью `Purchase`.
 
 **Методы**:
-- `get_payment_stats`: Получает статистику платежей по типам.
-- `get_full_summ`: Получает общую сумму покупок.
-- `get_next_id`: Получает следующий свободный ID для новой записи.
+- `get_payment_stats`: Получает статистику платежей.
+- `get_full_summ`: Получает полную сумму покупок.
+- `get_next_id`: Возвращает следующий свободный ID для новой записи.
 
 #### `get_payment_stats`
 
@@ -151,28 +154,28 @@ async def get_payment_stats(cls, session: AsyncSession) -> str:
         session (AsyncSession): Асинхронная сессия базы данных.
 
     Returns:
-        str: Форматированная строка со статистикой платежей по типам.
+        str: Отформатированная строка со статистикой платежей.
 
     Raises:
-        SQLAlchemyError: В случае ошибки при работе с базой данных.
+        SQLAlchemyError: Если возникает ошибка при работе с базой данных.
 
     Example:
         >>> session = AsyncSession()
-        >>> payment_stats = await PurchaseDao.get_payment_stats(session)
-        >>> print(payment_stats)
+        >>> stats = await PurchaseDao.get_payment_stats(session)
+        >>> print(stats)
     """
 ```
 
-**Описание**: Получает статистику платежей по типам, таким как Юкасса, Робокасса и STARS.
+**Описание**: Получает статистику платежей по типам (Юкасса, Робокасса, STARS) и возвращает отформатированную строку.
 
 **Параметры**:
 - `session` (AsyncSession): Асинхронная сессия базы данных.
 
 **Возвращает**:
-- `str`: Форматированная строка со статистикой платежей по типам.
+- `str`: Отформатированная строка со статистикой платежей.
 
 **Вызывает исключения**:
-- `SQLAlchemyError`: В случае ошибки при работе с базой данных.
+- `SQLAlchemyError`: Если возникает ошибка при работе с базой данных.
 
 #### `get_full_summ`
 
@@ -184,28 +187,28 @@ async def get_full_summ(cls, session: AsyncSession) -> int:
         session (AsyncSession): Асинхронная сессия базы данных.
 
     Returns:
-        int: Общая сумма покупок.
+        int: Полная сумма покупок.
 
     Raises:
-        SQLAlchemyError: В случае ошибки при работе с базой данных.
+        SQLAlchemyError: Если возникает ошибка при работе с базой данных.
 
     Example:
         >>> session = AsyncSession()
-        >>> total_amount = await PurchaseDao.get_full_summ(session)
-        >>> print(f"Total amount: {total_amount}")
+        >>> total_sum = await PurchaseDao.get_full_summ(session)
+        >>> print(f"Total sum: {total_sum}")
     """
 ```
 
-**Описание**: Получает общую сумму покупок.
+**Описание**: Получает полную сумму покупок.
 
 **Параметры**:
 - `session` (AsyncSession): Асинхронная сессия базы данных.
 
 **Возвращает**:
-- `int`: Общая сумма покупок.
+- `int`: Полная сумма покупок.
 
 **Вызывает исключения**:
-- `SQLAlchemyError`: В случае ошибки при работе с базой данных.
+- `SQLAlchemyError`: Если возникает ошибка при работе с базой данных.
 
 #### `get_next_id`
 
@@ -218,9 +221,9 @@ async def get_next_id(cls, session: AsyncSession) -> int:
 
     Returns:
         int: Следующий свободный ID
-    
+
     Raises:
-        SQLAlchemyError: В случае ошибки при работе с базой данных.
+        SQLAlchemyError: Если возникает ошибка при работе с базой данных.
 
     Example:
         >>> session = AsyncSession()
@@ -238,7 +241,7 @@ async def get_next_id(cls, session: AsyncSession) -> int:
 - `int`: Следующий свободный ID.
 
 **Вызывает исключения**:
-- `SQLAlchemyError`: В случае ошибки при работе с базой данных.
+- `SQLAlchemyError`: Если возникает ошибка при работе с базой данных.
 
 ### `CategoryDao`
 
@@ -247,3 +250,7 @@ async def get_next_id(cls, session: AsyncSession) -> int:
 ### `ProductDao`
 
 **Описание**: DAO для работы с моделью `Product`.
+
+## Функции
+
+В данном модуле функции отсутствуют.

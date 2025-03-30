@@ -1,13 +1,14 @@
 ## \file /src/endpoints/prestashop/language.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
 
 """
-.. module:: src.endpoints.prestashop 
-	:platform: Windows, Unix
-	:synopsis:
-
+```rst
+    ..:modlue: src.endpoints.prestashop.language
+```
+Модуль для работы с языками в PrestaShop.
+===========================================
+Модуль представляет интерфейс взаимодейлствия с сущностью `language` в cms `Prestashop` через `API Prestashop`
 """
 import asyncio
 from types import SimpleNamespace
@@ -17,49 +18,87 @@ import header
 from src import gs
 from src.endpoints.prestashop.api import PrestaShop
 from src.logger.exceptions import PrestaShopException
-from src.utils.printer import  pprint as print
+from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
 from typing import Optional
 
+
 class PrestaLanguage(PrestaShop):
-    """ 
+    """
     Класс, отвечающий за настройки языков магазина PrestaShop.
 
-    Пример использования класса:
-
-    .. code-block:: python
-
-        prestalanguage = PrestaLanguage(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
-        prestalanguage.add_language_PrestaShop('English', 'en')
-        prestalanguage.delete_language_PrestaShop(3)
-        prestalanguage.update_language_PrestaShop(4, 'Updated Language Name')
-        print(prestalanguage.get_language_details_PrestaShop(5))
+    Example:
+        >>> prestalanguage = PrestaLanguage(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
+        >>> prestalanguage.add_language_PrestaShop('English', 'en')
+        >>> prestalanguage.delete_language_PrestaShop(3)
+        >>> prestalanguage.update_language_PrestaShop(4, 'Updated Language Name')
+        >>> print(prestalanguage.get_language_details_PrestaShop(5))
     """
     
     def __init__(self, *args, **kwards):
-        """Класс интерфейс взаимодействия языками в Prestashop
-        Важно помнить, что у каждого магазина своя нумерация языков
-        :lang_string: ISO названия языка. Например: en, ru, he
+        """
+        Args:
+            *args: Произвольные аргументы.
+            **kwards: Произвольные именованные аргументы.
+
+        Note:
+            Важно помнить, что у каждого магазина своя нумерация языков.
+            Я определяю языки в своих базах в таком порядке:
+            `en` - 1;
+            `he` - 2;
+            `ru` - 3.
         """
         ...
 
-    def get_lang_name_by_index(self, lang_index:int|str ) -> str:
-        """Возвращает имя языка ISO по его индексу в таблице Prestashop"""
+    def get_lang_name_by_index(self, lang_index: int | str) -> str:
+        """
+        Функция извлекает ISO код азыка из магазина `Prestashop`
+
+        Args:
+            lang_index: Индекс языка в таблице PrestaShop.
+
+        Returns:
+            Имя языка ISO по его индексу в таблице PrestaShop.
+        """
         try:
             return super().get('languagaes', resource_id=str(lang_index), display='full', io_format='JSON')
         except Exception as ex:
-            logger.error(f"Ошибка получения языка по индексу {lang_index=}", ex)
+            logger.error(f'Ошибка получения языка по индексу {lang_index=}', ex)
             return ''
 
-        """Возвращает номер языка из таблицы Prestashop по его имени ISO """
-        ...
-        
     def get_languages_schema(self) -> Optional[dict]:
-        """Get the schema for languages.
+        """Функция извлекает словарь актуальных языков дла данного магазина.
 
-        :return: Language schema or `None` on failure.
-        :rtype: dict
+        Returns:
+            Language schema or `None` on failure.
+
+        Examples:
+            # Возвращаемый словарь:
+            {
+                "languages": {
+                        "language": [
+                                        {
+                                        "attrs": {
+                                            "id": "1"
+                                        },
+                                        "value": ""
+                                        },
+                                        {
+                                        "attrs": {
+                                            "id": "2"
+                                        },
+                                        "value": ""
+                                        },
+                                        {
+                                        "attrs": {
+                                            "id": "3"
+                                        },
+                                        "value": ""
+                                        }
+                                    ]
+                }
+            }
         """
         try:
             response = self._exec('languages', display='full', io_format='JSON')
@@ -70,15 +109,15 @@ class PrestaLanguage(PrestaShop):
 
 
 async def main():
-    """"""
+    """
+    Example:
+        >>> asyncio.run(main())
+    """
     ...
-    lang_class = PrestaLanguageAync()
-    languagas_schema = await  lang_class.get_languages_schema()
+    lang_class = PrestaLanguage()
+    languagas_schema = await lang_class.get_languages_schema()
     print(languagas_schema)
+
 
 if __name__ == '__main__':
     asyncio.run(main())
-
-    
-            
-

@@ -8,12 +8,13 @@
 Модуль для управления и обработки изображений, а также продвижения в Facebook и PrestaShop.
 =================================
 Основные возможности:
-    - Описание изображений с использованием Gemini AI.
-    - Загрузка описаний продуктов в PrestaShop.
-    - .....
+    - <инструкция для модели gemini:Описание изображений с использованием Gemini AI.>
+    - <инструкция для модели gemini:Загрузка описаний продуктов в PrestaShop.>
+    - ..... <далее, если есть>
 Классы:
-    `Config` - <инструкция для модели: Дай краткое описание и назначение этого класса>
-    `EmilDesign` - <инструкция для модели: Дай краткое описание и назначение этого класса>
+    `Config` - <инструкция для модели gemini: Дай полное описание и назначение этого класса>
+    `EmilDesign` - <инструкция для модели: Дай полное описание и назначение этого класса>
+    - ..... <далее, если есть>
 """
 
 import os
@@ -204,17 +205,23 @@ class EmilDesign:
                     products=SimpleNamespace(local_image_path=[m.local_image_path]),
                 )
                 post_message(d, message, without_captions=True)
-        except Exception as e:
-            logger.error(f'Error while promoting to Facebook: {e}', exc_info=True)
+        except Exception as ex:
+            logger.error(f'Error while promoting to Facebook:', ex, exc_info=True)
 
     def upload_described_products_to_prestashop(
-        self, products_list: Optional[List[SimpleNamespace]] = None, lang: Optional[str] = None, *args, **kwards
+        self, products_list: Optional[List[SimpleNamespace]] = None, id_lang: Optional[int | str] = None, *args, **kwards
     ) -> bool:
         """Upload product information to PrestaShop.
 
         Args:
             products_list (Optional[List[SimpleNamespace]], optional): List of product info. Defaults to None.
-            lang (Optional[str], optional): Language code. Defaults to None.
+            id_lang (Optional[str], optional): Language id for prestasop databases.
+            Обычно я назначаю языки в таком порядке 1 - en;2 - he; 3 - ru. 
+            Важно проверить порядок якыков целевой базе данных.
+            >>import language
+            >>lang_class = PrestaLanguage()
+            >>print(lang_class.get_languages_schema())
+
 
         Returns:
             bool: True if upload succeeds, False otherwise.
@@ -225,21 +232,20 @@ class EmilDesign:
         """
         try:
 
-            json_files_list: list[str] = get_filenames_from_directory(self.data_path, ext='json')
-            products_list: list[SimpleNamespace] = [j_loads_ns(self.data_path / f) for f in json_files_list]
-
-
-            p: PrestaProduct = PrestaProduct(api_domain=Config.API_DOMAIN , api_key=api_key)
+            products_files_list: list[str] = get_filenames_from_directory(self.data_path, ext='json')
+            products_list: list[SimpleNamespace] = [j_loads_ns(self.data_path / f) for f in products_files_list]
+            p: PrestaProduct = PrestaProduct(api_domain=Config.API_DOMAIN , api_key=Config.API_KEY)
 
             """Важно! При загрузке товаров в PrestaShop, необходимо указать язык, на котором будут отображаться названия и характеристики товара.
-            в данном случае, язык по умолчанию - иврит (he), но также можно указать английский (en) или русский (ru)
+            в данном случае, язык по умолчанию - иврит (he = 2), но также можно указать английский (en) или русский (ru)
             индексы могут меняться в зависимости от настроек магазина. Обычно я выставляю индекс `1` для английского, `2` для иврита и `3` для русского.
             таблица с индексами для` emil-design.com` находится в файле `locales.json` в папке `shop_locales`
             """
+
             lang_ns: SimpleNamespace = j_loads_ns(
                 Path(__root__, 'src', 'endpoints', 'emil', 'shop_locales', 'locales.json')
             )
-            lang_index = getattr(lang_ns, lang)
+            lang_index = getattr(lang_ns, id_lang)
 
             for product_ns in products_list:
                 f: ProductFields = ProductFields(lang_index)
@@ -252,11 +258,11 @@ class EmilDesign:
                 f.local_image_path = product_ns.local_image_path
                 p.add_new_product(f)
             return True
-        except FileNotFoundError as e:
-            logger.error(f'Locales file not found: {e}', exc_info=True)
+        except FileNotFoundError as ex:
+            logger.error(f'Locales file not found: ',ex, exc_info=True)
             return False
-        except Exception as e:
-            logger.error(f'Error while uploading to PrestaShop: {e}', exc_info=True)
+        except Exception as ex:
+            logger.error(f'Error while uploading to PrestaShop: ',ex, exc_info=True)
             return False
 
 

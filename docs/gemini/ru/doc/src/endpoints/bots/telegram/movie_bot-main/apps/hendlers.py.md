@@ -2,36 +2,38 @@
 
 ## Обзор
 
-Модуль `apps.hendlers` содержит обработчики для различных команд и запросов, связанных с поиском фильмов и сериалов через Telegram-бота. Включает в себя обработку команды `/start`, выбор типа фильма (фильм или сериал) и обработку ввода названия фильма для последующего поиска.
+Модуль `apps.hendlers` предназначен для обработки различных взаимодействий с пользователем в Telegram-боте. Он содержит обработчики команд и запросов, связанных с поиском фильмов и сериалов. Модуль использует библиотеку `aiogram` для работы с Telegram API и включает в себя определение состояний для управления диалогом с пользователем.
 
 ## Подробней
 
-Этот модуль является частью Telegram-бота для поиска фильмов. Он обрабатывает взаимодействие с пользователем, определяя, какой тип контента (фильм или сериал) интересует пользователя, и принимает название для поиска. После получения необходимой информации, модуль использует функцию `search_query` для выполнения поиска и предоставляет результаты пользователю. Взаимодействие осуществляется через `aiogram`, который обеспечивает функциональность Telegram-бота.
+Модуль `apps.hendlers` обрабатывает команды `/start`, запросы на поиск фильмов/сериалов, а также сохраняет и передает параметры поиска (тип и название) между состояниями. Он использует клавиатуру (`apps.keyboard`) для предоставления пользователю выбора и вызывает функцию `search_query` (`apps.search`) для выполнения поиска.
 
 ## Классы
 
-### `Params(StatesGroup)`
+### `Params`
 
 **Описание**:
-Класс `Params` используется для определения состояний в FSM (Finite State Machine) для обработки параметров поиска фильма.
+Класс `Params` представляет собой группу состояний (StatesGroup) для хранения параметров поиска фильма или сериала.
 
 **Методы**:
-- `type_movie`: Состояние для ожидания ввода типа фильма (фильм или сериал).
-- `name`: Состояние для ожидания ввода названия фильма.
+- `type_movie`: Состояние для хранения типа фильма/сериала.
+- `name`: Состояние для хранения названия фильма/сериала.
 
 ## Функции
 
-### `command_start_handler(message: Message) -> None`
+### `command_start_handler`
 
 ```python
 async def command_start_handler(message: Message) -> None:
     """
     Args:
-        message (Message): Объект сообщения от Telegram.
+        message (Message): Объект сообщения от пользователя.
 
     Returns:
         None
 
+    Raises:
+        No exceptions
     """
 ```
 
@@ -39,141 +41,144 @@ async def command_start_handler(message: Message) -> None:
 Обработчик команды `/start`. Отправляет приветственное сообщение пользователю и предлагает начать поиск фильма.
 
 **Параметры**:
-- `message` (Message): Объект сообщения от Telegram.
+- `message` (Message): Объект сообщения, содержащий информацию о сообщении, отправленном пользователем.
 
 **Возвращает**:
 - `None`
 
 **Примеры**:
 ```python
-# Пример вызова (в контексте aiogram):
-# async def some_handler(message: types.Message):
-#     await command_start_handler(message)
+# Пример вызова (непосредственно не вызывается, вызывается aiogram при получении команды /start)
+# await command_start_handler(message)
 ```
 
-### `movie_handler(callback: CallbackQuery, state: FSMContext) -> None`
+### `movie_handler`
 
 ```python
 async def movie_handler(callback: CallbackQuery, state: FSMContext) -> None:
     """
     Args:
-        callback (CallbackQuery): Объект обратного вызова от Telegram.
-        state (FSMContext): Объект состояния FSM.
+        callback (CallbackQuery): Объект callback query от пользователя.
+        state (FSMContext): Объект FSM context для управления состоянием пользователя.
 
     Returns:
         None
 
+    Raises:
+        No exceptions
     """
 ```
 
 **Описание**:
-Обработчик нажатия кнопки `new_movies`. Устанавливает состояние ожидания выбора типа фильма (фильм или сериал).
+Обработчик callback-запроса `new_movies`. Устанавливает состояние `Params.type_movie` и предлагает пользователю указать, что он ищет: фильм или сериал.
 
 **Параметры**:
-- `callback` (CallbackQuery): Объект обратного вызова от Telegram.
-- `state` (FSMContext): Объект состояния FSM.
+- `callback` (CallbackQuery): Объект callback-запроса, содержащий информацию о нажатой кнопке.
+- `state` (FSMContext): Объект FSM context, используемый для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
 
 **Примеры**:
 ```python
-# Пример вызова (в контексте aiogram):
-# async def some_handler(callback: types.CallbackQuery, state: FSMContext):
-#     await movie_handler(callback, state)
+# Пример вызова (непосредственно не вызывается, вызывается aiogram при получении callback-запроса с data == 'new_movies')
+# await movie_handler(callback, state)
 ```
 
-### `series_handler(callback: CallbackQuery, state: FSMContext) -> None`
+### `series_handler`
 
 ```python
 async def series_handler(callback: CallbackQuery, state: FSMContext) -> None:
     """
     Args:
-        callback (CallbackQuery): Объект обратного вызова от Telegram.
-        state (FSMContext): Объект состояния FSM.
+        callback (CallbackQuery): Объект callback query от пользователя.
+        state (FSMContext): Объект FSM context для управления состоянием пользователя.
 
     Returns:
         None
 
+    Raises:
+        No exceptions
     """
 ```
 
 **Описание**:
-Обработчик нажатия кнопки `series`. Удаляет предыдущее сообщение, обновляет состояние FSM, указывая, что пользователь ищет сериал, и запрашивает название сериала.
+Обработчик callback-запроса `series`. Удаляет предыдущее сообщение, обновляет данные состояния, устанавливает состояние `Params.name` и запрашивает название сериала.
 
 **Параметры**:
-- `callback` (CallbackQuery): Объект обратного вызова от Telegram.
-- `state` (FSMContext): Объект состояния FSM.
+- `callback` (CallbackQuery): Объект callback-запроса, содержащий информацию о нажатой кнопке.
+- `state` (FSMContext): Объект FSM context, используемый для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
 
 **Примеры**:
 ```python
-# Пример вызова (в контексте aiogram):
-# async def some_handler(callback: types.CallbackQuery, state: FSMContext):
-#     await series_handler(callback, state)
+# Пример вызова (непосредственно не вызывается, вызывается aiogram при получении callback-запроса с data == 'series')
+# await series_handler(callback, state)
 ```
 
-### `film_handler(callback: CallbackQuery, state: FSMContext) -> None`
+### `film_handler`
 
 ```python
 async def film_handler(callback: CallbackQuery, state: FSMContext) -> None:
     """
     Args:
-        callback (CallbackQuery): Объект обратного вызова от Telegram.
-        state (FSMContext): Объект состояния FSM.
+        callback (CallbackQuery): Объект callback query от пользователя.
+        state (FSMContext): Объект FSM context для управления состоянием пользователя.
 
     Returns:
         None
 
+    Raises:
+        No exceptions
     """
 ```
 
 **Описание**:
-Обработчик нажатия кнопки `film`. Удаляет предыдущее сообщение, обновляет состояние FSM, указывая, что пользователь ищет фильм, и запрашивает название фильма.
+Обработчик callback-запроса `film`. Удаляет предыдущее сообщение, обновляет данные состояния, устанавливает состояние `Params.name` и запрашивает название фильма.
 
 **Параметры**:
-- `callback` (CallbackQuery): Объект обратного вызова от Telegram.
-- `state` (FSMContext): Объект состояния FSM.
+- `callback` (CallbackQuery): Объект callback-запроса, содержащий информацию о нажатой кнопке.
+- `state` (FSMContext): Объект FSM context, используемый для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
 
 **Примеры**:
 ```python
-# Пример вызова (в контексте aiogram):
-# async def some_handler(callback: types.CallbackQuery, state: FSMContext):
-#     await film_handler(callback, state)
+# Пример вызова (непосредственно не вызывается, вызывается aiogram при получении callback-запроса с data == 'film')
+# await film_handler(callback, state)
 ```
 
-### `name_handler(message: Message, state: FSMContext) -> None`
+### `name_handler`
 
 ```python
 async def name_handler(message: Message, state: FSMContext) -> None:
     """
     Args:
-        message (Message): Объект сообщения от Telegram.
-        state (FSMContext): Объект состояния FSM.
+        message (Message): Объект сообщения от пользователя.
+        state (FSMContext): Объект FSM context для управления состоянием пользователя.
 
     Returns:
         None
 
+    Raises:
+        No exceptions
     """
 ```
 
 **Описание**:
-Обработчик ввода названия фильма. Обновляет состояние FSM, сохраняя название фильма, выполняет поиск фильма с использованием функции `search_query` и предоставляет результаты пользователю.
+Обработчик сообщений в состоянии `Params.name`. Обновляет данные состояния названием фильма/сериала, выполняет поиск с использованием `search_query` и отправляет результат пользователю. После этого предлагает начать новый поиск и очищает состояние.
 
 **Параметры**:
-- `message` (Message): Объект сообщения от Telegram.
-- `state` (FSMContext): Объект состояния FSM.
+- `message` (Message): Объект сообщения, содержащий название фильма/сериала.
+- `state` (FSMContext): Объект FSM context, используемый для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
 
 **Примеры**:
 ```python
-# Пример вызова (в контексте aiogram):
-# async def some_handler(message: types.Message, state: FSMContext):
-#     await name_handler(message, state)
+# Пример вызова (непосредственно не вызывается, вызывается aiogram при получении сообщения в состоянии Params.name)
+# await name_handler(message, state)

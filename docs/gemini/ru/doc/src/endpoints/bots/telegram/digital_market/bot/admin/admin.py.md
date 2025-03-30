@@ -1,28 +1,41 @@
-# Модуль `admin`
+# Модуль администрирования бота (admin.py)
 
 ## Обзор
 
-Модуль `admin` предоставляет функциональность для управления административной частью Telegram-бота, включая добавление и удаление товаров, просмотр статистики и другие административные действия. Он использует `aiogram` для обработки команд и взаимодействует с базой данных через `sqlalchemy`.
+Модуль `admin.py` предназначен для реализации функциональности административной панели Telegram-бота. Он содержит обработчики для различных административных действий, таких как просмотр статистики, управление товарами (добавление, удаление) и другие операции, доступные только администраторам бота.
 
 ## Подробней
 
-Модуль содержит роутер `admin_router`, который обрабатывает различные callback-запросы и сообщения от администраторов. Определены состояния через `FSM` (Finite State Machine) для управления процессом добавления товаров. Функции в модуле позволяют администраторам просматривать статистику, добавлять, удалять и управлять товарами через интерфейс бота.
+Этот модуль обеспечивает интерфейс для администраторов бота, позволяя им управлять контентом и функциональностью бота через Telegram. Он включает в себя обработку колбэков и текстовых сообщений, связанных с административными командами, а также использует FSM (машину состояний) для управления сложными процессами, такими как добавление нового товара. Расположение файла в структуре проекта указывает на то, что это один из основных компонентов, отвечающих за административные функции.
 
 ## Классы
 
 ### `AddProduct`
 
 **Описание**:
-Класс `AddProduct` представляет собой группу состояний (StatesGroup) для процесса добавления нового товара. Каждое состояние соответствует определенному этапу ввода информации о товаре.
+Класс `AddProduct` представляет собой группу состояний (StatesGroup), используемую для управления процессом добавления нового товара в базу данных. Каждое состояние соответствует определенному шагу в процессе добавления товара, такому как ввод имени, описания, цены и т.д.
 
 **Атрибуты**:
 - `name` (State): Состояние для ввода имени товара.
 - `description` (State): Состояние для ввода описания товара.
 - `price` (State): Состояние для ввода цены товара.
-- `file_id` (State): Состояние для ввода ID файла товара.
+- `file_id` (State): Состояние для выбора или загрузки файла товара.
 - `category_id` (State): Состояние для выбора категории товара.
 - `hidden_content` (State): Состояние для ввода скрытого контента товара.
 - `confirm_add` (State): Состояние для подтверждения добавления товара.
+
+**Примеры**:
+
+```python
+class AddProduct(StatesGroup):
+    name = State()
+    description = State()
+    price = State()
+    file_id = State()
+    category_id = State()
+    hidden_content = State()
+    confirm_add = State()
+```
 
 ## Функции
 
@@ -32,29 +45,39 @@
 async def start_admin(call: CallbackQuery):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
 
     Returns:
         None
 
     Raises:
-        Exception: В случае возникновения ошибки при открытии админ-панели.
+        Exception: Если возникает ошибка при открытии админ-панели.
 
-     Example:
+    Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "admin_panel".)
+        (Предположим, что у нас есть объект `call` типа `CallbackQuery`)
+        >>> await start_admin(call)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `admin_panel`. Предоставляет администратору доступ к панели управления, отправляя клавиатуру с доступными действиями.
+Обработчик колбэка `admin_panel`. Проверяет, имеет ли пользователь доступ к админ-панели на основе `settings.ADMIN_IDS`. Если доступ разрешен, отправляет сообщение с клавиатурой администратора.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
 
 **Возвращает**:
 - `None`
+
+**Вызывает исключения**:
+- `Exception`: Обрабатывает исключения, которые могут возникнуть при редактировании или отправке сообщений.
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции start_admin с объектом call типа CallbackQuery
+await start_admin(call)
+```
 
 ### `admin_statistic`
 
@@ -62,31 +85,38 @@ async def start_admin(call: CallbackQuery):
 async def admin_statistic(call: CallbackQuery, session_without_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных без коммита.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
-     Example:
+    Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "statistic".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `session_without_commit` типа `AsyncSession`)
+        >>> await admin_statistic(call, session_without_commit)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `statistic`. Собирает и отображает статистику по пользователям и заказам.
+Обработчик колбэка `statistic`. Собирает и отображает статистику пользователей и заказов. Использует `UserDAO` и `PurchaseDao` для получения данных из базы данных.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_statistic с объектами call типа CallbackQuery и session_without_commit типа AsyncSession
+await admin_statistic(call, session_without_commit)
+```
 
 ### `admin_process_cancel`
 
@@ -94,31 +124,38 @@ async def admin_statistic(call: CallbackQuery, session_without_commit: AsyncSess
 async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "cancel".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `state` типа `FSMContext`)
+        >>> await admin_process_cancel(call, state)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `cancel`. Отменяет текущий сценарий добавления товара, очищает состояние пользователя и возвращает в предыдущее меню.
+Обработчик колбэка `cancel`. Очищает состояние FSM и отменяет процесс добавления товара.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_cancel с объектами call типа CallbackQuery и state типа FSMContext
+await admin_process_cancel(call, state)
+```
 
 ### `admin_process_start_dell`
 
@@ -126,31 +163,38 @@ async def admin_process_cancel(call: CallbackQuery, state: FSMContext):
 async def admin_process_start_dell(call: CallbackQuery, session_without_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных без коммита.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "delete_product".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `session_without_commit` типа `AsyncSession`)
+        >>> await admin_process_start_dell(call, session_without_commit)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `delete_product`. Отображает список товаров с возможностью их удаления.
+Обработчик колбэка `delete_product`. Запускает процесс удаления товара, отображая список всех товаров с возможностью выбора для удаления.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_start_dell с объектами call типа CallbackQuery и session_without_commit типа AsyncSession
+await admin_process_start_dell(call, session_without_commit)
+```
 
 ### `admin_process_start_dell`
 
@@ -158,31 +202,38 @@ async def admin_process_start_dell(call: CallbackQuery, session_without_commit: 
 async def admin_process_start_dell(call: CallbackQuery, session_with_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        session_with_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных с коммитом.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        session_with_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных с коммитом.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку, начинающуюся с "dell_".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `session_with_commit` типа `AsyncSession`)
+        >>> await admin_process_start_dell(call, session_with_commit)
     """
 ```
 
 **Описание**:
-Обработчик callback-запросов, начинающихся с `dell_`. Удаляет выбранный товар из базы данных.
+Обработчик колбэков, начинающихся с `dell_`. Удаляет выбранный товар из базы данных.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `session_with_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных с коммитом.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `session_with_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных с коммитом.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_start_dell с объектами call типа CallbackQuery и session_with_commit типа AsyncSession
+await admin_process_start_dell(call, session_with_commit)
+```
 
 ### `admin_process_products`
 
@@ -190,31 +241,38 @@ async def admin_process_start_dell(call: CallbackQuery, session_with_commit: Asy
 async def admin_process_products(call: CallbackQuery, session_without_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных без коммита.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "process_products".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `session_without_commit` типа `AsyncSession`)
+        >>> await admin_process_products(call, session_without_commit)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `process_products`. Предоставляет администратору меню управления товарами (добавление, удаление и т.д.).
+Обработчик колбэка `process_products`. Отображает количество товаров в базе данных и предлагает выбор действий (добавить, удалить и т.д.).
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_products с объектами call типа CallbackQuery и session_without_commit типа AsyncSession
+await admin_process_products(call, session_without_commit)
+```
 
 ### `admin_process_add_product`
 
@@ -222,31 +280,38 @@ async def admin_process_products(call: CallbackQuery, session_without_commit: As
 async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "add_product".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `state` типа `FSMContext`)
+        >>> await admin_process_add_product(call, state)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `add_product`. Запускает сценарий добавления нового товара, начиная с запроса имени товара.
+Обработчик колбэка `add_product`. Запускает сценарий добавления нового товара, устанавливая начальное состояние `AddProduct.name`.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_add_product с объектами call типа CallbackQuery и state типа FSMContext
+await admin_process_add_product(call, state)
+```
 
 ### `admin_process_name`
 
@@ -254,31 +319,38 @@ async def admin_process_add_product(call: CallbackQuery, state: FSMContext):
 async def admin_process_name(message: Message, state: FSMContext):
     """
     Args:
-        message (Message): Объект Message, представляющий сообщение от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+        message (Message): Объект Message, представляющий входящее сообщение.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при вводе пользователем имени товара.)
+        (Предположим, что у нас есть объекты `message` типа `Message` и `state` типа `FSMContext`)
+        >>> await admin_process_name(message, state)
     """
 ```
 
 **Описание**:
-Обработчик сообщения с именем товара. Сохраняет имя товара в состоянии и запрашивает описание товара.
+Обработчик текстового сообщения в состоянии `AddProduct.name`. Сохраняет имя товара и переходит к следующему состоянию `AddProduct.description`.
 
 **Параметры**:
-- `message` (Message): Объект сообщения, содержащий введенное имя товара.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+- `message` (Message): Объект сообщения, содержащий текст с именем товара.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_name с объектами message типа Message и state типа FSMContext
+await admin_process_name(message, state)
+```
 
 ### `admin_process_description`
 
@@ -286,33 +358,40 @@ async def admin_process_name(message: Message, state: FSMContext):
 async def admin_process_description(message: Message, state: FSMContext, session_without_commit: AsyncSession):
     """
     Args:
-        message (Message): Объект Message, представляющий сообщение от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных без коммита.
+        message (Message): Объект Message, представляющий входящее сообщение.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
+        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при вводе пользователем описания товара.)
+        (Предположим, что у нас есть объекты `message` типа `Message`, `state` типа `FSMContext` и `session_without_commit` типа `AsyncSession`)
+        >>> await admin_process_description(message, state, session_without_commit)
     """
 ```
 
 **Описание**:
-Обработчик сообщения с описанием товара. Сохраняет описание товара в состоянии и запрашивает категорию товара.
+Обработчик текстового сообщения в состоянии `AddProduct.description`. Сохраняет описание товара и переходит к следующему состоянию `AddProduct.category_id`.
 
 **Параметры**:
-- `message` (Message): Объект сообщения, содержащий введенное описание товара.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `message` (Message): Объект сообщения, содержащий текст с описанием товара.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
+- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_description с объектами message типа Message, state типа FSMContext и session_without_commit типа AsyncSession
+await admin_process_description(message, state, session_without_commit)
+```
 
 ### `admin_process_category`
 
@@ -320,31 +399,38 @@ async def admin_process_description(message: Message, state: FSMContext, session
 async def admin_process_category(call: CallbackQuery, state: FSMContext):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при выборе пользователем категории товара.)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `state` типа `FSMContext`)
+        >>> await admin_process_category(call, state)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса с выбором категории товара. Сохраняет ID категории в состоянии и запрашивает цену товара.
+Обработчик колбэков, начинающихся с `add_category_`. Сохраняет идентификатор выбранной категории товара и переходит к следующему состоянию `AddProduct.price`.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_category с объектами call типа CallbackQuery и state типа FSMContext
+await admin_process_category(call, state)
+```
 
 ### `admin_process_price`
 
@@ -352,31 +438,41 @@ async def admin_process_category(call: CallbackQuery, state: FSMContext):
 async def admin_process_price(message: Message, state: FSMContext):
     """
     Args:
-        message (Message): Объект Message, представляющий сообщение от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+        message (Message): Объект Message, представляющий входящее сообщение.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        ValueError: Если введенное значение цены не является числом.
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при вводе пользователем цены товара.)
+        (Предположим, что у нас есть объекты `message` типа `Message` и `state` типа `FSMContext`)
+        >>> await admin_process_price(message, state)
     """
 ```
 
 **Описание**:
-Обработчик сообщения с ценой товара. Сохраняет цену товара в состоянии и запрашивает файл товара (если требуется).
+Обработчик текстового сообщения в состоянии `AddProduct.price`. Сохраняет цену товара и переходит к следующему состоянию `AddProduct.file_id`.
 
 **Параметры**:
-- `message` (Message): Объект сообщения, содержащий введенную цену товара.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+- `message` (Message): Объект сообщения, содержащий текст с ценой товара.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
+
+**Вызывает исключения**:
+- `ValueError`: Если введенное значение цены не является числом.
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_price с объектами message типа Message и state типа FSMContext
+await admin_process_price(message, state)
+```
 
 ### `admin_process_without_file`
 
@@ -384,31 +480,38 @@ async def admin_process_price(message: Message, state: FSMContext):
 async def admin_process_without_file(call: CallbackQuery, state: FSMContext):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "without_file".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery` и `state` типа `FSMContext`)
+        >>> await admin_process_without_file(call, state)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `without_file`. Указывает, что товар не имеет файла, и запрашивает скрытый контент товара.
+Обработчик колбэка `without_file`. Устанавливает `file_id` в `None`, если файл не выбран, и переходит к следующему состоянию `AddProduct.hidden_content`.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_without_file с объектами call типа CallbackQuery и state типа FSMContext
+await admin_process_without_file(call, state)
+```
 
 ### `admin_process_without_file`
 
@@ -416,31 +519,38 @@ async def admin_process_without_file(call: CallbackQuery, state: FSMContext):
 async def admin_process_without_file(message: Message, state: FSMContext):
     """
     Args:
-        message (Message): Объект Message, представляющий сообщение от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+        message (Message): Объект Message, представляющий входящее сообщение.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при отправке пользователем файла (документа) для товара.)
+        (Предположим, что у нас есть объекты `message` типа `Message` и `state` типа `FSMContext`)
+        >>> await admin_process_without_file(message, state)
     """
 ```
 
 **Описание**:
-Обработчик сообщения с файлом товара. Сохраняет ID файла в состоянии и запрашивает скрытый контент товара.
+Обработчик документа в состоянии `AddProduct.file_id`. Сохраняет `file_id` и переходит к следующему состоянию `AddProduct.hidden_content`.
 
 **Параметры**:
-- `message` (Message): Объект сообщения, содержащий отправленный файл товара.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
+- `message` (Message): Объект сообщения, содержащий документ (файл).
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_without_file с объектами message типа Message и state типа FSMContext
+await admin_process_without_file(message, state)
+```
 
 ### `admin_process_hidden_content`
 
@@ -448,33 +558,40 @@ async def admin_process_without_file(message: Message, state: FSMContext):
 async def admin_process_hidden_content(message: Message, state: FSMContext, session_without_commit: AsyncSession):
     """
     Args:
-        message (Message): Объект Message, представляющий сообщение от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных без коммита.
+        message (Message): Объект Message, представляющий входящее сообщение.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
+        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при вводе пользователем скрытого контента для товара.)
+        (Предположим, что у нас есть объекты `message` типа `Message`, `state` типа `FSMContext` и `session_without_commit` типа `AsyncSession`)
+        >>> await admin_process_hidden_content(message, state, session_without_commit)
     """
 ```
 
 **Описание**:
-Обработчик сообщения со скрытым контентом товара. Сохраняет скрытый контент в состоянии и отображает сводку введенных данных для подтверждения.
+Обработчик текстового сообщения в состоянии `AddProduct.hidden_content`. Сохраняет скрытый контент товара, формирует сообщение с информацией о товаре и предлагает подтвердить добавление.
 
 **Параметры**:
-- `message` (Message): Объект сообщения, содержащий введенный скрытый контент товара.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `message` (Message): Объект сообщения, содержащий текст со скрытым контентом товара.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
+- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных без коммита.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_hidden_content с объектами message типа Message, state типа FSMContext и session_without_commit типа AsyncSession
+await admin_process_hidden_content(message, state, session_without_commit)
+```
 
 ### `admin_process_confirm_add`
 
@@ -482,30 +599,36 @@ async def admin_process_hidden_content(message: Message, state: FSMContext, sess
 async def admin_process_confirm_add(call: CallbackQuery, state: FSMContext, session_with_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий обратный вызов от пользователя.
-        state (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
-        session_with_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных с коммитом.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий колбэк.
+        state (FSMContext): Объект FSMContext для управления состоянием пользователя.
+        session_with_commit (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных с коммитом.
 
     Returns:
         None
 
     Raises:
-         Ошибка выполнение
+        Нет
 
     Example:
         Пример вызова:
-
-        (Этот метод вызывается автоматически при нажатии пользователем на кнопку "confirm_add".)
+        (Предположим, что у нас есть объекты `call` типа `CallbackQuery`, `state` типа `FSMContext` и `session_with_commit` типа `AsyncSession`)
+        >>> await admin_process_confirm_add(call, state, session_with_commit)
     """
 ```
 
 **Описание**:
-Обработчик callback-запроса `confirm_add`. Подтверждает добавление товара, сохраняет данные в базе данных и завершает сценарий.
+Обработчик колбэка `confirm_add`. Подтверждает добавление товара, сохраняет данные в базе данных и завершает сценарий добавления товара.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект обратного вызова, содержащий информацию о действии пользователя.
-- `state` (FSMContext): Контекст машины состояний для хранения и управления состоянием пользователя.
-- `session_with_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения операций с базой данных с коммитом.
+- `call` (CallbackQuery): Объект колбэка, содержащий информацию о вызове.
+- `state` (FSMContext): Объект FSMContext для управления состоянием пользователя.
+- `session_with_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных с коммитом.
 
 **Возвращает**:
 - `None`
+
+**Примеры**:
+Пример вызова функции:
+```python
+# Пример вызова функции admin_process_confirm_add с объектами call типа CallbackQuery, state типа FSMContext и session_with_commit типа AsyncSession
+await admin_process_confirm_add(call, state, session_with_commit)

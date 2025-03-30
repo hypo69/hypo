@@ -1,482 +1,323 @@
-# Модуль для работы с Mega.nz
+# Модуль mega.py
+
 ## Обзор
-Модуль `mega.py` предоставляет класс `Mega` для взаимодействия с сервисом Mega.nz. Он включает в себя функции для аутентификации, скачивания и загрузки файлов, а также для работы с публичными ссылками.
+
+Модуль `mega.py` предоставляет класс `Mega` для взаимодействия с сервисом Mega.co.nz. Он включает функциональность для входа в систему, получения списка файлов, скачивания и загрузки файлов. Модуль использует различные криптографические методы для обеспечения безопасности данных.
 
 ## Подробней
 
-Этот модуль позволяет выполнять различные операции с Mega.nz, такие как вход в систему с использованием email и пароля, создание эфемерных сессий, получение списка файлов, скачивание файлов по URL и загрузка файлов на сервер. Он использует криптографические методы для обеспечения безопасности передаваемых данных.
+Этот модуль позволяет автоматизировать взаимодействие с сервисом Mega, включая аутентификацию, управление файлами и передачу данных. Он использует криптографические методы, такие как AES и RSA, для защиты данных при передаче и хранении.
 
 ## Классы
 
 ### `Mega`
 
-**Описание**: Класс для взаимодействия с API Mega.nz.
+**Описание**: Класс для взаимодействия с сервисом Mega.
 
 **Методы**:
+
 - `__init__`: Инициализирует экземпляр класса `Mega`.
 - `from_credentials`: Создает экземпляр класса `Mega` с использованием email и пароля.
-- `from_ephemeral`: Создает экземпляр класса `Mega` для эфемерной сессии.
-- `api_req`: Выполняет API-запрос к серверу Mega.nz.
-- `login_user`: Выполняет вход в систему с использованием email и пароля.
-- `login_ephemeral`: Выполняет вход в систему для эфемерной сессии.
-- `_login_common`: Общий метод для обработки результатов входа в систему.
-- `get_files`: Получает список файлов и папок из облачного хранилища.
-- `download_from_url`: Скачивает файл по публичной ссылке.
-- `download_file`: Скачивает файл из Mega.nz.
-- `get_public_url`: Получает публичную ссылку на файл.
-- `uploadfile`: Загружает файл на Mega.nz.
+- `from_ephemeral`: Создает экземпляр класса `Mega` для анонимного входа.
+- `api_req`: Выполняет API-запрос к сервису Mega.
+- `login_user`: Аутентифицирует пользователя с использованием email и пароля.
+- `login_ephemeral`: Выполняет анонимный вход в систему.
+- `_login_common`: Общая логика для входа в систему.
+- `get_files`: Получает список файлов пользователя.
+- `download_from_url`: Загружает файл из публичного URL.
+- `download_file`: Загружает файл по его ID и ключу.
+- `get_public_url`: Возвращает публичный URL файла.
+- `uploadfile`: Загружает файл в облачное хранилище.
 
-**Параметры**:
-- `seqno` (int): Уникальный идентификатор запроса.
-- `sid` (str): Идентификатор сессии.
-- `master_key` (list[int]): Главный ключ для шифрования данных.
-- `rsa_priv_key` (list[int]): Приватный RSA-ключ для расшифровки данных.
-- `root_id` (str): Идентификатор корневой папки.
-- `inbox_id` (str): Идентификатор папки входящих сообщений.
-- `trashbin_id` (str): Идентификатор корзины.
+#### `__init__`
 
-**Примеры**
 ```python
-# Пример создания экземпляра класса Mega и входа в систему с использованием email и пароля
-mega = Mega.from_credentials('email@example.com', 'password')
+    def __init__(self):
+        """
+        Инициализирует экземпляр класса Mega.
 
-# Пример получения списка файлов
-files = mega.get_files()
+        Args:
+            self (Mega): Экземпляр класса Mega.
 
-# Пример скачивания файла по публичной ссылке
-file_name = mega.download_from_url('https://mega.nz/#!file_id!file_key')
+        Returns:
+            None
 
-# Пример загрузки файла на сервер
-data = mega.uploadfile('filename')
+        Raises:
+            None
+        """
+        ...
 ```
 
-## Функции
+**Описание**: Инициализирует экземпляр класса `Mega`, устанавливая начальное значение для номера последовательности и идентификатора сессии.
 
-### `__init__`
-
-```python
-def __init__(self):
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-    
-    Returns:
-        None
-    
-    Raises:
-        None
-    """
-    ...
-```
-
-**Описание**: Инициализирует экземпляр класса `Mega`, устанавливая начальные значения для `seqno` и `sid`.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-mega = Mega()
-```
-
-### `from_credentials`
+#### `from_credentials`
 
 ```python
-def from_credentials(cls, email: str, password: str) -> Mega:
-    """
-    Args:
-        cls (Mega): Класс `Mega`.
-        email (str): Email пользователя.
-        password (str): Пароль пользователя.
-    
-    Returns:
-        Mega: Экземпляр класса `Mega`.
-    
-    Raises:
-        None
-    """
-    ...
+    @classmethod
+    def from_credentials(cls, email: str, password: str) -> 'Mega':
+        """
+        Создает экземпляр класса Mega с использованием email и пароля.
+
+        Args:
+            cls (Mega): Класс Mega.
+            email (str): Email пользователя.
+            password (str): Пароль пользователя.
+
+        Returns:
+            Mega: Экземпляр класса Mega.
+
+        Raises:
+            None
+        """
+        ...
 ```
 
 **Описание**: Создает экземпляр класса `Mega` и выполняет вход в систему с использованием предоставленных email и пароля.
 
-**Параметры**:
-- `cls` (Mega): Класс `Mega`.
-- `email` (str): Email пользователя.
-- `password` (str): Пароль пользователя.
+#### `from_ephemeral`
 
-**Возвращает**:
-- `Mega`: Экземпляр класса `Mega`.
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
 ```python
-mega = Mega.from_credentials('email@example.com', 'password')
+    @classmethod
+    def from_ephemeral(cls) -> 'Mega':
+        """
+        Создает экземпляр класса Mega для анонимного входа.
+
+        Args:
+            cls (Mega): Класс Mega.
+
+        Returns:
+            Mega: Экземпляр класса Mega.
+
+        Raises:
+            None
+        """
+        ...
 ```
 
-### `from_ephemeral`
+**Описание**: Создает экземпляр класса `Mega` и выполняет анонимный вход в систему.
+
+#### `api_req`
 
 ```python
-def from_ephemeral(cls) -> Mega:
+    def api_req(self, data: dict) -> dict:
+        """
+        Выполняет API-запрос к сервису Mega.
+
+        Args:
+            data (dict): Данные запроса в формате словаря.
+
+        Returns:
+            dict: Ответ от API в формате словаря.
+
+        Raises:
+            MegaRequestException: Если API возвращает код ошибки.
+        """
+        ...
+```
+
+**Описание**: Выполняет API-запрос к сервису Mega, добавляя параметры идентификации и сессии, а также обрабатывая возможные ошибки.
+
+#### `login_user`
+
+```python
+    def login_user(self, email: str, password: str):
+        """
+        Аутентифицирует пользователя с использованием email и пароля.
+
+        Args:
+            email (str): Email пользователя.
+            password (str): Пароль пользователя.
+
+        Returns:
+            None
+
+        Raises:
+            MegaIncorrectPasswordExcetion: Если введен неверный email или пароль.
+        """
+        ...
+```
+
+**Описание**: Аутентифицирует пользователя, подготавливая ключ пароля и выполняя API-запрос для входа в систему.
+
+#### `login_ephemeral`
+
+```python
+    def login_ephemeral(self):
+        """
+        Выполняет анонимный вход в систему.
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Raises:
+            MegaRequestException: Если API возвращает код ошибки.
+        """
+        ...
+```
+
+**Описание**: Выполняет анонимный вход в систему, генерируя случайные ключи и выполняя API-запросы для получения пользовательского идентификатора.
+
+#### `_login_common`
+
+```python
+    def _login_common(self, res: dict, password: list[int]):
+        """
+        Общая логика для входа в систему.
+
+        Args:
+            res (dict): Ответ от API с данными для входа.
+            password (list[int]): Ключ пароля.
+
+        Returns:
+            None
+
+        Raises:
+            MegaIncorrectPasswordExcetion: Если введен неверный email или пароль.
+        """
+        ...
+```
+
+**Описание**: Общая логика для завершения процесса входа в систему, включающая расшифровку мастер-ключа и установку идентификатора сессии.
+
+#### `get_files`
+
+```python
+    def get_files(self) -> dict:
+        """
+        Получает список файлов пользователя.
+
+        Args:
+            None
+
+        Returns:
+            dict: Данные о файлах пользователя.
+
+        Raises:
+            MegaRequestException: Если API возвращает код ошибки.
+        """
+        ...
+```
+
+**Описание**: Получает список файлов и каталогов пользователя, расшифровывая ключи и атрибуты файлов.
+
+#### `download_from_url`
+
+```python
+    def download_from_url(self, url: str) -> str:
+        """
+        Загружает файл из публичного URL.
+
+        Args:
+            url (str): Публичный URL файла.
+
+        Returns:
+            str: Имя загруженного файла.
+
+        Raises:
+            MegaRequestException: Если API возвращает код ошибки.
+        """
+        ...
+```
+
+**Описание**: Загружает файл из публичного URL, извлекая идентификатор файла и ключ из URL.
+
+#### `download_file`
+
+```python
+    def download_file(self, file_id: str, file_key: str, public: bool = False, store_path: Optional[str] = None) -> str:
+        """
+        Загружает файл по его ID и ключу.
+
+        Args:
+            file_id (str): Идентификатор файла.
+            file_key (str): Ключ файла.
+            public (bool, optional): Флаг, указывающий, является ли файл публичным. По умолчанию False.
+            store_path (Optional[str], optional): Путь для сохранения файла. По умолчанию None.
+
+        Returns:
+            str: Имя загруженного файла.
+
+        Raises:
+            MegaRequestException: Если API возвращает код ошибки.
+            ValueError: Если MAC не совпадает.
+        """
+        ...
+```
+
+**Описание**: Загружает файл по его ID и ключу, расшифровывая содержимое файла и проверяя его целостность.
+
+#### `get_public_url`
+
+```python
+    def get_public_url(self, file_id: str, file_key: list[int]) -> str:
+        """
+        Возвращает публичный URL файла.
+
+        Args:
+            file_id (str): Идентификатор файла.
+            file_key (list[int]): Ключ файла.
+
+        Returns:
+            str: Публичный URL файла.
+
+        Raises:
+            MegaRequestException: Если API возвращает код ошибки.
+        """
+        ...
+```
+
+**Описание**: Возвращает публичный URL файла, комбинируя идентификатор файла и зашифрованный ключ.
+
+#### `uploadfile`
+
+```python
+    def uploadfile(self, filename: str, dst: Optional[str] = None) -> dict:
+        """
+        Загружает файл в облачное хранилище.
+
+        Args:
+            filename (str): Путь к файлу для загрузки.
+            dst (Optional[str], optional): Идентификатор целевого каталога. По умолчанию None.
+
+        Returns:
+            dict: Данные о загруженном файле.
+
+        Raises:
+            MegaRequestException: Если API возвращает код ошибки.
+        """
+        ...
+```
+
+**Описание**: Загружает файл в облачное хранилище, шифруя содержимое файла и отправляя его на сервер.
+
+## Функции
+
+### `aes_cbc_encrypt_a32`
+
+```python
+def aes_cbc_encrypt_a32(chunk_mac: list[int], ul_key: list[int]) -> list[int]:
     """
+    Шифрует блок данных с использованием AES в режиме CBC.
+
     Args:
-        cls (Mega): Класс `Mega`.
-    
+        chunk_mac (list[int]): Блок данных для шифрования.
+        ul_key (list[int]): Ключ шифрования.
+
     Returns:
-        Mega: Экземпляр класса `Mega`.
-    
-    Raises:
-        None
+        list[int]: Зашифрованный блок данных.
     """
-    ...
 ```
 
-**Описание**: Создает экземпляр класса `Mega` для эфемерной сессии (без использования email и пароля).
+**Описание**: Шифрует блок данных с использованием AES в режиме CBC.
 
 **Параметры**:
-- `cls` (Mega): Класс `Mega`.
+
+- `chunk_mac` (list[int]): Блок данных для шифрования.
+- `ul_key` (list[int]): Ключ шифрования.
 
 **Возвращает**:
-- `Mega`: Экземпляр класса `Mega`.
 
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-mega = Mega.from_ephemeral()
-```
-
-### `api_req`
-
-```python
-def api_req(self, data: dict) -> dict:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-        data (dict): Словарь с данными для отправки в API-запросе.
-    
-    Returns:
-        dict: Ответ от API в формате словаря.
-    
-    Raises:
-        MegaRequestException: Если API возвращает код ошибки.
-    """
-    ...
-```
-
-**Описание**: Отправляет API-запрос к серверу Mega.nz и возвращает ответ в формате словаря.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-- `data` (dict): Словарь с данными для отправки в API-запросе.
-
-**Возвращает**:
-- `dict`: Ответ от API в формате словаря.
-
-**Вызывает исключения**:
-- `MegaRequestException`: Если API возвращает код ошибки.
-
-**Примеры**:
-```python
-data = mega.api_req({'a': 'f', 'c': 1})
-```
-
-### `login_user`
-
-```python
-def login_user(self, email: str, password: str) -> None:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-        email (str): Email пользователя.
-        password (str): Пароль пользователя.
-    
-    Returns:
-        None
-    
-    Raises:
-        MegaIncorrectPasswordExcetion: Если указан неверный email или пароль.
-    """
-    ...
-```
-
-**Описание**: Выполняет вход в систему с использованием предоставленных email и пароля.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-- `email` (str): Email пользователя.
-- `password` (str): Пароль пользователя.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `MegaIncorrectPasswordExcetion`: Если указан неверный email или пароль.
-
-**Примеры**:
-```python
-mega = Mega()
-mega.login_user('email@example.com', 'password')
-```
-
-### `login_ephemeral`
-
-```python
-def login_ephemeral(self) -> None:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-    
-    Returns:
-        None
-    
-    Raises:
-        None
-    """
-    ...
-```
-
-**Описание**: Выполняет вход в систему для эфемерной сессии (без использования email и пароля).
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-mega = Mega()
-mega.login_ephemeral()
-```
-
-### `_login_common`
-
-```python
-def _login_common(self, res: dict, password: list[int]) -> None:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-        res (dict): Ответ от API с данными для входа.
-        password (list[int]): Ключ пароля.
-    
-    Returns:
-        None
-    
-    Raises:
-        MegaIncorrectPasswordExcetion: Если указан неверный email или пароль.
-    """
-    ...
-```
-
-**Описание**: Общий метод для обработки результатов входа в систему, расшифровки ключей и установки идентификатора сессии.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-- `res` (dict): Ответ от API с данными для входа.
-- `password` (list[int]): Ключ пароля.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `MegaIncorrectPasswordExcetion`: Если указан неверный email или пароль.
-
-**Примеры**:
-```python
-# Пример использования внутри методов login_user и login_ephemeral
-```
-
-### `get_files`
-
-```python
-def get_files(self) -> dict:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-    
-    Returns:
-        dict: Данные о файлах.
-    
-    Raises:
-        None
-    """
-    ...
-```
-
-**Описание**: Получает список файлов и папок из облачного хранилища.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-
-**Возвращает**:
-- `dict`: Словарь с данными о файлах и папках.
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-files = mega.get_files()
-```
-
-### `download_from_url`
-
-```python
-def download_from_url(self, url: str) -> str:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-        url (str): URL файла для скачивания.
-    
-    Returns:
-        str: Имя скаченного файла.
-    
-    Raises:
-        None
-    """
-    ...
-```
-
-**Описание**: Скачивает файл по публичной ссылке.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-- `url` (str): URL файла для скачивания.
-
-**Возвращает**:
-- `str`: Имя скаченного файла.
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-file_name = mega.download_from_url('https://mega.nz/#!file_id!file_key')
-```
-
-### `download_file`
-
-```python
-def download_file(self, file_id: str, file_key: str, public: bool = False, store_path: Optional[str] = None) -> str:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-        file_id (str): ID файла для скачивания.
-        file_key (str): Ключ файла для скачивания.
-        public (bool): Является ли файл публичным. По умолчанию `False`.
-        store_path (Optional[str]): Путь для сохранения файла. По умолчанию `None`.
-    
-    Returns:
-        str: Имя скаченного файла.
-    
-    Raises:
-        ValueError: Если MAC не совпадает.
-    """
-    ...
-```
-
-**Описание**: Скачивает файл из Mega.nz.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-- `file_id` (str): ID файла для скачивания.
-- `file_key` (str): Ключ файла для скачивания.
-- `public` (bool): Является ли файл публичным. По умолчанию `False`.
-- `store_path` (Optional[str]): Путь для сохранения файла. По умолчанию `None`.
-
-**Возвращает**:
-- `str`: Имя скаченного файла.
-
-**Вызывает исключения**:
-- `ValueError`: Если MAC не совпадает.
-
-**Примеры**:
-```python
-file_name = mega.download_file('file_id', 'file_key', public=True, store_path='/path/to/store')
-```
-
-### `get_public_url`
-
-```python
-def get_public_url(self, file_id: str, file_key: list[int]) -> str:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-        file_id (str): ID файла.
-        file_key (list[int]): Ключ файла.
-    
-    Returns:
-        str: Публичный URL файла.
-    
-    Raises:
-        None
-    """
-    ...
-```
-
-**Описание**: Получает публичную ссылку на файл.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-- `file_id` (str): ID файла.
-- `file_key` (list[int]): Ключ файла.
-
-**Возвращает**:
-- `str`: Публичный URL файла.
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-public_url = mega.get_public_url('file_id', [1, 2, 3, 4, 5, 6, 7, 8])
-```
-
-### `uploadfile`
-
-```python
-def uploadfile(self, filename: str, dst: Optional[str] = None) -> dict:
-    """
-    Args:
-        self (Mega): Экземпляр класса `Mega`.
-        filename (str): Имя файла для загрузки.
-        dst (Optional[str]): ID папки назначения. По умолчанию `None`.
-    
-    Returns:
-        dict: Данные о загруженном файле.
-    
-    Raises:
-        None
-    """
-    ...
-```
-
-**Описание**: Загружает файл на Mega.nz.
-
-**Параметры**:
-- `self` (Mega): Экземпляр класса `Mega`.
-- `filename` (str): Имя файла для загрузки.
-- `dst` (Optional[str]): ID папки назначения. По умолчанию `None`.
-
-**Возвращает**:
-- `dict`: Данные о загруженном файле.
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-data = mega.uploadfile('filename', dst='destination_folder_id')
+- `list[int]`: Зашифрованный блок данных.

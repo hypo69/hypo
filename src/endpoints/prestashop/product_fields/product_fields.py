@@ -82,7 +82,7 @@ class ProductFields:
             return False 
 
 
-    def _set_multilang_value(self, field_name: str, value: str, id_lang: Optional[Union[int, str]] = None) -> bool:
+    def _set_multilang_value(self, field_name: str, value: str, id_lang: Optional[int | str] = None) -> bool:
         """
         Устанавливает мультиязычное значение для заданного поля.
 

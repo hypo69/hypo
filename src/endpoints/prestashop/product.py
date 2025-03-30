@@ -3,11 +3,13 @@
 #! .pyenv/bin/python3
 
 """
+```rst
 .. module:: src.endopoints.prestashop.product
     :platform: Windows, Unix
-    :synopsis: Interaction between website, product, and PrestaShop.
-Defines the behavior of a product in the project.
-
+```
+Модуль для взаимодействия с товарами в PrestaShop.
+======================================================
+Определяет логику взаимодействия с товарами в проекте.
 """
 import asyncio
 import os
@@ -55,19 +57,21 @@ class Config:
         API_DOMAIN = gs.credentials.presta.client.emil_design.api_domain
         API_KEY = gs.credentials.presta.client.emil_design.api_key
 
+    
+
 class PrestaProduct(PrestaShop):
     """Manipulations with the product.
     Initially, I instruct the grabber to fetch data from the product page,
     and then work with the PrestaShop API.
     """
 
-    def __init__(self, API_KEY:str, API_DOMAIN:str, *args, **kwargs):
+    def __init__(self, api_key:str, api_domain:str, *args, **kwargs):
         """
         Initializes a Product object.
 
         """
 
-        super().__init__( api_key = API_KEY, api_domain = API_DOMAIN, *args, **kwargs)
+        super().__init__( api_key = api_key, api_domain = api_domain, *args, **kwargs)
 
     def get_product_schema(self, resource_id:Optional[str | int] = None, schema: Optional[str] = 'blank') -> dict:
         """Get the schema for the product resource from PrestaShop.
@@ -121,8 +125,15 @@ class PrestaProduct(PrestaShop):
                     else:
                         break
 
-    def get_product(self, id_product:int, **kwards):
-        """"""
+    def get_product(self, id_product:int, **kwards) -> dict:
+        """Возваращает словарь полей товара из магазина Prestasop
+          Args:
+            `id_product` (int) - значение поля ID в таблице `product` Preastashop
+        Returns:
+            {'product':
+                {... product fields}
+            }
+        """
         kwards = {'data_format': 'JSON', 'language': 2}
         kwards = {'data_format': 'JSON',}
         return self.read(resource = 'products', resource_id = id_product, **kwards)
@@ -130,6 +141,7 @@ class PrestaProduct(PrestaShop):
     def add_new_product(self, f: ProductFields) -> dict:
         """
         Add a new product to PrestaShop.
+        Преобразовывает объект `ProducFields` в словарь формата `Prestashop` и отрапавлет его в API Престашоп
 
         Args:
             f (ProductFields): An instance of the ProductFields data class containing the product information.
@@ -144,9 +156,7 @@ class PrestaProduct(PrestaShop):
         self._add_parent_categories(f)
 
         presta_product_dict: dict = f.to_dict()
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        #presta_product_dict['name'] = {'language':[presta_product_dict['name']]}
-
+        
         ...
         kwards = {
             'data_format': Config.POST_FORMAT,

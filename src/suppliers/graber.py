@@ -3,15 +3,20 @@
 #! .pyenv/bin/python3
 
 """
-
 ```rst
 .. module:: src.suppliers 
-	:platform: Windows, Unix
-	:synopsis:  Базовый класс сбора данных со старницы HTML поставщиков.
+```   
+
+ Модуль грабера. Собирает информацию с вестраницы товара
+ =========================================================
+ Базовый класс сбора данных со старницы HTML поставщиков.
     Целевые поля страницы (`название`,`описание`,`спецификация`,`артикул`,`цена`,...) собирает вебдрйвер (class: [`Driver`](../webdriver))
     Местополжение поля определяется его локатором. Локаторы хранятся в словарях JSON в директории `locators` каждого поставщика.
     ([подробно о локаторах](locators.ru.md))
-```    
+     Таблица поставщиков:
+              https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?gid=1778506526#gid=1778506526
+
+ 
 
 ## Для нестендартной обработки полей товара просто переопределите функцию в своем классе.
 Пример:
@@ -27,8 +32,7 @@ class G(Graber):
         self.fields.name = <Ваша реализация>
         )
     ```
-              Таблица поставщиков:
-              https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?gid=1778506526#gid=1778506526
+             
 """
 
 
@@ -62,23 +66,30 @@ from src.logger.exceptions import ExecuteLocatorException
 from src.utils.printer import pprint as print
 from src.logger.logger import logger
 
+
 # Глобальные настройки через объект `Context`
 class Context:
     """
     Класс для хранения глобальных настроек.
 
-    :ivar driver: Объект драйвера, используется для управления браузером или другим интерфейсом.
-    :vartype driver: 'Driver'
-    :ivar locator: Пространство имен для хранения локаторов.
-    :vartype locator: SimpleNamespace
-    :ivar supplier_prefix: Префикс поставщика.
-    :vartype supplier_prefix: str
+    Attributes:
+        driver (Optional['Driver']): Объект драйвера, используется для управления браузером или другим интерфейсом.
+        locator_for_decorator (Optional[SimpleNamespace]): Если будет установлен - выполнится декоратор `@close_pop_up`.
+            Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`.
+        supplier_prefix (Optional[str]): Префикс поставщика.
+
+    Example:
+        >>> context = Context()
+        >>> context.supplier_prefix = 'prefix'
+        >>> print(context.supplier_prefix)
+        prefix
     """
 
     # Аттрибуты класса
-    driver: 'Driver' = None
-    locator_for_decorator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
-    supplier_prefix: str = None
+    driver: Optional['Driver'] = None
+    locator_for_decorator: Optional[SimpleNamespace] = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
+    supplier_prefix: Optional[str] = None
+
 
 
 # Определение декоратора для закрытия всплывающих окон
@@ -130,8 +141,8 @@ class Graber:
         self.fields: ProductFields = ProductFields(lang_index) # <- установка базового языка. Тип - `int`
         Context.driver = self.driver
         Context.supplier_prefix = None
-        """Если установлен Context.locator_for_decorator - выполнится декоратор `@close_pop_up`"""
         Context.locator_for_decorator = None
+        """Если будет установлен локатор в Context.locator_for_decorator - выполнится декоратор `@close_pop_up`"""
 
     async def error(self, field: str):
         """Обработчик ошибок для полей."""

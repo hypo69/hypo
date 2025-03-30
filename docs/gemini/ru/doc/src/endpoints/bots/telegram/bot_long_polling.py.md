@@ -1,34 +1,37 @@
-# hypotez/src/endpoints/bots/telegram/bot_long_polling.py
+# Модуль `bot_long_polling.py`
 
 ## Обзор
 
-Этот модуль определяет класс `TelegramBot`, который предоставляет интерфейс для взаимодействия с Telegram ботом. Он включает в себя регистрацию обработчиков команд и сообщений, а также методы для запуска и остановки бота.
+Модуль `bot_long_polling.py` представляет собой реализацию Telegram-бота с использованием библиотеки `telegram.ext`. Он определяет класс `TelegramBot`, который обеспечивает интерфейс для взаимодействия с Telegram API. Модуль включает обработку команд, текстовых сообщений, голосовых сообщений и документов. Расположен в `hypotez/src/endpoints/bots/telegram/`.
 
 ## Подробней
 
-Класс `TelegramBot` инициализирует бота с использованием токена, регистрирует обработчики для различных команд, таких как `/start`, `/help`, и `/sendpdf`, а также обработчики для текстовых сообщений, голосовых сообщений и документов. Он использует библиотеку `telegram.ext` для обработки обновлений от Telegram. Этот модуль позволяет интегрировать бота в систему для обработки сообщений, отправки PDF-файлов и выполнения других задач.
+Этот модуль предназначен для создания и управления Telegram-ботом. Он использует long polling для получения обновлений от Telegram API и обрабатывает различные типы входящих данных, такие как команды, текстовые сообщения, голосовые сообщения и документы. Класс `TelegramBot` инициализирует бота с использованием предоставленного токена и регистрирует обработчики для различных типов сообщений.
 
 ## Классы
 
 ### `TelegramBot`
 
-**Описание**: Класс, представляющий Telegram бота.
+**Описание**: Класс, представляющий Telegram-бота.
 
 **Методы**:
-- `__init__`: Инициализирует Telegram бота.
+- `__init__`: Инициализирует экземпляр класса `TelegramBot`.
 - `register_handlers`: Регистрирует обработчики команд и сообщений.
 - `replace_message_handler`: Заменяет текущий обработчик текстовых сообщений на новый.
 - `start`: Обрабатывает команду `/start`.
 
 **Параметры**:
-- `token` (str): Токен Telegram бота, например, `gs.credentials.telegram.bot.kazarinov`.
+- `token` (str): Токен Telegram-бота.
 
 **Примеры**
-```python
-from src.endpoints.bots.telegram.bot_long_polling import TelegramBot
 
-# Инициализация бота с использованием токена
-bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
+```python
+# Пример инициализации TelegramBot
+token = "YOUR_TELEGRAM_BOT_TOKEN"
+bot = TelegramBot(token)
+
+# Пример запуска бота
+# bot.application.run_polling()
 ```
 
 ## Функции
@@ -47,18 +50,7 @@ def __init__(self, token: str):
 **Описание**: Инициализирует экземпляр класса `TelegramBot`.
 
 **Параметры**:
-- `token` (str): Токен Telegram бота.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
-```
+- `token` (str): Токен Telegram-бота, например, `gs.credentials.telegram.bot.kazarinov`.
 
 ### `register_handlers`
 
@@ -67,22 +59,7 @@ def register_handlers(self) -> None:
     """Register bot commands and message handlers."""
 ```
 
-**Описание**: Регистрирует обработчики команд и сообщений для Telegram бота.
-
-**Параметры**:
-- `self`: Экземпляр класса `TelegramBot`.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
-bot.register_handlers()
-```
+**Описание**: Регистрирует обработчики команд и сообщений бота.
 
 ### `replace_message_handler`
 
@@ -101,21 +78,6 @@ def replace_message_handler(self, new_handler: Callable) -> None:
 **Параметры**:
 - `new_handler` (Callable): Новая функция для обработки сообщений.
 
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-async def new_message_handler(update: Update, context: CallbackContext) -> None:
-    await update.message.reply_text("Новый обработчик сообщений")
-
-bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
-bot.replace_message_handler(new_message_handler)
-```
-
 ### `start`
 
 ```python
@@ -123,42 +85,8 @@ async def start(self, update: Update, context: CallbackContext) -> None:
     """Handle the /start command."""
 ```
 
-**Описание**: Обрабатывает команду `/start`, отправляя приветственное сообщение пользователю.
+**Описание**: Обрабатывает команду `/start`.
 
 **Параметры**:
-- `update` (Update): Объект обновления от Telegram.
-- `context` (CallbackContext): Контекст обратного вызова.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-# Пример вызова обработчика start
-async def test_start():
-    from telegram import Update, User, Message
-    from telegram.ext import CallbackContext
-
-    # Создаем фиктивные объекты update и context
-    update = Update(
-        update_id=123,
-        message=Message(
-            message_id=1,
-            date=datetime.now(),
-            chat=Chat(id=12345),
-            from_user=User(id=67890, first_name="Test")
-        )
-    )
-    context = CallbackContext(Application)
-
-    # Создаем экземпляр бота и вызываем функцию start
-    bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
-    await bot.start(update, context)
-
-import asyncio
-from datetime import datetime
-from telegram import Chat
-asyncio.run(test_start())
+- `update` (Update): Объект `Update` от Telegram API.
+- `context` (CallbackContext): Объект `CallbackContext` от `telegram.ext`.

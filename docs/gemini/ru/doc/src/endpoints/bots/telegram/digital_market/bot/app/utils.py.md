@@ -1,12 +1,12 @@
-# Модуль утилит для работы с Robokassa
+# Модуль utils.py для Robokassa
 
 ## Обзор
 
-Модуль `utils.py` содержит набор функций для работы с платежной системой Robokassa. Он включает в себя генерацию платежных ссылок, проверку подписи, обработку ответов от Robokassa и проверку успешности платежей. Модуль предназначен для интеграции с ботом Telegram и обеспечивает безопасное проведение платежей.
+Модуль `utils.py` предназначен для генерации платежных ссылок Robokassa и обработки ответов от Robokassa. Он включает функции для расчета подписи, создания ссылок для оплаты, разбора ответов и проверки подписи для ResultURL и SuccessURL. Модуль обеспечивает интеграцию с платежной системой Robokassa для обработки платежей в боте Telegram.
 
 ## Подробней
 
-Модуль `utils.py` предоставляет функциональность для создания и проверки платежей через Robokassa. Он содержит функции для генерации подписи, создания платежной ссылки, разбора ответа от Robokassa и проверки успешности платежа. Эти функции используются для безопасного взаимодействия с Robokassa и обработки платежей в боте Telegram.
+Этот модуль содержит функции, необходимые для взаимодействия с Robokassa API. Он генерирует ссылки для оплаты, проверяет подписи и обрабатывает ответы от Robokassa, что позволяет безопасно и надежно проводить платежи. Используется для автоматизации процесса оплаты в боте Telegram, предоставляя пользователям удобный способ оплаты за товары или услуги.
 
 ## Функции
 
@@ -15,44 +15,55 @@
 ```python
 def calculate_signature(login, cost, inv_id, password, user_id, user_telegram_id, product_id, is_result=False):
     """ This if example function
-        Args:
-            login: логин мерчанта.
-            cost: Стоимость товара.
-            inv_id: Номер заказа.
-            password: Пароль мерчанта.
-            user_id: ID пользователя.
-            user_telegram_id: Telegram ID пользователя.
-            product_id: ID товара.
-            is_result (bool): Флаг, указывающий, является ли URL результатом (Result URL). По умолчанию `False`.
-        Returns:
-            str: Возвращает MD5-хеш, используемый для подписи запроса.
+    Args:
+        login:
+        cost:
+        inv_id:
+        password:
+        user_id:
+        user_telegram_id:
+        product_id:
+        is_result (bool):
 
-        Raises:
-             None
+    Returns:
 
-        Example:
-            Примеры вызовов
+     Raises:
+          Ошибка выполнение
+
+     Example:
+          Примеры вызовов
+
     """
 ```
 
-**Описание**: Вычисляет подпись для запросов к Robokassa. Подпись генерируется на основе параметров запроса и пароля мерчанта.
+**Описание**: Вычисляет подпись для запросов к Robokassa.
 
 **Параметры**:
-- `login`: Логин мерчанта.
-- `cost`: Стоимость товара.
+- `login`: Логин магазина в Robokassa.
+- `cost`: Сумма платежа.
 - `inv_id`: Номер заказа.
-- `password`: Пароль мерчанта.
+- `password`: Пароль магазина в Robokassa.
 - `user_id`: ID пользователя.
 - `user_telegram_id`: Telegram ID пользователя.
-- `product_id`: ID товара.
-- `is_result` (bool): Флаг, указывающий, является ли URL результатом (Result URL). По умолчанию `False`.
+- `product_id`: ID продукта.
+- `is_result` (bool): Флаг, указывающий, является ли URL результатом (Result URL).
 
 **Возвращает**:
-- `str`: MD5-хеш, используемый для подписи запроса.
+- `str`: Подпись, вычисленная на основе входных параметров.
 
 **Примеры**:
+
 ```python
-calculate_signature('login', 100.0, 123, 'password', 1, 123456789, 1)
+login = "test_login"
+cost = 100.0
+inv_id = 123
+password = "test_password"
+user_id = 1
+user_telegram_id = 123456789
+product_id = 10
+
+signature = calculate_signature(login, cost, inv_id, password, user_id, user_telegram_id, product_id)
+print(signature)
 ```
 
 ### `generate_payment_link`
@@ -62,27 +73,28 @@ def generate_payment_link(cost: float, number: int, description: str,
                           user_id: int, user_telegram_id: int, product_id: int,
                           is_test=1, robokassa_payment_url='https://auth.robokassa.ru/Merchant/Index.aspx') -> str:
     """ This if example function
-        Args:
-            cost (float): Стоимость товара.
-            number (int): Номер заказа.
-            description (str): Описание заказа.
-            user_id (int): ID пользователя.
-            user_telegram_id (int): Telegram ID пользователя.
-            product_id (int): ID товара.
-            is_test (int): Флаг тестового режима (1 - тест, 0 - боевой режим). По умолчанию 1.
-            robokassa_payment_url: URL для оплаты Robokassa. По умолчанию 'https://auth.robokassa.ru/Merchant/Index.aspx'.
-        Returns:
-            str: Ссылка на страницу оплаты.
+    Args:
+        cost (float): Стоимость товара
+        number (int): Номер заказа
+        description (str): Описание заказа
+        user_id (int): ID пользователя
+        user_telegram_id (int): Telegram ID пользователя
+        product_id (int): ID товара
+        is_test:
+        robokassa_payment_url:
 
-        Raises:
-             None
+    Returns:
 
-        Example:
-            Примеры вызовов
+     Raises:
+          Ошибка выполнение
+
+     Example:
+          Примеры вызовов
+
     """
 ```
 
-**Описание**: Генерирует ссылку для оплаты через Robokassa с обязательными параметрами.
+**Описание**: Генерирует ссылку для оплаты через Robokassa.
 
 **Параметры**:
 - `cost` (float): Стоимость товара.
@@ -91,15 +103,24 @@ def generate_payment_link(cost: float, number: int, description: str,
 - `user_id` (int): ID пользователя.
 - `user_telegram_id` (int): Telegram ID пользователя.
 - `product_id` (int): ID товара.
-- `is_test` (int): Флаг тестового режима (1 - тест, 0 - боевой режим). По умолчанию `1`.
-- `robokassa_payment_url`: URL для оплаты Robokassa. По умолчанию `'https://auth.robokassa.ru/Merchant/Index.aspx'`.
+- `is_test`: Флаг тестового режима (1 - тест, 0 - боевой режим).
+- `robokassa_payment_url`: URL для оплаты Robokassa.
 
 **Возвращает**:
 - `str`: Ссылка на страницу оплаты.
 
 **Примеры**:
+
 ```python
-generate_payment_link(100.0, 123, 'Test description', 1, 123456789, 1)
+cost = 100.0
+number = 123
+description = "Test order"
+user_id = 1
+user_telegram_id = 123456789
+product_id = 10
+
+payment_link = generate_payment_link(cost, number, description, user_id, user_telegram_id, product_id)
+print(payment_link)
 ```
 
 ### `parse_response`
@@ -107,16 +128,17 @@ generate_payment_link(100.0, 123, 'Test description', 1, 123456789, 1)
 ```python
 def parse_response(request: str) -> dict:
     """ This if example function
-        Args:
-            request (str): Строка запроса.
-        Returns:
-            dict: Словарь с параметрами.
+    Args:
+        request (str): Строка запроса
 
-        Raises:
-             None
+    Returns:
 
-        Example:
-            Примеры вызовов
+     Raises:
+          Ошибка выполнение
+
+     Example:
+          Примеры вызовов
+
     """
 ```
 
@@ -129,8 +151,11 @@ def parse_response(request: str) -> dict:
 - `dict`: Словарь с параметрами.
 
 **Примеры**:
+
 ```python
-parse_response('https://example.com?param1=value1&param2=value2')
+request = "https://example.com?param1=value1&param2=value2"
+params = parse_response(request)
+print(params)
 ```
 
 ### `check_signature_result`
@@ -138,42 +163,53 @@ parse_response('https://example.com?param1=value1&param2=value2')
 ```python
 def check_signature_result(out_sum, inv_id, received_signature, password, user_id, user_telegram_id, product_id) -> bool:
     """ This if example function
-        Args:
-            out_sum: Сумма платежа.
-            inv_id: Номер заказа.
-            received_signature: Полученная подпись.
-            password: Пароль мерчанта.
-            user_id: ID пользователя.
-            user_telegram_id: Telegram ID пользователя.
-            product_id: ID товара.
-        Returns:
-            bool: `True`, если подпись верна, иначе `False`.
+    Args:
+        out_sum:
+        inv_id:
+        received_signature:
+        password:
+        user_id:
+        user_telegram_id:
+        product_id:
 
-        Raises:
-             None
+    Returns:
 
-        Example:
-            Примеры вызовов
+     Raises:
+          Ошибка выполнение
+
+     Example:
+          Примеры вызовов
+
     """
 ```
 
-**Описание**: Проверяет подпись результата оплаты.
+**Описание**: Проверяет подпись для ResultURL.
 
 **Параметры**:
 - `out_sum`: Сумма платежа.
 - `inv_id`: Номер заказа.
 - `received_signature`: Полученная подпись.
-- `password`: Пароль мерчанта.
+- `password`: Пароль магазина в Robokassa.
 - `user_id`: ID пользователя.
 - `user_telegram_id`: Telegram ID пользователя.
-- `product_id`: ID товара.
+- `product_id`: ID продукта.
 
 **Возвращает**:
 - `bool`: `True`, если подпись верна, иначе `False`.
 
 **Примеры**:
+
 ```python
-check_signature_result(100.0, 123, 'signature', 'password', 1, 123456789, 1)
+out_sum = 100.0
+inv_id = 123
+received_signature = "test_signature"
+password = "test_password"
+user_id = 1
+user_telegram_id = 123456789
+product_id = 10
+
+is_valid = check_signature_result(out_sum, inv_id, received_signature, password, user_id, user_telegram_id, product_id)
+print(is_valid)
 ```
 
 ### `result_payment`
@@ -181,16 +217,17 @@ check_signature_result(100.0, 123, 'signature', 'password', 1, 123456789, 1)
 ```python
 def result_payment(request: str) -> str:
     """ This if example function
-        Args:
-            request (str): Строка запроса с параметрами оплаты.
-        Returns:
-            str: 'OK' + номер заказа, если оплата прошла успешно, иначе 'bad sign'.
+    Args:
+        request (str): Строка запроса с параметрами оплаты
 
-        Raises:
-             None
+    Returns:
 
-        Example:
-            Примеры вызовов
+     Raises:
+          Ошибка выполнение
+
+     Example:
+          Примеры вызовов
+
     """
 ```
 
@@ -203,8 +240,11 @@ def result_payment(request: str) -> str:
 - `str`: `'OK' + номер заказа`, если оплата прошла успешно, иначе `'bad sign'`.
 
 **Примеры**:
+
 ```python
-result_payment('https://example.com?OutSum=100.0&InvId=123&SignatureValue=signature&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=1')
+request = "https://example.com?OutSum=100.0&InvId=123&SignatureValue=test_signature&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=10"
+result = result_payment(request)
+print(result)
 ```
 
 ### `check_success_payment`
@@ -212,16 +252,17 @@ result_payment('https://example.com?OutSum=100.0&InvId=123&SignatureValue=signat
 ```python
 def check_success_payment(request: str) -> str:
     """ This if example function
-        Args:
-            request (str): Строка запроса с параметрами оплаты.
-        Returns:
-            str: Сообщение об успешной оплате или 'bad sign' при неверной подписи.
+    Args:
+        request (str): Строка запроса с параметрами оплаты
 
-        Raises:
-             None
+    Returns:
 
-        Example:
-            Примеры вызовов
+     Raises:
+          Ошибка выполнение
+
+     Example:
+          Примеры вызовов
+
     """
 ```
 
@@ -234,5 +275,8 @@ def check_success_payment(request: str) -> str:
 - `str`: Сообщение об успешной оплате или `'bad sign'` при неверной подписи.
 
 **Примеры**:
+
 ```python
-check_success_payment('https://example.com?OutSum=100.0&InvId=123&SignatureValue=signature&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=1')
+request = "https://example.com?OutSum=100.0&InvId=123&SignatureValue=test_signature&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=10"
+result = check_success_payment(request)
+print(result)

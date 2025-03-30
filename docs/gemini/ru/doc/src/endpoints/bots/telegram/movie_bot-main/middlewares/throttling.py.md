@@ -1,27 +1,25 @@
-# Модуль для реализации троттлинга сообщений в Telegram боте
+# Модуль ThrottlingMiddleware
 
 ## Обзор
 
-Этот модуль предоставляет middleware для aiogram, который позволяет ограничивать частоту отправки сообщений от пользователей в Telegram боте. Он использует `TTLCache` для хранения информации о том, когда пользователь в последний раз отправлял сообщение, и предотвращает обработку сообщений, отправленных слишком часто.
+Модуль `ThrottlingMiddleware` предоставляет класс `ThrottlingMiddleware`, который реализует механизм ограничения скорости обработки сообщений в Telegram-боте. Он использует `TTLCache` для хранения информации о том, когда последнее сообщение от определенного пользователя было обработано, и предотвращает слишком частую обработку сообщений от одного и того же пользователя.
 
 ## Подробней
 
-Данный код реализует механизм троттлинга (ограничения частоты) сообщений для Telegram-бота, использующего библиотеку `aiogram`. Он предотвращает перегрузку бота и спам со стороны пользователей, ограничивая количество сообщений, которые пользователь может отправлять в течение определенного периода времени.
-
-Middleware `ThrottlingMiddleware` проверяет, находится ли идентификатор чата пользователя в кэше `TTLCache`. Если идентификатор чата уже есть в кэше, это означает, что пользователь недавно отправлял сообщение, и middleware не пропускает сообщение для дальнейшей обработки. Если идентификатора чата нет в кэше, middleware добавляет его в кэш и позволяет сообщению быть обработанным.
+Этот код используется для предотвращения злоупотреблений и защиты от флуда в Telegram-боте. Он позволяет ограничить количество сообщений, которые пользователь может отправлять боту за определенный период времени, тем самым повышая стабильность и отзывчивость бота.
 
 ## Классы
 
 ### `ThrottlingMiddleware`
 
-**Описание**: Middleware для ограничения частоты отправки сообщений от пользователей.
+**Описание**: Middleware для ограничения скорости обработки сообщений в Telegram-боте.
 
 **Методы**:
-- `__init__`: Инициализирует middleware с заданным временем ограничения.
-- `__call__`: Вызывается для каждого входящего сообщения. Проверяет, не превысил ли пользователь лимит сообщений.
+- `__init__`: Инициализирует объект `ThrottlingMiddleware`.
+- `__call__`: Вызывается для обработки каждого сообщения.
 
 **Параметры**:
-- `time_limit` (int): Время в секундах, в течение которого пользователь может отправлять только одно сообщение. По умолчанию 2 секунды.
+- `time_limit` (int): Время в секундах, в течение которого сообщения от одного и того же пользователя будут игнорироваться. По умолчанию 2 секунды.
 
 **Примеры**
 ```python
@@ -32,34 +30,29 @@ from aiogram.handlers import MessageHandler
 import asyncio
 from typing import Any, Dict
 
-# Импортируем наш middleware
-from middlewares.throttling import ThrottlingMiddleware
+# Создаем экземпляр бота
+TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+bot = Bot(token=TOKEN)
 
-# Вместо токена вставьте реальный токен вашего бота
-BOT_TOKEN = "YOUR_BOT_TOKEN"
-
-# Создаем экземпляры бота и диспетчера
-bot = Bot(token=BOT_TOKEN)
+# Создаем диспетчер
 dp = Dispatcher()
 
-# Регистрируем ThrottlingMiddleware
+# Подключаем middleware
 dp.message.middleware(ThrottlingMiddleware(time_limit=2))
 
 # Обработчик команды /start
 @dp.message(CommandStart())
-async def command_start_handler(message: Message) -> Any:
-    await message.answer("Привет! Я бот с ограничением частоты сообщений.")
+async def start_handler(message: Message):
+    await message.answer("Привет! Я бот, который ограничивает количество сообщений.")
 
-# Обработчик текстовых сообщений
+# Обработчик всех остальных сообщений
 @dp.message()
-async def message_handler(message: Message, data: Dict[str, Any]) -> Any:
-    await message.answer("Вы отправили сообщение!")
+async def echo_handler(message: Message):
+    await message.answer(f"Ты написал: {message.text}")
 
-async def main() -> None:
-    try:
-        await dp.start_polling(bot)
-    finally:
-        await bot.session.close()
+# Запуск бота
+async def main():
+    await dp.start_polling(bot)
 
 if __name__ == '__main__':
     asyncio.run(main())
@@ -72,33 +65,23 @@ if __name__ == '__main__':
 ```python
 def __init__(self, time_limit: int = 2) -> None:
     """
+    Инициализирует объект `ThrottlingMiddleware`.
+
     Args:
-        time_limit (int, optional): Время в секундах, в течение которого пользователь может отправлять только одно сообщение. По умолчанию 2.
+        time_limit (int, optional): Время в секундах, в течение которого сообщения от одного и того же пользователя будут игнорироваться. По умолчанию 2 секунды.
 
     Returns:
         None
 
     Raises:
         None
-
     """
 ```
 
-**Описание**: Инициализирует middleware с заданным временем ограничения.
+**Описание**: Инициализирует объект `ThrottlingMiddleware`, создавая `TTLCache` с заданным временем жизни.
 
 **Параметры**:
-- `time_limit` (int): Время в секундах, в течение которого пользователь может отправлять только одно сообщение. По умолчанию 2 секунды.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- Отсутствуют
-
-**Примеры**:
-```python
-middleware = ThrottlingMiddleware(time_limit=3)
-```
+- `time_limit` (int, optional): Время в секундах, в течение которого сообщения от одного и того же пользователя будут игнорироваться. По умолчанию 2 секунды.
 
 ### `__call__`
 
@@ -110,9 +93,11 @@ async def __call__(
     data: Dict[str, Any]
 ) -> Any:
     """
+    Вызывается для обработки каждого сообщения.
+
     Args:
         handler (Callable[[Message, Dict[str, Any]], Awaitable[Any]]): Функция-обработчик сообщения.
-        event (Message): Объект сообщения Telegram.
+        event (Message): Объект сообщения.
         data (Dict[str, Any]): Дополнительные данные.
 
     Returns:
@@ -120,30 +105,55 @@ async def __call__(
 
     Raises:
         None
-
     """
 ```
 
-**Описание**: Вызывается для каждого входящего сообщения. Проверяет, не превысил ли пользователь лимит сообщений.
+**Описание**: Метод `__call__` вызывается для обработки каждого сообщения. Он проверяет, находится ли идентификатор чата пользователя в кэше `self.limit`. Если да, то сообщение игнорируется. Если нет, то идентификатор чата добавляется в кэш, и сообщение передается обработчику.
 
 **Параметры**:
 - `handler` (Callable[[Message, Dict[str, Any]], Awaitable[Any]]): Функция-обработчик сообщения.
-- `event` (Message): Объект сообщения Telegram.
+- `event` (Message): Объект сообщения.
 - `data` (Dict[str, Any]): Дополнительные данные.
 
 **Возвращает**:
 - `Any`: Результат обработки сообщения.
 
-**Вызывает исключения**:
-- Отсутствуют
-
 **Примеры**:
-```python
-async def my_handler(message: Message, data: Dict[str, Any]) -> Any:
-    # Обработка сообщения
-    pass
 
-middleware = ThrottlingMiddleware(time_limit=2)
-# Вызов middleware
-# await middleware(my_handler, message, data)
+```python
+from aiogram import Bot, Dispatcher
+from aiogram.types import Message
+from aiogram.filters import CommandStart
+import asyncio
+from typing import Any, Dict
+
+# Создаем экземпляр бота
+TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+bot = Bot(token=TOKEN)
+
+# Создаем диспетчер
+dp = Dispatcher()
+
+# Создаем экземпляр middleware
+throttling_middleware = ThrottlingMiddleware(time_limit=2)
+
+# Регистрируем middleware
+dp.message.middleware(throttling_middleware)
+
+# Обработчик команды /start
+@dp.message(CommandStart())
+async def start_handler(message: Message):
+    await message.answer("Привет! Я бот, который ограничивает количество сообщений.")
+
+# Обработчик всех остальных сообщений
+@dp.message()
+async def echo_handler(message: Message):
+    await message.answer(f"Ты написал: {message.text}")
+
+# Запуск бота
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == '__main__':
+    asyncio.run(main())
 ```

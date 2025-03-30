@@ -1,38 +1,39 @@
-# Модуль `telegram_webhooks`
+# Модуль telegram_webhooks
 
 ## Обзор
 
-Модуль `telegram_webhooks` реализует телеграм-бота с использованием сервера FastAPI и RPC. Он предоставляет класс `TelegramBot`, который упрощает взаимодействие с Telegram API, настройку вебхуков и обработку входящих сообщений. Модуль позволяет запускать бота как через вебхук, так и через polling.
+Модуль `telegram_webhooks.py` реализует Telegram-бота, интегрированного с сервером FastAPI через RPC. Он предоставляет интерфейс для обработки входящих сообщений и команд от пользователей Telegram, а также для взаимодействия с другими частями системы через удаленные вызовы процедур (RPC).
 
 ## Подробней
 
-Этот модуль является ключевым компонентом системы для интеграции телеграм-ботов с остальной частью приложения через FastAPI и RPC. Он обеспечивает возможность динамической регистрации маршрутов для обработки сообщений, а также поддерживает работу с различными типами входящих данных, такими как текст, голос и документы. Расположение файла `/src/endpoints/bots/telegram/telegram_webhooks.py` указывает на то, что он является частью подсистемы обработки ботов в проекте `hypotez`.
+Этот модуль является ключевым компонентом для интеграции Telegram-ботов в систему `hypotez`. Он обеспечивает возможность приема и обработки сообщений из Telegram, а также отправку ответов и выполнение команд.
+
+Модуль использует библиотеку `telegram.ext` для упрощения работы с Telegram Bot API и `FastAPI` для создания веб-сервера, который принимает обновления от Telegram через webhook. Для взаимодействия между компонентами системы используется RPC, что позволяет боту выполнять задачи, требующие доступа к другим сервисам или данным.
 
 ## Классы
 
 ### `TelegramBot`
 
-**Описание**: Класс `TelegramBot` представляет собой интерфейс для работы с Telegram ботом. Он включает в себя методы для инициализации бота, запуска сервера, регистрации обработчиков и остановки бота.
+**Описание**: Класс `TelegramBot` представляет собой основной интерфейс для работы с Telegram-ботом. Он инициализирует бота, регистрирует обработчики команд и сообщений, а также запускает веб-сервер для приема обновлений от Telegram.
 
 **Методы**:
 - `__init__`: Инициализирует экземпляр класса `TelegramBot`.
-- `run`: Запускает бота и инициализирует RPC и webhook.
-- `_register_default_handlers`: Регистрирует обработчики по умолчанию, используя экземпляр `BotHandler`.
+- `run`: Запускает бота, инициализирует RPC и webhook.
+- `_register_default_handlers`: Регистрирует обработчики по умолчанию.
 - `_handle_message`: Обрабатывает любое текстовое сообщение.
-- `initialize_bot_webhook`: Инициализирует вебхук бота.
-- `_register_route_via_rpc`: Регистрирует маршрут вебхука Telegram через RPC.
-- `stop`: Останавливает бота и удаляет вебхук.
+- `initialize_bot_webhook`: Инициализирует webhook бота.
+- `_register_route_via_rpc`: Регистрирует маршрут Telegram webhook через RPC.
+- `stop`: Останавливает бота и удаляет webhook.
 
 **Параметры**:
-- `token` (str): Токен Telegram бота.
-- `route` (str, optional): Webhook route для FastAPI. По умолчанию `/telegram_webhook`.
+- `token` (str): Токен Telegram-бота.
+- `route` (str): Webhook route для FastAPI. По умолчанию '/telegram_webhook'.
 
-**Примеры**:
+**Примеры**
 
 ```python
 from dotenv import load_dotenv
 import os
-from src.endpoints.bots.telegram.telegram_webhooks import TelegramBot
 
 load_dotenv()
 bot = TelegramBot(os.getenv('TELEGRAM_TOKEN'))
@@ -46,41 +47,38 @@ bot.run()
 ```python
 def __init__(self, token: str, route: str = 'telegram_webhook'):
     """
-    Initialize the TelegramBot instance.
-
     Args:
         token (str): Telegram bot token.
         route (str): Webhook route for FastAPI. Defaults to '/telegram_webhook'.
     """
-    ...
 ```
 
 **Описание**: Инициализирует экземпляр класса `TelegramBot`.
 
 **Параметры**:
-- `token` (str): Токен Telegram бота.
-- `route` (str, optional): Webhook route для FastAPI. По умолчанию `/telegram_webhook`.
+- `token` (str): Токен Telegram-бота.
+- `route` (str, optional): Webhook route для FastAPI. По умолчанию '/telegram_webhook'.
 
 **Примеры**:
 ```python
-from src.endpoints.bots.telegram.telegram_webhooks import TelegramBot
-bot = TelegramBot('YOUR_TELEGRAM_BOT_TOKEN', route='/custom_route')
+bot = TelegramBot("YOUR_TELEGRAM_BOT_TOKEN", route='/custom_webhook')
 ```
 
 ### `run`
 
 ```python
 def run(self):
-    """Run the bot and initialize RPC and webhook."""
-    ...
+    """
+    Args:
+        self (TelegramBot): Экземпляр класса `TelegramBot`.
+    """
 ```
 
-**Описание**: Запускает бота и инициализирует RPC и webhook.
+**Описание**: Запускает бота, инициализирует RPC и webhook.
 
 **Примеры**:
 ```python
-from src.endpoints.bots.telegram.telegram_webhooks import TelegramBot
-bot = TelegramBot('YOUR_TELEGRAM_BOT_TOKEN')
+bot = TelegramBot(os.getenv('TELEGRAM_TOKEN'))
 bot.run()
 ```
 
@@ -88,16 +86,17 @@ bot.run()
 
 ```python
 def _register_default_handlers(self):
-    """Register the default handlers using the BotHandler instance."""
-    ...
+    """
+    Args:
+        self (TelegramBot): Экземпляр класса `TelegramBot`.
+    """
 ```
 
-**Описание**: Регистрирует обработчики по умолчанию, используя экземпляр `BotHandler`.
+**Описание**: Регистрирует обработчики по умолчанию.
 
 **Примеры**:
 ```python
-from src.endpoints.bots.telegram.telegram_webhooks import TelegramBot
-bot = TelegramBot('YOUR_TELEGRAM_BOT_TOKEN')
+bot = TelegramBot(os.getenv('TELEGRAM_TOKEN'))
 bot._register_default_handlers()
 ```
 
@@ -105,8 +104,11 @@ bot._register_default_handlers()
 
 ```python
 async def _handle_message(self, update: Update, context: CallbackContext) -> None:
-    """Handle any text message."""
-    ...
+    """
+    Args:
+        update (Update): Объект `Update` от Telegram.
+        context (CallbackContext): Контекст обратного вызова.
+    """
 ```
 
 **Описание**: Обрабатывает любое текстовое сообщение.
@@ -117,7 +119,7 @@ async def _handle_message(self, update: Update, context: CallbackContext) -> Non
 
 **Примеры**:
 ```python
-# Пример вызова внутри класса TelegramBot
+# Пример использования внутри класса TelegramBot
 await self._handle_message(update, context)
 ```
 
@@ -125,22 +127,22 @@ await self._handle_message(update, context)
 
 ```python
 def initialize_bot_webhook(self, route: str):
-    """Initialize the bot webhook."""
-    ...
+    """
+    Args:
+        route (str): Маршрут для вебхука.
+    """
 ```
 
-**Описание**: Инициализирует вебхук бота.
+**Описание**: Инициализирует webhook бота.
 
 **Параметры**:
-- `route` (str): Маршрут вебхука.
+- `route` (str): Маршрут для вебхука.
 
 **Возвращает**:
-- `str | False`: URL вебхука или `False` в случае ошибки.
+- `str | bool`: URL вебхука в случае успеха, `False` в случае ошибки.
 
 **Примеры**:
 ```python
-from src.endpoints.bots.telegram.telegram_webhooks import TelegramBot
-bot = TelegramBot('YOUR_TELEGRAM_BOT_TOKEN')
 webhook_url = bot.initialize_bot_webhook('/telegram_webhook')
 ```
 
@@ -148,20 +150,19 @@ webhook_url = bot.initialize_bot_webhook('/telegram_webhook')
 
 ```python
 def _register_route_via_rpc(self, rpc_client: ServerProxy):
-    """Register the Telegram webhook route via RPC."""
-    ...
+    """
+    Args:
+        rpc_client (ServerProxy): Клиент RPC.
+    """
 ```
 
-**Описание**: Регистрирует маршрут вебхука Telegram через RPC.
+**Описание**: Регистрирует маршрут Telegram webhook через RPC.
 
 **Параметры**:
-- `rpc_client` (ServerProxy): RPC клиент.
+- `rpc_client` (ServerProxy): Клиент RPC.
 
 **Примеры**:
 ```python
-from xmlrpc.client import ServerProxy
-from src.endpoints.bots.telegram.telegram_webhooks import TelegramBot
-bot = TelegramBot('YOUR_TELEGRAM_BOT_TOKEN')
 rpc_client = ServerProxy(f"http://{gs.host}:9000", allow_none=True)
 bot._register_route_via_rpc(rpc_client)
 ```
@@ -170,14 +171,15 @@ bot._register_route_via_rpc(rpc_client)
 
 ```python
 def stop(self):
-    """Stop the bot and delete the webhook."""
-    ...
+    """
+    Args:
+        self (TelegramBot): Экземпляр класса `TelegramBot`.
+    """
 ```
 
-**Описание**: Останавливает бота и удаляет вебхук.
+**Описание**: Останавливает бота и удаляет webhook.
 
 **Примеры**:
 ```python
-from src.endpoints.bots.telegram.telegram_webhooks import TelegramBot
-bot = TelegramBot('YOUR_TELEGRAM_BOT_TOKEN')
+bot = TelegramBot(os.getenv('TELEGRAM_TOKEN'))
 bot.stop()

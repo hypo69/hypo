@@ -1,23 +1,26 @@
-# Модуль neural_networks
+# Модуль `ToolBox_n_networks.py`
 
 ## Обзор
 
-Модуль `neural_networks` предоставляет класс `neural_networks`, который содержит методы для взаимодействия с различными нейронными сетями. Включает методы для генерации изображений на основе текстовых запросов и обработки текстовых сообщений с использованием различных моделей, таких как FLUX.1-schnell, Mistral и GPT-4o-mini.
+Модуль `ToolBox_n_networks.py` содержит класс `neural_networks`, который предоставляет методы для взаимодействия с различными нейронными сетями через API. В частности, он включает методы для генерации изображений на основе текстовых запросов и для получения текстовых ответов от языковых моделей.
 
 ## Подробней
 
-Этот модуль используется для упрощения взаимодействия с различными API нейронных сетей, абстрагируя детали реализации каждого API. Это позволяет легко переключаться между различными моделями и сервисами, а также обеспечивает централизованное управление параметрами и аутентификацией.
+Этот модуль предоставляет интерфейс для выполнения запросов к различным API нейронных сетей, таким как FLUX.1-schnell для генерации изображений и Mistral Large 2407, free gpt-4o-mini для получения текстовых ответов. Он использует библиотеки `requests` для отправки HTTP-запросов, `json` для обработки JSON-ответов, `os` для доступа к переменным окружения, `io` для работы с потоками ввода-вывода и `PIL` (Pillow) для обработки изображений.
+
+Модуль предназначен для использования в проектах, где требуется интеграция с нейронными сетями для автоматической генерации контента или обработки текстовых данных.
 
 ## Классы
 
 ### `neural_networks`
 
-**Описание**: Класс, содержащий методы для работы с различными нейронными сетями.
+**Описание**:
+Класс `neural_networks` предоставляет методы для взаимодействия с различными нейронными сетями.
 
 **Методы**:
-- `_FLUX_schnell`: Отправляет запрос к модели FLUX.1-schnell для генерации изображения на основе текстового запроса.
-- `__mistral_large_2407`: Отправляет запрос к модели Mistral для обработки текстовых сообщений.
-- `_free_gpt_4o_mini`: Отправляет запрос к модели GPT-4o-mini для обработки текстовых сообщений.
+- `_FLUX_schnell`: Отправляет запрос к API FLUX.1-schnell для генерации изображения на основе текстового запроса.
+- `__mistral_large_2407`: Отправляет запрос к API Mistral Large 2407 для получения текстового ответа на основе списка сообщений.
+- `_free_gpt_4o_mini`: Отправляет запрос к API free gpt-4o-mini для получения текстового ответа на основе списка сообщений.
 
 ## Функции
 
@@ -28,36 +31,39 @@ def _FLUX_schnell(self, prompt: str, size: list[int, int], seed: int, num_infere
     """
     Args:
         prompt (str): Текстовый запрос для генерации изображения.
-        size (list[int, int]): Список с шириной и высотой изображения.
+        size (list[int, int]): Размеры изображения (ширина, высота).
         seed (int): Зерно для генерации случайных чисел.
         num_inference_steps (int): Количество шагов для генерации изображения.
 
     Returns:
-        str | None: Объект `Image` с сгенерированным изображением или `None` в случае ошибки.
+        str|None: Объект `Image` с сгенерированным изображением или `None` в случае ошибки.
+
+    Raises:
+        requests.exceptions.RequestException: Если возникает ошибка при отправке запроса к API.
+
+    Example:
+        >>> from PIL import Image
+        >>> nn = neural_networks()
+        >>> image = nn._FLUX_schnell("a cat", [512, 512], 123, 50)
+        >>> if image:
+        ...     image.save("cat.png")
     """
 ```
 
-**Описание**: Отправляет запрос к API black-forest-labs/FLUX.1-schnell для генерации изображения на основе текстового запроса.
+**Описание**:
+Отправляет запрос к API FLUX.1-schnell для генерации изображения на основе текстового запроса.
 
 **Параметры**:
 - `prompt` (str): Текстовый запрос для генерации изображения.
-- `size` (list[int, int]): Список с шириной и высотой изображения (ширина, высота).
+- `size` (list[int, int]): Размеры изображения (ширина, высота).
 - `seed` (int): Зерно для генерации случайных чисел.
 - `num_inference_steps` (int): Количество шагов для генерации изображения.
 
 **Возвращает**:
-- `str | None`: Объект `Image` с сгенерированным изображением или `None` в случае ошибки.
+- `str|None`: Объект `Image` с сгенерированным изображением или `None` в случае ошибки.
 
-**Примеры**:
-
-```python
-# Пример вызова функции (предполагается наличие экземпляра класса neural_networks)
-# image = neural_networks_instance._FLUX_schnell("A futuristic cityscape", [512, 512], 123, 50)
-# if image:
-#     image.save("futuristic_cityscape.png")
-# else:
-#     print("Не удалось сгенерировать изображение.")
-```
+**Вызывает исключения**:
+- `requests.exceptions.RequestException`: Если возникает ошибка при отправке запроса к API.
 
 ### `__mistral_large_2407`
 
@@ -65,30 +71,34 @@ def _FLUX_schnell(self, prompt: str, size: list[int, int], seed: int, num_infere
 def __mistral_large_2407(self, prompt: list[dict[str, str]]) -> tuple[str, int, int]|str:
     """
     Args:
-        prompt (list[dict[str, str]]): Список словарей с текстовыми сообщениями.
+        prompt (list[dict[str, str]]): Список сообщений для отправки в API.
 
     Returns:
-        tuple[str, int, int] | str: Кортеж, содержащий ответ, количество использованных токенов в запросе и в ответе, или строку с сообщением об ошибке.
+        tuple[str, int, int]|str: Кортеж, содержащий текстовое сообщение, количество токенов в запросе и количество токенов в ответе, или строка с ошибкой.
+
+    Raises:
+        requests.exceptions.RequestException: Если возникает ошибка при отправке запроса к API.
+
+    Example:
+        >>> nn = neural_networks()
+        >>> prompt = [{"role": "user", "content": "What is the capital of France?"}]
+        >>> response, prompt_tokens, completion_tokens = nn.__mistral_large_2407(prompt)
+        >>> print(response)
+        {'role': 'assistant', 'content': 'The capital of France is Paris.'}
     """
 ```
 
-**Описание**: Отправляет запрос к API Mistral для обработки текстовых сообщений.
+**Описание**:
+Отправляет запрос к API Mistral Large 2407 для получения текстового ответа на основе списка сообщений.
 
 **Параметры**:
-- `prompt` (list[dict[str, str]]): Список словарей, где каждый словарь содержит ключ "content" с текстом сообщения.
+- `prompt` (list[dict[str, str]]): Список сообщений для отправки в API.
 
 **Возвращает**:
-- `tuple[str, int, int] | str`: Кортеж, содержащий ответ, количество использованных токенов в запросе и в ответе, или строку с сообщением об ошибке.
+- `tuple[str, int, int]|str`: Кортеж, содержащий текстовое сообщение, количество токенов в запросе и количество токенов в ответе, или строка с ошибкой.
 
-**Примеры**:
-
-```python
-# Пример вызова функции (предполагается наличие экземпляра класса neural_networks)
-# prompt = [{"role": "user", "content": "Explain the theory of relativity."}]
-# response, prompt_tokens, completion_tokens = neural_networks_instance.__mistral_large_2407(prompt)
-# print(f"Ответ: {response}")
-# print(f"Токены в запросе: {prompt_tokens}, токены в ответе: {completion_tokens}")
-```
+**Вызывает исключения**:
+- `requests.exceptions.RequestException`: Если возникает ошибка при отправке запроса к API.
 
 ### `_free_gpt_4o_mini`
 
@@ -96,26 +106,31 @@ def __mistral_large_2407(self, prompt: list[dict[str, str]]) -> tuple[str, int, 
 def _free_gpt_4o_mini(self, prompt: list[dict[str, str]]) -> tuple[str, int, int]|str:
     """
     Args:
-        prompt (list[dict[str, str]]): Список словарей с текстовыми сообщениями.
+        prompt (list[dict[str, str]]): Список сообщений для отправки в API.
 
     Returns:
-        tuple[str, int, int] | str: Кортеж, содержащий ответ, количество использованных токенов в запросе и в ответе, или результат вызова `__mistral_large_2407` в случае ошибки.
+        tuple[str, int, int]|str: Кортеж, содержащий текстовое сообщение, количество токенов в запросе и количество токенов в ответе, или строка с ошибкой.
+
+    Raises:
+        requests.exceptions.RequestException: Если возникает ошибка при отправке запроса к API.
+
+    Example:
+        >>> nn = neural_networks()
+        >>> prompt = [{"role": "user", "content": "What is the capital of Germany?"}]
+        >>> response, prompt_tokens, completion_tokens = nn._free_gpt_4o_mini(prompt)
+        >>> print(response)
+        {'role': 'assistant', 'content': 'The capital of Germany is Berlin.'}
     """
 ```
 
-**Описание**: Отправляет запрос к API GPT-4o-mini для обработки текстовых сообщений. Если запрос не удаётся, использует `__mistral_large_2407`.
+**Описание**:
+Отправляет запрос к API free gpt-4o-mini для получения текстового ответа на основе списка сообщений.
 
 **Параметры**:
-- `prompt` (list[dict[str, str]]): Список словарей, где каждый словарь содержит ключ "content" с текстом сообщения.
+- `prompt` (list[dict[str, str]]): Список сообщений для отправки в API.
 
 **Возвращает**:
-- `tuple[str, int, int] | str`: Кортеж, содержащий ответ, количество использованных токенов в запросе и в ответе, или результат вызова `__mistral_large_2407` в случае ошибки.
+- `tuple[str, int, int]|str`: Кортеж, содержащий текстовое сообщение, количество токенов в запросе и количество токенов в ответе, или строка с ошибкой.
 
-**Примеры**:
-
-```python
-# Пример вызова функции (предполагается наличие экземпляра класса neural_networks)
-# prompt = [{"role": "user", "content": "Translate 'Hello, world!' to French."}]
-# response, prompt_tokens, completion_tokens = neural_networks_instance._free_gpt_4o_mini(prompt)
-# print(f"Ответ: {response}")
-# print(f"Токены в запросе: {prompt_tokens}, токены в ответе: {completion_tokens}")
+**Вызывает исключения**:
+- `requests.exceptions.RequestException`: Если возникает ошибка при отправке запроса к API.

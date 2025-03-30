@@ -51,7 +51,11 @@
         except Exception as ex:
             logger.error('Error while processing data', ех, exc_info=True)
     ```
-
+#### **5 Не используй `Union[]` в коде. Вместо него используй `|`
+Например:
+```python
+x: str | int ...
+```
 
 ---
 

@@ -2,280 +2,62 @@
 
 ## Обзор
 
-Модуль `minibot.py` представляет собой реализацию мини-бота для обслуживания запросов от пользователя Kazarinov. Он использует библиотеку `telebot` для взаимодействия с Telegram API и включает функциональность для обработки текстовых сообщений, URL-адресов, голосовых сообщений и документов. Также, в зависимости от конфигурации, бот может использовать Google Gemini AI для генерации ответов на текстовые запросы.
+Модуль `minibot.py` представляет собой реализацию мини-бота для обслуживания запросов от пользователя Kazarinov. Он использует библиотеку `telebot` для взаимодействия с Telegram API и включает функциональность для обработки текстовых сообщений, URL, голосовых сообщений и документов. Также реализована интеграция с AI-моделью Google Gemini для генерации ответов на запросы пользователя.
 
 ## Подробней
 
-Модуль предназначен для работы в двух режимах: `PRODUCTION` и `DEV`. В зависимости от режима, бот использует разные токены для подключения к Telegram API. Ключи для доступа к API могут браться как из переменных окружения, так и из базы данных с паролями.
-Основная задача бота - обработка сообщений пользователя, выполнение сценариев на основе полученных данных (например, URL-адресов) и предоставление ответов с использованием AI.
-Модуль включает в себя классы `BotHandler` и `Config`, а также основные обработчики команд и сообщений для Telegram бота.
+Этот модуль является частью проекта `hypotez` и предназначен для предоставления интерфейса взаимодействия с пользователем через Telegram. Он обрабатывает различные типы входящих сообщений, такие как текстовые команды, URL (в частности, из OneTab), голосовые сообщения и документы. В зависимости от типа сообщения, бот выполняет соответствующие действия, такие как отправка сообщений, обработка URL для извлечения данных, транскрибирование голосовых сообщений или сохранение документов.
+
+Основная цель модуля - обеспечить удобный и функциональный интерфейс для взаимодействия с пользователем, используя возможности Telegram API и AI-модели Google Gemini. Он также предоставляет механизмы для обработки ошибок и логирования событий, что облегчает отладку и поддержку бота.
 
 ## Классы
 
 ### `BotHandler`
 
 **Описание**:
-Класс `BotHandler` предназначен для обработки сообщений, получаемых от Telegram бота. Он включает в себя методы для обработки текста, URL, голосовых сообщений, документов и команды `--next`.
+Класс `BotHandler` предназначен для обработки команд, полученных от Telegram-бота. Он содержит методы для обработки текстовых сообщений, URL, а также для отправки различных типов ответов пользователю.
 
 **Методы**:
-- `__init__`: Инициализирует обработчик, настраивает список вопросов и AI модель.
-- `handle_message`: Обрабатывает входящие текстовые сообщения, определяет тип сообщения (URL, команда или текст) и вызывает соответствующие обработчики.
-- `_send_user_flowchart`: Отправляет пользователю схему user_flowchart.
-- `_handle_url`: Обрабатывает URL, полученный от пользователя, извлекает данные и запускает сценарий.
-- `_handle_next_command`: Обрабатывает команду `--next` и отправляет пользователю случайный вопрос и ответ от AI.
-- `help_command`: Отправляет пользователю сообщение со списком доступных команд.
-- `send_pdf`: Отправляет пользователю PDF-файл.
-- `handle_voice`: Обрабатывает голосовые сообщения, распознает текст и отправляет его пользователю.
-- `_transcribe_voice`: Заглушка для транскрибирования голосового сообщения.
-- `handle_document`: Обрабатывает полученные документы, сохраняет их и отправляет пользователю сообщение с путем к файлу.
-
-#### `__init__`
-
-```python
-def __init__(self):
-    """Инициализация обработчика событий телеграм-бота."""
-    ...
-```
-
-**Описание**:
-Инициализирует экземпляр класса `BotHandler`.
+- `__init__`: Инициализирует обработчик событий телеграм-бота, настраивает список вопросов и AI-модель Google Gemini.
+- `handle_message`: Обрабатывает текстовые сообщения, определяя тип запроса (URL, команда или текст) и выполняет соответствующие действия.
+- `_send_user_flowchart`: Отправляет схему user_flowchart в виде фотографии.
+- `_handle_url`: Обрабатывает URL, присланные пользователем, извлекая данные из OneTab и запуская сценарий.
+- `_handle_next_command`: Обрабатывает команду '--next' и её аналоги, отправляя случайный вопрос и ответ от AI-модели.
+- `help_command`: Обрабатывает команду /help, отправляя список доступных команд.
+- `send_pdf`: Обрабатывает команду /sendpdf для отправки PDF-файла.
+- `handle_voice`: Обрабатывает голосовые сообщения, транскрибируя их и отправляя распознанный текст пользователю.
+- `_transcribe_voice`: Транскрибирует голосовое сообщение (заглушка, пока не реализовано).
+- `handle_document`: Обрабатывает полученные документы, сохраняя их во временную директорию.
 
 **Параметры**:
-- Отсутствуют.
-
-**Возвращает**:
-- Отсутствует.
+- `base_dir` (Path): Базовая директория для хранения ресурсов бота.
+- `questions_list` (list[str]): Список вопросов для обработки команды '--next'.
+- `model` (GoogleGenerativeAI): AI-модель Google Gemini для генерации ответов.
 
 **Примеры**:
+
 ```python
 handler = BotHandler()
-```
-
-#### `handle_message`
-
-```python
-def handle_message(self, bot: telebot, message: 'message'):
-    """Обработка текстовых сообщений."""
-    ...
-```
-
-**Описание**:
-Обрабатывает текстовые сообщения, полученные от пользователя.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `message` (message): Объект сообщения от пользователя.
-
-**Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-handler.handle_message(bot, message)
-```
-
-#### `_send_user_flowchart`
-
-```python
-def _send_user_flowchart(self, bot, chat_id):
-    """Отправка схемы user_flowchart."""
-    ...
-```
-
-**Описание**:
-Отправляет пользователю схему user_flowchart в виде изображения.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `chat_id` (int): Идентификатор чата пользователя.
-
-**Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-handler._send_user_flowchart(bot, message.chat.id)
-```
-
-#### `_handle_url`
-
-```python
-def _handle_url(self, bot, message: 'message'):
-    """Обработка URL, присланного пользователем."""
-    ...
-```
-
-**Описание**:
-Обрабатывает URL, полученный от пользователя, извлекает данные и запускает сценарий.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `message` (message): Объект сообщения от пользователя.
-
-**Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-handler._handle_url(bot, message)
-```
-
-#### `_handle_next_command`
-
-```python
-def _handle_next_command(self, bot, message):
-    """Обработка команды '--next' и её аналогов."""
-    ...
-```
-
-**Описание**:
-Обрабатывает команду `--next` и отправляет пользователю случайный вопрос и ответ от AI.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `message` (message): Объект сообщения от пользователя.
-
-**Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-handler._handle_next_command(bot, message)
-```
-
-#### `help_command`
-
-```python
-def help_command(self, bot, message):
-    """Обработка команды /help."""
-    ...
-```
-
-**Описание**:
-Отправляет пользователю сообщение со списком доступных команд.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `message` (message): Объект сообщения от пользователя.
-
-**Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-handler.help_command(bot, message)
-```
-
-#### `send_pdf`
-
-```python
-def send_pdf(self, bot, message, pdf_file):
-    """Обработка команды /sendpdf для отправки PDF."""
-    ...
-```
-
-**Описание**:
-Отправляет пользователю PDF-файл.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `message` (message): Объект сообщения от пользователя.
-- `pdf_file` (str): Путь к PDF-файлу.
-
-**Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-handler.send_pdf(bot, message, 'example.pdf')
-```
-
-#### `handle_voice`
-
-```python
-def handle_voice(self, bot, message):
-    """Обработка голосовых сообщений."""
-    ...
-```
-
-**Описание**:
-Обрабатывает голосовые сообщения, распознает текст и отправляет его пользователю.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `message` (message): Объект сообщения от пользователя.
-
-**Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-handler.handle_voice(bot, message)
-```
-
-#### `_transcribe_voice`
-
-```python
-def _transcribe_voice(self, file_path):
-    """Транскрибирование голосового сообщения (заглушка)."""
-    ...
-```
-
-**Описание**:
-Транскрибирует голосовое сообщение (заглушка).
-
-**Параметры**:
-- `file_path` (str): Путь к файлу голосового сообщения.
-
-**Возвращает**:
-- `str`: Распознанный текст.
-
-**Примеры**:
-```python
-text = handler._transcribe_voice('voice.ogg')
-```
-
-#### `handle_document`
-
-```python
-def handle_document(self, bot, message):
-    """Обработка полученных документов."""
-    ...
-```
-
-**Описание**:
-Обрабатывает полученные документы, сохраняет их и отправляет пользователю сообщение с путем к файлу.
-
-**Параметры**:
-- `bot` (telebot): Экземпляр телеграм-бота.
-- `message` (message): Объект сообщения от пользователя.
-
-**Возвращает**:
-- `bool`: `True`, если обработка прошла успешно, `False` в случае ошибки.
-
-**Примеры**:
-```python
-success = handler.handle_document(bot, message)
 ```
 
 ### `Config`
 
 **Описание**:
-Класс `Config` предназначен для хранения конфигурационных параметров бота.
+Класс `Config` предназначен для хранения конфигурационных параметров бота, таких как токен Telegram бота, ID канала, директории с фотографиями и текстовые сообщения для различных команд.
 
 **Параметры**:
-- `BOT_TOKEN` (str): Токен бота, который зависит от режима работы (`PRODUCTION` или `DEV`) и источника ключей (переменные окружения или база данных).
-- `CHANNEL_ID` (str): Идентификатор канала.
+- `BOT_TOKEN` (str): Токен Telegram бота, который зависит от режима работы (PRODUCTION или DEV) и способа получения (из .env или из базы данных).
+- `CHANNEL_ID` (str): ID канала Telegram.
 - `PHOTO_DIR` (Path): Путь к директории с фотографиями.
-- `COMMAND_INFO` (str): Информация о боте, отображаемая по команде `/info`.
-- `UNKNOWN_COMMAND_MESSAGE` (str): Сообщение об неизвестной команде.
-- `START_MESSAGE` (str): Приветственное сообщение при старте бота.
-- `HELP_MESSAGE` (str): Справочное сообщение, отображаемое по команде `/help`.
+- `COMMAND_INFO` (str): Информация о боте для команды /info.
+- `UNKNOWN_COMMAND_MESSAGE` (str): Сообщение для неизвестных команд.
+- `START_MESSAGE` (str): Сообщение для команды /start.
+- `HELP_MESSAGE` (str): Сообщение для команды /help.
 
 **Примеры**:
+
 ```python
 config = Config()
-print(config.BOT_TOKEN)
 ```
 
 ## Функции
@@ -285,22 +67,38 @@ print(config.BOT_TOKEN)
 ```python
 @bot.message_handler(commands=['start'])
 def command_start(message):
-    """Обработка команды /start."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример вызова команды /start пользователем:
+        >>> /start
+    """
 ```
 
 **Описание**:
 Обрабатывает команду `/start`, отправляя приветственное сообщение пользователю.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении команды /start
+@bot.message_handler(commands=['start'])
+def command_start(message):
+    logger.info(f"User {message.from_user.username} send /start command")
+    bot.send_message(message.chat.id, config.START_MESSAGE)
 ```
 
 ### `command_help`
@@ -308,22 +106,38 @@ def command_start(message):
 ```python
 @bot.message_handler(commands=['help'])
 def command_help(message):
-    """Обработка команды /help."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример вызова команды /help пользователем:
+        >>> /help
+    """
 ```
 
 **Описание**:
-Обрабатывает команду `/help`, вызывая метод `help_command` класса `BotHandler` для отправки справочного сообщения.
+Обрабатывает команду `/help`, вызывая метод `help_command` у объекта `handler` для отправки списка доступных команд.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении команды /help
+@bot.message_handler(commands=['help'])
+def command_help(message):
+    logger.info(f"User {message.from_user.username} send /help command")
+    handler.help_command(bot, message)
 ```
 
 ### `command_info`
@@ -331,22 +145,38 @@ def command_help(message):
 ```python
 @bot.message_handler(commands=['info'])
 def command_info(message):
-    """Обработка команды /info."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример вызова команды /info пользователем:
+        >>> /info
+    """
 ```
 
 **Описание**:
-Обрабатывает команду `/info`, отправляя информацию о боте.
+Обрабатывает команду `/info`, отправляя информацию о боте пользователю.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении команды /info
+@bot.message_handler(commands=['info'])
+def command_info(message):
+    logger.info(f"User {message.from_user.username} send /info command")
+    bot.send_message(message.chat.id, config.COMMAND_INFO)
 ```
 
 ### `command_time`
@@ -354,22 +184,40 @@ def command_info(message):
 ```python
 @bot.message_handler(commands=['time'])
 def command_time(message):
-    """Обработка команды /time."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример вызова команды /time пользователем:
+        >>> /time
+    """
 ```
 
 **Описание**:
-Обрабатывает команду `/time`, отправляя текущее время.
+Обрабатывает команду `/time`, отправляя текущее время пользователю.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении команды /time
+@bot.message_handler(commands=['time'])
+def command_time(message):
+    logger.info(f"User {message.from_user.username} send /time command")
+    now = datetime.datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    bot.send_message(message.chat.id, f"Current time: {current_time}")
 ```
 
 ### `command_photo`
@@ -377,22 +225,51 @@ def command_time(message):
 ```python
 @bot.message_handler(commands=['photo'])
 def command_photo(message):
-    """Обработка команды /photo."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        FileNotFoundError: Если директория с фотографиями не найдена.
+
+    Example:
+        Пример вызова команды /photo пользователем:
+        >>> /photo
+    """
 ```
 
 **Описание**:
-Обрабатывает команду `/photo`, отправляя случайную фотографию из указанной директории.
+Обрабатывает команду `/photo`, отправляя случайную фотографию из директории `PHOTO_DIR`.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
+
+**Вызывает исключения**:
+- `FileNotFoundError`: Если директория с фотографиями не найдена.
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении команды /photo
+@bot.message_handler(commands=['photo'])
+def command_photo(message):
+    logger.info(f"User {message.from_user.username} send /photo command")
+    try:
+        photo_files = os.listdir(config.PHOTO_DIR)
+        if photo_files:
+            random_photo = random.choice(photo_files)
+            photo_path = os.path.join(config.PHOTO_DIR, random_photo)
+            with open(photo_path, 'rb') as photo:
+                bot.send_photo(message.chat.id, photo)
+        else:
+            bot.send_message(message.chat.id, "No photos in the folder.")
+    except FileNotFoundError:
+        bot.send_message(message.chat.id, "Photo directory not found.")
 ```
 
 ### `handle_voice_message`
@@ -400,22 +277,37 @@ def command_photo(message):
 ```python
 @bot.message_handler(content_types=['voice'])
 def handle_voice_message(message):
-    """Обработка голосовых сообщений."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример отправки голосового сообщения пользователем.
+    """
 ```
 
 **Описание**:
-Обрабатывает голосовые сообщения, перенаправляя их в метод `handle_voice` класса `BotHandler`.
+Обрабатывает голосовые сообщения, вызывая метод `handle_voice` у объекта `handler`.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении голосового сообщения
+@bot.message_handler(content_types=['voice'])
+def handle_voice_message(message):
+    logger.info(f"User {message.from_user.username} send voice message")
+    handler.handle_voice(bot, message)
 ```
 
 ### `handle_document_message`
@@ -423,22 +315,37 @@ def handle_voice_message(message):
 ```python
 @bot.message_handler(content_types=['document'])
 def handle_document_message(message):
-    """Обработка полученных документов."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример отправки документа пользователем.
+    """
 ```
 
 **Описание**:
-Обрабатывает полученные документы, перенаправляя их в метод `handle_document` класса `BotHandler`.
+Обрабатывает полученные документы, вызывая метод `handle_document` у объекта `handler`.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении документа
+@bot.message_handler(content_types=['document'])
+def handle_document_message(message):
+    logger.info(f"User {message.from_user.username} send document message")
+    handler.handle_document(bot, message)
 ```
 
 ### `handle_text_message`
@@ -446,22 +353,37 @@ def handle_document_message(message):
 ```python
 @bot.message_handler(func=lambda message: message.text and not message.text.startswith('/'))
 def handle_text_message(message):
-    """Обработка текстовых сообщений."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример отправки текстового сообщения пользователем, не являющегося командой.
+    """
 ```
 
 **Описание**:
-Обрабатывает текстовые сообщения, перенаправляя их в метод `handle_message` класса `BotHandler`.
+Обрабатывает текстовые сообщения, не начинающиеся с `/`, вызывая метод `handle_message` у объекта `handler`.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении текстового сообщения
+@bot.message_handler(func=lambda message: message.text and not message.text.startswith('/'))
+def handle_text_message(message):
+    logger.info(f"User {message.from_user.username} sent message: {message.text}")
+    handler.handle_message(bot, message)
 ```
 
 ### `handle_unknown_command`
@@ -469,42 +391,79 @@ def handle_text_message(message):
 ```python
 @bot.message_handler(func=lambda message: message.text and message.text.startswith('/'))
 def handle_unknown_command(message):
-    """Обработка неизвестных команд."""
-    ...
+    """
+    Args:
+        message (telebot.types.Message): Объект сообщения от Telegram.
+
+    Returns:
+        None
+
+    Raises:
+        No exceptions
+
+    Example:
+        Пример отправки неизвестной команды пользователем.
+    """
 ```
 
 **Описание**:
 Обрабатывает неизвестные команды, отправляя сообщение об этом пользователю.
 
 **Параметры**:
-- `message` (telebot.types.Message): Объект сообщения от пользователя.
+- `message` (telebot.types.Message): Объект сообщения от Telegram.
 
 **Возвращает**:
-- Отсутствует.
+- `None`
 
 **Примеры**:
+
 ```python
-# Пример использования обрабатывается непосредственно библиотекой telebot при получении неизвестной команды
+@bot.message_handler(func=lambda message: message.text and message.text.startswith('/'))
+def handle_unknown_command(message):
+    logger.info(f"User {message.from_user.username} send unknown command: {message.text}")
+    bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
 ```
 
 ### `main`
 
 ```python
 def main():
-    """Основная функция для запуска бота."""
-    ...
+    """
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        Exception: В случае ошибки во время работы бота.
+
+    Example:
+        Запуск основного цикла работы бота.
+    """
 ```
 
 **Описание**:
-Основная функция для запуска бота. Инициализирует и запускает бота в режиме polling.
+Основная функция для запуска бота.
 
 **Параметры**:
-- Отсутствуют.
+- `None`
 
 **Возвращает**:
-- Отсутствует.
+- `None`
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки во время работы бота.
 
 **Примеры**:
+
 ```python
-if __name__ == '__main__':
-    main()
+def main():
+    try:
+        logger.info(f"Starting bot in {MODE} mode")
+        bot.polling(none_stop=True)
+    except Exception as ex:
+        logger.error(f"Error during bot polling: ", ex)
+        ...
+        bot.stop_bot()
+        main()

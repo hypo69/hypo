@@ -1,12 +1,16 @@
-# Модуль `catalog_router.py`
+# Модуль catalog_router
 
 ## Обзор
 
-Модуль `catalog_router.py` предназначен для обработки запросов, связанных с каталогом товаров в Telegram-боте. Он содержит набор обработчиков callback-запросов и сообщений, которые позволяют пользователям просматривать категории товаров, информацию о товарах и совершать покупки через различные платежные системы.
+Модуль `catalog_router` представляет собой набор обработчиков (handlers) для Telegram-бота, специализирующихся на отображении каталога товаров, обработке выбора категорий и организации процессов оплаты через различные платежные системы (ЮKassa, Stars, Robocassa). Он интегрирован с базой данных для получения информации о категориях, товарах и пользователях, а также использует различные клавиатуры для навигации и выбора товаров.
 
 ## Подробней
 
-Этот модуль играет ключевую роль в навигации пользователей по каталогу товаров, отображении информации о товарах и организации процесса оплаты. Он интегрирован с базой данных для получения информации о категориях и товарах, а также взаимодействует с платежными системами, такими как ЮKassa, Robocassa и Stars.
+Этот модуль является важной частью логики пользовательского интерфейса бота, отвечая за взаимодействие с каталогом товаров. Он позволяет пользователям просматривать категории, выбирать товары и совершать покупки, используя различные платежные системы. Модуль использует роутер `catalog_router` для обработки входящих callback-запросов и сообщений, связанных с каталогом и оплатой.
+
+## Классы
+
+В данном модуле классы отсутствуют.
 
 ## Функции
 
@@ -16,29 +20,42 @@
 async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий запрос обратного вызова от пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для работы с базой данных без автоматической фиксации изменений.
+        call (CallbackQuery): Объект CallbackQuery, представляющий входящий callback-запрос от пользователя.
+        session_without_commit (AsyncSession): Асинхронная сессия SQLAlchemy для работы с базой данных без автоматической фиксации изменений.
 
     Returns:
         None
 
     Raises:
-        Exception: Если не удается удалить предыдущее сообщение (например, если оно отсутствует).
+        Exception: В случае возникновения ошибки при удалении сообщения.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объекты call и session_without_commit
+        # await page_catalog(call, session_without_commit)
     """
 ```
 
-**Описание**: Обработчик callback-запроса `catalog`. Отвечает за отображение каталога товаров, запрашивая список категорий из базы данных и отправляя пользователю сообщение с кнопками для выбора категории.
+**Описание**:
+Обработчик callback-запроса с данными "catalog". Загружает каталог товаров и отправляет пользователю сообщение с категориями товаров, используя клавиатуру `catalog_kb`.
 
 **Параметры**:
-- `call` (CallbackQuery): Объект CallbackQuery, содержащий информацию о callback-запросе.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `call` (CallbackQuery): Объект CallbackQuery, представляющий входящий callback-запрос от пользователя.
+- `session_without_commit` (AsyncSession): Асинхронная сессия SQLAlchemy для работы с базой данных без автоматической фиксации изменений.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции (не отображается в реальном коде, вызывается через CallbackQuery)
-# await page_catalog(call, session_without_commit)
-```
+**Вызывает исключения**:
+- `Exception`: В случае возникновения ошибки при удалении сообщения.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объекты call и session_without_commit
+  # await page_catalog(call, session_without_commit)
+  ```
 
 ### `page_catalog_products`
 
@@ -46,26 +63,42 @@ async def page_catalog(call: CallbackQuery, session_without_commit: AsyncSession
 async def page_catalog_products(call: CallbackQuery, session_without_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий запрос обратного вызова от пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для работы с базой данных без автоматической фиксации изменений.
+        call (CallbackQuery): Объект CallbackQuery, содержащий информацию о callback-запросе.
+        session_without_commit (AsyncSession): Асинхронная сессия SQLAlchemy для выполнения операций с базой данных.
 
     Returns:
         None
+
+    Raises:
+        Нет явных исключений, но может возникнуть исключение при работе с базой данных.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объекты call и session_without_commit
+        # await page_catalog_products(call, session_without_commit)
     """
 ```
 
-**Описание**: Обработчик callback-запросов, начинающихся с `category_`. Отображает список товаров, принадлежащих к выбранной категории.
+**Описание**:
+Обработчик callback-запроса, начинающегося с "category_". Извлекает идентификатор категории из данных callback и отображает список товаров в выбранной категории.
 
 **Параметры**:
 - `call` (CallbackQuery): Объект CallbackQuery, содержащий информацию о callback-запросе.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `session_without_commit` (AsyncSession): Асинхронная сессия SQLAlchemy для выполнения операций с базой данных.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции (не отображается в реальном коде, вызывается через CallbackQuery)
-# await page_catalog_products(call, session_without_commit)
-```
+**Вызывает исключения**:
+- Нет явных исключений, но может возникнуть исключение при работе с базой данных.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объекты call и session_without_commit
+  # await page_catalog_products(call, session_without_commit)
+  ```
 
 ### `process_about`
 
@@ -73,26 +106,42 @@ async def page_catalog_products(call: CallbackQuery, session_without_commit: Asy
 async def process_about(call: CallbackQuery, session_without_commit: AsyncSession):
     """
     Args:
-        call (CallbackQuery): Объект CallbackQuery, представляющий запрос обратного вызова от пользователя.
-        session_without_commit (AsyncSession): Асинхровая сессия SQLAlchemy для работы с базой данных без автоматической фиксации изменений.
+        call (CallbackQuery): Объект CallbackQuery, содержащий информацию о callback-запросе.
+        session_without_commit (AsyncSession): Асинхронная сессия SQLAlchemy для выполнения операций с базой данных.
 
     Returns:
         None
+
+    Raises:
+        Нет явных исключений, но могут возникнуть исключения при вызове других функций.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объекты call и session_without_commit
+        # await process_about(call, session_without_commit)
     """
 ```
 
-**Описание**: Обработчик callback-запросов, начинающихся с `buy_`.  Инициирует процесс покупки товара в зависимости от выбранного типа оплаты.
+**Описание**:
+Обработчик callback-запросов, начинающихся с "buy_". Определяет тип платежа (ЮKassa, Stars, Robocassa) и вызывает соответствующую функцию для проведения оплаты.
 
 **Параметры**:
 - `call` (CallbackQuery): Объект CallbackQuery, содержащий информацию о callback-запросе.
-- `session_without_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `session_without_commit` (AsyncSession): Асинхронная сессия SQLAlchemy для выполнения операций с базой данных.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции (не отображается в реальном коде, вызывается через CallbackQuery)
-# await process_about(call, session_without_commit)
-```
+**Вызывает исключения**:
+- Нет явных исключений, но могут возникнуть исключения при вызове других функций.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объекты call и session_without_commit
+  # await process_about(call, session_without_commit)
+  ```
 
 ### `send_yukassa_invoice`
 
@@ -100,30 +149,46 @@ async def process_about(call: CallbackQuery, session_without_commit: AsyncSessio
 async def send_yukassa_invoice(call, user_info, product_id, price):
     """
     Args:
-        call: Объект CallbackQuery, представляющий запрос обратного вызова от пользователя.
+        call: Объект CallbackQuery, содержащий информацию о callback-запросе.
         user_info: Информация о пользователе.
-        product_id: Идентификатор продукта.
-        price: Цена продукта.
+        product_id: Идентификатор товара.
+        price: Цена товара.
 
     Returns:
         None
+
+    Raises:
+        Нет явных исключений.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объекты call, user_info, product_id и price
+        # await send_yukassa_invoice(call, user_info, product_id, price)
     """
 ```
 
-**Описание**: Отправляет пользователю инвойс для оплаты через ЮKassa.
+**Описание**:
+Отправляет счет на оплату через ЮKassa.
 
 **Параметры**:
 - `call`: Объект CallbackQuery, содержащий информацию о callback-запросе.
 - `user_info`: Информация о пользователе.
-- `product_id`: Идентификатор продукта.
-- `price`: Цена продукта.
+- `product_id`: Идентификатор товара.
+- `price`: Цена товара.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции
-# await send_yukassa_invoice(call, user_info, product_id, price)
-```
+**Вызывает исключения**:
+- Нет явных исключений.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объекты call, user_info, product_id и price
+  # await send_yukassa_invoice(call, user_info, product_id, price)
+  ```
 
 ### `send_robocassa_invoice`
 
@@ -131,32 +196,48 @@ async def send_yukassa_invoice(call, user_info, product_id, price):
 async def send_robocassa_invoice(call, user_info, product_id, price, session: AsyncSession):
     """
     Args:
-        call: Объект CallbackQuery, представляющий запрос обратного вызова от пользователя.
+        call: Объект CallbackQuery, содержащий информацию о callback-запросе.
         user_info: Информация о пользователе.
-        product_id: Идентификатор продукта.
-        price: Цена продукта.
-        session (AsyncSession): Асинхровая сессия SQLAlchemy для работы с базой данных без автоматической фиксации изменений.
+        product_id: Идентификатор товара.
+        price: Цена товара.
+        session (AsyncSession): Асинхронная сессия SQLAlchemy для работы с базой данных.
 
     Returns:
         None
+
+    Raises:
+        Нет явных исключений.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объекты call, user_info, product_id, price и session
+        # await send_robocassa_invoice(call, user_info, product_id, price, session)
     """
 ```
 
-**Описание**: Отправляет пользователю ссылку для оплаты через Robocassa.
+**Описание**:
+Генерирует ссылку на оплату через Robocassa и отправляет ее пользователю.
 
 **Параметры**:
 - `call`: Объект CallbackQuery, содержащий информацию о callback-запросе.
 - `user_info`: Информация о пользователе.
-- `product_id`: Идентификатор продукта.
-- `price`: Цена продукта.
-- `session` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `product_id`: Идентификатор товара.
+- `price`: Цена товара.
+- `session` (AsyncSession): Асинхронная сессия SQLAlchemy для работы с базой данных.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции
-# await send_robocassa_invoice(call, user_info, product_id, price, session)
-```
+**Вызывает исключения**:
+- Нет явных исключений.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объекты call, user_info, product_id, price и session
+  # await send_robocassa_invoice(call, user_info, product_id, price, session)
+  ```
 
 ### `send_stars_invoice`
 
@@ -164,30 +245,46 @@ async def send_robocassa_invoice(call, user_info, product_id, price, session: As
 async def send_stars_invoice(call, user_info, product_id, stars_price):
     """
     Args:
-        call: Объект CallbackQuery, представляющий запрос обратного вызова от пользователя.
+        call: Объект CallbackQuery, содержащий информацию о callback-запросе.
         user_info: Информация о пользователе.
-        product_id: Идентификатор продукта.
-        stars_price: Цена продукта в звездах.
+        product_id: Идентификатор товара.
+        stars_price: Цена товара в звездах.
 
     Returns:
         None
+
+    Raises:
+        Нет явных исключений.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объекты call, user_info, product_id и stars_price
+        # await send_stars_invoice(call, user_info, product_id, stars_price)
     """
 ```
 
-**Описание**: Отправляет пользователю инвойс для оплаты звездами.
+**Описание**:
+Отправляет счет на оплату в звездах.
 
 **Параметры**:
-- `call`: Объект CallbackQuery, представляющий запрос обратного вызова от пользователя.
+- `call`: Объект CallbackQuery, содержащий информацию о callback-запросе.
 - `user_info`: Информация о пользователе.
-- `product_id`: Идентификатор продукта.
-- `stars_price`: Цена продукта в звездах.
+- `product_id`: Идентификатор товара.
+- `stars_price`: Цена товара в звездах.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции
-# await send_stars_invoice(call, user_info, product_id, stars_price)
-```
+**Вызывает исключения**:
+- Нет явных исключений.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объекты call, user_info, product_id и stars_price
+  # await send_stars_invoice(call, user_info, product_id, stars_price)
+  ```
 
 ### `pre_checkout_query`
 
@@ -195,24 +292,40 @@ async def send_stars_invoice(call, user_info, product_id, stars_price):
 async def pre_checkout_query(pre_checkout_q: PreCheckoutQuery):
     """
     Args:
-        pre_checkout_q (PreCheckoutQuery): Объект PreCheckoutQuery, содержащий информацию о предварительном запросе перед оплатой.
+        pre_checkout_q (PreCheckoutQuery): Объект PreCheckoutQuery, содержащий информацию о предварительном запросе на оплату.
 
     Returns:
         None
+
+    Raises:
+        Нет явных исключений.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объект pre_checkout_q
+        # await pre_checkout_query(pre_checkout_q)
     """
 ```
 
-**Описание**: Обработчик предварительного запроса перед оплатой.
+**Описание**:
+Обработчик предварительного запроса на оплату.
 
 **Параметры**:
-- `pre_checkout_q` (PreCheckoutQuery): Объект PreCheckoutQuery, содержащий информацию о предварительном запросе перед оплатой.
+- `pre_checkout_q` (PreCheckoutQuery): Объект PreCheckoutQuery, содержащий информацию о предварительном запросе на оплату.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции (не отображается в реальном коде, вызывается через PreCheckoutQuery)
-# await pre_checkout_query(pre_checkout_q)
-```
+**Вызывает исключения**:
+- Нет явных исключений.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объект pre_checkout_q
+  # await pre_checkout_query(pre_checkout_q)
+  ```
 
 ### `successful_payment`
 
@@ -221,21 +334,37 @@ async def successful_payment(message: Message, session_with_commit: AsyncSession
     """
     Args:
         message (Message): Объект Message, содержащий информацию об успешной оплате.
-        session_with_commit (AsyncSession): Асинхровая сессия SQLAlchemy для работы с базой данных с автоматической фиксацией изменений.
+        session_with_commit (AsyncSession): Асинхронная сессия SQLAlchemy для работы с базой данных с автоматической фиксацией изменений.
 
     Returns:
         None
+
+    Raises:
+        Нет явных исключений.
+
+    Example:
+        Пример вызова функции:
+
+        # Допустим, у нас есть объекты message и session_with_commit
+        # await successful_payment(message, session_with_commit)
     """
 ```
 
-**Описание**: Обработчик события успешной оплаты. Выполняет логику после успешной оплаты, такую как предоставление доступа к купленному товару.
+**Описание**:
+Обработчик успешной оплаты. Извлекает информацию об оплате из сообщения и вызывает функцию `successful_payment_logic` для обработки логики после успешной оплаты.
 
 **Параметры**:
 - `message` (Message): Объект Message, содержащий информацию об успешной оплате.
-- `session_with_commit` (AsyncSession): Асинхровая сессия SQLAlchemy для выполнения запросов к базе данных.
+- `session_with_commit` (AsyncSession): Асинхронная сессия SQLAlchemy для работы с базой данных с автоматической фиксацией изменений.
 
-**Пример**:
+**Возвращает**:
+- `None`
 
-```python
-# Пример вызова функции (не отображается в реальном коде, вызывается при успешной оплате)
-# await successful_payment(message, session_with_commit)
+**Вызывает исключения**:
+- Нет явных исключений.
+
+**Примеры**:
+- Пример вызова функции:
+  ```python
+  # Допустим, у нас есть объекты message и session_with_commit
+  # await successful_payment(message, session_with_commit)
