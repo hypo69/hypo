@@ -1,44 +1,69 @@
-# Документация для модуля `Supplier`
-
-## Оглавление
-- [Обзор](#обзор)
-- [Подробнее](#подробнее)
-- [Классы](#классы)
-  - [`Supplier`](#supplier)
-    - [`__init__`](#__init__)
-    - [`_payload`](#_payload)
-    - [`login`](#login)
-    - [`run_scenario_files`](#run_scenario_files)
-    - [`run_scenarios`](#run_scenarios)
-- [Как это работает](#как-это-работает)
+# Документация модуля `Supplier`
 
 ## Обзор
 
-`Supplier` - это базовый класс для всех поставщиков (suppliers) в контексте данного кода. Поставщик представляет собой источник информации, будь то производитель товаров, данных или информации. Источниками поставщика могут быть целевая страница веб-сайта, документ, база данных или таблица. Этот класс объединяет различных поставщиков под стандартизированным набором операций. Каждый поставщик имеет уникальный префикс.
+Этот модуль предоставляет базовый класс `Supplier`, который служит основой для всех поставщиков данных в проекте. Поставщик может быть производителем товаров, данных или информации. Источники поставщика включают целевую страницу веб-сайта, документ, базу данных или таблицу. Этот класс объединяет различных поставщиков под стандартизированным набором операций. Каждый поставщик имеет уникальный префикс.
 
-## Подробнее
+## Подробней
 
-Класс `Supplier` служит основой для управления взаимодействием с поставщиками. Он обрабатывает инициализацию, конфигурацию, аутентификацию и выполнение рабочих процессов для различных источников данных, таких как `amazon.com`, `walmart.com`, `mouser.com` и `digikey.com`. Клиенты также могут определять дополнительных поставщиков.
+Класс `Supplier` является основой для управления взаимодействием с поставщиками. Он обрабатывает инициализацию, конфигурацию, аутентификацию и выполнение рабочих процессов для различных источников данных, таких как `amazon.com`, `walmart.com`, `mouser.com` и `digikey.com`. Клиенты также могут определять дополнительных поставщиков.
 
-## Классы
+## Список реализованных поставщиков:
 
-### `Supplier`
+- [aliexpress](aliexpress) - Реализован с двумя рабочими процессами: `webdriver` и `api`
+- [amazon](amazon) - `webdriver`
+- [bangood](bangood) - `webdriver`
+- [cdata](cdata) - `webdriver`
+- [chat_gpt](chat_gpt) - Взаимодействует с интерфейсом ChatGPT (НЕ С МОДЕЛЬЮ!)
+- [ebay](ebay) - `webdriver`
+- [etzmaleh](etzmaleh) - `webdriver`
+- [gearbest](gearbest) - `webdriver`
+- [grandadvance](grandadvance) - `webdriver`
+- [hb](hb) - `webdriver`
+- [ivory](ivory) - `webdriver`
+- [ksp](ksp) - `webdriver`
+- [kualastyle](kualastyle) `webdriver`
+- [morlevi](morlevi) `webdriver`
+- [visualdg](visualdg) `webdriver`
+- [wallashop](wallashop) `webdriver`
+- [wallmart](wallmart) `webdriver`
 
-**Описание**: Базовый класс для всех поставщиков.
+[Подробнее о WebDriver :class: `Driver`](../webdriver)
+[Подробнее о рабочих процессах :class: `Scenario`](../scenarios)
 
-**Атрибуты**:
-- `supplier_id` (int): Уникальный идентификатор поставщика.
-- `supplier_prefix` (str): Префикс поставщика, например, `'amazon'`, `'aliexpress'`.
-- `supplier_settings` (dict): Настройки поставщика, загруженные из JSON-файла.
-- `locale` (str): Код локализации (по умолчанию: `'en'`).
-- `price_rule` (str): Правила для расчета цен (например, правила НДС).
-- `related_modules` (module): Вспомогательные модули для конкретных операций поставщика.
-- `scenario_files` (list): Список файлов сценариев для выполнения.
-- `current_scenario` (dict): Сценарий, выполняемый в данный момент.
-- `login_data` (dict): Данные для аутентификации.
-- `locators` (dict): Словарь локаторов веб-элементов.
-- `driver` (Driver): Экземпляр WebDriver для взаимодействия с веб-сайтом поставщика.
-- `parsing_method` (str): Метод разбора данных (например, `'webdriver'`, `'api'`, `'xls'`, `'csv'`).
+```mermaid
+graph TD
+    subgraph WebInteraction
+        webelement <--> executor
+        subgraph InnerInteraction
+            executor <--> webdriver
+        end
+    end
+    webdriver -->|result| supplier
+    supplier -->|locator| webdriver
+    supplier --> product_fields
+    product_fields --> endpoints
+    scenario -->|Specific scenario for supplier| supplier
+
+
+```
+
+## Атрибуты
+
+- **`supplier_id`** *(int)*: Уникальный идентификатор поставщика.
+- **`supplier_prefix`** *(str)*: Префикс поставщика, например, `'amazon'`, `'aliexpress'`.
+- **`supplier_settings`** *(dict)*: Настройки поставщика, загруженные из JSON-файла.
+- **`locale`** *(str)*: Код локализации (по умолчанию: `'en'`).
+- **`price_rule`** *(str)*: Правила для расчета цен (например, правила НДС).
+- **`related_modules`** *(module)*: Вспомогательные модули для конкретных операций поставщика.
+- **`scenario_files`** *(list)*: Список файлов сценариев для выполнения.
+- **`current_scenario`** *(dict)*: Сценарий, выполняемый в данный момент.
+- **`login_data`** *(dict)*: Данные для аутентификации.
+- **`locators`** *(dict)*: Словарь локаторов веб-элементов.
+- **`driver`** *(Driver)*: Экземпляр WebDriver для взаимодействия с веб-сайтом поставщика.
+- **`parsing_method`** *(str)*: Метод разбора данных (например, `'webdriver'`, `'api'`, `'xls'`, `'csv'`).
+
+## Методы
 
 ### `__init__`
 
@@ -56,7 +81,8 @@ def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Dr
     """
 ```
 
-**Описание**: Конструктор класса `Supplier`.
+**Описание**:
+Конструктор класса `Supplier`.
 
 **Параметры**:
 - `supplier_prefix` (str): Префикс поставщика.
@@ -64,12 +90,10 @@ def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Dr
 - `webdriver` (str | Driver | bool, optional): Тип WebDriver. По умолчанию `'default'`.
 
 **Вызывает исключения**:
-- `DefaultSettingsException`: Если настройки по умолчанию настроены неправильно.
+- `DefaultSettingsException`: Если настройки по умолчанию не настроены должным образом.
 
-**Пример**:
-```python
-supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')
-```
+**Как работает функция**:
+Функция инициализирует экземпляр класса `Supplier`. Она принимает префикс поставщика, код локализации и тип WebDriver в качестве аргументов. Если настройки по умолчанию не настроены должным образом, функция вызывает исключение `DefaultSettingsException`.
 
 ### `_payload`
 
@@ -85,18 +109,17 @@ def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
     """
 ```
 
-**Описание**: Загружает настройки поставщика и инициализирует WebDriver.
+**Описание**:
+Загружает настройки поставщика, инициализирует локаторы и WebDriver.
 
 **Параметры**:
 - `webdriver` (str | Driver | bool): Тип WebDriver.
 
 **Возвращает**:
-- `bool`: `True`, если загрузка прошла успешно.
+- `bool`: Возвращает `True`, если загрузка прошла успешно.
 
-**Пример**:
-```python
-supplier._payload(webdriver='firefox')
-```
+**Как работает функция**:
+Функция загружает настройки, локаторы и инициализирует WebDriver. Она принимает тип WebDriver в качестве аргумента и возвращает `True`, если загрузка прошла успешно.
 
 ### `login`
 
@@ -109,15 +132,14 @@ def login(self) -> bool:
     """
 ```
 
-**Описание**: Выполняет аутентификацию на веб-сайте поставщика.
+**Описание**:
+Аутентифицирует пользователя на веб-сайте поставщика.
 
 **Возвращает**:
-- `bool`: `True`, если вход выполнен успешно.
+- `bool`: Возвращает `True`, если вход в систему выполнен успешно.
 
-**Пример**:
-```python
-supplier.login()
-```
+**Как работает функция**:
+Функция аутентифицирует пользователя на веб-сайте поставщика и возвращает `True`, если вход в систему выполнен успешно.
 
 ### `run_scenario_files`
 
@@ -133,18 +155,17 @@ def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
     """
 ```
 
-**Описание**: Выполняет один или несколько файлов сценариев.
+**Описание**:
+Запускает предоставленные файлы сценариев.
 
 **Параметры**:
 - `scenario_files` (str | List[str], optional): Список или путь к файлам сценариев.
 
 **Возвращает**:
-- `bool`: `True`, если сценарии выполнены успешно.
+- `bool`: Возвращает `True`, если сценарии были успешно выполнены.
 
-**Пример**:
-```python
-supplier.run_scenario_files(['example_scenario.json'])
-```
+**Как работает функция**:
+Функция запускает предоставленные файлы сценариев и возвращает `True`, если сценарии были успешно выполнены.
 
 ### `run_scenarios`
 
@@ -160,35 +181,37 @@ def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
     """
 ```
 
-**Описание**: Выполняет указанные сценарии.
+**Описание**:
+Выполняет указанные сценарии.
 
 **Параметры**:
 - `scenarios` (dict | list[dict]): Сценарии для выполнения.
 
 **Возвращает**:
-- `bool`: `True`, если все сценарии выполнены успешно.
+- `bool`: Возвращает `True`, если все сценарии были успешно выполнены.
 
-**Пример**:
-```python
-supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
-```
+**Как работает функция**:
+Функция выполняет указанные сценарии и возвращает `True`, если все сценарии были успешно выполнены.
 
 ## Как это работает
 
 1. **Инициализация**:
-   - Метод `__init__` устанавливает префикс поставщика, локализацию и WebDriver.
+   - Метод `__init__` настраивает префикс поставщика, локализацию и WebDriver.
+     Пример:
      ```python
      supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')
      ```
 
 2. **Загрузка настроек**:
    - `_payload` загружает конфигурацию, инициализирует локаторы и WebDriver.
+     Пример:
      ```python
      supplier._payload(webdriver='firefox')
      ```
 
 3. **Аутентификация**:
    - `login` выполняет вход пользователя на веб-сайт поставщика.
+     Пример:
      ```python
      supplier.login()
      ```
@@ -198,7 +221,7 @@ supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
      ```python
      supplier.run_scenario_files(['example_scenario.json'])
      ```
-   - **Запуск определенных сценариев**:
+   - **Запуск конкретных сценариев**:
      ```python
      supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
      ```

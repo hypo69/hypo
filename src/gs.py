@@ -13,3 +13,6 @@ from src.utils.jjson import j_loads_ns
 from pathlib import Path
 
 gs = j_loads_ns(__root__ / 'src' / 'config.json')
+"""Загружаю конфигурацию из файла.
+Применяется тогда, когда нет файла credentials.kdbx
+"""

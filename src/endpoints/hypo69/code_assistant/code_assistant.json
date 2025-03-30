@@ -2,7 +2,9 @@
   "role": "doc_writer_md",
   "lang": "EN",
   "model": [ "gemini" ],
+
   "start_dirs": [
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\convertors",
 
@@ -155,7 +157,6 @@
     "*.md",
     "*.rst",
     "*.md",
-
     "Makefile",
     "LICENSE*",
     "CHANGELOG*",
@@ -207,18 +208,19 @@
   "output_directory": {
     "code_checker_md": "<model>/<lang>/consultant/src",
     "code_explainer_md": "<model>/<lang>/explainer/src",
+    "how_to_writer_md": "<model>/<lang>/how_to/src",
     "code_explainer_html": "<model>/<lang>explainer/html/src",
     "doc_writer_md": "<model>/<lang>/doc/src",
     "pytest": "../pytest/<model>/src",
     "doc_writer_rst": "<model>/<lang>/doc/rst/src",
-    "doc_writer_html": "<model>/<lang>/doc/html/src",
-    "how_to_writer": "<model>/<lang>/how_to/src"
+    "doc_writer_html": "<model>/<lang>/doc/html/src"
+
   },
 
   "roles": [
     "doc_writer_md",
-    "code_explainer_md",
     "code_checker_md",
+    "code_explainer_md",
     "how_to_writer_md"
   ],
   "exclude-roles": [

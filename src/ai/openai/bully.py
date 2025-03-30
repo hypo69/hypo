@@ -4,40 +4,11 @@
 #! .pyenv/bin/python3
 
 """
-.. module:: src.ai.openai 
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-  
-""" module: src.ai.openai """
-
-
-""" @namespace src.ai """
-"""   - Пример, как развести chatGPT на грубости
+```rst
+.. module:: src.ai.openai
+```
+Пример, как развести chatGPT на грубости
+=========================================
 """
 import os
 import src.ai.openai
