@@ -1,182 +1,130 @@
-# Модуль `ToolBox_DataBase.py`
+# Модуль DataBase для работы с базой данных ToolBox
 
 ## Обзор
 
-Модуль `ToolBox_DataBase.py` предоставляет класс `DataBase` для управления базой данных SQLite. Он обеспечивает создание таблицы, вставку, обновление и загрузку данных. Модуль предназначен для использования в боте `ToolBox` для хранения и извлечения пользовательских данных.
+Модуль `ToolBox_DataBase.py` предоставляет класс `DataBase` для управления базой данных SQLite. Он включает функции для создания таблиц, вставки, обновления и загрузки данных. Модуль предназначен для использования в боте ToolBox для хранения и управления данными пользователей.
 
-## Подробней
+## Подробнее
 
-Модуль содержит класс `DataBase`, который инициализируется с именем базы данных, именем таблицы и словарем, определяющим структуру таблицы (имена и типы столбцов). Класс предоставляет методы для создания таблицы, вставки или обновления данных, а также для загрузки данных из базы данных в словарь. В основной части модуля (`if __name__ == "__main__":`) демонстрируется пример использования класса `DataBase` для создания базы данных, добавления и обновления записей пользователей.
+Модуль содержит класс `DataBase`, который инкапсулирует логику взаимодействия с базой данных SQLite. Он позволяет создавать таблицы, добавлять, обновлять и извлекать данные из базы данных. Класс поддерживает различные типы данных, такие как целые числа, булевы значения, текст и их списки, а также даты и время.
 
 ## Классы
 
 ### `DataBase`
 
-**Описание**: Класс для управления базой данных SQLite.
+**Описание**:
+Класс `DataBase` предназначен для управления базой данных SQLite. Он предоставляет методы для создания таблиц, вставки, обновления и загрузки данных.
 
 **Как работает класс**:
-Класс `DataBase` предоставляет интерфейс для взаимодействия с базой данных SQLite. При инициализации класс принимает имя базы данных, имя таблицы и словарь `titles`, определяющий структуру таблицы. Метод `create` создает таблицу, если она еще не существует. Метод `insert_or_update_data` вставляет новую запись или обновляет существующую. Метод `load_data_from_db` загружает данные из таблицы в словарь. Типы данных преобразуются в соответствующие типы Python с использованием словаря `types`.
+1.  При инициализации класса `DataBase` принимаются параметры: имя базы данных (`db_name`), имя таблицы (`table_name`) и словарь с заголовками столбцов и их типами (`titles`).
+2.  Определяется словарь `types`, который содержит лямбда-функции для преобразования данных из строк в соответствующие типы данных.
+3.  Метод `create` создает таблицу в базе данных, если она не существует.
+4.  Метод `insert_or_update_data` вставляет или обновляет данные в таблице.
+5.  Метод `load_data_from_db` загружает данные из таблицы в словарь.
 
 **Методы**:
-- `__init__`: Инициализирует объект `DataBase` с именем базы данных, именем таблицы и структурой таблицы.
-- `create`: Создает таблицу в базе данных, если она еще не существует.
-- `insert_or_update_data`: Вставляет или обновляет данные в таблице.
-- `load_data_from_db`: Загружает данные из таблицы в словарь.
 
-#### `__init__`
+*   `__init__(self, db_name: str, table_name: str, titles: dict[str, str]) -> None`
+    *   **Описание**: Инициализирует класс `DataBase` с именем базы данных, именем таблицы и словарем заголовков.
+    *   **Параметры**:
+        *   `db_name` (str): Имя файла базы данных.
+        *   `table_name` (str): Имя таблицы в базе данных.
+        *   `titles` (dict[str, str]): Словарь, где ключи - это имена столбцов, а значения - их типы данных.
+    *   **Как работает метод**:
+        1. Сохраняет имя базы данных, имя таблицы и заголовки в атрибуты экземпляра класса.
+        2. Определяет словарь `types`, который содержит лямбда-функции для преобразования данных из строк в соответствующие типы данных (целое число, булево значение, список целых чисел, список булевых значений, список текстов, дата и время, строка). Эти преобразования необходимы при чтении данных из базы данных, так как все данные хранятся в виде текста.
+        3. Лямбда-функции используют модули `json`, `re`, `datetime` и `ast` для обработки строковых представлений данных и преобразования их в нужные типы.
 
-```python
-def __init__(self, db_name: str, table_name: str, titles: dict[str, str]) -> None:
-    """
-    Args:
-        db_name (str): Имя базы данных.
-        table_name (str): Имя таблицы.
-        titles (dict[str, str]): Словарь, определяющий структуру таблицы (имена и типы столбцов).
+*   `create(self) -> None`
+    *   **Описание**: Создает таблицу в базе данных, если она еще не существует.
+    *   **Как работает метод**:
+        1.  Подключается к базе данных SQLite.
+        2.  Формирует SQL-запрос для создания таблицы с использованием переданных заголовков столбцов и их типов данных.
+        3.  Выполняет SQL-запрос.
+        4.  Закрывает соединение с базой данных.
+*   `insert_or_update_data(self, record_id: str, values: dict[str, list[bool|int] | bool | int | str]) -> None`
+    *   **Описание**: Вставляет новую запись или обновляет существующую запись в таблице базы данных.
+    *   **Параметры**:
+        *   `record_id` (str): Уникальный идентификатор записи.
+        *   `values` (dict[str, list[bool|int] | bool | int | str]): Словарь значений для вставки или обновления, где ключи - это имена столбцов.
+    *  **Как работает метод**:
+        1.  Подключается к базе данных SQLite.
+        2.  Формирует SQL-запрос для вставки или обновления данных в таблице. Использует конструкцию `REPLACE INTO`, которая позволяет либо вставить новую запись, если запись с указанным `record_id` не существует, либо обновить существующую запись, если она уже есть.
+        3.  Подготавливает значения для вставки или обновления, преобразуя списки в строковый формат, пригодный для хранения в базе данных. Для этого используется модуль `json` для сериализации списков, содержащих словари или другие сложные объекты, и функция `sub` из модуля `re` для замены фигурных скобок на квадратные при преобразовании списков.
+        4.  Выполняет SQL-запрос с подготовленными значениями.
+        5.  Сохраняет изменения и закрывает соединение с базой данных.
 
-    Returns:
-        None
-
-    Raises:
-        None
-    """
-```
-
-**Описание**: Инициализирует объект `DataBase`.
-
-**Как работает функция**:
-Функция инициализирует объект `DataBase`, сохраняя имя базы данных, имя таблицы и структуру таблицы в атрибутах экземпляра. Также определяется словарь `types`, который содержит функции для преобразования строковых значений из базы данных в соответствующие типы Python.
-
-**Параметры**:
-- `db_name` (str): Имя базы данных.
-- `table_name` (str): Имя таблицы.
-- `titles` (dict[str, str]): Словарь, определяющий структуру таблицы (имена и типы столбцов).
-
-#### `create`
-
-```python
-def create(self) -> None:
-    """
-    Args:
-        None
-
-    Returns:
-        None
-
-    Raises:
-        sqlite3.Error: Если возникает ошибка при создании таблицы.
-    """
-```
-
-**Описание**: Создает таблицу в базе данных, если она еще не существует.
-
-**Как работает функция**:
-Функция устанавливает соединение с базой данных SQLite и выполняет SQL-запрос для создания таблицы, если она еще не существует. Структура таблицы определяется словарем `self.titles`.
-
-**Параметры**:
-- Нет
-
-#### `insert_or_update_data`
-
-```python
-def insert_or_update_data(self, record_id: str, values: dict[str, list[bool|int]|bool|int|str]) -> None:
-    """
-    Args:
-        record_id (str): Идентификатор записи.
-        values (dict[str, list[bool|int]|bool|int|str]): Словарь значений для вставки или обновления.
-
-    Returns:
-        None
-
-    Raises:
-        sqlite3.Error: Если возникает ошибка при вставке или обновлении данных.
-    """
-```
-
-**Описание**: Вставляет или обновляет данные в таблице.
-
-**Как работает функция**:
-Функция устанавливает соединение с базой данных SQLite и выполняет SQL-запрос для вставки новой записи или обновления существующей записи с заданным идентификатором `record_id`.  Если запись с указанным `record_id` уже существует, она будет перезаписана.  Значения для вставки или обновления берутся из словаря `values`, переданного в качестве аргумента.  Если значением является список, то оно преобразуется в строку JSON.
-
-**Параметры**:
-- `record_id` (str): Идентификатор записи.
-- `values` (dict[str, list[bool|int]|bool|int|str]): Словарь значений для вставки или обновления.
-
-#### `load_data_from_db`
-
-```python
-def load_data_from_db(self) -> dict[str, dict[str, list[bool|int]|bool|int|str]]:
-    """
-    Args:
-        None
-
-    Returns:
-        dict[str, dict[str, list[bool|int]|bool|int|str]]: Словарь, содержащий данные из базы данных.
-
-    Raises:
-        sqlite3.Error: Если возникает ошибка при загрузке данных.
-    """
-```
-
-**Описание**: Загружает данные из таблицы в словарь.
-
-**Как работает функция**:
-Функция устанавливает соединение с базой данных SQLite и выполняет SQL-запрос для извлечения всех записей из таблицы. Затем данные преобразуются в словарь, где ключом является идентификатор записи, а значением - словарь, содержащий значения столбцов.  Значения столбцов преобразуются в соответствующие типы Python с использованием словаря `self.types`.
-
-**Параметры**:
-- Нет
-
-**Возвращает**:
-- `dict[str, dict[str, list[bool|int]|bool|int|str]]`: Словарь, содержащий данные из базы данных.
+*   `load_data_from_db(self) -> dict[str, dict[str, list[bool|int] | bool | int | str]]`
+    *   **Описание**: Загружает данные из таблицы базы данных в словарь.
+    *   **Возвращает**:
+        *   `dict[str, dict[str, list[bool|int] | bool | int | str]]`: Словарь, где ключи - это идентификаторы записей, а значения - словари со значениями столбцов.
+    *   **Как работает метод**:
+        1.  Подключается к базе данных SQLite.
+        2.  Формирует SQL-запрос для извлечения всех данных из таблицы.
+        3.  Выполняет SQL-запрос и получает все строки из таблицы.
+        4.  Итерируется по каждой строке и создает словарь, где ключом является идентификатор записи, а значением - словарь с данными из остальных столбцов.
+        5.  Использует словарь `types` для преобразования данных из строкового формата в соответствующие типы данных (целое число, булево значение, список целых чисел, список булевых значений, список текстов, дата и время, строка).
+        6.  Закрывает соединение с базой данных.
+        7.  Возвращает словарь с загруженными данными.
 
 ## Функции
 
-### `main` (в блоке `if __name__ == "__main__":`)
+### `if __name__ == "__main__":`
 
-```python
-if __name__ == "__main__":
-    base = DataBase(db_name="UsersData.db", table_name="users_data_table", titles={"id": "TEXT PRIMARY KEY", "text": "INTEGER[]",
-                        "sessions_messages": "TEXT[]", "some": "BOOLEAN",
-                        "images": "CHAR", "free" : "BOOLEAN", "basic" : "BOOLEAN",
-                        "pro" : "BOOLEAN", "incoming_tokens": "INTEGER", "outgoing_tokens" : "INTEGER",
-                        "free_requests" : "INTEGER", "datetime_sub": "DATETIME", "promocode": "BOOLEAN", "ref": "TEXT"})
-    base.create(); db = base.load_data_from_db(); N = 8
-    uid = input()
-    if uid != '':
-        if "pro" in uid:
-            db[uid.split()[0]] = {"text": [0]*N, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": True, "pro": True, "incoming_tokens": 1.7*10**5, "outgoing_tokens": 5*10**5, "free_requests": 10, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(months=1), "promocode": False, "ref": ""}
-        elif 'admin' in uid:
-            db[uid.split()[0]] = {"text": [0]*N, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": True, "pro": True, "incoming_tokens": 100*10**5, "outgoing_tokens": 100*10**5, "free_requests": 1000, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(years=5), "promocode": False, "ref": ""}
-        else:
-            db[uid] = {"text": [0]*N, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": False, "pro": False, "incoming_tokens": 0, "outgoing_tokens": 0, "free_requests": 10, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(days=1), "promocode": False, "ref": ""}
-        base.insert_or_update_data(uid.split()[0], db[uid.split()[0]])
-```
-
-**Описание**: Пример использования класса `DataBase`.
+**Описание**:
+Данный блок кода выполняется только при непосредственном запуске скрипта, а не при импорте его как модуля. Он демонстрирует создание базы данных, загрузку данных, а также вставку или обновление данных в таблице.
 
 **Как работает функция**:
-В блоке `if __name__ == "__main__":` создается экземпляр класса `DataBase` с именем базы данных "UsersData.db", именем таблицы "users_data_table" и структурой таблицы, определенной в словаре `titles`. Затем создается таблица, загружаются данные из базы данных, запрашивается ввод пользователя и, в зависимости от введенных данных, создается или обновляется запись пользователя.
 
-**Параметры**:
-- Нет
+1.  Создается экземпляр класса `DataBase` с именем базы данных `UsersData.db`, именем таблицы `users_data_table` и словарем заголовков столбцов и их типов данных.
+2.  Вызывается метод `create` для создания таблицы, если она еще не существует.
+3.  Вызывается метод `load_data_from_db` для загрузки данных из таблицы в словарь.
+4.  Пользователю предлагается ввести идентификатор пользователя (uid).
+5.  В зависимости от введенного идентификатора пользователя, создается новая запись или обновляется существующая запись в словаре `db`.
+6.  Если в идентификаторе пользователя содержится "pro", то создается запись с предустановленными значениями для пользователя с Pro-подпиской.
+7.  Если в идентификаторе пользователя содержится "admin", то создается запись с предустановленными значениями для администратора.
+8.  В противном случае создается запись с предустановленными значениями для обычного пользователя.
+9.  Вызывается метод `insert_or_update_data` для вставки или обновления данных в таблице базы данных.
+
+**Переменные**:
+
+*   `base` (DataBase): Экземпляр класса `DataBase`.
+*   `db` (dict): Словарь с загруженными данными из базы данных.
+*   `N` (int): Константа, определяющая размер списка, используемого для инициализации данных пользователя.
+*   `uid` (str): Идентификатор пользователя, введенный пользователем.
 
 **Примеры**:
 
-Примеры создания и работы с базой данных:
+Примеры использования блока `if __name__ == "__main__":`:
 
 ```python
-    base = DataBase(db_name="UsersData.db", table_name="users_data_table", titles={"id": "TEXT PRIMARY KEY", "text": "INTEGER[]",
-                        "sessions_messages": "TEXT[]", "some": "BOOLEAN",
-                        "images": "CHAR", "free" : "BOOLEAN", "basic" : "BOOLEAN",
-                        "pro" : "BOOLEAN", "incoming_tokens": "INTEGER", "outgoing_tokens" : "INTEGER",
-                        "free_requests" : "INTEGER", "datetime_sub": "DATETIME", "promocode": "BOOLEAN", "ref": "TEXT"})
-    base.create()
-    db = base.load_data_from_db()
-    uid = input()
-    if uid != '':
-        if "pro" in uid:
-            db[uid.split()[0]] = {"text": [0]*8, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": True, "pro": True, "incoming_tokens": 1.7*10**5, "outgoing_tokens": 5*10**5, "free_requests": 10, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(months=1), "promocode": False, "ref": ""}
-        elif 'admin' in uid:
-            db[uid.split()[0]] = {"text": [0]*8, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": True, "pro": True, "incoming_tokens": 100*10**5, "outgoing_tokens": 100*10**5, "free_requests": 1000, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(years=5), "promocode": False, "ref": ""}
-        else:
-            db[uid] = {"text": [0]*8, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": False, "pro": False, "incoming_tokens": 0, "outgoing_tokens": 0, "free_requests": 10, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(days=1), "promocode": False, "ref": ""}
-        base.insert_or_update_data(uid.split()[0], db[uid.split()[0]])
+# Создание экземпляра класса DataBase
+base = DataBase(db_name="UsersData.db", table_name="users_data_table", titles={"id": "TEXT PRIMARY KEY", "text": "INTEGER[]",
+                    "sessions_messages": "TEXT[]", "some": "BOOLEAN",
+                    "images": "CHAR", "free" : "BOOLEAN", "basic" : "BOOLEAN",
+                    "pro" : "BOOLEAN", "incoming_tokens": "INTEGER", "outgoing_tokens" : "INTEGER",
+                    "free_requests" : "INTEGER", "datetime_sub": "DATETIME", "promocode": "BOOLEAN", "ref": "TEXT"})
+
+# Создание таблицы
+base.create()
+
+# Загрузка данных из базы данных
+db = base.load_data_from_db()
+
+# Ввод идентификатора пользователя
+uid = input()
+
+# Проверка наличия "pro" в uid
+if "pro" in uid:
+    db[uid.split()[0]] = {"text": [0]*N, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": True, "pro": True, "incoming_tokens": 1.7*10**5, "outgoing_tokens": 5*10**5, "free_requests": 10, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(months=1), "promocode": False, "ref": ""}
+
+# Проверка наличия "admin" в uid
+elif 'admin' in uid:
+    db[uid.split()[0]] = {"text": [0]*N, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": True, "pro": True, "incoming_tokens": 100*10**5, "outgoing_tokens": 100*10**5, "free_requests": 1000, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(years=5), "promocode": False, "ref": ""}
+
+# Если uid не содержит "pro" или "admin"
+else:
+    db[uid] = {"text": [0]*N, "sessions_messages": [], "some": False, "images": "", "free": False, "basic": False, "pro": False, "incoming_tokens": 0, "outgoing_tokens": 0, "free_requests": 10, "datetime_sub": datetime.now().replace(microsecond=0)+relativedelta(days=1), "promocode": False, "ref": ""}
+
+# Вставка или обновление данных в базе данных
+base.insert_or_update_data(uid.split()[0], db[uid.split()[0]])

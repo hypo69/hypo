@@ -1,274 +1,223 @@
-# Модуль моделей базы данных для Telegram-бота Digital Market
+# Модуль `models.py`
 
 ## Обзор
 
-Этот модуль содержит определения моделей базы данных, используемых для хранения информации о пользователях, категориях, продуктах и покупках в Telegram-боте Digital Market. Он использует SQLAlchemy для определения структуры базы данных и ORM для взаимодействия с ней.
+Модуль `models.py` содержит определения классов моделей базы данных, используемых в Telegram-боте для цифрового рынка. Он определяет структуру таблиц для пользователей, категорий, продуктов и покупок, а также устанавливает связи между ними. Модуль использует SQLAlchemy ORM для взаимодействия с базой данных.
 
 ## Подробней
 
-Этот модуль определяет структуру базы данных, необходимую для функционирования Telegram-бота Digital Market. Он включает в себя модели для пользователей, категорий продуктов, самих продуктов и истории покупок. Связи между моделями устанавливаются с использованием `relationship` из SQLAlchemy, обеспечивая целостность данных и удобство навигации между связанными записями. Модуль использует SQLAlchemy для определения структуры базы данных и ORM для взаимодействия с ней.
+Этот модуль определяет структуру данных, которая будет храниться в базе данных.  Он включает в себя классы, представляющие пользователей, категории продуктов, сами продукты и историю покупок. Связи между этими классами определены с помощью SQLAlchemy, что позволяет легко получать связанные данные (например, все покупки конкретного пользователя).  Модуль играет важную роль в организации данных и обеспечивает согласованность данных в приложении. <инструкция для модели gemini:Обеспечение целостности и согласованности данных.>
 
 ## Классы
 
 ### `User`
 
-**Описание**: Класс, представляющий пользователя Telegram-бота.
+**Описание**: Класс `User` представляет таблицу пользователей в базе данных.
 
 **Как работает класс**:
-Класс `User` представляет собой модель пользователя в базе данных. Он содержит информацию о пользователе, такую как его telegram ID, имя пользователя, имя и фамилия. Также он содержит связь с таблицей `Purchase` для отслеживания покупок пользователя.
+Класс `User` определяет структуру таблицы `users` в базе данных.  Он включает поля для хранения идентификатора пользователя в Telegram, имени пользователя, имени и фамилии, а также список покупок, связанных с этим пользователем.  Связь с классом `Purchase` осуществляется через отношение `relationship`, что позволяет легко получать все покупки, сделанные конкретным пользователем.
 
 **Методы**:
-- `__repr__`: Возвращает строковое представление объекта `User`.
+- `__repr__`: Возвращает строковое представление объекта `User`, содержащее его id, telegram_id и имя пользователя.
 
 **Параметры**:
 - `telegram_id` (int): Уникальный идентификатор пользователя в Telegram.
-- `username` (str | None): Имя пользователя в Telegram (может отсутствовать).
-- `first_name` (str | None): Имя пользователя (может отсутствовать).
-- `last_name` (str | None): Фамилия пользователя (может отсутствовать).
+- `username` (str | None): Имя пользователя в Telegram (может быть `None`).
+- `first_name` (str | None): Имя пользователя (может быть `None`).
+- `last_name` (str | None): Фамилия пользователя (может быть `None`).
 - `purchases` (List['Purchase']): Список покупок, связанных с пользователем.
 
 **Примеры**
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from bot.dao.database import Base  # Предполагается, что Base определен в database.py
 
-# Определите строку подключения к базе данных (замените на свою)
-DATABASE_URL = "sqlite:///:memory:"
-
-# Создайте движок SQLAlchemy
-engine = create_engine(DATABASE_URL)
-
-# Создайте таблицы в базе данных (если их еще нет)
+# Создание SQLite базы данных в памяти для примера
+engine = create_engine('sqlite:///:memory:')
 Base.metadata.create_all(engine)
 
-# Создайте класс Session
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Пример использования класса User
-def create_user(telegram_id: int, username: str, first_name: str, last_name: str) -> User:
-    """
-    Создает нового пользователя в базе данных.
-
-    Args:
-        telegram_id (int): Уникальный идентификатор пользователя в Telegram.
-        username (str): Имя пользователя в Telegram.
-        first_name (str): Имя пользователя.
-        last_name (str): Фамилия пользователя.
-
-    Returns:
-        User: Объект созданного пользователя.
-    """
-    db = SessionLocal()
-    try:
-        new_user = User(telegram_id=telegram_id, username=username, first_name=first_name, last_name=last_name)
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        return new_user
-    except Exception as ex:
-        db.rollback()
-        raise ex
-    finally:
-        db.close()
+# Создание сессии
+Session = sessionmaker(bind=engine)
+session = Session()
 
 # Пример создания пользователя
-new_user = create_user(123456789, "testuser", "Test", "User")
-print(new_user)
+new_user = User(telegram_id=123456789, username='test_user', first_name='Test', last_name='User')
+session.add(new_user)
+session.commit()
+
+# Получение пользователя
+retrieved_user = session.query(User).filter_by(telegram_id=123456789).first()
+print(retrieved_user)  # Вывод: <User(id=1, telegram_id=123456789, username='test_user')>
+
+session.close()
 ```
 
 ### `Category`
 
-**Описание**: Класс, представляющий категорию продукта.
+**Описание**: Класс `Category` представляет таблицу категорий продуктов в базе данных.
 
 **Как работает класс**:
-Класс `Category` представляет собой модель категории продукта в базе данных. Он содержит название категории и связь с таблицей `Product` для получения списка продуктов, принадлежащих к данной категории.
+Класс `Category` определяет структуру таблицы `categories` в базе данных.  Он включает поле для хранения названия категории и список продуктов, связанных с этой категорией.  Связь с классом `Product` осуществляется через отношение `relationship`, что позволяет легко получать все продукты, принадлежащие к конкретной категории.
+```python
+class Category(Base):
+    __tablename__ = 'categories'
 
+    category_name: Mapped[str] = mapped_column(Text, nullable=False)
+    products: Mapped[List["Product"]] = relationship(
+        "Product",
+        back_populates="category",
+        cascade="all, delete-orphan"
+    )
+
+    def __repr__(self):
+        return f"<Category(id={self.id}, name='{self.category_name}')>"
+```
 **Методы**:
-- `__repr__`: Возвращает строковое представление объекта `Category`.
+- `__repr__`: Возвращает строковое представление объекта `Category`, содержащее его id и название категории.
 
 **Параметры**:
 - `category_name` (str): Название категории.
-- `products` (List["Product"]): Список продуктов, связанных с категорией.
+- `products` (List["Product"]): Список продуктов, принадлежащих к категории.
 
 **Примеры**
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from bot.dao.database import Base  # Предполагается, что Base определен в database.py
 
-# Определите строку подключения к базе данных (замените на свою)
-DATABASE_URL = "sqlite:///:memory:"
-
-# Создайте движок SQLAlchemy
-engine = create_engine(DATABASE_URL)
-
-# Создайте таблицы в базе данных (если их еще нет)
+# Создание SQLite базы данных в памяти для примера
+engine = create_engine('sqlite:///:memory:')
 Base.metadata.create_all(engine)
 
-# Создайте класс Session
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-def create_category(category_name: str) -> Category:
-    """
-    Создает новую категорию в базе данных.
-
-    Args:
-        category_name (str): Название категории.
-
-    Returns:
-        Category: Объект созданной категории.
-    """
-    db = SessionLocal()
-    try:
-        new_category = Category(category_name=category_name)
-        db.add(new_category)
-        db.commit()
-        db.refresh(new_category)
-        return new_category
-    except Exception as ex:
-        db.rollback()
-        raise ex
-    finally:
-        db.close()
+# Создание сессии
+Session = sessionmaker(bind=engine)
+session = Session()
 
 # Пример создания категории
-new_category = create_category("Электроника")
-print(new_category)
+new_category = Category(category_name='Electronics')
+session.add(new_category)
+session.commit()
+
+# Получение категории
+retrieved_category = session.query(Category).filter_by(category_name='Electronics').first()
+print(retrieved_category)  # Вывод: <Category(id=1, name='Electronics')>
+
+session.close()
 ```
 
 ### `Product`
 
-**Описание**: Класс, представляющий продукт.
+**Описание**: Класс `Product` представляет таблицу продуктов в базе данных.
 
 **Как работает класс**:
-Класс `Product` представляет собой модель продукта в базе данных. Он содержит информацию о продукте, такую как название, описание, цена, file_id (идентификатор файла, связанного с продуктом), category_id (идентификатор категории, к которой принадлежит продукт) и hidden_content (скрытое содержимое, доступное после покупки). Также он содержит связи с таблицами `Category` и `Purchase`.
+Класс `Product` определяет структуру таблицы `products` в базе данных.  Он включает поля для хранения названия продукта, описания, цены, file_id, category_id, hidden_content, связи с категорией и списком покупок, связанных с продуктом.  Связь с классом `Category` осуществляется через отношение `relationship`, что позволяет легко получать категорию, к которой принадлежит продукт.  Связь с классом `Purchase` позволяет получить все покупки, содержащие данный продукт.
 
 **Методы**:
-- `__repr__`: Возвращает строковое представление объекта `Product`.
+- `__repr__`: Возвращает строковое представление объекта `Product`, содержащее его id, название и цену.
 
 **Параметры**:
 - `name` (str): Название продукта.
 - `description` (str): Описание продукта.
 - `price` (int): Цена продукта.
-- `file_id` (str | None): Идентификатор файла, связанного с продуктом (может отсутствовать).
+- `file_id` (str | None): Идентификатор файла, связанного с продуктом (может быть `None`).
 - `category_id` (int): Идентификатор категории, к которой принадлежит продукт.
-- `hidden_content` (str): Скрытое содержимое, доступное после покупки.
-- `category` (Category): Объект категории, к которой принадлежит продукт.
+- `hidden_content` (str): Скрытое содержимое, связанное с продуктом.
+- `category` (Category): Категория, к которой принадлежит продукт.
 - `purchases` (List['Purchase']): Список покупок, связанных с продуктом.
 
 **Примеры**
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from bot.dao.database import Base  # Предполагается, что Base определен в database.py
 
-# Определите строку подключения к базе данных (замените на свою)
-DATABASE_URL = "sqlite:///:memory:"
-
-# Создайте движок SQLAlchemy
-engine = create_engine(DATABASE_URL)
-
-# Создайте таблицы в базе данных (если их еще нет)
-Base.metadata.create_all(engine)
-
-# Создайте класс Session
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-def create_product(name: str, description: str, price: int, file_id: str, category_id: int, hidden_content: str) -> Product:
-    """
-    Создает новый продукт в базе данных.
-
-    Args:
-        name (str): Название продукта.
-        description (str): Описание продукта.
-        price (int): Цена продукта.
-        file_id (str): Идентификатор файла, связанного с продуктом.
-        category_id (int): Идентификатор категории, к которой принадлежит продукт.
-        hidden_content (str): Скрытое содержимое, доступное после покупки.
-
-    Returns:
-        Product: Объект созданного продукта.
-    """
-    db = SessionLocal()
-    try:
-        new_product = Product(name=name, description=description, price=price, file_id=file_id, category_id=category_id, hidden_content=hidden_content)
-        db.add(new_product)
-        db.commit()
-        db.refresh(new_product)
-        return new_product
-    except Exception as ex:
-        db.rollback()
-        raise ex
-    finally:
-        db.close()
+# Предположим, что Category уже определена и есть объект category
+# Пример создания category (если её нет)
+new_category = Category(category_name='Electronics')
+session.add(new_category)
+session.commit()
+category = session.query(Category).filter_by(category_name='Electronics').first()
 
 # Пример создания продукта
-new_product = create_product("Наушники", "Беспроводные наушники", 1500, "file123", 1, "Секретный код: 1234")
-print(new_product)
+new_product = Product(
+    name='Laptop',
+    description='High-performance laptop',
+    price=1200,
+    category_id=category.id,  # Используем id существующей категории
+    hidden_content='Confidential data'
+)
+session.add(new_product)
+session.commit()
+
+# Получение продукта
+retrieved_product = session.query(Product).filter_by(name='Laptop').first()
+print(retrieved_product)  # Вывод: <Product(id=1, name='Laptop', price=1200)>
+
+session.close()
 ```
 
 ### `Purchase`
 
-**Описание**: Класс, представляющий покупку.
+**Описание**: Класс `Purchase` представляет таблицу покупок в базе данных.
 
 **Как работает класс**:
-Класс `Purchase` представляет собой модель покупки в базе данных. Он содержит информацию о покупке, такую как user_id (идентификатор пользователя, совершившего покупку), product_id (идентификатор приобретенного продукта), цена, тип оплаты, идентификатор платежа, а также связи с таблицами `User` и `Product`.
+Класс `Purchase` определяет структуру таблицы `purchases` в базе данных.  Он включает поля для хранения идентификаторов пользователя и продукта, цены, типа оплаты, идентификатора платежа, а также связи с пользователем и продуктом.  Связи с классами `User` и `Product` осуществляются через отношения `relationship`, что позволяет легко получать информацию о пользователе и продукте, связанных с покупкой.
 
 **Методы**:
-- `__repr__`: Возвращает строковое представление объекта `Purchase`.
+- `__repr__`: Возвращает строковое представление объекта `Purchase`, содержащее его id, user_id, product_id и дату создания.
 
 **Параметры**:
 - `user_id` (int): Идентификатор пользователя, совершившего покупку.
 - `product_id` (int): Идентификатор приобретенного продукта.
 - `price` (int): Цена покупки.
 - `payment_type` (str): Тип оплаты.
-- `payment_id` (str): Уникальный идентификатор платежа.
-- `user` (User): Объект пользователя, совершившего покупку.
-- `product` (Product): Объект приобретенного продукта.
+- `payment_id` (str): Идентификатор платежа.
+- `user` (User): Пользователь, совершивший покупку.
+- `product` (Product): Приобретенный продукт.
 
 **Примеры**
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from bot.dao.database import Base  # Предполагается, что Base определен в database.py
 
-# Определите строку подключения к базе данных (замените на свою)
-DATABASE_URL = "sqlite:///:memory:"
+# Предположим, что User и Product уже определены и есть объекты user и product
+# Пример создания user и product (если их нет)
+new_user = User(telegram_id=123456789, username='test_user', first_name='Test', last_name='User')
+session.add(new_user)
+new_category = Category(category_name='Electronics')
+session.add(new_category)
+session.commit()
+category = session.query(Category).filter_by(category_name='Electronics').first()
 
-# Создайте движок SQLAlchemy
-engine = create_engine(DATABASE_URL)
+new_product = Product(
+    name='Laptop',
+    description='High-performance laptop',
+    price=1200,
+    category_id=category.id,  # Используем id существующей категории
+    hidden_content='Confidential data'
+)
+session.add(new_product)
+session.commit()
 
-# Создайте таблицы в базе данных (если их еще нет)
-Base.metadata.create_all(engine)
-
-# Создайте класс Session
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-def create_purchase(user_id: int, product_id: int, price: int, payment_type: str, payment_id: str) -> Purchase:
-    """
-    Создает новую покупку в базе данных.
-
-    Args:
-        user_id (int): Идентификатор пользователя, совершившего покупку.
-        product_id (int): Идентификатор приобретенного продукта.
-        price (int): Цена покупки.
-        payment_type (str): Тип оплаты.
-        payment_id (str): Уникальный идентификатор платежа.
-
-    Returns:
-        Purchase: Объект созданной покупки.
-    """
-    db = SessionLocal()
-    try:
-        new_purchase = Purchase(user_id=user_id, product_id=product_id, price=price, payment_type=payment_type, payment_id=payment_id)
-        db.add(new_purchase)
-        db.commit()
-        db.refresh(new_purchase)
-        return new_purchase
-    except Exception as ex:
-        db.rollback()
-        raise ex
-    finally:
-        db.close()
+user = session.query(User).filter_by(telegram_id=123456789).first()
+product = session.query(Product).filter_by(name='Laptop').first()
 
 # Пример создания покупки
-new_purchase = create_purchase(1, 1, 1500, "card", "payment123")
-print(new_purchase)
+new_purchase = Purchase(
+    user_id=user.id,
+    product_id=product.id,
+    price=1200,
+    payment_type='Credit Card',
+    payment_id='1234567890'
+)
+session.add(new_purchase)
+session.commit()
+
+# Получение покупки
+retrieved_purchase = session.query(Purchase).filter_by(payment_id='1234567890').first()
+print(retrieved_purchase)  # Вывод: <Purchase(id=1, user_id=1, product_id=1, date=2024-10-26 00:00:00)>
+
+session.close()
 ```

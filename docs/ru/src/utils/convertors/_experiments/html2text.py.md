@@ -1,198 +1,57 @@
-# Модуль `html2text`
+# Модуль для конвертации HTML в текст (экспериментальный)
 
 ## Обзор
 
-Модуль `html2text` предназначен для конвертации HTML-контента в текстовый формат. Он использует сторонние библиотеки и утилиты для извлечения текста из HTML-файлов и сохранения его в текстовом виде. Этот модуль является частью экспериментов в проекте `hypotez`.
+Этот модуль, расположенный в `src/utils/convertors/_experiments/html2text.py`, предназначен для конвертации HTML-контента в текстовый формат. Включает функции для чтения HTML-файлов, конвертации их в текст и сохранения полученного текста в файл.
 
 ## Подробней
 
-Модуль предназначен для преобразования HTML-файлов в текст, что может быть полезно для извлечения информации из веб-страниц или документов HTML для дальнейшей обработки или анализа. Он использует функции `html2text` и `html2text_file` из модуля `src.utils.convertors` для выполнения преобразования. Результат сохраняется в текстовом файле.
+Модуль является частью набора инструментов для обработки текста в проекте `hypotez`. Он использует сторонние библиотеки и внутренние модули для выполнения конвертации HTML в текст. Этот модуль может быть использован для извлечения читаемого текста из HTML-документов, например, для анализа веб-страниц или обработки HTML-содержимого.
 
-## Функции
+## Содержание
 
-### `read_text_file`
+- [Импортированные модули](#импортированные-модули)
+- [Переменные](#переменные)
 
-```python
-def read_text_file(file_path: str | Path, as_list: bool = False, extensions: Optional[list[str]] = None, chunk_size: int = 8192) -> Generator[str, None, None] | str | None:
-    """ This if example function
-    Args:
-        file_path (str): Описание параметра `file_path`.
-        as_list (bool): Описание параметра `as_list`.
-        extensions (Optional[list[str]], optional): Описание параметра `extensions`. По умолчанию None.
-        chunk_size (int): Описание параметра `chunk_size`.
-    Returns:
-        Generator[str, None, None] | str | None: Описание возвращаемого значения. Возвращает `True` или `False`.
+## Импортированные модули
 
-     Raises:
-          Ошибка выполнение
+В данном модуле используются следующие импортированные модули:
 
-     Example:
-         Примеры вызовов
-
-    """
-    # Не выводи тело функции. только документацию и примеры вызова функции;
-```
-
-**Описание**:
-Чтение текстового файла.
-
-**Как работает функция**:
-Функция `read_text_file` считывает содержимое текстового файла по указанному пути. Она может возвращать содержимое в виде генератора строк (если `as_list=True`) или в виде одной строки.
-
-**Параметры**:
-- `file_path` (str | Path): Путь к файлу, который нужно прочитать.
-- `as_list` (bool, optional): Если `True`, функция возвращает генератор строк. По умолчанию `False`.
-- `extensions` (Optional[list[str]], optional): Список расширений файлов для чтения из каталога. По умолчанию `None`.
-- `chunk_size` (int, optional): Размер чанков для чтения файла в байтах. По умолчанию `8192`.
-
-**Возвращает**:
-- `Generator[str, None, None] | str | None`: Генератор строк, объединенная строка или `None` в случае ошибки.
-
-**Примеры**:
-
-```python
-from pathlib import Path
-file_path = Path('example.txt')
-content = read_text_file(file_path)
-if content:
-   print(f'File content: {content[:100]}...')
-```
-
-### `save_text_file`
-
-```python
-def save_text_file(text: str, file_path: str | Path, encoding: str = 'utf-8') -> bool:
-    """ This if example function
-    Args:
-        text (str): Описание параметра `text`.
-        file_path (str): Описание параметра `file_path`.
-        encoding (str): Описание параметра `encoding`.
-    Returns:
-        bool: Описание возвращаемого значения. Возвращает `True` или `False`.
-
-     Raises:
-          Ошибка выполнение
-
-     Example:
-         Примеры вызовов
-
-    """
-    # Не выводи тело функции. только документацию и примеры вызова функции;
-```
-
-**Описание**:
-Сохранение текстового файла.
-
-**Как работает функция**:
-Функция `save_text_file` сохраняет предоставленный текстовый контент в файл по указанному пути.
-
-**Параметры**:
-- `text` (str): Текст, который нужно сохранить в файл.
-- `file_path` (str | Path): Путь к файлу, в который нужно сохранить текст.
-- `encoding` (str, optional): Кодировка файла. По умолчанию `'utf-8'`.
-
-**Возвращает**:
-- `bool`: `True`, если файл успешно сохранен, иначе `False`.
-
-**Примеры**:
-
-```python
-from pathlib import Path
-file_path = Path('example.txt')
-text = 'Example text'
-save_text_file(text, file_path)
-```
-
-### `html2text`
-
-```python
-def html2text(html: str, bodywidth: int = 0,  override: Optional[dict] = None) -> str:
-    """ This if example function
-    Args:
-        html (str): Описание параметра `html`.
-        bodywidth (int): Описание параметра `bodywidth`.
-        override (Optional[dict], optional): Описание параметра `override`. По умолчанию None.
-    Returns:
-        str: Описание возвращаемого значения. Возвращает `True` или `False`.
-
-     Raises:
-          Ошибка выполнение
-
-     Example:
-         Примеры вызовов
-
-    """
-    # Не выводи тело функции. только документацию и примеры вызова функции;
-```
-
-**Описание**:
-Конвертация HTML в текст.
-
-**Как работает функция**:
-Функция `html2text` преобразует HTML-контент в текстовый формат, удаляя HTML-теги и форматирование.
-
-**Параметры**:
-- `html` (str): HTML-контент для преобразования.
-- `bodywidth` (int, optional): Ширина текста. По умолчанию `0`.
-- `override` (Optional[dict], optional): Переопределение параметров. По умолчанию `None`.
-
-**Возвращает**:
-- `str`: Текстовое представление HTML-контента.
-
-**Примеры**:
-
-```python
-html = '<p>Example text</p>'
-text = html2text(html)
-print(text)
-```
-
-### `html2text_file`
-
-```python
-def html2text_file(file_path: str | Path, bodywidth: int = 0,  override: Optional[dict] = None) -> str:
-    """ This if example function
-    Args:
-        file_path (str): Описание параметра `file_path`.
-        bodywidth (int): Описание параметра `bodywidth`.
-        override (Optional[dict], optional): Описание параметра `override`. По умолчанию None.
-    Returns:
-        str: Описание возвращаемого значения. Возвращает `True` или `False`.
-
-     Raises:
-          Ошибка выполнение
-
-     Example:
-         Примеры вызовов
-
-    """
-    # Не выводи тело функции. только документацию и примеры вызова функции;
-```
-
-**Описание**:
-Конвертация HTML-файла в текст.
-
-**Как работает функция**:
-Функция `html2text_file` считывает HTML-контент из файла по указанному пути и преобразует его в текстовый формат.
-
-**Параметры**:
-- `file_path` (str | Path): Путь к HTML-файлу.
-- `bodywidth` (int, optional): Ширина текста. По умолчанию `0`.
-- `override` (Optional[dict], optional): Переопределение параметров. По умолчанию `None`.
-
-**Возвращает**:
-- `str`: Текстовое представление HTML-контента из файла.
-
-**Примеры**:
-
-```python
-from pathlib import Path
-file_path = Path('example.html')
-text = html2text_file(file_path)
-print(text)
-```
+- `header`: Предположительно, модуль содержит общие заголовки или метаданные.
+- `src.gs`: Модуль, содержащий глобальные настройки и пути.
+- `src.utils.convertors.html2text`: Функция для конвертации HTML в текст.
+- `src.utils.convertors.html2text_file`: Функция для конвертации HTML-файла в текст.
+- `src.utils.file.read_text_file`: Функция для чтения текстовых файлов.
+- `src.utils.file.save_text_file`: Функция для сохранения текста в файл.
 
 ## Переменные
 
-- `html`: HTML-контент, прочитанный из файла `index.html`.
-- `text_from_html`: Текст, извлеченный из HTML-контента с использованием функции `html2text`.
+- `html`: Содержимое HTML-файла, прочитанное с использованием функции `read_text_file`.
+- `text_from_html`: Текст, полученный из HTML-содержимого после конвертации с использованием функции `html2text`.
+
+```python
+html = read_text_file(gs.path.google_drive / 'html2text' / 'index.html')
+text_from_html = html2text(html)
+save_text_file(text_from_html, gs.path.google_drive / 'html2text' / 'index.txt')
+...
+```
+
+### `html`
+
+Содержимое HTML-файла `index.html`, расположенного в каталоге `html2text` на Google Drive.
+Функция `read_text_file` используется для чтения этого файла.
+
+### `text_from_html`
+
+Текст, полученный из HTML-содержимого, хранящегося в переменной `html`.
+Функция `html2text` используется для конвертации HTML в текст.
+
+### Как это работает:
+1. **Чтение HTML-файла**:
+   - Читает содержимое HTML-файла (`index.html`) с использованием функции `read_text_file` из модуля `src.utils.file`.
+
+2. **Конвертация HTML в текст**:
+   - Преобразует HTML-содержимое в текстовый формат с использованием функции `html2text` из модуля `src.utils.convertors`.
+
+3. **Сохранение текста в файл**:
+   - Сохраняет полученный текст в файл (`index.txt`) с использованием функции `save_text_file` из модуля `src.utils.file`.

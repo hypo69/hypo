@@ -1,4 +1,4 @@
-# AI Module: AI Model Management
+# ai Module: AI Model Management
 
 ## Обзор
 

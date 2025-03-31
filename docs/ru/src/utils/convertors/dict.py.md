@@ -1,12 +1,24 @@
-# Модуль для конвертации `dict` в различные форматы
+# Модуль для конвертации между `dict` и `SimpleNamespace` объектами
 
 ## Обзор
 
-Модуль `src.utils.convertors.dict` предоставляет инструменты для преобразования данных между форматом словаря (`dict`) и `SimpleNamespace`, а также для экспорта данных в различные форматы, такие как XML, CSV, JSON, XLS, HTML и PDF. Он содержит функции для рекурсивного преобразования словарей в объекты `SimpleNamespace` и обратно.
+Модуль `src.utils.convertors.dict` предоставляет инструменты для преобразования данных между форматами `dict` и `SimpleNamespace`, а также для экспорта данных в различные форматы, такие как XML, CSV, JSON, XLS, HTML и PDF.
 
 ## Подробней
 
-Этот модуль предназначен для упрощения работы с данными, представленными в виде словарей, и их преобразования в другие форматы, необходимые для различных задач, таких как экспорт данных, создание отчетов и т.д. Модуль содержит функции для рекурсивного преобразования словарей в объекты `SimpleNamespace` и обратно, а также для экспорта данных в различные форматы.
+Этот модуль содержит функции для рекурсивного преобразования словарей в объекты `SimpleNamespace` и обратно. Кроме того, он предоставляет возможность экспортировать данные в различные форматы, что может быть полезно для интеграции с различными системами и приложениями.
+Модуль включает в себя функции для работы с XML, CSV, JSON, XLS, HTML и PDF форматами. Он обеспечивает гибкость и удобство при работе с данными, позволяя легко преобразовывать их между различными форматами.
+
+## Содержание
+
+- [Функции](#Функции)
+    - [replace_key_in_dict](#replace_key_in_dict)
+    - [dict2ns](#dict2ns)
+    - [dict2xml](#dict2xml)
+    - [dict2csv](#dict2csv)
+    - [dict2xls](#dict2xls)
+    - [dict2html](#dict2html)
+    - [example_json2xml](#example_json2xml)
 
 ## Функции
 
@@ -15,15 +27,15 @@
 ```python
 def replace_key_in_dict(data, old_key, new_key) -> dict:
     """
-    Recursively replaces a key in a dictionary or list.
-    
+    Рекурсивно заменяет ключ в словаре или списке.
+
     Args:
-        data (dict | list): The dictionary or list where key replacement occurs.
-        old_key (str): The key to be replaced.
-        new_key (str): The new key.
-    
+        data (dict | list): Словарь или список, в котором происходит замена ключа.
+        old_key (str): Ключ, который нужно заменить.
+        new_key (str): Новый ключ.
+
     Returns:
-        dict: The updated dictionary with replaced keys.
+        dict: Обновленный словарь с замененными ключами.
 
     Example Usage:
 
@@ -52,13 +64,12 @@ def replace_key_in_dict(data, old_key, new_key) -> dict:
     """
 ```
 
-**Описание**: Рекурсивно заменяет ключ `old_key` на `new_key` в словаре или списке.
+**Назначение**: Рекурсивно заменяет ключ `old_key` на `new_key` в словаре или списке.
 
-**Как работает функция**: 
-Функция проверяет, является ли входной параметр `data` словарем или списком. Если это словарь, она проходит по всем ключам словаря и заменяет `old_key` на `new_key`. Если значением ключа является словарь или список, функция рекурсивно вызывает себя для этого значения. Если `data` является списком, функция проходит по всем элементам списка и рекурсивно вызывает себя для каждого элемента.
+**Как работает функция**: Функция проверяет, является ли входной параметр `data` словарем или списком. Если это словарь, она перебирает все ключи и заменяет `old_key` на `new_key`. Если значением ключа является словарь или список, функция рекурсивно вызывает саму себя для этого значения. Если `data` является списком, функция перебирает все элементы и рекурсивно вызывает саму себя для каждого элемента.
 
 **Параметры**:
-- `data` (dict | list): Словарь или список, в котором производится замена ключа.
+- `data` (dict | list): Словарь или список, в котором происходит замена ключа.
 - `old_key` (str): Ключ, который нужно заменить.
 - `new_key` (str): Новый ключ.
 
@@ -69,48 +80,20 @@ def replace_key_in_dict(data, old_key, new_key) -> dict:
 
 ```python
 data = {"old_key": "value"}
-updated_data = replace_key_in_json(data, "old_key", "new_key")
+updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится {"new_key": "value"}
 
 data = {"outer": {"old_key": "value"}}
-updated_data = replace_key_in_json(data, "old_key", "new_key")
+updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится {"outer": {"new_key": "value"}}
 
 data = [{"old_key": "value1"}, {"old_key": "value2"}]
-updated_data = replace_key_in_json(data, "old_key", "new_key")
+updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится [{"new_key": "value1"}, {"new_key": "value2"}]
 
 data = {"outer": [{"inner": {"old_key": "value"}}]}
-updated_data = replace_key_in_json(data, "old_key", "new_key")
+updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится {"outer": [{"inner": {"new_key": "value"}}]}
-```
-
-### `dict2pdf`
-
-```python
-def dict2pdf(data: dict | SimpleNamespace, file_path: str | Path):
-    """
-    Save dictionary data to a PDF file.
-
-    Args:
-        data (dict | SimpleNamespace): The dictionary to convert to PDF.
-        file_path (str | Path): Path to the output PDF file.
-    """
-```
-
-**Описание**: Сохраняет данные словаря в PDF-файл.
-
-**Как работает функция**:
-Функция преобразует словарь в PDF-файл. Если входные данные представлены в виде `SimpleNamespace`, они преобразуются в словарь. Затем создается PDF-файл, в который построчно записываются ключи и значения словаря. Если места на странице не хватает, создается новая страница.
-
-**Параметры**:
-- `data` (dict | SimpleNamespace): Словарь для преобразования в PDF.
-- `file_path` (str | Path): Путь к выходному PDF-файлу.
-
-**Примеры**:
-```python
-data = {'name': 'Product', 'price': 10.0}
-dict2pdf(data, 'product.pdf')
 ```
 
 ### `dict2ns`
@@ -118,20 +101,19 @@ dict2pdf(data, 'product.pdf')
 ```python
 def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
     """
-    Recursively convert dictionaries to SimpleNamespace.
+    Рекурсивно преобразует словари в SimpleNamespace.
 
     Args:
-        data (Dict[str, Any] | List[Any]): The data to convert.
+        data (Dict[str, Any] | List[Any]): Данные для преобразования.
 
     Returns:
-        Any: Converted data as a SimpleNamespace or a list of SimpleNamespace.
+        Any: Преобразованные данные в виде SimpleNamespace или списка SimpleNamespace.
     """
 ```
 
-**Описание**: Рекурсивно преобразует словари в `SimpleNamespace`.
+**Назначение**: Рекурсивно преобразует словари в объекты `SimpleNamespace`.
 
-**Как работает функция**:
-Функция рекурсивно преобразует словарь в объект `SimpleNamespace`. Если значением ключа является словарь, функция рекурсивно вызывает себя для этого значения. Если значением ключа является список, функция проходит по всем элементам списка и рекурсивно вызывает себя для каждого элемента, если элемент является словарем.
+**Как работает функция**: Функция проверяет, является ли входной параметр `data` словарем или списком. Если это словарь, она перебирает все элементы словаря и рекурсивно вызывает саму себя для каждого значения, которое является словарем. Если значением является список, то функция преобразует каждый элемент списка в `SimpleNamespace`, если это возможно. Если `data` является списком, функция применяет те же преобразования к каждому элементу списка.
 
 **Параметры**:
 - `data` (Dict[str, Any] | List[Any]): Данные для преобразования.
@@ -139,171 +121,124 @@ def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
 **Возвращает**:
 - `Any`: Преобразованные данные в виде `SimpleNamespace` или списка `SimpleNamespace`.
 
-**Примеры**:
-
-```python
-data = {'name': 'Product', 'price': 10.0}
-ns = dict2ns(data)
-print(ns.name)  # Вывод: Product
-```
-
 ### `dict2xml`
 
 ```python
 def dict2xml(data: Dict[str, Any], encoding: str = 'UTF-8') -> str:
     """
-    Generate an XML string from a dictionary.
+    Генерирует XML строку из словаря.
 
     Args:
-        data (Dict[str, Any]): The data to convert to XML.
-        encoding (str, optional): Data encoding. Defaults to 'UTF-8'.
+        data (Dict[str, Any]): Данные для преобразования в XML.
+        encoding (str, optional): Кодировка данных. По умолчанию 'UTF-8'.
 
     Returns:
-        str: The XML string representing the input dictionary.
+        str: XML строка, представляющая входной словарь.
 
     Raises:
-        Exception: If more than one root node is provided.
+        Exception: Если предоставлено более одного корневого узла.
     """
 ```
 
-**Описание**: Генерирует XML-строку из словаря.
+**Назначение**: Генерирует XML строку из словаря.
 
-**Как работает функция**:
-Функция преобразует словарь в XML-строку. Она использует внутренние функции `_process_simple`, `_process_attr`, `_process_complex` и `_process` для рекурсивной обработки словаря и создания XML-элементов. Функция `_process_simple` создает узлы для простых типов данных (int, str). Функция `_process_attr` создает атрибуты для XML-элементов. Функция `_process_complex` создает узлы для сложных типов данных, таких как списки или словари. Функция `_process` является основной функцией, которая вызывает другие функции для обработки различных типов данных.
+**Как работает функция**: Функция использует рекурсивный подход для преобразования словаря в XML. Она определяет вспомогательные функции для обработки простых типов данных (int, str), атрибутов и сложных типов данных (списки, словари). Основная функция `_process` определяет тип значения и вызывает соответствующую функцию для его обработки. Если значение является словарем, создается XML элемент с атрибутами и дочерними элементами. Если значение является списком, создается набор XML элементов.
 
 **Параметры**:
 - `data` (Dict[str, Any]): Данные для преобразования в XML.
-- `encoding` (str, optional): Кодировка данных. По умолчанию 'UTF-8'.
+- `encoding` (str, optional): Кодировка данных. По умолчанию `'UTF-8'`.
 
 **Возвращает**:
-- `str`: XML-строка, представляющая входной словарь.
+- `str`: XML строка, представляющая входной словарь.
 
 **Вызывает исключения**:
 - `Exception`: Если предоставлено более одного корневого узла.
-
-**Примеры**:
-
-```python
-data = {'product': {'name': 'Product', 'price': 10.0}}
-xml_string = dict2xml(data)
-print(xml_string)
-```
 
 ### `dict2csv`
 
 ```python
 def dict2csv(data: dict | SimpleNamespace, file_path: str | Path) -> bool:
     """
-    Save dictionary or SimpleNamespace data to a CSV file.
+    Сохраняет данные словаря или SimpleNamespace в CSV файл.
 
     Args:
-        data (dict | SimpleNamespace): The data to save to a CSV file.
-        file_path (str | Path): Path to the CSV file.
+        data (dict | SimpleNamespace): Данные для сохранения в CSV файл.
+        file_path (str | Path): Путь к CSV файлу.
 
     Returns:
-        bool: True if the file was saved successfully, False otherwise.
+        bool: True, если файл был успешно сохранен, False в противном случае.
     """
 ```
 
-**Описание**: Сохраняет данные из словаря или `SimpleNamespace` в CSV-файл.
+**Назначение**: Сохраняет данные словаря или `SimpleNamespace` в CSV файл.
 
-**Как работает функция**:
-Функция вызывает функцию `save_csv_file` из модуля `src.utils.csv` для сохранения данных в CSV-файл.
+**Как работает функция**: Функция вызывает функцию `save_csv_file` из модуля `<укажите модуль>` для сохранения данных в CSV файл. Функция просто передает входные параметры в `save_csv_file`.
 
 **Параметры**:
-- `data` (dict | SimpleNamespace): Данные для сохранения в CSV-файл.
-- `file_path` (str | Path): Путь к CSV-файлу.
+- `data` (dict | SimpleNamespace): Данные для сохранения в CSV файл.
+- `file_path` (str | Path): Путь к CSV файлу.
 
 **Возвращает**:
-- `bool`: `True`, если файл успешно сохранен, `False` в противном случае.
-
-**Примеры**:
-
-```python
-data = {'name': 'Product', 'price': 10.0}
-success = dict2csv(data, 'product.csv')
-if success:
-    print('CSV file saved successfully.')
-```
+- `bool`: `True`, если файл был успешно сохранен, `False` в противном случае.
 
 ### `dict2xls`
 
 ```python
 def dict2xls(data: dict | SimpleNamespace, file_path: str | Path) -> bool:
     """
-    Save dictionary or SimpleNamespace data to an XLS file.
+    Сохраняет данные словаря или SimpleNamespace в XLS файл.
 
     Args:
-        data (dict | SimpleNamespace): The data to save to an XLS file.
-        file_path (str | Path): Path to the XLS file.
+        data (dict | SimpleNamespace): Данные для сохранения в XLS файл.
+        file_path (str | Path): Путь к XLS файлу.
 
     Returns:
-        bool: True if the file was saved successfully, False otherwise.
+        bool: True, если файл был успешно сохранен, False в противном случае.
     """
 ```
 
-**Описание**: Сохраняет данные из словаря или `SimpleNamespace` в XLS-файл.
+**Назначение**: Сохраняет данные словаря или `SimpleNamespace` в XLS файл.
 
-**Как работает функция**:
-Функция вызывает функцию `save_xls_file` из модуля `src.utils.xls` для сохранения данных в XLS-файл.
+**Как работает функция**: Функция вызывает функцию `save_xls_file` из модуля `src.utils.xls` для сохранения данных в XLS файл. Функция просто передает входные параметры в `save_xls_file`.
 
 **Параметры**:
-- `data` (dict | SimpleNamespace): Данные для сохранения в XLS-файл.
-- `file_path` (str | Path): Путь к XLS-файлу.
+- `data` (dict | SimpleNamespace): Данные для сохранения в XLS файл.
+- `file_path` (str | Path): Путь к XLS файлу.
 
 **Возвращает**:
-- `bool`: `True`, если файл успешно сохранен, `False` в противном случае.
-
-**Примеры**:
-
-```python
-data = {'name': 'Product', 'price': 10.0}
-success = dict2xls(data, 'product.xls')
-if success:
-    print('XLS file saved successfully.')
-```
+- `bool`: `True`, если файл был успешно сохранен, `False` в противном случае.
 
 ### `dict2html`
 
 ```python
 def dict2html(data: dict | SimpleNamespace, encoding: str = 'UTF-8') -> str:
     """
-    Generate an HTML table string from a dictionary or SimpleNamespace object.
+    Генерирует HTML таблицу из словаря или объекта SimpleNamespace.
 
     Args:
-        data (dict | SimpleNamespace): The data to convert to HTML.
-        encoding (str, optional): Data encoding. Defaults to 'UTF-8'.
+        data (dict | SimpleNamespace): Данные для преобразования в HTML.
+        encoding (str, optional): Кодировка данных. По умолчанию 'UTF-8'.
 
     Returns:
-        str: The HTML string representing the input dictionary.
+        str: HTML строка, представляющая входной словарь.
     """
 ```
 
-**Описание**: Генерирует HTML-таблицу из словаря или объекта `SimpleNamespace`.
+**Назначение**: Генерирует HTML таблицу из словаря или объекта `SimpleNamespace`.
 
-**Как работает функция**:
-Функция преобразует словарь или `SimpleNamespace` в HTML-таблицу. Если входные данные представлены в виде `SimpleNamespace`, они преобразуются в словарь. Затем функция `dict_to_html_table` рекурсивно преобразует словарь в HTML-таблицу.
+**Как работает функция**: Функция преобразует входные данные в HTML таблицу. Если входные данные являются объектом `SimpleNamespace`, они преобразуются в словарь. Затем функция использует рекурсивную функцию `dict_to_html_table` для преобразования словаря в HTML таблицу. Функция `dict_to_html_table` рекурсивно перебирает элементы словаря и создает HTML таблицу с ключами и значениями. Если значение является словарем, функция вызывает саму себя для этого значения. Если значение является списком, создается HTML список.
 
 **Параметры**:
 - `data` (dict | SimpleNamespace): Данные для преобразования в HTML.
-- `encoding` (str, optional): Кодировка данных. По умолчанию 'UTF-8'.
+- `encoding` (str, optional): Кодировка данных. По умолчанию `'UTF-8'`.
 
 **Возвращает**:
-- `str`: HTML-строка, представляющая входной словарь.
-
-**Примеры**:
-
-```python
-data = {'name': 'Product', 'price': 10.0}
-html_string = dict2html(data)
-print(html_string)
-```
+- `str`: HTML строка, представляющая входной словарь.
 
 ### `example_json2xml`
 
 ```python
 def example_json2xml():
-
     # Example usage
     json_data = {
         "product": {
@@ -333,17 +268,12 @@ def example_json2xml():
     print(xml_output)
 ```
 
-**Описание**: Пример использования функции `json2xml` (не существует в предоставленном коде).
+**Назначение**: Пример использования функции `json2xml`.
 
-**Как работает функция**:
-Функция содержит пример данных в формате JSON и вызывает функцию `json2xml` (которой нет в предоставленном коде) для преобразования JSON в XML. Результат выводится на экран.
+**Как работает функция**: Функция создает пример JSON данных и преобразует их в XML с использованием функции `json2xml`. Результат выводится в консоль.
 
 **Параметры**:
-- Отсутствуют.
+- Нет параметров.
 
 **Возвращает**:
-- Отсутствует.
-
-**Примеры**:
-```python
-example_json2xml()
+- Нет возвращаемого значения.

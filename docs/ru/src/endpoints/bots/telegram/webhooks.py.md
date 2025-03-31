@@ -1,12 +1,12 @@
-# Модуль `src.endpoints.bots.telegram.webhooks`
+# Модуль для обработки вебхуков Telegram
 
 ## Обзор
 
-Модуль предоставляет функции для обработки вебхуков Telegram через сервер FastAPI, используя асинхронные операции. Он позволяет принимать и обрабатывать обновления от Telegram бота.
+Этот модуль содержит функции для обработки входящих вебхуков от Telegram через сервер FastAPI. Он использует библиотеку `python-telegram-bot` для взаимодействия с Telegram Bot API.
 
 ## Подробней
 
-Этот модуль является частью системы обработки входящих сообщений от Telegram бота. Он содержит функции для приема POST-запросов от Telegram, преобразования этих запросов в объекты `Update` из библиотеки `python-telegram-bot`, и их последующей обработки. Модуль использует `FastAPI` для создания веб-сервера и `python-telegram-bot` для взаимодействия с Telegram API.
+Модуль предоставляет функциональность для асинхронной обработки входящих вебхуков Telegram. Он получает данные из запроса, преобразует их в объекты `Update` из библиотеки `python-telegram-bot` и обрабатывает их с помощью `Application` из той же библиотеки. Это позволяет боту реагировать на сообщения, команды и другие события, отправленные пользователями Telegram.
 
 ## Функции
 
@@ -14,76 +14,78 @@
 
 ```python
 def telegram_webhook(request: Request, application: Application):
-    """Handle incoming webhook requests."""
+    """
+    Обрабатывает входящий запрос вебхука Telegram (синхронная обертка).
+
+    Args:
+        request (Request): Объект запроса FastAPI.
+        application (Application): Объект приложения Telegram Bot.
+
+    Returns:
+        None: Функция ничего не возвращает явно.
+
+    """
+    asyncio.run(telegram_webhook_async(request, application))
 ```
 
 **Как работает функция**:
-Функция `telegram_webhook` является синхронной оберткой для асинхронной функции `telegram_webhook_async`. Она запускает асинхронную функцию в синхронном контексте, используя `asyncio.run`.
-
-**Параметры**:
-- `request` (Request): Объект `Request` от FastAPI, содержащий данные входящего HTTP-запроса.
-- `application` (Application): Объект `Application` из библиотеки `python-telegram-bot`, представляющий экземпляр бота.
-
-**Возвращает**:
-- `None`: Функция ничего не возвращает явно.
-
-**Вызывает исключения**:
-- Не вызывает исключений напрямую, но может пробрасывать исключения, возникшие в `telegram_webhook_async`.
-
-**Примеры**:
-```python
-# Пример использования функции telegram_webhook
-from fastapi import FastAPI, Request
-from telegram.ext import Application
-
-app = FastAPI()
-application = Application.builder().token("YOUR_TELEGRAM_BOT_TOKEN").build()
-
-@app.post("/telegram_webhook")
-async def webhook_endpoint(request: Request):
-    telegram_webhook(request, application)
-    return {"status": "ok"}
-```
+1. Функция является синхронной оберткой для асинхронной функции `telegram_webhook_async`.
+2. Она использует `asyncio.run` для запуска асинхронной функции в синхронном контексте.
 
 ### `telegram_webhook_async`
 
 ```python
 async def telegram_webhook_async(request: Request, application: Application):
-    """Handle incoming webhook requests."""
+    """
+    Асинхронно обрабатывает входящие запросы вебхуков Telegram.
+
+    Args:
+        request (Request): Объект запроса FastAPI.
+        application (Application): Объект приложения Telegram Bot.
+
+    Returns:
+        Request: Возвращает объект запроса FastAPI.
+
+    Raises:
+        json.JSONDecodeError: Если не удается декодировать JSON из запроса.
+        Exception: При возникновении других ошибок при обработке вебхука.
+
+    """
+    return request
+
+    try:
+        data = await request.json()
+        async with application:
+            update = Update.de_json(data, application.bot)
+            await application.process_update(update)
+        return Response(status_code=200)
+    except json.JSONDecodeError as ex:
+        logger.error(f'Error decoding JSON: ', ex)
+        return Response(status_code=400, content=f'Invalid JSON: {ex}')
+    except Exception as ex:
+        logger.error(f'Error processing webhook: {type(ex)} - {ex}')
+        return Response(status_code=500, content=f'Error processing webhook: {ex}')
 ```
 
 **Как работает функция**:
 
-1.  **Чтение данных из запроса**: Извлекает данные JSON из входящего HTTP-запроса, используя `await request.json()`.
-2.  **Обработка обновления**: Использует асинхронный контекстный менеджер `async with application:` для управления ресурсами приложения-бота. Внутри этого блока:
-    *   Преобразует JSON-данные в объект `Update`, используя `Update.de_json(data, application.bot)`. Этот объект содержит всю информацию об обновлении от Telegram.
-    *   Обрабатывает обновление, вызывая `await application.process_update(update)`. Это передает обновление соответствующим обработчикам, зарегистрированным в приложении.
-3.  **Обработка ошибок**: Если происходит ошибка при разборе JSON (`json.JSONDecodeError`), в лог записывается сообщение об ошибке, и возвращается HTTP-ответ с кодом 400 (Bad Request). Если происходит любая другая ошибка (`Exception`), в лог записывается сообщение об ошибке, и возвращается HTTP-ответ с кодом 500 (Internal Server Error).
-4.  **Возврат ответа**: В случае успешной обработки возвращает HTTP-ответ с кодом 200 (OK).
+1.  **Извлечение данных из запроса**:
+    *   Функция пытается извлечь JSON-данные из объекта `request` с использованием `await request.json()`. Этот шаг преобразует тело запроса в формат JSON для дальнейшей обработки.
 
-**Параметры**:
+2.  **Обработка обновления Telegram**:
+    *   `async with application:`: Используется асинхронный контекстный менеджер для управления ресурсами приложения Telegram Bot. Это гарантирует, что приложение будет корректно запущено и остановлено.
+    *   `update = Update.de_json(data, application.bot)`: Преобразует JSON-данные в объект `Update`, используя метод `de_json` класса `Update` из библиотеки `python-telegram-bot`. Этот объект содержит информацию о произошедшем событии, таком как новое сообщение или команда.
+    *   `await application.process_update(update)`: Передает объект `update` для дальнейшей обработки в приложении Telegram Bot. Этот метод отвечает за вызов соответствующих обработчиков (handlers) на основе типа обновления.
 
-*   `request` (Request): Объект `Request` от FastAPI, содержащий данные входящего HTTP-запроса.
-*   `application` (Application): Объект `Application` из библиотеки `python-telegram-bot`, представляющий экземпляр бота.
+3.  **Обработка ошибок**:
 
-**Возвращает**:
+    *   **JSONDecodeError**:
+        *   Если при попытке декодирования JSON возникает ошибка (`json.JSONDecodeError`), она логируется с использованием `logger.error(f'Error decoding JSON: ', ex)`, где `ex` содержит информацию об ошибке.
+        *   Возвращается HTTP-ответ с кодом состояния 400 (Bad Request) и сообщением об ошибке, указывающим на некорректный JSON.
+    *   **Exception**:
+        *   Если возникает любая другая ошибка в процессе обработки вебхука, она логируется с использованием `logger.error(f'Error processing webhook: {type(ex)} - {ex}')`. Логируется тип и сообщение об ошибке.
+        *   Возвращается HTTP-ответ с кодом состояния 500 (Internal Server Error) и сообщением об ошибке.
 
-*   `Response`: Объект `Response` от FastAPI, содержащий HTTP-ответ. В случае успеха возвращает ответ со статусом 200, в случае ошибки — 400 или 500.
-
-**Вызывает исключения**:
-
-*   `json.JSONDecodeError`: Вызывается при неудачной попытке разбора JSON из тела запроса.
-*   `Exception`: Вызывается при любой другой ошибке во время обработки запроса.
-
-**Примеры**:
-
-```python
-from fastapi import FastAPI, Request
-from telegram.ext import Application
-
-app = FastAPI()
-application = Application.builder().token("YOUR_TELEGRAM_BOT_TOKEN").build()
-
-@app.post("/telegram_webhook")
-async def webhook_endpoint(request: Request):
-    return await telegram_webhook_async(request, application)
+4.  **Возврат ответа**:
+    *   В случае успешной обработки возвращается объект `Response` с кодом состояния 200 (OK), что означает успешное выполнение запроса.
+    *   В случае ошибки возвращается объект `Response` с соответствующим кодом состояния (400 или 500) и сообщением об ошибке.

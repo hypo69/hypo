@@ -2,21 +2,21 @@
 
 ## Обзор
 
-Модуль `src.endpoints.bots.telegram.handlers` предоставляет класс `BotHandler`, который используется для обработки различных команд и сообщений, получаемых от Telegram-бота. Он включает в себя обработку URL-адресов, текстовых сообщений, голосовых сообщений и документов.
+Модуль `src.endpoints.bots.telegram.handlers` предназначен для обработки событий, поступающих от Telegram-бота. Он включает в себя класс `BotHandler`, который содержит методы для обработки различных типов сообщений, таких как URL, команды и документы.
 
 ## Подробней
 
-Этот модуль является ключевым компонентом для управления взаимодействием с пользователем через Telegram-бота. Он обрабатывает команды, предоставляет справку, отправляет PDF-файлы и транскрибирует голосовые сообщения. Модуль обеспечивает централизованную обработку всех входящих сообщений и команд, что упрощает поддержку и расширение функциональности бота. Расположение файла `hypotez/src/endpoints/bots/telegram/handlers.py` указывает на то, что он является частью подсистемы обработки конечных точек, специфичных для Telegram-ботов.
+Этот модуль является ключевым компонентом для интеграции Telegram-бота с системой. Он обеспечивает обработку входящих сообщений и команд, позволяя боту взаимодействовать с пользователями и выполнять различные задачи, такие как обработка URL, отправка PDF-файлов и распознавание голосовых сообщений.
 
 ## Классы
 
 ### `BotHandler`
 
-**Описание**: Класс `BotHandler` предназначен для обработки команд и сообщений, полученных от Telegram-бота.
+**Описание**:
+Класс `BotHandler` предназначен для обработки команд и сообщений, получаемых от Telegram-бота.
 
 **Как работает класс**:
-
-Класс `BotHandler` инициализируется без параметров. Он содержит методы для обработки различных типов сообщений и команд, отправляемых боту. Основные методы включают обработку URL-адресов, текстовых сообщений, голосовых сообщений, документов, а также команды `/start`, `/help` и `/sendpdf`. Класс использует модуль `logger` для логирования событий и ошибок, а также предоставляет пользователю обратную связь через отправку текстовых сообщений.
+Класс `BotHandler` содержит методы для обработки различных типов сообщений от Telegram-бота. При инициализации класса выполняются необходимые настройки для работы с ботом. Методы класса позволяют обрабатывать URL, текстовые команды, голосовые сообщения и документы, а также отправлять ответы пользователям.
 
 **Методы**:
 
@@ -26,282 +26,336 @@
 - `handle_message`: Обработка любого текстового сообщения.
 - `start`: Обработка команды `/start`.
 - `help_command`: Обработка команды `/help`.
-- `send_pdf`: Обработка команды `/sendpdf` для отправки PDF-файла.
-- `handle_voice`: Обработка голосовых сообщений и транскрибация аудио.
-- `transcribe_voice`: Транскрибация голосового сообщения с использованием сервиса распознавания речи.
+- `send_pdf`: Обработка команды `/sendpdf` для генерации и отправки PDF-файла.
+- `handle_voice`: Обработка голосовых сообщений и транскрибирование аудио.
+- `transcribe_voice`: Транскрибирование голосового сообщения с использованием сервиса распознавания речи.
 - `handle_document`: Обработка полученных документов.
-- `handle_log`: Обработка лог-сообщений.
+- `handle_log`: Обработка сообщений журнала.
 
-#### `__init__`
+---
 
-```python
-    def __init__(self):
-        """
-        Инициализация обработчика событий телеграм-бота.
-        """
-        ...
-```
+## Функции
 
-**Описание**: Инициализирует экземпляр класса `BotHandler`.
-
-**Как работает функция**:
-Метод инициализации `__init__` в классе `BotHandler` выполняет настройку начального состояния объекта. В текущей реализации, отмеченной как `...`, подразумевается выполнение необходимых операций инициализации, которые в данном коде не указаны. Это может включать в себя, например, загрузку конфигураций, установку соединений с внешними сервисами или определение начальных значений для атрибутов класса.
-
-#### `handle_url`
+### `__init__`
 
 ```python
-    async def handle_url(self, update: Update, context: CallbackContext) -> Any:
-        """
-        Обработка URL, присланного пользователем.
-        """
-        ...
+def __init__(self):
+    """
+    Инициализация обработчика событий телеграм-бота.
+    """
+    ...
 ```
 
-**Описание**: Обрабатывает URL-адрес, отправленный пользователем.
+**Как работает функция**:
+Функция `__init__` является конструктором класса `BotHandler`. Внутри этой функции происходит инициализация необходимых атрибутов и настроек для работы обработчика событий Telegram-бота. В текущей реализации, тело функции содержит `...`, что означает, что конкретная реализация инициализации не предоставлена.
+
+### `handle_url`
+
+```python
+async def handle_url(self, update: Update, context: CallbackContext) -> Any:
+    """
+    Обработка URL, присланного пользователем.
+    """
+    ...
+```
+
+**Назначение**:
+Функция `handle_url` предназначена для обработки URL-адресов, отправленных пользователем через Telegram-бот.
 
 **Как работает функция**:
-Метод `handle_url` предназначен для обработки URL-адресов, которые пользователи отправляют боту. В текущей реализации, обозначенной как `...`, предполагается выполнение логики обработки URL, например, извлечение информации с веб-страницы, сохранение URL в базе данных или выполнение других действий, связанных с предоставленным URL.
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора. Внутри функции происходит обработка URL, извлечение необходимой информации и выполнение соответствующих действий. Конкретная реализация обработки URL не указана (представлена как `...`).
 
 **Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
 - `context` (CallbackContext): Контекст текущего разговора.
 
 **Возвращает**:
+- `Any`: Функция может возвращать любой тип данных в зависимости от логики обработки URL.
 
-- `Any`: возвращает данные любого типа, в зависимости от выполнения
-
-#### `handle_next_command`
-
-```python
-    async def handle_next_command(self, update: Update) -> None:
-        """
-        Обработка команды '--next' и её аналогов.
-        """
-        ...
-```
-
-**Описание**: Обрабатывает команду `--next` и её аналоги.
-
-**Как работает функция**:
-Метод `handle_next_command` предназначен для обработки команды `--next` и её аналогов, которые пользователи отправляют боту. В текущей реализации, обозначенной как `...`, предполагается выполнение логики обработки этой команды, например, переход к следующему элементу в списке, выполнение следующего шага в последовательности операций или другие действия, связанные с командой `--next`.
-
-**Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
-
-#### `handle_message`
+### `handle_next_command`
 
 ```python
-    async def handle_message(self, update: Update, context: CallbackContext) -> None:
-        """Handle any text message."""
-        # Placeholder for custom logic
-        logger.info(f"Message received: {update.message.text}")
-        await update.message.reply_text("Message received by BotHandler.")
+async def handle_next_command(self, update: Update) -> None:
+    """
+    Обработка команды '--next' и её аналогов.
+    """
+    ...
 ```
 
-**Описание**: Обрабатывает любое текстовое сообщение, полученное от пользователя.
+**Назначение**:
+Функция `handle_next_command` предназначена для обработки команды `--next` и её аналогов, отправленных пользователем через Telegram-бот.
 
 **Как работает функция**:
-Метод `handle_message` принимает любое текстовое сообщение, полученное от пользователя, и выполняет определенные действия в ответ. В текущей реализации, метод логирует полученное сообщение с использованием `logger.info` и отправляет пользователю подтверждение о получении сообщения.
+Функция принимает объект `Update`, содержащий информацию о сообщении. Внутри функции происходит обработка команды `--next`, выполнение соответствующих действий. Конкретная реализация обработки команды не указана (представлена как `...`).
 
 **Параметры**:
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
 
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
+
+### `handle_message`
+
+```python
+async def handle_message(self, update: Update, context: CallbackContext) -> None:
+    """Handle any text message."""
+    # Placeholder for custom logic
+    logger.info(f"Message received: {update.message.text}")
+    await update.message.reply_text("Message received by BotHandler.")
+```
+
+**Назначение**:
+Функция `handle_message` предназначена для обработки любого текстового сообщения, отправленного пользователем через Telegram-бот.
+
+**Как работает функция**:
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора.
+1. **Логирование**: Функция записывает полученное сообщение в журнал с использованием `logger.info`.
+2. **Ответ пользователю**: Отправляет пользователю ответное сообщение "Message received by BotHandler.".
+
+**Параметры**:
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
 - `context` (CallbackContext): Контекст текущего разговора.
 
-#### `start`
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
+
+### `start`
 
 ```python
-    async def start(self, update: Update, context: CallbackContext) -> None:
-        """Handle the /start command."""
+async def start(self, update: Update, context: CallbackContext) -> None:
+    """Handle the /start command."""
+    await update.message.reply_text(
+        'Hello! I am your simple bot. Type /help to see available commands.'
+    )
+```
+
+**Назначение**:
+Функция `start` предназначена для обработки команды `/start`, отправленной пользователем через Telegram-бот.
+
+**Как работает функция**:
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора.
+1. **Ответ пользователю**: Отправляет пользователю приветственное сообщение и предлагает воспользоваться командой `/help`.
+
+**Параметры**:
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
+- `context` (CallbackContext): Контекст текущего разговора.
+
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
+
+### `help_command`
+
+```python
+async def help_command(self, update: Update, context: CallbackContext) -> None:
+    """Handle the /help command."""
+    await update.message.reply_text(
+        'Available commands:\\n'
+        '/start - Start the bot\\n'
+        '/help - Show this help message\\n'
+        '/sendpdf - Send a PDF file'
+    )
+```
+
+**Назначение**:
+Функция `help_command` предназначена для обработки команды `/help`, отправленной пользователем через Telegram-бот.
+
+**Как работает функция**:
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора.
+1. **Ответ пользователю**: Отправляет пользователю список доступных команд.
+
+**Параметры**:
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
+- `context` (CallbackContext): Контекст текущего разговора.
+
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
+
+### `send_pdf`
+
+```python
+async def send_pdf(self, update: Update, context: CallbackContext) -> None:
+    """Handle the /sendpdf command to generate and send a PDF file."""
+    try:
+        pdf_file = gs.path.docs / "example.pdf"
+        with open(pdf_file, 'rb') as pdf_file_obj:
+            await update.message.reply_document(document=pdf_file_obj)
+    except Exception as ex:
+        logger.error('Ошибка при отправке PDF-файла: ', ex)
         await update.message.reply_text(
-            'Hello! I am your simple bot. Type /help to see available commands.'
+            'Произошла ошибка при отправке PDF-файла. Попробуй ещё раз.'
         )
 ```
 
-**Описание**: Обрабатывает команду `/start`.
+**Назначение**:
+Функция `send_pdf` предназначена для обработки команды `/sendpdf`, отправленной пользователем через Telegram-бот, и отправки PDF-файла в ответ.
 
 **Как работает функция**:
-Метод `start` обрабатывает команду `/start`, отправляя пользователю приветственное сообщение и информируя о возможности использования команды `/help` для получения списка доступных команд.
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора.
+1. **Определение пути к файлу**: Определяет путь к PDF-файлу `example.pdf` в директории `docs`.
+2. **Отправка файла**:
+   - Открывает PDF-файл для чтения в двоичном режиме.
+   - Отправляет PDF-файл пользователю с использованием метода `reply_document`.
+3. **Обработка ошибок**:
+   - Если происходит ошибка при отправке файла, записывает сообщение об ошибке в журнал с использованием `logger.error`.
+   - Отправляет пользователю сообщение об ошибке с предложением попробовать ещё раз.
 
 **Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
 - `context` (CallbackContext): Контекст текущего разговора.
 
-#### `help_command`
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при открытии или отправке PDF-файла.
+
+### `handle_voice`
 
 ```python
-    async def help_command(self, update: Update, context: CallbackContext) -> None:
-        """Handle the /help command."""
+async def handle_voice(self, update: Update, context: CallbackContext) -> None:
+    """Handle voice messages and transcribe the audio."""
+    try:
+        voice = update.message.voice
+        file = await context.bot.get_file(voice.file_id)
+        file_path = gs.path.temp / f'{voice.file_id}.ogg'
+
+        await file.download_to_drive(file_path)
+
+        transcribed_text = await self.transcribe_voice(file_path)
+
+        await update.message.reply_text(f'Распознанный текст: {transcribed_text}')
+
+    except Exception as ex:
+        logger.error('Ошибка при обработке голосового сообщения: ', ex)
         await update.message.reply_text(
-            'Available commands:\\n'
-            '/start - Start the bot\\n'
-            '/help - Show this help message\\n'
-            '/sendpdf - Send a PDF file'
+            'Произошла ошибка при обработке голосового сообщения. Попробуй ещё раз.'
         )
 ```
 
-**Описание**: Обрабатывает команду `/help`.
+**Назначение**:
+Функция `handle_voice` предназначена для обработки голосовых сообщений, отправленных пользователем через Telegram-бот, и транскрибирования аудио в текст.
 
 **Как работает функция**:
-Метод `help_command` обрабатывает команду `/help`, отправляя пользователю список доступных команд и их описание.
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора.
+1. **Получение информации о голосовом сообщении**: Извлекает информацию о голосовом сообщении из объекта `update.message.voice`.
+2. **Загрузка голосового сообщения**:
+   - Получает файл голосового сообщения с использованием `context.bot.get_file`.
+   - Определяет путь для сохранения файла во временной директории.
+   - Загружает файл на диск.
+3. **Транскрибирование аудио**:
+   - Вызывает функцию `transcribe_voice` для преобразования аудио в текст.
+4. **Отправка распознанного текста**:
+   - Отправляет распознанный текст пользователю.
+5. **Обработка ошибок**:
+   - Если происходит ошибка при обработке голосового сообщения, записывает сообщение об ошибке в журнал с использованием `logger.error`.
+   - Отправляет пользователю сообщение об ошибке с предложением попробовать ещё раз.
 
 **Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
 - `context` (CallbackContext): Контекст текущего разговора.
 
-#### `send_pdf`
-
-```python
-    async def send_pdf(self, update: Update, context: CallbackContext) -> None:
-        """Handle the /sendpdf command to generate and send a PDF file."""
-        try:
-            pdf_file = gs.path.docs / "example.pdf"
-            with open(pdf_file, 'rb') as pdf_file_obj:
-                await update.message.reply_document(document=pdf_file_obj)
-        except Exception as ex:
-            logger.error('Ошибка при отправке PDF-файла: ', ex)
-            await update.message.reply_text(
-                'Произошла ошибка при отправке PDF-файла. Попробуй ещё раз.'
-            )
-```
-
-**Описание**: Обрабатывает команду `/sendpdf` для отправки PDF-файла.
-
-**Как работает функция**:
-Метод `send_pdf` обрабатывает команду `/sendpdf`, отправляя пользователю PDF-файл. Он пытается открыть файл `example.pdf` и отправить его пользователю. В случае возникновения ошибки, логирует ошибку и отправляет пользователю сообщение об ошибке.
-
-**Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
-- `context` (CallbackContext): Контекст текущего разговора.
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
 
 **Вызывает исключения**:
+- `Exception`: В случае ошибки при обработке голосового сообщения.
 
-- `Exception`: Если возникает ошибка при отправке PDF-файла.
-
-#### `handle_voice`
-
-```python
-    async def handle_voice(self, update: Update, context: CallbackContext) -> None:
-        """Handle voice messages and transcribe the audio."""
-        try:
-            voice = update.message.voice
-            file = await context.bot.get_file(voice.file_id)
-            file_path = gs.path.temp / f'{voice.file_id}.ogg'
-
-            await file.download_to_drive(file_path)
-
-            transcribed_text = await self.transcribe_voice(file_path)
-
-            await update.message.reply_text(f'Распознанный текст: {transcribed_text}')
-
-        except Exception as ex:
-            logger.error('Ошибка при обработке голосового сообщения: ', ex)
-            await update.message.reply_text(
-                'Произошла ошибка при обработке голосового сообщения. Попробуй ещё раз.'
-            )
-```
-
-**Описание**: Обрабатывает голосовые сообщения и транскрибирует аудио.
-
-**Как работает функция**:
-Метод `handle_voice` обрабатывает голосовые сообщения, полученные от пользователя. Он получает файл голосового сообщения, скачивает его на диск, транскрибирует аудио в текст с помощью метода `transcribe_voice` и отправляет распознанный текст пользователю. В случае возникновения ошибки, логирует ошибку и отправляет пользователю сообщение об ошибке.
-
-**Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
-- `context` (CallbackContext): Контекст текущего разговора.
-
-**Вызывает исключения**:
-
-- `Exception`: Если возникает ошибка при обработке голосового сообщения.
-
-#### `transcribe_voice`
+### `transcribe_voice`
 
 ```python
-    async def transcribe_voice(self, file_path: Path) -> str:
-        """Transcribe voice message using a speech recognition service."""
-        return 'Распознавание голоса ещё не реализовано.'
+async def transcribe_voice(self, file_path: Path) -> str:
+    """Transcribe voice message using a speech recognition service."""
+    return 'Распознавание голоса ещё не реализовано.'
 ```
 
-**Описание**: Транскрибирует голосовое сообщение с использованием сервиса распознавания речи.
+**Назначение**:
+Функция `transcribe_voice` предназначена для транскрибирования голосового сообщения в текст с использованием сервиса распознавания речи.
 
 **Как работает функция**:
-Метод `transcribe_voice` предназначен для транскрибации голосовых сообщений в текст. В текущей реализации, метод возвращает сообщение о том, что распознавание голоса ещё не реализовано. В будущем, этот метод должен использовать сервис распознавания речи для преобразования аудио в текст.
+Функция принимает путь к файлу голосового сообщения. В текущей реализации функция возвращает строку "Распознавание голоса ещё не реализовано.", что указывает на то, что функциональность транскрибирования еще не реализована.
 
 **Параметры**:
-
 - `file_path` (Path): Путь к файлу голосового сообщения.
 
 **Возвращает**:
+- `str`: Распознанный текст голосового сообщения.
 
-- `str`: Распознанный текст из голосового сообщения.
-
-#### `handle_document`
+### `handle_document`
 
 ```python
-    async def handle_document(self, update: Update, context: CallbackContext) -> bool:
-        """Handle received documents.
+async def handle_document(self, update: Update, context: CallbackContext) -> bool:
+    """Handle received documents.
 
-        Args:
-            update (Update): Update object containing the message data.
-            context (CallbackContext): Context of the current conversation.
+    Args:
+        update (Update): Update object containing the message data.
+        context (CallbackContext): Context of the current conversation.
 
-        Returns:
-            str: Content of the text document.
-        """
-        try:
-            self.update = update
-            self.context = context
-            file = await self.update.message.document.get_file()
-            file_name = await self.update.message.document.file_name
-            tmp_file_path = await file.download_to_drive()  # Save file locally
-            await update.message.reply_text(f'Файл сохранения в {self.update.message.document.file_name}')
-            return True
-        except Exception as ex:
-            await update.message.reply_text(f'Ошибка сохраненеия файла {file_name}')
+    Returns:
+        str: Content of the text document.
+    """
+    try:
+        self.update = update
+        self.context = context
+        file = await self.update.message.document.get_file()
+        file_name = await self.update.message.document.file_name
+        tmp_file_path = await file.download_to_drive()  # Save file locally
+        await update.message.reply_text(f'Файл сохранения в {self.update.message.document.file_name}')
+        return True
+    except Exception as ex:
+        await update.message.reply_text(f'Ошибка сохраненеия файла {file_name}')
 ```
 
-**Описание**: Обрабатывает полученные документы.
+**Назначение**:
+Функция `handle_document` предназначена для обработки полученных документов, отправленных пользователем через Telegram-бот.
 
 **Как работает функция**:
-Метод `handle_document` обрабатывает документы, полученные от пользователя. Он получает файл документа, скачивает его на диск и отправляет пользователю сообщение об успешном сохранении файла. В случае возникновения ошибки, отправляет пользователю сообщение об ошибке.
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора.
+1. **Получение информации о файле**:
+   - Получает объект файла из сообщения.
+   - Извлекает имя файла.
+2. **Загрузка файла**:
+   - Загружает файл на локальный диск во временную директорию.
+3. **Отправка подтверждения**:
+   - Отправляет пользователю сообщение с подтверждением сохранения файла и указанием имени файла.
+4. **Обработка ошибок**:
+   - Если происходит ошибка при сохранении файла, отправляет пользователю сообщение об ошибке с указанием имени файла.
 
 **Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
 - `context` (CallbackContext): Контекст текущего разговора.
 
 **Возвращает**:
-
-- `bool`: True в случае успешного сохранения, иначе вызывает исключение.
+- `bool`: Возвращает `True` в случае успешного сохранения файла.
 
 **Вызывает исключения**:
+- `Exception`: В случае ошибки при сохранении файла.
 
-- `Exception`: Если возникает ошибка при сохранении файла.
-
-#### `handle_log`
+### `handle_log`
 
 ```python
-    async def handle_log(self, update: Update, context: CallbackContext) -> None:
-        """Handle log messages."""
-        return True
-        log_message = update.message.text
-        logger.info(f"Received log message: {log_message}")
-        await update.message.reply_text("Log received and processed.")
+async def handle_log(self, update: Update, context: CallbackContext) -> None:
+    """Handle log messages."""
+    return True
+    log_message = update.message.text
+    logger.info(f"Received log message: {log_message}")
+    await update.message.reply_text("Log received and processed.")
 ```
 
-**Описание**: Обрабатывает логи сообщений.
+**Назначение**:
+Функция `handle_log` предназначена для обработки сообщений журнала, отправленных через Telegram-бот.
 
 **Как работает функция**:
-
-Метод `handle_log` обрабатывает сообщения журнала, полученные от пользователя. Он извлекает текст сообщения из объекта `update`, записывает его в журнал с использованием `logger.info`, а затем отправляет подтверждение пользователю. В текущей реализации метод возвращает `True` до обработки, что может быть ошибочным.
+Функция принимает объект `Update`, содержащий информацию о сообщении, и `CallbackContext`, содержащий контекст текущего разговора.
+1. **Логика обработки**:
+    - Функция не выполняет логирование и не отправляет сообщение об обработке, т.к. в первой строке стоит `return True`. Весь код после этого оператора не будет выполнен.
+2. **Запись в лог (не будет выполнена)**:
+   - Записывает полученное сообщение в журнал с использованием `logger.info`.
+3. **Отправка подтверждения (не будет выполнена)**:
+   - Отправляет пользователю сообщение о том, что журнал получен и обработан.
 
 **Параметры**:
-
-- `update` (Update): Объект, содержащий данные об обновлении от Telegram.
+- `update` (Update): Объект, содержащий данные обновления от Telegram.
 - `context` (CallbackContext): Контекст текущего разговора.
+
+**Возвращает**:
+- `bool`: Функция всегда возвращает `True`.

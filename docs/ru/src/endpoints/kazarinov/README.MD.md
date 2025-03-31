@@ -1,28 +1,41 @@
-# Документация модуля `src.endpoints.kazarinov`
+# Документация для модуля `src.endpoints.kazarinov`
 
 ## Обзор
 
-Документация описывает функциональность `Kazarinov. PDF Mexiron Creator`, включая взаимодействие с Telegram ботами `prod` и `test`, а также логику обработки данных, полученных из One-Tab.
-В данном модуле описывается логика работы телеграм бота, который принимает ссылки One-Tab, извлекает данные, выполняет сценарии и отправляет результаты в WhatsApp.
+Документация для модуля `src.endpoints.kazarinov`, который отвечает за создание PDF-документов Mexiron. 
+Модуль включает в себя описание взаимодействия клиентской части (Kazarinov) с Telegram ботами `prod` и `test`, а также схемы работы с данными One-Tab.
 
-## Содержание
+## Оглавление
 
-- [Обзор](#Обзор)
-- [Подробней](#Подробней)
-- [Схема работы](#Схема-работы)
-    - [Client side (Kazarinov)](#client-side-kazarinov)
-    - [Code side](#code-side)
-- [Next](#Next)
+- [Обзор](#обзор)
+- [Подробнее](#подробнее)
+- [`KazarinovTelegramBot`](#kazarinovtelegrambot)
+- [`BotHandler`](#bothandler)
+- [Client side (Kazarinov)](#client-side-kazarinov)
+- [Code side](#code-side)
+- [Next](#next)
 
-## Подробней
+## Подробнее
 
-Модуль `src.endpoints.kazarinov` предназначен для обработки данных, полученных от Telegram ботов (`prod` и `test`), и выполнения определенных сценариев. Основная цель - автоматизация процесса, начиная от получения ссылки One-Tab до отправки результатов в WhatsApp.
+Модуль предоставляет функциональность для работы с Telegram ботами и сценариями Mexiron, 
+включая обработку данных из One-Tab и отправку сгенерированных ссылок в WhatsApp.
 
-## Схема работы
+## `KazarinovTelegramBot`
 
-### Client side (Kazarinov)
+Ссылки на ресурсы:
+- https://one-tab.co.il
+- https://morlevi.co.il
+- https://grandavance.co.il
+- https://ivory.co.il
+- https://ksp.co.il
 
-Схема описывает клиентскую сторону взаимодействия, где пользователь выбирает комплектующие для сборки компьютера, объединяет их в One-Tab и отправляет ссылку в Telegram боту.
+## `BotHandler`
+
+Описание обработки ботов.
+
+## Client side (Kazarinov)
+
+### Схема взаимодействия клиентской части с Telegram ботами
 
 ```mermaid
 flowchart TD
@@ -32,9 +45,9 @@ flowchart TD
     SendToBot -->|hypo69_test_bot| TestBot[Telegram бот <code>test</code>]
 ```
 
-### Code side
+## Code side
 
-Схема описывает логику обработки данных на стороне кода, начиная от проверки URL до выполнения сценария и отправки результатов.
+### Схема обработки данных и выполнения сценария
 
 ```mermaid
 flowchart TD
@@ -54,6 +67,8 @@ flowchart TD
 ```
 
 ## Next
+
+### Ссылки на связанные модули
 
 - [Kazarinov bot](https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.md)
 - [Scenario Execution](https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/README.MD)

@@ -2,58 +2,62 @@
 
 ## Обзор
 
-Модуль `date_time` предоставляет функциональность для проверки, находится ли текущее время в заданном интервале, с возможностью установки таймаута. Он включает класс `TimeoutCheck`, который позволяет определять, попадает ли текущее время в указанный временной промежуток, что полезно для выполнения операций, которые должны происходить только в определенные периоды времени (например, ночное обслуживание).
+Модуль `date_time` содержит класс `TimeoutCheck` с функциями для проверки, находится ли текущее время в заданном интервале, с возможностью указания таймаута. Этот модуль полезен для выполнения операций, которые должны происходить только в определенные периоды времени.
 
 ## Подробней
 
-Этот модуль содержит класс `TimeoutCheck`, который включает методы для проверки, находится ли текущее время в заданном интервале, и для ожидания ввода пользователя с таймаутом. Класс использует модуль `threading` для реализации таймаутов.
+Модуль предоставляет возможность определить, попадает ли текущее время в заданный временной интервал, что может быть полезно для выполнения операций, которые должны происходить только в определенные периоды (например, ночное обслуживание). По умолчанию временной интервал установлен с 23:00 до 06:00, и функция может обрабатывать интервалы, охватывающие полночь.
+
+Дополнительно, он предоставляет функциональность ожидания ответа с таймаутом.
 
 ## Классы
 
 ### `TimeoutCheck`
 
-**Описание**: Класс для проверки, находится ли текущее время в заданном интервале с возможностью установки таймаута.
+**Описание**: Класс `TimeoutCheck` предоставляет методы для проверки, находится ли текущее время в заданном интервале, а также для ожидания ввода от пользователя с использованием таймаута.
 
-**Как работает класс**: Класс `TimeoutCheck` инициализируется с атрибутом `result`, который используется для хранения результата проверки интервала времени. Методы `interval` и `interval_with_timeout` позволяют проверять, находится ли текущее время в заданном интервале, с возможностью установки таймаута.
+**Как работает класс**:
+Класс `TimeoutCheck` инициализируется без аргументов. Он содержит методы `interval`, `interval_with_timeout`, `get_input` и `input_with_timeout`. Метод `interval` проверяет, находится ли текущее время в заданном интервале. Метод `interval_with_timeout` выполняет ту же проверку, но с использованием таймаута. Методы `get_input` и `input_with_timeout` используются для получения ввода от пользователя с таймаутом.
 
 **Методы**:
 - `__init__`: Инициализирует экземпляр класса `TimeoutCheck` с атрибутом `result`, установленным в `None`.
 - `interval`: Проверяет, находится ли текущее время в заданном интервале.
-- `interval_with_timeout`: Проверяет, находится ли текущее время в заданном интервале с таймаутом.
+- `interval_with_timeout`: Проверяет, находится ли текущее время в заданном интервале с использованием таймаута.
 - `get_input`: Запрашивает ввод от пользователя.
 - `input_with_timeout`: Ожидает ввод от пользователя с таймаутом.
 
-### `TimeoutCheck.__init__`
-
+#### `__init__`
+```python
+    def __init__(self):
+        self.result = None
+```
 **Описание**: Инициализирует экземпляр класса `TimeoutCheck`.
 
+**Как работает метод**:
+Метод инициализирует атрибут `result` экземпляра класса `TimeoutCheck` значением `None`. Этот атрибут используется для хранения результата проверки интервала времени.
+
 **Параметры**:
-- Нет параметров.
+- Отсутствуют.
 
-**Примеры**:
+**Возвращает**:
+- Отсутствует.
+
+#### `interval`
 ```python
-timeout_check = TimeoutCheck()
+    def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
+        current_time = datetime.now().time()
+
+        if start < end:
+            # Interval within the same day (e.g., 08:00 to 17:00)
+            self.result = start <= current_time <= end
+        else:
+            # Interval spanning midnight (e.g., 23:00 to 06:00)
+            self.result = current_time >= start or current_time <= end
 ```
-
-### `TimeoutCheck.interval`
-
-```python
-def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-    """ Check if the current time is within the specified interval.
-    
-    Args:
-        start (time): Start of the interval (default is 23:00).
-        end (time): End of the interval (default is 06:00).
-
-    Returns:
-        bool: True if the current time is within the interval, False otherwise.
-    """
-    ...
-```
-
 **Описание**: Проверяет, находится ли текущее время в заданном интервале.
 
-**Как работает функция**: Функция получает текущее время и сравнивает его с заданным интервалом, определяемым параметрами `start` и `end`. Если интервал находится в пределах одного дня (например, с 08:00 до 17:00), функция проверяет, находится ли текущее время между `start` и `end`. Если интервал охватывает полночь (например, с 23:00 до 06:00), функция проверяет, больше ли текущее время, чем `start`, или меньше, чем `end`. Результат сохраняется в атрибуте `self.result`.
+**Как работает метод**:
+Метод получает текущее время и сравнивает его с заданным интервалом, определяемым параметрами `start` и `end`. Если интервал находится в пределах одного дня, проверяется, находится ли текущее время между `start` и `end`. Если интервал охватывает полночь, проверяется, находится ли текущее время после `start` или до `end`. Результат сохраняется в атрибуте `self.result`.
 
 **Параметры**:
 - `start` (time): Начало интервала (по умолчанию 23:00).
@@ -62,95 +66,68 @@ def interval(self, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
 **Возвращает**:
 - `bool`: `True`, если текущее время находится в интервале, `False` в противном случае.
 
-**Примеры**:
+#### `interval_with_timeout`
 ```python
-from datetime import time
-timeout_check = TimeoutCheck()
-if timeout_check.interval(start=time(8, 0), end=time(17, 0)):
-    print("Current time is within the interval.")
-else:
-    print("Current time is outside the interval.")
+    def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
+        thread = threading.Thread(target=self.interval, args=(start, end))
+        thread.start()
+        thread.join(timeout)
+
+        if thread.is_alive():
+            print(f"Timeout occurred after {timeout} seconds, continuing execution.")
+            thread.join()  # Ensures thread stops after timeout
+            return False  # Timeout occurred, so returning False
+        return self.result
 ```
+**Описание**: Проверяет, находится ли текущее время в заданном интервале с использованием таймаута.
 
-### `TimeoutCheck.interval_with_timeout`
-
-```python
-def interval_with_timeout(self, timeout: int = 5, start: time = time(23, 0), end: time = time(6, 0)) -> bool:
-    """ Check if the current time is within the specified interval with a timeout.
-
-    Args:
-        timeout (int): Time in seconds to wait for the interval check.
-        start (time): Start of the interval (default is 23:00).
-        end (time): End of the interval (default is 06:00).
-
-    Returns:
-        bool: True if the current time is within the interval and response within timeout, False if not or timeout occurs.
-    """
-    ...
-```
-
-**Описание**: Проверяет, находится ли текущее время в заданном интервале с таймаутом.
-
-**Как работает функция**: Функция создает и запускает поток для выполнения проверки интервала с использованием метода `interval`. Поток ожидает завершения в течение заданного времени таймаута. Если поток завершается в течение таймаута, функция возвращает результат проверки. Если происходит таймаут, функция возвращает `False`.
+**Как работает метод**:
+Метод запускает поток для проверки интервала времени с использованием метода `interval`. Поток ожидает завершения в течение заданного таймаута. Если таймаут истекает, метод возвращает `False`. Если поток завершается до истечения таймаута, метод возвращает результат проверки интервала, сохраненный в атрибуте `self.result`.
 
 **Параметры**:
-- `timeout` (int): Время ожидания в секундах для проверки интервала (по умолчанию 5).
+- `timeout` (int): Время ожидания в секундах (по умолчанию 5).
 - `start` (time): Начало интервала (по умолчанию 23:00).
 - `end` (time): Конец интервала (по умолчанию 06:00).
 
 **Возвращает**:
 - `bool`: `True`, если текущее время находится в интервале и ответ получен в течение таймаута, `False`, если нет или произошел таймаут.
 
-**Примеры**:
+#### `get_input`
 ```python
-from datetime import time
-timeout_check = TimeoutCheck()
-if timeout_check.interval_with_timeout(timeout=5, start=time(8, 0), end=time(17, 0)):
-    print("Current time is within the interval.")
-else:
-    print("Current time is outside the interval or timeout occurred.")
+    def get_input(self):
+        """ Запрашиваем ввод от пользователя."""
+        self.user_input = input("U:> ")
 ```
-
-### `TimeoutCheck.get_input`
-
-```python
-def get_input(self):
-    """ Запрашиваем ввод от пользователя."""
-    ...
-```
-
 **Описание**: Запрашивает ввод от пользователя.
 
-**Как работает функция**: Функция использует `input()` для запроса ввода от пользователя и сохраняет введенные данные в атрибуте `self.user_input`.
+**Как работает метод**:
+Метод выводит приглашение "U:> " и ожидает ввода от пользователя. Введенные данные сохраняются в атрибуте `self.user_input`.
 
 **Параметры**:
-- Нет параметров.
+- Отсутствуют.
 
-**Примеры**:
+**Возвращает**:
+- Отсутствует.
+
+#### `input_with_timeout`
 ```python
-timeout_check = TimeoutCheck()
-timeout_check.get_input()
-print(f"User input: {timeout_check.user_input}")
+    def input_with_timeout(self, timeout: int = 5) -> str | None:
+        thread = threading.Thread(target=self.get_input)
+        thread.start()
+
+        # Ожидаем завершения потока или тайм-аут
+        thread.join(timeout)
+
+        if thread.is_alive():
+            print(f"Timeout occurred after {timeout} seconds.")
+            return  # Возвращаем None, если тайм-аут произошел
+
+        return self.user_input
 ```
-
-### `TimeoutCheck.input_with_timeout`
-
-```python
-def input_with_timeout(self, timeout: int = 5) -> str | None:
-    """ Ожидаем ввод с тайм-аутом.
-
-    Args:
-        timeout (int): Время ожидания ввода в секундах.
-
-    Returns:
-        str | None: Введенные данные или None, если был тайм-аут.
-    """
-    ...
-```
-
 **Описание**: Ожидает ввод от пользователя с таймаутом.
 
-**Как работает функция**: Функция создает и запускает поток для получения ввода от пользователя с использованием метода `get_input`. Поток ожидает завершения в течение заданного времени таймаута. Если поток завершается в течение таймаута, функция возвращает введенные данные. Если происходит таймаут, функция возвращает `None`.
+**Как работает метод**:
+Метод запускает поток для получения ввода от пользователя с использованием метода `get_input`. Поток ожидает завершения в течение заданного таймаута. Если таймаут истекает, метод возвращает `None`. Если поток завершается до истечения таймаута, метод возвращает введенные пользователем данные, сохраненные в атрибуте `self.user_input`.
 
 **Параметры**:
 - `timeout` (int): Время ожидания ввода в секундах (по умолчанию 5).
@@ -158,28 +135,6 @@ def input_with_timeout(self, timeout: int = 5) -> str | None:
 **Возвращает**:
 - `str | None`: Введенные данные или `None`, если произошел таймаут.
 
-**Примеры**:
-```python
-timeout_check = TimeoutCheck()
-user_input = timeout_check.input_with_timeout(timeout=5)
-if user_input:
-    print(f"User input: {user_input}")
-else:
-    print("Timeout occurred.")
-```
-
 ## Функции
 
-В данном модуле нет отдельных функций, только методы класса `TimeoutCheck`.
-
-```python
-if __name__ == '__main__':
-    # Example usage
-    timeout_check = TimeoutCheck()
-    
-    # Check interval with a timeout of 5 seconds
-    if timeout_check.interval_with_timeout(timeout=5):
-        print("Current time is within the interval.")
-    else:
-        print("Current time is outside the interval or timeout occurred.")
-```
+В данном модуле функции отсутствуют.

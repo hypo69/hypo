@@ -1,70 +1,48 @@
-# Модуль training.py
+# Модуль для работы с OpenAI Model
 
 ## Обзор
 
-Модуль `training.py` предназначен для работы с OpenAI API, включая управление моделями, ассистентами и обучение моделей. Он предоставляет класс `OpenAIModel` для взаимодействия с OpenAI API и выполнения задач, связанных с обучением моделей и обработкой данных.
+Модуль `training.py` предоставляет класс `OpenAIModel` для взаимодействия с OpenAI API, управления моделями и их обучения. Он включает в себя методы для получения списка доступных моделей и ассистентов, настройки ассистента, отправки сообщений модели, анализа тональности, динамической донастройки и обучения модели на основе предоставленных данных.
 
 ## Подробней
 
-Этот модуль предоставляет функциональность для:
-
-- Инициализации и настройки OpenAI API клиента.
-- Получения списка доступных моделей и ассистентов.
-- Установки ассистента для использования.
-- Отправки сообщений в модель и получения ответов.
-- Анализа тональности сообщений.
-- Динамической дообучения модели на основе предыдущих диалогов.
-- Обучения модели на основе предоставленных данных.
-- Сохранения идентификаторов заданий обучения.
-- Описания изображений с использованием OpenAI API.
-
-Модуль использует различные утилиты, такие как `j_loads`, `j_dumps` для работы с JSON, `base64encode` для кодирования изображений в base64, и `logger` для логирования.
+Этот модуль используется для упрощения работы с OpenAI API, предоставляя удобный интерфейс для выполнения различных задач, связанных с моделями OpenAI. Он облегчает процесс обучения моделей, управления ассистентами и взаимодействия с ними, а также анализа тональности ответов модели.
 
 ## Классы
 
 ### `OpenAIModel`
 
-**Описание**: Класс для взаимодействия с OpenAI API и управления моделями.
+**Описание**: Класс `OpenAIModel` предназначен для взаимодействия с OpenAI API и управления моделями.
 
 **Как работает класс**:
-Класс `OpenAIModel` предоставляет методы для взаимодействия с OpenAI API, включая:
-
-- Инициализацию клиента OpenAI с использованием API ключа.
-- Получение списка доступных моделей и ассистентов.
-- Установку ассистента для использования.
-- Отправку сообщений в модель и получение ответов.
-- Анализ тональности сообщений.
-- Динамической дообучения модели на основе предыдущих диалогов.
-- Обучение модели на основе предоставленных данных.
-- Сохранения идентификаторов заданий обучения.
-- Описания изображений с использованием OpenAI API.
+Класс `OpenAIModel` инициализируется с использованием API-ключа, системной инструкции и идентификатора ассистента. Он содержит методы для получения списка доступных моделей и ассистентов, настройки ассистента, отправки сообщений модели, анализа тональности, динамической донастройки и обучения модели на основе предоставленных данных.
 
 **Атрибуты**:
-- `model` (str): Имя используемой модели OpenAI. По умолчанию "gpt-4o-mini".
+- `model` (str): Имя используемой модели (по умолчанию "gpt-4o-mini").
 - `client` (OpenAI): Клиент OpenAI для взаимодействия с API.
-- `current_job_id` (str): Идентификатор текущего задания.
+- `current_job_id` (str): Идентификатор текущей задачи обучения.
 - `assistant_id` (str): Идентификатор ассистента.
-- `assistant` (объект): Объект ассистента OpenAI.
-- `thread` (объект): Объект треда OpenAI.
-- `system_instruction` (str): Системные инструкции для модели.
+- `assistant` (Any): Объект ассистента, полученный из OpenAI API.
+- `thread` (Any): Объект треда для взаимодействия с ассистентом.
+- `system_instruction` (str): Системная инструкция для модели.
 - `dialogue_log_path` (str | Path): Путь к файлу журнала диалогов.
 - `dialogue` (List[Dict[str, str]]): Список диалогов.
 - `assistants` (List[SimpleNamespace]): Список доступных ассистентов.
 - `models_list` (List[str]): Список доступных моделей.
 
 **Методы**:
-- `__init__`: Инициализирует объект `OpenAIModel`.
-- `list_models`: Возвращает список доступных моделей.
-- `list_assistants`: Возвращает список доступных ассистентов.
-- `set_assistant`: Устанавливает ассистента для использования.
-- `_save_dialogue`: Сохраняет диалог в файл.
-- `determine_sentiment`: Определяет тональность сообщения.
-- `ask`: Отправляет сообщение модели и возвращает ответ.
-- `describe_image`: Описывает изображение с использованием OpenAI API.
+- `__init__`: Инициализирует объект `OpenAIModel` с API-ключом, системной инструкцией и идентификатором ассистента.
+- `list_models`: Возвращает список доступных моделей из OpenAI API.
+- `list_assistants`: Возвращает список доступных ассистентов из JSON-файла.
+- `set_assistant`: Устанавливает ассистента, используя предоставленный идентификатор.
+- `_save_dialogue`: Сохраняет весь диалог в JSON-файл.
+- `determine_sentiment`: Определяет тональность сообщения (положительную, отрицательную или нейтральную).
+- `ask`: Отправляет сообщение модели и возвращает ответ вместе с анализом тональности.
+- `describe_image`: Описывает изображение, используя модель OpenAI.
 - `describe_image_by_requests`: Описывает изображение, используя запросы к OpenAI API.
-- `dynamic_train`: Динамически дообучает модель на основе предыдущих диалогов.
-- `train`: Обучает модель на основе предоставленных данных.
-- `save_job_id`: Сохраняет идентификатор задания обучения.
+- `dynamic_train`: Динамически дообучает модель на основе предыдущего диалога.
+- `train`: Обучает модель на основе предоставленных данных или каталога.
+- `save_job_id`: Сохраняет идентификатор задачи обучения с описанием в файл.
 
 ### `__init__`
 ```python
@@ -75,36 +53,32 @@ def __init__(self, api_key:str, system_instruction: str = None, model_name:str =
         system_instruction (str, optional): An optional system instruction for the model.
         assistant_id (str, optional): An optional assistant ID. Defaults to 'asst_dr5AgQnhhhnef5OSMzQ9zdk9'.
     """
-    #self.client = OpenAI(api_key = gs.credentials.openai.project_api)
-    self.client = OpenAI(api_key = api_key if api_key else gs.credentials.openai.api_key)
-    self.current_job_id = None
-    self.assistant_id = assistant_id or gs.credentials.openai.assistant_id.code_assistant
-    self.system_instruction = system_instruction
-
-    # Load assistant and thread during initialization
-    self.assistant = self.client.beta.assistants.retrieve(self.assistant_id)
-    self.thread = self.client.beta.threads.create()
+    ...
 ```
-**Описание**: Инициализирует объект `OpenAIModel`.
+**Назначение**: Инициализирует объект `OpenAIModel` с API-ключом, системной инструкцией и идентификатором ассистента.
 
 **Как работает функция**:
-- Инициализирует клиент OpenAI с использованием API ключа, который берется из аргумента `api_key`, если он предоставлен, или из `gs.credentials.openai.api_key` в противном случае.
-- Устанавливает `current_job_id` в `None`.
-- Устанавливает `assistant_id` из аргумента `assistant_id`, если он предоставлен, или из `gs.credentials.openai.assistant_id.code_assistant` в противном случае.
-- Устанавливает `system_instruction` из аргумента `system_instruction`.
-- Загружает ассистента и тред с использованием `assistant_id`.
+Функция инициализирует клиент OpenAI с использованием предоставленного API-ключа или ключа по умолчанию из `gs.credentials.openai.api_key`. Она также устанавливает идентификатор ассистента, системную инструкцию и загружает ассистента и тред.
+
+Внутри функции происходят следующие действия:
+1. Инициализация клиента OpenAI с использованием API-ключа.
+2. Установка идентификатора текущей задачи (`current_job_id`) в `None`.
+3. Установка идентификатора ассистента, используя предоставленный `assistant_id` или значение по умолчанию из `gs.credentials.openai.assistant_id.code_assistant`.
+4. Установка системной инструкции из предоставленного аргумента `system_instruction`.
+5. Загрузка ассистента с использованием `client.beta.assistants.retrieve(self.assistant_id)`.
+6. Создание треда с использованием `client.beta.threads.create()`.
 
 **Параметры**:
-- `api_key` (str): API ключ для доступа к OpenAI.
-- `system_instruction` (str, optional): Системные инструкции для модели. По умолчанию `None`.
-- `model_name` (str, optional): Имя модели OpenAI. По умолчанию 'gpt-4o-mini'.
-- `assistant_id` (str, optional): Идентификатор ассистента. По умолчанию `None`.
+- `api_key` (str): API-ключ для доступа к OpenAI API.
+- `system_instruction` (str, optional): Необязательная системная инструкция для модели. По умолчанию `None`.
+- `model_name` (str, optional): Имя модели для использования. По умолчанию `'gpt-4o-mini'`.
+- `assistant_id` (str, optional): Необязательный идентификатор ассистента. По умолчанию `None`.
 
 **Возвращает**:
-- `None`
+- Ничего (None).
 
 **Вызывает исключения**:
-- Отсутствуют
+- Отсутствуют явные исключения, но могут возникнуть исключения при инициализации клиента OpenAI или загрузке ассистента/треда, если API-ключ недействителен или ассистент не существует.
 
 **Примеры**:
 ```python
@@ -120,31 +94,27 @@ def list_models(self) -> List[str]:
     Returns:
         List[str]: A list of model IDs available via the OpenAI API.
     """
-    try:
-        models = self.client.models.list()
-        model_list = [model['id'] for model in models['data']]
-        logger.info(f"Loaded models: {model_list}")
-        return model_list
-    except Exception as ex:
-        logger.error("An error occurred while loading models:", ex)
-        return []
+    ...
 ```
-**Описание**: Динамически получает и возвращает доступные модели из OpenAI API.
+**Назначение**: Динамически получает и возвращает список доступных моделей из OpenAI API.
 
 **Как работает функция**:
-- Пытается получить список моделей из OpenAI API с помощью `self.client.models.list()`.
-- Извлекает идентификаторы моделей из ответа API и сохраняет их в списке `model_list`.
-- Логирует список загруженных моделей с помощью `logger.info`.
-- В случае ошибки логирует ошибку с помощью `logger.error` и возвращает пустой список.
+Функция обращается к OpenAI API для получения списка доступных моделей и возвращает их идентификаторы в виде списка строк.
+
+Внутри функции происходят следующие действия:
+1. Попытка получить список моделей с использованием `self.client.models.list()`.
+2. Извлечение идентификаторов моделей из полученных данных.
+3. Логирование списка загруженных моделей с использованием `logger.info()`.
+4. В случае ошибки, логирование ошибки с использованием `logger.error()` и возврат пустого списка.
 
 **Параметры**:
-- Отсутствуют
+- Отсутствуют.
 
 **Возвращает**:
 - `List[str]`: Список идентификаторов моделей, доступных через OpenAI API.
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при загрузке моделей.
+- Исключение может быть вызвано, если не удается получить доступ к OpenAI API или если API возвращает ошибку.
 
 **Примеры**:
 ```python
@@ -161,31 +131,27 @@ def list_assistants(self) -> List[str]:
     Returns:
         List[str]: A list of assistant names.
     """
-    try:
-        self.assistants = j_loads_ns(gs.path.src / 'ai' / 'openai' / 'model' / 'assistants' / 'assistants.json')
-        assistant_list = [assistant.name for assistant in self.assistants]
-        logger.info(f"Loaded assistants: {assistant_list}")
-        return assistant_list
-    except Exception as ex:
-        logger.error("An error occurred while loading assistants:", ex)
-        return []
+    ...
 ```
-**Описание**: Динамически загружает доступных ассистентов из JSON файла.
+**Назначение**: Динамически загружает доступных ассистентов из JSON-файла.
 
 **Как работает функция**:
-- Пытается загрузить список ассистентов из JSON файла с помощью `j_loads_ns`.
-- Извлекает имена ассистентов из загруженных данных и сохраняет их в списке `assistant_list`.
-- Логирует список загруженных ассистентов с помощью `logger.info`.
-- В случае ошибки логирует ошибку с помощью `logger.error` и возвращает пустой список.
+Функция загружает список ассистентов из JSON-файла, расположенного по пути `gs.path.src / 'ai' / 'openai' / 'model' / 'assistants' / 'assistants.json'`, и возвращает их имена в виде списка строк.
+
+Внутри функции происходят следующие действия:
+1. Загрузка списка ассистентов из JSON-файла с использованием `j_loads_ns()`.
+2. Извлечение имен ассистентов из загруженных данных.
+3. Логирование списка загруженных ассистентов с использованием `logger.info()`.
+4. В случае ошибки, логирование ошибки с использованием `logger.error()` и возврат пустого списка.
 
 **Параметры**:
-- Отсутствуют
+- Отсутствуют.
 
 **Возвращает**:
 - `List[str]`: Список имен ассистентов.
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при загрузке ассистентов.
+- Исключение может быть вызвано, если не удается загрузить JSON-файл или если файл имеет неверный формат.
 
 **Примеры**:
 ```python
@@ -201,54 +167,55 @@ def set_assistant(self, assistant_id: str):
     Args:
         assistant_id (str): The ID of the assistant to set.
     """
-    try:
-        self.assistant_id = assistant_id
-        self.assistant = self.client.beta.assistants.retrieve(assistant_id)
-        logger.info(f"Assistant set successfully: {assistant_id}")
-    except Exception as ex:
-        logger.error("An error occurred while setting the assistant:", ex)
+    ...
 ```
-**Описание**: Устанавливает ассистента, используя предоставленный идентификатор ассистента.
+**Назначение**: Устанавливает ассистента, используя предоставленный идентификатор.
 
 **Как работает функция**:
-- Устанавливает `assistant_id` равным предоставленному `assistant_id`.
-- Получает ассистента из OpenAI API с помощью `self.client.beta.assistants.retrieve(assistant_id)`.
-- Логирует успешную установку ассистента с помощью `logger.info`.
-- В случае ошибки логирует ошибку с помощью `logger.error`.
+Функция устанавливает ассистента, используя предоставленный идентификатор, и загружает информацию об ассистенте из OpenAI API.
+
+Внутри функции происходят следующие действия:
+1. Установка идентификатора ассистента `self.assistant_id` в значение `assistant_id`.
+2. Получение информации об ассистенте из OpenAI API с использованием `self.client.beta.assistants.retrieve(assistant_id)`.
+3. Логирование успешной установки ассистента с использованием `logger.info()`.
+4. В случае ошибки, логирование ошибки с использованием `logger.error()`.
 
 **Параметры**:
 - `assistant_id` (str): Идентификатор ассистента для установки.
 
 **Возвращает**:
-- `None`
+- Ничего (None).
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при установке ассистента.
+- Исключение может быть вызвано, если не удается получить доступ к OpenAI API или если ассистент с указанным идентификатором не существует.
 
 **Примеры**:
 ```python
-model.set_assistant(assistant_id='asst_456')
+model.set_assistant(assistant_id='asst_123')
 ```
 
 ### `_save_dialogue`
 ```python
 def _save_dialogue(self):
     """Save the entire dialogue to the JSON file."""
-    j_dumps(self.dialogue, self.dialogue_log_path)
+    ...
 ```
-**Описание**: Сохраняет весь диалог в JSON файл.
+**Назначение**: Сохраняет весь диалог в JSON-файл.
 
 **Как работает функция**:
-- Сохраняет текущий диалог (`self.dialogue`) в JSON файл, указанный в `self.dialogue_log_path`, используя функцию `j_dumps`.
+Функция сохраняет весь накопленный диалог (список сообщений) в JSON-файл, путь к которому указан в `self.dialogue_log_path`.
+
+Внутри функции происходят следующие действия:
+1. Сохранение диалога в JSON-файл с использованием `j_dumps(self.dialogue, self.dialogue_log_path)`.
 
 **Параметры**:
-- Отсутствуют
+- Отсутствуют.
 
 **Возвращает**:
-- `None`
+- Ничего (None).
 
 **Вызывает исключения**:
-- Отсутствуют
+- Исключение может быть вызвано, если не удается записать в файл или если файл не существует.
 
 **Примеры**:
 ```python
@@ -266,28 +233,19 @@ def determine_sentiment(self, message: str) -> str:
     Returns:
         str: The sentiment ('positive', 'negative', or 'neutral').
     """
-    positive_words = ["good", "great", "excellent", "happy", "love", "wonderful", "amazing", "positive"]
-    negative_words = ["bad", "terrible", "hate", "sad", "angry", "horrible", "negative", "awful"]
-    neutral_words = ["okay", "fine", "neutral", "average", "moderate", "acceptable", "sufficient"]
-
-    message_lower = message.lower()
-
-    if any(word in message_lower for word in positive_words):
-        return "positive"
-    elif any(word in message_lower for word in negative_words):
-        return "negative"
-    elif any(word in message_lower for word in neutral_words):
-        return "neutral"
-    else:
-        return "neutral"
+    ...
 ```
-**Описание**: Определяет тональность сообщения (положительная, отрицательная или нейтральная).
+**Назначение**: Определяет тональность сообщения (положительную, отрицательную или нейтральную).
 
 **Как работает функция**:
-- Определяет тональность сообщения на основе наличия ключевых слов в сообщении.
-- Приводит сообщение к нижнему регистру.
-- Проверяет наличие положительных, отрицательных и нейтральных слов в сообщении.
-- Возвращает тональность сообщения на основе найденных ключевых слов.
+Функция анализирует сообщение и определяет его тональность на основе наличия ключевых слов, связанных с положительными, отрицательными или нейтральными эмоциями.
+
+Внутри функции происходят следующие действия:
+1. Преобразование сообщения в нижний регистр.
+2. Проверка наличия положительных слов в сообщении. Если есть, возвращается "positive".
+3. Проверка наличия отрицательных слов в сообщении. Если есть, возвращается "negative".
+4. Проверка наличия нейтральных слов в сообщении. Если есть, возвращается "neutral".
+5. Если ни одно из вышеперечисленных условий не выполнено, возвращается "neutral".
 
 **Параметры**:
 - `message` (str): Сообщение для анализа.
@@ -296,12 +254,12 @@ def determine_sentiment(self, message: str) -> str:
 - `str`: Тональность сообщения ('positive', 'negative' или 'neutral').
 
 **Вызывает исключения**:
-- Отсутствуют
+- Отсутствуют.
 
 **Примеры**:
 ```python
-sentiment = model.determine_sentiment(message='This is a great message!')
-print(sentiment)
+sentiment = model.determine_sentiment("This is a great day!")
+print(sentiment)  # Вывод: positive
 ```
 
 ### `ask`
@@ -317,74 +275,38 @@ def ask(self, message: str, system_instruction: str = None, attempts: int = 3) -
     Returns:
         str: The response from the model.
     """
-    try:
-        messages = []
-        if self.system_instruction or system_instruction:
-            system_instruction_escaped = (system_instruction or self.system_instruction).replace('"', r'\"')
-            messages.append({"role": "system", "content": system_instruction_escaped})
-
-        message_escaped = message.replace('"', r'\"')
-        messages.append({
-                        "role": "user", 
-                         "content": message_escaped
-                         })
-
-        # Отправка запроса к модели
-        response = self.client.chat.completions.create(
-            model = self.model,
-            
-            messages = messages,
-            temperature = 0,
-            max_tokens=8000,
-        )
-        reply = response.choices[0].message.content.strip()
-
-        # Анализ тональности
-        sentiment = self.determine_sentiment(reply)
-
-        # Добавление сообщений и тональности в диалог
-        self.dialogue.append({"role": "system", "content": system_instruction or self.system_instruction})
-        self.dialogue.append({"role": "user", "content": message_escaped})
-        self.dialogue.append({"role": "assistant", "content": reply, "sentiment": sentiment})
-
-        # Сохранение диалога
-        self._save_dialogue()
-
-        return reply
-    except Exception as ex:
-        logger.debug(f"An error occurred while sending the message: \n-----\n {pprint(messages)} \n-----\n", ex, True)
-        time.sleep(3)
-        if attempts > 0:
-            return self.ask(message, attempts - 1)
-        return 
+    ...
 ```
-**Описание**: Отправляет сообщение модели и возвращает ответ вместе с анализом тональности.
+**Назначение**: Отправляет сообщение модели и возвращает ответ вместе с анализом тональности.
 
 **Как работает функция**:
-- Формирует список сообщений для отправки в модель.
-- Добавляет системные инструкции, если они предоставлены.
-- Экранирует двойные кавычки в сообщении пользователя.
-- Отправляет запрос к модели с использованием `self.client.chat.completions.create`.
-- Извлекает ответ из ответа модели.
-- Анализирует тональность ответа с помощью `self.determine_sentiment`.
-- Добавляет сообщения и тональность в диалог.
-- Сохраняет диалог с помощью `self._save_dialogue`.
-- В случае ошибки логирует ошибку с помощью `logger.debug`, ждет 3 секунды и повторяет попытку отправки сообщения, если количество попыток не исчерпано.
+Функция отправляет сообщение модели OpenAI и возвращает ответ. Она также выполняет анализ тональности ответа и сохраняет диалог.
+
+Внутри функции происходят следующие действия:
+1. Формирование списка сообщений для отправки в модель.
+2. Добавление системной инструкции (если указана) в список сообщений.
+3. Добавление сообщения пользователя в список сообщений.
+4. Отправка запроса к модели с использованием `self.client.chat.completions.create()`.
+5. Извлечение ответа из полученного результата.
+6. Анализ тональности ответа с использованием `self.determine_sentiment()`.
+7. Добавление сообщений и тональности в диалог.
+8. Сохранение диалога с использованием `self._save_dialogue()`.
+9. В случае ошибки, логирование ошибки и повторная попытка отправки сообщения (если количество попыток не исчерпано).
 
 **Параметры**:
-- `message` (str): Сообщение для отправки в модель.
-- `system_instruction` (str, optional): Системные инструкции. По умолчанию `None`.
-- `attempts` (int, optional): Количество попыток повтора. По умолчанию 3.
+- `message` (str): Сообщение для отправки модели.
+- `system_instruction` (str, optional): Необязательная системная инструкция. По умолчанию `None`.
+- `attempts` (int, optional): Количество попыток повторной отправки сообщения в случае ошибки. По умолчанию `3`.
 
 **Возвращает**:
 - `str`: Ответ от модели.
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при отправке сообщения.
+- Исключение может быть вызвано, если не удается получить доступ к OpenAI API или если модель возвращает ошибку.
 
 **Примеры**:
 ```python
-response = model.ask(message='What is the capital of France?')
+response = model.ask("What is the capital of France?")
 print(response)
 ```
 
@@ -393,76 +315,33 @@ print(response)
 def describe_image(self, image_path: str | Path, prompt:Optional[str] = None, system_instruction:Optional[str] = None ) -> str:
     """"""
     ...
-    
-    messages:list = []
-    base64_image = base64encode(image_path)
-
-    if system_instruction:
-        messages.append({"role": "system", "content": system_instruction})
-
-    messages.append(
-        {
-            "role": "user",
-            "content": [
-                {
-                    "type": "text", 
-                    "text": prompt if prompt else "What's in this image?"},
-                {
-                    "type": "image_url",
-                    "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
-                },
-            ],
-        }
-    )
-    try:
-        response = self.client.chat.completions.create(
-                model = self.model,
-                messages = messages,
-                temperature = 0,
-                max_tokens=800,
-            )
-    
-        reply = response
-        ...
-        try:
-            raw_reply = response.choices[0].message.content.strip()
-            return j_loads_ns(raw_reply)
-        except Exception as ex:
-            logger.error(f"Trouble in reponse {response}", ex, True)
-            ...
-            return
-
-    except Exception as ex:
-        logger.error(f"Ошибка openai", ex, True)
-        ...
-        return
 ```
-**Описание**: Описывает изображение с использованием OpenAI API.
+**Назначение**: Описывает изображение, используя модель OpenAI.
 
 **Как работает функция**:
-- Кодирует изображение в base64 с помощью `base64encode`.
-- Формирует список сообщений для отправки в модель.
-- Добавляет системные инструкции, если они предоставлены.
-- Добавляет сообщение с изображением и запросом на описание.
-- Отправляет запрос к модели с использованием `self.client.chat.completions.create`.
-- Извлекает ответ из ответа модели.
-- Пытается загрузить ответ как JSON с помощью `j_loads_ns`.
-- В случае ошибки логирует ошибку с помощью `logger.error`.
+Функция отправляет изображение в OpenAI API и получает описание изображения.
+
+Внутри функции происходят следующие действия:
+1. Кодирование изображения в base64.
+2. Формирование списка сообщений, включающего системную инструкцию (если есть) и запрос с изображением.
+3. Отправка запроса к OpenAI API с использованием `self.client.chat.completions.create()`.
+4. Извлечение ответа из полученного результата.
+5. В случае ошибки, логирование ошибки.
 
 **Параметры**:
 - `image_path` (str | Path): Путь к изображению.
-- `prompt` (str, optional): Запрос на описание изображения. По умолчанию `None`.
-- `system_instruction` (str, optional): Системные инструкции. По умолчанию `None`.
+- `prompt` (Optional[str], optional): Необязательный запрос для описания изображения. По умолчанию `None`.
+- `system_instruction` (Optional[str], optional): Необязательная системная инструкция. По умолчанию `None`.
 
 **Возвращает**:
 - `str`: Описание изображения.
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при описании изображения.
+- Исключение может быть вызвано, если не удается получить доступ к OpenAI API или если модель возвращает ошибку.
 
 **Примеры**:
 ```python
-description = model.describe_image(image_path='path/to/image.jpg', prompt='Describe this image in detail.')
+description = model.describe_image("path/to/image.jpg", prompt="Describe this image in detail.")
 print(description)
 ```
 
@@ -470,102 +349,61 @@ print(description)
 ```python
 def describe_image_by_requests(self, image_path: str | Path, prompt:str = None) -> str:
     """Send an image to the OpenAI API and receive a description."""
-    # Getting the base64 string
-    base64_image = base64encode(image_path)
-
-    headers = {
-      "Content-Type": "application/json",
-      "Authorization": f"Bearer {gs.credentials.openai.project_api}"
-    }
-
-    payload = {
-      "model": "gpt-4o",
-      "messages": [
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "text",
-              "text": prompt if prompt else "What’s in this image?"
-            },
-            {
-              "type": "image_url",
-              "image_url": {
-                "url": f"data:image/jpeg;base64,{base64_image}"
-              }
-            }
-          ]
-        }
-      ],
-      "max_tokens": 300
-    }
-    try:
-        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-        response_json = response.json()
-        ...
-    except Exception as ex:
-        logger.error(f"Error in image description {image_path=}\n", ex)
+    ...
 ```
-**Описание**: Отправляет изображение в OpenAI API и получает описание, используя библиотеку `requests`.
+**Назначение**: Отправляет изображение в OpenAI API и получает описание.
 
 **Как работает функция**:
-- Кодирует изображение в base64 с помощью `base64encode`.
-- Формирует заголовки запроса, включая API ключ.
-- Формирует полезную нагрузку (payload) запроса с изображением и запросом на описание.
-- Отправляет POST запрос к OpenAI API с использованием библиотеки `requests`.
-- В случае ошибки логирует ошибку с помощью `logger.error`.
+Функция отправляет изображение в OpenAI API с использованием библиотеки `requests` и получает описание изображения в ответ.
+
+Внутри функции происходят следующие действия:
+1. Кодирование изображения в base64.
+2. Формирование заголовков запроса, включающих API-ключ.
+3. Формирование полезной нагрузки (payload) запроса, включающей модель, сообщение с изображением и максимальное количество токенов.
+4. Отправка POST-запроса к OpenAI API с использованием `requests.post()`.
+5. Обработка ответа от API.
+6. В случае ошибки, логирование ошибки.
 
 **Параметры**:
 - `image_path` (str | Path): Путь к изображению.
-- `prompt` (str, optional): Запрос на описание изображения. По умолчанию `None`.
+- `prompt` (str, optional): Необязательный запрос для описания изображения. По умолчанию `None`.
 
 **Возвращает**:
-- `None`
+- Ничего (None).
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при описании изображения.
+- Исключение может быть вызвано, если не удается отправить запрос к OpenAI API или если API возвращает ошибку.
 
 **Примеры**:
 ```python
-model.describe_image_by_requests(image_path='path/to/image.jpg', prompt='Describe this image.')
+model.describe_image_by_requests("path/to/image.jpg", prompt="Describe this image.")
 ```
 
 ### `dynamic_train`
 ```python
 def dynamic_train(self):
     """Dynamically load previous dialogue and fine-tune the model based on it."""
-    try:
-        messages = j_loads(gs.path.google_drive / 'AI' / 'conversation' / 'dailogue.json')
-
-        if messages:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                assistant=self.assistant_id,
-                messages=messages,
-                temperature=0,
-            )
-            logger.info("Fine-tuning during the conversation was successful.")
-        else:
-            logger.info("No previous dialogue found for fine-tuning.")
-    except Exception as ex:
-        logger.error(f"Error during dynamic fine-tuning: {ex}")
+    ...
 ```
-**Описание**: Динамически загружает предыдущий диалог и дообучает модель на его основе.
+**Назначение**: Динамически загружает предыдущий диалог и дообучает модель на его основе.
 
 **Как работает функция**:
-- Загружает предыдущий диалог из JSON файла с помощью `j_loads`.
-- Если диалог найден, отправляет его в OpenAI API для дообучения модели.
-- Логирует успешное дообучение или отсутствие диалога для дообучения.
-- В случае ошибки логирует ошибку с помощью `logger.error`.
+Функция загружает предыдущий диалог из JSON-файла и использует его для дообучения модели.
+
+Внутри функции происходят следующие действия:
+1. Загрузка диалога из JSON-файла с использованием `j_loads()`.
+2. Если диалог существует, отправка запроса к OpenAI API для дообучения модели с использованием загруженного диалога.
+3. Логирование успешного дообучения или отсутствия предыдущего диалога.
+4. В случае ошибки, логирование ошибки.
 
 **Параметры**:
-- Отсутствуют
+- Отсутствуют.
 
 **Возвращает**:
-- `None`
+- Ничего (None).
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при динамическом дообучении.
+- Исключение может быть вызвано, если не удается загрузить JSON-файл или если API возвращает ошибку.
 
 **Примеры**:
 ```python
@@ -586,49 +424,35 @@ def train(self, data: str = None, data_dir: Path | str = None, data_file: Path |
     Returns:
         str | None: The job ID of the training job or None if an error occurred.
     """
-    if not data_dir:
-        data_dir = gs.path.google_drive / 'AI' / 'training'
-
-    try:
-        documents = j_loads(data if data else data_file if data_file else data_dir)
-
-        response = self.client.Training.create(
-            model=self.model,
-            documents=documents,
-            labels=["positive" if positive else "negative"] * len(documents),
-            show_progress=True
-        )
-        self.current_job_id = response.id
-        return response.id
-
-    except Exception as ex:
-        logger.error("An error occurred during training:", ex)
-        return
+    ...
 ```
-**Описание**: Обучает модель на основе предоставленных данных или директории.
+**Назначение**: Обучает модель на основе предоставленных данных или каталога.
 
 **Как работает функция**:
-- Определяет директорию для обучения, если она не предоставлена.
-- Загружает данные для обучения из предоставленных аргументов (`data`, `data_file`, `data_dir`) с использованием `j_loads`.
-- Отправляет данные в OpenAI API для обучения модели.
-- Устанавливает `current_job_id` равным идентификатору задания обучения.
-- В случае ошибки логирует ошибку с помощью `logger.error`.
+Функция обучает модель OpenAI на основе предоставленных данных, которые могут быть в виде строки, файла или каталога с файлами.
+
+Внутри функции происходят следующие действия:
+1. Определение источника данных (строка, файл или каталог).
+2. Загрузка данных из определенного источника.
+3. Отправка запроса к OpenAI API для обучения модели с использованием загруженных данных.
+4. Получение идентификатора задачи обучения.
+5. В случае ошибки, логирование ошибки.
 
 **Параметры**:
-- `data` (str, optional): Путь к CSV файлу или строка в формате CSV с данными.
-- `data_dir` (Path | str, optional): Директория, содержащая CSV файлы для обучения.
-- `data_file` (Path | str, optional): Путь к одному CSV файлу с данными для обучения.
+- `data` (str, optional): Путь к CSV-файлу или строка в формате CSV с данными.
+- `data_dir` (Path | str, optional): Каталог, содержащий CSV-файлы для обучения.
+- `data_file` (Path | str, optional): Путь к отдельному CSV-файлу с данными для обучения.
 - `positive` (bool, optional): Указывает, являются ли данные положительными или отрицательными. По умолчанию `True`.
 
 **Возвращает**:
-- `str | None`: Идентификатор задания обучения или `None` в случае ошибки.
+- `str | None`: Идентификатор задачи обучения или `None` в случае ошибки.
 
 **Вызывает исключения**:
-- `Exception`: В случае ошибки при обучении.
+- Исключение может быть вызвано, если не удается загрузить данные или если API возвращает ошибку.
 
 **Примеры**:
 ```python
-job_id = model.train(data_file='path/to/training_data.csv', positive=True)
+job_id = model.train(data_file="path/to/training_data.csv")
 print(job_id)
 ```
 
@@ -642,38 +466,33 @@ def save_job_id(self, job_id: str, description: str, filename: str = "job_ids.js
         description (str): Description of the job.
         filename (str, optional): The file to save job IDs. Defaults to "job_ids.json".
     """
-    job_data = {"id": job_id, "description": description, "created": time.time()}
-    job_file = gs.path.google_drive / filename
-
-    if not job_file.exists():
-        j_dumps([job_data], job_file)
-    else:
-        existing_jobs = j_loads(job_file)
-        existing_jobs.append(job_data)
-        j_dumps(existing_jobs, job_file)
+    ...
 ```
-**Описание**: Сохраняет идентификатор задания с описанием в файл.
+**Назначение**: Сохраняет идентификатор задачи обучения с описанием в файл.
 
 **Как работает функция**:
-- Формирует данные о задании (`job_data`) в виде словаря, содержащего идентификатор, описание и время создания.
-- Определяет путь к файлу для сохранения данных о задании.
-- Если файл не существует, создает его и сохраняет данные о задании в виде списка.
-- Если файл существует, загружает существующие данные о заданиях, добавляет новые данные и сохраняет обновленный список.
+Функция сохраняет идентификатор задачи обучения и его описание в JSON-файл.
+
+Внутри функции происходят следующие действия:
+1. Формирование словаря с данными о задаче обучения (идентификатор, описание, время создания).
+2. Определение пути к файлу для сохранения данных.
+3. Если файл не существует, создание файла и сохранение данных в виде списка.
+4. Если файл существует, загрузка существующих данных, добавление новых данных в список и сохранение обновленного списка в файл.
 
 **Параметры**:
-- `job_id` (str): Идентификатор задания для сохранения.
-- `description` (str): Описание задания.
-- `filename` (str, optional): Имя файла для сохранения идентификаторов заданий. По умолчанию "job_ids.json".
+- `job_id` (str): Идентификатор задачи обучения.
+- `description` (str): Описание задачи обучения.
+- `filename` (str, optional): Имя файла для сохранения данных. По умолчанию `"job_ids.json"`.
 
 **Возвращает**:
-- `None`
+- Ничего (None).
 
 **Вызывает исключения**:
-- Отсутствуют
+- Исключение может быть вызвано, если не удается записать в файл или если файл не существует.
 
 **Примеры**:
 ```python
-model.save_job_id(job_id='job_123', description='Training model with new data', filename='job_ids.json')
+model.save_job_id("job_123", "Training model with new data")
 ```
 
 ## Функции
@@ -701,70 +520,34 @@ def main():
         Saving the Training Job ID:
 
         After training, the job ID is saved with a description to a JSON file."""
-    
-    # Initialize the model with system instructions and assistant ID (optional)
-    model = OpenAIModel(system_instruction="You are a helpful assistant.", assistant_id="asst_dr5AgQnhhhnef5OSMzQ9zdk9")
-    
-    # Example of listing available models
-    print("Available Models:")
-    models = model.list_models
-    pprint(models)
-
-    # Example of listing available assistants
-    print("\nAvailable Assistants:")
-    assistants = model.list_assistants
-    pprint(assistants)
-
-    # Example of asking the model a question
-    user_input = "Hello, how are you?"
-    print("\nUser Input:", user_input)
-    response = model.ask(user_input)
-    print("Model Response:", response)
-
-    # Example of dynamic training using past dialogue
-    print("\nPerforming dynamic training...")
-    model.dynamic_train()
-
-    # Example of training the model using provided data
-    print("\nTraining the model...")
-    training_result = model.train(data_file=gs.path.google_drive / 'AI' / 'training_data.csv')
-    print(f"Training job ID: {training_result}")
-
-    # Example of saving a job ID
-    if training_result:
-        model.save_job_id(training_result, "Training model with new data", filename="job_ids.json")
-        print(f"Saved training job ID: {training_result}")
-
-    # Пример описания изображения
-    image_path = gs.path.google_drive / 'images' / 'example_image.jpg'
-    print("\nDescribing Image:")
-    description = model.describe_image(image_path)
-    print(f"Image description: {description}")
-
-if __name__ == "__main__":
-    main()
+    ...
 ```
-**Описание**: Главная функция для инициализации `OpenAIModel` и демонстрации использования.
+
+**Назначение**: Главная функция для инициализации `OpenAIModel` и демонстрации использования.
 
 **Как работает функция**:
-- Инициализирует `OpenAIModel` с системными инструкциями и идентификатором ассистента.
-- Выводит список доступных моделей и ассистентов.
-- Отправляет вопрос модели и выводит ответ.
-- Выполняет динамическое обучение на основе предыдущего диалога.
-- Обучает модель, используя данные из указанного файла.
-- Сохраняет идентификатор задания обучения.
-- Описывает изображение и выводит описание.
+Функция `main` инициализирует класс `OpenAIModel`, демонстрирует методы для получения списка доступных моделей и ассистентов, отправки сообщений модели, динамической донастройки и обучения модели.
+
+Внутри функции происходят следующие действия:
+1. Инициализация модели с системной инструкцией и идентификатором ассистента.
+2. Вывод списка доступных моделей.
+3. Вывод списка доступных ассистентов.
+4. Отправка вопроса модели и вывод ответа.
+5. Выполнение динамической донастройки модели.
+6. Обучение модели с использованием данных из файла.
+7. Сохранение идентификатора задачи обучения.
+8. Описание изображения.
 
 **Параметры**:
-- Отсутствуют
+- Отсутствуют.
 
 **Возвращает**:
-- Отсутствуют
+- Ничего (None).
 
 **Вызывает исключения**:
-- Отсутствуют
+- Отсутствуют явные исключения, но могут возникнуть исключения при взаимодействии с OpenAI API.
 
 **Примеры**:
 ```python
-main()
-```
+if __name__ == "__main__":
+    main()

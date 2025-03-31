@@ -1,408 +1,344 @@
-# Документация модуля `executor.py`
+# Документация `executor.py`
 
 ## Обзор
 
-Модуль `executor.py` является частью пакета `src.webdriver` и предназначен для автоматизации взаимодействия с веб-элементами с использованием Selenium. Этот модуль предоставляет гибкий и универсальный фреймворк для определения местоположения, взаимодействия и извлечения информации из веб-элементов на основе предоставленных конфигураций, известных как "локаторы".
+Модуль `executor.py` является частью пакета `src.webdriver` и предназначен для автоматизации взаимодействий с веб-элементами с использованием Selenium. Этот модуль предоставляет гибкий и универсальный фреймворк для обнаружения, взаимодействия и извлечения информации из веб-элементов на основе предоставленных конфигураций, известных как "локаторы".
 
-## Подробнее
+## Ключевые особенности
 
-Модуль `executor.py` предоставляет инструменты для работы с веб-элементами на странице, используя Selenium WebDriver. Он позволяет выполнять различные действия, такие как клики, отправка сообщений, выполнение событий и получение атрибутов. Модуль особенно полезен для автоматизации задач, связанных с тестированием веб-приложений, сбором данных и взаимодействием с динамическими веб-страницами.
+1.  **Разбор и обработка локаторов**: Преобразует словари с конфигурациями в объекты `SimpleNamespace`, что позволяет гибко манипулировать данными локатора.
+2.  **Взаимодействие с веб-элементами**: Выполняет различные действия, такие как клики, отправка сообщений, выполнение событий и получение атрибутов из веб-элементов.
+3.  **Обработка ошибок**: Поддерживает продолжение выполнения в случае ошибки, позволяя обрабатывать веб-страницы с нестабильными элементами или требующие особого подхода.
+4.  **Поддержка нескольких типов локаторов**: Обрабатывает как одиночные, так и множественные локаторы, позволяя идентифицировать и взаимодействовать с одним или несколькими веб-элементами одновременно.
 
-## Классы
+## Структура модуля
 
-### `ExecuteLocator`
+### Классы
+
+#### `ExecuteLocator`
+
+Этот класс является ядром модуля, ответственным за обработку взаимодействий веб-элементов на основе предоставленных локаторов.
 
 **Описание**:
-Этот класс является ядром модуля и отвечает за обработку взаимодействий с веб-элементами на основе предоставленных локаторов.
+Класс `ExecuteLocator` предназначен для выполнения действий над веб-элементами на основе заданных локаторов. Он инициализируется с драйвером Selenium и предоставляет методы для поиска элементов, выполнения событий и получения атрибутов.
 
 **Как работает класс**:
-Класс `ExecuteLocator` инициализируется с экземпляром Selenium WebDriver. Он использует этот драйвер для поиска веб-элементов на странице на основе предоставленных локаторов. Локаторы могут быть представлены в виде словарей или объектов `SimpleNamespace`, что обеспечивает гибкость в определении критериев поиска элементов.
-
-При вызове метода `execute_locator` класс определяет тип локатора и преобразует его в `SimpleNamespace`, если это необходимо. Затем он проверяет наличие атрибутов события, атрибута или обязательного флага. Если локатор соответствует этим критериям, класс пытается сопоставить локатор и извлечь атрибуты элемента.
-
-В случае возникновения исключений в процессе выполнения, класс перехватывает их и регистрирует с помощью модуля `logger`. Если локатор содержит событие, класс выполняет его. Если локатор содержит атрибут, класс извлекает его значение. Если ни событие, ни атрибут не указаны, класс возвращает веб-элемент, соответствующий локатору.
+Класс `ExecuteLocator` принимает драйвер Selenium в качестве аргумента и использует его для поиска веб-элементов на странице. Он также поддерживает выполнение различных действий, таких как клики, отправка сообщений и получение атрибутов. Основной метод `execute_locator` принимает локатор в качестве аргумента и выполняет соответствующие действия над найденным элементом или элементами. Локатор может быть представлен как словарем, так и объектом `SimpleNamespace`. Внутри класса происходит проверка типа локатора, его преобразование при необходимости, и дальнейшее выполнение действий в зависимости от наличия атрибутов `event` и `attribute`. Класс также обрабатывает исключения и логирует ошибки при возникновении проблем.
 
 **Атрибуты**:
-- `driver`: Экземпляр Selenium WebDriver.
-- `actions`: Объект `ActionChains` для выполнения сложных действий.
-- `by_mapping`: Словарь, сопоставляющий типы локаторов с методами `By` Selenium.
-- `mode`: Режим выполнения (`debug`, `dev` и т. д.).
+
+*   `driver`: Экземпляр Selenium WebDriver.
+*   `actions`: Объект `ActionChains` для выполнения сложных действий.
+*   `by_mapping`: Словарь, отображающий типы локаторов на методы `By` Selenium.
+*   `mode`: Режим выполнения (`debug`, `dev` и т.д.).
 
 **Методы**:
-- `__post_init__`: Инициализирует объект `ActionChains`, если предоставлен драйвер.
-- `execute_locator`: Выполняет действия над веб-элементом на основе предоставленного локатора.
-- `evaluate_locator`: Оценивает и обрабатывает атрибуты локатора.
-- `get_attribute_by_locator`: Извлекает атрибуты из элемента или списка элементов, найденных по заданному локатору.
-- `get_webelement_by_locator`: Извлекает веб-элементы на основе предоставленного локатора.
-- `get_webelement_as_screenshot`: Делает скриншот найденного веб-элемента.
-- `execute_event`: Выполняет события, связанные с локатором.
-- `send_message`: Отправляет сообщение веб-элементу.
 
-## Функции
+*   `__post_init__`: Инициализирует объект `ActionChains`, если предоставлен драйвер.
 
-### `ExecuteLocator.execute_locator`
+    ```python
+    def __post_init__(self) -> None:
+        """
+        Инициализирует объект ActionChains, если предоставлен драйвер.
 
-```python
-async def execute_locator(self, locator: dict | SimpleNamespace) -> Any:
-    """Executes actions on a web element based on the provided locator."""
-```
+        Args:
+            None
 
-**Описание**: Выполняет действия над веб-элементом на основе предоставленного локатора.
+        Returns:
+            None
 
-**Как работает функция**:
-Метод `execute_locator` принимает локатор в виде словаря или объекта `SimpleNamespace`. Он определяет тип локатора и преобразует его в `SimpleNamespace`, если это необходимо. Затем он проверяет наличие атрибутов события, атрибута или обязательного флага. Если локатор соответствует этим критериям, метод пытается сопоставить локатор и извлечь атрибуты элемента.
+        Raises:
+            None
 
-В случае возникновения исключений в процессе выполнения, метод перехватывает их и регистрирует с помощью модуля `logger`. Если локатор содержит событие, метод выполняет его. Если локатор содержит атрибут, метод извлекает его значение. Если ни событие, ни атрибут не указаны, метод возвращает веб-элемент, соответствующий локатору.
+        Example:
+            >>> executor = ExecuteLocator(driver=webdriver.Chrome())
+            >>> executor.actions is not None
+            True
+        """
+    ```
 
-**Параметры**:
-- `locator` (dict | SimpleNamespace): Локатор для веб-элемента.
+*   `execute_locator`: Выполняет действия над веб-элементом на основе предоставленного локатора.
 
-**Возвращает**:
-- `Any`: Результат выполнения действия над веб-элементом.
+    ```python
+    async def execute_locator(self, locator: SimpleNamespace | dict) -> Any:
+        """
+        Выполняет действия над веб-элементом на основе предоставленного локатора.
 
-**Вызывает исключения**:
-- `Exception`: В случае возникновения ошибки при выполнении действия над веб-элементом.
+        Args:
+            locator (SimpleNamespace | dict): Локатор веб-элемента.
 
-**Примеры**:
+        Returns:
+            Any: Результат выполнения действия.
+
+        Raises:
+            Exception: Если возникает ошибка при выполнении действия.
+
+        Example:
+            >>> locator = {'by': 'id', 'selector': 'my_element', 'event': 'click'}
+            >>> result = await executor.execute_locator(locator)
+            >>> print(result)
+            None
+        """
+    ```
+
+*   `evaluate_locator`: Оценивает и обрабатывает атрибуты локатора.
+
+    ```python
+    async def evaluate_locator(self, locator: SimpleNamespace) -> List[Any] | Any:
+        """
+        Оценивает и обрабатывает атрибуты локатора.
+
+        Args:
+            locator (SimpleNamespace): Локатор веб-элемента.
+
+        Returns:
+            List[Any] | Any: Результат оценки атрибутов.
+
+        Raises:
+            Exception: Если возникает ошибка при оценке атрибутов.
+
+        Example:
+            >>> locator = SimpleNamespace(attribute=['text', 'value'])
+            >>> result = await executor.evaluate_locator(locator)
+            >>> print(result)
+            ['text_value', 'value_value']
+        """
+    ```
+
+*   `get_attribute_by_locator`: Извлекает атрибуты из элемента или списка элементов, найденных по заданному локатору.
+
+    ```python
+    async def get_attribute_by_locator(self, locator: SimpleNamespace | dict) -> List[str] | str | None:
+        """
+        Извлекает атрибуты из элемента или списка элементов, найденных по заданному локатору.
+
+        Args:
+            locator (SimpleNamespace | dict): Локатор веб-элемента.
+
+        Returns:
+            List[str] | str | None: Список атрибутов, атрибут или None в случае ошибки.
+
+        Raises:
+            Exception: Если возникает ошибка при извлечении атрибута.
+
+        Example:
+            >>> locator = {'by': 'id', 'selector': 'my_element', 'attribute': 'text'}
+            >>> result = await executor.get_attribute_by_locator(locator)
+            >>> print(result)
+            'element_text'
+        """
+    ```
+
+*   `get_webelement_by_locator`: Извлекает веб-элементы на основе предоставленного локатора.
+
+    ```python
+    def get_webelement_by_locator(self, locator: SimpleNamespace) -> List[WebElement] | WebElement | None:
+        """
+        Извлекает веб-элементы на основе предоставленного локатора.
+
+        Args:
+            locator (SimpleNamespace): Локатор веб-элемента.
+
+        Returns:
+            List[WebElement] | WebElement | None: Список веб-элементов, веб-элемент или None в случае ошибки.
+
+        Raises:
+            NoSuchElementException: Если элемент не найден.
+
+        Example:
+            >>> locator = SimpleNamespace(by='id', selector='my_element')
+            >>> element = executor.get_webelement_by_locator(locator)
+            >>> print(element)
+            <selenium.webdriver.remote.webelement.WebElement (session="...", element="...")>
+        """
+    ```
+
+*   `get_webelement_as_screenshot`: Делает скриншот найденного веб-элемента.
+
+    ```python
+    def get_webelement_as_screenshot(self, element: WebElement) -> bytes | None:
+        """
+        Делает скриншот найденного веб-элемента.
+
+        Args:
+            element (WebElement): Веб-элемент для скриншота.
+
+        Returns:
+            bytes | None: Байты изображения скриншота или None в случае ошибки.
+
+        Raises:
+            WebDriverException: Если возникает ошибка при создании скриншота.
+
+        Example:
+            >>> locator = SimpleNamespace(by='id', selector='my_element')
+            >>> element = executor.get_webelement_by_locator(locator)
+            >>> screenshot = executor.get_webelement_as_screenshot(element)
+            >>> print(screenshot[:20])
+            b'\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR'
+        """
+    ```
+
+*   `execute_event`: Выполняет события, связанные с локатором.
+
+    ```python
+    def execute_event(self, element: WebElement, locator: SimpleNamespace) -> Any:
+        """
+        Выполняет события, связанные с локатором.
+
+        Args:
+            element (WebElement): Веб-элемент для выполнения события.
+            locator (SimpleNamespace): Локатор веб-элемента.
+
+        Returns:
+            Any: Результат выполнения события.
+
+        Raises:
+            Exception: Если возникает ошибка при выполнении события.
+
+        Example:
+            >>> locator = SimpleNamespace(event='click()')
+            >>> element = driver.find_element(By.ID, 'my_element')
+            >>> result = executor.execute_event(element, locator)
+            >>> print(result)
+            None
+        """
+    ```
+
+*   `send_message`: Отправляет сообщение веб-элементу.
+
+    ```python
+    def send_message(self, element: WebElement, locator: SimpleNamespace) -> None:
+        """
+        Отправляет сообщение веб-элементу.
+
+        Args:
+            element (WebElement): Веб-элемент для отправки сообщения.
+            locator (SimpleNamespace): Локатор веб-элемента.
+
+        Returns:
+            None
+
+        Raises:
+            Exception: Если возникает ошибка при отправке сообщения.
+
+        Example:
+            >>> locator = SimpleNamespace(send_keys='hello')
+            >>> element = driver.find_element(By.ID, 'my_element')
+            >>> executor.send_message(element, locator)
+            None
+        """
+    ```
+
+### Схемы потоков
+
+Модуль включает схемы потоков Mermaid для иллюстрации потока выполнения для ключевых методов:
+
+*   **`execute_locator`**:
+
+    ```mermaid
+    graph TD
+    Start[Start] --> CheckLocatorType[Check if locator is SimpleNamespace or dict]
+    CheckLocatorType --> IsSimpleNamespace{Is locator SimpleNamespace?}
+    IsSimpleNamespace -->|Yes| UseLocatorAsIs[Use locator as is]
+    IsSimpleNamespace -->|No| ConvertDictToSimpleNamespace[Convert dict to SimpleNamespace]
+    ConvertDictToSimpleNamespace --> UseLocatorAsIs
+    UseLocatorAsIs --> DefineParseLocator[Define async function _parse_locator]
+    DefineParseLocator --> CheckEventAttributeMandatory[Check if locator has event, attribute, or mandatory]
+    CheckEventAttributeMandatory -->|No| ReturnNone[Return None]
+    CheckEventAttributeMandatory -->|Yes| TryMapByEvaluateAttribute[Try to map by and evaluate attribute]
+    TryMapByEvaluateAttribute --> CatchExceptionsAndLog[Catch exceptions and log if needed]
+    CatchExceptionsAndLog --> HasEvent{Does locator have event?}
+    HasEvent -->|Yes| ExecuteEvent[Execute event]
+    HasEvent -->|No| HasAttribute{Does locator have attribute?}
+    HasAttribute -->|Yes| GetAttributeByLocator[Get attribute by locator]
+    HasAttribute -->|No| GetWebElementByLocator[Get web element by locator]
+    ExecuteEvent --> ReturnEventResult[Return result of event]
+    GetAttributeByLocator --> ReturnAttributeResult[Return attribute result]
+    GetWebElementByLocator --> ReturnWebElementResult[Return web element result]
+    ReturnEventResult --> ReturnFinalResult[Return final result of _parse_locator]
+    ReturnAttributeResult --> ReturnFinalResult
+    ReturnWebElementResult --> ReturnFinalResult
+    ReturnFinalResult --> ReturnExecuteLocatorResult[Return result of execute_locator]
+    ReturnExecuteLocatorResult --> End[End]
+    ```
+
+*   **`evaluate_locator`**:
+
+    ```mermaid
+    graph TD
+    Start[Start] --> CheckIfAttributeIsList[Check if attribute is list]
+    CheckIfAttributeIsList -->|Yes| IterateOverAttributes[Iterate over each attribute in list]
+    IterateOverAttributes --> CallEvaluateForEachAttribute[Call _evaluate for each attribute]
+    CallEvaluateForEachAttribute --> ReturnGatheredResults[Return gathered results from asyncio.gather]
+    CheckIfAttributeIsList -->|No| CallEvaluateForSingleAttribute[Call _evaluate for single attribute]
+    CallEvaluateForSingleAttribute --> ReturnEvaluateResult[Return result of _evaluate]
+    ReturnEvaluateResult --> End[End]
+    ReturnGatheredResults --> End
+    ```
+
+*   **`get_attribute_by_locator`**:
+
+    ```mermaid
+    graph TD
+    Start[Start] --> CheckIfLocatorIsSimpleNamespaceOrDict[Check if locator is SimpleNamespace or dict]
+    CheckIfLocatorIsSimpleNamespaceOrDict -->|Yes| ConvertLocatorToSimpleNamespaceIfNeeded[Convert locator to SimpleNamespace if needed]
+    ConvertLocatorToSimpleNamespaceIfNeeded --> CallGetWebElementByLocator[Call get_webelement_by_locator]
+    CallGetWebElementByLocator --> CheckIfWebElementIsFound[Check if web_element is found]
+    CheckIfWebElementIsFound -->|No| LogDebugMessageAndReturn[Log debug message and return]
+    CheckIfWebElementIsFound -->|Yes| CheckIfAttributeIsDictionaryLikeString[Check if locator.attribute is a dictionary-like string]
+    CheckIfAttributeIsDictionaryLikeString -->|Yes| ParseAttributeStringToDict[Parse locator.attribute string to dict]
+    ParseAttributeStringToDict --> CheckIfWebElementIsList[Check if web_element is a list]
+    CheckIfWebElementIsList -->|Yes| RetrieveAttributesForEachElementInList[Retrieve attributes for each element in list]
+    RetrieveAttributesForEachElementInList --> ReturnListOfAttributes[Return list of attributes]
+    CheckIfWebElementIsList -->|No| RetrieveAttributesForSingleWebElement[Retrieve attributes for a single web_element]
+    RetrieveAttributesForSingleWebElement --> ReturnListOfAttributes
+    CheckIfAttributeIsDictionaryLikeString -->|No| CheckIfWebElementIsListAgain[Check if web_element is a list]
+    CheckIfWebElementIsListAgain -->|Yes| RetrieveAttributesForEachElementInListAgain[Retrieve attributes for each element in list]
+    RetrieveAttributesForEachElementInListAgain --> ReturnListOfAttributesOrSingleAttribute[Return list of attributes or single attribute]
+    CheckIfWebElementIsListAgain -->|No| RetrieveAttributeForSingleWebElementAgain[Retrieve attribute for a single web_element]
+    RetrieveAttributeForSingleWebElementAgain --> ReturnListOfAttributesOrSingleAttribute
+    ReturnListOfAttributesOrSingleAttribute --> End[End]
+    LogDebugMessageAndReturn --> End
+    ```
+
+## Использование
+
+Чтобы использовать этот модуль, создайте экземпляр класса `ExecuteLocator` с экземпляром Selenium WebDriver, а затем вызовите различные методы для взаимодействия с веб-элементами на основе предоставленных локаторов.
+
+### Пример
 
 ```python
 from selenium import webdriver
 from src.webdriver.executor import ExecuteLocator
-from types import SimpleNamespace
 
 # Инициализация WebDriver
 driver = webdriver.Chrome()
 
-# Инициализация ExecuteLocator
+# Инициализация класса ExecuteLocator
 executor = ExecuteLocator(driver=driver)
 
-# Определение локатора в виде словаря
-locator_dict = {
+# Определение локатора
+locator = {
     "by": "ID",
     "selector": "some_element_id",
     "event": "click()"
 }
 
 # Выполнение локатора
-result = await executor.execute_locator(locator_dict)
+result = await executor.execute_locator(locator)
 print(result)
-
-# Определение локатора в виде SimpleNamespace
-locator_sns = SimpleNamespace(by="ID", selector="some_element_id", event="click()")
-
-# Выполнение локатора
-result = await executor.execute_locator(locator_sns)
-print(result)
-```
-
-### `ExecuteLocator.evaluate_locator`
-
-```python
-async def evaluate_locator(self, locator: SimpleNamespace) -> list[Any] | Any | None:
-    """Evaluates and processes locator attributes."""
-```
-
-**Описание**: Оценивает и обрабатывает атрибуты локатора.
-
-**Как работает функция**:
-Метод `evaluate_locator` принимает локатор в виде объекта `SimpleNamespace`. Он проверяет, является ли атрибут локатора списком. Если да, то метод итерируется по каждому атрибуту в списке и вызывает функцию `_evaluate` для каждого атрибута. Результаты собираются с помощью `asyncio.gather`. Если атрибут не является списком, метод вызывает `_evaluate` для одного атрибута.
-
-**Параметры**:
-- `locator` (SimpleNamespace): Локатор для веб-элемента.
-
-**Возвращает**:
-- `list[Any] | Any | None`: Результат оценки и обработки атрибутов локатора.
-
-**Вызывает исключения**:
-- `Exception`: В случае возникновения ошибки при оценке и обработке атрибутов локатора.
-
-**Примеры**:
-
-```python
-from selenium import webdriver
-from src.webdriver.executor import ExecuteLocator
-from types import SimpleNamespace
-
-# Инициализация WebDriver
-driver = webdriver.Chrome()
-
-# Инициализация ExecuteLocator
-executor = ExecuteLocator(driver=driver)
-
-# Определение локатора в виде SimpleNamespace с атрибутом в виде списка
-locator_sns_list = SimpleNamespace(by="ID", selector="some_element_id", attribute=["value", "text"])
-
-# Выполнение локатора
-result = await executor.evaluate_locator(locator_sns_list)
-print(result)
-
-# Определение локатора в виде SimpleNamespace с одиночным атрибутом
-locator_sns_single = SimpleNamespace(by="ID", selector="some_element_id", attribute="value")
-
-# Выполнение локатора
-result = await executor.evaluate_locator(locator_sns_single)
-print(result)
-```
-
-### `ExecuteLocator.get_attribute_by_locator`
-
-```python
-async def get_attribute_by_locator(self, locator: dict | SimpleNamespace) -> list[Any] | Any | None:
-    """Retrieves attributes from an element or list of elements found by the given locator."""
-```
-
-**Описание**: Извлекает атрибуты из элемента или списка элементов, найденных по заданному локатору.
-
-**Как работает функция**:
-Метод `get_attribute_by_locator` принимает локатор в виде словаря или объекта `SimpleNamespace`. Он преобразует локатор в `SimpleNamespace`, если это необходимо. Затем он вызывает метод `get_webelement_by_locator` для получения веб-элемента. Если веб-элемент не найден, метод регистрирует отладочное сообщение и возвращает `None`.
-
-Если веб-элемент найден, метод проверяет, является ли атрибут локатора строкой, подобной словарю. Если да, то метод анализирует строку атрибута в словарь. Затем он проверяет, является ли веб-элемент списком. Если да, то метод извлекает атрибуты для каждого элемента в списке. Если веб-элемент не является списком, метод извлекает атрибуты для одного веб-элемента.
-
-**Параметры**:
-- `locator` (dict | SimpleNamespace): Локатор для веб-элемента.
-
-**Возвращает**:
-- `list[Any] | Any | None`: Список атрибутов или один атрибут, извлеченный из веб-элемента.
-
-**Вызывает исключения**:
-- `Exception`: В случае возникновения ошибки при извлечении атрибутов из веб-элемента.
-
-**Примеры**:
-
-```python
-from selenium import webdriver
-from src.webdriver.executor import ExecuteLocator
-from types import SimpleNamespace
-
-# Инициализация WebDriver
-driver = webdriver.Chrome()
-
-# Инициализация ExecuteLocator
-executor = ExecuteLocator(driver=driver)
-
-# Определение локатора в виде словаря
-locator_dict = {
-    "by": "ID",
-    "selector": "some_element_id",
-    "attribute": "value"
-}
-
-# Получение атрибута по локатору
-result = await executor.get_attribute_by_locator(locator_dict)
-print(result)
-
-# Определение локатора в виде SimpleNamespace
-locator_sns = SimpleNamespace(by="ID", selector="some_element_id", attribute="value")
-
-# Получение атрибута по локатору
-result = await executor.get_attribute_by_locator(locator_sns)
-print(result)
-```
-
-### `ExecuteLocator.get_webelement_by_locator`
-
-```python
-def get_webelement_by_locator(self, locator: SimpleNamespace) -> WebElement | list[WebElement] | None:
-    """Extracts web elements based on the provided locator."""
-```
-
-**Описание**: Извлекает веб-элементы на основе предоставленного локатора.
-
-**Как работает функция**:
-Метод `get_webelement_by_locator` принимает локатор в виде объекта `SimpleNamespace`. Он использует атрибуты `by` и `selector` локатора для поиска веб-элементов на странице. Если атрибут `many` установлен в `True`, метод пытается найти несколько веб-элементов. В противном случае метод пытается найти только один веб-элемент.
-
-**Параметры**:
-- `locator` (SimpleNamespace): Локатор для веб-элемента.
-
-**Возвращает**:
-- `WebElement | list[WebElement] | None`: Найденный веб-элемент, список веб-элементов или `None`, если веб-элемент не найден.
-
-**Вызывает исключения**:
-- `NoSuchElementException`: Если веб-элемент не найден.
-
-**Примеры**:
-
-```python
-from selenium import webdriver
-from src.webdriver.executor import ExecuteLocator
-from types import SimpleNamespace
-from selenium.webdriver.remote.webdriver import WebElement
-
-# Инициализация WebDriver
-driver = webdriver.Chrome()
-
-# Инициализация ExecuteLocator
-executor = ExecuteLocator(driver=driver)
-
-# Определение локатора в виде SimpleNamespace
-locator_sns = SimpleNamespace(by="ID", selector="some_element_id")
-
-# Получение веб-элемента по локатору
-element = executor.get_webelement_by_locator(locator_sns)
-
-if isinstance(element, WebElement):
-    print("Web element found")
-else:
-    print("Web element not found")
-```
-
-### `ExecuteLocator.get_webelement_as_screenshot`
-
-```python
-def get_webelement_as_screenshot(self, locator: SimpleNamespace, filename: str = 'element_screenshot.png') -> str | None:
-    """Takes a screenshot of the located web element."""
-```
-
-**Описание**: Делает скриншот найденного веб-элемента.
-
-**Как работает функция**:
-Метод `get_webelement_as_screenshot` принимает локатор в виде объекта `SimpleNamespace` и имя файла для сохранения скриншота. Он вызывает метод `get_webelement_by_locator` для получения веб-элемента. Если веб-элемент найден, метод делает скриншот веб-элемента и сохраняет его в файл.
-
-**Параметры**:
-- `locator` (SimpleNamespace): Локатор для веб-элемента.
-- `filename` (str, optional): Имя файла для сохранения скриншота. По умолчанию 'element_screenshot.png'.
-
-**Возвращает**:
-- `str | None`: Путь к сохраненному скриншоту или `None`, если веб-элемент не найден.
-
-**Вызывает исключения**:
-- `Exception`: В случае возникновения ошибки при создании скриншота веб-элемента.
-
-**Примеры**:
-
-```python
-from selenium import webdriver
-from src.webdriver.executor import ExecuteLocator
-from types import SimpleNamespace
-
-# Инициализация WebDriver
-driver = webdriver.Chrome()
-
-# Инициализация ExecuteLocator
-executor = ExecuteLocator(driver=driver)
-
-# Определение локатора в виде SimpleNamespace
-locator_sns = SimpleNamespace(by="ID", selector="some_element_id")
-
-# Получение скриншота веб-элемента
-screenshot_path = executor.get_webelement_as_screenshot(locator_sns)
-
-if screenshot_path:
-    print(f"Screenshot saved to {screenshot_path}")
-else:
-    print("Web element not found")
-```
-
-### `ExecuteLocator.execute_event`
-
-```python
-def execute_event(self, web_element: WebElement, locator: SimpleNamespace) -> Any:
-    """Executes the events associated with a locator."""
-```
-
-**Описание**: Выполняет события, связанные с локатором.
-
-**Как работает функция**:
-Метод `execute_event` принимает веб-элемент и локатор в виде объекта `SimpleNamespace`. Он извлекает тип события из локатора и выполняет соответствующее действие над веб-элементом. Поддерживаемые типы событий включают `click()`, `hover()`, `send_keys()`, `submit()` и другие.
-
-**Параметры**:
-- `web_element` (WebElement): Веб-элемент, над которым выполняется событие.
-- `locator` (SimpleNamespace): Локатор для веб-элемента.
-
-**Возвращает**:
-- `Any`: Результат выполнения события.
-
-**Вызывает исключения**:
-- `Exception`: В случае возникновения ошибки при выполнении события.
-
-**Примеры**:
-
-```python
-from selenium import webdriver
-from src.webdriver.executor import ExecuteLocator
-from types import SimpleNamespace
-from selenium.webdriver.remote.webdriver import WebElement
-
-# Инициализация WebDriver
-driver = webdriver.Chrome()
-
-# Инициализация ExecuteLocator
-executor = ExecuteLocator(driver=driver)
-
-# Определение локатора в виде SimpleNamespace
-locator_sns = SimpleNamespace(by="ID", selector="some_element_id", event="click()")
-
-# Получение веб-элемента по локатору
-element = executor.get_webelement_by_locator(locator_sns)
-
-if isinstance(element, WebElement):
-    # Выполнение события
-    result = executor.execute_event(element, locator_sns)
-    print("Event executed")
-else:
-    print("Web element not found")
-```
-
-### `ExecuteLocator.send_message`
-
-```python
-def send_message(self, web_element: WebElement, message: str) -> None:
-    """Sends a message to a web element."""
-```
-
-**Описание**: Отправляет сообщение веб-элементу.
-
-**Как работает функция**:
-Метод `send_message` принимает веб-элемент и сообщение в виде строки. Он отправляет сообщение веб-элементу с помощью метода `send_keys`.
-
-**Параметры**:
-- `web_element` (WebElement): Веб-элемент, которому отправляется сообщение.
-- `message` (str): Отправляемое сообщение.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `Exception`: В случае возникновения ошибки при отправке сообщения веб-элементу.
-
-**Примеры**:
-
-```python
-from selenium import webdriver
-from src.webdriver.executor import ExecuteLocator
-from selenium.webdriver.remote.webdriver import WebElement
-from types import SimpleNamespace
-
-# Инициализация WebDriver
-driver = webdriver.Chrome()
-
-# Инициализация ExecuteLocator
-executor = ExecuteLocator(driver=driver)
-
-# Определение локатора в виде SimpleNamespace
-locator_sns = SimpleNamespace(by="ID", selector="some_element_id")
-
-# Получение веб-элемента по локатору
-element = executor.get_webelement_by_locator(locator_sns)
-
-if isinstance(element, WebElement):
-    # Отправка сообщения веб-элементу
-    executor.send_message(element, "Hello, world!")
-    print("Message sent")
-else:
-    print("Web element not found")
 ```
 
 ## Зависимости
 
-- `selenium`: Для веб-автоматизации.
-- `asyncio`: Для асинхронных операций.
-- `re`: Для регулярных выражений.
-- `dataclasses`: Для создания классов данных.
-- `enum`: Для создания перечислений.
-- `pathlib`: Для обработки путей к файлам.
-- `types`: Для создания простых пространств имен.
-- `typing`: Для аннотаций типов.
+*   `selenium`: Для автоматизации веб-интерфейса.
+*   `asyncio`: Для асинхронных операций.
+*   `re`: Для регулярных выражений.
+*   `dataclasses`: Для создания классов данных.
+*   `enum`: Для создания перечислений.
+*   `pathlib`: Для обработки путей к файлам.
+*   `types`: Для создания простых пространств имен.
+*   `typing`: Для аннотаций типов.
 
 ## Обработка ошибок
 
@@ -410,8 +346,12 @@ else:
 
 ## Вклад
 
-Вклад в этот модуль приветствуется. Убедитесь, что любые изменения хорошо задокументированы и включают соответствующие тесты.
+Вклад в этот модуль приветствуется. Пожалуйста, убедитесь, что любые изменения хорошо документированы и включают соответствующие тесты.
 
 ## Лицензия
 
 Этот модуль лицензирован в соответствии с лицензией MIT. Подробности см. в файле `LICENSE`.
+
+\---
+
+Этот README предоставляет исчерпывающий обзор модуля `executor.py`, включая его цель, структуру, использование и зависимости. Он предназначен для того, чтобы помочь разработчикам понять и эффективно использовать модуль.

@@ -2,70 +2,95 @@
 
 ## Обзор
 
-Модуль предназначен для автоматической отправки рекламных объявлений в группы Facebook. Он использует веб-драйвер для взаимодействия с Facebook и выполняет рекламные кампании, определенные в конфигурационных файлах.
+Модуль `src.endpoints.advertisement.facebook.start_posting_my_groups` предназначен для автоматической публикации рекламных объявлений в группах Facebook. Он использует веб-драйвер для управления браузером и взаимодействует с Facebook через класс `FacebookPromoter`. Модуль поддерживает запуск рекламных кампаний из списка, используя данные о группах из JSON-файлов.
 
 ## Подробней
 
-Этот модуль является частью системы автоматизации рекламы в проекте `hypotez`. Он использует `FacebookPromoter` для управления рекламными кампаниями и веб-драйвер `Driver` для взаимодействия с сайтом Facebook. Модуль предназначен для работы в режиме 24/7, автоматически отправляя рекламу в группы Facebook до прерывания пользователем.
+Этот модуль является частью системы автоматизации рекламы в проекте `hypotez`. Он позволяет запускать рекламные кампании в Facebook, используя список групп, полученных из JSON-файлов. Модуль использует `FacebookPromoter` для управления процессом публикации и `Driver` для управления веб-браузером.
 
 ## Классы
 
 ### `FacebookPromoter`
 
-**Описание**: Класс `FacebookPromoter` отвечает за управление рекламными кампаниями в Facebook.
+**Описание**: Класс `FacebookPromoter` отвечает за автоматическую публикацию рекламных объявлений в группах Facebook.
 
-**Как работает класс**: Класс инициализируется веб-драйвером, списком путей к файлам групп и флагом, указывающим на отсутствие видео. Он предоставляет методы для запуска и управления рекламными кампаниями.
+**Как работает класс**:
+Класс инициализируется драйвером веб-браузера, списком путей к файлам с информацией о группах и флагом, указывающим на необходимость публикации видео. Он предоставляет методы для запуска рекламных кампаний и обработки процесса публикации.
 
 **Методы**:
 
-- `run_campaigns`: Запускает рекламные кампании.
-  **Параметры**:
-
-  - `campaigns` (list): Список названий кампаний для запуска.
-  - `group_file_paths` (list): Список путей к файлам, содержащим информацию о группах.
+- `run_campaigns`: Запускает рекламные кампании в Facebook.
 
 ## Функции
 
-В данном коде отсутствуют отдельные функции, но используется класс `FacebookPromoter` с методом `run_campaigns`.
+### Отсутствуют функции, определенные вне классов.
 
-### `run_campaigns`
+## Код
 
 ```python
-def run_campaigns(campaigns: list, group_file_paths: list) -> None:
-    """This is example function
-    Args:
-        campaigns (list): Описание параметра `campaigns`.
-        group_file_paths (list): Описание параметра `group_file_paths`.
-    Returns:
-        None: Описание возвращаемого значения.
+import header 
+import copy
+from src.webdriver.driver import Driver, Chrome
+from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
+from src.logger.logger import logger
 
-     Raises:
-          Ошибка выполнение
+d = Driver(Chrome)
+d.get_url(r"https://facebook.com")
 
-     Example:
-         Примеры вызовов
-    """
-    # Не выводи тело функции. только документацию и примеры вызова функции;
+filenames:list = ['my_managed_groups.json',]  
+
+campaigns:list = ['brands',
+                  'mom_and_baby',
+                  'pain',
+                  'sport_and_activity',
+                  'house',
+                  'bags_backpacks_suitcases',
+                  'man']
+
+promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = True)
+
+try:
+    while True:
+        
+        promoter.run_campaigns(campaigns = copy.copy(campaigns), group_file_paths = filenames)
+        ...
+
+        
+except KeyboardInterrupt:
+    logger.info("Campaign promotion interrupted.")
 ```
 
-**Описание**: Метод запускает рекламные кампании в Facebook.
+**Описание кода**:
 
-**Как работает функция**: Метод `run_campaigns` принимает список названий кампаний и список путей к файлам групп. Он использует эти данные для запуска рекламных объявлений в указанных группах Facebook.
+1.  **Импорты**:
+    *   `header`: Импорт модуля `header`.
+    *   `copy`: Импорт модуля `copy` для создания копий объектов.
+    *   `Driver`, `Chrome` из `src.webdriver.driver`: Импорт классов `Driver` и `Chrome` для управления веб-браузером.
+    *   `FacebookPromoter` из `src.endpoints.advertisement.facebook.promoter`: Импорт класса `FacebookPromoter` для управления рекламными кампаниями.
+    *   `logger` из `src.logger.logger`: Импорт модуля `logger` для логирования.
 
-**Параметры**:
+2.  **Инициализация драйвера**:
 
-- `campaigns` (list): Список названий кампаний для запуска.
-- `group_file_paths` (list): Список путей к файлам, содержащим информацию о группах.
+    *   `d = Driver(Chrome)`: Создание инстанса драйвера Chrome.
+    *   `d.get_url(r"https://facebook.com")`: Открытие Facebook в браузере.
 
-**Возвращает**:
+3.  **Настройка кампаний**:
 
-- `None`: Метод ничего не возвращает.
+    *   `filenames:list = ['my_managed_groups.json',]`: Список файлов, содержащих информацию о группах.
+    *   `campaigns:list = ['brands', 'mom_and_baby', 'pain', 'sport_and_activity', 'house', 'bags_backpacks_suitcases', 'man']`: Список рекламных кампаний.
 
-**Вызывает исключения**:
+4.  **Инициализация промоутера**:
 
-- `KeyboardInterrupt`: Прерывание выполнения программы пользователем.
+    *   `promoter = FacebookPromoter(d, group_file_paths=filenames, no_video=True)`: Создание инстанса `FacebookPromoter` с драйвером, списком файлов групп и флагом `no_video`.
 
-**Примеры**:
+5.  **Запуск кампаний**:
 
-```python
-promoter.run_campaigns(campaigns=['brands', 'mom_and_baby'], group_file_paths=['my_managed_groups.json'])
+    *   `try`: Блок try-except для обработки исключений.
+    *   `while True`: Бесконечный цикл для непрерывного запуска кампаний.
+    *   `promoter.run_campaigns(campaigns=copy.copy(campaigns), group_file_paths=filenames)`: Запуск рекламных кампаний с копией списка кампаний и списком файлов групп.
+    *   `...`: Индикатор продолжения кода (оставлен без изменений).
+
+6.  **Обработка прерывания**:
+
+    *   `except KeyboardInterrupt`: Обработка прерывания с клавиатуры (Ctrl+C).
+    *   `logger.info("Campaign promotion interrupted.")`: Логирование сообщения о прерывании кампании.

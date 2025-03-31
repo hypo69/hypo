@@ -1,151 +1,90 @@
-# Модуль `gemini_simplechat.main`
+# Модуль gemini_simplechat.main
 
 ## Обзор
 
-Модуль `gemini_simplechat.main` предоставляет простой чат, использующий модель Google Gemini для обработки и генерации ответов на входящие сообщения. Он включает в себя FastAPI приложение, настроенное для обработки запросов чата через HTTP endpoints.
+Модуль `gemini_simplechat.main` представляет собой FastAPI приложение, предназначенное для создания простого чат-интерфейса с использованием модели Google Gemini. Он включает в себя настройку CORS, определение модели запроса чата и маршруты для обработки запросов.
 
-## Подробней
+## Подробнее
 
-Этот модуль служит отправной точкой для развертывания чат-бота на основе модели Gemini. Он определяет API endpoints для взаимодействия с чат-ботом, используя FastAPI для обработки HTTP запросов и ответов. Он включает в себя настройку CORS для обеспечения безопасного взаимодействия между клиентом и сервером, а также обработку ошибок и логирование. Расположение файла в проекте `hypotez` указывает на его роль в качестве основного интерфейса для взаимодействия с чат-ботом Gemini.
-
-## Классы
-
-### `ChatRequest`
-
-**Описание**: Модель запроса чата, используемая для валидации и передачи входящих сообщений.
-
-**Как работает класс**:
-Класс `ChatRequest` наследуется от `BaseModel` библиотеки `pydantic` и определяет структуру входящего запроса чата. Он содержит одно поле `message`, которое представляет собой строку сообщения, отправленную пользователем. Pydantic автоматически выполняет валидацию типа данных для этого поля.
-
-**Параметры**:
-- `message` (str): Сообщение от пользователя.
-
-**Примеры**:
-```python
-from pydantic import BaseModel
-
-class ChatRequest(BaseModel):
-    message: str
-
-# Пример использования
-request = ChatRequest(message="Привет, как дела?")
-print(request.message)
-```
+Модуль предоставляет API для взаимодействия с моделью Google Gemini, позволяя отправлять запросы и получать ответы в реальном времени. Он также включает в себя базовую HTML страницу для взаимодействия с API через веб-интерфейс.
+Модуль использует FastAPI для создания API, pydantic для валидации запросов, а также модуль `src.ai.GoogleGenerativeAI` для взаимодействия с моделью Google Gemini.
 
 ## Функции
 
 ### `root`
 
 ```python
-async def root():
+async def root() -> HTMLResponse:
     """
+    Асинхронная функция для обработки корневого маршрута ("/").
+
+    Args:
+        Нет аргументов.
+
     Returns:
-        HTMLResponse: Возвращает HTML-контент из файла index.html.
+        HTMLResponse: HTML-контент, полученный из файла, указанного в `gs.fast_api.index_path`.
 
     Raises:
-        HTTPException: Если происходит ошибка при чтении файла index.html.
+        HTTPException: Если не удается прочитать HTML-файл, возвращает HTTP-ошибку 500.
 
-    Example:
-        >>> response = await root()
-        >>> print(response.status_code)
-        200
+    Как работает функция:
+    ----------------------
+
+    Функция пытается прочитать содержимое HTML-файла, путь к которому задан в `gs.fast_api.index_path`.
+    Если чтение файла проходит успешно, функция возвращает HTML-контент в виде объекта `HTMLResponse`.
+    В случае возникновения исключения при чтении файла, функция логирует ошибку и вызывает исключение `HTTPException` с кодом 500 и детальным описанием ошибки.
+
     """
-```
-
-**Описание**: Обрабатывает корневой GET запрос и возвращает HTML страницу.
-
-**Как работает функция**:
-Функция `root` является асинхронным обработчиком GET запросов к корневому пути ("/"). Она пытается прочитать содержимое HTML файла, путь к которому определен в конфигурации `gs.fast_api.index_path`. В случае успеха функция возвращает HTML контент в виде объекта `HTMLResponse`. Если при чтении файла возникает исключение, функция возбуждает исключение `HTTPException` с кодом состояния 500 и детальным сообщением об ошибке.
-
-**Возвращает**:
-- `HTMLResponse`: HTML-контент для отображения в браузере.
-
-**Вызывает исключения**:
-- `HTTPException`: Если не удается прочитать HTML файл.
-
-**Примеры**:
-```python
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
-from pathlib import Path
-from src import gs
-
-app = FastAPI()
-
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    try:
-        html_content = Path( gs.fast_api.index_path).read_text(encoding="utf-8")
-        return HTMLResponse(content=html_content)
-    except Exception as ex:
-        raise HTTPException(status_code=500, detail=f"Error reading templates:{str(ex)}" )
 ```
 
 ### `chat`
 
 ```python
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest) -> dict:
     """
+    Асинхронная функция для обработки POST-запросов к маршруту "/api/chat".
+
     Args:
-        request (ChatRequest): Объект запроса, содержащий сообщение чата.
+        request (ChatRequest): Объект `ChatRequest`, содержащий сообщение для чата.
 
     Returns:
-        dict: Ответ от модели чата в формате JSON.
+        dict: Словарь, содержащий ответ от модели чата.
 
     Raises:
-        HTTPException: В случае ошибки при обработке запроса или получении ответа от модели.
-    
-    Example:
-        >>> from fastapi.testclient import TestClient
-        >>> from pydantic import BaseModel
-        >>> class ChatRequest(BaseModel):
-        ...     message: str
-        >>> from fastapi import FastAPI
-        >>> app = FastAPI()
-        >>> @app.post("/api/chat")
-        ... async def chat(request: ChatRequest):
-        ...     return {"response": "test response"}
-        >>> client = TestClient(app)
-        >>> response = client.post("/api/chat", json={"message": "hello"})
-        >>> assert response.status_code == 200
-        >>> response.json()
-        {'response': 'test response'}
+        HTTPException: Если возникает ошибка при взаимодействии с моделью чата, возвращает HTTP-ошибку 500.
+
+    Как работает функция:
+    ----------------------
+    1. **Получение запроса**:
+       - Функция принимает объект `ChatRequest`, содержащий сообщение пользователя.
+
+    2. **Взаимодействие с моделью чата**:
+       - Функция вызывает метод `chat` объекта `model` (экземпляр класса `GoogleGenerativeAI`), передавая сообщение пользователя.
+       - Получает ответ от модели чата.
+
+    3. **Обработка ответа**:
+       - Возвращает ответ в виде словаря с ключом `"response"`.
+
+    4. **Обработка ошибок**:
+       - Если в процессе взаимодействия с моделью возникает ошибка, функция логирует ошибку с помощью `logger.error` и вызывает исключение `HTTPException` с кодом 500 и детальным описанием ошибки.
     """
 ```
 
-**Описание**: Обрабатывает POST запросы к endpoint `/api/chat` и возвращает ответ от модели Gemini.
+## Классы
 
-**Как работает функция**:
-Функция `chat` принимает объект `ChatRequest`, содержащий сообщение пользователя, и передает это сообщение модели `GoogleGenerativeAI` для получения ответа. Затем она возвращает ответ модели в формате JSON. В случае возникновения ошибки в процессе обработки запроса или получения ответа от модели, функция логирует ошибку и возвращает HTTP исключение с кодом состояния 500 и детальным описанием ошибки.
+### `ChatRequest`
+
+**Описание**:
+Класс `ChatRequest` представляет собой модель данных для запроса чата. Он использует Pydantic для определения структуры запроса и валидации данных.
+
+**Как работает класс**:
+Класс `ChatRequest` содержит одно поле `message` типа `str`, которое представляет собой сообщение, отправленное пользователем в чат. Pydantic автоматически выполняет валидацию типа данных при создании экземпляра класса.
 
 **Параметры**:
-- `request` (ChatRequest): Объект запроса, содержащий сообщение чата.
+- `message` (str): Сообщение для чата.
 
-**Возвращает**:
-- `dict`: Ответ от модели чата в формате JSON.
+## Переменные
 
-**Вызывает исключения**:
-- `HTTPException`: В случае ошибки при обработке запроса или получении ответа от модели.
-
-**Примеры**:
-```python
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from src.ai import GoogleGenerativeAI
-from src.logger import logger
-
-app = FastAPI()
-
-class ChatRequest(BaseModel):
-    message: str
-
-# Предположим, что model - это экземпляр GoogleGenerativeAI, настроенный ранее
-@app.post("/api/chat")
-async def chat(request: ChatRequest):
-    global model
-    try:
-        response = await model.chat(request.message)
-        return {"response": response}
-    except Exception as ex:
-        logger.error(f"Error in chat: ",ex)
-        raise HTTPException(status_code=500, detail=str(ex))
+- `app`: Экземпляр класса `FastAPI`, используемый для создания API.
+- `system_instruction`: Строка, содержащая системные инструкции, прочитанные из файла `instructions/system_instruction.md`.
+- `model`: Экземпляр класса `GoogleGenerativeAI`, используемый для взаимодействия с моделью Google Gemini.
