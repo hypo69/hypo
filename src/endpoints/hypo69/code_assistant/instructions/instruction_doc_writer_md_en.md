@@ -68,7 +68,17 @@ The documentation must meet the following requirements:
      ...
      except SomeError as ex:
          logger.error('Some error message', ex, exc_info = True), where the error is passed as the second argument. exc_info determines whether to output service information.
-     ```
+    ```
+
+    _ If the code uses a webdriver, know how to use it
+    inherit Driver, Chrome, Firexox, Playwright
+    Next define it as
+    # Creating a driver instance (example with Chrome)
+    driver = Drivewr(Chrome)
+    The Driver and Chrome, Firexox, Playwright modules already contain all selenium settings.
+    The main command that is used in the code: `driver.execute_locator(l:dict)`
+    It returns the value of the webelement by locator.
+
    - All comments and docstrings must be in Russian in UTF-8 format. If the code's docstrings are in English, translate them to Russian
 
 2. **Table of Contents (TOC)**:
@@ -86,9 +96,9 @@ The documentation must meet the following requirements:
      **Purpose**: Purpose of the function.
 
      **How the function works**:
-     <Explain in detail the purpose of the function. Provide a detailed description of what transformation actions occur in the function body>
+     1.  <Explain in detail the purpose of the function. Provide a detailed description of what transformation actions occur in the function body>
 
-     The following actions and transformations occur inside the function:
+     2.  The following actions and transformations occur inside the function:
      A
      |
      -- C
@@ -97,9 +107,7 @@ The documentation must meet the following requirements:
      |
      F
 
-     Where `A,B,C,D,E,F` are internal logical blocks of the function
-
-     If there are inner functions inside the function, consider each of them separately
+     Where `A,B,C,D,E,F` are internal logical blocks of the function. Do not use abbreviations A,B,C,... give logical names to the blocks
 
      **Parameters**:
      - `param` (str): Description of the `param` parameter.
@@ -110,6 +118,9 @@ The documentation must meet the following requirements:
 
      **Raises Exceptions**:
      - `SomeError`: Description of the situation in which the `SomeError` exception occurs.
+
+     If there are inner functions inside the function, consider each of them in detail separately
+     **Inner functions**: If any
      
 4. **Section Headers**:
    - Use first-level (`#`), second-level (`##`), third-level (`###`) and fourth-level (`####`) headers sequentially throughout the file.
@@ -135,6 +146,7 @@ The documentation must meet the following requirements:
 
     **How the class works**:
         Explain how the class works. If the class is complex, provide a detailed code analysis
+
    Document EACH function or method. Explain the purpose of each variable.
    - All comments and docstrings must be in Russian in UTF-8 format. If the original code is written in English, translate it to Russian
 
@@ -146,7 +158,6 @@ The documentation must meet the following requirements:
    - `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
    **Examples**
    - Examples of defining a class and working with the class
-
 
    ## Functions
 

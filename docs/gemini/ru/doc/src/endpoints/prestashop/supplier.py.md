@@ -1,56 +1,52 @@
-# Модуль для работы с поставщиками PrestaShop
+# Модуль `src.endpoints.prestashop.supplier`
 
 ## Обзор
 
-Модуль `src.endpoints.prestashop.supplier` предоставляет класс `PrestaSupplier` для взаимодействия с API PrestaShop с целью управления информацией о поставщиках. Он наследуется от класса `PrestaShop` и предоставляет функциональность для инициализации и настройки соединения с API PrestaShop.
+Модуль `src.endpoints.prestashop.supplier` предназначен для работы с поставщиками в PrestaShop. Он содержит класс `PrestaSupplier`, который расширяет функциональность класса `PrestaShop` и предоставляет методы для взаимодействия с API PrestaShop для управления информацией о поставщиках.
 
 ## Подробней
 
-Этот модуль предназначен для упрощения работы с поставщиками в PrestaShop. Он позволяет инициализировать подключение к API PrestaShop, используя домен API и ключ API, которые могут быть переданы как отдельные параметры или как часть словаря с учетными данными.
+Этот модуль предоставляет удобный интерфейс для выполнения операций, связанных с поставщиками, таких как получение списка поставщиков, добавление нового поставщика, обновление информации о существующем поставщике и удаление поставщика. Модуль использует API PrestaShop для взаимодействия с интернет-магазином. Для работы требуется указать домен API и ключ API PrestaShop.
 
 ## Классы
 
 ### `PrestaSupplier`
 
-**Описание**: Класс `PrestaSupplier` предназначен для работы с поставщиками PrestaShop. Он наследуется от класса `PrestaShop` и предоставляет методы для взаимодействия с API PrestaShop.
+**Описание**: Класс `PrestaSupplier` предназначен для работы с поставщиками PrestaShop. Он наследуется от класса `PrestaShop` и предоставляет методы для выполнения операций, связанных с поставщиками.
 
 **Как работает класс**:
-
-1.  При инициализации класса происходит проверка наличия необходимых параметров для подключения к API PrestaShop (домен и ключ API).
-2.  Если параметры переданы через словарь `credentials`, они извлекаются из него.
-3.  Если параметры не переданы или отсутствуют, вызывается исключение `ValueError`.
-4.  Вызывается конструктор родительского класса `PrestaShop` для инициализации соединения с API.
+1.  При инициализации класса проверяются переданные параметры `api_domain` и `api_key`. Если они не указаны, выбрасывается исключение `ValueError`.
+2.  Вызывается конструктор родительского класса `PrestaShop` с переданными параметрами.
 
 **Методы**:
 
-*   `__init__`: Инициализация экземпляра класса `PrestaSupplier`.
+-   `__init__`: Инициализирует экземпляр класса `PrestaSupplier`.
 
     **Параметры**:
-
-    *   `credentials` (Optional[dict | SimpleNamespace], optional): Словарь или объект `SimpleNamespace` с параметрами `api_domain` и `api_key`. По умолчанию `None`.
-    *   `api_domain` (Optional[str], optional): Домен API. По умолчанию `None`.
-    *   `api_key` (Optional[str], optional): Ключ API. По умолчанию `None`.
+    -   `credentials` (Optional[dict | SimpleNamespace], optional): Словарь или объект `SimpleNamespace`, содержащий параметры `api_domain` и `api_key`. По умолчанию `None`.
+    -   `api_domain` (Optional[str], optional): Домен API PrestaShop. По умолчанию `None`.
+    -   `api_key` (Optional[str], optional): Ключ API PrestaShop. По умолчанию `None`.
+    -   `*args`: Произвольные позиционные аргументы, передаваемые в конструктор родительского класса `PrestaShop`.
+    -   `**kwards`: Произвольные именованные аргументы, передаваемые в конструктор родительского класса `PrestaShop`.
 
     **Возвращает**:
-
-    *   None
+    -   `None`
 
     **Вызывает исключения**:
+    -   `ValueError`: Если не указаны оба параметра `api_domain` и `api_key`.
 
-    *   `ValueError`: Если не переданы `api_domain` или `api_key`.
-
-    **Примеры**:
+    **Пример**:
 
     ```python
     from types import SimpleNamespace
-    # Пример 1: Инициализация с использованием отдельных параметров
-    supplier = PrestaSupplier(api_domain='your_api_domain', api_key='your_api_key')
 
-    # Пример 2: Инициализация с использованием словаря credentials
-    credentials = {'api_domain': 'your_api_domain', 'api_key': 'your_api_key'}
+    # Инициализация с использованием словаря
+    supplier = PrestaSupplier(credentials={'api_domain': 'example.com', 'api_key': 'test_key'})
+
+    # Инициализация с использованием SimpleNamespace
+    credentials = SimpleNamespace(api_domain='example.com', api_key='test_key')
     supplier = PrestaSupplier(credentials=credentials)
 
-    # Пример 3: Инициализация с использованием SimpleNamespace
-    credentials = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
-    supplier = PrestaSupplier(credentials=credentials)
+    # Инициализация с указанием параметров api_domain и api_key напрямую
+    supplier = PrestaSupplier(api_domain='example.com', api_key='test_key')
     ```

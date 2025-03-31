@@ -1,23 +1,20 @@
-# Модуль `api_async`
+# Модуль `api_async.py`
 
 ## Обзор
 
-Модуль `api_async` предоставляет асинхронный класс `PrestaShopAsync` для взаимодействия с API PrestaShop, используя JSON и XML. Этот класс обеспечивает асинхронные методы для выполнения CRUD-операций, поиска и загрузки изображений. Также, в классе реализована обработка ошибок и методы для управления данными API.
+Модуль предоставляет асинхронный класс `PrestaShopAsync` для взаимодействия с API PrestaShop.
+Он поддерживает операции CRUD, поиск и загрузку изображений. Модуль включает обработку ошибок и методы для работы с данными API.
 
-## Подробнее
+## Подробней
 
-Модуль предназначен для асинхронного взаимодействия с API PrestaShop, что позволяет выполнять запросы не блокируя основной поток выполнения. Это особенно полезно для приложений, требующих высокой производительности и отзывчивости.
-
-## Содержание
-
-- [Классы](#Классы)
-    - [Format](#Format)
-    - [PrestaShopAsync](#PrestaShopAsync)
-- [Функции](#Функции)
+Этот модуль предназначен для упрощения асинхронного взаимодействия с API PrestaShop. Он предоставляет методы для выполнения различных операций, таких как создание, чтение, обновление и удаление ресурсов, а также для поиска и загрузки изображений.
 
 ## Классы
 
 ### `Format`
+
+**Описание**:
+Перечисление, определяющее типы данных, возвращаемые API (JSON, XML).
 
 ```python
 class Format(Enum):
@@ -32,10 +29,14 @@ class Format(Enum):
     XML = 'XML'
 ```
 
-**Описание**:
-Перечисление, определяющее форматы данных, возвращаемые API (JSON, XML).
+**Как работает класс**:
+
+Перечисление `Format` определяет два возможных формата данных: `JSON` и `XML`. Формат `XML` помечен как устаревший.
 
 ### `PrestaShopAsync`
+
+**Описание**:
+Асинхронный класс для взаимодействия с API PrestaShop с использованием JSON и XML.
 
 ```python
 class PrestaShopAsync:
@@ -117,7 +118,53 @@ class PrestaShopAsync:
     ps_version = ''
     API_DOMAIN:str = None
     API_KEY:str = None
+```
 
+**Как работает класс**:
+
+Класс `PrestaShopAsync` предоставляет асинхронные методы для взаимодействия с API PrestaShop.
+Он позволяет выполнять операции CRUD (создание, чтение, обновление, удаление), поиск и загрузку изображений.
+Класс включает обработку ошибок и методы для обработки данных API.
+
+**Атрибуты**:
+
+-   `client` (ClientSession): Асинхронный клиент сессии для выполнения HTTP-запросов.
+-   `debug` (bool): Флаг для активации режима отладки.
+-   `lang_index` (Optional[int]): Индекс языка по умолчанию.
+-   `data_format` (str): Формат данных по умолчанию ('JSON' или 'XML').
+-   `ps_version` (str): Версия PrestaShop.
+-   `API_DOMAIN` (str): Домен API PrestaShop.
+-   `API_KEY` (str): Ключ API PrestaShop.
+
+**Методы**:
+
+-   `__init__`: Инициализирует класс `PrestaShopAsync`.
+-   `ping`: Проверяет работоспособность веб-сервиса асинхронно.
+-   `_check_response`: Проверяет статус код ответа и обрабатывает ошибки асинхронно.
+-   `_parse_response_error`: Разбирает ответ об ошибке от API PrestaShop асинхронно.
+-   `_prepare`: Подготавливает URL для запроса.
+-   `_exec`: Выполняет HTTP-запрос к API PrestaShop асинхронно.
+-   `_parse`: Разбирает XML или JSON ответ от API асинхронно.
+-   `create`: Создает новый ресурс в API PrestaShop асинхронно.
+-   `read`: Читает ресурс из API PrestaShop асинхронно.
+-   `write`: Обновляет существующий ресурс в API PrestaShop асинхронно.
+-   `unlink`: Удаляет ресурс из API PrestaShop асинхронно.
+-   `search`: Ищет ресурсы в API PrestaShop асинхронно.
+-   `create_binary`: Загружает бинарный файл в ресурс API PrestaShop асинхронно.
+-   `_save`: Сохраняет данные в файл.
+-   `get_data`: Получает данные из ресурса API PrestaShop и сохраняет их асинхронно.
+-   `remove_file`: Удаляет файл из файловой системы.
+-   `get_apis`: Получает список всех доступных API асинхронно.
+-   `get_languages_schema`: Получает схему для языков асинхронно.
+-   `upload_image_async`: Загружает изображение в API PrestaShop асинхронно.
+-   `upload_image`: Загружает изображение в API PrestaShop асинхронно.
+-   `get_product_images`: Получает изображения для продукта асинхронно.
+
+## Функции
+
+### `__init__`
+
+```python
     def __init__(self,
                 api_domain:str,
                 api_key:str,
@@ -143,7 +190,31 @@ class PrestaShopAsync:
             auth=aiohttp.BasicAuth(self.API_KEY, ''),
             timeout=ClientTimeout(total=60)
         )
+```
 
+**Назначение**:
+Инициализация класса `PrestaShopAsync`.
+
+**Как работает функция**:
+
+1.  Сохраняет значения переданных аргументов `api_domain`, `api_key`, `debug` и `data_format` в атрибуты экземпляра класса.
+2.  Инициализирует асинхронную сессию `ClientSession` с использованием ключа API для аутентификации. Устанавливает общее время ожидания для запросов в 60 секунд.
+
+**Параметры**:
+
+-   `api_domain` (str): Домен API PrestaShop.
+-   `api_key` (str): Ключ API PrestaShop.
+-   `data_format` (str, optional): Формат данных по умолчанию ('JSON' или 'XML'). По умолчанию 'JSON'.
+-   `debug` (bool, optional): Флаг для активации режима отладки. По умолчанию `True`.
+
+**Вызывает исключения**:
+
+-   `PrestaShopAuthenticationError`: Если ключ API неверен или не существует.
+-   `PrestaShopException`: Для общих ошибок веб-сервисов PrestaShop.
+
+### `ping`
+
+```python
     async def ping(self) -> bool:
         """! Test if the webservice is working perfectly asynchronously.
 
@@ -155,7 +226,24 @@ class PrestaShopAsync:
             url=self.API_DOMAIN
         ) as response:
             return await self._check_response(response.status, response)
+```
 
+**Назначение**:
+Проверка работоспособности веб-сервиса асинхронно.
+
+**Как работает функция**:
+
+1.  Выполняет `HEAD` запрос к домену API.
+2.  Передает статус код ответа и сам ответ в метод `_check_response` для проверки.
+3.  Возвращает результат проверки, который показывает, работает ли веб-сервис.
+
+**Возвращает**:
+
+-   `bool`: `True`, если веб-сервис работает, иначе `False`.
+
+### `_check_response`
+
+```python
     def _check_response(self, status_code: int, response, method: Optional[str] = None, url: Optional[str] = None,
                         headers: Optional[dict] = None, data: Optional[dict] = None) -> bool:
         """! Check the response status code and handle errors asynchronously.
@@ -176,7 +264,33 @@ class PrestaShopAsync:
         else:
             self._parse_response_error(response, method, url, headers, data)
             return False
+```
 
+**Назначение**:
+Проверка статус кода ответа и обработка ошибок асинхронно.
+
+**Как работает функция**:
+
+1.  Проверяет, находится ли статус код ответа в диапазоне 200-201 (успешные коды).
+2.  Если статус код не успешный, вызывает метод `_parse_response_error` для обработки ошибки.
+3.  Возвращает `True`, если статус код успешный, иначе `False`.
+
+**Параметры**:
+
+-   `status_code` (int): HTTP статус код ответа.
+-   `response` (aiohttp.ClientResponse): Объект HTTP ответа.
+-   `method` (str, optional): HTTP метод, использованный для запроса.
+-   `url` (str, optional): URL запроса.
+-   `headers` (dict, optional): Заголовки запроса.
+-   `data` (dict, optional): Данные, отправленные в запросе.
+
+**Возвращает**:
+
+-   `bool`: `True`, если статус код 200 или 201, иначе `False`.
+
+### `_parse_response_error`
+
+```python
     def _parse_response_error(self, response, method: Optional[str] = None, url: Optional[str] = None,
                               headers: Optional[dict] = None, data: Optional[dict] = None):
         """! Parse the error response from PrestaShop API asynchronously.
@@ -216,7 +330,35 @@ class PrestaShopAsync:
                 message = error.find('message').text
             logger.error(f'XML response error: {message} \n Code: {code}')
             return code, message
+```
 
+**Назначение**:
+Разбор ответа об ошибке от API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Проверяет формат данных (`data_format`).
+2.  Если формат `JSON`:
+    *   Получает статус код ответа.
+    *   Если статус код не успешный, извлекает текст ответа и регистрирует критическое сообщение с информацией о статус коде, URL, заголовках и тексте ответа.
+    *   Возвращает объект ответа.
+3.  Если формат `XML`:
+    *   Разбирает текст ответа с помощью метода `_parse`.
+    *   Извлекает код и сообщение об ошибке из разобранного ответа.
+    *   Регистрирует сообщение об ошибке с кодом и сообщением.
+    *   Возвращает код и сообщение об ошибке.
+
+**Параметры**:
+
+-   `response` (aiohttp.ClientResponse): Объект HTTP ответа от сервера.
+-   `method` (str, optional): HTTP метод, использованный для запроса.
+-   `url` (str, optional): URL запроса.
+-   `headers` (dict, optional): Заголовки запроса.
+-   `data` (dict, optional): Данные, отправленные в запросе.
+
+### `_prepare`
+
+```python
     def _prepare(self, url: str, params: dict) -> str:
         """! Prepare the URL for the request.
 
@@ -230,7 +372,29 @@ class PrestaShopAsync:
         req = PreparedRequest()
         req.prepare_url(url, params)
         return req.url
+```
 
+**Назначение**:
+Подготовка URL для запроса.
+
+**Как работает функция**:
+
+1.  Создает объект `PreparedRequest`.
+2.  Подготавливает URL с параметрами с помощью метода `prepare_url`.
+3.  Возвращает подготовленный URL.
+
+**Параметры**:
+
+-   `url` (str): Базовый URL.
+-   `params` (dict): Параметры для запроса.
+
+**Возвращает**:
+
+-   `str`: Подготовленный URL с параметрами.
+
+### `_exec`
+
+```python
     async def _exec(self,
               resource: str,
               resource_id: Optional[Union[int, str]] = None,
@@ -271,7 +435,7 @@ class PrestaShopAsync:
             # original_stderr = sys.stderr
             # f = open('stderr.log', 'w')
             # sys.stderr = f
-            
+
             # prepared_url = self._prepare(f'{self.API_DOMAIN}/api/{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}/api/{resource}',
             #                       {'filter': search_filter,
             #                        'display': display,
@@ -280,9 +444,9 @@ class PrestaShopAsync:
             #                        'limit': limit,
             #                        'language': language,
             #                        'output_format': io_format})
-            
+
             # request_data = dict2xml(data) if data and io_format == 'XML' else data
-            
+
             # with self.client.request(
             #     method=method,
             #     url=prepared_url,
@@ -326,7 +490,43 @@ class PrestaShopAsync:
                     return response.json()
                 else:
                     return self._parse(await response.text())
+```
 
+**Назначение**:
+Выполнение HTTP-запроса к API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Отключает режим отладки (`self.debug = False`).
+2.  Подготавливает URL запроса, используя метод `_prepare`, с учетом указанных параметров, таких как фильтры, схема, сортировка, лимит и язык.
+3.  Преобразует данные запроса в формат XML, если указан формат XML (`io_format == 'XML'`).
+4.  Выполняет HTTP-запрос с использованием асинхронного клиента `self.client.request` с указанным методом, URL, данными и заголовками.
+5.  Проверяет статус ответа с помощью метода `_check_response`. Если статус не успешный, возвращает `False`.
+6.  В зависимости от формата ответа (`io_format`) возвращает JSON или разбирает XML с помощью метода `_parse`.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'products', 'categories').
+-   `resource_id` (int | str, optional): ID ресурса.
+-   `resource_ids` (int | tuple, optional): ID нескольких ресурсов.
+-   `method` (str, optional): HTTP метод (GET, POST, PUT, DELETE).
+-   `data` (dict, optional): Данные для отправки с запросом.
+-   `headers` (dict, optional): Дополнительные заголовки для запроса.
+-   `search_filter` (str | dict, optional): Фильтр для запроса.
+-   `display` (str | list, optional): Поля для отображения в ответе.
+-   `schema` (str, optional): Схема данных.
+-   `sort` (str, optional): Параметр сортировки для запроса.
+-   `limit` (str, optional): Лимит результатов для запроса.
+-   `language` (int, optional): ID языка для запроса.
+-   `io_format` (str, optional): Формат данных ('JSON' или 'XML').
+
+**Возвращает**:
+
+-   `dict | None`: Ответ от API или `False` в случае неудачи.
+
+### `_parse`
+
+```python
     def _parse(self, text: str) -> dict | ElementTree.Element | bool:
         """! Parse XML or JSON response from the API asynchronously.
 
@@ -346,7 +546,33 @@ class PrestaShopAsync:
         except (ExpatError, ValueError) as ex:
             logger.error(f'Parsing Error: {str(ex)}')
             return False
+```
 
+**Назначение**:
+Разбор XML или JSON ответа от API асинхронно.
+
+**Как работает функция**:
+
+1.  Пытается разобрать текст ответа в зависимости от формата данных (`data_format`).
+2.  Если формат `JSON`:
+    *   Использует `j_loads` для разбора JSON.
+    *   Если в данных есть ключ 'PrestaShop', возвращает значение этого ключа, иначе возвращает данные целиком.
+3.  Если формат `XML`:
+    *   Использует `ElementTree.fromstring` для разбора XML.
+    *   Возвращает дерево элементов.
+4.  В случае ошибки разбора регистрирует ошибку и возвращает `False`.
+
+**Параметры**:
+
+-   `text` (str): Текст ответа.
+
+**Возвращает**:
+
+-   `dict | ElementTree.Element | bool`: Разобранные данные или `False` в случае неудачи.
+
+### `create`
+
+```python
     async def create(self, resource: str, data: dict) -> Optional[dict]:
         """! Create a new resource in PrestaShop API asynchronously.
 
@@ -358,7 +584,28 @@ class PrestaShopAsync:
              dict: Response from the API.
         """
         return await self._exec(resource=resource, method='POST', data=data, io_format=self.data_format)
+```
 
+**Назначение**:
+Создание нового ресурса в API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Вызывает метод `_exec` с указанием ресурса, метода `POST`, данных и формата данных.
+2.  Возвращает ответ от API.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'products').
+-   `data` (dict): Данные для нового ресурса.
+
+**Возвращает**:
+
+-   `dict`: Ответ от API.
+
+### `read`
+
+```python
     async def read(self, resource: str, resource_id: Union[int, str], **kwargs) -> Optional[dict]:
         """! Read a resource from the PrestaShop API asynchronously.
 
@@ -370,7 +617,28 @@ class PrestaShopAsync:
             dict: Response from the API.
         """
         return await self._exec(resource=resource, resource_id=resource_id, method='GET', io_format= self.data_format)
+```
 
+**Назначение**:
+Чтение ресурса из API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Вызывает метод `_exec` с указанием ресурса, ID ресурса, метода `GET` и формата данных.
+2.  Возвращает ответ от API.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'products').
+-   `resource_id` (int | str): ID ресурса.
+
+**Возвращает**:
+
+-   `dict`: Ответ от API.
+
+### `write`
+
+```python
     async def write(self, resource: str, data: dict) -> Optional[dict]:
         """! Update an existing resource in the PrestaShop API asynchronously.
 
@@ -383,7 +651,28 @@ class PrestaShopAsync:
         """
         return await self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data,
                           io_format=self.data_format)
+```
 
+**Назначение**:
+Обновление существующего ресурса в API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Вызывает метод `_exec` с указанием ресурса, ID ресурса (из данных), метода `PUT`, данных и формата данных.
+2.  Возвращает ответ от API.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'products').
+-   `data` (dict): Данные для ресурса.
+
+**Возвращает**:
+
+-   `dict`: Ответ от API.
+
+### `unlink`
+
+```python
     async def unlink(self, resource: str, resource_id: Union[int, str]) -> bool:
         """! Delete a resource from the PrestaShop API asynchronously.
 
@@ -395,7 +684,28 @@ class PrestaShopAsync:
             bool: `True` if successful, `False` otherwise.
         """
         return await self._exec(resource=resource, resource_id=resource_id, method='DELETE', io_format=self.data_format)
+```
 
+**Назначение**:
+Удаление ресурса из API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Вызывает метод `_exec` с указанием ресурса, ID ресурса, метода `DELETE` и формата данных.
+2.  Возвращает `True`, если удаление успешно, иначе `False`.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'products').
+-   `resource_id` (int | str): ID ресурса.
+
+**Возвращает**:
+
+-   `bool`: `True`, если успешно, `False` иначе.
+
+### `search`
+
+```python
     async def search(self, resource: str, filter: Optional[Union[str, dict]] = None, **kwargs) -> List[dict]:
         """! Search for resources in the PrestaShop API asynchronously.
 
@@ -407,7 +717,28 @@ class PrestaShopAsync:
              List[dict]: List of resources matching the search criteria.
         """
         return await self._exec(resource=resource, search_filter=filter, method='GET', io_format=self.data_format, **kwargs)
+```
 
+**Назначение**:
+Поиск ресурсов в API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Вызывает метод `_exec` с указанием ресурса, фильтра поиска, метода `GET`, формата данных и дополнительных аргументов.
+2.  Возвращает список ресурсов, соответствующих критериям поиска.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'products').
+-   `filter` (str | dict, optional): Фильтр для поиска.
+
+**Возвращает**:
+
+-   `List[dict]`: Список ресурсов, соответствующих критериям поиска.
+
+### `create_binary`
+
+```python
     async def create_binary(self, resource: str, file_path: str, file_name: str) -> dict:
         """! Upload a binary file to a PrestaShop API resource asynchronously.
 
@@ -428,7 +759,31 @@ class PrestaShopAsync:
             ) as response:
 
                return response.json()
+```
 
+**Назначение**:
+Загрузка бинарного файла в ресурс API PrestaShop асинхронно.
+
+**Как работает функция**:
+
+1.  Открывает файл в бинарном режиме для чтения.
+2.  Устанавливает заголовок `Content-Type` как `application/octet-stream`.
+3.  Выполняет `POST` запрос к указанному ресурсу API с телом файла.
+4.  Возвращает JSON ответ от API.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'images/products/22').
+-   `file_path` (str): Путь к бинарному файлу.
+-   `file_name` (str): Имя файла.
+
+**Возвращает**:
+
+-   `dict`: Ответ от API.
+
+### `_save`
+
+```python
     def _save(self, file_name: str, data: dict):
         """! Save data to a file.
 
@@ -437,7 +792,24 @@ class PrestaShopAsync:
             data (dict): Data to be saved.
         """
         save_text_file(file_name, j_dumps(data, indent=4, ensure_ascii=False))
+```
 
+**Назначение**:
+Сохранение данных в файл.
+
+**Как работает функция**:
+
+1.  Сохраняет данные в файл с указанным именем, используя `j_dumps` для преобразования данных в JSON с отступами и отключенным ASCII.
+2.  Использует функцию `save_text_file` для сохранения текста в файл.
+
+**Параметры**:
+
+-   `file_name` (str): Имя файла.
+-   `data` (dict): Данные для сохранения.
+
+### `get_data`
+
+```python
     async def get_data(self, resource: str, **kwargs) -> Optional[dict]:
         """! Fetch data from a PrestaShop API resource and save it asynchronously.
 
@@ -453,7 +825,30 @@ class PrestaShopAsync:
             self._save(f'{resource}.json', data)
             return data
         return False
+```
 
+**Назначение**:
+Получение данных из ресурса API PrestaShop и сохранение их асинхронно.
+
+**Как работает функция**:
+
+1.  Вызывает метод `_exec` для получения данных из API.
+2.  Если данные получены, сохраняет их в файл с именем `{resource}.json` с помощью метода `_save`.
+3.  Возвращает полученные данные.
+4.  Если данные не получены, возвращает `False`.
+
+**Параметры**:
+
+-   `resource` (str): API ресурс (например, 'products').
+-   `**kwargs`: Дополнительные аргументы для API запроса.
+
+**Возвращает**:
+
+-   `dict | None`: Данные из API или `False` в случае неудачи.
+
+### `remove_file`
+
+```python
     def remove_file(self, file_path: str):
         """! Remove a file from the filesystem.
 
@@ -462,337 +857,14 @@ class PrestaShopAsync:
         """
         try:
             os.remove(file_path)
-        except Exception as e:
-            logger.error(f'Error removing file {file_path}: {e}')
-
-    async def get_apis(self) -> Optional[dict]:
-        """! Get a list of all available APIs asynchronously.
-
-        Returns:
-             dict: List of available APIs.
-        """
-        return await self._exec('apis', method='GET', io_format=self.data_format)
-
-    async def get_languages_schema(self) -> Optional[dict]:
-        """! Get the schema for languages asynchronously.
-
-        Returns:
-            dict: Language schema or `None` on failure.
-        """
-        try:
-            response = await self._exec('languages', display='full', io_format='JSON')
-            return response
         except Exception as ex:
-            logger.error(f'Error: {ex}')
-            return
-
-    async def upload_image_async(self, resource: str, resource_id: int, img_url: str,
-                           img_name: Optional[str] = None) -> Optional[dict]:
-        """! Upload an image to PrestaShop API asynchronously.
-
-        Args:
-            resource (str): API resource (e.g., 'images/products/22').
-            resource_id (int): Resource ID.
-            img_url (str): URL of the image.
-            img_name (str, optional): Name of the image file, defaults to None.
-
-        Returns:
-            dict | None: Response from the API or `False` on failure.
-        """
-        url_parts = img_url.rsplit('.', 1)
-        url_without_extension = url_parts[0]
-        extension = url_parts[1] if len(url_parts) > 1 else ''
-        filename = str(resource_id) + f'_{img_name}.{extension}'
-        png_file_path = await save_image_from_url(img_url, filename)
-        response = await self.create_binary(resource, png_file_path, img_name)
-        self.remove_file(png_file_path)
-        return response
-
-    async def upload_image(self, resource: str, resource_id: int, img_url: str,
-                     img_name: Optional[str] = None) -> Optional[dict]:
-        """! Upload an image to PrestaShop API asynchronously.
-
-        Args:
-            resource (str): API resource (e.g., 'images/products/22').
-            resource_id (int): Resource ID.
-            img_url (str): URL of the image.
-            img_name (str, optional): Name of the image file, defaults to None.
-
-        Returns:
-            dict | None: Response from the API or `False` on failure.
-        """
-        url_parts = img_url.rsplit('.', 1)
-        url_without_extension = url_parts[0]
-        extension = url_parts[1] if len(url_parts) > 1 else ''
-        filename = str(resource_id) + f'_{img_name}.{extension}'
-        png_file_path = await save_image_from_url(img_url, filename)
-        response = await self.create_binary(resource, png_file_path, img_name)
-        self.remove_file(png_file_path)
-        return response
-
-    async def get_product_images(self, product_id: int) -> Optional[dict]:
-        """! Get images for a product asynchronously.
-
-        Args:
-            product_id (int): Product ID.
-
-        Returns:
-            dict | None: List of product images or `False` on failure.
-        """
-        return await self._exec(f'products/{product_id}/images', method='GET', io_format=self.data_format)
+            logger.error(f'Error removing file {file_path}: {ex}')
 ```
 
-**Описание**:
-Асинхронный класс для взаимодействия с API PrestaShop.
+**Назначение**:
+Удаление файла из файловой системы.
 
-**Как работает класс**:
+**Как работает функция**:
 
-1.  **Инициализация**:
-    *   При инициализации класса `PrestaShopAsync` задаются основные параметры для работы с API PrestaShop, такие как домен API, ключ API, формат данных и режим отладки.
-    *   Создается клиентская сессия `ClientSession` для выполнения асинхронных запросов с использованием аутентификации на основе API-ключа.
-2.  **Основные методы**:
-    *   `ping`: Проверяет доступность веб-сервиса PrestaShop.
-    *   `create`, `read`, `write`, `unlink`: Выполняют CRUD-операции (создание, чтение, обновление, удаление) ресурсов PrestaShop.
-    *   `search`: Поиск ресурсов в PrestaShop API с использованием фильтров.
-    *   `create_binary`: Загружает бинарные файлы (например, изображения) в API PrestaShop.
-    *   `get_data`: Получает данные из API PrestaShop и сохраняет их в файл.
-    *   `upload_image`, `upload_image_async`: Загружает изображения в API PrestaShop.
-3.  **Внутренние методы**:
-    *   `_exec`: Выполняет HTTP-запросы к API PrestaShop. Поддерживает различные HTTP-методы, форматы данных и параметры запросов.
-    *   `_prepare`: Подготавливает URL для запроса, добавляя параметры.
-    *   `_check_response`: Проверяет статус ответа от API и обрабатывает ошибки.
-    *   `_parse_response_error`: Разбирает ошибки, полученные от API PrestaShop, и логирует их.
-    *   `_parse`: Разбирает XML или JSON ответы от API.
-
-**Методы**:
-
-*   `__init__(self, api_domain: str, api_key: str, data_format: str = 'JSON', debug: bool = True) -> None`
-
-    ```python
-    def __init__(self,
-                api_domain:str,
-                api_key:str,
-                data_format: str = 'JSON',
-                debug: bool = True) -> None:
-        """! Initialize the PrestaShopAsync class.
-
-        Args:
-            data_format (str, optional): Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
-            default_lang (int, optional): Default language ID. Defaults to 1.
-            debug (bool, optional): Activate debug mode. Defaults to True.
-
-        Raises:
-            PrestaShopAuthenticationError: When the API key is wrong or does not exist.
-            PrestaShopException: For generic PrestaShop WebServices errors.
-        """
-        self.API_DOMAIN = api_domain
-        self.API_KEY = api_key
-        self.debug = debug
-        self.data_format = data_format
-
-        self.client = ClientSession(
-            auth=aiohttp.BasicAuth(self.API_KEY, ''),
-            timeout=ClientTimeout(total=60)
-        )
-    ```
-
-    **Назначение**:
-    Инициализирует класс `PrestaShopAsync`.
-
-    **Как работает метод**:
-
-    1.  Присваивает значения атрибутам экземпляра класса на основе переданных аргументов: `api_domain`, `api_key`, `debug` и `data_format`.
-    2.  Создает экземпляр `ClientSession` из библиотеки `aiohttp` для асинхронных HTTP-запросов. В `ClientSession` устанавливается базовая аутентификация с использованием API-ключа и таймаут для запросов.
-
-    **Параметры**:
-
-    *   `api_domain` (str): Домен API PrestaShop.
-    *   `api_key` (str): Ключ API для аутентификации.
-    *   `data_format` (str, optional): Формат данных по умолчанию ('JSON' или 'XML'). По умолчанию 'JSON'.
-    *   `debug` (bool, optional): Включает режим отладки. По умолчанию `True`.
-
-    **Вызывает исключения**:
-
-    *   `PrestaShopAuthenticationError`: Если API-ключ неверен или не существует.
-    *   `PrestaShopException`: Для общих ошибок веб-сервисов PrestaShop.
-
-*   `ping(self) -> bool`
-
-    ```python
-    async def ping(self) -> bool:
-        """! Test if the webservice is working perfectly asynchronously.
-
-        Returns:
-            bool: Result of the ping test. Returns `True` if the webservice is working, otherwise `False`.
-        """
-        async with self.client.request(
-            method='HEAD',
-            url=self.API_DOMAIN
-        ) as response:
-            return await self._check_response(response.status, response)
-    ```
-
-    **Назначение**:
-    Проверяет работоспособность веб-сервиса асинхронно.
-
-    **Как работает метод**:
-
-    1.  Отправляет `HEAD` запрос к домену API, используя асинхронный клиент `self.client`.
-    2.  Вызывает метод `self._check_response` для проверки статуса ответа.
-    3.  Возвращает `True`, если веб-сервис работает, иначе `False`.
-
-    **Возвращает**:
-
-    *   `bool`: Результат проверки веб-сервиса. Возвращает `True`, если веб-сервис работает, иначе `False`.
-
-*   `_check_response(self, status_code: int, response, method: Optional[str] = None, url: Optional[str] = None, headers: Optional[dict] = None, data: Optional[dict] = None) -> bool`
-
-    ```python
-    def _check_response(self, status_code: int, response, method: Optional[str] = None, url: Optional[str] = None,
-                        headers: Optional[dict] = None, data: Optional[dict] = None) -> bool:
-        """! Check the response status code and handle errors asynchronously.
-
-        Args:
-            status_code (int): HTTP response status code.
-            response (aiohttp.ClientResponse): HTTP response object.
-            method (str, optional): HTTP method used for the request.
-            url (str, optional): The URL of the request.
-            headers (dict, optional): The headers used in the request.
-            data (dict, optional): The data sent in the request.
-
-        Returns:
-            bool: `True` if the status code is 200 or 201, otherwise `False`.
-        """
-        if status_code in (200, 201):
-            return True
-        else:
-            self._parse_response_error(response, method, url, headers, data)
-            return False
-    ```
-
-    **Назначение**:
-    Проверяет код состояния HTTP-ответа и обрабатывает ошибки асинхронно.
-
-    **Как работает метод**:
-
-    1.  Проверяет, находится ли код состояния HTTP-ответа (`status_code`) в диапазоне успешных кодов (200 или 201).
-    2.  Если код состояния успешен, возвращает `True`.
-    3.  В противном случае вызывает метод `self._parse_response_error` для обработки ошибки и возвращает `False`.
-
-    **Параметры**:
-
-    *   `status_code` (int): Код состояния HTTP-ответа.
-    *   `response`: Объект HTTP-ответа.
-    *   `method` (str, optional): HTTP-метод, использованный для запроса.
-    *   `url` (str, optional): URL запроса.
-    *   `headers` (dict, optional): Заголовки запроса.
-    *   `data` (dict, optional): Данные, отправленные в запросе.
-
-    **Возвращает**:
-
-    *   `bool`: `True`, если код состояния 200 или 201, иначе `False`.
-
-*   `_parse_response_error(self, response, method: Optional[str] = None, url: Optional[str] = None, headers: Optional[dict] = None, data: Optional[dict] = None)`
-
-    ```python
-    def _parse_response_error(self, response, method: Optional[str] = None, url: Optional[str] = None,
-                              headers: Optional[dict] = None, data: Optional[dict] = None):
-        """! Parse the error response from PrestaShop API asynchronously.
-
-        Args:
-            response (aiohttp.ClientResponse): HTTP response object from the server.
-            method (str, optional): HTTP method used for the request.
-            url (str, optional): The URL of the request.
-            headers (dict, optional): The headers used in the request.
-            data (dict, optional): The data sent in the request.
-        """
-        if self.data_format == 'JSON':
-            status_code = response.status
-            if not status_code in (200, 201):
-                text = response.text()
-                logger.critical(f"""response status code: {status_code}
-                    url: {response.request_info.url}
-                    --------------
-                    headers: {response.headers}
-                    --------------
-                    response text: {text}""")
-            return response
-        else:
-            error_answer = self._parse(response.text())
-            if isinstance(error_answer, dict):
-                error_content = (error_answer
-                                 .get('PrestaShop', {})
-                                 .get('errors', {})
-                                 .get('error', {}))
-                if isinstance(error_content, list):
-                    error_content = error_content[0]
-                code = error_content.get('code')
-                message = error_content.get('message')
-            elif isinstance(error_answer, ElementTree.Element):
-                error = error_answer.find('errors/error')
-                code = error.find('code').text
-                message = error.find('message').text
-            logger.error(f'XML response error: {message} \n Code: {code}')
-            return code, message
-    ```
-
-    **Назначение**:
-    Асинхронно разбирает ответ об ошибке от API PrestaShop.
-
-    **Как работает метод**:
-
-    1.  Проверяет формат данных (`self.data_format`).
-    2.  Если формат данных `JSON`:
-        *   Получает код состояния HTTP-ответа.
-        *   Если код состояния не 200 и не 201, получает текст ответа и логирует критическую информацию, такую как код состояния, URL, заголовки и текст ответа.
-        *   Возвращает объект ответа.
-    3.  Если формат данных не `JSON` (предположительно `XML`):
-        *   Вызывает метод `self._parse` для разбора текста ответа.
-        *   Если результат разбора является словарем, извлекает код и сообщение об ошибке из структуры ответа.
-        *   Если результат разбора является элементом `ElementTree`, извлекает код и сообщение об ошибке из XML-структуры.
-        *   Логирует сообщение об ошибке и код.
-        *   Возвращает код и сообщение об ошибке.
-
-    **Параметры**:
-
-    *   `response`: Объект HTTP-ответа от сервера.
-    *   `method` (str, optional): HTTP-метод, использованный для запроса.
-    *   `url` (str, optional): URL запроса.
-    *   `headers` (dict, optional): Заголовки запроса.
-    *   `data` (dict, optional): Данные, отправленные в запросе.
-
-*   `_prepare(self, url: str, params: dict) -> str`
-
-    ```python
-    def _prepare(self, url: str, params: dict) -> str:
-        """! Prepare the URL for the request.
-
-        Args:
-            url (str): The base URL.
-            params (dict): The parameters for the request.
-
-        Returns:
-            str: The prepared URL with parameters.
-        """
-        req = PreparedRequest()
-        req.prepare_url(url, params)
-        return req.url
-    ```
-
-    **Назначение**:
-    Подготавливает URL для запроса.
-
-    **Как работает метод**:
-
-    1.  Создает объект `PreparedRequest`.
-    2.  Использует метод `prepare_url` объекта `PreparedRequest` для добавления параметров к базовому URL.
-    3.  Возвращает подготовленный URL.
-
-    **Параметры**:
-
-    *   `url` (str): Базовый URL.
-    *   `params` (dict): Параметры для запроса.
-
-    **Возвращает**:
-
-    *   `str`:
+1.  Пытается удалить файл по указанному пути с помощью `os.remove`.
+2.  В случае ошибки регистрирует ошибку с использованием

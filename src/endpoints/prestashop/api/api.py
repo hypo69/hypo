@@ -550,3 +550,18 @@ class PrestaShop:
         :rtype: dict | None
         """
         return self._exec(f'products/{product_id}/images', method='GET', data_format=self.data_format)
+
+
+    ####################################################################################################################################
+
+    resource: str = 'products'
+
+    def get(resource):
+        """"""
+
+    def main():
+        """"""
+
+
+    if __name__ == '__main__':
+        main()

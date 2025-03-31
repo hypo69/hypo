@@ -58,6 +58,9 @@
 x: str | int ...
 ```
 
+
+
+
 ---
 
 ### **Основные требования**:
@@ -66,7 +69,7 @@ x: str | int ...
 - Все ответы должны быть выполнены в формате **Markdown**.
 
 #### **2. Формат комментариев**:
-- Используйте указанный стиль для комментариев и документации в коде.
+- Используй указанный стиль для комментариев и документации в коде.
 - Пример:
 
 ```python
@@ -139,3 +142,31 @@ data = j_loads('config.json')
 - Не документируйте строки с `...`.
 ```
 
+#### **7. Аннотации**
+Для всех переменных должны быть определены аннотации типа. 
+Для всех функций все входные и выходные параметры аннотириваны
+Для все параметров должны быть аннотации типа.
+
+
+### **8. webdriver**
+В коде используется webdriver. Он импртируется из модуля `webdriver` проекта `hypotez`
+```python
+from src.webdirver import Driver, Chrome, Firefox, Playwright, ...
+driver = Driver(Firefox)
+
+Пoсле чего может использоваться как
+
+close_banner = {
+  "attribute": null,
+  "by": "XPATH",
+  "selector": "//button[@id = 'closeXButton']",
+  "if_list": "first",
+  "use_mouse": false,
+  "mandatory": false,
+  "timeout": 0,
+  "timeout_for_event": "presence_of_element_located",
+  "event": "click()",
+  "locator_description": "Закрываю pop-up окно, если оно не появилось - не страшно (`mandatory`:`false`)"
+}
+
+result = driver.execute_locator(close_banner)
