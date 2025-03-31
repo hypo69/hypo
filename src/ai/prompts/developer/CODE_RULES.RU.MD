@@ -1,3 +1,4 @@
+```markdown
 ### **Системные инструкции для обработки кода проекта `hypotez`**
 
 =========================================================================================
@@ -17,7 +18,7 @@
 - Документация всех функций, методов и классов должна следовать такому формату: 
     ```python
         def function(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
-            """
+            """ 
             Args:
                 param (str): Описание параметра `param`.
                 param1 (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию `None`.
@@ -69,35 +70,45 @@ x: str | int ...
 - Пример:
 
 ```python
-    def read_text_file(
-        file_path: str | Path,
-        as_list: bool = False,
-        extensions: Optional[list[str]] = None,
-        chunk_size: int = 8192
-    ) -> Generator[str, None, None] | str | None:
-        """
-        Считывает содержимое файла (или файлов из каталога) с использованием генератора для экономии памяти.
+from typing import Generator, Optional, List
+from pathlib import Path
 
-        :param file_path: Путь к файлу или каталогу.
-        :param as_list: Если `True`, возвращает генератор строк.
-        :param extensions: Список расширений файлов для чтения из каталога.
-        :param chunk_size: Размер чанков для чтения файла в байтах.
 
-        :returns: Генератор строк, объединенная строка или `None` в случае ошибки.
+def read_text_file(
+    file_path: str | Path,
+    as_list: bool = False,
+    extensions: Optional[List[str]] = None,
+    chunk_size: int = 8192,
+) -> Generator[str, None, None] | str | None:
+    """
+    Считывает содержимое файла (или файлов из каталога) с использованием генератора для экономии памяти.
 
-        :raises Exception: Если возникает ошибка при чтении файла.
+    Args:
+        file_path (str | Path): Путь к файлу или каталогу.
+        as_list (bool): Если `True`, возвращает генератор строк.
+        extensions (Optional[List[str]]): Список расширений файлов для чтения из каталога.
+        chunk_size (int): Размер чанков для чтения файла в байтах.
 
-        Пример:
-            >>> from pathlib import Path
-            >>> file_path = Path('example.txt')
-            >>> content = read_text_file(file_path)
-            >>> if content:
-            ...    print(f'File content: {content[:100]}...')
-            File content: Example text...
-        """
-        ...
+    Returns:
+        Generator[str, None, None] | str | None: Генератор строк, объединенная строка или `None` в случае ошибки.
+
+    Raises:
+        Exception: Если возникает ошибка при чтении файла.
+
+    Example:
+        >>> from pathlib import Path
+        >>> file_path = Path('example.txt')
+        >>> content = read_text_file(file_path)
+        >>> if content:
+        ...    print(f'File content: {content[:100]}...')
+        File content: Example text...
+    """
+    ...
 ```
-- Всегда предоставляйте подробные объяснения в комментариях. Избегайте расплывчатых терминов, таких как *«получить»* или *«делать»*. Вместо этого используйте точные термины, такие как *«извлечь»*, *«проверить»*, *«выполнить»*.
+- Всегда делай подробные объяснения в комментариях. Избегай расплывчатых терминов, 
+- таких как *«получить»* или *«делать»*
+-  . Вместо этого используйте точные термины, такие как *«извлечь»*, *«проверить»*, *«выполнить»*.
+- Вместо: *«получаем»*, *«возвращаем»*, *«преобразовываем»* используй имя объекта *«функция получае»*, *«переменная возвращает»*, *«код преобразовывает»* 
 - Комментарии должны непосредственно предшествовать описываемому блоку кода и объяснять его назначение.
 
 #### **3. Пробелы вокруг операторов присваивания**:
@@ -126,4 +137,5 @@ data = j_loads('config.json')
 #### **6. Обработка `...` в коде**:
 - Оставляйте `...` как указатели в коде без изменений.
 - Не документируйте строки с `...`.
+```
 

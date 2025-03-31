@@ -3,9 +3,9 @@
 #! .pyenv/bin/python3
 
 """
+```rst
 .. module:: src 
-	:platform: Windows, Unix
-	:synopsis:
+```
 
 Root of the project.
 ========================================================================================

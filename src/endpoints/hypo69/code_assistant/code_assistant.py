@@ -59,17 +59,28 @@ from src import USE_ENV
 
 class Config:
     ...
-    base_path: Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
+    base_path: Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'   
     config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
     role: str = 'doc_writer_md'
     lang: str = 'ru'
     system_instruction: str = ''
+
+    @property
+    def code_instruction(self) -> str | bool:
+        """Чтение инструкции для кода."""
+        try:
+            return Path( Config.base_path / 'instructions'/ f'instruction_{Config.role}_{Config.lang}.md'
+            ).read_text(encoding='UTF-8')
+        except Exception as ex:
+            logger.error(f'Error reading instruction file', ex, False)
+            ...
 
     gemini: SimpleNamespace = SimpleNamespace(**{
         'model_name': os.getenv('GEMINI_MODEL') if USE_ENV else config.gemini_model_name or None,
         'api_key': os.getenv('GEMINI_API_KEY') if USE_ENV else gs.credentials.gemini.onela or None,
         'response_mime_type': 'text/plain',
     })
+
 
 
 class CodeAssistant:
@@ -81,7 +92,7 @@ class CodeAssistant:
 
     role: str
     lang: str
-    base_path: Path = __root__ / 'src' / 'endpoints' / 'hypo69' / 'code_assistant'
+    
     config: SimpleNamespace = j_loads_ns(base_path / 'code_assistant.json')
     gemini_model: GoogleGenerativeAI
     openai_model: OpenAIModel
@@ -135,7 +146,7 @@ class CodeAssistant:
 
         self._initialize_models(list(models_list), **kwards)
 
-    def _initialize_models(self, models_list: list, **kwards) -> bool:
+    def _initialize_models(self, models_list: list, response_mime_type:str = 'text/plain', **kwards) -> bool:
         """
         Инициализация моделей на основе заданных параметров.
 
@@ -153,8 +164,6 @@ class CodeAssistant:
         if 'gemini' in models_list:
             # Определение значений по умолчанию
 
-            default_response_mime_type = 'text/plain'
-
             try:
                 # Фильтрация kwards для удаления известных аргументов
                 filtered_kwargs = {
@@ -171,7 +180,7 @@ class CodeAssistant:
                         'system_instruction', Config.system_instruction
                     ),
                     generation_config=kwards.get(
-                        'generation_config', {'response_mime_type': default_response_mime_type}
+                        'generation_config', {'response_mime_type': response_mime_type}
                     ),
                     **filtered_kwargs,
                 )
@@ -180,33 +189,6 @@ class CodeAssistant:
             except Exception as ex:
                 logger.error(f'Ошибка при инициализации Gemini:', ex, None)
                 return False
-
-    @property
-    def code_instruction(self) -> str | bool:
-        """Чтение инструкции для кода."""
-        try:
-            return Path(
-                gs.path.endpoints
-                / 'hypo69'
-                / 'code_assistant'
-                / 'instructions'
-                / f'instruction_{Config.role}_{Config.lang}.md'
-            ).read_text(encoding='UTF-8')
-        except Exception as ex:
-            logger.error(f'Error reading instruction file', ex, False)
-            ...
-            return ''
-
-    @property
-    def translations(self) -> SimpleNamespace:
-        """Загрузка переводов для ролей и языков."""
-        return j_loads_ns(
-            gs.path.endpoints
-            / 'hypo69'
-            / 'code_assistant'
-            / 'translations'
-            / 'translations.json'
-        )
 
     def send_file(self, file_path: Path) -> Optional[str | None]:
         """
@@ -245,26 +227,26 @@ class CodeAssistant:
             ...
             return False
         start_dirs = start_dirs if isinstance(start_dirs, list) else [start_dirs]
-        for process_driectory in start_dirs:
-            process_driectory = Path(process_driectory)  # Преобразуем в Path для удобства
-            logger.info(f'Start {process_driectory=}')
+        for process_directory in start_dirs:
+            process_directory = Path(process_directory)  # Преобразуем в Path для удобства
+            logger.info(f'Start {process_directory=}')
 
-            if not process_driectory.exists():
-                logger.error(f"Директория не существует: {process_driectory}")
+            if not process_directory.exists():
+                logger.error(f"Директория не существует: {process_directory}")
                 continue  # Переходим к следующей директории, если текущая не существует
 
-            if not process_driectory.is_dir():
-                logger.error(f"Это не директория: {process_driectory}")
+            if not process_directory.is_dir():
+                logger.error(f"Это не директория: {process_directory}")
                 continue  # Переходим к следующей директории, если текущая не является директорией
 
-            for i, (file_path, content) in enumerate(self._yield_files_content(process_driectory)):
+            for i, (file_path, content) in enumerate(self._yield_files_content(process_directory)):
                 if not any((file_path, content)):  # <- ошибка чтения файла
                     logger.error(f'Ошибка чтения содержимого файла {file_path}/Content {content} ')
                     continue
                 if i < start_from_file:  # <- старт с номера файла
                     continue
                 if file_path and content:
-                    # send_file(file_path) # <- отправить в модель файл
+                    logger.debug(f'Processed file number: {i}', None, False)
                     content_request = self._create_request(file_path, content)
                     response = await self.gemini_model.ask_async(content_request)
 
@@ -274,7 +256,7 @@ class CodeAssistant:
                             logger.error(f'Файл {file_path} \n НЕ сохранился')
                             ...
                             continue
-                        logger.debug(f'Processed file number: {i + 1}', None, False)
+                        
                         ...
                     else:
                         logger.error('Ошибка ответа модели', None, False)
@@ -285,24 +267,16 @@ class CodeAssistant:
 
     def _create_request(self, file_path: str, content: str) -> str:
         """Создание запроса с учетом роли и языка."""
-        content_request = content
+        
         try:
-            roles_translations: SimpleNamespace = getattr(
-                self.translations.roles, Config.role, 'doc_writer_md'
-            )
-            role_description_translated: str = getattr(
-                roles_translations, Config.lang, 'Your specialization is documentation creation in the `MD` format'
-            )
-            file_location_translated: str = getattr(
-                self.translations.file_location_translated, Config.lang, 'Path to file: '
-            )
-
             content_request: dict = {
-                'role': f'{role_description_translated}',
+                'role': Config.role,
                 'output_language': Config.lang,
-                f'{file_location_translated}': get_relative_path(file_path, 'hypotez'),
-                'instruction': self.code_instruction or '',
-                'input_code': f'```{content}```',
+                f'file_location_in_project_hypotez': get_relative_path(file_path, 'hypotez'),
+                'instruction': Config.code_instruction or '',
+                'input_code': f"""```python
+                {content}
+                ```""",
             }
         except Exception as ex:
             logger.error(f'Ошибка в составлении запроса ', ex, False)
@@ -313,20 +287,20 @@ class CodeAssistant:
 
     def _yield_files_content(
         self,
-        process_driectory: str | Path,
+        process_directory: str | Path,
     ) -> Iterator[tuple[Path, str]]:
         """
         Генерирует пути файлов и их содержимое по указанным шаблонам.
 
         Args:
-            process_driectory (Path | str): Абсолютный путь к стартовой директории
+            process_directory (Path | str): Абсолютный путь к стартовой директории
 
         Returns:
             bool: Iterator
         """
 
-        process_driectory: Path = (
-            process_driectory if isinstance(process_driectory, Path) else Path(process_driectory)
+        process_directory: Path = (
+            process_directory if isinstance(process_directory, Path) else Path(process_directory)
         )
         # Компиляция паттернов исключаемых файлов
         try:
@@ -342,7 +316,7 @@ class CodeAssistant:
         include_file_patterns = self.config.include_files
 
         # Итерация по всем файлам в директории
-        for file_path in process_driectory.rglob('*'):
+        for file_path in process_directory.rglob('*'):
             # Проверка на соответствие шаблонам включения
             if not any(
                 fnmatch.fnmatch(file_path.name, pattern) for pattern in include_file_patterns

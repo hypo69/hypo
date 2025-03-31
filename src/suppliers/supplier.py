@@ -4,10 +4,12 @@
 #! .pyenv/bin/python3
 
 """
+```rst
 .. module:: src.suppliers.supplier 
-	:platform: Windows, Unix
-	:synopsis: Base class for suppliers
+```
+Базовый класс поставщиков. Отсюда удобно запускать сценарии. У каждого поставщика оределены собственные локаторы полей товара.
 
+[Докумeнтация по локаторам]()
 """
 
 

@@ -7,7 +7,7 @@
 .. module:: src.endpoints.emil
 ```
 
-Модуль для управления и обработки изображений, а также продвижения в Facebook и PrestaShop.
+Модуль для управления и обработки изображений, а также продвижения в Facebook и PrestaShop. Относится к магазину `emil-design.com`
 =================================
 Основные возможности:
     - <инструкция для модели gemini:Описание изображений с использованием Gemini AI.>
@@ -55,8 +55,15 @@ class Config:
     """Configuration class for EmilDesign."""
 
     ENDPOINT: str = 'emil'
-    MODE: str = 'dev'
-    POST_FORMAT = 'JSON'
+    MODE: str = 'dev' 
+    """
+    MODE (str) = определяет конечную точку API 
+    принимаемые значения:
+    `dev` - dev.emil_design.com prestashop 1.7
+    `dev8` - dev8.emil_design.com prestashop 8
+    `prod` - emil_design.com prestashop 1.7 <- ⚠️ Внимание!  Рабочий магазин!
+    """
+    POST_FORMAT = 'XML'
     API_DOMAIN: str = ''
     API_KEY: str = ''
 
@@ -75,9 +82,15 @@ class Config:
         API_DOMAIN = gs.credentials.presta.client.dev8_emil_design.api_domain
         API_KEY = gs.credentials.presta.client.dev8_emil_design.api_key
 
-    else:
+    elif MODE == 'prod':
         API_DOMAIN = gs.credentials.presta.client.emil_design.api_domain
         API_KEY = gs.credentials.presta.client.emil_design.api_key
+
+    else:
+        # `DEV` для API устанавливается если MODE пустой или имеет невалидное значение
+        MODE = 'dev'
+        API_DOMAIN = gs.credentials.presta.client.dev_emil_design.api_domain
+        API_KEY = gs.credentials.presta.client.dev_emil_design.api_key
 
 
 class EmilDesign:
@@ -220,6 +233,7 @@ class EmilDesign:
             id_lang (Optional[str], optional): Language id for prestasop databases.
             Обычно я назначаю языки в таком порядке 1 - en;2 - he; 3 - ru. 
             Важно проверить порядок якыков целевой базе данных.
+            Вот образец кода для получения слопваря языков из конкретной базы данных
             >>import language
             >>lang_class = PrestaLanguage()
             >>print(lang_class.get_languages_schema())
