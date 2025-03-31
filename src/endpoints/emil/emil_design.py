@@ -3,7 +3,9 @@
 #! .pyenv/bin/python3
 
 """
+```rst
 .. module:: src.endpoints.emil
+```
 
 Модуль для управления и обработки изображений, а также продвижения в Facebook и PrestaShop.
 =================================
@@ -54,7 +56,7 @@ class Config:
 
     ENDPOINT: str = 'emil'
     MODE: str = 'dev'
-    POST_FORMAT = 'XML'
+    POST_FORMAT = 'JSON'
     API_DOMAIN: str = ''
     API_KEY: str = ''
 
@@ -209,7 +211,7 @@ class EmilDesign:
             logger.error(f'Error while promoting to Facebook:', ex, exc_info=True)
 
     def upload_described_products_to_prestashop(
-        self, products_list: Optional[List[SimpleNamespace]] = None, id_lang: Optional[int | str] = None, *args, **kwards
+        self, products_list: Optional[List[SimpleNamespace]] = None, id_lang: Optional[int | str] = 2, *args, **kwards
     ) -> bool:
         """Upload product information to PrestaShop.
 
@@ -245,10 +247,17 @@ class EmilDesign:
             lang_ns: SimpleNamespace = j_loads_ns(
                 Path(__root__, 'src', 'endpoints', 'emil', 'shop_locales', 'locales.json')
             )
-            lang_index = getattr(lang_ns, id_lang)
+            if isinstance(id_lang, str) and id_lang in ('en','he','ru'):
+                id_lang = getattr(lang_ns, id_lang)
+            else:
+                try:
+                    id_lang = int(id_lang)
+                except Exception as ex:
+                    logger.error(f'Неправильный формат макера языка. ',ex)
+                    ...
 
             for product_ns in products_list:
-                f: ProductFields = ProductFields(lang_index)
+                f: ProductFields = ProductFields(id_lang)
                 f.name = product_ns.name
                 f.description = product_ns.description
                 f.price = '100'
@@ -268,6 +277,6 @@ class EmilDesign:
 
 if __name__ == '__main__':
     emil = EmilDesign()
-    emil.upload_described_products_to_prestashop(lang='he')
+    emil.upload_described_products_to_prestashop(id_lang = 2)
     # asyncio.run(emil.upload_described_products_to_prestashop_async(lang='he'))
     # emil.describe_images('he')

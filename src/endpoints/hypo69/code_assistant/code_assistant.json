@@ -4,7 +4,7 @@
   "model": [ "gemini" ],
 
   "start_dirs": [
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\convertors",
 
@@ -47,9 +47,9 @@
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\chat_gpt_nodejs",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\discord",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\google_dirve",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\google_drive",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\telegram",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\google_dirve",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\bots\\whatsapp",
 
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil\\report_generator",
@@ -68,6 +68,9 @@
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\helplers",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\tools",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\api\\errors",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\campaign",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\scenarios",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress\\utils",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\amazon",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\bangood",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\cdata",

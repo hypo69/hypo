@@ -266,12 +266,13 @@ class GoogleGenerativeAI:
                 time.sleep(2**attempt + 10)
                 continue
             except ResourceExhausted as ex:
+                timeout = 10800
                 logger.debug(
                     f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
                     ex,
                     False,
                 )
-                time.sleep(10800)
+                time.sleep(timeout)
                 continue
             except (DefaultCredentialsError, RefreshError) as ex:
                 logger.error("Authentication error:", ex, False)

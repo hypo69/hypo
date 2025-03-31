@@ -97,6 +97,7 @@ class ProductFields:
             где каждый словарь представляет собой значение для определенного языка и имеет структуру:
 
             {'attrs': {'id': 'language_id'}, 'value': 'language_value'}
+             {'id': 'language_id'}, 'value': 'language_value'}
 
             - 'attrs': Словарь, содержащий атрибуты значения.  В данном случае, обязательным атрибутом является 'id',
                        который представляет собой идентификатор языка.
@@ -111,21 +112,21 @@ class ProductFields:
         Returns:
             bool: True, если значение успешно установлено, False в случае ошибки.
         """
-        id_lang_str: str = str(id_lang) if id_lang else str(self.id_lan)
-        lang_data: dict = {'attrs': {'id': id_lang_str}, 'value': value}
+        id_lang: int = int(id_lang) if id_lang else int(self.id_lang)
 
+        # lang_data: dict = {'attrs': {'id': id_lang}, 'value': f'{value}' }
+        lang_data: dict = {'@id': id_lang, '#text': f'{value}' }
         try:
             # Get the existing field value, or None if it doesn't exist
             field = getattr(self.presta_fields, field_name, None)
-
             if field is None:
                 # If the field doesn't exist, create a dictionary with the new language data
-                setattr(self.presta_fields, field_name, {'language': [lang_data]})
+                setattr(self.presta_fields, field_name, {'language': lang_data})
             else:
                 # If the field exists, update or append the new language data to the existing list
                 if not isinstance(field, dict) or 'language' not in field or not isinstance(field['language'], list):
                     # Если поле не является словарем с ключом 'language', содержащим список, то создаем словарь
-                    setattr(self.presta_fields, field_name, {'language': [lang_data]})
+                    setattr(self.presta_fields, field_name, {'language': lang_data})
                 else:
                     language_list = field['language']
                     found = False
