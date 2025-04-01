@@ -3,7 +3,9 @@
   "lang": "EN",
   "model": [ "gemini" ],
   "process_dirs": [
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gpt4free",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gpt4free\\",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gpt4free\\g4f",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\client",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\server",
@@ -59,10 +61,13 @@
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\emil\\scenarios",
 
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gemini_simplechat",
+
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov\\scenarios",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\code_assistant",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\whatsapp",
+
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\tiny_troupe",
 
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers\\aliexpress",
@@ -106,7 +111,7 @@
     "skd",
     "quickstart",
     "quick_start",
-    " В раздумьях. Пока не включаю  _experiments",
+    " В раздумьях. Пока не исключаю  _experiments",
     "templates",
     "db",
     "node_modules",
@@ -132,7 +137,7 @@
     "more_basic_computer_games",
     "Understanding_Mathematics_And_Logic_Using_BASIC_Computer_Games",
     "projecteuler",
-    "TinyTroupe"
+    
 
   ],
   "exclude_files": [
