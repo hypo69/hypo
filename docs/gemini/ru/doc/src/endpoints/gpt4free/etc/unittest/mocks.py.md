@@ -1,322 +1,311 @@
 # Модуль mocks.py
+
 ## Обзор
 
-Модуль `mocks.py` содержит набор классов, представляющих собой моки (имитации) различных провайдеров для использования в юнит-тестах. Эти моки позволяют изолированно тестировать функциональность, зависящую от внешних провайдеров, без необходимости реального подключения к ним.
-Они позволяют имитировать различные сценарии, включая успешные ответы, ошибки аутентификации и исключения.
-## Подробнее
+Модуль содержит моки (заглушки) для различных провайдеров, используемых в проекте `hypotez`. Эти моки применяются в юнит-тестах для имитации поведения реальных провайдеров, таких как асинхронные и генераторные провайдеры, а также для эмуляции различных сценариев, включая ошибки и исключения.
 
-Модуль предоставляет классы, имитирующие как синхронные, так и асинхронные провайдеры, а также провайдеры, возвращающие потоковые ответы и изображения. Это позволяет тестировать различные аспекты взаимодействия с провайдерами в контролируемой среде.
+## Подробней
+
+Этот модуль предоставляет набор классов, которые наследуются от базовых классов провайдеров (`AbstractProvider`, `AsyncProvider`, `AsyncGeneratorProvider`) и переопределяют их методы для возврата предопределенных значений или вызова исключений. Это позволяет тестировать различные аспекты системы, не полагаясь на внешние сервисы и их доступность. Моки позволяют изолировать тестируемые компоненты и упростить проверку корректности их работы в различных ситуациях.
+
 ## Классы
 
 ### `ProviderMock`
 
-**Описание**: Мок для абстрактного провайдера `AbstractProvider`.
+**Описание**: Мок для обычного (синхронного) провайдера.
 
-**Принцип работы**: Этот класс имитирует базового провайдера, возвращая строку "Mock" при вызове метода `create_completion`.
+**Принцип работы**:
+Этот класс наследуется от `AbstractProvider` и переопределяет метод `create_completion` для возврата статической строки "Mock" в виде генератора. Используется для имитации успешного ответа от провайдера.
 
 **Методы**:
 
-- `create_completion(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию завершения запроса.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Возвращает**: Генератор, выдающий строку "Mock".
+- `create_completion`:
+    ```python
+    @classmethod
+    def create_completion(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Генерирует последовательность, содержащую строку "Mock".
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-# Пример использования ProviderMock
-provider = ProviderMock()
-result = provider.create_completion(model="test_model", messages=[], stream=False)
-print(next(result))  # Вывод: Mock
-```
+        Yields:
+            str: Строка "Mock".
+        """
+    ...
+    ```
 
 ### `AsyncProviderMock`
 
-**Описание**: Мок для асинхронного провайдера `AsyncProvider`.
+**Описание**: Мок для асинхронного провайдера.
 
-**Принцип работы**: Этот класс имитирует асинхронного провайдера, возвращая строку "Mock" при вызове асинхронного метода `create_async`.
+**Принцип работы**:
+Этот класс наследуется от `AsyncProvider` и переопределяет метод `create_async` для возврата статической строки "Mock" в виде корутины. Используется для имитации успешного асинхронного ответа от провайдера.
 
 **Методы**:
 
-- `create_async(cls, model, messages, **kwargs)`:
-  - **Назначение**: Создает имитацию асинхронного завершения запроса.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Возвращает**: Асинхронная функция, возвращающая строку "Mock".
+- `create_async`:
+    ```python
+    @classmethod
+    async def create_async(
+        cls, model, messages, **kwargs
+    ):
+        """
+        Асинхронно возвращает строку "Mock".
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-import asyncio
-# Пример использования AsyncProviderMock
-async def main():
-    provider = AsyncProviderMock()
-    result = await provider.create_async(model="test_model", messages=[])
-    print(result)
-
-asyncio.run(main()) # Вывод: Mock
-```
+        Returns:
+            str: Строка "Mock".
+        """
+    ...
+    ```
 
 ### `AsyncGeneratorProviderMock`
 
-**Описание**: Мок для асинхронного генератора провайдера `AsyncGeneratorProvider`.
+**Описание**: Мок для асинхронного провайдера-генератора.
 
-**Принцип работы**: Этот класс имитирует асинхронного генератора провайдера, возвращая строку "Mock" при вызове асинхронного метода `create_async_generator`.
+**Принцип работы**:
+Этот класс наследуется от `AsyncGeneratorProvider` и переопределяет метод `create_async_generator` для возврата статической строки "Mock" в виде асинхронного генератора. Используется для имитации успешного ответа от асинхронного провайдера, возвращающего результаты по частям.
 
 **Методы**:
 
-- `create_async_generator(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию асинхронного генератора завершений запроса.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Возвращает**: Асинхронный генератор, выдающий строку "Mock".
+- `create_async_generator`:
+    ```python
+    @classmethod
+    async def create_async_generator(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Асинхронно генерирует последовательность, содержащую строку "Mock".
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-import asyncio
-# Пример использования AsyncGeneratorProviderMock
-async def main():
-    provider = AsyncGeneratorProviderMock()
-    async for result in provider.create_async_generator(model="test_model", messages=[], stream=False):
-        print(result)
-
-asyncio.run(main()) # Вывод: Mock
-```
+        Yields:
+            str: Строка "Mock".
+        """
+    ...
+    ```
 
 ### `ModelProviderMock`
 
-**Описание**: Мок для провайдера, возвращающего имя модели.
+**Описание**: Мок провайдера, возвращающего имя модели.
 
-**Принцип работы**: Этот класс имитирует провайдера, возвращая имя модели, переданное в метод `create_completion`.
+**Принцип работы**:
+Этот класс наследуется от `AbstractProvider` и переопределяет метод `create_completion` для возврата имени модели, переданного в качестве аргумента. Используется для проверки, что модель правильно передается в провайдер.
 
 **Методы**:
 
-- `create_completion(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию завершения запроса, возвращая имя модели.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Возвращает**: Генератор, выдающий имя модели.
+- `create_completion`:
+    ```python
+    @classmethod
+    def create_completion(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Генерирует последовательность, содержащую имя модели.
 
-**Примеры**:
+        Args:
+            model: Модель для генерации.
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-# Пример использования ModelProviderMock
-provider = ModelProviderMock()
-result = provider.create_completion(model="test_model", messages=[], stream=False)
-print(next(result)) # Вывод: test_model
-```
+        Yields:
+            str: Имя модели.
+        """
+    ...
+    ```
 
 ### `YieldProviderMock`
 
-**Описание**: Мок для асинхронного генератора провайдера, возвращающего содержимое сообщений.
+**Описание**: Мок асинхронного провайдера-генератора, возвращающего содержимое сообщений.
 
-**Принцип работы**: Этот класс имитирует асинхронного генератора провайдера, возвращая содержимое каждого сообщения из списка `messages`.
+**Принцип работы**:
+Этот класс наследуется от `AsyncGeneratorProvider` и переопределяет метод `create_async_generator` для возврата содержимого каждого сообщения из списка `messages`. Используется для имитации провайдера, возвращающего ответы на основе входных сообщений.
 
 **Методы**:
 
-- `create_async_generator(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию асинхронного генератора завершений запроса, возвращая содержимое сообщений.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Возвращает**: Асинхронный генератор, выдающий содержимое каждого сообщения.
+- `create_async_generator`:
+    ```python
+    @classmethod
+    async def create_async_generator(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Асинхронно генерирует последовательность, содержащую содержимое каждого сообщения.
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Список сообщений, каждое из которых является словарем с ключом "content".
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-import asyncio
-# Пример использования YieldProviderMock
-async def main():
-    provider = YieldProviderMock()
-    messages = [{"content": "Первое сообщение"}, {"content": "Второе сообщение"}]
-    async for result in provider.create_async_generator(model="test_model", messages=messages, stream=False):
-        print(result)
-
-asyncio.run(main())
-# Вывод:
-# Первое сообщение
-# Второе сообщение
-```
+        Yields:
+            str: Содержимое каждого сообщения.
+        """
+    ...
+    ```
 
 ### `YieldImageResponseProviderMock`
 
-**Описание**: Мок для асинхронного генератора провайдера, возвращающего объект `ImageResponse`.
+**Описание**: Мок асинхронного провайдера-генератора, возвращающего `ImageResponse`.
 
-**Принцип работы**: Этот класс имитирует асинхронного генератора провайдера, возвращая объект `ImageResponse` с заданным запросом и пустой строкой для URL.
+**Принцип работы**:
+Этот класс наследуется от `AsyncGeneratorProvider` и переопределяет метод `create_async_generator` для возврата объекта `ImageResponse`, содержащего prompt и пустую строку. Используется для имитации провайдера, генерирующего изображения.
 
 **Методы**:
 
-- `create_async_generator(cls, model, messages, stream, prompt: str, **kwargs)`:
-  - **Назначение**: Создает имитацию асинхронного генератора завершений запроса, возвращая объект `ImageResponse`.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `prompt` (str): Текст запроса.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Возвращает**: Асинхронный генератор, выдающий объект `ImageResponse`.
+- `create_async_generator`:
+    ```python
+    @classmethod
+    async def create_async_generator(
+        cls, model, messages, stream, prompt: str, **kwargs
+    ):
+        """
+        Асинхронно генерирует последовательность, содержащую объект ImageResponse.
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            prompt (str): Промпт для генерации изображения.
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-import asyncio
-from g4f.providers.response import ImageResponse
-# Пример использования YieldImageResponseProviderMock
-async def main():
-    provider = YieldImageResponseProviderMock()
-    async for result in provider.create_async_generator(model="test_model", messages=[], stream=False, prompt="test_prompt"):
-        print(result)
-
-asyncio.run(main())
-# Вывод:
-# <g4f.providers.response.ImageResponse object at ...>
-```
+        Yields:
+            ImageResponse: Объект ImageResponse с промптом и пустой строкой.
+        """
+    ...
+    ```
 
 ### `MissingAuthProviderMock`
 
-**Описание**: Мок для провайдера, вызывающего исключение `MissingAuthError`.
+**Описание**: Мок провайдера, вызывающего исключение `MissingAuthError`.
 
-**Принцип работы**: Этот класс имитирует провайдера, вызывающего исключение `MissingAuthError` при вызове метода `create_completion`.
+**Принцип работы**:
+Этот класс наследуется от `AbstractProvider` и переопределяет метод `create_completion` для вызова исключения `MissingAuthError`. Используется для имитации ситуации, когда для работы с провайдером требуется аутентификация, но она не предоставлена.
 
 **Методы**:
 
-- `create_completion(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию завершения запроса, вызывая исключение `MissingAuthError`.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Вызывает исключения**:
-    - `MissingAuthError`: Всегда вызывается при вызове метода.
+- `create_completion`:
+    ```python
+    @classmethod
+    def create_completion(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Вызывает исключение MissingAuthError.
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-# Пример использования MissingAuthProviderMock
-provider = MissingAuthProviderMock()
-try:
-    result = provider.create_completion(model="test_model", messages=[], stream=False)
-    print(next(result))
-except MissingAuthError as ex:
-    print(f"Исключение: {ex}") # Вывод: Исключение: MissingAuthProviderMock
-```
+        Raises:
+            MissingAuthError: Всегда вызывается.
+        """
+    ...
+    ```
 
 ### `RaiseExceptionProviderMock`
 
-**Описание**: Мок для провайдера, вызывающего исключение `RuntimeError`.
+**Описание**: Мок провайдера, вызывающего исключение `RuntimeError`.
 
-**Принцип работы**: Этот класс имитирует провайдера, вызывающего исключение `RuntimeError` при вызове метода `create_completion`.
+**Принцип работы**:
+Этот класс наследуется от `AbstractProvider` и переопределяет метод `create_completion` для вызова исключения `RuntimeError`. Используется для имитации ситуации, когда во время работы провайдера происходит необработанная ошибка.
 
 **Методы**:
 
-- `create_completion(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию завершения запроса, вызывая исключение `RuntimeError`.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Вызывает исключения**:
-    - `RuntimeError`: Всегда вызывается при вызове метода.
+- `create_completion`:
+    ```python
+    @classmethod
+    def create_completion(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Вызывает исключение RuntimeError.
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-# Пример использования RaiseExceptionProviderMock
-provider = RaiseExceptionProviderMock()
-try:
-    result = provider.create_completion(model="test_model", messages=[], stream=False)
-    print(next(result))
-except RuntimeError as ex:
-    print(f"Исключение: {ex}") # Вывод: Исключение: RaiseExceptionProviderMock
-```
+        Raises:
+            RuntimeError: Всегда вызывается.
+        """
+    ...
+    ```
 
 ### `AsyncRaiseExceptionProviderMock`
 
-**Описание**: Мок для асинхронного генератора провайдера, вызывающего исключение `RuntimeError`.
+**Описание**: Мок асинхронного провайдера-генератора, вызывающего исключение `RuntimeError`.
 
-**Принцип работы**: Этот класс имитирует асинхронного генератора провайдера, вызывающего исключение `RuntimeError` при вызове метода `create_async_generator`.
+**Принцип работы**:
+Этот класс наследуется от `AsyncGeneratorProvider` и переопределяет метод `create_async_generator` для вызова исключения `RuntimeError`. Используется для имитации ситуации, когда во время работы асинхронного провайдера происходит необработанная ошибка.
 
 **Методы**:
 
-- `create_async_generator(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию асинхронного генератора завершений запроса, вызывая исключение `RuntimeError`.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Вызывает исключения**:
-    - `RuntimeError`: Всегда вызывается при вызове метода.
+- `create_async_generator`:
+    ```python
+    @classmethod
+    async def create_async_generator(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Асинхронно вызывает исключение RuntimeError.
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-import asyncio
-# Пример использования AsyncRaiseExceptionProviderMock
-async def main():
-    provider = AsyncRaiseExceptionProviderMock()
-    try:
-        async for result in provider.create_async_generator(model="test_model", messages=[], stream=False):
-            print(result)
-    except RuntimeError as ex:
-        print(f"Исключение: {ex}")
-
-asyncio.run(main()) # Вывод: Исключение: AsyncRaiseExceptionProviderMock
-```
+        Raises:
+            RuntimeError: Всегда вызывается.
+        """
+    ...
+    ```
 
 ### `YieldNoneProviderMock`
 
-**Описание**: Мок для асинхронного генератора провайдера, возвращающего `None`.
+**Описание**: Мок асинхронного провайдера-генератора, возвращающего `None`.
 
-**Принцип работы**: Этот класс имитирует асинхронного генератора провайдера, возвращая `None` при вызове метода `create_async_generator`.
+**Принцип работы**:
+Этот класс наследуется от `AsyncGeneratorProvider` и переопределяет метод `create_async_generator` для возврата значения `None`. Используется для имитации ситуации, когда провайдер не возвращает никаких данных.
 
 **Методы**:
 
-- `create_async_generator(cls, model, messages, stream, **kwargs)`:
-  - **Назначение**: Создает имитацию асинхронного генератора завершений запроса, возвращая `None`.
-  - **Параметры**:
-    - `cls`: Ссылка на класс.
-    - `model`: Имя модели.
-    - `messages`: Список сообщений.
-    - `stream`: Флаг потоковой передачи.
-    - `**kwargs`: Дополнительные аргументы.
-  - **Возвращает**: Асинхронный генератор, выдающий `None`.
+- `create_async_generator`:
+    ```python
+    @classmethod
+    async def create_async_generator(
+        cls, model, messages, stream, **kwargs
+    ):
+        """
+        Асинхронно генерирует последовательность, содержащую None.
 
-**Примеры**:
+        Args:
+            model: Модель для генерации (не используется).
+            messages: Сообщения для генерации (не используются).
+            stream: Флаг стриминга (не используется).
+            **kwargs: Дополнительные аргументы (не используются).
 
-```python
-import asyncio
-# Пример использования YieldNoneProviderMock
-async def main():
-    provider = YieldNoneProviderMock()
-    async for result in provider.create_async_generator(model="test_model", messages=[], stream=False):
-        print(result)
-
-asyncio.run(main()) # Вывод: None
-```
+        Yields:
+            None: Всегда возвращает None.
+        """
+    ...
+    ```
