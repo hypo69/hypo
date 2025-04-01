@@ -3,13 +3,10 @@
   "lang": "EN",
   "model": [ "gemini" ],
   "process_dirs": [
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\gpt4free",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\client",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\server"
-  ],
-
-
-  "exclude_dirs": [
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\server",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\g4f",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\convertors",
@@ -92,7 +89,12 @@
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\morlevi",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\visualdg",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\wallashop",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\wallmart",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\wallmart"
+  ],
+
+
+  "exclude_dirs": [
+    
 
     ".ipynb_checkpoints",
     "resources",

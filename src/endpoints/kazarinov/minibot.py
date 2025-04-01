@@ -4,10 +4,15 @@
 #! .pyenv/bin/python3
 
 """
+```rst
 .. module:: src.endpoints.kazarinov.minibot 
-	:platform: Windows, Unix
-	:synopsis: минибот для обслуживания запросов от казаринова
+```
 
+Минибот для обслуживания запросов на создание прайслиста для Казаринова
+========================================================================
+
+
+[Документация](https://github.com/hypo69/hypo/blob/master/docs/ru/src/endpoints/kazarinov/minibot.py.md)
 """
 
 import telebot
@@ -16,7 +21,7 @@ import datetime
 import random
 from pathlib import Path
 import asyncio
-
+import time
 
 
 import header
@@ -271,7 +276,7 @@ def handle_unknown_command(message):
     logger.info(f"User {message.from_user.username} send unknown command: {message.text}")
     bot.send_message(message.chat.id, config.UNKNOWN_COMMAND_MESSAGE)
 
-def main():
+def main(restarts:int = 5):
 
     try:
         logger.info(f"Starting bot in {MODE} mode")
@@ -280,9 +285,17 @@ def main():
     except Exception as ex:
         logger.error(f"Error during bot polling: ", ex)
         ...
-        bot.stop_bot()
-        main()
+        if restarts > 1:
+            try:
+                bot.stop_bot()
+            except Exception as ex:
+                logger.error(f'Ошибка останова бота', ex)
+            logger.debug('Повторный запуск через 10 сек')
+            time.sleep(10)
+            main(restarts - 1)
+        else:
+            logger.error(f'Превышено количество переподключений')
 
 if __name__ == '__main__':
-    main()
+    main(restarts = 5)
    
