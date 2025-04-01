@@ -4,10 +4,13 @@
 #! .pyenv/bin/python3
 
 """
+клиент Claude
+==============
+
+
+
 module: src.ai.anthropic.claude
-    :platform: Windows, Unix
-    :synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
-    :TODO: В дальнейшем перенести в системную переменную
+[Документация](https://github.com/hypo69/hypo/blob/master/docs/ru/src/ai/anthropic/claude.py.md)
 """
 
 

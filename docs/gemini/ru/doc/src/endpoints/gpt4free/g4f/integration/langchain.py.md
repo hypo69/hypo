@@ -1,11 +1,12 @@
-# Модуль интеграции Langchain с g4f
+# Модуль интеграции g4f с Langchain
+
 ## Обзор
 
-Модуль предоставляет интеграцию между библиотекой Langchain и g4f (GenerativeForFree), позволяя использовать модели g4f в качестве чат-моделей Langchain. В частности, он переопределяет функции преобразования сообщений и создает класс `ChatAI`, который расширяет `ChatOpenAI` из Langchain для работы с моделями g4f.
+Модуль предоставляет интеграцию между библиотекой `g4f` (библиотека для доступа к различным моделям ИИ) и фреймворком `Langchain`. Он включает в себя переопределение функции преобразования сообщений и класс `ChatAI`, который расширяет возможности `ChatOpenAI` из `Langchain` для использования с `g4f`.
 
-## Подробней
+## Подробнее
 
-Этот модуль позволяет использовать модели, предоставляемые g4f, в пайплайнах Langchain. Это достигается путем замены стандартной функции преобразования сообщений Langchain и создания класса `ChatAI`, который адаптирован для работы с g4f. Модуль обеспечивает совместимость между Langchain и g4f, упрощая использование различных моделей в Langchain.
+Этот модуль позволяет использовать модели, доступные через `g4f`, в цепочках `Langchain`. Это достигается путем переопределения способа преобразования сообщений и создания класса `ChatAI`, который настраивает клиент `g4f` для взаимодействия с этими моделями. Расположение файла в проекте указывает на то, что он предназначен для расширения возможностей `Langchain` за счет интеграции с различными моделями ИИ, доступными через `g4f`.
 
 ## Функции
 
@@ -13,33 +14,46 @@
 
 ```python
 def new_convert_message_to_dict(message: BaseMessage) -> dict:
-    """Преобразует объект сообщения (BaseMessage) в словарь, пригодный для использования в API чат-моделей.
+    """Преобразует объект сообщения (BaseMessage) в словарь.
 
     Args:
-        message (BaseMessage): Объект сообщения, который необходимо преобразовать.
+        message (BaseMessage): Объект сообщения для преобразования.
 
     Returns:
-        dict: Словарь, представляющий сообщение. Содержит ключи 'role' (роль отправителя), 'content' (содержимое сообщения) и, при наличии, 'tool_calls' (информация о вызовах инструментов).
+        dict: Словарь, представляющий сообщение.
 
     Как работает функция:
-    1. Проверяет, является ли сообщение экземпляром класса `ChatCompletionMessage`.
-    2. Если да, то создает словарь `message_dict` с ключами 'role' и 'content', взятыми из атрибутов объекта `message`.
-    3. Если в `message` присутствует атрибут `tool_calls`, то добавляет в `message_dict` ключ 'tool_calls', значением которого является список словарей, описывающих каждый вызов инструмента. Каждый словарь содержит ключи 'id', 'type' и 'function', соответствующие атрибутам объекта `tool_call`.
-    4. Если `message_dict["content"]` равно пустой строке, то устанавливает значение `message_dict["content"]` в `None`.
-    5. Если сообщение не является экземпляром `ChatCompletionMessage`, то использует стандартную функцию `convert_message_to_dict` из модуля `openai` для преобразования сообщения в словарь.
+     1. **Проверка типа сообщения**: Функция проверяет, является ли входное сообщение экземпляром `ChatCompletionMessage`.
+     2. **Обработка ChatCompletionMessage**: Если сообщение является экземпляром `ChatCompletionMessage`, создается словарь `message_dict` со следующими ключами:
+        - `"role"`: Роль сообщения (например, "user", "assistant").
+        - `"content"`: Содержимое сообщения.
+        - `"tool_calls"`: Список вызовов инструментов, если они есть в сообщении. Каждый вызов инструмента преобразуется в словарь с ключами `"id"`, `"type"` и `"function"`.
+        Если содержимое сообщения пустое, оно устанавливается в `None`.
+     3. **Обработка других типов сообщений**: Если сообщение не является экземпляром `ChatCompletionMessage`, используется стандартная функция `convert_message_to_dict` из модуля `openai` для преобразования сообщения в словарь.
+     4. **Возврат результата**: Функция возвращает словарь, представляющий сообщение.
 
-    Внутри функции происходят следующие действия и преобразования:
-    A. **Проверка типа сообщения:** Определяется, является ли входящее сообщение типом `ChatCompletionMessage`.
-    |
-    B. **Обработка ChatCompletionMessage:** Если сообщение является `ChatCompletionMessage`, извлекаются роль, содержимое и, при наличии, вызовы инструментов.
-    |
-    C. **Преобразование вызовов инструментов:** Если есть вызовы инструментов, они преобразуются в формат словаря.
-    |
-    D. **Обработка пустого содержимого:** Если содержимое сообщения пустое, оно устанавливается в `None`.
-    |
-    E. **Обработка других типов сообщений:** Если сообщение не является `ChatCompletionMessage`, используется стандартный метод преобразования.
-    |
-    F. **Возврат результата:** Возвращается преобразованный словарь.
+     ASCII-схема работы функции:
+
+     Начало
+     ↓
+     isinstance(message, ChatCompletionMessage)?
+     ├── Да → Создать message_dict с данными из message, преобразовать tool_calls
+     │       Если message_dict["content"] == "": message_dict["content"] = None
+     └── Нет → message_dict = convert_message_to_dict(message)
+     ↓
+     Возврат message_dict
+
+    Example:
+        >>> from langchain_community.messages import HumanMessage
+        >>> message = HumanMessage(content="Hello")
+        >>> new_convert_message_to_dict(message)
+        {'content': 'Hello', 'additional_kwargs': {}, 'type': 'human'}
+
+        >>> from g4f.client.stubs import ChatCompletionMessage, ToolCall
+        >>> tool_call = ToolCall(id='123', type='function', function={'name': 'my_function', 'arguments': '{"arg1": "value1"}'})
+        >>> message = ChatCompletionMessage(role="assistant", content="Tool call", tool_calls=[tool_call])
+        >>> new_convert_message_to_dict(message)
+        {'role': 'assistant', 'content': 'Tool call', 'tool_calls': [{'id': '123', 'type': 'function', 'function': {'name': 'my_function', 'arguments': '{"arg1": "value1"}'}}]}
     """
     message_dict: Dict[str, Any]
     if isinstance(message, ChatCompletionMessage):
@@ -57,89 +71,68 @@ def new_convert_message_to_dict(message: BaseMessage) -> dict:
     return message_dict
 ```
 
-**Примеры:**
-
-```python
-from langchain_core.messages import BaseMessage, HumanMessage
-from g4f.client.stubs import ChatCompletionMessage, ToolCall
-# Пример 1: Преобразование ChatCompletionMessage без tool_calls
-message = ChatCompletionMessage(role="assistant", content="Hello!")
-result = new_convert_message_to_dict(message)
-print(result)  # {'role': 'assistant', 'content': 'Hello!'}
-
-# Пример 2: Преобразование ChatCompletionMessage с tool_calls
-tool_calls = [ToolCall(id="1", type="function", function={"name": "get_weather", "arguments": "{location: 'Moscow'}"})]
-message = ChatCompletionMessage(role="assistant", content="Calling tool", tool_calls=tool_calls)
-result = new_convert_message_to_dict(message)
-print(result)
-# {'role': 'assistant', 'content': 'Calling tool', 'tool_calls': [{'id': '1', 'type': 'function', 'function': {'name': 'get_weather', 'arguments': "{location: 'Moscow'}"}}]}
-
-# Пример 3: Преобразование HumanMessage
-message = HumanMessage(content="Hi there!")
-result = new_convert_message_to_dict(message)
-print(result)  # {'content': 'Hi there!', 'role': 'human'}
-```
-
 ## Классы
 
 ### `ChatAI`
 
-**Описание**:
-Класс `ChatAI` расширяет класс `ChatOpenAI` из библиотеки Langchain для интеграции с моделями g4f. Он позволяет использовать модели g4f в качестве чат-моделей Langchain.
+```python
+class ChatAI(ChatOpenAI):
+    """Наследует ChatOpenAI и расширяет его функциональность для работы с моделями g4f.
 
-**Принцип работы**:
-Класс `ChatAI` наследует от `ChatOpenAI` и переопределяет метод `validate_environment`, чтобы настроить клиент g4f для использования с Langchain. Он также устанавливает `model_name` по умолчанию в "gpt-4o".
+    Inherits:
+        ChatOpenAI: Базовый класс для работы с моделями OpenAI.
 
-**Методы**:
+    Attributes:
+        model_name (str): Имя модели, по умолчанию "gpt-4o".
+        client: Клиент для выполнения запросов к моделям g4f.
+        async_client: Асинхронный клиент для выполнения асинхронных запросов к моделям g4f.
 
-- `validate_environment(cls, values: dict) -> dict`:
-    ```python
+    Methods:
+        validate_environment(cls, values: dict) -> dict: Проверяет и настраивает окружение для работы с g4f.
+    """
+
+    model_name: str = Field(default="gpt-4o", alias="model")
+
     @classmethod
     def validate_environment(cls, values: dict) -> dict:
-        """Проверяет и настраивает окружение для использования g4f в качестве чат-модели Langchain.
+        """Проверяет и настраивает окружение для работы с g4f.
 
         Args:
-            values (dict): Словарь с параметрами конфигурации.
+            values (dict): Словарь с параметрами для настройки окружения.
 
         Returns:
-            dict: Обновленный словарь с параметрами конфигурации, включающий настроенный клиент g4f.
+            dict: Обновленный словарь с настроенным окружением.
 
         Как работает функция:
-        1. Извлекает параметры `api_key` и `provider` из словаря `values` (при их наличии).
-        2. Создает клиент `Client` и асинхронный клиент `AsyncClient` из библиотеки `g4f.client`, передавая им параметры `api_key` и `provider`.
-        3. Присваивает клиенты `chat.completions` атрибутам `client` и `async_client` словаря `values`.
-        4. Возвращает обновленный словарь `values`.
+        1. **Извлечение параметров клиента**: Функция извлекает параметры для инициализации клиента `g4f` из входного словаря `values`. Это включает в себя `api_key` и `provider` (если они указаны).
+        2. **Создание клиентов**: На основе извлеченных параметров создаются два клиента: синхронный (`Client`) и асинхронный (`AsyncClient`). Эти клиенты используются для выполнения запросов к моделям `g4f`.
+        3. **Сохранение клиентов в values**: Созданные клиенты сохраняются в словаре `values` под ключами `"client"` и `"async_client"`.
+        4. **Возврат обновленного словаря**: Функция возвращает обновленный словарь `values` с настроенными клиентами.
 
-        Внутри функции происходят следующие действия и преобразования:
-        A. **Извлечение параметров:** Извлекаются параметры `api_key` и `provider` из входного словаря.
-        |
-        B. **Создание клиентов g4f:** Создаются синхронный и асинхронный клиенты `g4f` с использованием извлеченных параметров.
-        |
-        C. **Настройка параметров Langchain:** В словарь `values` добавляются настроенные клиенты для использования с Langchain.
-        |
-        D. **Возврат результата:** Возвращается обновленный словарь конфигурации.
+        ASCII-схема работы функции:
+
+        Начало
+        ↓
+        Извлечение api_key и provider из values
+        ↓
+        Создание синхронного клиента Client(**client_params)
+        ↓
+        Создание асинхронного клиента AsyncClient(**client_params)
+        ↓
+        Сохранение клиентов в values
+        ↓
+        Возврат values
+
+        Example:
+            >>> ChatAI.validate_environment({"api_key": "test_key", "model_kwargs": {"provider": "test_provider"}})
+            {'api_key': 'test_key', 'model_kwargs': {'provider': 'test_provider'}, 'client': <g4f.client.chat.completions object at 0x...>, 'async_client': <g4f.client.chat.completions object at 0x...>}
         """
-    ```
-    **Назначение**: Проверяет и настраивает окружение, создавая клиентов `Client` и `AsyncClient` из библиотеки `g4f.client`. Эти клиенты используются для взаимодействия с моделями g4f.
-    **Параметры**:
-        - `values` (dict): Словарь, содержащий параметры конфигурации.
-    **Возвращает**:
-        - `dict`: Обновленный словарь `values`, включающий настроенные клиенты `client` и `async_client`.
-
-**Примеры**:
-
-```python
-from typing import Dict
-
-# Пример 1: Создание экземпляра ChatAI с минимальной конфигурацией
-config: Dict[str, Any] = {}
-validated_config = ChatAI.validate_environment(config)
-print(validated_config.keys())
-#dict_keys(['client', 'async_client'])
-
-# Пример 2: Создание экземпляра ChatAI с указанием провайдера
-config: Dict[str, Any] = {"model_kwargs": {"provider": "g4f.models.gpt_4"}}
-validated_config = ChatAI.validate_environment(config)
-print(validated_config.keys())
-#dict_keys(['model_kwargs', 'client', 'async_client'])
-```
+        client_params = {
+            "api_key": values["api_key"] if "api_key" in values else None,
+            "provider": values["model_kwargs"]["provider"] if "provider" in values["model_kwargs"] else None,
+        }
+        values["client"] = Client(**client_params).chat.completions
+        values["async_client"] = AsyncClient(
+            **client_params
+        ).chat.completions
+        return values

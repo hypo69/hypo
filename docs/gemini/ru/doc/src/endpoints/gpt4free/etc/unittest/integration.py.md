@@ -1,144 +1,260 @@
 # Модуль интеграционных тестов для gpt4free
-
 ## Обзор
 
-Модуль содержит интеграционные тесты для проверки взаимодействия с различными провайдерами (Copilot, DDG) через API gpt4free.
-Эти тесты проверяют успешность выполнения запросов к API и корректность возвращаемых данных.
+Модуль `integration.py` предназначен для интеграционного тестирования провайдеров `Copilot` и `DDG` с использованием библиотеки `g4f`. Он включает в себя как синхронные, так и асинхронные тесты для проверки корректности взаимодействия с провайдерами при запросах к `ChatCompletion`.
 
-## Подробней
+## Подробнее
 
-Этот файл содержит интеграционные тесты, проверяющие интеграцию с различными провайдерами API, такими как Copilot и DDG, используя клиент gpt4free.
-Он проверяет, что запросы возвращают ожидаемые ответы в формате JSON. Этот код важен для автоматизированного тестирования, чтобы убедиться,
-что различные компоненты системы работают правильно вместе.
+Этот модуль выполняет интеграционные тесты, чтобы убедиться, что провайдеры `Copilot` и `DDG` правильно интегрированы с библиотекой `g4f`. В частности, проверяется, что ответы от этих провайдеров соответствуют ожидаемому формату `json_object` и содержат ключ `"success"`.
+Модуль использует `unittest` для организации тестов и включает как синхронные, так и асинхронные тесты для полного охвата функциональности.
 
 ## Классы
 
 ### `TestProviderIntegration`
 
-**Описание**: Класс для интеграционных тестов провайдеров.
+**Описание**: Класс для синхронных интеграционных тестов провайдеров.
 
-**Принцип работы**:
-Класс содержит тесты для синхронного выполнения запросов к API различных провайдеров.
-Он создает экземпляры `Client` с указанным провайдером, отправляет запросы и проверяет, что ответы соответствуют ожидаемому формату и содержат ожидаемые данные.
+**Наследует**:
+- `unittest.TestCase`: Базовый класс для создания тестов в `unittest`.
 
 **Методы**:
-- `test_bing`: Тест для проверки интеграции с провайдером Copilot.
-- `test_openai`: Тест для проверки интеграции с провайдером DDG.
 
-#### `test_bing`
-
-```python
-def test_bing(self):
-    """
-    Тестирует интеграцию с провайдером Copilot.
-
-    Создает клиент с провайдером Copilot, отправляет запрос и проверяет, что ответ является экземпляром ChatCompletion
-    и содержит ожидаемые данные в формате JSON.
-    """
-    ...
-```
-
-**Как работает функция**:
-1. Создается экземпляр класса `Client` с провайдером `Copilot`.
-2. Отправляется запрос `chat.completions.create` с предопределенными сообщениями и указанием формата ответа как `json_object`.
-3. Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
-4. Проверяется, что ответ содержит ключ `success` в JSON-формате.
-
-**Примеры**:
-```python
-# Пример использования test_bing
-test_case = TestProviderIntegration()
-test_case.test_bing()
-```
-
-#### `test_openai`
-
-```python
-def test_openai(self):
-    """
-    Тестирует интеграцию с провайдером DDG.
-
-    Создает клиент с провайдером DDG, отправляет запрос и проверяет, что ответ является экземпляром ChatCompletion
-    и содержит ожидаемые данные в формате JSON.
-    """
-    ...
-```
-
-**Как работает функция**:
-1. Создается экземпляр класса `Client` с провайдером `DDG`.
-2. Отправляется запрос `chat.completions.create` с предопределенными сообщениями и указанием формата ответа как `json_object`.
-3. Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
-4. Проверяется, что ответ содержит ключ `success` в JSON-формате.
-
-**Примеры**:
-```python
-# Пример использования test_openai
-test_case = TestProviderIntegration()
-test_case.test_openai()
-```
+- `test_bing(self)`: Тест для провайдера `Copilot`.
+- `test_openai(self)`: Тест для провайдера `DDG`.
 
 ### `TestChatCompletionAsync`
 
-**Описание**: Класс для асинхронных интеграционных тестов.
+**Описание**: Класс для асинхронных интеграционных тестов провайдеров.
 
-**Принцип работы**:
-Класс содержит асинхронные тесты для выполнения запросов к API различных провайдеров.
-Он создает экземпляры `AsyncClient` с указанным провайдером, отправляет запросы и проверяет, что ответы соответствуют ожидаемому формату и содержат ожидаемые данные.
+**Наследует**:
+- `unittest.IsolatedAsyncioTestCase`: Базовый класс для создания асинхронных тестов в `unittest`.
 
 **Методы**:
-- `test_bing`: Асинхронный тест для проверки интеграции с провайдером Copilot.
-- `test_openai`: Асинхронный тест для проверки интеграции с провайдером DDG.
 
-#### `test_bing`
+- `test_bing(self)`: Асинхронный тест для провайдера `Copilot`.
+- `test_openai(self)`: Асинхронный тест для провайдера `DDG`.
+
+## Функции
+
+### `TestProviderIntegration.test_bing`
 
 ```python
-async def test_bing(self):
-    """
-    Асинхронно тестирует интеграцию с провайдером Copilot.
-
-    Создает асинхронный клиент с провайдером Copilot, отправляет запрос и проверяет, что ответ является экземпляром ChatCompletion
-    и содержит ожидаемые данные в формате JSON.
-    """
-    ...
+    def test_bing(self):
+        client = Client(provider=Copilot)
+        response = client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
 ```
 
+**Назначение**: Проверяет интеграцию с провайдером `Copilot`. Функция создает синхронный клиент с провайдером `Copilot`, отправляет запрос и проверяет, что ответ является экземпляром `ChatCompletion` и содержит ключ `"success"` в JSON.
+
+**Параметры**:
+- `self`: Ссылка на экземпляр класса `TestProviderIntegration`.
+
+**Возвращает**: None
+
+**Вызывает исключения**: None
+
 **Как работает функция**:
-1. Создается экземпляр класса `AsyncClient` с провайдером `Copilot`.
-2. Отправляется асинхронный запрос `chat.completions.create` с предопределенными сообщениями и указанием формата ответа как `json_object`.
-3. Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
-4. Проверяется, что ответ содержит ключ `success` в JSON-формате.
+1. **Создание клиента**: Создается экземпляр класса `Client` с указанием провайдера `Copilot`.
+2. **Отправка запроса**: Отправляется запрос к `chat.completions.create` с предопределенными сообщениями `DEFAULT_MESSAGES`, пустой строкой и указанием формата ответа `json_object`.
+3. **Проверка типа ответа**: Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
+4. **Проверка содержимого ответа**: Извлекается содержимое ответа, декодируется из JSON и проверяется наличие ключа `"success"`.
+
+```
+Создание клиента (client)
+↓
+Отправка запроса (response)
+↓
+Проверка типа ответа (assertIsInstance)
+↓
+Проверка содержимого ответа (assertIn)
+```
 
 **Примеры**:
 ```python
-# Пример использования test_bing
-import asyncio
-test_case = TestChatCompletionAsync()
-asyncio.run(test_case.test_bing())
+import unittest
+from g4f.client import Client
+from g4f.Provider import Copilot
+from g4f.client import ChatCompletion
+
+DEFAULT_MESSAGES = [{"role": "system", "content": 'Response in json, Example: {"success": false}'},
+                    {"role": "user", "content": "Say success true in json"}]
+
+class TestProviderIntegration(unittest.TestCase):
+    def test_bing(self):
+        client = Client(provider=Copilot)
+        response = client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
+
+if __name__ == '__main__':
+    unittest.main()
 ```
 
-#### `test_openai`
+### `TestProviderIntegration.test_openai`
 
 ```python
-async def test_openai(self):
-    """
-    Асинхронно тестирует интеграцию с провайдером DDG.
-
-    Создает асинхронный клиент с провайдером DDG, отправляет запрос и проверяет, что ответ является экземпляром ChatCompletion
-    и содержит ожидаемые данные в формате JSON.
-    """
-    ...
+    def test_openai(self):
+        client = Client(provider=DDG)
+        response = client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
 ```
 
+**Назначение**: Проверяет интеграцию с провайдером `DDG`. Функция создает синхронный клиент с провайдером `DDG`, отправляет запрос и проверяет, что ответ является экземпляром `ChatCompletion` и содержит ключ `"success"` в JSON.
+
+**Параметры**:
+- `self`: Ссылка на экземпляр класса `TestProviderIntegration`.
+
+**Возвращает**: None
+
+**Вызывает исключения**: None
+
 **Как работает функция**:
-1. Создается экземпляр класса `AsyncClient` с провайдером `DDG`.
-2. Отправляется асинхронный запрос `chat.completions.create` с предопределенными сообщениями и указанием формата ответа как `json_object`.
-3. Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
-4. Проверяется, что ответ содержит ключ `success` в JSON-формате.
+1. **Создание клиента**: Создается экземпляр класса `Client` с указанием провайдера `DDG`.
+2. **Отправка запроса**: Отправляется запрос к `chat.completions.create` с предопределенными сообщениями `DEFAULT_MESSAGES`, пустой строкой и указанием формата ответа `json_object`.
+3. **Проверка типа ответа**: Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
+4. **Проверка содержимого ответа**: Извлекается содержимое ответа, декодируется из JSON и проверяется наличие ключа `"success"`.
+
+```
+Создание клиента (client)
+↓
+Отправка запроса (response)
+↓
+Проверка типа ответа (assertIsInstance)
+↓
+Проверка содержимого ответа (assertIn)
+```
 
 **Примеры**:
 ```python
-# Пример использования test_openai
-import asyncio
-test_case = TestChatCompletionAsync()
-asyncio.run(test_case.test_openai())
+import unittest
+from g4f.client import Client
+from g4f.Provider import DDG
+from g4f.client import ChatCompletion
+
+DEFAULT_MESSAGES = [{"role": "system", "content": 'Response in json, Example: {"success": false}'},
+                    {"role": "user", "content": "Say success true in json"}]
+
+class TestProviderIntegration(unittest.TestCase):
+    def test_openai(self):
+        client = Client(provider=DDG)
+        response = client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
+
+if __name__ == '__main__':
+    unittest.main()
 ```
+
+### `TestChatCompletionAsync.test_bing`
+
+```python
+    async def test_bing(self):
+        client = AsyncClient(provider=Copilot)
+        response = await client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
+```
+
+**Назначение**: Асинхронно проверяет интеграцию с провайдером `Copilot`. Функция создает асинхронный клиент с провайдером `Copilot`, отправляет запрос и проверяет, что ответ является экземпляром `ChatCompletion` и содержит ключ `"success"` в JSON.
+
+**Параметры**:
+- `self`: Ссылка на экземпляр класса `TestChatCompletionAsync`.
+
+**Возвращает**: None
+
+**Вызывает исключения**: None
+
+**Как работает функция**:
+1. **Создание клиента**: Создается экземпляр класса `AsyncClient` с указанием провайдера `Copilot`.
+2. **Отправка запроса**: Отправляется асинхронный запрос к `chat.completions.create` с предопределенными сообщениями `DEFAULT_MESSAGES`, пустой строкой и указанием формата ответа `json_object`.
+3. **Проверка типа ответа**: Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
+4. **Проверка содержимого ответа**: Извлекается содержимое ответа, декодируется из JSON и проверяется наличие ключа `"success"`.
+
+```
+Создание клиента (client)
+↓
+Отправка запроса (response)
+↓
+Проверка типа ответа (assertIsInstance)
+↓
+Проверка содержимого ответа (assertIn)
+```
+
+**Примеры**:
+```python
+import unittest
+from g4f.client import AsyncClient
+from g4f.Provider import Copilot
+from g4f.client import ChatCompletion
+
+DEFAULT_MESSAGES = [{"role": "system", "content": 'Response in json, Example: {"success": false}'},
+                    {"role": "user", "content": "Say success true in json"}]
+
+class TestChatCompletionAsync(unittest.IsolatedAsyncioTestCase):
+    async def test_bing(self):
+        client = AsyncClient(provider=Copilot)
+        response = await client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+### `TestChatCompletionAsync.test_openai`
+
+```python
+    async def test_openai(self):
+        client = AsyncClient(provider=DDG)
+        response = await client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
+```
+
+**Назначение**: Асинхронно проверяет интеграцию с провайдером `DDG`. Функция создает асинхронный клиент с провайдером `DDG`, отправляет запрос и проверяет, что ответ является экземпляром `ChatCompletion` и содержит ключ `"success"` в JSON.
+
+**Параметры**:
+- `self`: Ссылка на экземпляр класса `TestChatCompletionAsync`.
+
+**Возвращает**: None
+
+**Вызывает исключения**: None
+
+**Как работает функция**:
+1. **Создание клиента**: Создается экземпляр класса `AsyncClient` с указанием провайдера `DDG`.
+2. **Отправка запроса**: Отправляется асинхронный запрос к `chat.completions.create` с предопределенными сообщениями `DEFAULT_MESSAGES`, пустой строкой и указанием формата ответа `json_object`.
+3. **Проверка типа ответа**: Проверяется, что полученный ответ является экземпляром класса `ChatCompletion`.
+4. **Проверка содержимого ответа**: Извлекается содержимое ответа, декодируется из JSON и проверяется наличие ключа `"success"`.
+
+```
+Создание клиента (client)
+↓
+Отправка запроса (response)
+↓
+Проверка типа ответа (assertIsInstance)
+↓
+Проверка содержимого ответа (assertIn)
+```
+
+**Примеры**:
+```python
+import unittest
+from g4f.client import AsyncClient
+from g4f.Provider import DDG
+from g4f.client import ChatCompletion
+
+DEFAULT_MESSAGES = [{"role": "system", "content": 'Response in json, Example: {"success": false}'},
+                    {"role": "user", "content": "Say success true in json"}]
+
+class TestChatCompletionAsync(unittest.IsolatedAsyncioTestCase):
+    async def test_openai(self):
+        client = AsyncClient(provider=DDG)
+        response = await client.chat.completions.create(DEFAULT_MESSAGES, "", response_format={"type": "json_object"})
+        self.assertIsInstance(response, ChatCompletion)
+        self.assertIn("success", json.loads(response.choices[0].message.content))
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,13 +1,19 @@
-# Модуль конфигурации и текстовых сообщений для Google Drive Uploader Bot
+# Модуль конфигурации и текстовых констант для Google Drive Uploader Bot
 
 ## Обзор
 
-Этот модуль содержит конфигурационные параметры и текстовые сообщения, используемые в Google Drive Uploader Bot. Он определяет различные переменные, такие как имена папок, учетные данные, текстовые сообщения для различных состояний и операций бота.
+Модуль содержит конфигурационные параметры и текстовые константы, используемые Google Drive Uploader Bot. Он определяет имена папок, учетные данные для Mega, приветственные сообщения, справку, уведомления о процессе загрузки и сообщения об ошибках.
 
 ## Подробней
 
-Модуль содержит настройки для авторизации, загрузки и обработки файлов. Он также включает текстовые сообщения для информирования пользователя о статусе операций.
-Этот код используется для определения констант и настроек, необходимых для работы бота, таких как имя папки на Google Диске, учетные данные для Mega, текстовые сообщения для различных этапов работы бота и пути для загрузки файлов.
+Этот модуль предоставляет значения по умолчанию для различных параметров и сообщений, которые могут быть изменены в соответствии с потребностями пользователя. В частности, он содержит:
+
+-   Имя папки на Google Диске (drive_folder_name).
+-   Учетные данные для доступа к Mega (MEGA_EMAIL, MEGA_PASSWORD).
+-   Текстовые константы для различных сообщений бота, таких как приветствие, справка, уведомления о процессе загрузки и сообщения об ошибках.
+-   Флаги для включения/выключения поддержки Openload, Dropbox и Mega (OPENLOAD, DROPBOX, MEGA).
+-   Путь для загрузки файлов (DOWN_PATH).
+-   Сообщение об обновлении бота (UPDATE).
 
 ## Переменные
 
@@ -17,7 +23,7 @@
 drive_folder_name = "GDriveUploaderBot"
 ```
 
-**Описание**: Имя папки на Google Диске, куда будут загружаться файлы.
+**Описание**: Имя папки на Google Диске, в которой будут сохраняться загруженные файлы. Может быть изменено по желанию пользователя.
 
 ### `MEGA_EMAIL`
 
@@ -25,7 +31,7 @@ drive_folder_name = "GDriveUploaderBot"
 MEGA_EMAIL = "bearyan8@yandex.com"
 ```
 
-**Описание**: Email аккаунта Mega.
+**Описание**: Email, используемый для доступа к аккаунту Mega. **Требуется** для работы с Mega ссылками.
 
 ### `MEGA_PASSWORD`
 
@@ -33,16 +39,15 @@ MEGA_EMAIL = "bearyan8@yandex.com"
 MEGA_PASSWORD = "bearyan8@yandex.com"
 ```
 
-**Описание**: Пароль от аккаунта Mega.
+**Описание**: Пароль для доступа к аккаунту Mega. **Требуется** для работы с Mega ссылками.
 
 ### `START`
 
 ```python
-START = " Hi {}  \nI am Drive Uploader Bot . Please Authorise To use me .By using /auth \n\n For more info /help \n\n Third-Party Website \n Support Added /update \n\n For Bot Updates  \n <a href ='https://t.me/aryan_bots'>Join Channel</a>\nPlease Report Bugs  @aryanvikash"
+START = " Hi {}  \\nI am Drive Uploader Bot . Please Authorise To use me .By using /auth \\n\\n For more info /help \\n\\n Third-Party Website \\n Support Added /update \\n\\n For Bot Updates  \\n <a href =\'https://t.me/aryan_bots\'>Join Channel</a>\\nPlease Report Bugs  @aryanvikash"
 ```
 
-**Описание**: Приветственное сообщение бота при старте.
-Содержит инструкции по авторизации и использованию бота, а также ссылки на канал с обновлениями и контакты для сообщения об ошибках.
+**Описание**: Приветственное сообщение бота. Содержит информацию о необходимости авторизации, командах `/auth` и `/help`, а также ссылку на канал с обновлениями бота.
 
 ### `HELP`
 
@@ -52,8 +57,7 @@ HELP = """   <b>AUTHORISE BOT</b>
        Your Google Drive Token And 
        Send It To Bot  
 <b> You Wanna Change Your Login 
-        Account ?</b> \n
-
+        Account ?</b> \\n
         You Can Use /revoke 
         command            
 <b>What I Can Do With This Bot? </b>
@@ -63,8 +67,7 @@ HELP = """   <b>AUTHORISE BOT</b>
 <b> Links Supported By Bot</b>
             * Direct Links 
             * Openload links [Max Speed 
-              500 KBps :(   ]
-            * Dropbox links 
+              500 KBps :(   ]\n            * Dropbox links 
             *  Mega links
             
             + More On Its way:)
@@ -73,8 +76,7 @@ Bug Report @aryanvikash
         """
 ```
 
-**Описание**: Справочное сообщение бота.
-Содержит информацию о командах авторизации, смены аккаунта, возможностях бота и поддерживаемых типах ссылок.
+**Описание**: Справочное сообщение бота. Содержит информацию о командах `/auth` и `/revoke`, а также о поддерживаемых типах ссылок.
 
 ### `DP_DOWNLOAD`
 
@@ -82,16 +84,15 @@ Bug Report @aryanvikash
 DP_DOWNLOAD = "Dropbox Link !! Downloading Started ..."
 ```
 
-**Описание**: Сообщение о начале загрузки файла из Dropbox.
+**Описание**: Сообщение, отображаемое при начале загрузки файла с Dropbox.
 
 ### `OL_DOWNLOAD`
 
 ```python
-OL_DOWNLOAD = "Openload Link !! Downloading Started ... \n Openload Links Are Extremely Slow"
+OL_DOWNLOAD = "Openload Link !! Downloading Started ... \\n Openload Links Are Extremely Slow"
 ```
 
-**Описание**: Сообщение о начале загрузки файла из Openload.
-Указывает на низкую скорость загрузки с Openload.
+**Описание**: Сообщение, отображаемое при начале загрузки файла с Openload. Предупреждает о низкой скорости загрузки.
 
 ### `PROCESSING`
 
@@ -99,7 +100,7 @@ OL_DOWNLOAD = "Openload Link !! Downloading Started ... \n Openload Links Are Ex
 PROCESSING = "Processing Your Request ...!!"
 ```
 
-**Описание**: Сообщение об обработке запроса пользователя.
+**Описание**: Сообщение, отображаемое во время обработки запроса пользователя.
 
 ### `DOWN_TWO`
 
@@ -107,7 +108,7 @@ PROCESSING = "Processing Your Request ...!!"
 DOWN_TWO = True
 ```
 
-**Описание**: Флаг, определяющий, нужно ли выполнять двойную загрузку (возможно, для проверки). Значение всегда `True`.
+**Описание**: Булевая переменная, значение которой всегда `True`. Вероятно, определяет какую-то логику двойной загрузки, однако ее фактическое использование в коде неясно.
 
 ### `DOWNLOAD`
 
@@ -115,16 +116,15 @@ DOWN_TWO = True
 DOWNLOAD = "Downloading Started ..."
 ```
 
-**Описание**: Сообщение о начале загрузки файла.
+**Описание**: Сообщение, отображаемое при начале загрузки файла.
 
 ### `DOWN_MEGA`
 
 ```python
-DOWN_MEGA = "Downloading Started... \n  Mega Links are \n Extremely Slow :("
+DOWN_MEGA = "Downloading Started... \\n  Mega Links are \\n Extremely Slow :("
 ```
 
-**Описание**: Сообщение о начале загрузки файла из Mega.
-Указывает на низкую скорость загрузки с Mega.
+**Описание**: Сообщение, отображаемое при начале загрузки файла с Mega. Предупреждает о низкой скорости загрузки.
 
 ### `DOWN_COMPLETE`
 
@@ -132,69 +132,63 @@ DOWN_MEGA = "Downloading Started... \n  Mega Links are \n Extremely Slow :("
 DOWN_COMPLETE = "Downloading complete !!"
 ```
 
-**Описание**: Сообщение об успешном завершении загрузки файла.
+**Описание**: Сообщение, отображаемое при завершении загрузки файла.
 
 ### `NOT_AUTH`
 
 ```python
-NOT_AUTH = "You Are Not Authorised To Using this Bot \n\n Please Authorise Me Using /auth  \n\n @aryanvikash"
+NOT_AUTH = "You Are Not Authorised To Using this Bot \\n\\n Please Authorise Me Using /auth  \\n\\n @aryanvikash"
 ```
 
-**Описание**: Сообщение об отсутствии авторизации пользователя.
-Предлагает авторизоваться с помощью команды `/auth`.
+**Описание**: Сообщение, отображаемое при попытке использовать бота без авторизации.
 
 ### `REVOKE_FAIL`
 
 ```python
-REVOKE_FAIL = "You Are Already UnAuthorised \n. Please Use /auth To Authorise \n\n report At @aryanvikash "
+REVOKE_FAIL = "You Are Already UnAuthorised \\n. Please Use /auth To Authorise \\n\\n report At @aryanvikash "
 ```
 
-**Описание**: Сообщение об ошибке при попытке отмены авторизации.
-Указывает, что пользователь уже не авторизован.
+**Описание**: Сообщение, отображаемое при попытке отменить авторизацию, когда пользователь уже не авторизован.
 
 ### `AUTH_SUCC`
 
 ```python
-AUTH_SUCC = "Authorised Successfully  !! \n\n Now Send me A direct Link :)"
+AUTH_SUCC = "Authorised Successfully  !! \\n\\n Now Send me A direct Link :)"
 ```
 
-**Описание**: Сообщение об успешной авторизации пользователя.
-Предлагает отправить прямую ссылку для загрузки.
+**Описание**: Сообщение, отображаемое при успешной авторизации пользователя.
 
 ### `ALREADY_AUTH`
 
 ```python
-ALREADY_AUTH = "You Are Already Authorised ! \n\n Wanna Change Drive Account? \n\n Use /revoke \n\n report At @aryanvikash "
+ALREADY_AUTH = "You Are Already Authorised ! \\n\\n Wanna Change Drive Account? \\n\\n Use /revoke \\n\\n report At @aryanvikash "
 ```
 
-**Описание**: Сообщение о том, что пользователь уже авторизован.
-Предлагает использовать команду `/revoke` для смены аккаунта.
+**Описание**: Сообщение, отображаемое при попытке авторизоваться, когда пользователь уже авторизован.
 
 ### `AUTH_URL`
 
 ```python
-AUTH_URL = '<a href ="{}">Vist This Url</a> \n Generate And Copy Your Google Drive Token And Send It To Me'
+AUTH_URL = '<a href ="{}">Vist This Url</a> \\n Generate And Copy Your Google Drive Token And Send It To Me'
 ```
 
-**Описание**: Шаблон сообщения с URL для авторизации в Google Drive.
-Содержит инструкцию по генерации токена и отправке его боту.
+**Описание**: Сообщение, содержащее ссылку для получения токена Google Drive.
 
 ### `UPLOADING`
 
 ```python
-UPLOADING = "Download Complete !! \n Uploading Your file"
+UPLOADING = "Download Complete !! \\n Uploading Your file"
 ```
 
-**Описание**: Сообщение о начале загрузки файла на Google Drive.
+**Описание**: Сообщение, отображаемое при начале загрузки файла на Google Drive.
 
 ### `REVOKE_TOK`
 
 ```python
-REVOKE_TOK = " Your Token is Revoked Successfully !! \n\n Use /auth To Re-Authorise Your Drive Acc. "
+REVOKE_TOK = " Your Token is Revoked Successfully !! \\n\\n Use /auth To Re-Authorise Your Drive Acc. "
 ```
 
-**Описание**: Сообщение об успешной отмене авторизации.
-Предлагает повторно авторизоваться с помощью команды `/auth`.
+**Описание**: Сообщение, отображаемое при успешной отмене авторизации пользователя.
 
 ### `DOWN_PATH`
 
@@ -202,26 +196,23 @@ REVOKE_TOK = " Your Token is Revoked Successfully !! \n\n Use /auth To Re-Author
 DOWN_PATH = "Downloads/"  # Linux path
 ```
 
-**Описание**: Путь к папке для загрузок.
-Указан путь для Linux.
+**Описание**: Путь к папке, в которую сохраняются загруженные файлы.
 
 ### `DOWNLOAD_URL`
 
 ```python
-DOWNLOAD_URL = "Your File Uploaded Successfully \n\n <b>Filename</b> : {} \n\n <b> Size</b> : {} MB \n\n <b>Download</b> {}"
+DOWNLOAD_URL = "Your File Uploaded Successfully \\n\\n <b>Filename</b> : {} \\n\\n <b> Size</b> : {} MB \\n\\n <b>Download</b> {}"
 ```
 
-**Описание**: Шаблон сообщения об успешной загрузке файла на Google Drive.
-Содержит информацию об имени файла, размере и ссылке для скачивания.
+**Описание**: Сообщение, отображаемое при успешной загрузке файла на Google Drive. Содержит информацию об имени файла, размере и ссылке для скачивания.
 
 ### `AUTH_ERROR`
 
 ```python
-AUTH_ERROR = "AUTH Error !! Please  Send Me a  valid Token or Re - Authorise Me  \n\n report At @aryanvikash"
+AUTH_ERROR = "AUTH Error !! Please  Send Me a  valid Token or Re - Authorise Me  \\n\\n report At @aryanvikash"
 ```
 
-**Описание**: Сообщение об ошибке авторизации.
-Предлагает отправить валидный токен или повторно авторизоваться.
+**Описание**: Сообщение, отображаемое при ошибке авторизации.
 
 ### `OPENLOAD`
 
@@ -229,7 +220,7 @@ AUTH_ERROR = "AUTH Error !! Please  Send Me a  valid Token or Re - Authorise Me 
 OPENLOAD = True
 ```
 
-**Описание**: Флаг, указывающий, поддерживается ли загрузка с Openload. Значение всегда `True`.
+**Описание**: Флаг, определяющий, поддерживаются ли ссылки Openload.
 
 ### `DROPBOX`
 
@@ -237,7 +228,7 @@ OPENLOAD = True
 DROPBOX = True
 ```
 
-**Описание**: Флаг, указывающий, поддерживается ли загрузка с Dropbox. Значение всегда `True`.
+**Описание**: Флаг, определяющий, поддерживаются ли ссылки Dropbox.
 
 ### `MEGA`
 
@@ -245,7 +236,7 @@ DROPBOX = True
 MEGA = True
 ```
 
-**Описание**: Флаг, указывающий, поддерживается ли загрузка с Mega. Значение всегда `True`.
+**Описание**: Флаг, определяющий, поддерживаются ли ссылки Mega.
 
 ### `UPDATE`
 
@@ -257,12 +248,10 @@ UPDATE = """ <b> Update  on  27.07.2019</b>
 <b> Links Supported By Bot</b>
             * Direct Links 
             * Openload links [Max Speed 
-              500 KBps :(   ]
-            * Dropbox links 
+              500 KBps :(   ]\n            * Dropbox links 
             *  Mega links (only files)
             
             + More are in way:) """
 ```
 
-**Описание**: Сообщение об обновлении бота.
-Содержит информацию о добавленных функциях и улучшении обработки ошибок.
+**Описание**: Сообщение об обновлении бота. Содержит информацию о добавленных функциях и поддерживаемых типах ссылок.

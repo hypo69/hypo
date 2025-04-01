@@ -1,12 +1,13 @@
-# Модуль для работы с HTML
+# Модуль для конвертации HTML
 
 ## Обзор
 
-Модуль `html2pdf.py` предоставляет набор утилит для работы с HTML, включая функции для конвертации HTML в escape-последовательности, обратно в HTML, в словари и объекты SimpleNamespace. Также включает функции для конвертации HTML в PDF.
+Модуль `html2pdf.py` предоставляет набор утилит для конвертации HTML в различные форматы, включая экранированные последовательности, словари, объекты SimpleNamespace и PDF-файлы. Он включает функции для экранирования и деэкранирования HTML-тегов, преобразования HTML в словари и объекты SimpleNamespace, а также для конвертации HTML в PDF с использованием библиотеки `weasyprint`.
 
-## Подробней
+## Подробнее
 
-Этот модуль предоставляет инструменты для преобразования HTML в различные форматы данных, что может быть полезно для обработки и анализа HTML-контента. В частности, модуль позволяет преобразовывать HTML в PDF.
+Этот модуль содержит функции для работы с HTML, включая преобразование HTML в экранированные последовательности, преобразование экранированных последовательностей обратно в HTML, преобразование HTML в словари и объекты SimpleNamespace, а также преобразование HTML в PDF. Он использует библиотеки `html.parser`, `xhtml2pdf` и `weasyprint` для выполнения этих задач.
+Внутри проекта модуль используется для преобразования  различной информации в удобный формат. Например, для генерации отчетов в формате PDF.
 
 ## Функции
 
@@ -29,19 +30,25 @@ def html2escape(input_str: str) -> str:
         >>> print(result)
         &lt;p&gt;Hello, world!&lt;/p&gt;
     """
-    return StringFormatter.escape_html_tags(input_str)
+    ...
 ```
 
-**Назначение**: Преобразует HTML в escape-последовательности.
-
-**Как работает функция**:
-Функция `html2escape` принимает HTML-код в качестве входной строки и преобразует его в escape-последовательности, заменяя символы, такие как `<`, `>`, `&`, кавычки и апострофы, на соответствующие escape-последовательности (`&lt;`, `&gt;`, `&amp;` и т.д.).
+**Назначение**: Преобразует HTML в экранированные последовательности.
 
 **Параметры**:
-- `input_str` (str): HTML-код, который необходимо преобразовать.
+- `input_str` (str): HTML-код для преобразования.
 
 **Возвращает**:
-- `str`: HTML, преобразованный в escape-последовательности.
+- `str`: HTML, преобразованный в экранированные последовательности.
+
+**Как работает функция**:
+1. Функция принимает HTML-код в качестве входных данных.
+2. Она вызывает метод `StringFormatter.escape_html_tags(input_str)` для преобразования HTML в экранированные последовательности.
+3. Возвращает преобразованный HTML.
+
+```ascii
+HTML-код --> Преобразование в экранированные последовательности --> Экранированный HTML
+```
 
 **Примеры**:
 ```python
@@ -69,19 +76,25 @@ def escape2html(input_str: str) -> str:
         >>> print(result)
         <p>Hello, world!</p>
     """
-    return StringFormatter.unescape_html_tags(input_str)
+    ...
 ```
 
-**Назначение**: Преобразует escape-последовательности обратно в HTML.
-
-**Как работает функция**:
-Функция `escape2html` принимает строку с escape-последовательностями и преобразует их обратно в HTML, заменяя escape-последовательности, такие как `&lt;`, `&gt;`, `&amp;`, на соответствующие символы `<`, `>`, `&`.
+**Назначение**: Преобразует экранированные последовательности обратно в HTML.
 
 **Параметры**:
-- `input_str` (str): Строка с escape-последовательностями.
+- `input_str` (str): Строка с экранированными последовательностями.
 
 **Возвращает**:
-- `str`: Escape-последовательности, преобразованные обратно в HTML.
+- `str`: Экранированные последовательности, преобразованные обратно в HTML.
+
+**Как работает функция**:
+1. Функция принимает строку с экранированными последовательностями в качестве входных данных.
+2. Она вызывает метод `StringFormatter.unescape_html_tags(input_str)` для преобразования экранированных последовательностей обратно в HTML.
+3. Возвращает преобразованный HTML.
+
+```ascii
+Строка с экранированными последовательностями --> Преобразование в HTML --> HTML
+```
 
 **Примеры**:
 ```python
@@ -109,37 +122,86 @@ def html2dict(html_str: str) -> Dict[str, str]:
         >>> print(result)
         {'p': 'Hello', 'a': 'World'}
     """
-    class HTMLToDictParser(HTMLParser):
-        def __init__(self):
-            super().__init__()
-            self.result = {}
-            self.current_tag = None
-
-        def handle_starttag(self, tag, attrs):
-            self.current_tag = tag
-
-        def handle_endtag(self, tag):
-            self.current_tag = None
-
-        def handle_data(self, data):
-            if self.current_tag:
-                self.result[self.current_tag] = data.strip()
-
-    parser = HTMLToDictParser()
-    parser.feed(html_str)
-    return parser.result
+    ...
 ```
 
 **Назначение**: Преобразует HTML в словарь, где теги являются ключами, а содержимое - значениями.
-
-**Как работает функция**:
-Функция `html2dict` использует класс `HTMLToDictParser`, который наследуется от `HTMLParser`. Этот класс анализирует HTML-строку и извлекает теги и их содержимое. Метод `handle_starttag` устанавливает текущий тег, а метод `handle_data` извлекает данные из текущего тега и сохраняет их в словаре `result`.
 
 **Параметры**:
 - `html_str` (str): HTML-строка для преобразования.
 
 **Возвращает**:
-- `dict`: Словарь, где ключами являются HTML-теги, а значениями - их содержимое.
+- `dict`: Словарь, где HTML-теги являются ключами, а их содержимое - значениями.
+
+**Как работает функция**:
+1. Функция определяет внутренний класс `HTMLToDictParser`, который наследуется от `HTMLParser`.
+2. Класс `HTMLToDictParser` переопределяет методы `handle_starttag`, `handle_endtag` и `handle_data` для извлечения тегов и содержимого.
+3. Создается экземпляр `HTMLToDictParser`.
+4. HTML-строка передается в метод `feed` парсера.
+5. Результат парсинга (словарь) возвращается.
+
+**Внутренние функции**:
+
+#### `HTMLToDictParser`
+```python
+class HTMLToDictParser(HTMLParser):
+    """
+    Преобразует HTML в словарь, где теги являются ключами, а содержимое - значениями.
+
+    Inherits:
+        HTMLParser: Наследуется от класса HTMLParser.
+
+    Attributes:
+        result (dict): Словарь для хранения результатов парсинга.
+        current_tag (str): Текущий обрабатываемый тег.
+
+    Methods:
+        handle_starttag(tag, attrs): Обрабатывает начало тега.
+        handle_endtag(tag): Обрабатывает конец тега.
+        handle_data(data): Обрабатывает данные внутри тега.
+    """
+
+    def __init__(self):
+        """
+        Инициализирует парсер HTML.
+        """
+        super().__init__()
+        self.result = {}
+        self.current_tag = None
+
+    def handle_starttag(self, tag, attrs):
+        """
+        Обрабатывает начало тега.
+
+        Args:
+            tag (str): Тег HTML.
+            attrs (list): Атрибуты тега.
+        """
+        self.current_tag = tag
+
+    def handle_endtag(self, tag):
+        """
+        Обрабатывает конец тега.
+
+        Args:
+            tag (str): Тег HTML.
+        """
+        self.current_tag = None
+
+    def handle_data(self, data):
+        """
+        Обрабатывает данные внутри тега.
+
+        Args:
+            data (str): Данные внутри тега.
+        """
+        if self.current_tag:
+            self.result[self.current_tag] = data.strip()
+```
+
+```ascii
+HTML-строка --> Создание HTMLToDictParser --> Парсинг HTML --> Словарь (тег: содержимое)
+```
 
 **Примеры**:
 ```python
@@ -169,20 +231,25 @@ def html2ns(html_str: str) -> SimpleNamespace:
         >>> print(result.a)
         World
     """
-    html_dict = html2dict(html_str)
-    return SimpleNamespace(**html_dict)
+    ...
 ```
 
 **Назначение**: Преобразует HTML в объект SimpleNamespace, где теги являются атрибутами, а содержимое - значениями.
-
-**Как работает функция**:
-Функция `html2ns` сначала преобразует HTML-строку в словарь с помощью функции `html2dict`, а затем использует этот словарь для создания объекта `SimpleNamespace`.
 
 **Параметры**:
 - `html_str` (str): HTML-строка для преобразования.
 
 **Возвращает**:
-- `SimpleNamespace`: Объект SimpleNamespace с HTML-тегами в качестве атрибутов и их содержимым в качестве значений.
+- `SimpleNamespace`: Объект SimpleNamespace, где HTML-теги являются атрибутами, а их содержимое - значениями.
+
+**Как работает функция**:
+1. Функция вызывает функцию `html2dict` для преобразования HTML в словарь.
+2. Создается объект `SimpleNamespace` из словаря.
+3. Возвращается объект `SimpleNamespace`.
+
+```ascii
+HTML-строка --> Преобразование в словарь (html2dict) --> Создание SimpleNamespace --> SimpleNamespace
+```
 
 **Примеры**:
 ```python
@@ -197,35 +264,37 @@ print(result.a)  # Вывод: World
 ```python
 def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
     """Converts HTML content to a PDF file using WeasyPrint."""
-    try:
-        HTML(string=html_str).write_pdf(pdf_file)
-        return True
-    except Exception as e:
-        print(f"Error during PDF generation: {e}")
-        return
+    ...
 ```
 
-**Назначение**: Преобразует HTML-контент в PDF-файл, используя библиотеку `WeasyPrint`.
-
-**Как работает функция**:
-Функция `html2pdf` принимает HTML-строку и путь к PDF-файлу. Она использует библиотеку `WeasyPrint` для преобразования HTML в PDF. В случае возникновения ошибки во время генерации PDF, она выводит сообщение об ошибке.
+**Назначение**: Преобразует HTML-контент в PDF-файл с использованием библиотеки `weasyprint`.
 
 **Параметры**:
 - `html_str` (str): HTML-контент в виде строки.
 - `pdf_file` (str | Path): Путь к выходному PDF-файлу.
 
 **Возвращает**:
-- `bool | None`: Возвращает `True`, если генерация PDF прошла успешно, и `None` в противном случае.
+- `bool | None`: Возвращает `True`, если генерация PDF прошла успешно; `None` в противном случае.
 
 **Вызывает исключения**:
-- `Exception`: Если возникает ошибка во время генерации PDF.
+- `Exception`: Если во время генерации PDF произошла ошибка.
+
+**Как работает функция**:
+1. Пытается преобразовать HTML-контент в PDF-файл, используя библиотеку `weasyprint`.
+2. В случае успеха возвращает `True`.
+3. Если во время генерации PDF произошла ошибка, печатает сообщение об ошибке и возвращает `None`.
+
+```ascii
+HTML-строка --> Генерация PDF (weasyprint) --> PDF-файл
+```
 
 **Примеры**:
+
 ```python
 html = "<p>Hello, world!</p>"
-pdf_file = "output.pdf"
+pdf_file = "example.pdf"
 result = html2pdf(html, pdf_file)
 if result:
-    print("PDF generated successfully")
+    print("PDF generated successfully!")
 else:
-    print("PDF generation failed")
+    print("PDF generation failed.")

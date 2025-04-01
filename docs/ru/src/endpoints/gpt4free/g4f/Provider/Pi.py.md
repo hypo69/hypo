@@ -2,245 +2,249 @@
 
 ## Обзор
 
-Модуль `Pi` предоставляет асинхронный генератор для взаимодействия с сервисом Pi.ai. Он позволяет вести беседы, отправлять запросы и получать ответы в асинхронном режиме. Модуль использует `StreamSession` для асинхронных HTTP-запросов и поддерживает потоковую передачу данных.
+Модуль `Pi` предназначен для асинхронного взаимодействия с AI-сервисом Pi.ai для генерации текста. Он предоставляет класс `Pi`, который наследуется от `AsyncGeneratorProvider` и использует асинхронные генераторы для потоковой передачи ответов. Модуль поддерживает работу через прокси, установку таймаутов и сохранение истории переписки.
 
-## Подробнее
+## Подробней
 
-Этот модуль является частью проекта `hypotez` и предназначен для интеграции с сервисом Pi.ai, предоставляя удобный интерфейс для асинхронного обмена сообщениями. Он использует асинхронные генераторы для обработки потоковых данных, что позволяет эффективно работать с большими объемами информации.
-Модуль определяет методы для начала разговора, отправки сообщений и получения истории чата, обеспечивая полный цикл взаимодействия с API Pi.ai.
+Модуль `Pi` является провайдером для библиотеки `g4f` и обеспечивает интеграцию с сервисом Pi.ai. Он использует асинхронные запросы для обмена сообщениями с сервером и поддерживает потоковую передачу данных, что позволяет получать ответы в реальном времени.
 
 ## Классы
 
 ### `Pi`
 
-**Описание**: Класс `Pi` является асинхронным генератором провайдером для взаимодействия с API Pi.ai.
+**Описание**: Класс `Pi` предоставляет методы для взаимодействия с сервисом Pi.ai. Он позволяет начинать новые диалоги, отправлять запросы и получать ответы в асинхронном режиме.
 
-**Принцип работы**:
-1.  **Инициализация**: При первом обращении к классу, если `_headers` не установлены, происходит получение аргументов (включая cookies и headers) с использованием `get_args_from_nodriver`.
-2.  **Начало разговора**: Метод `start_conversation` начинает новый разговор с Pi.ai и возвращает идентификатор разговора.
-3.  **Отправка запроса**: Метод `ask` отправляет запрос к Pi.ai и возвращает асинхронный генератор, который выдает ответы по мере их поступления.
-4.  **Обработка ответов**: В процессе работы, ответы от Pi.ai обрабатываются и извлекаются из потока данных. Cookies обновляются для поддержания сессии.
+**Наследует**: `AsyncGeneratorProvider`
 
-**Атрибуты:**
-
-*   `url` (str): URL для взаимодействия с Pi.ai ("https://pi.ai/talk").
-*   `working` (bool): Указывает, что провайдер работает (True).
-*   `use_nodriver` (bool): Указывает на использование без драйвера (True).
-*   `supports_stream` (bool): Указывает на поддержку потоковой передачи (True).
-*   `default_model` (str): Модель по умолчанию ("pi").
-*   `models` (list): Список поддерживаемых моделей (["pi"]).
-*   `_headers` (dict): Заголовки HTTP-запроса (инициализируется как None).
-*   `_cookies` (Cookies): Cookies для HTTP-запроса (инициализируется как пустой словарь).
+**Атрибуты**:
+- `url` (str): URL-адрес сервиса Pi.ai.
+- `working` (bool): Флаг, указывающий на работоспособность провайдера.
+- `use_nodriver` (bool): Флаг, указывающий на использование без драйвера.
+- `supports_stream` (bool): Флаг, указывающий на поддержку потоковой передачи данных.
+- `default_model` (str): Модель, используемая по умолчанию ("pi").
+- `models` (List[str]): Список поддерживаемых моделей (только "pi").
+- `_headers` (dict): Заголовки HTTP-запроса.
+- `_cookies` (Cookies): Куки для HTTP-запроса.
 
 **Методы**:
-
-*   `create_async_generator`: Создает асинхронный генератор для взаимодействия с Pi.ai.
-*   `start_conversation`: Начинает новый разговор с Pi.ai.
-*   `get_chat_history`: Получает историю чата.
-*   `ask`: Отправляет запрос к Pi.ai и возвращает асинхронный генератор ответов.
-
-## Функции
+- `create_async_generator()`: Создает асинхронный генератор для получения ответов от сервиса.
+- `start_conversation()`: Начинает новый диалог с сервисом и возвращает идентификатор диалога.
+- `get_chat_history()`: Получает историю переписки по идентификатору диалога.
+- `ask()`: Отправляет запрос в сервис и возвращает асинхронный генератор ответов.
 
 ### `create_async_generator`
 
 ```python
-@classmethod
-async def create_async_generator(
-    cls,
-    model: str,
-    messages: Messages,
-    stream: bool,
-    proxy: str = None,
-    timeout: int = 180,
-    conversation_id: str = None,
-    **kwargs
-) -> AsyncResult:
-    """Создает асинхронный генератор для взаимодействия с Pi.ai.
+    @classmethod
+    async def create_async_generator(
+        cls,
+        model: str,
+        messages: Messages,
+        stream: bool,
+        proxy: str = None,
+        timeout: int = 180,
+        conversation_id: str = None,
+        **kwargs
+    ) -> AsyncResult:
+        """
+        Создает асинхронный генератор для получения ответов от сервиса Pi.ai.
 
-    Args:
-        model (str): Модель для использования.
-        messages (Messages): Список сообщений для отправки.
-        stream (bool): Флаг, указывающий, использовать ли потоковую передачу.
-        proxy (str, optional): Адрес прокси-сервера. По умолчанию `None`.
-        timeout (int, optional): Время ожидания запроса в секундах. По умолчанию 180.
-        conversation_id (str, optional): Идентификатор разговора. По умолчанию `None`.
-        **kwargs: Дополнительные параметры.
+        Args:
+            model (str): Модель для генерации текста.
+            messages (Messages): Список сообщений для отправки в сервис.
+            stream (bool): Флаг, указывающий на необходимость потоковой передачи данных.
+            proxy (str, optional): Адрес прокси-сервера. По умолчанию `None`.
+            timeout (int, optional): Время ожидания ответа от сервиса. По умолчанию 180.
+            conversation_id (str, optional): Идентификатор существующего диалога. По умолчанию `None`.
+            **kwargs: Дополнительные параметры.
 
-    Returns:
-        AsyncResult: Асинхронный генератор, выдающий ответы от Pi.ai.
+        Returns:
+            AsyncResult: Асинхронный генератор, возвращающий ответы от сервиса.
 
-    Как работает функция:
-    1. Проверяет, инициализированы ли заголовки (`cls._headers`). Если нет, то получает их и cookies с помощью `get_args_from_nodriver`.
-    2. Создает асинхронную сессию `StreamSession` с полученными заголовками и cookies.
-    3. Если `conversation_id` не предоставлен, начинает новый разговор, получая `conversation_id` от Pi.ai.
-    4. Форматирует запрос с использованием `format_prompt` или берет последнее сообщение из списка.
-    5. Вызывает метод `ask` для отправки запроса и получения ответов.
-    6. Итерируется по ответам, извлекая текст из каждого ответа и передавая его через `yield`.
+        Как работает функция:
+        1. Проверяет, инициализированы ли заголовки запроса (`cls._headers`). Если нет, получает их с помощью `get_args_from_nodriver`.
+        2. Использует `StreamSession` для выполнения асинхронных запросов.
+        3. Если `conversation_id` не передан, начинает новый диалог с помощью `start_conversation`.
+        4. Форматирует запрос с помощью `format_prompt`.
+        5. Отправляет запрос в сервис с помощью `ask` и получает асинхронный генератор ответов.
 
-    Внутри функции происходят следующие действия и преобразования:
-    A. Проверка инициализации заголовков и получение их при необходимости.
-    |
-    B. Создание асинхронной сессии.
-    |
-    C. Получение или использование существующего `conversation_id`.
-    |
-    D. Форматирование запроса.
-    |
-    E. Отправка запроса и получение ответов.
-    |
-    F. Извлечение текста из ответов и передача через `yield`.
-    """
-    ...
+        Внутренние функции: нет
+
+        """
 ```
 
-**Примеры**:
+#### ASCII Flowchart функции `create_async_generator`
+
+```
+    Начало
+    │
+    ├──> Проверка инициализации заголовков (cls._headers)
+    │   └──> Нет: Получение заголовков и куки через get_args_from_nodriver
+    │
+    ├──> Создание StreamSession
+    │
+    ├──> Проверка conversation_id
+    │   └──> Нет: Запуск нового диалога через start_conversation
+    │
+    ├──> Форматирование запроса через format_prompt
+    │
+    └──> Отправка запроса через ask
+    │   └──> Получение асинхронного генератора ответов
+    │
+    Конец
+```
+
+#### Примеры вызова функции `create_async_generator`
 
 ```python
-# Пример использования create_async_generator
-model = "pi"
-messages = [{"role": "user", "content": "Hello, Pi!"}]
-stream = True
-# result = Pi.create_async_generator(model=model, messages=messages, stream=stream)
+# Пример 1: Создание генератора для нового диалога
+async for message in Pi.create_async_generator(model='pi', messages=[{'role': 'user', 'content': 'Hello'}], stream=True):
+    print(message)
+
+# Пример 2: Создание генератора для существующего диалога
+async for message in Pi.create_async_generator(model='pi', messages=[{'role': 'user', 'content': 'Continue'}], stream=True, conversation_id='123'):
+    print(message)
 ```
 
 ### `start_conversation`
 
 ```python
-@classmethod
-async def start_conversation(cls, session: StreamSession) -> str:
-    """Начинает новый разговор с Pi.ai.
+    @classmethod
+    async def start_conversation(cls, session: StreamSession) -> str:
+        """
+        Начинает новый диалог с сервисом Pi.ai и возвращает идентификатор диалога.
 
-    Args:
-        session (StreamSession): Асинхронная сессия для выполнения запроса.
+        Args:
+            session (StreamSession): Асинхронная сессия для выполнения запросов.
 
-    Returns:
-        str: Идентификатор нового разговора.
+        Returns:
+            str: Идентификатор нового диалога.
 
-    Raises:
-        Exception: Если возникает ошибка при выполнении запроса.
+        Как работает функция:
+        1. Отправляет POST-запрос на URL-адрес `https://pi.ai/api/chat/start` с пустыми данными.
+        2. Устанавливает заголовок `accept` в значение `application/json` и `x-api-version` в значение `3`.
+        3. Извлекает идентификатор диалога (`sid`) из JSON-ответа.
 
-    Как работает функция:
-    1. Отправляет POST-запрос к `https://pi.ai/api/chat/start` с заголовками, необходимыми для начала разговора.
-    2. Проверяет статус ответа с помощью `raise_for_status`.
-    3. Извлекает `conversation_id` из JSON-ответа.
-
-    Внутри функции происходят следующие действия и преобразования:
-    A. Отправка POST-запроса.
-    |
-    B. Проверка статуса ответа.
-    |
-    C. Извлечение `conversation_id`.
-    """
-    ...
+        Внутренние функции: нет
+        """
 ```
 
-**Примеры**:
+#### ASCII Flowchart функции `start_conversation`
+
+```
+    Начало
+    │
+    ├──> Отправка POST-запроса на https://pi.ai/api/chat/start
+    │   └──> Установка заголовков accept и x-api-version
+    │
+    ├──> Извлечение идентификатора диалога (sid) из JSON-ответа
+    │
+    Конец
+```
+
+#### Примеры вызова функции `start_conversation`
 
 ```python
-# Пример использования start_conversation
-# async def example():
-#     session = StreamSession()
-#     conversation_id = await Pi.start_conversation(session)
-#     print(f"Conversation ID: {conversation_id}")
-# asyncio.run(example())
+# Пример: Запуск нового диалога
+session = StreamSession()
+conversation_id = await Pi.start_conversation(session)
+print(conversation_id)
 ```
 
 ### `get_chat_history`
 
 ```python
-async def get_chat_history(session: StreamSession, conversation_id: str):
-    """Получает историю чата.
+    async def get_chat_history(session: StreamSession, conversation_id: str):
+        """
+        Получает историю переписки по идентификатору диалога.
 
-    Args:
-        session (StreamSession): Асинхронная сессия для выполнения запроса.
-        conversation_id (str): Идентификатор разговора.
+        Args:
+            session (StreamSession): Асинхронная сессия для выполнения запросов.
+            conversation_id (str): Идентификатор диалога.
 
-    Returns:
-        dict: JSON-ответ с историей чата.
+        Returns:
+            dict: JSON-ответ, содержащий историю переписки.
 
-    Raises:
-        Exception: Если возникает ошибка при выполнении запроса.
+        Как работает функция:
+        1. Формирует параметры запроса, включая `conversation_id`.
+        2. Отправляет GET-запрос на URL-адрес `https://pi.ai/api/chat/history` с параметрами.
+        3. Возвращает JSON-ответ, содержащий историю переписки.
 
-    Как работает функция:
-    1. Определяет параметры запроса, включая `conversation_id`.
-    2. Отправляет GET-запрос к `https://pi.ai/api/chat/history` с параметрами.
-    3. Проверяет статус ответа с помощью `raise_for_status`.
-    4. Возвращает JSON-ответ с историей чата.
-
-    Внутри функции происходят следующие действия и преобразования:
-    A. Определение параметров запроса.
-    |
-    B. Отправка GET-запроса.
-    |
-    C. Проверка статуса ответа.
-    |
-    D. Возврат JSON-ответа.
-    """
-    ...
+        Внутренние функции: нет
+        """
 ```
 
-**Примеры**:
+#### ASCII Flowchart функции `get_chat_history`
+
+```
+    Начало
+    │
+    ├──> Формирование параметров запроса (conversation_id)
+    │
+    ├──> Отправка GET-запроса на https://pi.ai/api/chat/history
+    │
+    └──> Возврат JSON-ответа с историей переписки
+    │
+    Конец
+```
+
+#### Примеры вызова функции `get_chat_history`
 
 ```python
-# Пример использования get_chat_history
-# async def example():
-#     session = StreamSession()
-#     conversation_id = "some_conversation_id"
-#     history = await Pi.get_chat_history(session, conversation_id)
-#     print(f"Chat history: {history}")
-# asyncio.run(example())
+# Пример: Получение истории переписки
+session = StreamSession()
+history = await Pi.get_chat_history(session, '123')
+print(history)
 ```
 
 ### `ask`
 
 ```python
-@classmethod
-async def ask(cls, session: StreamSession, prompt: str, conversation_id: str):
-    """Отправляет запрос к Pi.ai и возвращает асинхронный генератор ответов.
+    @classmethod
+    async def ask(cls, session: StreamSession, prompt: str, conversation_id: str):
+        """
+        Отправляет запрос в сервис Pi.ai и возвращает асинхронный генератор ответов.
 
-    Args:
-        session (StreamSession): Асинхронная сессия для выполнения запроса.
-        prompt (str): Текст запроса.
-        conversation_id (str): Идентификатор разговора.
+        Args:
+            session (StreamSession): Асинхронная сессия для выполнения запросов.
+            prompt (str): Текст запроса.
+            conversation_id (str): Идентификатор диалога.
 
-    Yields:
-        dict: Части ответа от Pi.ai.
+        Yields:
+            str: Часть ответа от сервиса.
 
-    Raises:
-        Exception: Если возникает ошибка при выполнении запроса.
+        Как работает функция:
+        1. Формирует JSON-данные для запроса, включая `text`, `conversation_id` и `mode`.
+        2. Отправляет POST-запрос на URL-адрес `https://pi.ai/api/chat` с JSON-данными.
+        3. Обновляет куки (`cls._cookies`) на основе ответа.
+        4. Итерируется по строкам ответа и извлекает текстовые данные из строк, начинающихся с `data: {"text":` или `data: {"title":`.
 
-    Как работает функция:
-    1. Формирует JSON-данные для отправки запроса, включая текст запроса, `conversation_id` и режим.
-    2. Отправляет POST-запрос к `https://pi.ai/api/chat` с JSON-данными.
-    3. Проверяет статус ответа с помощью `raise_for_status`.
-    4. Обновляет cookies с помощью `merge_cookies`.
-    5. Итерируется по строкам ответа, извлекая JSON-части, начинающиеся с `data: {"text":` или `data: {"title":`.
-    6. Возвращает извлеченные JSON-части через `yield`.
-
-    Внутри функции происходят следующие действия и преобразования:
-    A. Формирование JSON-данных.
-    |
-    B. Отправка POST-запроса.
-    |
-    C. Проверка статуса ответа.
-    |
-    D. Обновление cookies.
-    |
-    E. Итерация по строкам ответа.
-    |
-    F. Извлечение JSON-частей и передача через `yield`.
-    """
-    ...
+        Внутренние функции: нет
+        """
 ```
 
-**Примеры**:
+#### ASCII Flowchart функции `ask`
+
+```
+    Начало
+    │
+    ├──> Формирование JSON-данных для запроса
+    │   └──> Включение text, conversation_id и mode
+    │
+    ├──> Отправка POST-запроса на https://pi.ai/api/chat
+    │
+    ├──> Обновление куки (cls._cookies)
+    │
+    ├──> Итерация по строкам ответа
+    │   └──> Извлечение текстовых данных из строк, начинающихся с data: {"text": или data: {"title":
+    │
+    Конец
+```
+
+#### Примеры вызова функции `ask`
 
 ```python
-# Пример использования ask
-# async def example():
-#     session = StreamSession()
-#     prompt = "Tell me a story."
-#     conversation_id = "some_conversation_id"
-#     async for line in Pi.ask(session, prompt, conversation_id):
-#         print(f"Response line: {line}")
-# asyncio.run(example())
+# Пример: Отправка запроса и получение ответа
+session = StreamSession()
+async for line in Pi.ask(session, 'Hello', '123'):
+    print(line)

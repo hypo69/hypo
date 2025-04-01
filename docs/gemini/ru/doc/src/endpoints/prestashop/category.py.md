@@ -1,108 +1,144 @@
-# Модуль для работы с категориями PrestaShop
+# Модуль `src.endpoints.prestashop.category`
 
 ## Обзор
 
-Модуль `category.py` предназначен для управления категориями в PrestaShop. Он предоставляет класс `PrestaCategory`, который позволяет получать информацию о родительских категориях. Класс наследуется от `PrestaShop`, что обеспечивает взаимодействие с API PrestaShop.
+Модуль предназначен для управления категориями в PrestaShop. Он содержит класс `PrestaCategory`, который позволяет получать информацию о родительских категориях.
 
-## Подробней
+## Подробнее
 
-Этот модуль является частью системы для управления интернет-магазином на платформе PrestaShop. Он позволяет автоматизировать процесс получения иерархии категорий, что может быть полезно для навигации по сайту, формирования структуры каталога и других задач.
+Этот модуль предоставляет функциональность для взаимодействия с API PrestaShop для управления категориями товаров. Класс `PrestaCategory` расширяет класс `PrestaShop` и реализует методы для получения списка родительских категорий для заданной категории. Этот модуль полезен для навигации по иерархии категорий в PrestaShop и получения информации об их структуре.
 
 ## Классы
 
-### `PrestaCategory(PrestaShop)`
+### `PrestaCategory`
 
-**Описание**: Класс для управления категориями в PrestaShop. Наследуется от класса `PrestaShop`.
+**Описание**: Класс для управления категориями в PrestaShop.
 
-**Как работает класс**:
+**Наследует**:
+- `PrestaShop`: Класс `PrestaCategory` наследует функциональность для взаимодействия с API PrestaShop.
 
-1.  При инициализации класса `PrestaCategory` вызывается конструктор родительского класса `PrestaShop` с передачей параметров `api_key` и `api_domain`, необходимых для аутентификации и подключения к API PrestaShop.
-2.  Метод `get_parent_categories_list` используется для рекурсивного получения списка родительских категорий для заданной категории.
+**Атрибуты**:
+- `api_key` (str): Ключ API для доступа к PrestaShop.
+- `api_domain` (str): Доменное имя PrestaShop.
 
 **Методы**:
+- `get_parent_categories_list()`: Получает список родительских категорий для заданной категории.
 
-*   `__init__(self, api_key: str, api_domain: str, *args, **kwargs)`: Инициализирует объект класса `PrestaCategory`.
-*   `get_parent_categories_list(self, id_category: str | int, parent_categories_list: List[int|str] = []) -> List[int]`: Получает список родительских категорий для заданной категории.
-
-#### `__init__(self, api_key: str, api_domain: str, *args, **kwargs)`
+### `__init__`
 
 ```python
-    def __init__(self, api_key:str, api_domain:str, *args, **kwargs):
-        """
-        Initializes a Product object.
+def __init__(self, api_key: str, api_domain: str, *args, **kwargs) -> None:
+    """Initializes a Product object.
 
-        """
+    Args:
+        api_key (str): Ключ API для доступа к PrestaShop.
+        api_domain (str): Доменное имя PrestaShop.
 
-        super().__init__( api_key = api_key ,api_domain = api_domain, *args, **kwargs)
+    Returns:
+        None
+
+    Example:
+        >>> category = PrestaCategory(api_key=\'your_api_key\', api_domain=\'your_domain\')
+    """
+    ...
 ```
 
-**Назначение**: Инициализирует объект класса `PrestaCategory`.
-
-**Как работает функция**:
-Вызывает конструктор родительского класса `PrestaShop` с передачей параметров `api_key` и `api_domain`, необходимых для аутентификации и подключения к API PrestaShop.
+**Назначение**: Инициализирует объект `PrestaCategory`.
 
 **Параметры**:
-
-*   `api_key` (str): Ключ API для доступа к PrestaShop.
-*   `api_domain` (str): Доменное имя PrestaShop.
-*   `*args`: Произвольные позиционные аргументы.
-*   `**kwargs`: Произвольные именованные аргументы.
+- `api_key` (str): Ключ API для доступа к PrestaShop.
+- `api_domain` (str): Доменное имя PrestaShop.
 
 **Возвращает**:
+- `None`
 
-*   `None`
+**Как работает функция**:
+1. Вызывает конструктор родительского класса `PrestaShop` для инициализации общих параметров API.
 
-**Вызывает исключения**:
+**Примеры**:
+```python
+category = PrestaCategory(api_key='your_api_key', api_domain='your_domain')
+```
 
-*   `PrestaShopError`: Если возникает ошибка при инициализации родительского класса.
-
-#### `get_parent_categories_list(self, id_category: str | int, parent_categories_list: List[int|str] = []) -> List[int]`
+### `get_parent_categories_list`
 
 ```python
-    def get_parent_categories_list(self, id_category: str | int, parent_categories_list: List[int|str] = []) -> List[int]:
-        """! Retrieve parent categories from PrestaShop for a given category."""
-        if not id_category:
-            logger.error("Missing category ID.")
-            return parent_categories_list
+def get_parent_categories_list(
+    self, id_category: str | int, parent_categories_list: Optional[List[int | str]] = None
+) -> List[int | str]:
+    """Retrieve parent categories from PrestaShop for a given category.
 
-        category = super().get('categories', resource_id=id_category, display='full', io_format='JSON')
-        if not category:
-            logger.error("Issue with retrieving categories.")
-            return
+    Args:
+        id_category (str | int): ID категории, для которой нужно получить родительские категории.
+        parent_categories_list (Optional[List[int | str]], optional): Список родительских категорий. Defaults to None.
 
-        _parent_category = int(category['id_parent'])
-        parent_categories_list.append(_parent_category)
+    Returns:
+        List[int | str]: Список ID родительских категорий.
 
-        if _parent_category <= 2:
-            return parent_categories_list
-        else:
-            return self.get_parent_categories_list(_parent_category, parent_categories_list)
+    Raises:
+        ValueError: Если отсутствует ID категории.
+        Exception: Если возникает ошибка при получении данных о категории.
+
+    Example:
+        >>> category = PrestaCategory(api_key=\'your_api_key\', api_domain=\'your_domain\')
+        >>> parent_categories = category.get_parent_categories_list(id_category=\'10\')
+        >>> print(parent_categories)
+        [2, 10]
+    """
+    ...
 ```
 
 **Назначение**: Получает список родительских категорий из PrestaShop для заданной категории.
 
-**Как работает функция**:
-
-1.  Проверяет, передан ли `id_category`. Если нет, логирует ошибку и возвращает текущий список родительских категорий.
-2.  Вызывает метод `get` родительского класса `PrestaShop` для получения информации о категории по ее `id`.
-3.  Если категория не найдена, логирует ошибку и возвращает `None`.
-4.  Извлекает `id_parent` из полученной информации о категории и добавляет его в список родительских категорий.
-5.  Если `id_parent` меньше или равен 2, возвращает список родительских категорий.
-6.  В противном случае рекурсивно вызывает себя с `id_parent` в качестве аргумента для получения родительских категорий верхнего уровня.
-
 **Параметры**:
-
-*   `id_category` (str | int): ID категории, для которой нужно получить список родительских категорий.
-*   `parent_categories_list` (List[int|str], optional): Список родительских категорий. По умолчанию `[]`.
+- `id_category` (str | int): ID категории, для которой нужно получить родительские категории.
+- `parent_categories_list` (Optional[List[int | str]], optional): Список родительских категорий. По умолчанию `None`.
 
 **Возвращает**:
-
-*   `List[int]`: Список ID родительских категорий.
+- `List[int | str]`: Список ID родительских категорий.
 
 **Вызывает исключения**:
+- `ValueError`: Если отсутствует ID категории.
+- `Exception`: Если возникает ошибка при получении данных о категории.
 
-*   `PrestaShopError`: Если возникает ошибка при получении информации о категории из PrestaShop.
+**Как работает функция**:
+1. Проверяет, передан ли `id_category`. Если нет, то логирует ошибку и возвращает пустой список или переданный `parent_categories_list`.
+2. Получает информацию о категории из PrestaShop, используя метод `super().get()`.
+3. Если информация о категории не получена, логирует ошибку и возвращает пустой список или переданный `parent_categories_list`.
+4. Извлекает `id_parent` из полученной информации о категории.
+5. Добавляет `id_parent` в список `parent_categories_list`.
+6. Если `id_parent` меньше или равен 2, возвращает `parent_categories_list`.
+7. В противном случае рекурсивно вызывает `get_parent_categories_list()` с `id_parent` в качестве `id_category`.
 
-## Функции
+```
+A: Проверка наличия id_category
+|
+B: Получение информации о категории из PrestaShop
+|
+C: Извлечение id_parent из информации о категории
+|
+D: Добавление id_parent в parent_categories_list
+|
+E: Проверка id_parent <= 2
+|
+F: Возврат parent_categories_list
+```
 
-В данном модуле нет отдельных функций, не принадлежащих классам.
+**Примеры**:
+```python
+category = PrestaCategory(api_key='your_api_key', api_domain='your_domain')
+parent_categories = category.get_parent_categories_list(id_category='10')
+print(parent_categories)
+# [2, 10]
+```
+```python
+category = PrestaCategory(api_key='your_api_key', api_domain='your_domain')
+parent_categories = category.get_parent_categories_list(id_category=10)
+print(parent_categories)
+# [2, 10]
+```
+```python
+category = PrestaCategory(api_key='your_api_key', api_domain='your_domain')
+parent_categories = category.get_parent_categories_list(id_category='10', parent_categories_list=[1,2,3])
+print(parent_categories)
+# [1, 2, 3, 2, 10]

@@ -1,12 +1,27 @@
-# Модуль для работы с JSON и SimpleNamespace (`jjson.py`)
+# Модуль для работы с JSON и SimpleNamespace
 
 ## Обзор
 
-Модуль `jjson.py` предоставляет набор функций для работы с данными в формате JSON и SimpleNamespace. Он включает функции для загрузки, сохранения и преобразования данных между различными форматами, такими как JSON, CSV, словари Python и объекты SimpleNamespace. Модуль также обеспечивает обработку ошибок и ведение журнала для облегчения отладки и обслуживания.
+Модуль `jjson` предоставляет набор функций для работы с данными в формате JSON, включая чтение, запись и преобразование данных. Он также поддерживает работу с объектами `SimpleNamespace`.
 
-## Подробней
+## Подробнее
 
-Этот модуль предназначен для упрощения работы с конфигурационными файлами и данными, которые могут быть представлены в различных форматах. Он предоставляет удобные функции для чтения и записи данных, а также для преобразования данных в объекты SimpleNamespace, что облегчает доступ к данным по атрибутам. Модуль также включает функции для очистки и исправления JSON-строк.
+Модуль содержит функции для загрузки JSON из файлов, строк и объектов, а также для сохранения JSON в файлы. Он также включает функции для преобразования данных между форматами JSON и `SimpleNamespace`. Модуль предназначен для упрощения работы с JSON-данными в проекте `hypotez`.
+Основные функции:
+- `j_dumps` - сохраняет JSON в файл или возвращает JSON как словарь.
+- `j_loads` - загружает JSON из файла, каталога, строки или объекта.
+- `j_loads_ns` - загружает JSON и преобразует его в `SimpleNamespace`.
+
+## Классы
+
+### `Config`
+
+**Описание**: Класс, содержащий константы для режимов записи файлов.
+
+**Атрибуты**:
+- `MODE_WRITE` (str): Режим записи "w".
+- `MODE_APPEND_START` (str): Режим добавления в начало файла "a+".
+- `MODE_APPEND_END` (str): Режим добавления в конец файла "+a".
 
 ## Функции
 
@@ -14,74 +29,67 @@
 
 ```python
 def _convert_to_dict(value: Any) -> Any:
-    """Convert SimpleNamespace and lists to dict."""
-    if isinstance(value, SimpleNamespace):
-        return {key: _convert_to_dict(val) for key, val in vars(value).items()}
-    if isinstance(value, dict):
-        return {key: _convert_to_dict(val) for key, val in value.items()}
-    if isinstance(value, list):
-        return [_convert_to_dict(item) for item in value]
-    return value
-```
+    """ Функция преобразует SimpleNamespace и списки в словари.
 
-**Назначение**: Преобразует объекты `SimpleNamespace` и списки в словари.
+    Args:
+        value (Any): Значение для преобразования.
 
-**Как работает функция**:
-Функция рекурсивно проходит по входным данным и преобразует объекты `SimpleNamespace` и списки в словари. Если входное значение является экземпляром `SimpleNamespace`, оно преобразуется в словарь, где ключи и значения рекурсивно обрабатываются. Если входное значение является словарем или списком, каждый элемент рекурсивно преобразуется.
+    Returns:
+        Any: Преобразованное значение. Возвращает словарь, если входное значение является SimpleNamespace или списком.
 
-**Параметры**:
-- `value` (Any): Входное значение для преобразования.
+    Как работает функция:
+    1. Проверяет, является ли входное значение экземпляром `SimpleNamespace`. Если да, то преобразует его в словарь, рекурсивно применяя `_convert_to_dict` к каждому значению.
+    2. Если входное значение является словарем, то рекурсивно применяет `_convert_to_dict` к каждому значению в словаре.
+    3. Если входное значение является списком, то рекурсивно применяет `_convert_to_dict` к каждому элементу списка.
+    4. Если входное значение не является ни `SimpleNamespace`, ни словарем, ни списком, то возвращает его без изменений.
 
-**Возвращает**:
-- `Any`: Преобразованное значение в виде словаря или списка.
+    ASCII flowchart:
+    Value
+    |
+    isinstance(Value, SimpleNamespace)? --> YES --> Convert SimpleNamespace to Dict
+    |   NO
+    isinstance(Value, Dict)? --> YES --> Convert Dict
+    |   NO
+    isinstance(Value, List)? --> YES --> Convert List
+    |   NO
+    Return Value
 
-**Примеры**:
-
-```python
-from types import SimpleNamespace
-data = SimpleNamespace(a=1, b=SimpleNamespace(c=2))
-result = _convert_to_dict(data)
-print(result)  # Вывод: {'a': 1, 'b': {'c': 2}}
+    """
 ```
 
 ### `_read_existing_data`
 
 ```python
 def _read_existing_data(path: Path, exc_info: bool = True) -> dict:
-    """Read existing JSON data from a file."""
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        logger.error(f"Error decoding existing JSON in {path}: {e}", exc_info=exc_info)
-        return {}
-    except Exception as ex:
-        logger.error(f"Error reading {path=}: {ex}", exc_info=exc_info)
-        return {}
-```
+    """ Читает существующие JSON данные из файла.
 
-**Назначение**: Читает существующие JSON-данные из файла.
+    Args:
+        path (Path): Путь к файлу.
+        exc_info (bool, optional): Если `True`, логирует исключения с трассировкой. По умолчанию `True`.
 
-**Как работает функция**:
-Функция пытается прочитать JSON-данные из файла, указанного в параметре `path`. В случае успеха она возвращает десериализованные данные. Если происходит ошибка при чтении или декодировании JSON, функция регистрирует ошибку с использованием модуля `logger` и возвращает пустой словарь. Параметр `exc_info` определяет, нужно ли выводить служебную информацию об исключении в лог.
+    Returns:
+        dict: JSON данные в виде словаря. Возвращает пустой словарь в случае ошибки.
 
-**Параметры**:
-- `path` (Path): Путь к файлу.
-- `exc_info` (bool, optional): Если `True`, логирует исключения с трассировкой. По умолчанию `True`.
+    Как работает функция:
+    1. Пытается прочитать содержимое файла, используя `path.read_text(encoding="utf-8")`.
+    2. Пытается преобразовать прочитанный текст в JSON, используя `json.loads()`.
+    3. Если происходит ошибка `json.JSONDecodeError`, логирует ошибку с помощью `logger.error` и возвращает пустой словарь.
+    4. Если происходит другая ошибка, логирует ошибку с помощью `logger.error` и возвращает пустой словарь.
 
-**Возвращает**:
-- `dict`: JSON-данные в виде словаря или пустой словарь в случае ошибки.
+    ASCII flowchart:
+    Path
+    |
+    try: read_text
+    |
+    json.loads(text)
+    |
+    except JSONDecodeError: log error; return {}
+    |
+    except Exception: log error; return {}
+    |
+    return data
 
-**Вызывает исключения**:
-- `FileNotFoundError`: Если файл не найден.
-- `json.JSONDecodeError`: Если JSON-данные не могут быть разобраны.
-
-**Примеры**:
-
-```python
-from pathlib import Path
-file_path = Path('config.json')
-data = _read_existing_data(file_path)
-print(data)
+    """
 ```
 
 ### `_merge_data`
@@ -90,47 +98,53 @@ print(data)
 def _merge_data(
     data: Dict, existing_data: Dict, mode: str
 ) -> Dict:
-    """Merge new data with existing data based on mode."""
-    try:
-        if mode == Config.MODE_APPEND_START:
-            if isinstance(data, list) and isinstance(existing_data, list):
-               return data + existing_data
-            if isinstance(data, dict) and isinstance(existing_data, dict):
-                 existing_data.update(data)
-            return existing_data
-        elif mode == Config.MODE_APPEND_END:
-            if isinstance(data, list) and isinstance(existing_data, list):
-                return existing_data + data
-            if isinstance(data, dict) and isinstance(existing_data, dict):
-                 data.update(existing_data)
-            return data
-        return data
-    except Exception as ex:
-        logger.error(ex)
-        return {}
-```
+    """ Объединяет новые данные с существующими данными в зависимости от режима.
 
-**Назначение**: Объединяет новые данные с существующими данными в зависимости от режима.
+    Args:
+        data (Dict): Новые данные для объединения.
+        existing_data (Dict): Существующие данные.
+        mode (str): Режим объединения (Config.MODE_APPEND_START, Config.MODE_APPEND_END).
 
-**Как работает функция**:
-Функция объединяет новые данные (`data`) с существующими данными (`existing_data`) на основе указанного режима (`mode`). Если режим `Config.MODE_APPEND_START`, то данные добавляются в начало существующих данных (для списков) или обновляются (для словарей). Если режим `Config.MODE_APPEND_END`, то данные добавляются в конец существующих данных (для списков) или существующие данные обновляют новые данные (для словарей). Если режим не соответствует ни одному из указанных, возвращаются новые данные. В случае возникновения ошибки функция логирует ее и возвращает пустой словарь.
+    Returns:
+        Dict: Объединенные данные. Возвращает пустой словарь в случае ошибки.
 
-**Параметры**:
-- `data` (Dict): Новые данные для объединения.
-- `existing_data` (Dict): Существующие данные.
-- `mode` (str): Режим объединения (`Config.MODE_APPEND_START` или `Config.MODE_APPEND_END`).
+    Как работает функция:
+    1. Проверяет режим объединения.
+    2. Если режим `Config.MODE_APPEND_START`:
+        - Если `data` и `existing_data` являются списками, объединяет `data` и `existing_data` (data + existing_data).
+        - Если `data` и `existing_data` являются словарями, обновляет `existing_data` данными из `data`.
+        - Возвращает `existing_data`.
+    3. Если режим `Config.MODE_APPEND_END`:
+        - Если `data` и `existing_data` являются списками, объединяет `existing_data` и `data` (existing_data + data).
+        - Если `data` и `existing_data` являются словарями, обновляет `data` данными из `existing_data`.
+        - Возвращает `data`.
+    4. Если режим не соответствует ни одному из вышеперечисленных, возвращает `data`.
+    5. В случае возникновения исключения логирует ошибку и возвращает пустой словарь.
 
-**Возвращает**:
-- `Dict`: Объединенные данные в виде словаря.
+    ASCII flowchart:
+    Data, Existing Data, Mode
+    |
+    Mode == Config.MODE_APPEND_START?
+    |   YES
+    |   |
+    |   Data и Existing Data - списки? --> YES --> data + existing_data
+    |   |   NO
+    |   Data и Existing Data - словари? --> YES --> existing_data.update(data)
+    |   |   NO
+    |   return existing_data
+    |   NO
+    Mode == Config.MODE_APPEND_END?
+    |   YES
+    |   |
+    |   Data и Existing Data - списки? --> YES --> existing_data + data
+    |   |   NO
+    |   Data и Existing Data - словари? --> YES --> data.update(existing_data)
+    |   |   NO
+    |   return data
+    |   NO
+    return data
 
-**Примеры**:
-
-```python
-data = {'a': 1, 'b': 2}
-existing_data = {'c': 3, 'd': 4}
-mode = Config.MODE_APPEND_END
-result = _merge_data(data, existing_data, mode)
-print(result)  # Вывод: {'a': 1, 'b': 2, 'c': 3, 'd': 4}
+    """
 ```
 
 ### `j_dumps`
@@ -144,156 +158,123 @@ def j_dumps(
     exc_info: bool = True,
 ) -> Optional[Dict]:
     """
-    Dump JSON data to a file or return the JSON data as a dictionary.
+    Сохраняет JSON данные в файл или возвращает JSON как словарь.
 
     Args:
-        data (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): JSON-compatible data or SimpleNamespace objects to dump.
-        file_path (Optional[Path], optional): Path to the output file. If None, returns JSON as a dictionary. Defaults to None.
-        ensure_ascii (bool, optional): If True, escapes non-ASCII characters in output. Defaults to True.
-        mode (str, optional): File open mode ('w', 'a+', '+a'). Defaults to 'w'.
-        exc_info (bool, optional): If True, logs exceptions with traceback. Defaults to True.
+        data (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): JSON-совместимые данные или объекты SimpleNamespace для сохранения.
+        file_path (Optional[Path], optional): Путь к выходному файлу. Если None, возвращает JSON как словарь. По умолчанию None.
+        ensure_ascii (bool, optional): Если True, экранирует не-ASCII символы в выводе. По умолчанию True.
+        mode (str, optional): Режим открытия файла ('w', 'a+', '+a'). По умолчанию 'w'.
+        exc_info (bool, optional): Если True, логирует исключения с трассировкой. По умолчанию True.
 
     Returns:
-        Optional[Dict]: JSON data as a dictionary if successful, or nothing if an error occurs.
+        Optional[Dict]: JSON данные как словарь в случае успеха, или None в случае ошибки.
 
     Raises:
-        ValueError: If the file mode is unsupported.
-    """
+        ValueError: Если режим файла не поддерживается.
 
-    path = Path(file_path) if isinstance(file_path, (str, Path)) else None
+    Как работает функция:
+    1. Преобразует `file_path` в объект `Path`, если он является строкой или `Path`.
+    2. Если `data` является строкой, пытается исправить JSON с помощью `repair_json`.
+    3. Преобразует `data` в словарь с помощью `_convert_to_dict`.
+    4. Если `mode` не является одним из допустимых режимов, устанавливает `mode` в `Config.MODE_WRITE`.
+    5. Если `path` существует и `mode` является одним из режимов добавления, читает существующие данные из файла с помощью `_read_existing_data`.
+    6. Объединяет `data` с существующими данными с помощью `_merge_data`.
+    7. Если `path` указан, пытается создать родительские директории и записать JSON в файл.
+    8. В случае успеха возвращает `data`, иначе возвращает `None`.
+    9. Если `path` не указан, возвращает `data`.
 
-    if isinstance(data, str):
-        try:
-            data = repair_json(data)
-        except Exception as ex:
-            logger.error(f"Error converting string: {data}", ex, exc_info)
-            return None
-
+    ASCII flowchart:
+    Data, File Path, Ensure ASCII, Mode
+    |
+    Data is str? --> YES --> repair_json(data)
+    |   NO
     data = _convert_to_dict(data)
-
-    if mode not in {Config.MODE_WRITE, Config.MODE_APPEND_START, Config.MODE_APPEND_END}:
-        mode = Config.MODE_WRITE
-
-    existing_data = {}
-    if path and path.exists() and mode in {Config.MODE_APPEND_START, Config.MODE_APPEND_END}:
-        existing_data = _read_existing_data(path, exc_info)
-    
+    |
+    mode in valid modes? --> YES
+    |   NO --> mode = Config.MODE_WRITE
+    |
+    path and path.exists() and mode in append modes? --> YES --> existing_data = _read_existing_data(path)
+    |   NO
     data = _merge_data(data, existing_data, mode)
-    
-    if path:
-        try:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            json.dump(data, path.open(mode, encoding="utf-8"), ensure_ascii=ensure_ascii, indent=4)
-            #path.write_text(json.dumps(data, ensure_ascii=ensure_ascii, indent=4), encoding='utf-8')
-        except Exception as ex:
-             logger.error(f"Failed to write to {path}: ", ex, exc_info=exc_info)
-             return None
-        return data
+    |
+    path? --> YES
+    |   |
+    |   try: write to file
+    |   |
+    |   except Exception: log error; return None
+    |   |
+    |   return data
+    |   NO
     return data
-```
 
-**Назначение**: Записывает JSON-данные в файл или возвращает JSON-данные в виде словаря.
-
-**Как работает функция**:
-Функция преобразует входные данные (`data`) в формат JSON и записывает их в файл, если указан `file_path`. Если `file_path` не указан, функция возвращает JSON-данные в виде словаря. Функция поддерживает различные режимы записи (`Config.MODE_WRITE`, `Config.MODE_APPEND_START`, `Config.MODE_APPEND_END`) и обеспечивает обработку ошибок при записи данных. Если входные данные являются строкой, функция пытается исправить JSON с помощью `repair_json`.
-
-**Параметры**:
-- `data` (Dict | SimpleNamespace | List[Dict] | List[SimpleNamespace]): Данные, совместимые с JSON, или объекты SimpleNamespace для записи.
-- `file_path` (Optional[Path], optional): Путь к выходному файлу. Если `None`, возвращает JSON как словарь. По умолчанию `None`.
-- `ensure_ascii` (bool, optional): Если `True`, экранирует символы, не входящие в ASCII, в выводе. По умолчанию `False`.
-- `mode` (str, optional): Режим открытия файла (`'w'`, `'a+'`, `'+a'`). По умолчанию `'w'`.
-- `exc_info` (bool, optional): Если `True`, логирует исключения с трассировкой. По умолчанию `True`.
-
-**Возвращает**:
-- `Optional[Dict]`: JSON-данные в виде словаря в случае успеха или `None`, если произошла ошибка.
-
-**Вызывает исключения**:
-- `ValueError`: Если режим файла не поддерживается.
-
-**Примеры**:
-
-```python
-from pathlib import Path
-data = {'a': 1, 'b': 2}
-file_path = Path('output.json')
-result = j_dumps(data, file_path)
-print(result)  # Вывод: {'a': 1, 'b': 2}
+    """
 ```
 
 ### `_decode_strings`
 
 ```python
 def _decode_strings(data: Any) -> Any:
-    """Recursively decode strings in a data structure."""
-    if isinstance(data, str):
-        try:
-           return codecs.decode(data, 'unicode_escape')
-        except Exception:
-            return data
-    if isinstance(data, list):\
-        return [_decode_strings(item) for item in data]
-    if isinstance(data, dict):
-        return {\
-            _decode_strings(key): _decode_strings(value) for key, value in data.items()\
-        }
-    return data
-```
+    """ Рекурсивно декодирует строки в структуре данных.
 
-**Назначение**: Рекурсивно декодирует строки в структуре данных.
+    Args:
+        data (Any): Данные для декодирования.
 
-**Как работает функция**:
-Функция рекурсивно проходит по структуре данных и пытается декодировать строки с использованием кодека `unicode_escape`. Если декодирование успешно, возвращается декодированная строка. Если происходит ошибка при декодировании, возвращается исходная строка.
+    Returns:
+        Any: Декодированные данные.
 
-**Параметры**:
-- `data` (Any): Входные данные для декодирования.
+    Как работает функция:
+    1. Если `data` является строкой, пытается декодировать ее, используя `codecs.decode(data, 'unicode_escape')`.
+    2. Если декодирование не удалось, возвращает исходную строку.
+    3. Если `data` является списком, рекурсивно применяет `_decode_strings` к каждому элементу списка.
+    4. Если `data` является словарем, рекурсивно применяет `_decode_strings` к каждому ключу и значению в словаре.
+    5. В противном случае возвращает `data` без изменений.
 
-**Возвращает**:
-- `Any`: Декодированные данные.
+    ASCII flowchart:
+    Data
+    |
+    isinstance(Data, str)? --> YES --> try: decode string
+    |   |   |   |   |       except: return Data
+    |   NO
+    isinstance(Data, list)? --> YES --> Recursively decode list elements
+    |   NO
+    isinstance(Data, dict)? --> YES --> Recursively decode keys and values
+    |   NO
+    return Data
 
-**Примеры**:
-
-```python
-data = {'a': 'test\\u0020string', 'b': ['another\\u0020string']}
-result = _decode_strings(data)
-print(result)  # Вывод: {'a': 'test string', 'b': ['another string']}
+    """
 ```
 
 ### `_string_to_dict`
 
 ```python
 def _string_to_dict(json_string: str) -> dict:
-    """Remove markdown quotes and parse JSON string."""
-    if json_string.startswith(("```", "```json")) and json_string.endswith(
-        ("```", "```\\n")
-    ):
-        json_string = json_string.strip("`").replace("json", "", 1).strip()
-    try:
-        return json.loads(json_string)
-    except json.JSONDecodeError as ex:
-        logger.error(f"JSON parsing error:\\n {json_string}", ex, False)
-        return {}
-```
+    """ Удаляет markdown кавычки и преобразует JSON строку в словарь.
 
-**Назначение**: Удаляет маркеры Markdown и разбирает JSON-строку.
+    Args:
+        json_string (str): JSON строка.
 
-**Как работает функция**:
-Функция принимает строку (`json_string`) в качестве входных данных и пытается удалить маркеры Markdown, такие как ```json, а затем разбирает строку как JSON. Если разбор JSON успешен, функция возвращает полученный словарь. В случае ошибки разбора JSON, функция записывает сообщение об ошибке в журнал и возвращает пустой словарь.
+    Returns:
+        dict: Словарь, полученный из JSON строки. Возвращает пустой словарь в случае ошибки.
 
-**Параметры**:
-- `json_string` (str): JSON-строка для разбора.
+    Как работает функция:
+    1. Проверяет, начинается ли строка с markdown кавычек ("```" или "```json") и заканчивается ли markdown кавычками ("```" или "```\\n").
+    2. Если да, удаляет кавычки и префикс "json" (если он есть).
+    3. Пытается преобразовать строку в словарь, используя `json.loads()`.
+    4. Если происходит ошибка `json.JSONDecodeError`, логирует ошибку и возвращает пустой словарь.
 
-**Возвращает**:
-- `dict`: Словарь, полученный из JSON-строки, или пустой словарь в случае ошибки.
+    ASCII flowchart:
+    JSON String
+    |
+    Starts and ends with markdown quotes? --> YES --> Remove quotes and 'json' prefix
+    |   NO
+    try: json.loads(string)
+    |
+    except JSONDecodeError: log error; return {}
+    |
+    return dict
 
-**Вызывает исключения**:
-- `json.JSONDecodeError`: Если JSON-данные не могут быть разобраны.
-
-**Примеры**:
-
-```python
-json_string = "```json\n{\"a\": 1, \"b\": 2}\n```"
-result = _string_to_dict(json_string)
-print(result)  # Вывод: {'a': 1, 'b': 2}
+    """
 ```
 
 ### `j_loads`
@@ -303,72 +284,46 @@ def j_loads(
     jjson: Union[dict, SimpleNamespace, str, Path, list], ordered: bool = True
 ) -> Union[dict, list]:
     """
-    Load JSON or CSV data from a file, directory, string, or object.
+    Загружает JSON или CSV данные из файла, директории, строки или объекта.
 
     Args:
-        jjson (dict | SimpleNamespace | str | Path | list): Path to file/directory, JSON string, or JSON object.
-        ordered (bool, optional): Use OrderedDict to preserve element order. Defaults to True.
+        jjson (dict | SimpleNamespace | str | Path | list): Путь к файлу/директории, JSON строка или JSON объект.
+        ordered (bool, optional): Использовать OrderedDict для сохранения порядка элементов. По умолчанию True.
 
     Returns:
-        dict | list: Processed data (dictionary or list of dictionaries).
+        dict | list: Обработанные данные (словарь или список словарей).
 
     Raises:
-        FileNotFoundError: If the specified file is not found.
-        json.JSONDecodeError: If the JSON data cannot be parsed.
-    """
-    try:
-        if isinstance(jjson, SimpleNamespace):
-            jjson = vars(jjson)
+        FileNotFoundError: Если указанный файл не найден.
+        json.JSONDecodeError: Если JSON данные не могут быть распарсены.
 
-        if isinstance(jjson, Path):
-            if jjson.is_dir():
-                files = list(jjson.glob("*.json"))
-                return [j_loads(file, ordered=ordered) for file in files]
-            # if jjson.suffix.lower() == ".csv":
-            #     return pd.read_csv(jjson).to_dict(orient="records")
-             
-            return json.loads(jjson.read_text(encoding="utf-8"))
-        if isinstance(jjson, str):
-            return _string_to_dict(jjson)
-        if isinstance(jjson, list):
-             return _decode_strings(jjson)
-        if isinstance(jjson, dict):
-            return _decode_strings(jjson)
-    except FileNotFoundError:
-        logger.error(f"File not found: {jjson}",None,False)
-        return {}
-    except json.JSONDecodeError as ex:
-        logger.error(f"JSON parsing error:\\n{jjson}\\n", ex, False)
-        return {}
-    except Exception as ex:
-        logger.error(f"Error loading data: ", ex, False)
-        return {}
+    Как работает функция:
+    1. Если `jjson` является `SimpleNamespace`, преобразует его в словарь.
+    2. Если `jjson` является `Path`:
+        - Если это директория, рекурсивно загружает все JSON файлы из этой директории.
+        - Если это файл, читает и парсит JSON данные из файла.
+    3. Если `jjson` является строкой, преобразует строку в словарь с помощью `_string_to_dict`.
+    4. Если `jjson` является списком, декодирует строки в списке с помощью `_decode_strings`.
+    5. Если `jjson` является словарем, декодирует строки в словаре с помощью `_decode_strings`.
+    6. Обрабатывает исключения `FileNotFoundError`, `json.JSONDecodeError` и `Exception`, логируя ошибки и возвращая пустой словарь.
+
+    ASCII flowchart:
+    jjson, ordered
+    |
+    jjson instanceof SimpleNamespace? --> YES --> jjson = vars(jjson)
+    |   NO
+    jjson instanceof Path? --> YES --> is directory? --> YES --> recursively load json files
+    |   |                       |   NO --> read and parse json
+    |   NO
+    jjson instanceof str? --> YES --> _string_to_dict(jjson)
+    |   NO
+    jjson instanceof list? --> YES --> _decode_strings(jjson)
+    |   NO
+    jjson instanceof dict? --> YES --> _decode_strings(jjson)
+    |   NO
+    handle FileNotFoundError, JSONDecodeError, Exception: log and return {}
     return {}
-```
-
-**Назначение**: Загружает JSON или CSV данные из файла, каталога, строки или объекта.
-
-**Как работает функция**:
-Функция `j_loads` загружает данные из различных источников, таких как файлы, каталоги, JSON-строки или объекты Python. Она автоматически определяет тип входных данных и выполняет соответствующие действия для загрузки и разбора данных. Если указан путь к каталогу, функция загружает все JSON-файлы из этого каталога. Функция также поддерживает загрузку данных из объектов SimpleNamespace и JSON-строк. В случае возникновения ошибок функция записывает сообщение об ошибке в журнал и возвращает пустой словарь.
-
-**Параметры**:
-- `jjson` (dict | SimpleNamespace | str | Path | list): Путь к файлу/каталогу, JSON-строка или JSON-объект.
-- `ordered` (bool, optional): Использовать `OrderedDict` для сохранения порядка элементов. По умолчанию `True`.
-
-**Возвращает**:
-- `dict | list`: Обработанные данные (словарь или список словарей).
-
-**Вызывает исключения**:
-- `FileNotFoundError`: Если указанный файл не найден.
-- `json.JSONDecodeError`: Если JSON-данные не могут быть разобраны.
-
-**Примеры**:
-
-```python
-from pathlib import Path
-file_path = Path('config.json')
-data = j_loads(file_path)
-print(data)
+    """
 ```
 
 ### `j_loads_ns`
@@ -377,32 +332,31 @@ print(data)
 def j_loads_ns(
     jjson: Union[Path, SimpleNamespace, Dict, str], ordered: bool = True
 ) -> Union[SimpleNamespace, List[SimpleNamespace], Dict]:
-    """Load JSON/CSV data and convert to SimpleNamespace."""
-    data = j_loads(jjson, ordered=ordered)
-    if data:
-        if isinstance(data, list):
-            return [dict2ns(item) for item in data]
-        return dict2ns(data)
+    """ Загружает JSON/CSV данные и преобразует в SimpleNamespace.
+
+    Args:
+        jjson (Path | SimpleNamespace | Dict | str): Путь к файлу, SimpleNamespace, словарь или строка.
+        ordered (bool, optional): Использовать OrderedDict для сохранения порядка элементов. По умолчанию True.
+
+    Returns:
+        Union[SimpleNamespace, List[SimpleNamespace], Dict]: SimpleNamespace или список SimpleNamespace объектов.
+
+    Как работает функция:
+    1. Загружает JSON данные с помощью функции `j_loads`.
+    2. Если данные успешно загружены:
+        - Если данные являются списком, преобразует каждый элемент списка в `SimpleNamespace` с помощью `dict2ns`.
+        - Если данные не являются списком, преобразует данные в `SimpleNamespace` с помощью `dict2ns`.
+    3. Возвращает полученные данные в формате `SimpleNamespace`.
+    4. В случае ошибки возвращает пустой словарь.
+
+    ASCII flowchart:
+    jjson, ordered
+    |
+    data = j_loads(jjson, ordered)
+    |
+    data? --> YES --> data instanceof list? --> YES --> convert each item to SimpleNamespace
+    |   |   |   |   |   NO --> convert data to SimpleNamespace
+    |   NO
     return {}
-```
 
-**Назначение**: Загружает JSON/CSV данные и преобразует их в SimpleNamespace.
-
-**Как работает функция**:
-Функция `j_loads_ns` загружает данные с использованием функции `j_loads` и преобразует их в объекты `SimpleNamespace`. Если загруженные данные являются списком, функция преобразует каждый элемент списка в объект `SimpleNamespace`. Если загруженные данные являются словарем, функция преобразует словарь в объект `SimpleNamespace`. В случае ошибки функция возвращает пустой словарь.
-
-**Параметры**:
-- `jjson` (Path | SimpleNamespace | Dict | str): Путь к файлу/каталогу, JSON-строка или JSON-объект.
-- `ordered` (bool, optional): Использовать `OrderedDict` для сохранения порядка элементов. По умолчанию `True`.
-
-**Возвращает**:
-- `Union[SimpleNamespace, List[SimpleNamespace], Dict]`: Обработанные данные в виде объекта `SimpleNamespace`, списка объектов `SimpleNamespace` или словаря.
-
-**Примеры**:
-
-```python
-from pathlib import Path
-file_path = Path('config.json')
-data = j_loads_ns(file_path)
-print(data)
-```
+    """

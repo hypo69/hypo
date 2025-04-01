@@ -1,30 +1,30 @@
-# Модуль `Lockchat`
+# Модуль Lockchat
 
 ## Обзор
 
-Модуль `Lockchat` предоставляет класс `Lockchat`, который является поставщиком (provider) для работы с API Lockchat. Он поддерживает стриминг, модели `gpt-3.5-turbo` и `gpt-4`. Lockchat использует API по адресу `http://supertest.lockchat.app`.
+Модуль `Lockchat` предоставляет класс `Lockchat`, который является провайдером для взаимодействия с API Lockchat. Этот API предоставляет доступ к моделям GPT-3.5 Turbo и GPT-4. Модуль поддерживает потоковую передачу данных, что позволяет получать ответы от API частями.
 
-## Подробнее
+## Подробней
 
-Этот модуль предназначен для интеграции с Lockchat API для получения завершений чата. Он реализует метод `create_completion`, который отправляет запросы к API Lockchat и возвращает токены ответа. Модуль обрабатывает возможные ошибки, такие как отсутствие модели, и поддерживает стриминг ответов.
+Модуль `Lockchat` используется для обмена сообщениями с API Lockchat, который предоставляет доступ к моделям GPT-3.5 Turbo и GPT-4. Он отправляет запросы к API и возвращает ответы. Поддерживается потоковая передача данных, что позволяет получать ответы от API частями.
 
 ## Классы
 
 ### `Lockchat`
 
-**Описание**: Класс `Lockchat` является поставщиком для работы с API Lockchat.
+**Описание**: Класс `Lockchat` является провайдером для взаимодействия с API Lockchat. Он наследует класс `AbstractProvider`.
 
 **Наследует**:
-- `AbstractProvider`: Наследует от абстрактного класса `AbstractProvider`, предоставляющего базовый интерфейс для поставщиков.
+- `AbstractProvider`: Абстрактный класс, определяющий интерфейс для всех провайдеров.
 
-**Атрибуты**:
-- `url` (str): URL API Lockchat. Значение по умолчанию: `"http://supertest.lockchat.app"`.
-- `supports_stream` (bool): Указывает, поддерживает ли поставщик стриминг. Значение по умолчанию: `True`.
-- `supports_gpt_35_turbo` (bool): Указывает, поддерживает ли поставщик модель `gpt-3.5-turbo`. Значение по умолчанию: `True`.
-- `supports_gpt_4` (bool): Указывает, поддерживает ли поставщик модель `gpt-4`. Значение по умолчанию: `True`.
+**Аттрибуты**:
+- `url` (str): URL-адрес API Lockchat. Значение по умолчанию: `"http://supertest.lockchat.app"`.
+- `supports_stream` (bool): Указывает, поддерживает ли провайдер потоковую передачу данных. Значение по умолчанию: `True`.
+- `supports_gpt_35_turbo` (bool): Указывает, поддерживает ли провайдер модель GPT-3.5 Turbo. Значение по умолчанию: `True`.
+- `supports_gpt_4` (bool): Указывает, поддерживает ли провайдер модель GPT-4. Значение по умолчанию: `True`.
 
 **Методы**:
-- `create_completion`: Статический метод для создания завершения чата.
+- `create_completion`: Отправляет запрос к API Lockchat и возвращает ответ.
 
 ## Функции
 
@@ -36,78 +36,95 @@
         model: str,
         messages: list[dict[str, str]],
         stream: bool, **kwargs: Any) -> CreateResult:
-        """ Функция отправляет запрос к API Lockchat для создания завершения чата.
+        """
+        Создает запрос к API Lockchat и возвращает ответ.
+
         Args:
-            model (str): Имя используемой модели.
-            messages (list[dict[str, str]]): Список сообщений в формате словаря, где каждый словарь содержит роли и контент сообщений.
-            stream (bool): Указывает, должен ли ответ быть в режиме стриминга.
-            **kwargs (Any): Дополнительные аргументы, такие как температура.
+            model (str): Название модели для использования.
+            messages (list[dict[str, str]]): Список сообщений для отправки в API.
+            stream (bool): Указывает, использовать ли потоковую передачу данных.
+            **kwargs (Any): Дополнительные параметры для передачи в API.
 
         Returns:
-            CreateResult: Генератор токенов ответа.
+            CreateResult: Результат создания запроса.
 
         Raises:
-            requests.exceptions.HTTPError: Если HTTP-запрос завершается с ошибкой.
+            requests.exceptions.HTTPError: Если при запросе к API произошла ошибка.
 
-        Как работает функция:
-         1. **Подготовка полезной нагрузки**:
-            - Извлекает значение температуры из `kwargs` или использует значение по умолчанию 0.7.
-            - Создает полезную нагрузку (payload) с температурой, сообщениями, моделью и флагом стриминга.
-
-         2. **Отправка запроса к API**:
-            - Определяет заголовки, включая User-Agent.
-            - Отправляет POST-запрос к API Lockchat с полезной нагрузкой и заголовками.
-
-         3. **Обработка ответа**:
-            - Генерирует исключение для HTTP-ошибок.
-            - Итерируется по строкам ответа.
-            - Обрабатывает ошибку, если модель не существует, и повторяет запрос.
-            - Извлекает контент из токенов и возвращает его с использованием `yield`.
-
-        Внутри функции происходят следующие действия и преобразования:
-             A - Извлечение параметров запроса и формирование payload
-             |
-             -- B - Отправка POST запроса к API Lockchat
-             |
-             C - Обработка ответа: проверка на ошибки, извлечение и передача контента
-
-        Примеры:
-            >>> model = "gpt-3.5-turbo"
-            >>> messages = [{"role": "user", "content": "Hello, how are you?"}]
-            >>> stream = True
-            >>> for token in Lockchat.create_completion(model=model, messages=messages, stream=stream):
-            ...     print(token, end="")
-            I am doing well, thank you for asking. How can I assist you today?
+        Внутренние функции:
+            Отсутствуют.
         """
-        temperature = float(kwargs.get("temperature", 0.7))
-        payload = {
-            "temperature": temperature,
-            "messages"   : messages,
-            "model"      : model,
-            "stream"     : True,
-        }
+```
 
-        headers = {
-            "user-agent": "ChatX/39 CFNetwork/1408.0.4 Darwin/22.5.0",
-        }
-        response = requests.post("http://supertest.lockchat.app/v1/chat/completions",
-                                 json=payload, headers=headers, stream=True)
+**Назначение**: Функция `create_completion` отправляет запрос к API Lockchat и возвращает ответ. Она принимает параметры, необходимые для формирования запроса, такие как модель, сообщения и настройки потоковой передачи.
 
-        response.raise_for_status()
-        for token in response.iter_lines():
-            if b"The model: `gpt-4` does not exist" in token:
-                print("error, retrying...")
-                
-                Lockchat.create_completion(
-                    model       = model,
-                    messages    = messages,
-                    stream      = stream,
-                    temperature = temperature,
-                    **kwargs)
+**Параметры**:
+- `model` (str): Название модели для использования.
+- `messages` (list[dict[str, str]]): Список сообщений для отправки в API.
+- `stream` (bool): Указывает, использовать ли потоковую передачу данных.
+- `**kwargs` (Any): Дополнительные параметры для передачи в API. Может включать `temperature` (float), определяющую случайность ответов.
 
-            if b"content" in token:
-                token = json.loads(token.decode("utf-8").split("data: ")[1])
-                token = token["choices"][0]["delta"].get("content")
+**Возвращает**:
+- `CreateResult`: Результат создания запроса. Это может быть генератор, возвращающий части ответа при потоковой передаче, или полный ответ.
 
-                if token:
-                    yield (token)
+**Вызывает исключения**:
+- `requests.exceptions.HTTPError`: Если при запросе к API произошла ошибка.
+
+**Как работает функция**:
+
+1.  **Подготовка полезной нагрузки (Payload)**: Формирует словарь `payload`, включающий температуру (если предоставлена, иначе 0.7), сообщения, модель и флаг потоковой передачи.
+
+2.  **Формирование заголовков (Headers)**: Определяет заголовки запроса, включая User-Agent.
+
+3.  **Отправка запроса (Request)**: Отправляет POST-запрос к API Lockchat с указанной полезной нагрузкой и заголовками.
+
+4.  **Обработка потока ответов (Stream processing)**: Если `stream=True`, функция итерируется по строкам ответа.
+    *   Проверяет наличие ошибки модели (`The model: \`gpt-4\` does not exist`) и, если она обнаружена, повторяет запрос.
+
+    *   Извлекает содержимое ответа из JSON, если строка содержит `"content"`.
+
+    *   Извлекает фактическое содержимое (`token`) из `token["choices"][0]["delta"].get("content")` и генерирует его.
+
+5.  **Завершение**: Функция возвращает результат, которым является либо генератор токенов (при потоковой передаче), либо полным ответом (если потоковая передача не используется).
+
+**ASCII flowchart**:
+
+```
+    Начало
+     ↓
+    Подготовка Payload (температура, сообщения, модель, stream)
+     ↓
+    Формирование Headers (User-Agent)
+     ↓
+    Отправка POST-запроса к API Lockchat
+     ↓
+    Обработка потока ответов (если stream=True)
+     ├─> Проверка на ошибку модели "gpt-4 does not exist"
+     │   └─> Да: Повторный вызов create_completion
+     │   └─> Нет: Продолжение
+     ↓
+    Извлечение содержимого из JSON (если есть "content")
+     ↓
+    Извлечение токена из ответа
+     ↓
+    Генерация токена (yield token)
+     ↓
+    Конец
+```
+
+**Примеры**:
+
+```python
+# Пример вызова функции create_completion
+model = "gpt-3.5-turbo"
+messages = [{"role": "user", "content": "Hello, how are you?"}]
+stream = True
+temperature = 0.9
+
+# Вызов функции
+result = Lockchat.create_completion(model=model, messages=messages, stream=stream, temperature=temperature)
+
+# Обработка результата (в данном случае, генератора)
+if stream:
+    for token in result:
+        print(token, end="")

@@ -2,11 +2,11 @@
 
 ## Обзор
 
-Модуль предназначен для конвертации PDF-файлов в HTML-формат. В частности, он использует утилиту `PDFUtils` для выполнения преобразования.
+Модуль предназначен для конвертации PDF-файлов в HTML-формат. Он использует утилиты из модуля `src.utils.pdf` для выполнения преобразования.
 
 ## Подробней
 
-Этот модуль предоставляет функцию `pdf2html`, которая принимает путь к PDF-файлу и путь для сохранения HTML-файла. Он использует библиотеку `PDFUtils` для конвертации PDF в HTML. Код предназначен для автоматизации процесса конвертации PDF-документов в HTML-формат. 
+Данный код обеспечивает функциональность преобразования PDF-документов в HTML, что может быть полезно для отображения содержимого PDF в веб-интерфейсах или для дальнейшей обработки текста.
 
 ## Функции
 
@@ -15,27 +15,40 @@
 ```python
 def pdf2html(pdf_file, html_file):
     """ """
+    PDFUtils.pdf_to_html(pdf_file, html_file)
 ```
 
-**Назначение**: Конвертирует PDF-файл в HTML-файл.
+**Назначение**: Преобразует PDF-файл в HTML-файл.
 
 **Параметры**:
-- `pdf_file` (str | Path): Путь к PDF-файлу, который нужно конвертировать.
-- `html_file` (str | Path): Путь для сохранения сгенерированного HTML-файла.
+- `pdf_file` (str): Путь к исходному PDF-файлу.
+- `html_file` (str): Путь к выходному HTML-файлу.
 
 **Возвращает**:
-- `None`: Функция ничего не возвращает.
+- `None`: Функция ничего не возвращает явно.
+
+**Вызывает исключения**:
+- Возможные исключения, возникающие при работе `PDFUtils.pdf_to_html`, не обрабатываются в данной функции, поэтому могут быть проброшены выше.
 
 **Как работает функция**:
-1. Функция `pdf2html` использует метод `pdf_to_html` из класса `PDFUtils` для преобразования PDF-файла в HTML.
-2. Внутри `PDFUtils.pdf_to_html` происходит процесс извлечения текста и форматирования из PDF-файла и записи его в HTML-файл.
+
+1. Функция `pdf2html` принимает пути к PDF-файлу (`pdf_file`) и HTML-файлу (`html_file`) в качестве аргументов.
+2. Она вызывает метод `pdf_to_html` из класса `PDFUtils`, передавая ему пути к входному и выходному файлам.
+3. Метод `pdf_to_html` выполняет фактическое преобразование PDF в HTML и сохраняет результат в указанный HTML-файл.
+
+ASCII flowchart:
+
+```
+PDF file --> PDFUtils.pdf_to_html() --> HTML file
+```
 
 **Примеры**:
 
 ```python
-pdf_file = gs.path.root / 'assets' / 'materials' / '101_BASIC_Computer_Games_Mar75.pdf'
-html_file = gs.path.root / 'assets' / 'materials' / '101_BASIC_Computer_Games_Mar75.html'
+from src.endpoints.hypo69.code_assistant.pdf2html import pdf2html
+from src import gs
+
+pdf_file = gs.path.root / 'assets' / 'materials' / 'example.pdf'
+html_file = gs.path.root / 'assets' / 'materials' / 'example.html'
 
 pdf2html(pdf_file, html_file)
-```
-В данном примере, PDF файл `'101_BASIC_Computer_Games_Mar75.pdf'`, расположенный в директории `'assets/materials'`, конвертируется в HTML файл `'101_BASIC_Computer_Games_Mar75.html'`, расположенный в той же директории.

@@ -14,15 +14,11 @@
 
 Пример использования класса `CodeAssistant`:
 # задайте роль исполнителя, язык 
-
-.. code-block:: python
+```python
 
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
     assistant.process_files()
-
-.. module:: src.endpoints.hypo69.code_assistant.code_assistant 
-    :platform: Windows, Unix
-    :synopsis: Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
+```
 
 .. header.py:
     ```mermaid
@@ -31,6 +27,8 @@
     
         Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
     ```
+
+[Документация](https://github.com/hypo69/hypo/blob/master/docs/ru/src/endpoints/hypo69/code_assistant/code_assistant.py.md)
 """
 
 import asyncio
@@ -56,6 +54,7 @@ from src.logger.logger import logger
 from src.endpoints.hypo69.code_assistant.make_summary import make_summary
 from src import USE_ENV
 
+# -------------------------- file config.py ----------------------------------
 
 class Config:
     ...
@@ -101,7 +100,7 @@ class Config:
 
 
 
-
+# -------------------------- end file ---------------------------------------------------
 
 
 

@@ -1,39 +1,53 @@
-# HeliconeAI: Интеграция с Helicone.ai и OpenAI
+# Документация модуля `src.ai.helicone`
 
 ## Обзор
 
-Класс `HeliconeAI` предназначен для облегчения взаимодействия с моделями Helicone.ai и OpenAI. Этот класс предоставляет методы для генерации стихов, анализа тональности, суммирования текста и перевода текста. Он также включает логирование завершений с использованием Helicone.ai.
+Модуль `src.ai.helicone` предоставляет класс `HeliconeAI`, который предназначен для упрощения взаимодействия с Helicone.ai и моделями OpenAI. Этот класс предоставляет методы для генерации стихов, анализа тональности текста, суммирования текста и перевода текста. Также он включает логирование завершений с использованием Helicone.ai.
 
-## Основные особенности
+## Подробнее
 
-1. **Генерация стихов**:
-   - Генерирует стихотворение на основе заданного запроса с использованием модели `gpt-3.5-turbo`.
+Этот модуль позволяет интегрировать функциональность Helicone.ai и OpenAI в проект `hypotez`, обеспечивая удобный интерфейс для выполнения различных задач обработки текста и логирования.
 
-2. **Анализ тональности**:
-   - Анализирует тональность заданного текста с использованием модели `text-davinci-003`.
+## Классы
 
-3. **Суммирование текста**:
-   - Суммирует заданный текст с использованием модели `text-davinci-003`.
+### `HeliconeAI`
 
-4. **Перевод текста**:
-   - Переводит заданный текст на указанный целевой язык с использованием модели `text-davinci-003`.
+**Описание**: Класс `HeliconeAI` предназначен для взаимодействия с Helicone.ai и OpenAI.
 
-5. **Логирование завершений**:
-   - Регистрирует все завершения с использованием Helicone.ai для мониторинга и анализа.
+**Принцип работы**:
+Класс инициализируется с клиентами Helicone и OpenAI. Он предоставляет методы для генерации стихов, анализа тональности, суммирования и перевода текста, а также логирует все завершения через Helicone.
 
-## Установка
+**Аттрибуты**:
+- `helicone` (Helicone): Клиент Helicone для логирования завершений.
+- `client` (OpenAI): Клиент OpenAI для выполнения запросов к моделям.
 
-Чтобы использовать класс `HeliconeAI`, убедитесь, что у вас установлены необходимые зависимости. Вы можете установить их с помощью pip:
+**Методы**:
+- `__init__(self)`: Инициализирует класс `HeliconeAI`, создавая экземпляры клиентов Helicone и OpenAI.
+- `generate_poem(self, prompt: str) -> str`: Генерирует стихотворение на основе заданного запроса.
+- `analyze_sentiment(self, text: str) -> str`: Анализирует тональность заданного текста.
+- `summarize_text(self, text: str) -> str`: Суммирует заданный текст.
+- `translate_text(self, text: str, target_language: str) -> str`: Переводит заданный текст на указанный язык.
 
-```bash
-pip install openai helicone
+### `__init__`
+
+**Назначение**: Инициализирует класс `HeliconeAI`, создавая экземпляры клиентов Helicone и OpenAI.
+
+**Параметры**:
+- Нет
+
+**Возвращает**:
+- Нет
+
+**Как работает функция**:
+
+1. Инициализируется клиент Helicone.
+2. Инициализируется клиент OpenAI.
+
+```
+Инициализация Helicone -> Инициализация OpenAI
 ```
 
-## Использование
-
-### Инициализация
-
-Инициализируйте класс `HeliconeAI`:
+**Примеры**:
 
 ```python
 from helicone import Helicone
@@ -43,17 +57,16 @@ class HeliconeAI:
     def __init__(self):
         self.helicone = Helicone()
         self.client = OpenAI()
+
+helicone_ai = HeliconeAI()
 ```
 
-### Методы
-
-#### `generate_poem`
-
-Генерирует стихотворение на основе заданного запроса:
+### `generate_poem`
 
 ```python
 def generate_poem(self, prompt: str) -> str:
-    """Генерирует стихотворение на основе заданного запроса.
+    """
+    Генерирует стихотворение на основе заданного запроса, используя модель `gpt-3.5-turbo`.
 
     Args:
         prompt (str): Запрос для генерации стихотворения.
@@ -61,33 +74,59 @@ def generate_poem(self, prompt: str) -> str:
     Returns:
         str: Сгенерированное стихотворение.
     """
-    response = self.client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
-    )
-    self.helicone.log_completion(response)
-    return response.choices[0].message.content
+    ...
 ```
 
+**Назначение**: Генерирует стихотворение на основе заданного запроса, используя модель `gpt-3.5-turbo`.
+
+**Параметры**:
+- `prompt` (str): Запрос для генерации стихотворения.
+
+**Возвращает**:
+- `str`: Сгенерированное стихотворение.
+
 **Как работает функция**:
-Функция `generate_poem` принимает строку `prompt` в качестве аргумента, который служит запросом для генерации стихотворения. Она использует клиент OpenAI для создания завершения чата с моделью `gpt-3.5-turbo`. Затем функция регистрирует это завершение с помощью Helicone и возвращает сгенерированное стихотворение из ответа OpenAI.
 
-Внутри функции происходят следующие действия и преобразования:
-A. Клиент OpenAI отправляет запрос на генерацию стихотворения с использованием модели `gpt-3.5-turbo`.
-|
-B. Helicone регистрирует завершение, полученное от OpenAI.
-|
-C. Функция возвращает сгенерированное стихотворение.
+1. Отправляет запрос в OpenAI для генерации стихотворения на основе предоставленного `prompt`.
+2. Логирует завершение с помощью Helicone.
+3. Возвращает сгенерированное стихотворение.
 
-#### `analyze_sentiment`
+```
+Запрос OpenAI (prompt) -> Логирование завершения (Helicone) -> Возврат стихотворения
+```
 
-Анализирует тональность заданного текста:
+**Примеры**:
+
+```python
+from helicone import Helicone
+from openai import OpenAI
+
+class HeliconeAI:
+    def __init__(self):
+        self.helicone = Helicone()
+        self.client = OpenAI()
+
+    def generate_poem(self, prompt: str) -> str:
+        response = self.client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+        self.helicone.log_completion(response)
+        return response.choices[0].message.content
+
+helicone_ai = HeliconeAI()
+poem = helicone_ai.generate_poem("Напиши мне стихотворение про кота.")
+print(poem)
+```
+
+### `analyze_sentiment`
 
 ```python
 def analyze_sentiment(self, text: str) -> str:
-    """Анализирует тональность заданного текста.
+    """
+    Анализирует тональность заданного текста, используя модель `text-davinci-003`.
 
     Args:
         text (str): Текст для анализа тональности.
@@ -95,32 +134,58 @@ def analyze_sentiment(self, text: str) -> str:
     Returns:
         str: Результат анализа тональности.
     """
-    response = self.client.completions.create(
-        model="text-davinci-003",
-        prompt=f"Analyze the sentiment of the following text: {text}",
-        max_tokens=50
-    )
-    self.helicone.log_completion(response)
-    return response.choices[0].text.strip()
+    ...
 ```
 
+**Назначение**: Анализирует тональность заданного текста, используя модель `text-davinci-003`.
+
+**Параметры**:
+- `text` (str): Текст для анализа тональности.
+
+**Возвращает**:
+- `str`: Результат анализа тональности.
+
 **Как работает функция**:
-Функция `analyze_sentiment` принимает строку `text` в качестве аргумента, который представляет собой текст для анализа тональности. Она использует клиент OpenAI для создания завершения с моделью `text-davinci-003`, запрашивая анализ тональности предоставленного текста. Затем функция регистрирует это завершение с помощью Helicone и возвращает результат анализа тональности.
 
-Внутри функции происходят следующие действия и преобразования:
-A. Клиент OpenAI отправляет запрос на анализ тональности с использованием модели `text-davinci-003`.
-|
-B. Helicone регистрирует завершение, полученное от OpenAI.
-|
-C. Функция возвращает результат анализа тональности.
+1. Отправляет запрос в OpenAI для анализа тональности текста.
+2. Логирует завершение с помощью Helicone.
+3. Возвращает результат анализа тональности.
 
-#### `summarize_text`
+```
+Запрос OpenAI (text) -> Логирование завершения (Helicone) -> Возврат анализа тональности
+```
 
-Суммирует заданный текст:
+**Примеры**:
+
+```python
+from helicone import Helicone
+from openai import OpenAI
+
+class HeliconeAI:
+    def __init__(self):
+        self.helicone = Helicone()
+        self.client = OpenAI()
+
+    def analyze_sentiment(self, text: str) -> str:
+        response = self.client.completions.create(
+            model="text-davinci-003",
+            prompt=f"Analyze the sentiment of the following text: {text}",
+            max_tokens=50
+        )
+        self.helicone.log_completion(response)
+        return response.choices[0].text.strip()
+
+helicone_ai = HeliconeAI()
+sentiment = helicone_ai.analyze_sentiment("Сегодня был отличный день!")
+print(sentiment)
+```
+
+### `summarize_text`
 
 ```python
 def summarize_text(self, text: str) -> str:
-    """Суммирует заданный текст.
+    """
+    Суммирует заданный текст, используя модель `text-davinci-003`.
 
     Args:
         text (str): Текст для суммирования.
@@ -128,92 +193,108 @@ def summarize_text(self, text: str) -> str:
     Returns:
         str: Суммированный текст.
     """
-    response = self.client.completions.create(
-        model="text-davinci-003",
-        prompt=f"Summarize the following text: {text}",
-        max_tokens=100
-    )
-    self.helicone.log_completion(response)
-    return response.choices[0].text.strip()
+    ...
 ```
 
+**Назначение**: Суммирует заданный текст, используя модель `text-davinci-003`.
+
+**Параметры**:
+- `text` (str): Текст для суммирования.
+
+**Возвращает**:
+- `str`: Суммированный текст.
+
 **Как работает функция**:
-Функция `summarize_text` принимает строку `text` в качестве аргумента, который представляет собой текст для суммирования. Она использует клиент OpenAI для создания завершения с моделью `text-davinci-003`, запрашивая суммирование предоставленного текста. Затем функция регистрирует это завершение с помощью Helicone и возвращает суммированный текст.
 
-Внутри функции происходят следующие действия и преобразования:
-A. Клиент OpenAI отправляет запрос на суммирование текста с использованием модели `text-davinci-003`.
-|
-B. Helicone регистрирует завершение, полученное от OpenAI.
-|
-C. Функция возвращает суммированный текст.
+1. Отправляет запрос в OpenAI для суммирования текста.
+2. Логирует завершение с помощью Helicone.
+3. Возвращает суммированный текст.
 
-#### `translate_text`
+```
+Запрос OpenAI (text) -> Логирование завершения (Helicone) -> Возврат суммированного текста
+```
 
-Переводит заданный текст на указанный целевой язык:
+**Примеры**:
+
+```python
+from helicone import Helicone
+from openai import OpenAI
+
+class HeliconeAI:
+    def __init__(self):
+        self.helicone = Helicone()
+        self.client = OpenAI()
+
+    def summarize_text(self, text: str) -> str:
+        response = self.client.completions.create(
+            model="text-davinci-003",
+            prompt=f"Summarize the following text: {text}",
+            max_tokens=100
+        )
+        self.helicone.log_completion(response)
+        return response.choices[0].text.strip()
+
+helicone_ai = HeliconeAI()
+summary = helicone_ai.summarize_text("Длинный текст для изложения...")
+print(summary)
+```
+
+### `translate_text`
 
 ```python
 def translate_text(self, text: str, target_language: str) -> str:
-    """Переводит заданный текст на указанный целевой язык.
+    """
+    Переводит заданный текст на указанный язык, используя модель `text-davinci-003`.
 
     Args:
         text (str): Текст для перевода.
-        target_language (str): Целевой язык для перевода.
+        target_language (str): Язык, на который нужно перевести текст.
 
     Returns:
         str: Переведенный текст.
     """
-    response = self.client.completions.create(
-        model="text-davinci-003",
-        prompt=f"Translate the following text to {target_language}: {text}",
-        max_tokens=200
-    )
-    self.helicone.log_completion(response)
-    return response.choices[0].text.strip()
+    ...
 ```
+
+**Назначение**: Переводит заданный текст на указанный язык, используя модель `text-davinci-003`.
+
+**Параметры**:
+- `text` (str): Текст для перевода.
+- `target_language` (str): Язык, на который нужно перевести текст.
+
+**Возвращает**:
+- `str`: Переведенный текст.
 
 **Как работает функция**:
-Функция `translate_text` принимает две строки в качестве аргументов: `text`, который представляет собой текст для перевода, и `target_language`, который представляет собой целевой язык для перевода. Она использует клиент OpenAI для создания завершения с моделью `text-davinci-003`, запрашивая перевод предоставленного текста на указанный язык. Затем функция регистрирует это завершение с помощью Helicone и возвращает переведенный текст.
 
-Внутри функции происходят следующие действия и преобразования:
-A. Клиент OpenAI отправляет запрос на перевод текста с использованием модели `text-davinci-003`.
-|
-B. Helicone регистрирует завершение, полученное от OpenAI.
-|
-C. Функция возвращает переведенный текст.
+1. Отправляет запрос в OpenAI для перевода текста на указанный язык.
+2. Логирует завершение с помощью Helicone.
+3. Возвращает переведенный текст.
 
-### Пример использования
-
-Вот пример того, как использовать класс `HeliconeAI`:
-
-```python
-def main():
-    helicone_ai = HeliconeAI()
-
-    poem = helicone_ai.generate_poem("Напиши мне стихотворение про кота.")
-    print("Generated Poem:\\n", poem)
-
-    sentiment = helicone_ai.analyze_sentiment("Сегодня был отличный день!")
-    print("Sentiment Analysis:\\n", sentiment)
-
-    summary = helicone_ai.summarize_text("Длинный текст для изложения...")
-    print("Summary:\\n", summary)
-
-    translation = helicone_ai.translate_text("Hello, how are you?", "русский")
-    print("Translation:\\n", translation)
-
-if __name__ == "__main__":
-    main()
+```
+Запрос OpenAI (text, target_language) -> Логирование завершения (Helicone) -> Возврат переведенного текста
 ```
 
-## Зависимости
+**Примеры**:
 
-- `helicone`
-- `openai`
+```python
+from helicone import Helicone
+from openai import OpenAI
 
-## Лицензия
+class HeliconeAI:
+    def __init__(self):
+        self.helicone = Helicone()
+        self.client = OpenAI()
 
-Этот проект лицензирован в соответствии с лицензией MIT. Подробности см. в файле [LICENSE](LICENSE).
+    def translate_text(self, text: str, target_language: str) -> str:
+        response = self.client.completions.create(
+            model="text-davinci-003",
+            prompt=f"Translate the following text to {target_language}: {text}",
+            max_tokens=200
+        )
+        self.helicone.log_completion(response)
+        return response.choices[0].text.strip()
 
----
-
-Для получения более подробной информации обратитесь к исходному коду и комментариям в классе `HeliconeAI`.
+helicone_ai = HeliconeAI()
+translation = helicone_ai.translate_text("Hello, how are you?", "русский")
+print(translation)

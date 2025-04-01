@@ -1,520 +1,471 @@
 # Модуль FastAPI сервера с XML-RPC интерфейсом для удалённого управления
+==================================================================
+
+Модуль содержит FastAPI сервер с интерфейсом XML-RPC для удалённого управления.
+Он предоставляет возможность запуска, остановки и управления серверами FastAPI через удалённые вызовы процедур (RPC).
 
 ## Обзор
 
-Модуль предоставляет FastAPI сервер с интерфейсом XML-RPC для удалённого управления. Он позволяет запускать и останавливать серверы на указанных портах, добавлять новые маршруты, просматривать статус серверов и зарегистрированные маршруты.
+Этот модуль реализует FastAPI сервер, который может управляться удаленно через XML-RPC. Он позволяет запускать и останавливать серверы на определенных портах, просматривать их статус, добавлять новые маршруты и останавливать все запущенные серверы. Модуль использует библиотеку `uvicorn` для асинхронного запуска серверов FastAPI и `xmlrpc.server` для предоставления XML-RPC интерфейса.
 
-## Подробнее
+## Подробней
 
-Этот модуль реализует FastAPI сервер, который может управляться удаленно через XML-RPC. Он использует библиотеку `uvicorn` для запуска асинхронного сервера и предоставляет API для управления сервером через командную строку или XML-RPC.
+Модуль предоставляет класс `FastApiServer`, который является Singleton-ом и управляет экземпляром FastAPI приложения. `CommandHandler` предоставляет интерфейс XML-RPC для удаленного управления сервером. Основная функция `main` запускает цикл обработки команд, позволяющий пользователю взаимодействовать с сервером через консоль.
 
 ## Классы
 
 ### `FastApiServer`
 
-**Описание**:
-Класс `FastApiServer` реализует FastAPI сервер с поддержкой Singleton.
+**Описание**: Класс, реализующий FastAPI сервер с поддержкой Singleton.
 
-**Как работает класс**:
-Класс `FastApiServer` является Singleton, что означает, что существует только один экземпляр этого класса. Он инициализирует FastAPI приложение, добавляет маршруты и предоставляет методы для запуска и остановки сервера.
+**Принцип работы**:
+Класс `FastApiServer` является синглтоном, что означает, что может быть создан только один экземпляр этого класса. Он инициализирует FastAPI приложение, настраивает маршруты и предоставляет методы для запуска и остановки сервера.
 
+**Атрибуты**:
 - `_instance`: Приватный атрибут класса, хранящий единственный экземпляр класса.
-- `app`: Экземпляр FastAPI приложения.
-- `host`: Хост, на котором будет запущен сервер. По умолчанию берется из конфигурационного файла.
-- `port`: Порт, на котором будет запущен сервер. По умолчанию 8000.
-- `router`: APIRouter для добавления маршрутов.
+- `app` (FastAPI): Экземпляр FastAPI приложения.
+- `host` (str): Хост, на котором будет запущен сервер (по умолчанию "127.0.0.1").
+- `port` (int): Порт, на котором будет запущен сервер (по умолчанию 8000).
+- `router` (APIRouter): Маршрутизатор для добавления API маршрутов.
+- `server_tasks` (Dict): Словарь для хранения задач сервера.
+- `servers` (Dict): Словарь для хранения запущенных серверов.
 
 **Методы**:
-
-- `__new__(cls, *args, **kwargs)`:
-    - Проверяет, существует ли уже экземпляр класса. Если нет, создает новый экземпляр и сохраняет его в `_instance`.
-    - Возвращает существующий экземпляр класса, если он уже создан.
-
-- `__init__(self, host: str = "127.0.0.1", title: str = "FastAPI RPC Server", **kwargs)`:
-    - Инициализирует экземпляр класса `FastApiServer`.
-    - Проверяет, был ли уже инициализирован экземпляр, чтобы избежать повторной инициализации.
-    - Добавляет маршруты `/hello` и `/post` к FastAPI приложению.
-    - Инициализирует FastAPI приложение, хост, словарь задач сервера и словарь серверов.
-    - Включает маршрутизатор в FastAPI приложение.
-
-- `add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs)`:
-    - Добавляет маршрут к FastAPI приложению.
-    - `path` (str): Путь маршрута.
-    - `func` (Callable): Функция, которая будет выполняться при запросе к маршруту.
-    - `methods` (List[str]): Список HTTP методов, которые поддерживает маршрут. По умолчанию `["GET"]`.
-    - `**kwargs`: Дополнительные аргументы, которые будут переданы в `router.add_api_route`.
-
-- `_start_server(self, port: int)`:
-    - Запускает uvicorn сервер асинхронно.
-    - `port` (int): Порт, на котором будет запущен сервер.
-    - Создает конфигурацию uvicorn сервера с указанным хостом, портом и уровнем логирования.
-    - Запускает uvicorn сервер.
-    - В случае ошибки логирует ее и удаляет сервер из словаря серверов.
-
-- `start(self, port: int, as_thread: bool = True)`:
-    - Запускает FastAPI сервер на указанном порту.
-    - `port` (int): Порт, на котором будет запущен сервер.
-    - `as_thread` (bool): Флаг, указывающий, запускать ли сервер в отдельном потоке. По умолчанию `True`.
-    - Проверяет, запущен ли уже сервер на указанном порту.
-    - Создает и запускает поток для запуска асинхронного сервера.
-
-- `stop(self, port: int)`:
-    - Останавливает FastAPI сервер на указанном порту.
-    - `port` (int): Порт, на котором нужно остановить сервер.
-    - Проверяет, запущен ли сервер на указанном порту.
-    - Останавливает поток сервера и удаляет сервер из словаря серверов.
-    - В случае ошибки логирует ее.
-
-- `stop_all(self)`:
-    - Останавливает все запущенные сервера.
-    - Перебирает все порты в словаре серверов и останавливает каждый сервер.
-
-- `get_servers_status(self)`:
-    - Возвращает статус всех серверов.
-    - Возвращает словарь, где ключ - порт, а значение - статус сервера ("Running" или "Stopped").
-
-- `get_routes(self)`:
-    - Возвращает список всех роутов.
-    - Проходит по всем маршрутам в приложении и возвращает список словарей с информацией о каждом маршруте (путь и методы).
-
-- `get_app(self)`:
-    - Возвращает FastAPI приложение.
-    - Позволяет получить доступ к FastAPI приложению для дальнейшей настройки или использования.
-
-- `add_new_route(self, path: str, module_name: str, func_name: str, methods: List[str] = ["GET"], **kwargs)`:
-    - Добавляет новый маршрут к уже работающему приложению.
-    - `path` (str): Путь маршрута.
-    - `module_name` (str): Имя модуля, содержащего функцию для маршрута.
-    - `func_name` (str): Имя функции, которая будет обрабатывать запросы к маршруту.
-    - `methods` (List[str]): Список HTTP методов, которые поддерживает маршрут. По умолчанию `["GET"]`.
-    - `**kwargs`: Дополнительные аргументы, которые будут переданы в функцию маршрута.
-    - Динамически импортирует модуль и получает функцию из модуля.
-    - Добавляет маршрут к FastAPI приложению.
+- `__new__(cls, *args, **kwargs)`: Создает новый экземпляр класса, если он еще не создан.
+- `__init__(self, host: str = "127.0.0.1", title: str = "FastAPI RPC Server", **kwargs)`: Инициализирует экземпляр класса, добавляет маршруты, такие как `/hello` и `/post`, и настраивает FastAPI приложение.
+- `add_route(self, path: str, func: Callable, methods: List[str] = ["GET"], **kwargs)`: Добавляет маршрут к FastAPI приложению.
+- `_start_server(self, port: int)`: Запускает uvicorn сервер асинхронно.
+- `start(self, port: int, as_thread: bool = True)`: Запускает FastAPI сервер на указанном порту в отдельном потоке.
+- `stop(self, port: int)`: Останавливает FastAPI сервер на указанном порту.
+- `stop_all(self)`: Останавливает все запущенные сервера.
+- `get_servers_status(self)`: Возвращает статус всех серверов.
+- `get_routes(self)`: Возвращает список всех роутов.
+- `get_app(self)`: Возвращает FastAPI приложение.
+- `add_new_route(self, path: str, module_name: str, func_name: str, methods: List[str] = ["GET"], **kwargs)`: Добавляет новый маршрут к уже работающему приложению, импортируя модуль и функцию динамически.
 
 ### `CommandHandler`
 
-**Описание**:
-Класс `CommandHandler` обрабатывает команды для FastAPI сервера через XML-RPC.
+**Описание**: Обработчик команд для FastAPI сервера через XML-RPC.
 
-**Как работает класс**:
-Класс `CommandHandler` предоставляет интерфейс XML-RPC для управления FastAPI сервером. Он позволяет запускать и останавливать серверы, просматривать статус серверов и зарегистрированные маршруты.
+**Принцип работы**:
+Класс `CommandHandler` предоставляет интерфейс XML-RPC для удаленного управления FastAPI сервером. Он регистрирует методы для запуска, остановки и получения статуса серверов, а также для добавления новых маршрутов.
+
+**Атрибуты**:
+- `rpc_port` (int): Порт для XML-RPC сервера (по умолчанию 9000).
+- `rpc_server` (SimpleXMLRPCServer): Экземпляр XML-RPC сервера.
 
 **Методы**:
-
-- `__init__(self, rpc_port=9000)`:
-    - Инициализирует обработчик команд.
-    - `rpc_port` (int): Порт, на котором будет запущен XML-RPC сервер. По умолчанию 9000.
-    - Создает XML-RPC сервер и регистрирует экземпляр класса `CommandHandler` для обработки запросов.
-    - Запускает XML-RPC сервер в отдельном потоке.
-
-- `start_server(self, port: int, host: str)`:
-    - Запускает FastAPI сервер на указанном порту и хосте.
-    - `port` (int): Порт, на котором будет запущен сервер.
-    - `host` (str): Хост, на котором будет запущен сервер.
-    - Вызывает функцию `start_server` для запуска сервера.
-
-- `stop_server(self, port: int)`:
-    - Останавливает FastAPI сервер на указанном порту.
-    - `port` (int): Порт, на котором нужно остановить сервер.
-    - Вызывает функцию `stop_server` для остановки сервера.
-
-- `stop_all_servers(self)`:
-    - Останавливает все запущенные FastAPI сервера.
-    - Вызывает функцию `stop_all_servers` для остановки всех серверов.
-
-- `status_servers(self)`:
-    - Показывает статус серверов.
-    - Вызывает функцию `status_servers` для получения и отображения статуса серверов.
-
-- `get_routes(self)`:
-    - Показывает все роуты.
-    - Вызывает функцию `get_routes` для получения и отображения всех роутов.
-
-- `add_new_route(self, path: str, module_name: str, func_name: str, methods: List[str] = ["GET"])`:
-    - Добавляет новый роут к серверу.
-    - `path` (str): Путь для нового роута.
-    - `module_name` (str): Имя модуля, содержащего функцию для обработки роута.
-    - `func_name` (str): Имя функции, которая будет обрабатывать роут.
-    - `methods` (List[str]): Список HTTP методов, поддерживаемых роутом.
-    - Вызывает функцию `add_new_route` для добавления нового роута.
-
-- `shutdown(self)`:
-    - Останавливает все серверы и выключает RPC сервер.
-    - Вызывает `stop_all_servers` для остановки всех FastAPI серверов.
-    - Вызывает `rpc_server.shutdown()` для остановки XML-RPC сервера.
-    - Завершает работу программы.
+- `__init__(self, rpc_port=9000)`: Инициализирует XML-RPC сервер и регистрирует методы экземпляра.
+- `start_server(self, port: int, host: str)`: Запускает FastAPI сервер.
+- `stop_server(self, port: int)`: Останавливает FastAPI сервер.
+- `stop_all_servers(self)`: Останавливает все запущенные серверы.
+- `status_servers(self)`: Возвращает статус серверов.
+- `get_routes(self)`: Возвращает список маршрутов.
+- `add_new_route(self, path: str, module_name: str, func_name: str, methods: List[str] = ["GET"])`: Добавляет новый маршрут.
+- `shutdown(self)`: Останавливает все серверы и завершает работу RPC сервера.
 
 ## Функции
 
-### `telegram_webhook()`
+### `telegram_webhook`
 
 ```python
-def telegram_webhook():
-    """"""
-    return 'Hello, World!'
+def telegram_webhook() -> str:
+    """ """
 ```
 
-**Назначение**:
-Функция `telegram_webhook` предназначена для обработки webhook запросов от Telegram. В текущей реализации она возвращает строку 'Hello, World!'.
+**Назначение**: Функция-заглушка для telegram webhook. В текущей реализации просто возвращает строку "Hello, World!".
 
-**Как работает функция**:
-Функция просто возвращает строку 'Hello, World!'. Она не выполняет никаких других действий.
+**Параметры**:
+- Нет параметров.
 
 **Возвращает**:
-- `str`: Возвращает строку 'Hello, World!'.
-
-### `test_function()`
-
-```python
-def test_function():
-    return "It is working!!!"
-```
-
-**Назначение**:
-Функция `test_function` предназначена для тестирования доступности сервера.
+- `str`: Строка "Hello, World!".
 
 **Как работает функция**:
-Функция просто возвращает строку "It is working!!!".
+1. Просто возвращает строку "Hello, World!".
+
+**Примеры**:
+```python
+result = telegram_webhook()
+print(result)  # Выведет: Hello, World!
+```
+
+### `test_function`
+
+```python
+def test_function() -> str:
+    """ """
+```
+
+**Назначение**: Тестовая функция, возвращающая строку "It is working!!!".
+
+**Параметры**:
+- Нет параметров.
 
 **Возвращает**:
-- `str`: Возвращает строку "It is working!!!".
-
-### `test_post(data: Dict[str, str])`
-
-```python
-def test_post(data: Dict[str, str]):
-    return {"result": "post ok", "data": data}
-```
-
-**Назначение**:
-Функция `test_post` предназначена для обработки POST запросов и возврата результата.
+- `str`: Строка "It is working!!!".
 
 **Как работает функция**:
-Функция принимает словарь `data` в качестве аргумента и возвращает словарь, содержащий результат "post ok" и переданные данные.
+1. Просто возвращает строку "It is working!!!".
+
+**Примеры**:
+```python
+result = test_function()
+print(result)  # Выведет: It is working!!!
+```
+
+### `test_post`
+
+```python
+def test_post(data: Dict[str, str]) -> Dict[str, str]:
+    """ """
+```
+
+**Назначение**: Тестовая функция для обработки POST запросов.
 
 **Параметры**:
 - `data` (Dict[str, str]): Словарь с данными, переданными в POST запросе.
 
 **Возвращает**:
-- `dict`: Возвращает словарь с результатом "post ok" и переданными данными.
-
-### `start_server(port: int, host: str)`
-
-```python
-def start_server(port: int, host: str):
-    """Запускает FastAPI сервер на указанном порту."""
-    global _api_server_instance
-    if _api_server_instance is None:
-        _api_server_instance = FastApiServer(host=host)
-    try:
-      _api_server_instance.start(port=port)
-    except Exception as ex:
-      logger.error(f"Ошибка запуска FastAPI сервера на порту {port}:",ex, exc_info=True)
-```
-
-**Назначение**:
-Функция `start_server` запускает FastAPI сервер на указанном порту.
+- `Dict[str, str]`: Словарь с результатом обработки POST запроса.
 
 **Как работает функция**:
-Функция сначала проверяет, инициализирован ли уже экземпляр `FastApiServer`. Если нет, она создает новый экземпляр. Затем она вызывает метод `start` экземпляра `FastApiServer` для запуска сервера на указанном порту.
+1. Возвращает словарь, содержащий сообщение "post ok" и переданные данные.
+
+**Примеры**:
+```python
+data = {"key": "value"}
+result = test_post(data)
+print(result)  # Выведет: {'result': 'post ok', 'data': {'key': 'value'}}
+```
+
+### `start_server`
+
+```python
+def start_server(port: int, host: str) -> None:
+    """Запускает FastAPI сервер на указанном порту."""
+```
+
+**Назначение**: Запускает FastAPI сервер на указанном порту.
 
 **Параметры**:
-- `port` (int): Порт, на котором будет запущен сервер.
-- `host` (str): Хост, на котором будет запущен сервер.
-
-**Вызывает исключения**:
-- `Exception`: Если возникает ошибка при запуске FastAPI сервера.
-
-### `stop_server(port: int)`
-
-```python
-def stop_server(port: int):
-    """Останавливает FastAPI сервер на указанном порту."""
-    global _api_server_instance
-    if _api_server_instance:
-        try:
-            _api_server_instance.stop(port=port)
-        except Exception as ex:
-            logger.error(f"Ошибка остановки FastAPI сервера на порту {port}:",ex, exc_info=True)
-```
-
-**Назначение**:
-Функция `stop_server` останавливает FastAPI сервер на указанном порту.
+- `port` (int): Порт, на котором нужно запустить сервер.
+- `host` (str): Хост, на котором нужно запустить сервер.
 
 **Как работает функция**:
-Функция проверяет, инициализирован ли экземпляр `FastApiServer`. Если да, она вызывает метод `stop` экземпляра `FastApiServer` для остановки сервера на указанном порту.
+1. Проверяет, инициализирован ли экземпляр `FastApiServer`. Если нет, создает его.
+2. Вызывает метод `start` экземпляра `FastApiServer` для запуска сервера на указанном порту.
+3. Обрабатывает возможные исключения и логирует ошибки.
+
+```ascii
+    Начало
+    │
+    ├── Проверка: _api_server_instance is None?
+    │   └── ДА: Создать экземпляр FastApiServer
+    │
+    ├── Запуск сервера: _api_server_instance.start(port=port)
+    │   ├── Попытка запуска
+    │   └── Обработка исключений (логирование ошибок)
+    │
+    Конец
+```
+
+**Примеры**:
+```python
+start_server(port=8000, host="127.0.0.1")
+```
+
+### `stop_server`
+
+```python
+def stop_server(port: int) -> None:
+    """Останавливает FastAPI сервер на указанном порту."""
+```
+
+**Назначение**: Останавливает FastAPI сервер на указанном порту.
 
 **Параметры**:
 - `port` (int): Порт, на котором нужно остановить сервер.
 
-**Вызывает исключения**:
-- `Exception`: Если возникает ошибка при остановке FastAPI сервера.
+**Как работает функция**:
+1. Проверяет, инициализирован ли экземпляр `FastApiServer`.
+2. Вызывает метод `stop` экземпляра `FastApiServer` для остановки сервера на указанном порту.
+3. Обрабатывает возможные исключения и логирует ошибки.
 
-### `stop_all_servers()`
+```ascii
+    Начало
+    │
+    ├── Проверка: _api_server_instance is not None?
+    │   └── ДА: Остановить сервер на порту
+    │
+    ├── Остановка сервера: _api_server_instance.stop(port=port)
+    │   ├── Попытка остановки
+    │   └── Обработка исключений (логирование ошибок)
+    │
+    Конец
+```
+
+**Примеры**:
+```python
+stop_server(port=8000)
+```
+
+### `stop_all_servers`
 
 ```python
-def stop_all_servers():
+def stop_all_servers() -> None:
     """Останавливает все запущенные FastAPI сервера."""
-    global _api_server_instance
-    if _api_server_instance:
-      try:
-        _api_server_instance.stop_all()
-      except Exception as ex:
-        logger.error(f"Ошибка остановки всех FastAPI серверов:",ex, exc_info=True)
 ```
 
-**Назначение**:
-Функция `stop_all_servers` останавливает все запущенные FastAPI сервера.
+**Назначение**: Останавливает все запущенные FastAPI сервера.
+
+**Параметры**:
+- Нет параметров.
 
 **Как работает функция**:
-Функция проверяет, инициализирован ли экземпляр `FastApiServer`. Если да, она вызывает метод `stop_all` экземпляра `FastApiServer` для остановки всех серверов.
+1. Проверяет, инициализирован ли экземпляр `FastApiServer`.
+2. Вызывает метод `stop_all` экземпляра `FastApiServer` для остановки всех серверов.
+3. Обрабатывает возможные исключения и логирует ошибки.
 
-**Вызывает исключения**:
-- `Exception`: Если возникает ошибка при остановке всех FastAPI серверов.
+```ascii
+    Начало
+    │
+    ├── Проверка: _api_server_instance is not None?
+    │   └── ДА: Остановить все серверы
+    │
+    ├── Остановка всех серверов: _api_server_instance.stop_all()
+    │   ├── Попытка остановки
+    │   └── Обработка исключений (логирование ошибок)
+    │
+    Конец
+```
 
-### `status_servers()`
+**Примеры**:
+```python
+stop_all_servers()
+```
+
+### `status_servers`
 
 ```python
-def status_servers():
+def status_servers() -> None:
     """Показывает статус серверов."""
-    global _api_server_instance
-    if _api_server_instance:
-        servers = _api_server_instance.get_servers_status()
-        if servers:
-            print(f"Server initialized on host {_api_server_instance.host}")
-            for port, status in servers.items():
-                print(f"  - Port {port}: {status}")
-        else:
-            print("No servers running")
-    else:
-        print("Server not initialized.")
 ```
 
-**Назначение**:
-Функция `status_servers` показывает статус серверов.
+**Назначение**: Выводит статус всех запущенных серверов.
 
 **Как работает функция**:
-Функция проверяет, инициализирован ли экземпляр `FastApiServer`. Если да, она вызывает метод `get_servers_status` экземпляра `FastApiServer` для получения статуса серверов и выводит информацию о статусе каждого сервера.
+1. Проверяет, инициализирован ли экземпляр `FastApiServer`.
+2. Вызывает метод `get_servers_status` экземпляра `FastApiServer` для получения статуса серверов.
+3. Выводит информацию о статусе каждого сервера. Если серверы не запущены, выводит соответствующее сообщение.
 
-**Вызывает исключения**:
-- `Exception`: Если возникает ошибка при получении статуса серверов.
+```ascii
+    Начало
+    │
+    ├── Проверка: _api_server_instance is not None?
+    │   └── ДА: Получить статус серверов
+    │
+    ├── Получение статуса: _api_server_instance.get_servers_status()
+    │   ├── Если серверы есть: Вывод статуса каждого сервера
+    │   └── Если серверов нет: Вывод сообщения "No servers running"
+    │
+    Конец
+```
 
-### `get_routes()`
+**Примеры**:
+```python
+status_servers()
+```
+
+### `get_routes`
 
 ```python
-def get_routes():
+def get_routes() -> None:
     """Показывает все роуты."""
-    global _api_server_instance
-    if _api_server_instance:
-      routes = _api_server_instance.get_routes()
-      if routes:
-        print("Available routes:")
-        for route in routes:
-          print(f"  - Path: {route['path']}, Methods: {route['methods']}")
-      else:
-        print("No routes defined")
-    else:
-        print("Server not initialized.")
 ```
 
-**Назначение**:
-Функция `get_routes` показывает все роуты.
+**Назначение**: Выводит список всех зарегистрированных маршрутов.
 
 **Как работает функция**:
-Функция проверяет, инициализирован ли экземпляр `FastApiServer`. Если да, она вызывает метод `get_routes` экземпляра `FastApiServer` для получения списка роутов и выводит информацию о каждом роуте.
+1. Проверяет, инициализирован ли экземпляр `FastApiServer`.
+2. Вызывает метод `get_routes` экземпляра `FastApiServer` для получения списка маршрутов.
+3. Выводит информацию о каждом маршруте. Если маршруты не определены, выводит соответствующее сообщение.
 
-**Вызывает исключения**:
-- `Exception`: Если возникает ошибка при получении списка роутов.
+```ascii
+    Начало
+    │
+    ├── Проверка: _api_server_instance is not None?
+    │   └── ДА: Получить список маршрутов
+    │
+    ├── Получение маршрутов: _api_server_instance.get_routes()
+    │   ├── Если маршруты есть: Вывод каждого маршрута
+    │   └── Если маршрутов нет: Вывод сообщения "No routes defined"
+    │
+    Конец
+```
 
-### `add_new_route(path: str, module_name: str, func_name: str, methods: List[str] = ["GET"])`
+**Примеры**:
+```python
+get_routes()
+```
+
+### `add_new_route`
 
 ```python
-def add_new_route(path: str, module_name: str, func_name: str, methods: List[str] = ["GET"]):
+def add_new_route(path: str, module_name: str, func_name: str, methods: List[str] = ["GET"]) -> None:
     """Добавляет новый роут к серверу."""
-    global _api_server_instance
-    if _api_server_instance:
-      try:
-          _api_server_instance.add_new_route(path=path, module_name=module_name, func_name=func_name, methods=methods)
-          print(f"Route added: {path}, {methods=}")
-      except Exception as ex:
-        logger.error(f"Ошибка добавления нового роута {path}:",ex, exc_info=True)
-    else:
-        print("Server not initialized. Start server first")
 ```
 
-**Назначение**:
-Функция `add_new_route` добавляет новый роут к серверу.
-
-**Как работает функция**:
-Функция проверяет, инициализирован ли экземпляр `FastApiServer`. Если да, она вызывает метод `add_new_route` экземпляра `FastApiServer` для добавления нового роута с указанными параметрами.
+**Назначение**: Добавляет новый маршрут к FastAPI серверу.
 
 **Параметры**:
-- `path` (str): Путь для нового роута.
-- `module_name` (str): Имя модуля, содержащего функцию для обработки роута.
-- `func_name` (str): Имя функции, которая будет обрабатывать роут.
-- `methods` (List[str]): Список HTTP методов, поддерживаемых роутом.
+- `path` (str): Путь для нового маршрута.
+- `module_name` (str): Имя модуля, содержащего функцию для маршрута.
+- `func_name` (str): Имя функции, которая будет обрабатывать запросы к маршруту.
+- `methods` (List[str]): Список HTTP методов, поддерживаемых маршрутом (по умолчанию ["GET"]).
 
-**Вызывает исключения**:
-- `Exception`: Если возникает ошибка при добавлении нового роута.
+**Как работает функция**:
+1. Проверяет, инициализирован ли экземпляр `FastApiServer`.
+2. Вызывает метод `add_new_route` экземпляра `FastApiServer` для добавления нового маршрута.
+3. Обрабатывает возможные исключения и логирует ошибки.
 
-### `parse_port_range(range_str)`
+```ascii
+    Начало
+    │
+    ├── Проверка: _api_server_instance is not None?
+    │   └── ДА: Добавить новый маршрут
+    │
+    ├── Добавление маршрута: _api_server_instance.add_new_route(...)
+    │   ├── Попытка добавления
+    │   └── Обработка исключений (логирование ошибок)
+    │
+    Конец
+```
+
+**Примеры**:
+```python
+add_new_route(path="/test", module_name="my_module", func_name="my_function")
+```
+
+### `parse_port_range`
 
 ```python
-def parse_port_range(range_str):
+def parse_port_range(range_str: str) -> List[int]:
     """Разбирает строку с диапазоном портов."""
-    if not re.match(r'^[\\d-]+$', range_str):
-        print(f"Invalid port range: {range_str}")
-        return []
-    if '-' in range_str:
-        try:
-            start, end = map(int, range_str.split('-'))
-            if start > end:
-                raise ValueError("Invalid port range")
-            return list(range(start, end + 1))
-        except ValueError:
-            print(f"Invalid port range: {range_str}")
-            return []
-    else:
-        try:
-            return [int(range_str)]
-        except ValueError:
-            print(f"Invalid port: {range_str}")
-            return []
 ```
 
-**Назначение**:
-Функция `parse_port_range` разбирает строку с диапазоном портов.
-
-**Как работает функция**:
-Функция принимает строку `range_str` в качестве аргумента и пытается разобрать ее как диапазон портов. Если строка содержит дефис (`-`), она разделяет строку на начало и конец диапазона и возвращает список всех портов в диапазоне. Если строка не содержит дефис, она пытается преобразовать строку в целое число и возвращает список, содержащий только это число.
+**Назначение**: Разбирает строку с диапазоном портов и возвращает список портов.
 
 **Параметры**:
-- `range_str` (str): Строка с диапазоном портов.
+- `range_str` (str): Строка с диапазоном портов (например, "8000-8005" или "8000").
 
 **Возвращает**:
-- `List[int]`: Возвращает список портов.
+- `List[int]`: Список портов. Если строка не соответствует формату, возвращает пустой список.
 
-### `display_menu()`
+**Как работает функция**:
+1. Проверяет, соответствует ли строка формату диапазона портов (например, "8000-8005" или "8000").
+2. Если строка содержит дефис, пытается разбить строку на начало и конец диапазона и сгенерировать список портов.
+3. Если строка не содержит дефис, пытается преобразовать строку в целое число и вернуть список, содержащий только этот порт.
+4. Обрабатывает возможные исключения и возвращает пустой список в случае ошибки.
+
+```ascii
+    Начало
+    │
+    ├── Проверка: Соответствует ли строка формату диапазона портов?
+    │   └── НЕТ: Вывод сообщения об ошибке и возврат пустого списка
+    │
+    ├── Проверка: Содержит ли строка дефис?
+    │   ├── ДА: Разбить строку на начало и конец диапазона
+    │   │   ├── Преобразовать начало и конец в целые числа
+    │   │   ├── Сгенерировать список портов в диапазоне
+    │   │   └── Обработка исключений (возврат пустого списка)
+    │   └── НЕТ: Преобразовать строку в целое число
+    │       ├── Вернуть список, содержащий только этот порт
+    │       └── Обработка исключений (возврат пустого списка)
+    │
+    Конец
+```
+
+**Примеры**:
+```python
+ports = parse_port_range("8000-8005")
+print(ports)  # Выведет: [8000, 8001, 8002, 8003, 8004, 8005]
+
+ports = parse_port_range("8000")
+print(ports)  # Выведет: [8000]
+
+ports = parse_port_range("invalid")
+print(ports)  # Выведет: []
+```
+
+### `display_menu`
 
 ```python
-def display_menu():
+def display_menu() -> None:
     """Выводит меню с доступными командами."""
-    print("\nAvailable commands:")
-    print("  start <port>        - Start server on the specified port")
-    print("  status              - Show all served ports status")
-    print("  routes              - Show all registered routes")
-    print("  stop <port>         - Stop server on the specified port")
-    print("  stop_all            - Stop all servers")
-    print("  add_route <path>    - Add a new route to the server")
-    print("  shutdown            - Stop all servers and exit")
-    print("  help                - Show this help menu")
-    print("  exit                - Exit the program")
 ```
 
-**Назначение**:
-Функция `display_menu` выводит меню с доступными командами.
+**Назначение**: Выводит меню с доступными командами для управления сервером.
 
 **Как работает функция**:
-Функция просто выводит список доступных команд в консоль.
+1. Выводит список доступных команд и их описания.
 
-### `main()`
+**Примеры**:
+```python
+display_menu()
+```
+
+### `main`
 
 ```python
-def main():
+def main() -> None:
     """Основная функция управления сервером."""
-    command_handler = CommandHandler()
-    while True:
-        display_menu()
-        try:
-            command_line = input("Enter command: ").strip().lower()
-            if not command_line:
-                continue
-
-            parts = command_line.split()
-            command = parts[0]
-
-            if command == "start":
-                if len(parts) != 2:
-                    print("Usage: start <port>")
-                    continue
-                try:
-                    port = int(parts[1])
-                    host = input("Enter host address (default: 127.0.0.1): ").strip() or "127.0.0.1"
-                    command_handler.start_server(port=port, host=host)
-                except ValueError:
-                    print("Invalid port number.")
-                except Exception as ex:
-                    logger.error(f"An error occurred:", ex, exc_info=True)
-
-            elif command == "status":
-                command_handler.status_servers()
-
-            elif command == "routes":
-                command_handler.get_routes()
-            
-            elif command == "stop":
-               if len(parts) != 2:
-                   print("Usage: stop <port>")
-                   continue
-               try:
-                    port = int(parts[1])
-                    command_handler.stop_server(port=port)
-               except ValueError:
-                   print("Invalid port number.")
-               except Exception as ex:
-                  logger.error(f"An error occurred:", ex, exc_info=True)
-            
-            elif command == "stop_all":
-               command_handler.stop_all_servers()
-            
-            elif command == "add_route":
-                if len(parts) < 2:
-                    print("Usage: add_route <path> <module_name> <func_name>")
-                    continue
-                path = parts[1]
-                module_name = input("Enter module name: ").strip()
-                func_name = input("Enter function name: ").strip()
-                methods = input("Enter HTTP methods (comma-separated, default: GET): ").strip().upper() or "GET"
-                methods = [method.strip() for method in methods.split(",")]
-                command_handler.add_new_route(path=path, module_name=module_name, func_name=func_name, methods=methods)
-
-
-            elif command == "shutdown":
-                command_handler.shutdown()  # call shutdown method on command_handler
-
-            elif command == "help":
-                display_menu()
-
-            elif command == "exit":
-                print("Exiting the program.")
-                sys.exit(0)
-            
-            else:
-                print("Unknown command. Type 'help' to see the list of available commands")
-
-        except Exception as ex:
-            logger.error(f"An error occurred:", ex, exc_info=True)
 ```
 
-**Назначение**:
-Функция `main` является основной функцией управления сервером.
+**Назначение**: Основная функция управления сервером.
 
 **Как работает функция**:
-Функция создает экземпляр `CommandHandler`, который используется для обработки команд. Она входит в бесконечный цикл, в котором выводит меню доступных команд, принимает команду от пользователя и выполняет соответствующее действие.
+1. Создает экземпляр `CommandHandler`.
+2. Входит в бесконечный цикл, в котором выводит меню доступных команд и ожидает ввода пользователя.
+3. Обрабатывает введенные команды и вызывает соответствующие методы `CommandHandler`.
+4. Обрабатывает возможные исключения и логирует ошибки.
 
-**Логика работы цикла**:
-1. **Отображение меню**: Вызывается функция `display_menu()` для отображения доступных команд.
-2. **Ввод команды**: Пользователь вводит команду, которая затем обрабатывается.
-3. **Обработка команды**:
-   - Команда разбивается на части, и определяется основная команда.
-   - В зависимости от команды выполняются различные действия:
-     - `start`: Запускает сервер на указанном порту.
-     - `status`: Отображает статус всех серверов.
-     - `routes`: Отображает все зарегистрированные маршруты.
-     - `stop`: Останавливает сервер на указанном порту.
-     - `stop_all`: Останавливает все запущенные серверы.
-     - `add_route`: Добавляет новый маршрут к серверу.
-     - `shutdown`: Останавливает все серверы и завершает работу программы.
-     - `help`: Отображает меню с доступными командами.
-     - `exit`: Завершает работу программы.
-   - В случае возникновения ошибки выводится сообщение об ошибке.
+```ascii
+    Начало
+    │
+    ├── Создание экземпляра CommandHandler
+    │
+    ├── Бесконечный цикл
+    │   ├── Вывод меню доступных команд
+    │   ├── Ожидание ввода пользователя
+    │   ├── Разбор введенной команды
+    │   ├── Выполнение команды
+    │   ├── Обработка исключений
+    │
+    Конец
+```
+
+**Примеры**:
+Запуск программы:
+```bash
+python your_module_name.py
+```
+
+## Оглавление
+
+- [Классы](#классы)
+  - [`FastApiServer`](#fastapiserver)
+  - [`CommandHandler`](#commandhandler)
+- [Функции](#функции)
+  - [`telegram_webhook`](#telegram_webhook)
+  - [`test_function`](#test_function)
+  - [`test_post`](#test_post)
+  - [`start_server`](#start_server)
+  - [`stop_server`](#stop_server)
+  - [`stop_all_servers`](#stop_all_servers)
+  - [`status_servers`](#status_servers)
+  - [`get_routes`](#get_routes)
+  - [`add_new_route`](#add_new_route)
+  - [`parse_port_range`](#parse_port_range)
+  - [`display_menu`](#display_menu)
+  - [`main`](#main)

@@ -1,368 +1,237 @@
-# Модуль `test_execute_scenaries.py`
+# Модуль `test_execute_scenarios.py`
 
 ## Обзор
 
-Модуль содержит набор тестов для проверки функциональности выполнения сценариев, включая запуск списка файлов сценариев, запуск одного файла сценария и извлечение данных со страницы продукта.
+Модуль содержит тесты для проверки функциональности выполнения сценариев, включая запуск сценариев из файлов, запуск отдельных сценариев и захват страниц продуктов. Он использует библиотеку `unittest` для создания тестовых случаев и `MagicMock` для имитации зависимостей.
 
-## Подробней
+## Подробнее
 
-Этот модуль предназначен для тестирования основных функций, связанных с выполнением сценариев парсинга веб-страниц. Он включает тесты для обработки сценариев, загруженных из файлов, переключения между различными методами парсинга (webdriver и API), а также для проверки успешности и неудачи извлечения данных со страниц продуктов. Модуль использует `unittest` для организации тестов и `MagicMock` для имитации зависимостей и упрощения тестирования отдельных компонентов.
+Этот модуль предназначен для тестирования основных функций, связанных с выполнением сценариев парсинга. В частности, проверяется корректность обработки списка файлов со сценариями, запуск сценариев из файла, а также захват данных со страниц продуктов. Модуль использует моки (mock objects) для изоляции тестируемых функций от внешних зависимостей, что позволяет проводить более надежные и предсказуемые тесты.
 
 ## Классы
 
 ### `TestRunListOfScenarioFiles`
 
-**Описание**: Класс содержит тесты для функции `run_scenarios`, которая отвечает за запуск списка файлов сценариев.
-
-**Как работает класс**:
-
-Класс `TestRunListOfScenarioFiles` использует `unittest.TestCase` для определения тестовых методов. Он проверяет поведение функции `run_scenarios` в различных ситуациях, включая случай, когда предоставлен список файлов сценариев, и случай, когда список не предоставлен. Для имитации зависимостей используется `MagicMock`.
+**Описание**: Класс содержит тесты для функции `run_scenarios`, которая отвечает за запуск списка файлов со сценариями.
 
 **Методы**:
 
-- `test_with_scenario_files_...ed`: Тест проверяет запуск `run_scenarios` со списком файлов сценариев. Он удостоверяется, что функция правильно обрабатывает файлы сценариев и что соответствующие методы не вызываются или вызываются нужное количество раз.
-- `test_with_no_scenario_files_...ed`: Тест проверяет запуск `run_scenarios` без списка файлов сценариев. Он удостоверяется, что в этом случае вызываются методы, связанные с построением категорий магазина.
+- `test_with_scenario_files_...ed`: Тест проверяет запуск сценариев, когда передается список файлов со сценариями.
+- `test_with_no_scenario_files_...ed`: Тест проверяет запуск сценариев, когда список файлов со сценариями не передан (используются сценарии по умолчанию).
 
 ### `TestRunScenarioFile`
 
-**Описание**: Класс содержит тесты для функции `run_scenario_file`, которая отвечает за запуск сценария из файла.
-
-**Как работает класс**:
-
-Класс `TestRunScenarioFile` использует `unittest.TestCase` для определения тестовых методов. Он проверяет поведение функции `run_scenario_file` в различных ситуациях, таких как использование webdriver или API для парсинга, а также случай, когда в файле сценария отсутствуют сценарии. Для имитации зависимостей используются `MagicMock` и `patch`.
+**Описание**: Класс содержит тесты для функции `run_scenario_file`, которая отвечает за запуск сценария из указанного файла.
 
 **Методы**:
 
-- `setUp`: Подготавливает тестовую среду, создавая экземпляр `MagicMock` для имитации объекта `Supplier` и устанавливая необходимые атрибуты и настройки.
-- `test_run_scenario_file_webdriver`: Тест проверяет запуск `run_scenario_file` с использованием webdriver. Он удостоверяется, что функция правильно загружает файл сценария и вызывает функцию `run_scenario` для каждого сценария в файле.
-- `test_run_scenario_file_api`: Тест проверяет запуск `run_scenario_file` с использованием API. Он удостоверяется, что функция вызывает функцию `run_scenario_file_via_api` для выполнения сценария через API.
-- `test_run_scenario_file_no_scenarios`: Тест проверяет случай, когда файл сценария не содержит сценариев. Он удостоверяется, что функция правильно обрабатывает эту ситуацию и регистрирует ошибку в логе.
+- `setUp`: Метод, выполняемый перед каждым тестом. Создает мок объекта `Supplier` с необходимыми атрибутами и настройками.
+- `test_run_scenario_file_webdriver`: Тест проверяет запуск сценария из файла с использованием вебдрайвера.
+- `test_run_scenario_file_api`: Тест проверяет запуск сценария из файла с использованием API.
+- `test_run_scenario_file_no_scenarios`: Тест проверяет ситуацию, когда в файле сценариев отсутствуют сценарии.
 
 ### `TestGrabProductPage`
 
-**Описание**: Класс содержит тесты для функции `grab_product_page`, которая отвечает за извлечение данных со страницы продукта.
-
-**Как работает класс**:
-
-Класс `TestGrabProductPage` использует `unittest.TestCase` для определения тестовых методов. Он проверяет поведение функции `grab_product_page` в различных ситуациях, включая успешное извлечение данных и случай, когда данные отсутствуют. Для имитации объекта `Supplier` используется экземпляр класса `Supplier`.
+**Описание**: Класс содержит тесты для функции `grab_product_page`, которая отвечает за захват данных со страницы продукта.
 
 **Методы**:
 
-- `setUp`: Подготавливает тестовую среду, создавая экземпляр класса `Supplier`.
-- `test_grab_product_page_succesStringFormatterul`: Тест проверяет успешное извлечение данных со страницы продукта. Он удостоверяется, что функция возвращает `True` и добавляет извлеченные данные в список продуктов `s.p`.
-- `test_grab_product_page_failure`: Тест проверяет случай, когда не удается извлечь все необходимые данные со страницы продукта. Он удостоверяется, что функция возвращает `False` и не добавляет данные в список продуктов `s.p`.
+- `setUp`: Метод, выполняемый перед каждым тестом. Создает инстанс класса `Supplier`.
+- `test_grab_product_page_succesStringFormatterul`: Тест проверяет успешный захват данных со страницы продукта, когда все необходимые данные присутствуют.
+- `test_grab_product_page_failure`: Тест проверяет ситуацию, когда при захвате данных со страницы продукта отсутствуют необходимые данные.
 
 ### `TestRunScenario`
 
-**Описание**: Класс содержит тесты для функции `run_scenario`, которая отвечает за запуск одного сценария.
-
-**Как работает класс**:
-
-Класс `TestRunScenario` использует `unittest.TestCase` для определения тестовых методов. Он проверяет поведение функции `run_scenario` в различных ситуациях, включая случай, когда URL отсутствует, и случай, когда URL валидный. Для имитации зависимостей используются `MagicMock`.
+**Описание**: Класс содержит тесты для функции `run_scenario`, которая отвечает за запуск отдельного сценария.
 
 **Методы**:
 
-- `setUp`: Подготавливает тестовую среду, создавая экземпляр класса `Supplier` и устанавливая необходимые атрибуты и настройки.
-- `tearDown`: Выполняет очистку после каждого теста. В данном случае, тело функции не реализовано (`...`).
-- `test_run_scenario_no_url`: Тест проверяет запуск сценария без URL. Он удостоверяется, что функция возвращает `False`.
-- `test_run_scenario_valid_url`: Тест проверяет запуск сценария с валидным URL. Он удостоверяется, что функция вызывает необходимые методы для извлечения данных и экспорта файлов.
-- `test_run_scenario_export_empty_list`: Тест проверяет случай, когда список продуктов пуст после извлечения данных. Он удостоверяется, что функция не вызывает метод экспорта файлов.
+- `setUp`: Метод, выполняемый перед каждым тестом. Создает инстанс класса `Supplier` и настраивает необходимые атрибуты.
+- `tearDown`: Метод, выполняемый после каждого теста. 
+- `test_run_scenario_no_url`: Тест проверяет ситуацию, когда в сценарии отсутствует URL.
+- `test_run_scenario_valid_url`: Тест проверяет запуск сценария с валидным URL.
+- `test_run_scenario_export_empty_list`: Тест проверяет ситуацию, когда после выполнения сценария список продуктов пуст (нечего экспортировать).
 
 ## Функции
 
 ### `run_scenarios`
 
 ```python
-def run_scenarios(s, scenario_files) -> bool:
-    """
-    Запускает сценарии из указанных файлов или из настроек поставщика.
+def run_scenarios(s, scenario_files=None):
+    """Запускает сценарии парсинга либо из указанных файлов, либо из настроек по умолчанию.
 
     Args:
-        s: Объект поставщика с настройками и связанными модулями.
-        scenario_files: Список файлов сценариев для запуска.
+        s (MagicMock): Мок объекта `Supplier`, представляющий поставщика данных.
+        scenario_files (list, optional): Список файлов со сценариями. По умолчанию `None`.
 
     Returns:
-        bool: True, если все сценарии выполнены успешно, иначе False.
+        bool: `True`, если все сценарии выполнены успешно, `False` в противном случае.
 
-    Raises:
-        Exception: Если возникает ошибка при выполнении сценария.
+    Как работает функция:
+    1. **Проверяет наличие списка файлов сценариев**:
+       - Если `scenario_files` предоставлен, функция использует его для выполнения сценариев.
+       - Если `scenario_files` не предоставлен, функция использует список сценариев из настроек `s.settings['scenarios']`.
+    2. **Определяет, нужно ли проверять категории на сайте**:
+       - Если в настройках `s.settings['check categories on site']` установлено значение `True`, функция вызывает `s.related_modules.build_shop_categories()` для построения категорий магазина.
+    3. **Итерирует по файлам сценариев**:
+       - Для каждого файла сценария в списке `scenario_files` или `s.settings['scenarios']` функция вызывает `run_scenario_file(s, scenario_file)`.
+       - Обновляет `s.current_scenario_filename` и `s.settings['last_runned_scenario']` после каждого выполненного файла сценария.
+
+    Схема работы функции:
+
+    Проверка наличия файлов сценариев --> Определение, нужно ли проверять категории --> Итерация по файлам сценариев --> Обновление информации о текущем сценарии
+
+    Примеры:
+    - Запуск с указанием файлов сценариев:
+      ```python
+      s = MagicMock()
+      scenario_files = ["scenario1.json", "scenario2.json"]
+      s.settings = {'check categories on site': False, 'scenarios': ["default1.json", "default2.json"]}
+      result = run_scenarios(s, scenario_files)
+      ```
+    - Запуск без указания файлов сценариев (используются сценарии по умолчанию):
+      ```python
+      s = MagicMock()
+      s.settings = {'check categories on site': True, 'scenarios': ["default1.json", "default2.json"]}
+      result = run_scenarios(s)
+      ```
     """
-```
-
-**Как работает функция**:
-
-1. **Определение источника сценариев**: Функция определяет, откуда брать сценарии для выполнения: из переданного списка файлов (`scenario_files`) или из настроек поставщика (`s.settings['scenarios']`).
-2. **Обработка списка файлов**: Если предоставлен список файлов (`scenario_files`), функция проходит по каждому файлу и запускает его, обновляя информацию о текущем сценарии и последнем запущенном сценарии в настройках поставщика.
-3. **Обработка сценариев из настроек**: Если список файлов не предоставлен, функция предполагает, что сценарии указаны в настройках поставщика (`s.settings['scenarios']`). В этом случае также обновляется информация о текущем сценарии и последнем запущенном сценарии.
-4. **Вызов связанных модулей**: Если в настройках указано, что нужно проверять категории на сайте (`s.settings['check categories on site']`), вызывается метод `build_shop_categories` из связанных модулей поставщика.
-
-**Примеры**:
-
-```python
-s = MagicMock()
-scenario_files = ["scenario1.json", "scenario2.json"]
-s.settings = {
-    'check categories on site': False,
-    'scenarios': ["default1.json", "default2.json"]
-}
-
-result = run_scenarios(s, scenario_files)
-
-assert result is True
-s.related_modules.build_shop_categories.assert_not_called()
-assert s.current_scenario_filename == "scenario2.json"
-assert s.settings['last_runned_scenario'] == "scenario2.json"
-```
-
-```python
-s = MagicMock()
-s.settings = {
-    'check categories on site': True,
-    'scenarios': ["default1.json", "default2.json"]
-}
-
-result = run_scenarios(s)
-
-assert result is True
-s.related_modules.build_shop_categories.assert_called_once()
-assert s.current_scenario_filename == "default2.json"
-assert s.settings['last_runned_scenario'] == "default2.json"
-```
 
 ### `run_scenario_file`
 
 ```python
-def run_scenario_file(s, scenario_file_name: str) -> bool:
-    """
-    Запускает сценарии, описанные в указанном файле сценария.
+def run_scenario_file(s, scenario_file):
+    """Запускает сценарии парсинга из указанного файла.
 
     Args:
-        s: Объект поставщика с настройками и связанными модулями.
-        scenario_file_name (str): Имя файла сценария для запуска.
+        s (MagicMock): Мок объекта `Supplier`, представляющий поставщика данных.
+        scenario_file (str): Имя файла со сценариями.
 
     Returns:
-        bool: True, если сценарии выполнены успешно, иначе False.
+        bool: `True`, если сценарии выполнены успешно, `False` в противном случае.
 
-    Raises:
-        FileNotFoundError: Если указанный файл сценария не найден.
-        Exception: Если возникает ошибка при выполнении сценария.
+    Как работает функция:
+    1. **Определяет метод парсинга**:
+       - Проверяет значение `s.settings["parcing method [webdriver|api]"]` для определения метода парсинга (webdriver или api).
+    2. **Загружает сценарии из файла**:
+       - Загружает JSON-файл с помощью `j_loads(s.dir_scenarios + scenario_file)`.
+       - Если `j_loads` возвращает `None` или в файле нет сценариев, логирует ошибку и возвращает `False`.
+    3. **Выполняет сценарии**:
+       - Если метод парсинга - "webdriver", итерирует по сценариям и вызывает `run_scenario(s, scenario)`.
+       - Если метод парсинга - "api", вызывает `s.related_modules.run_scenario_file_via_api(s, scenario_file)`.
+
+    Схема работы функции:
+
+    Определение метода парсинга --> Загрузка сценариев из файла --> Выполнение сценариев
+
+    Примеры:
+    - Запуск с использованием webdriver:
+      ```python
+      s = MagicMock()
+      s.settings = {"parcing method [webdriver|api]": "webdriver"}
+      s.dir_scenarios = "/path/to/scenarios/"
+      s.scenarios = {"scenario1": {"url": "https://example.com", "steps": []}}
+      with patch("your_module.j_loads") as mock_j_loads:
+          mock_j_loads.return_value = {"scenarios": s.scenarios}
+          with patch("your_module.run_scenario") as mock_run_scenario:
+              run_scenario_file(s, "test_scenario.json")
+      ```
+    - Запуск с использованием API:
+      ```python
+      s = MagicMock()
+      s.settings = {"parcing method [webdriver|api]": "api"}
+      with patch("your_module.related_modules.run_scenario_file_via_api") as mock_run_scenario_file_via_api:
+          run_scenario_file(s, "test_scenario.json")
+      ```
     """
-```
-
-**Как работает функция**:
-
-1. **Определение метода парсинга**: Функция определяет метод парсинга, который будет использоваться для выполнения сценария (webdriver или API), на основе настроек поставщика (`s.settings["parcing method [webdriver|api]"]`).
-2. **Загрузка сценариев из файла**: Функция загружает сценарии из указанного файла, используя функцию `j_loads` из модуля `your_module`.
-3. **Выполнение сценариев**: Если метод парсинга - webdriver, функция проходит по каждому сценарию в файле и запускает его, вызывая функцию `run_scenario`. Если метод парсинга - API, функция вызывает функцию `run_scenario_file_via_api` из связанных модулей поставщика.
-4. **Обработка отсутствия сценариев**: Если в файле сценария не указаны сценарии, функция регистрирует ошибку в логе и возвращает `False`.
-
-**Примеры**:
-
-```python
-from unittest.mock import patch
-
-# Mock j_loads function
-with patch("your_module.j_loads") as mock_j_loads:
-    # Mock scenario data
-    mock_j_loads.return_value = {"scenarios": self.s.scenarios}
-    
-    # Mock run_scenario function
-    with patch("your_module.run_scenario") as mock_run_scenario:
-        # Execute the function
-        run_scenario_file(self.s, "test_scenario.json")
-        
-        # Assert j_loads was called correctly
-        mock_j_loads.assert_called_once_with("/path/to/scenarios/test_scenario.json")
-        
-        # Assert run_scenario was called with the first scenario
-        mock_run_scenario.assert_any_call(self.s, self.s.scenarios["scenario1"])
-        
-        # Assert run_scenario was not called with the second scenario
-        mock_run_scenario.assert_not_called_with(self.s, self.s.scenarios["scenario2"])
-```
-
-```python
-from unittest.mock import patch
-
-# Set parsing method to "api"
-self.s.settings["parcing method [webdriver|api]"] = "api"
-
-# Mock the run_scenario_file_via_api function
-with patch("your_module.related_modules.run_scenario_file_via_api") as mock_run_scenario_file_via_api:
-    # Execute the function
-    run_scenario_file(self.s, "test_scenario.json")
-    
-    # Assert run_scenario_file_via_api was called correctly
-    mock_run_scenario_file_via_api.assert_called_once_with(self.s, "test_scenario.json")
-```
 
 ### `grab_product_page`
 
 ```python
-def grab_product_page(s) -> bool:
-    """
-    Извлекает данные со страницы продукта и сохраняет их в список продуктов поставщика.
+def grab_product_page(s):
+    """Захватывает данные со страницы продукта.
 
     Args:
-        s: Объект поставщика с настройками и связанными модулями.
+        s (Supplier): Объект `Supplier`, представляющий поставщика данных.
 
     Returns:
-        bool: True, если данные успешно извлечены и сохранены, иначе False.
+        bool: `True`, если данные успешно захвачены и добавлены в список продуктов, `False` в противном случае.
+
+    Как работает функция:
+    1. **Вызывает метод `grab_product_page` у объекта `Supplier`**:
+       - Получает словарь с данными продукта, вызвав `s.grab_product_page(_)`.
+    2. **Проверяет наличие необходимых данных**:
+       - Проверяет наличие ключей 'id', 'price' и 'name' в полученном словаре.
+    3. **Добавляет данные в список продуктов**:
+       - Если все необходимые данные присутствуют, добавляет словарь в список `s.p`.
+
+    Схема работы функции:
+
+    Вызов метода grab_product_page у объекта Supplier --> Проверка наличия необходимых данных --> Добавление данных в список продуктов
+
+    Примеры:
+    - Успешный захват данных:
+      ```python
+      s = Supplier()
+      s.grab_product_page = lambda _: {'id': '123', 'price': 19.99, 'name': 'Product Name'}
+      result = grab_product_page(s)
+      ```
+    - Неудачный захват данных (отсутствуют необходимые данные):
+      ```python
+      s = Supplier()
+      s.grab_product_page = lambda _: {'name': 'Product Name'}
+      result = grab_product_page(s)
+      ```
     """
-```
-
-**Как работает функция**:
-
-1. **Извлечение данных**: Функция вызывает метод `grab_product_page` объекта поставщика для извлечения данных со страницы продукта.
-2. **Проверка наличия данных**: Функция проверяет, что извлеченные данные содержат все необходимые поля (id, price, name).
-3. **Сохранение данных**: Если все необходимые поля присутствуют, функция добавляет извлеченные данные в список продуктов поставщика (`s.p`).
-4. **Обработка отсутствия данных**: Если какие-либо необходимые поля отсутствуют, функция не добавляет данные в список продуктов.
-
-**Примеры**:
-
-```python
-from unittest.mock import MagicMock
-
-# Mock the Supplier class
-s = MagicMock()
-
-# Mock the grab_product_page method to return valid data
-s.grab_product_page = lambda _: {'id': '123', 'price': 19.99, 'name': 'Product Name'}
-
-# Call the function
-result = grab_product_page(s)
-
-# Assert the result is True
-assert result is True
-
-# Assert the product list contains the new product
-assert len(s.p) == 1
-assert s.p[0]['id'] == '123'
-assert s.p[0]['price'] == 19.99
-assert s.p[0]['name'] == 'Product Name'
-```
-
-```python
-from unittest.mock import MagicMock
-
-# Mock the Supplier class
-s = MagicMock()
-
-# Mock the grab_product_page method to return incomplete data
-s.grab_product_page = lambda _: {'name': 'Product Name'}
-
-# Call the function
-result = grab_product_page(s)
-
-# Assert the result is False
-assert result is False
-
-# Assert the product list is empty
-assert len(s.p) == 0
-```
 
 ### `run_scenario`
 
 ```python
 def run_scenario(self, scenario: dict) -> bool:
-    """
-    Выполняет сценарий парсинга для указанного URL.
+    """Выполняет заданный сценарий парсинга.
 
     Args:
-        scenario (dict): Словарь с информацией о сценарии, включая название и URL.
+        scenario (dict): Словарь, содержащий информацию о сценарии.
 
     Returns:
-        bool: True, если сценарий выполнен успешно, иначе False.
+        bool: `True`, если сценарий выполнен успешно, `False` в противном случае.
+
+    Как работает функция:
+    1. **Проверяет наличие URL в сценарии**:
+       - Если URL отсутствует (`scenario['url'] is None`), функция возвращает `False`.
+    2. **Получает список продуктов в категории**:
+       - Вызывает `self.get_list_products_in_category(scenario['url'])` для получения списка URL продуктов в категории.
+    3. **Итерирует по списку продуктов**:
+       - Для каждого URL продукта вызывает `self.grab_product_page(url)` для захвата данных о продукте.
+       - Если `self.grab_product_page(url)` возвращает `True`, добавляет данные продукта в список `self.p`.
+    4. **Экспортирует данные**:
+       - Если список `self.p` не пуст, вызывает `self.export_files` для экспорта данных в файлы.
+
+    Схема работы функции:
+
+    Проверка наличия URL --> Получение списка продуктов в категории --> Итерация по списку продуктов --> Экспорт данных
+
+    Примеры:
+    - Запуск сценария с валидным URL:
+      ```python
+      supplier = Supplier()
+      scenario = {'name': 'scenario2', 'url': 'https://example.com/products'}
+      supplier.get_list_products_in_category = MagicMock(return_value=['https://example.com/products/1', 'https://example.com/products/2'])
+      supplier.grab_product_page = MagicMock(return_value=True)
+      supplier.export_files = MagicMock()
+      result = supplier.run_scenario(scenario)
+      ```
+    - Запуск сценария с пустым списком продуктов:
+      ```python
+      supplier = Supplier()
+      scenario = {'name': 'scenario3', 'url': 'https://example.com/products'}
+      supplier.get_list_products_in_category = MagicMock(return_value=['https://example.com/products/1'])
+      supplier.grab_product_page = MagicMock(return_value=False)
+      supplier.export_files = MagicMock()
+      result = supplier.run_scenario(scenario)
+      ```
     """
-```
 
-**Как работает функция**:
+## Запуск тестов
 
-1. **Проверка URL**: Функция проверяет, что в сценарии указан URL. Если URL отсутствует, функция возвращает `False`.
-2. **Получение списка продуктов**: Функция вызывает метод `get_list_products_in_category` объекта `supplier` для получения списка URL продуктов в категории.
-3. **Извлечение данных о продуктах**: Функция проходит по списку URL продуктов и вызывает метод `grab_product_page` для каждого URL, чтобы извлечь данные о продукте.
-4. **Экспорт данных**: Если данные о продуктах были успешно извлечены, функция вызывает метод `export_files` для экспорта данных в файл.
-5. **Обработка пустых списков**: Если после извлечения данных список продуктов пуст, функция не вызывает метод экспорта файлов.
-
-**Примеры**:
-
-```python
-from unittest.mock import MagicMock
-
-# Mock the Supplier class
-self.supplier = MagicMock()
-
-# Set up the scenario with no URL
-scenario = {'name': 'scenario1', 'url': None}
-
-# Mock the scenarios attribute
-self.supplier.scenarios = {'scenario1': scenario}
-
-# Mock the get_list_products_in_category method
-self.supplier.get_list_products_in_category = MagicMock(return_value=[])
-
-# Assert the function returns False
-self.assertFalse(self.supplier.run_scenario(scenario))
-```
-
-```python
-from unittest.mock import MagicMock
-
-# Mock the Supplier class
-self.supplier = MagicMock()
-
-# Set up the scenario with a valid URL
-scenario = {'name': 'scenario2', 'url': 'https://example.com/products'}
-
-# Mock the scenarios attribute
-self.supplier.scenarios = {'scenario2': scenario}
-
-# Mock the get_list_products_in_category method to return a list of product URLs
-self.supplier.get_list_products_in_category = MagicMock(return_value=['https://example.com/products/1', 'https://example.com/products/2'])
-
-# Mock the grab_product_page method to return True
-self.supplier.grab_product_page = MagicMock(return_value=True)
-
-# Mock the export_files method
-self.supplier.export_files = MagicMock()
-
-# Assert the function returns True
-self.assertTrue(self.supplier.run_scenario(scenario))
-
-# Assert the product list contains 2 products
-self.assertEqual(len(self.supplier.p), 2)
-
-# Assert the export_files method was called with the correct arguments
-self.supplier.export_files.assert_called_once_with(self.supplier, self.supplier.p, 'test_export-1', ['csv'])
-```
-
-```python
-from unittest.mock import MagicMock
-
-# Mock the Supplier class
-self.supplier = MagicMock()
-
-# Set up the scenario with a valid URL
-scenario = {'name': 'scenario3', 'url': 'https://example.com/products'}
-
-# Mock the scenarios attribute
-self.supplier.scenarios = {'scenario3': scenario}
-
-# Mock the get_list_products_in_category method to return a list of product URLs
-self.supplier.get_list_products_in_category = MagicMock(return_value=['https://example.com/products/1'])
-
-# Mock the grab_product_page method to return False
-self.supplier.grab_product_page = MagicMock(return_value=False)
-
-# Mock the export_files method
-self.supplier.export_files = MagicMock()
-
-# Assert the function returns False
-self.assertFalse(self.supplier.run_scenario(scenario))
-
-# Assert the product list is empty
-self.assertEqual(len(self.supplier.p), 0)
-
-# Assert the export_files method was not called
-self.supplier.export_files.assert_not_called()
-```
+В конце модуля находится блок `if __name__ == '__main__':`, который позволяет запускать тесты, определенные в этом модуле, при его непосредственном выполнении.

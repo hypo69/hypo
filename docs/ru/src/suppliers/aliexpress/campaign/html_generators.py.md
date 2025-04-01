@@ -1,184 +1,138 @@
-# Модуль: `src.suppliers.aliexpress.campaign.html_generators`
+# Модуль: Генераторы HTML контента рекламной кампании
 
 ## Обзор
 
-Модуль `html_generators.py` предназначен для генерации HTML-контента рекламных кампаний, сфокусированных на товарах из AliExpress. Он включает в себя классы для создания HTML-страниц как для отдельных продуктов, так и для категорий товаров, а также для общей страницы кампании, которая объединяет все категории.
+Модуль `html_generators.py` предназначен для генерации HTML-контента, необходимого для отображения рекламных кампаний, категорий продуктов и отдельных продуктов. Он содержит классы, которые создают HTML-файлы для каждой из этих сущностей, используя предоставленные данные о продуктах и категориях.
 
-## Подробнее
+## Подробней
 
-Этот модуль предоставляет функциональность для автоматического создания HTML-страниц, которые могут быть использованы для представления товаров и категорий в рекламных кампаниях. Он использует данные о продуктах, такие как название, цена, изображения и ссылки для покупки, чтобы сгенерировать HTML-код, который затем сохраняется в файлы.
+Этот модуль играет важную роль в создании интерактивных веб-страниц для рекламных кампаний. Он использует данные о продуктах, такие как название, цена, изображение и категория, чтобы сгенерировать HTML-код. Этот код затем сохраняется в виде HTML-файлов, которые могут быть развернуты на веб-сервере для отображения рекламной кампании.
 
 ## Классы
 
 ### `ProductHTMLGenerator`
 
-**Описание**: Класс `ProductHTMLGenerator` предназначен для генерации HTML-страниц для отдельных товаров.
+**Описание**: Класс для генерации HTML-кода для отдельного продукта.
 
 **Принцип работы**:
-Класс предоставляет статический метод `set_product_html`, который принимает информацию о продукте и путь к категории, создает HTML-файл с детальным описанием продукта и сохраняет его в указанном месте. HTML включает название продукта, изображение, цену, оригинальную цену, категорию и ссылку для покупки.
+Класс `ProductHTMLGenerator` предоставляет статический метод `set_product_html`, который принимает информацию о продукте и путь к категории, а затем создает HTML-файл с подробной информацией об этом продукте. В HTML включается название продукта, изображение, цена, категория и ссылка для покупки.
 
 **Методы**:
+- `set_product_html(product: SimpleNamespace, category_path: str | Path)`: Создает HTML-файл для отдельного продукта.
 
-- `set_product_html(product: SimpleNamespace, category_path: str | Path)`
+**Параметры**:
+- `product` (SimpleNamespace): Объект, содержащий детали продукта (название, описание, цена, изображение, URL и т. д.).
+- `category_path` (str | Path): Путь к каталогу, в котором следует сохранить HTML-файл продукта.
 
-    ```python
-    @staticmethod
-    def set_product_html(product: SimpleNamespace, category_path: str | Path):
-        """ Creates an HTML file for an individual product.
-        
-        @param product: The product details to include in the HTML.
-        @param category_path: The path to save the HTML file.
-        """
-    ```
+**Примеры**:
+Пример использования класса для создания HTML-страницы продукта:
 
-    **Назначение**: Создает HTML-файл для отдельного продукта.
+```python
+from pathlib import Path
+from types import SimpleNamespace
 
-    **Параметры**:
-    - `product` (SimpleNamespace): Объект, содержащий детали продукта, такие как `product_id`, `product_title`, `local_image_path`, `target_sale_price`, `target_sale_price_currency`, `target_original_price`, `target_original_price_currency`, `second_level_category_name` и `promotion_link`.
-    - `category_path` (str | Path): Путь к каталогу, в котором будет сохранен HTML-файл продукта.
+# Создание объекта SimpleNamespace с данными о продукте
+product_data = SimpleNamespace(
+    product_id="12345",
+    product_title="Супер Товар",
+    local_image_path="images/super_tovar.jpg",
+    target_sale_price="1999",
+    target_sale_price_currency="руб.",
+    target_original_price="2499",
+    target_original_price_currency="руб.",
+    second_level_category_name="Электроника",
+    promotion_link="https://example.com/super_tovar"
+)
 
-    **Как работает функция**:
-    1. Извлекает имя категории из `category_path`.
-    2. Формирует путь к HTML-файлу продукта, используя `product.product_id`.
-    3. Создает HTML-контент, включающий мета-теги, стили Bootstrap, заголовок с названием продукта, карточку продукта с изображением, ценами, категорией и ссылкой для покупки.
-    4. Вызывает функцию `save_text_file` для сохранения HTML-контента в файл.
+# Определение пути к категории
+category_path = "campaign/category1"
 
-    **Примеры**:
-    ```python
-    from types import SimpleNamespace
-    from pathlib import Path
-    
-    # Пример создания объекта product
-    product = SimpleNamespace(
-        product_id='12345',
-        product_title='Example Product',
-        local_image_path='/path/to/image.jpg',
-        target_sale_price='19.99',
-        target_sale_price_currency='USD',
-        target_original_price='29.99',
-        target_original_price_currency='USD',
-        second_level_category_name='Category Name',
-        promotion_link='https://example.com/product'
-    )
-    
-    # Пример вызова set_product_html
-    category_path = 'path/to/category'
-    ProductHTMLGenerator.set_product_html(product, category_path)
-    # Будет создан HTML-файл по пути path/to/category/html/12345.html
-    ```
+# Создание HTML-страницы продукта
+ProductHTMLGenerator.set_product_html(product_data, category_path)
+```
 
 ### `CategoryHTMLGenerator`
 
-**Описание**: Класс `CategoryHTMLGenerator` предназначен для генерации HTML-страниц для категорий продуктов.
+**Описание**: Класс для генерации HTML-кода для страницы категории продуктов.
 
 **Принцип работы**:
-Класс предоставляет статический метод `set_category_html`, который принимает список продуктов и путь к категории, создает HTML-файл, отображающий список продуктов в данной категории, и сохраняет его в указанном месте. HTML включает название категории и карточки для каждого продукта с изображением, названием, ценами и ссылкой для покупки.
+Класс `CategoryHTMLGenerator` предоставляет статический метод `set_category_html`, который генерирует HTML-страницу, содержащую список продуктов в заданной категории. Он принимает список объектов, представляющих продукты, и путь к категории, где будет сохранен HTML-файл.
 
 **Методы**:
+- `set_category_html(products_list: list[SimpleNamespace] | SimpleNamespace, category_path: str | Path)`: Создает HTML-файл для категории продуктов.
 
-- `set_category_html(products_list: list[SimpleNamespace] | SimpleNamespace, category_path: str | Path)`
+**Параметры**:
+- `products_list` (list[SimpleNamespace] | SimpleNamespace): Список объектов, содержащих информацию о продуктах в категории.
+- `category_path` (str | Path): Путь к каталогу, в котором следует сохранить HTML-файл категории.
 
-    ```python
-    @staticmethod
-    def set_category_html(products_list: list[SimpleNamespace] | SimpleNamespace, category_path: str | Path):
-        """ Creates an HTML file for the category.
-        
-        @param products_list: List of products to include in the HTML.
-        @param category_path: Path to save the HTML file.
-        """
-    ```
+**Примеры**:
+Пример использования класса для создания HTML-страницы категории продуктов:
 
-    **Назначение**: Создает HTML-файл для отображения списка продуктов в категории.
+```python
+from pathlib import Path
+from types import SimpleNamespace
 
-    **Параметры**:
-    - `products_list` (list[SimpleNamespace] | SimpleNamespace): Список объектов, содержащих детали продуктов, или один объект `SimpleNamespace` с деталями продукта.
-    - `category_path` (str | Path): Путь к каталогу, в котором будет сохранен HTML-файл категории.
+# Создание списка объектов SimpleNamespace с данными о продуктах
+products_data = [
+    SimpleNamespace(
+        product_title="Товар 1",
+        local_image_path="images/tovar1.jpg",
+        target_sale_price="999",
+        target_sale_price_currency="руб.",
+        target_original_price="1299",
+        target_original_price_currency="руб.",
+        second_level_category_name="Электроника",
+        promotion_link="https://example.com/tovar1"
+    ),
+    SimpleNamespace(
+        product_title="Товар 2",
+        local_image_path="images/tovar2.jpg",
+        target_sale_price="1499",
+        target_sale_price_currency="руб.",
+        target_original_price="1799",
+        target_original_price_currency="руб.",
+        second_level_category_name="Электроника",
+        promotion_link="https://example.com/tovar2"
+    )
+]
 
-    **Как работает функция**:
-    1. Преобразует `products_list` в список, если передан один объект `SimpleNamespace`.
-    2. Извлекает имя категории из `category_path`.
-    3. Формирует путь к HTML-файлу категории (`index.html`).
-    4. Создает HTML-контент, включающий мета-теги, стили Bootstrap, заголовок с названием категории и сетку продуктов, отображающую каждый продукт в виде карточки с изображением, названием, ценами, категорией и ссылкой для покупки.
-    5. Вызывает функцию `save_text_file` для сохранения HTML-контента в файл.
+# Определение пути к категории
+category_path = "campaign/category1"
 
-    **Примеры**:
-    ```python
-    from types import SimpleNamespace
-    from pathlib import Path
-    
-    # Пример создания списка объектов product
-    products_list = [
-        SimpleNamespace(
-            product_id='12345',
-            product_title='Example Product 1',
-            local_image_path='/path/to/image1.jpg',
-            target_sale_price='19.99',
-            target_sale_price_currency='USD',
-            target_original_price='29.99',
-            target_original_price_currency='USD',
-            second_level_category_name='Category Name',
-            promotion_link='https://example.com/product1'
-        ),
-        SimpleNamespace(
-            product_id='67890',
-            product_title='Example Product 2',
-            local_image_path='/path/to/image2.jpg',
-            target_sale_price='24.99',
-            target_sale_price_currency='USD',
-            target_original_price='34.99',
-            target_original_price_currency='USD',
-            second_level_category_name='Category Name',
-            promotion_link='https://example.com/product2'
-        )
-    ]
-    
-    # Пример вызова set_category_html
-    category_path = 'path/to/category'
-    CategoryHTMLGenerator.set_category_html(products_list, category_path)
-    # Будет создан HTML-файл по пути path/to/category/html/index.html
-    ```
+# Создание HTML-страницы категории продуктов
+CategoryHTMLGenerator.set_category_html(products_data, category_path)
+```
 
 ### `CampaignHTMLGenerator`
 
-**Описание**: Класс `CampaignHTMLGenerator` предназначен для генерации HTML-страницы кампании, содержащей список категорий.
+**Описание**: Класс для генерации HTML-кода для главной страницы кампании, содержащей список категорий.
 
 **Принцип работы**:
-Класс предоставляет статический метод `set_campaign_html`, который принимает список категорий и путь к кампании, создает HTML-файл со списком категорий, представленных в виде ссылок, и сохраняет его в указанном месте. HTML включает заголовок кампании и список ссылок на HTML-страницы категорий.
+Класс `CampaignHTMLGenerator` предоставляет статический метод `set_campaign_html`, который создает HTML-файл для главной страницы кампании, перечисляя все категории, доступные в кампании. Он принимает список названий категорий и путь к каталогу кампании, где будет сохранен HTML-файл.
 
 **Методы**:
+- `set_campaign_html(categories: list[str], campaign_path: str | Path)`: Создает HTML-файл для главной страницы кампании.
 
-- `set_campaign_html(categories: list[str], campaign_path: str | Path)`
+**Параметры**:
+- `categories` (list[str]): Список названий категорий для включения в HTML-страницу кампании.
+- `campaign_path` (str | Path): Путь к каталогу, в котором следует сохранить HTML-файл кампании.
 
-    ```python
-    @staticmethod
-    def set_campaign_html(categories: list[str], campaign_path: str | Path):
-        """ Creates an HTML file for the campaign, listing all categories.
-        
-        @param categories: List of category names.
-        @param campaign_path: Path to save the HTML file.
-        """
-    ```
+**Примеры**:
+Пример использования класса для создания HTML-страницы кампании:
 
-    **Назначение**: Создает HTML-файл для кампании, отображающий список категорий.
+```python
+from pathlib import Path
 
-    **Параметры**:
-    - `categories` (list[str]): Список названий категорий.
-    - `campaign_path` (str | Path): Путь к каталогу, в котором будет сохранен HTML-файл кампании.
+# Создание списка категорий
+categories = ["category1", "category2", "category3"]
 
-    **Как работает функция**:
-    1. Формирует путь к HTML-файлу кампании (`index.html`).
-    2. Создает HTML-контент, включающий мета-теги, стили Bootstrap, заголовок кампании и список категорий, представленных в виде ссылок на HTML-страницы категорий.
-    3. Вызывает функцию `save_text_file` для сохранения HTML-контента в файл.
+# Определение пути к кампании
+campaign_path = "campaign"
 
-    **Примеры**:
-    ```python
-    from pathlib import Path
-    
-    # Пример списка категорий
-    categories = ['Category1', 'Category2', 'Category3']
-    
-    # Пример вызова set_campaign_html
-    campaign_path = 'path/to/campaign'
-    CampaignHTMLGenerator.set_campaign_html(categories, campaign_path)
-    # Будет создан HTML-файл по пути path/to/campaign/index.html
-    ```
+# Создание HTML-страницы кампании
+CampaignHTMLGenerator.set_campaign_html(categories, campaign_path)
+```
+
+## Функции
+
+В данном модуле нет отдельных функций, только статические методы внутри классов.

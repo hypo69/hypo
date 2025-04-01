@@ -1,285 +1,270 @@
-# Модуль тестирования image_client
+# Модуль тестирования асинхронного клиента для работы с изображениями
 
 ## Обзор
 
-Модуль содержит юнит-тесты для проверки функциональности асинхронного клиента, генерирующего изображения, с использованием различных мок-провайдеров. Он проверяет правильность обработки различных сценариев, включая пропуск недоступных провайдеров, получение только одного результата и обработку исключений.
+Модуль содержит набор тестов для проверки корректной работы асинхронного клиента, предназначенного для генерации изображений с использованием различных провайдеров. В тестах используются моки провайдеров для эмуляции различных сценариев, таких как пропуск провайдера, получение одного результата, пропуск `None` значений и обработка исключений.
 
 ## Подробнее
 
-Этот модуль является частью набора тестов для библиотеки `g4f`, которая позволяет взаимодействовать с различными провайдерами изображений. Он использует `unittest` и `asyncio` для написания и запуска асинхронных тестов. Модуль проверяет, что клиент корректно обрабатывает различные ситуации, такие как недоступные провайдеры, провайдеры, возвращающие `None`, и провайдеры, выбрасывающие исключения.
+Этот модуль является частью системы автоматизированного тестирования проекта `hypotez`. Он проверяет, как `AsyncClient` взаимодействует с различными реализациями провайдеров изображений, особенно при использовании `IterListProvider`, который позволяет перебирать список провайдеров до тех пор, пока не будет получен валидный результат. Это гарантирует, что клиент может корректно обрабатывать ситуации, когда один или несколько провайдеров не работают или возвращают невалидные данные.
 
 ## Классы
 
 ### `TestIterListProvider`
 
-**Описание**:
-Класс `TestIterListProvider` содержит набор асинхронных тестов для проверки функциональности `IterListProvider`.
+**Описание**: Класс, содержащий набор асинхронных тестов для проверки `IterListProvider`.
 
-**Принцип работы**:
-Класс наследуется от `unittest.IsolatedAsyncioTestCase` и использует асинхронные методы для выполнения тестов. Каждый метод тестирует определенный сценарий взаимодействия с провайдерами изображений через асинхронный клиент `AsyncClient`. В тестах используются мок-провайдеры для имитации различных ситуаций, таких как недоступность провайдера, возврат `None` или выброс исключения.
+**Наследует**:
+
+- `unittest.IsolatedAsyncioTestCase`: Обеспечивает изоляцию тестов, позволяя запускать их асинхронно.
+
+**Атрибуты**:
+
+- `DEFAULT_MESSAGES (list)`: Список сообщений по умолчанию, используемых в тестах.
 
 **Методы**:
 
-- `test_skip_provider`: Тестирует сценарий, когда один из провайдеров в списке недоступен и должен быть пропущен.
-- `test_only_one_result`: Тестирует сценарий, когда несколько провайдеров возвращают результат, но должен быть использован только один.
-- `test_skip_none`: Тестирует сценарий, когда один из провайдеров возвращает `None` и должен быть пропущен.
-- `test_raise_exception`: Тестирует сценарий, когда провайдер выбрасывает исключение, и проверяет, что исключение правильно обрабатывается.
+- `test_skip_provider()`: Тестирует ситуацию, когда первый провайдер пропускается из-за отсутствия аутентификации, а используется второй провайдер.
+- `test_only_one_result()`: Тестирует ситуацию, когда несколько провайдеров возвращают результат, но используется только один.
+- `test_skip_none()`: Тестирует ситуацию, когда один из провайдеров возвращает `None`, и он должен быть пропущен.
+- `test_raise_exception()`: Тестирует ситуацию, когда один из провайдеров вызывает исключение, и оно должно быть корректно обработано.
 
 ## Функции
 
-### `run_exception`
-
-```python
-async def run_exception():
-    """Внутренняя функция для запуска теста исключения.
-    
-    Функция создает асинхронный клиент с использованием `IterListProvider`, который содержит `YieldNoneProviderMock` и `AsyncRaiseExceptionProviderMock`. Затем она пытается сгенерировать изображение и ожидает, что будет выброшено исключение `RuntimeError`.
-    
-    Args:
-        None
-    
-    Returns:
-        None
-    
-    Raises:
-        RuntimeError: Если не было выброшено исключение при генерации изображения.
-    """
-```
-
-**Как работает функция**:
-
-1. **Создание асинхронного клиента**:
-   - Создается экземпляр `AsyncClient` с использованием `IterListProvider`.
-   - Провайдеру передается список, содержащий `YieldNoneProviderMock` (который возвращает `None`) и `AsyncRaiseExceptionProviderMock` (который выбрасывает исключение).
-
-2. **Генерация изображения**:
-   - Вызывается метод `client.images.generate` с параметрами `"Hello"` и `""`.
-   - Ожидается, что `AsyncRaiseExceptionProviderMock` выбросит исключение `RuntimeError`.
-
-**Примеры**:
-```python
-import asyncio
-import unittest
-
-from g4f.client import AsyncClient
-from g4f.providers.retry_provider import IterListProvider
-from .mocks import YieldNoneProviderMock, AsyncRaiseExceptionProviderMock
-
-class TestIterListProvider(unittest.IsolatedAsyncioTestCase):
-    def test_raise_exception(self):
-        async def run_exception():
-            client = AsyncClient(image_provider=IterListProvider([YieldNoneProviderMock, AsyncRaiseExceptionProviderMock], False))
-            await client.images.generate("Hello", "")
-        self.assertRaises(RuntimeError, asyncio.run, run_exception())
-```
-
-### `TestIterListProvider.test_skip_provider`
+### `test_skip_provider`
 
 ```python
 async def test_skip_provider(self):
-    """Тестирует сценарий, когда один из провайдеров в списке недоступен и должен быть пропущен.
-
-    Создает асинхронный клиент с использованием `IterListProvider`, который содержит `MissingAuthProviderMock` и `YieldImageResponseProviderMock`.
-    Генерирует изображение и проверяет, что возвращенный ответ является экземпляром `ImagesResponse` и содержит ожидаемый URL.
+    """
+    Тестирует пропуск провайдера из-за MissingAuthProviderMock и использование YieldImageResponseProviderMock.
 
     Args:
-        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+        self (TestIterListProvider): Экземпляр класса TestIterListProvider.
 
     Returns:
         None
 
     Raises:
-        AssertionError: Если возвращенный ответ не является экземпляром `ImagesResponse` или URL не соответствует ожидаемому.
+        AssertionError: Если результат не соответствует ожидаемому.
     """
 ```
 
+**Назначение**: Проверяет, что если первый провайдер в списке не может быть использован (например, из-за отсутствия аутентификации), то клиент переходит к следующему провайдеру и использует его результат.
+
 **Как работает функция**:
 
-1.  **Создание асинхронного клиента**:
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, содержащим `MissingAuthProviderMock` и `YieldImageResponseProviderMock`.
+2.  Вызывается метод `client.images.generate` для генерации изображения.
+3.  Проверяется, что возвращенный объект является экземпляром `ImagesResponse`.
+4.  Проверяется, что URL изображения соответствует ожидаемому значению ("Hello"), полученному от `YieldImageResponseProviderMock`.
 
-    *   Создается экземпляр `AsyncClient` с использованием `IterListProvider`.
-    *   Провайдеру передается список, содержащий `MissingAuthProviderMock` (который имитирует недоступного провайдера) и `YieldImageResponseProviderMock` (который возвращает изображение).
+**ASCII flowchart**:
 
-2.  **Генерация изображения**:
-
-    *   Вызывается метод `client.images.generate` с параметрами `"Hello"`, `""` и `response_format="orginal"`.
-    *   Метод возвращает объект `ImagesResponse`.
-
-3.  **Проверка результата**:
-
-    *   Проверяется, что возвращенный ответ является экземпляром `ImagesResponse`.
-    *   Проверяется, что URL первого изображения в ответе соответствует `"Hello"`.
+```
+Создание AsyncClient с IterListProvider
+    ↓
+Вызов client.images.generate("Hello", "", response_format="orginal")
+    ↓
+Проверка, что response является ImagesResponse
+    ↓
+Проверка, что response.data[0].url == "Hello"
+```
 
 **Примеры**:
 
 ```python
-import unittest
-import asyncio
-from g4f.client import AsyncClient, ImagesResponse
-from g4f.providers.retry_provider import IterListProvider
-from .mocks import MissingAuthProviderMock, YieldImageResponseProviderMock
-
-class TestIterListProvider(unittest.IsolatedAsyncioTestCase):
-    async def test_skip_provider(self):
-        client = AsyncClient(image_provider=IterListProvider([MissingAuthProviderMock, YieldImageResponseProviderMock], False))
-        response = await client.images.generate("Hello", "", response_format="orginal")
-        self.assertIsInstance(response, ImagesResponse)
-        self.assertEqual("Hello", response.data[0].url)
+# Пример использования в тестовом классе
+async def test_skip_provider(self):
+    client = AsyncClient(image_provider=IterListProvider([MissingAuthProviderMock, YieldImageResponseProviderMock], False))
+    response = await client.images.generate("Hello", "", response_format="orginal")
+    self.assertIsInstance(response, ImagesResponse)
+    self.assertEqual("Hello", response.data[0].url)
 ```
 
-### `TestIterListProvider.test_only_one_result`
+### `test_only_one_result`
 
 ```python
 async def test_only_one_result(self):
-    """Тестирует сценарий, когда несколько провайдеров возвращают результат, но должен быть использован только один.
-
-    Создает асинхронный клиент с использованием `IterListProvider`, который содержит два экземпляра `YieldImageResponseProviderMock`.
-    Генерирует изображение и проверяет, что возвращенный ответ является экземпляром `ImagesResponse` и содержит ожидаемый URL.
+    """
+    Тестирует получение только одного результата от IterListProvider при наличии нескольких провайдеров.
 
     Args:
-        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+        self (TestIterListProvider): Экземпляр класса TestIterListProvider.
 
     Returns:
         None
 
     Raises:
-        AssertionError: Если возвращенный ответ не является экземпляром `ImagesResponse` или URL не соответствует ожидаемому.
+        AssertionError: Если результат не соответствует ожидаемому.
     """
 ```
 
+**Назначение**: Проверяет, что даже если несколько провайдеров могут вернуть результат, `IterListProvider` возвращает только один результат.
+
 **Как работает функция**:
 
-1.  **Создание асинхронного клиента**:
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, содержащим два экземпляра `YieldImageResponseProviderMock`.
+2.  Вызывается метод `client.images.generate` для генерации изображения.
+3.  Проверяется, что возвращенный объект является экземпляром `ImagesResponse`.
+4.  Проверяется, что URL изображения соответствует ожидаемому значению ("Hello").
 
-    *   Создается экземпляр `AsyncClient` с использованием `IterListProvider`.
-    *   Провайдеру передается список, содержащий два экземпляра `YieldImageResponseProviderMock` (которые возвращают изображение).
+**ASCII flowchart**:
 
-2.  **Генерация изображения**:
-
-    *   Вызывается метод `client.images.generate` с параметрами `"Hello"`, `""` и `response_format="orginal"`.
-    *   Метод возвращает объект `ImagesResponse`.
-
-3.  **Проверка результата**:
-
-    *   Проверяется, что возвращенный ответ является экземпляром `ImagesResponse`.
-    *   Проверяется, что URL первого изображения в ответе соответствует `"Hello"`.
+```
+Создание AsyncClient с IterListProvider
+    ↓
+Вызов client.images.generate("Hello", "", response_format="orginal")
+    ↓
+Проверка, что response является ImagesResponse
+    ↓
+Проверка, что response.data[0].url == "Hello"
+```
 
 **Примеры**:
 
 ```python
-import unittest
-import asyncio
-from g4f.client import AsyncClient, ImagesResponse
-from g4f.providers.retry_provider import IterListProvider
-from .mocks import YieldImageResponseProviderMock
-
-class TestIterListProvider(unittest.IsolatedAsyncioTestCase):
-    async def test_only_one_result(self):
-        client = AsyncClient(image_provider=IterListProvider([YieldImageResponseProviderMock, YieldImageResponseProviderMock], False))
-        response = await client.images.generate("Hello", "", response_format="orginal")
-        self.assertIsInstance(response, ImagesResponse)
-        self.assertEqual("Hello", response.data[0].url)
+# Пример использования в тестовом классе
+async def test_only_one_result(self):
+    client = AsyncClient(image_provider=IterListProvider([YieldImageResponseProviderMock, YieldImageResponseProviderMock], False))
+    response = await client.images.generate("Hello", "", response_format="orginal")
+    self.assertIsInstance(response, ImagesResponse)
+    self.assertEqual("Hello", response.data[0].url)
 ```
 
-### `TestIterListProvider.test_skip_none`
+### `test_skip_none`
 
 ```python
 async def test_skip_none(self):
-    """Тестирует сценарий, когда один из провайдеров возвращает `None` и должен быть пропущен.
-
-    Создает асинхронный клиент с использованием `IterListProvider`, который содержит `YieldNoneProviderMock` и `YieldImageResponseProviderMock`.
-    Генерирует изображение и проверяет, что возвращенный ответ является экземпляром `ImagesResponse` и содержит ожидаемый URL.
+    """
+    Тестирует пропуск None-значений от провайдера и использование следующего провайдера.
 
     Args:
-        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+        self (TestIterListProvider): Экземпляр класса TestIterListProvider.
 
     Returns:
         None
 
     Raises:
-        AssertionError: Если возвращенный ответ не является экземпляром `ImagesResponse` или URL не соответствует ожидаемому.
+        AssertionError: Если результат не соответствует ожидаемому.
     """
 ```
 
+**Назначение**: Проверяет, что если провайдер возвращает `None`, `IterListProvider` пропускает этот результат и переходит к следующему провайдеру.
+
 **Как работает функция**:
 
-1.  **Создание асинхронного клиента**:
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, содержащим `YieldNoneProviderMock` и `YieldImageResponseProviderMock`.
+2.  Вызывается метод `client.images.generate` для генерации изображения.
+3.  Проверяется, что возвращенный объект является экземпляром `ImagesResponse`.
+4.  Проверяется, что URL изображения соответствует ожидаемому значению ("Hello"), полученному от `YieldImageResponseProviderMock`.
 
-    *   Создается экземпляр `AsyncClient` с использованием `IterListProvider`.
-    *   Провайдеру передается список, содержащий `YieldNoneProviderMock` (который возвращает `None`) и `YieldImageResponseProviderMock` (который возвращает изображение).
+**ASCII flowchart**:
 
-2.  **Генерация изображения**:
-
-    *   Вызывается метод `client.images.generate` с параметрами `"Hello"`, `""` и `response_format="orginal"`.
-    *   Метод возвращает объект `ImagesResponse`.
-
-3.  **Проверка результата**:
-
-    *   Проверяется, что возвращенный ответ является экземпляром `ImagesResponse`.
-    *   Проверяется, что URL первого изображения в ответе соответствует `"Hello"`.
+```
+Создание AsyncClient с IterListProvider
+    ↓
+Вызов client.images.generate("Hello", "", response_format="orginal")
+    ↓
+Проверка, что response является ImagesResponse
+    ↓
+Проверка, что response.data[0].url == "Hello"
+```
 
 **Примеры**:
 
 ```python
-import unittest
-import asyncio
-from g4f.client import AsyncClient, ImagesResponse
-from g4f.providers.retry_provider import IterListProvider
-from .mocks import YieldNoneProviderMock, YieldImageResponseProviderMock
-
-class TestIterListProvider(unittest.IsolatedAsyncioTestCase):
-    async def test_skip_none(self):
-        client = AsyncClient(image_provider=IterListProvider([YieldNoneProviderMock, YieldImageResponseProviderMock], False))
-        response = await client.images.generate("Hello", "", response_format="orginal")
-        self.assertIsInstance(response, ImagesResponse)
-        self.assertEqual("Hello", response.data[0].url)
+# Пример использования в тестовом классе
+async def test_skip_none(self):
+    client = AsyncClient(image_provider=IterListProvider([YieldNoneProviderMock, YieldImageResponseProviderMock], False))
+    response = await client.images.generate("Hello", "", response_format="orginal")
+    self.assertIsInstance(response, ImagesResponse)
+    self.assertEqual("Hello", response.data[0].url)
 ```
 
-### `TestIterListProvider.test_raise_exception`
+### `test_raise_exception`
 
 ```python
 def test_raise_exception(self):
-    """Тестирует сценарий, когда провайдер выбрасывает исключение, и проверяет, что исключение правильно обрабатывается.
-
-    Определяет внутреннюю асинхронную функцию `run_exception`, которая создает асинхронный клиент с использованием `IterListProvider`, содержащий `YieldNoneProviderMock` и `AsyncRaiseExceptionProviderMock`.
-    Вызывает `run_exception` через `asyncio.run` и проверяет, что было выброшено исключение `RuntimeError`.
+    """
+    Тестирует возникновение исключения при генерации изображения.
 
     Args:
-        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+        self (TestIterListProvider): Экземпляр класса TestIterListProvider.
 
     Returns:
         None
 
     Raises:
-        AssertionError: Если не было выброшено исключение `RuntimeError`.
+        RuntimeError: Если исключение не было вызвано.
     """
 ```
 
+**Назначение**: Проверяет, что если провайдер вызывает исключение, оно корректно обрабатывается и пробрасывается.
+
 **Как работает функция**:
 
-1.  **Определение внутренней функции `run_exception`**:
+1.  Определяется асинхронная функция `run_exception`, которая создает экземпляр `AsyncClient` с `IterListProvider`, содержащим `YieldNoneProviderMock` и `AsyncRaiseExceptionProviderMock`.
+2.  В `run_exception` вызывается метод `client.images.generate` для генерации изображения.
+3.  Используется `self.assertRaises` для проверки, что при запуске `run_exception` будет вызвано исключение `RuntimeError`.
 
-    *   Определяется асинхронная функция `run_exception`, которая создает асинхронный клиент с использованием `IterListProvider`.
-    *   Провайдеру передается список, содержащий `YieldNoneProviderMock` (который возвращает `None`) и `AsyncRaiseExceptionProviderMock` (который выбрасывает исключение).
-    *   Внутри `run_exception` вызывается метод `client.images.generate` с параметрами `"Hello"` и `""`.
+**Внутренние функции**:
 
-2.  **Запуск и проверка исключения**:
+#### `run_exception`
 
-    *   Функция `run_exception` запускается с использованием `asyncio.run`.
-    *   Метод `self.assertRaises` проверяет, что при выполнении `asyncio.run(run_exception())` будет выброшено исключение `RuntimeError`.
+```python
+async def run_exception():
+    """
+    Внутренняя асинхронная функция для запуска теста с исключением.
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        RuntimeError: Если `AsyncRaiseExceptionProviderMock` вызывает исключение.
+    """
+```
+
+**Назначение**: Запускает процесс генерации изображения с провайдером, который вызывает исключение.
+
+**Как работает функция**:
+
+1. Создается экземпляр `AsyncClient` с `IterListProvider`, содержащим `YieldNoneProviderMock` и `AsyncRaiseExceptionProviderMock`.
+2. Вызывается метод `client.images.generate` для генерации изображения, что приводит к вызову исключения `RuntimeError` внутри `AsyncRaiseExceptionProviderMock`.
+
+**ASCII flowchart**:
+
+```
+Определение асинхронной функции run_exception
+    ↓
+Создание AsyncClient с IterListProvider
+    ↓
+Вызов client.images.generate("Hello", "")
+    ↓
+Проверка, что RuntimeError было вызвано
+```
 
 **Примеры**:
 
 ```python
-import unittest
-import asyncio
-from g4f.client import AsyncClient
-from g4f.providers.retry_provider import IterListProvider
-from .mocks import YieldNoneProviderMock, AsyncRaiseExceptionProviderMock
+# Пример использования в тестовом классе
+def test_raise_exception(self):
+    async def run_exception():
+        client = AsyncClient(image_provider=IterListProvider([YieldNoneProviderMock, AsyncRaiseExceptionProviderMock], False))
+        await client.images.generate("Hello", "")
+    self.assertRaises(RuntimeError, asyncio.run, run_exception())
+```
 
-class TestIterListProvider(unittest.IsolatedAsyncioTestCase):
-    def test_raise_exception(self):
-        async def run_exception():
-            client = AsyncClient(image_provider=IterListProvider([YieldNoneProviderMock, AsyncRaiseExceptionProviderMock], False))
-            await client.images.generate("Hello", "")
-        self.assertRaises(RuntimeError, asyncio.run, run_exception())
+### `__main__`
+```python
+if __name__ == '__main__':
+    unittest.main()
+```
+**Назначение**: Запускает юнит тесты, если скрипт запущен напрямую.
+
+**Как работает функция**:
+
+Проверяет, является ли текущий модуль главным модулем, запущенным в Python. Если да, то запускает юнит тесты, определенные в модуле, с использованием `unittest.main()`.
+```

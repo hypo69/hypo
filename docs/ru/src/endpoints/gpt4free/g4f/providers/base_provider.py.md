@@ -2,107 +2,298 @@
 
 ## Обзор
 
-Модуль определяет абстрактные классы для реализации провайдеров, предоставляющих функциональность для создания завершений текста (completions) с использованием различных моделей. Он содержит базовые классы для синхронных, асинхронных и асинхронных генераторов, а также вспомогательные миксины для обработки ошибок, аутентификации и работы с моделями.
+Модуль определяет абстрактные классы для реализации провайдеров, предоставляющих функциональность создания завершений (completions) на основе моделей машинного обучения. Он включает в себя базовые классы для синхронных, асинхронных и асинхронных генераторов, а также вспомогательные классы для работы с параметрами, моделями и обработкой ошибок.
 
 ## Подробнее
 
-Этот модуль является основой для создания провайдеров в проекте `hypotez`. Он определяет интерфейсы и общую логику, необходимую для взаимодействия с различными API, предоставляющими функциональность генерации текста. Модуль включает в себя классы для работы с асинхронными операциями и потоковой передачей данных, а также инструменты для управления аутентификацией и обработки ошибок.
+Этот модуль является основой для реализации различных провайдеров, взаимодействующих с API для генерации текста и других задач. Он содержит абстрактные классы, которые должны быть реализованы конкретными провайдерами, чтобы обеспечить единообразный интерфейс для работы с разными моделями и сервисами. Модуль также включает в себя механизмы для управления параметрами запросов, обработки ошибок и аутентификации.
 
 ## Содержание
 
-1.  [Константы](#константы)
-2.  [Классы](#классы)
-    *   [AbstractProvider](#abstractprovider)
-        *   [Методы класса](#методы-класса-abstractprovider)
-    *   [AsyncProvider](#asyncprovider)
-        *   [Методы класса](#методы-класса-asyncprovider)
-    *   [AsyncGeneratorProvider](#asyncgeneratorprovider)
-        *   [Методы класса](#методы-класса-asyncgeneratorprovider)
-    *   [ProviderModelMixin](#providermodelmixin)
-        *   [Методы класса](#методы-класса-providermodelmixin)
-    *   [RaiseErrorMixin](#raiseerrormixin)
-        *   [Методы класса](#методы-класса-raiseerrormixin)
-    *   [AuthFileMixin](#authfilemixin)
-        *   [Методы класса](#методы-класса-authfilemixin)
-    *   [AsyncAuthedProvider](#asyncauthedprovider)
-        *   [Методы класса](#методы-класса-asyncauthedprovider)
+- [Классы](#классы)
+  - [`AbstractProvider`](#abstractprovider)
+  - [`AsyncProvider`](#asyncprovider)
+  - [`AsyncGeneratorProvider`](#asyncgeneratorprovider)
+  - [`ProviderModelMixin`](#providermodelmixin)
+  - [`RaiseErrorMixin`](#raiseerrormixin)
+  - [`AuthFileMixin`](#authfilemixin)
+  - [`AsyncAuthedProvider`](#asyncauthedprovider)
+- [Переменные](#переменные)
 
-## Константы
+## Переменные
 
 ### `SAFE_PARAMETERS`
 
-Список безопасных параметров, которые можно передавать в запросы к провайдерам.
+Список безопасных параметров, которые можно передавать в запросах к провайдерам. Этот список используется для фильтрации параметров, чтобы предотвратить передачу потенциально опасных данных.
 
 ### `BASIC_PARAMETERS`
 
-Словарь, содержащий базовые параметры, используемые при создании запросов к провайдерам.
+Словарь с базовыми параметрами, которые используются по умолчанию для всех провайдеров. Этот словарь содержит значения по умолчанию для таких параметров, как модель, сообщения, потоковая передача и т.д.
 
 ### `PARAMETER_EXAMPLES`
 
-Словарь, содержащий примеры значений параметров, используемых при создании запросов к провайдерам.
+Словарь с примерами значений параметров, которые можно передавать в запросах к провайдерам. Этот словарь используется для предоставления примеров использования различных параметров.
 
 ## Классы
 
 ### `AbstractProvider`
 
-Абстрактный базовый класс для провайдеров.
-
 **Описание**:
-Определяет интерфейс для создания завершений текста (completions). Предоставляет абстрактный метод `create_completion`, который должен быть реализован в подклассах. Также предоставляет методы для асинхронного создания завершений и получения параметров.
+Абстрактный базовый класс для всех провайдеров. Он определяет интерфейс для создания завершений (completions) на основе моделей машинного обучения.
 
-#### Методы класса `AbstractProvider`
+**Методы**:
 
-*   `create_completion`
+- `create_completion(model: str, messages: Messages, stream: bool, **kwargs) -> CreateResult`:
+    Абстрактный метод, который должен быть реализован в подклассах. Он создает завершение с заданными параметрами.
+- `create_async(model: str, messages: Messages, *, timeout: int = None, loop: AbstractEventLoop = None, executor: ThreadPoolExecutor = None, **kwargs) -> str`:
+    Асинхронный метод, который создает результат на основе заданной модели и сообщений.
+- `get_create_function() -> callable`:
+    Возвращает функцию создания завершения.
+- `get_async_create_function() -> callable`:
+    Возвращает асинхронную функцию создания завершения.
+- `get_parameters(as_json: bool = False) -> dict[str, Parameter]`:
+    Возвращает словарь параметров, поддерживаемых провайдером.
+- `params() -> str`:
+    Возвращает параметры, поддерживаемые провайдером, в виде строки.
 
-    ```python
+#### `create_completion`
+
+```python
+@classmethod
+@abstractmethod
+def create_completion(
+    cls,
+    model: str,
+    messages: Messages,
+    stream: bool,
+    **kwargs
+) -> CreateResult:
+    """
+    Args:
+        model (str): Модель для использования.
+        messages (Messages): Сообщения для обработки.
+        stream (bool): Использовать ли потоковую передачу.
+        **kwargs: Дополнительные именованные аргументы.
+
+    Returns:
+        CreateResult: Результат процесса создания.
+    """
+```
+**Назначение**: 
+Абстрактный метод для создания завершения (completion) на основе предоставленных параметров.
+
+**Параметры**:
+- `model` (str): Имя модели, которую следует использовать для генерации завершения.
+- `messages` (Messages): Список сообщений, которые передаются модели в качестве контекста.
+- `stream` (bool): Флаг, указывающий, следует ли использовать потоковый режим для получения результатов.
+- `**kwargs`: Дополнительные именованные аргументы, которые могут потребоваться для конкретной реализации провайдера.
+
+**Возвращает**:
+- `CreateResult`: Результат создания завершения. Тип `CreateResult` определен в модуле `src.endpoints.gpt4free.g4f.typing`.
+
+**Вызывает исключения**:
+- `NotImplementedError`: Если метод не реализован в подклассе.
+
+**Как работает функция**:
+
+1. Метод `create_completion` является абстрактным, то есть он не содержит реализации в классе `AbstractProvider`.
+2. Подклассы, наследующие от `AbstractProvider`, должны предоставить свою реализацию этого метода.
+3. Реализация должна принимать имя модели, список сообщений и флаг потоковой передачи, а также любые дополнительные аргументы.
+4. На основе этих входных данных, реализация должна вызывать API или другой механизм для генерации завершения.
+5. Результат генерации должен быть возвращен в виде объекта `CreateResult`.
+
+**Примеры**:
+Поскольку метод является абстрактным, примеры его вызова не могут быть предоставлены в контексте класса `AbstractProvider`. Однако, ниже приведен пример гипотетической реализации в подклассе:
+
+```python
+from typing import Generator
+from src.endpoints.gpt4free.g4f.typing import Messages
+
+class MyProvider(AbstractProvider):
     @classmethod
-    @abstractmethod
     def create_completion(
         cls,
         model: str,
         messages: Messages,
         stream: bool,
         **kwargs
-    ) -> CreateResult:
+    ) -> Generator[str, None, None]:
         """
-        Создает завершение текста (completion) с заданными параметрами.
-
-        Args:
-            model (str): Модель для использования.
-            messages (Messages): Сообщения для обработки.
-            stream (bool): Использовать ли потоковую передачу.
-            **kwargs: Дополнительные именованные аргументы.
-
-        Returns:
-            CreateResult: Результат процесса создания.
+        Реализация метода create_completion для MyProvider.
         """
-        ...
-    ```
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
+```
 
-    **Назначение**:
-    Абстрактный метод, который должен быть реализован в подклассах для создания завершения текста на основе предоставленных параметров.
+#### `create_async`
 
-    **Параметры**:
-    - `model` (str): Имя модели, которую необходимо использовать для генерации ответа.
-    - `messages` (Messages): Список сообщений, используемых для контекста генерации. Обычно это список словарей, где каждый словарь имеет ключи "role" (роль отправителя, например, "user" или "system") и "content" (содержимое сообщения).
-    - `stream` (bool): Флаг, указывающий, использовать ли потоковый режим для генерации ответа. Если `True`, ответ будет генерироваться частями, а не целиком.
-    - `**kwargs`: Дополнительные именованные аргументы, которые могут включать специфичные для конкретного провайдера параметры.
+```python
+@classmethod
+async def create_async(
+    cls,
+    model: str,
+    messages: Messages,
+    *,
+    timeout: int = None,
+    loop: AbstractEventLoop = None,
+    executor: ThreadPoolExecutor = None,
+    **kwargs
+) -> str:
+    """
+    Args:
+        cls (type): Класс, на котором вызывается этот метод.
+        model (str): Модель для использования при создании.
+        messages (Messages): Сообщения для обработки.
+        loop (AbstractEventLoop, optional): Событийный цикл для использования. По умолчанию `None`.
+        executor (ThreadPoolExecutor, optional): Исполнитель для запуска асинхронных задач. По умолчанию `None`.
+        **kwargs: Дополнительные именованные аргументы.
 
-    **Возвращает**:
-    - `CreateResult`: Результат создания завершения текста. Тип `CreateResult` является псевдонимом для `Generator[str, None, None] | str`, что означает, что функция может возвращать либо генератор строк (в случае потокового режима), либо строку с полным текстом ответа.
+    Returns:
+        str: Созданный результат в виде строки.
+    """
+```
 
-    **Вызывает исключения**:
-    - `NotImplementedError`: Если метод не переопределен в производном классе.
+**Назначение**:
+Асинхронный метод для создания результата на основе заданной модели и сообщений.
 
-    **Как работает функция**:
+**Параметры**:
+- `cls` (type): Класс, на котором вызывается этот метод.
+- `model` (str): Имя модели, которую следует использовать для генерации результата.
+- `messages` (Messages): Список сообщений, которые передаются модели в качестве контекста.
+- `timeout` (int, optional): Максимальное время ожидания выполнения операции в секундах. По умолчанию `None`.
+- `loop` (AbstractEventLoop, optional): Событийный цикл asyncio, который следует использовать. Если не указан, будет использован текущий событийный цикл. По умолчанию `None`.
+- `executor` (ThreadPoolExecutor, optional): Исполнитель потоков, который будет использоваться для выполнения задачи в отдельном потоке. По умолчанию `None`.
+- `**kwargs`: Дополнительные именованные аргументы, которые могут потребоваться для конкретной реализации провайдера.
 
-    1.  Метод является абстрактным, поэтому его реализация должна быть предоставлена в подклассах, которые наследуются от `AbstractProvider`.
-    2.  Внутри подкласса, реализующего этот метод, должен быть код, который использует параметры `model`, `messages` и `kwargs` для взаимодействия с API провайдера и генерации ответа.
-    3.  Если `stream` установлен в `True`, реализация должна возвращать генератор, который выдает части ответа по мере их генерации. В противном случае должна быть возвращена строка, содержащая полный ответ.
+**Возвращает**:
+- `str`: Результат создания в виде строки.
 
-*   `create_async`
+**Как работает функция**:
 
-    ```python
+1. Метод `create_async` принимает имя модели, список сообщений и необязательные параметры: `timeout`, `loop` и `executor`.
+2. Если событийный цикл `loop` не указан, метод получает текущий событийный цикл с помощью `asyncio.get_running_loop()`.
+3. Определяется внутренняя функция `create_func`, которая вызывает метод `create_completion` класса для создания завершения. Результат конкатенируется с помощью функции `concat_chunks`.
+4. Метод использует `asyncio.wait_for` для запуска `create_func` в исполнителе потоков `executor` и ожидания результата в течение заданного времени `timeout`.
+5. Результат выполнения возвращается в виде строки.
+
+```python
+A[Получение параметров: model, messages, timeout, loop, executor]
+|
+B[Получение текущего событийного цикла, если не предоставлен]
+|
+C[Определение внутренней функции create_func, вызывающей create_completion и concat_chunks]
+|
+D[Запуск create_func в executor с таймаутом]
+|
+E[Возврат результата в виде строки]
+```
+**Примеры**:
+
+```python
+import asyncio
+from src.endpoints.gpt4free.g4f.typing import Messages
+
+class MyProvider(AbstractProvider):
+    @classmethod
+    def create_completion(
+        cls,
+        model: str,
+        messages: Messages,
+        stream: bool,
+        **kwargs
+    ) -> Generator[str, None, None]:
+        """
+        Реализация метода create_completion для MyProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
+
+async def main():
+    messages: Messages = [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Hello!"}]
+    result = await MyProvider.create_async(model="my_model", messages=messages, timeout=10)
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+#### `get_create_function`
+
+```python
+@classmethod
+def get_create_function(cls) -> callable:
+    """
+    Returns:
+        callable:
+    """
+```
+
+**Назначение**:
+Возвращает функцию создания завершения.
+
+**Параметры**:
+Отсутствуют.
+
+**Возвращает**:
+- `callable`: Функция, используемая для создания завершения.
+
+**Как работает функция**:
+
+1. Метод `get_create_function` возвращает метод `create_completion` класса.
+
+**Примеры**:
+
+```python
+class MyProvider(AbstractProvider):
+    @classmethod
+    def create_completion(
+        cls,
+        model: str,
+        messages: Messages,
+        stream: bool,
+        **kwargs
+    ) -> Generator[str, None, None]:
+        """
+        Реализация метода create_completion для MyProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
+
+create_function = MyProvider.get_create_function()
+# create_function теперь указывает на MyProvider.create_completion
+```
+
+#### `get_async_create_function`
+
+```python
+@classmethod
+def get_async_create_function(cls) -> callable:
+    """
+    Returns:
+        callable:
+    """
+```
+
+**Назначение**:
+Возвращает асинхронную функцию создания завершения.
+
+**Параметры**:
+Отсутствуют.
+
+**Возвращает**:
+- `callable`: Асинхронная функция, используемая для создания завершения.
+
+**Как работает функция**:
+
+1. Метод `get_async_create_function` возвращает метод `create_async` класса.
+
+**Примеры**:
+
+```python
+class MyProvider(AbstractProvider):
     @classmethod
     async def create_async(
         cls,
@@ -115,379 +306,483 @@
         **kwargs
     ) -> str:
         """
-        Асинхронно создает результат на основе заданной модели и сообщений.
-
-        Args:
-            cls (type): Класс, на котором вызывается этот метод.
-            model (str): Модель для использования при создании.
-            messages (Messages): Сообщения для обработки.
-            loop (AbstractEventLoop, optional): Цикл событий для использования. По умолчанию None.
-            executor (ThreadPoolExecutor, optional): Исполнитель для запуска асинхронных задач. По умолчанию None.
-            **kwargs: Дополнительные именованные аргументы.
-
-        Returns:
-            str: Созданный результат в виде строки.
+        Реализация асинхронного метода create_async для MyProvider.
         """
-        ...
-    ```
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        return "This is a dummy completion."
 
-    **Назначение**:
-    Асинхронно создает результат на основе заданной модели и сообщений.
+async_create_function = MyProvider.get_async_create_function()
+# async_create_function теперь указывает на MyProvider.create_async
+```
 
-    **Параметры**:
-    - `model` (str): Модель для использования при создании.
-    - `messages` (Messages): Сообщения для обработки.
-    - `timeout` (int, optional): Максимальное время ожидания выполнения операции. По умолчанию `None`.
-    - `loop` (AbstractEventLoop, optional): Объект event loop для выполнения асинхронных операций. Если не указан, используется текущий event loop.
-    - `executor` (ThreadPoolExecutor, optional): Executor для выполнения блокирующих операций в отдельном потоке. Если не указан, используется executor по умолчанию.
-    - `**kwargs`: Дополнительные именованные аргументы, которые передаются в функцию `create_completion`.
+#### `get_parameters`
 
-    **Возвращает**:
-    - `str`: Результат выполнения асинхронной операции в виде строки.
+```python
+@classmethod
+def get_parameters(cls, as_json: bool = False) -> dict[str, Parameter]:
+    """
+    Args:
+        cls (type): The class on which this method is called.
+        as_json (bool): If True, returns the parameters as JSON.
 
-    **Как работает функция**:
+    Returns:
+        dict[str, Parameter]: A dictionary of parameters supported by the provider.
+    """
+```
 
-    1.  Функция получает текущий event loop, если он не был передан в качестве аргумента.
-    2.  Определяет внутреннюю функцию `create_func`, которая вызывает `cls.create_completion` с переданными аргументами и объединяет полученные чанки в одну строку с помощью `concat_chunks`.
-    3.  Запускает `create_func` в executor с помощью `loop.run_in_executor`, что позволяет выполнять блокирующие операции в отдельном потоке, не блокируя основной event loop.
-    4.  Ожидает завершения выполнения задачи с помощью `asyncio.wait_for` с заданным `timeout`. Если время ожидания истекает, выбрасывается исключение `asyncio.TimeoutError`.
-    5.  Возвращает результат выполнения задачи в виде строки.
+**Назначение**:
+Возвращает словарь параметров, поддерживаемых провайдером.
 
-*   `get_create_function`
+**Параметры**:
+- `cls` (type): Класс, на котором вызывается этот метод.
+- `as_json` (bool): Если `True`, возвращает параметры в формате JSON.
 
-    ```python
-    @classmethod
-    def get_create_function(cls) -> callable:
-        return cls.create_completion
-    ```
+**Возвращает**:
+- `dict[str, Parameter]`: Словарь параметров, поддерживаемых провайдером.
 
-    **Назначение**:
-    Возвращает функцию для создания завершений.
+**Как работает функция**:
 
-    **Возвращает**:
-    - `callable`: Функция `create_completion`.
+1. Метод `get_parameters` получает параметры из сигнатуры метода `create_async_generator` (если класс является подклассом `AsyncGeneratorProvider`), `create_async` (если класс является подклассом `AsyncProvider`) или `create_completion`.
+2. Фильтрует параметры, оставляя только те, которые находятся в списке `SAFE_PARAMETERS` и для которых `name != "stream"` или `cls.supports_stream` равно `True`.
+3. Если `as_json` равно `True`, метод преобразует параметры в формат JSON, используя примеры значений из словаря `PARAMETER_EXAMPLES` и значения по умолчанию для различных типов данных.
+4. Возвращает словарь параметров.
 
-    **Как работает функция**:
+```python
+A[Получение параметров из сигнатуры метода create_async_generator, create_async или create_completion]
+|
+B[Фильтрация параметров по SAFE_PARAMETERS и supports_stream]
+|
+C[Если as_json == True: преобразование параметров в формат JSON]
+|
+D[Возврат словаря параметров]
+```
 
-    1.  Функция просто возвращает ссылку на метод `create_completion` класса.
+**Примеры**:
 
-*   `get_async_create_function`
-
-    ```python
-    @classmethod
-    def get_async_create_function(cls) -> callable:
-        return cls.create_async
-    ```
-
-    **Назначение**:
-    Возвращает асинхронную функцию для создания завершений.
-
-    **Возвращает**:
-    - `callable`: Асинхронная функция `create_async`.
-
-    **Как работает функция**:
-
-    1.  Функция просто возвращает ссылку на метод `create_async` класса.
-
-*   `get_parameters`
-
-    ```python
-    @classmethod
-    def get_parameters(cls, as_json: bool = False) -> dict[str, Parameter]:
-        params = {name: parameter for name, parameter in signature(
-            cls.create_async_generator if issubclass(cls, AsyncGeneratorProvider) else
-            cls.create_async if issubclass(cls, AsyncProvider) else
-            cls.create_completion
-        ).parameters.items() if name in SAFE_PARAMETERS
-            and (name != "stream" or cls.supports_stream)}
-        if as_json:
-            def get_type_as_var(annotation: type, key: str, default):
-                if key in PARAMETER_EXAMPLES:
-                    if key == "messages" and not cls.supports_system_message:
-                        return [PARAMETER_EXAMPLES[key][-1]]
-                    return PARAMETER_EXAMPLES[key]
-                if isinstance(annotation, type):
-                    if issubclass(annotation, int):
-                        return 0
-                    elif issubclass(annotation, float):
-                        return 0.0
-                    elif issubclass(annotation, bool):
-                        return False
-                    elif issubclass(annotation, str):
-                        return ""
-                    elif issubclass(annotation, dict):
-                        return {}
-                    elif issubclass(annotation, list):
-                        return []
-                    elif issubclass(annotation, BaseConversation):
-                        return {}
-                    elif issubclass(annotation, NoneType):
-                        return {}
-                elif annotation is None:
-                    return None
-                elif annotation == "str" or annotation == "list[str]":
-                    return default
-                elif isinstance(annotation, _GenericAlias):
-                    if annotation.__origin__ is Optional:
-                        return get_type_as_var(annotation.__args__[0])
-                else:
-                    return str(annotation)
-            return { name: (
-                param.default
-                if isinstance(param, Parameter) and param.default is not Parameter.empty and param.default is not None
-                else get_type_as_var(param.annotation, name, param.default) if isinstance(param, Parameter) else param
-            ) for name, param in {
-                **BASIC_PARAMETERS,
-                **params,
-                **{"provider": cls.__name__, "model": getattr(cls, "default_model", ""), "stream": cls.supports_stream},
-            }.items()}
-        return params
-    ```
-
-    **Назначение**:
-    Возвращает параметры, поддерживаемые провайдером.
-
-    **Параметры**:
-    - `as_json` (bool, optional): Если `True`, возвращает параметры в формате JSON. По умолчанию `False`.
-
-    **Возвращает**:
-    - `dict[str, Parameter]`: Словарь, содержащий параметры и их значения.
-
-    **Как работает функция**:
-
-    1.  Определяет, какую функцию использовать для получения параметров (`create_async_generator`, `create_async` или `create_completion`) в зависимости от типа класса (AsyncGeneratorProvider, AsyncProvider или AbstractProvider).
-    2.  Получает параметры из сигнатуры выбранной функции и фильтрует их, оставляя только те, которые находятся в списке `SAFE_PARAMETERS` и удовлетворяют условию `name != "stream" or cls.supports_stream`.
-    3.  Если `as_json` равен `True`, преобразует значения параметров в JSON-совместимый формат, используя значения из `PARAMETER_EXAMPLES` или значения по умолчанию для каждого типа данных.
-        - Внутренняя функция `get_type_as_var` рекурсивно определяет тип переменной и возвращает соответствующее значение по умолчанию.
-    4.  Возвращает словарь с параметрами.
-
-*   `params`
-
-    ```python
-    @classmethod
-    @property
-    def params(cls) -> str:
-        """
-        Возвращает параметры, поддерживаемые провайдером.
-
-        Args:
-            cls (type): Класс, на котором вызывается это свойство.
-
-        Returns:
-            str: Строка, перечисляющая поддерживаемые параметры.
-        """
-        ...
-    ```
-
-    **Назначение**:
-    Возвращает параметры, поддерживаемые провайдером, в виде строки.
-
-    **Возвращает**:
-    - `str`: Строка, перечисляющая поддерживаемые параметры.
-
-    **Как работает функция**:
-
-    1.  Получает параметры с помощью метода `cls.get_parameters()`.
-    2.  Форматирует каждый параметр в строку вида `\n {name}: {type} = {default_value}`.
-    3.  Объединяет все параметры в одну строку и возвращает ее.
-
-### `AsyncProvider`
-
-Предоставляет асинхронную функциональность для создания завершений.
-
-**Описание**:
-Этот класс расширяет `AbstractProvider` и предоставляет реализацию для асинхронного создания завершений текста. Он использует `asyncio` для выполнения асинхронных операций и предоставляет метод `create_async` для запуска процесса создания завершения.
-
-#### Методы класса `AsyncProvider`
-
-*   `create_completion`
-
-    ```python
+```python
+class MyProvider(AbstractProvider):
     @classmethod
     def create_completion(
         cls,
         model: str,
         messages: Messages,
-        stream: bool = False,
+        stream: bool,
         **kwargs
-    ) -> CreateResult:
+    ) -> Generator[str, None, None]:
         """
-        Создает результат завершения синхронно.
-
-        Args:
-            cls (type): Класс, на котором вызывается этот метод.
-            model (str): Модель для использования при создании.
-            messages (Messages): Сообщения для обработки.
-            stream (bool): Указывает, следует ли передавать результаты потоком. По умолчанию False.
-            loop (AbstractEventLoop, optional): Цикл событий для использования. По умолчанию None.
-            **kwargs: Дополнительные именованные аргументы.
-
-        Returns:
-            CreateResult: Результат создания завершения.
+        Реализация метода create_completion для MyProvider.
         """
-        ...
-    ```
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
 
-    **Назначение**:
-    Создает результат завершения текста синхронно, используя асинхронную функцию `create_async`.
+parameters = MyProvider.get_parameters()
+# parameters теперь содержит словарь параметров, поддерживаемых MyProvider
+```
 
-    **Параметры**:
-    - `model` (str): Модель для использования при создании.
-    - `messages` (Messages): Сообщения для обработки.
-    - `stream` (bool, optional): Указывает, следует ли использовать потоковую передачу результатов. По умолчанию `False`.
-    - `**kwargs`: Дополнительные именованные аргументы, передаваемые в `create_async`.
+#### `params`
 
-    **Возвращает**:
-    - `CreateResult`: Результат создания завершения текста.
+```python
+@classmethod
+@property
+def params(cls) -> str:
+    """
+    Args:
+        cls (type): Класс, на котором вызывается это свойство.
 
-    **Как работает функция**:
+    Returns:
+        str: Строка, содержащая список поддерживаемых параметров.
+    """
+```
 
-    1.  Проверяет, запущен ли event loop, с помощью `get_running_loop(check_nested=False)`. Если event loop не запущен, будет выброшено исключение.
-    2.  Вызывает асинхронную функцию `cls.create_async` с переданными аргументами и получает результат.
-    3.  Использует `yield asyncio.run()` для преобразования асинхронного результата в синхронный генератор, который возвращает результат.
+**Назначение**:
+Возвращает параметры, поддерживаемые провайдером, в виде строки.
 
-*   `create_async`
+**Параметры**:
+- `cls` (type): Класс, на котором вызывается это свойство.
 
-    ```python
+**Возвращает**:
+- `str`: Строка, содержащая список поддерживаемых параметров.
+
+**Как работает функция**:
+
+1. Метод `params` получает словарь параметров, поддерживаемых провайдером, с помощью метода `get_parameters`.
+2. Форматирует каждый параметр в виде строки, содержащей имя, тип и значение по умолчанию.
+3. Объединяет все строки в одну строку, разделенную символами новой строки.
+4. Возвращает отформатированную строку.
+
+```python
+A[Получение параметров с помощью get_parameters]
+|
+B[Форматирование каждого параметра в виде строки]
+|
+C[Объединение строк в одну строку]
+|
+D[Возврат отформатированной строки]
+```
+
+**Примеры**:
+
+```python
+class MyProvider(AbstractProvider):
+    @classmethod
+    def create_completion(
+        cls,
+        model: str,
+        messages: Messages,
+        stream: bool,
+        **kwargs
+    ) -> Generator[str, None, None]:
+        """
+        Реализация метода create_completion для MyProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
+
+params_string = MyProvider.params
+# params_string теперь содержит строку с описанием параметров, поддерживаемых MyProvider
+```
+
+### `AsyncProvider`
+
+**Описание**:
+Предоставляет асинхронную функциональность для создания завершений.
+
+**Наследует**:
+- `AbstractProvider`
+
+**Методы**:
+
+- `create_completion(model: str, messages: Messages, stream: bool = False, **kwargs) -> CreateResult`:
+    Создает результат завершения синхронно.
+- `create_async(model: str, messages: Messages, **kwargs) -> str`:
+    Абстрактный асинхронный метод для создания результатов.
+- `get_create_function() -> callable`:
+    Возвращает функцию создания завершения.
+- `get_async_create_function() -> callable`:
+    Возвращает асинхронную функцию создания завершения.
+
+#### `create_completion`
+
+```python
+@classmethod
+def create_completion(
+    cls,
+    model: str,
+    messages: Messages,
+    stream: bool = False,
+    **kwargs
+) -> CreateResult:
+    """
+    Args:
+        cls (type): Класс, на котором вызывается этот метод.
+        model (str): Модель для использования при создании.
+        messages (Messages): Сообщения для обработки.
+        stream (bool): Указывает, следует ли передавать результаты потоком. По умолчанию `False`.
+        loop (AbstractEventLoop, optional): Событийный цикл для использования. По умолчанию `None`.
+        **kwargs: Дополнительные именованные аргументы.
+
+    Returns:
+        CreateResult: Результат создания завершения.
+    """
+```
+
+**Назначение**:
+Создает результат завершения синхронно.
+
+**Параметры**:
+- `cls` (type): Класс, на котором вызывается этот метод.
+- `model` (str): Модель для использования при создании.
+- `messages` (Messages): Сообщения для обработки.
+- `stream` (bool, optional): Указывает, следует ли передавать результаты потоком. По умолчанию `False`.
+- `**kwargs`: Дополнительные именованные аргументы.
+
+**Возвращает**:
+- `CreateResult`: Результат создания завершения.
+
+**Как работает функция**:
+
+1. Метод `create_completion` принимает имя модели, список сообщений и необязательный параметр `stream`.
+2. Получает текущий событийный цикл с помощью `get_running_loop(check_nested=False)`.
+3. Вызывает асинхронный метод `create_async` с теми же параметрами и возвращает результат.
+
+```python
+A[Получение параметров: model, messages, stream]
+|
+B[Получение текущего событийного цикла]
+|
+C[Вызов create_async с теми же параметрами]
+|
+D[Возврат результата]
+```
+
+**Примеры**:
+
+```python
+import asyncio
+from src.endpoints.gpt4free.g4f.typing import Messages
+
+class MyAsyncProvider(AsyncProvider):
     @staticmethod
-    @abstractmethod
     async def create_async(
         model: str,
         messages: Messages,
         **kwargs
     ) -> str:
         """
-        Абстрактный метод для создания асинхронных результатов.
-
-        Args:
-            model (str): Модель для использования при создании.
-            messages (Messages): Сообщения для обработки.
-            **kwargs: Дополнительные именованные аргументы.
-
-        Raises:
-            NotImplementedError: Если этот метод не переопределен в производных классах.
-
-        Returns:
-            str: Созданный результат в виде строки.
+        Реализация асинхронного метода create_async для MyAsyncProvider.
         """
-        ...
-    ```
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        return "This is a dummy completion."
 
-    **Назначение**:
-    Абстрактный метод для создания асинхронных результатов. Этот метод должен быть переопределен в подклассах.
+messages: Messages = [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Hello!"}]
+result = MyAsyncProvider.create_completion(model="my_model", messages=messages, stream=False)
+# result теперь содержит результат выполнения create_async
+```
 
-    **Параметры**:
-    - `model` (str): Модель для использования при создании.
-    - `messages` (Messages): Сообщения для обработки.
-    - `**kwargs`: Дополнительные именованные аргументы.
+#### `create_async`
 
-    **Возвращает**:
-    - `str`: Созданный результат в виде строки.
+```python
+@staticmethod
+@abstractmethod
+async def create_async(
+    model: str,
+    messages: Messages,
+    **kwargs
+) -> str:
+    """
+    Args:
+        model (str): Модель для использования при создании.
+        messages (Messages): Сообщения для обработки.
+        **kwargs: Дополнительные именованные аргументы.
 
-    **Вызывает исключения**:
-    - `NotImplementedError`: Если метод не переопределен в производных классах.
+    Raises:
+        NotImplementedError: Если этот метод не переопределен в производных классах.
 
-    **Как работает функция**:
+    Returns:
+        str: Созданный результат в виде строки.
+    """
+```
 
-    1.  Метод является абстрактным и должен быть реализован в подклассах `AsyncProvider`.
-    2.  При реализации в подклассе, метод должен использовать параметры `model`, `messages` и `kwargs` для взаимодействия с API и создания асинхронного результата.
+**Назначение**:
+Абстрактный асинхронный метод для создания результатов.
 
-*   `get_create_function`
+**Параметры**:
+- `model` (str): Модель для использования при создании.
+- `messages` (Messages): Сообщения для обработки.
+- `**kwargs`: Дополнительные именованные аргументы.
 
-    ```python
-    @classmethod
-    def get_create_function(cls) -> callable:
-        return cls.create_completion
-    ```
+**Возвращает**:
+- `str`: Созданный результат в виде строки.
 
-    **Назначение**:
-    Возвращает функцию для создания завершений.
+**Вызывает исключения**:
+- `NotImplementedError`: Если этот метод не переопределен в производных классах.
 
-    **Возвращает**:
-    - `callable`: Функция `create_completion`.
+**Как работает функция**:
 
-    **Как работает функция**:
+1. Метод `create_async` является абстрактным, то есть он не содержит реализации в классе `AsyncProvider`.
+2. Подклассы, наследующие от `AsyncProvider`, должны предоставить свою реализацию этого метода.
+3. Реализация должна принимать имя модели, список сообщений и любые дополнительные аргументы.
+4. На основе этих входных данных, реализация должна вызывать API или другой механизм для генерации завершения асинхронно.
+5. Результат генерации должен быть возвращен в виде строки.
 
-    1.  Функция просто возвращает ссылку на метод `create_completion` класса.
+**Примеры**:
+Поскольку метод является абстрактным, примеры его вызова не могут быть предоставлены в контексте класса `AsyncProvider`. Однако, ниже приведен пример гипотетической реализации в подклассе:
 
-*   `get_async_create_function`
+```python
+import asyncio
+from src.endpoints.gpt4free.g4f.typing import Messages
 
-    ```python
-    @classmethod
-    def get_async_create_function(cls) -> callable:
-        return cls.create_async
-    ```
+class MyAsyncProvider(AsyncProvider):
+    @staticmethod
+    async def create_async(
+        model: str,
+        messages: Messages,
+        **kwargs
+    ) -> str:
+        """
+        Реализация асинхронного метода create_async для MyAsyncProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        return "This is a dummy completion."
+```
 
-    **Назначение**:
-    Возвращает асинхронную функцию для создания завершений.
+#### `get_create_function`
 
-    **Возвращает**:
-    - `callable`: Асинхронная функция `create_async`.
+```python
+@classmethod
+def get_create_function(cls) -> callable:
+    """
+    Returns:
+        callable:
+    """
+```
 
-    **Как работает функция**:
+**Назначение**:
+Возвращает функцию создания завершения.
 
-    1.  Функция просто возвращает ссылку на метод `create_async` класса.
+**Параметры**:
+Отсутствуют.
+
+**Возвращает**:
+- `callable`: Функция, используемая для создания завершения.
+
+**Как работает функция**:
+
+1. Метод `get_create_function` возвращает метод `create_completion` класса.
+
+**Примеры**:
+
+```python
+class MyAsyncProvider(AsyncProvider):
+    @staticmethod
+    async def create_async(
+        model: str,
+        messages: Messages,
+        **kwargs
+    ) -> str:
+        """
+        Реализация асинхронного метода create_async для MyAsyncProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        return "This is a dummy completion."
+
+create_function = MyAsyncProvider.get_create_function()
+# create_function теперь указывает на MyAsyncProvider.create_completion
+```
+
+#### `get_async_create_function`
+
+```python
+@classmethod
+def get_async_create_function(cls) -> callable:
+    """
+    Returns:
+        callable:
+    """
+```
+
+**Назначение**:
+Возвращает асинхронную функцию создания завершения.
+
+**Параметры**:
+Отсутствуют.
+
+**Возвращает**:
+- `callable`: Асинхронная функция, используемая для создания завершения.
+
+**Как работает функция**:
+
+1. Метод `get_async_create_function` возвращает метод `create_async` класса.
+
+**Примеры**:
+
+```python
+class MyAsyncProvider(AsyncProvider):
+    @staticmethod
+    async def create_async(
+        model: str,
+        messages: Messages,
+        **kwargs
+    ) -> str:
+        """
+        Реализация асинхронного метода create_async для MyAsyncProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        return "This is a dummy completion."
+
+async_create_function = MyAsyncProvider.get_async_create_function()
+# async_create_function теперь указывает на MyAsyncProvider.create_async
+```
 
 ### `AsyncGeneratorProvider`
 
+**Описание**:
 Предоставляет функциональность асинхронного генератора для потоковой передачи результатов.
 
-**Описание**:
-Этот класс расширяет `AbstractProvider` и предоставляет функциональность для создания асинхронных генераторов, которые позволяют передавать результаты потоком. Он поддерживает потоковую передачу данных и предоставляет методы для создания как синхронных, так и асинхронных генераторов.
+**Наследует**:
+- `AbstractProvider`
 
-#### Методы класса `AsyncGeneratorProvider`
+**Атрибуты**:
+- `supports_stream` (bool): Указывает, поддерживает ли провайдер потоковую передачу. Всегда `True`.
 
-*   `create_completion`
+**Методы**:
 
-    ```python
-    @classmethod
-    def create_completion(
-        cls,
-        model: str,
-        messages: Messages,
-        stream: bool = True,
-        **kwargs
-    ) -> CreateResult:
-        """
-        Создает результат потоковой передачи завершения синхронно.
+- `create_completion(model: str, messages: Messages, stream: bool = True, **kwargs) -> CreateResult`:
+    Создает результат потоковой передачи завершения синхронно.
+- `create_async_generator(model: str, messages: Messages, stream: bool = True, **kwargs) -> AsyncResult`:
+    Абстрактный асинхронный метод для создания генератора.
+- `get_create_function() -> callable`:
+    Возвращает функцию создания завершения.
+- `get_async_create_function() -> callable`:
+    Возвращает асинхронную функцию создания завершения.
 
-        Args:
-            cls (type): Класс, на котором вызывается этот метод.
-            model (str): Модель для использования при создании.
-            messages (Messages): Сообщения для обработки.
-            stream (bool): Указывает, следует ли передавать результаты потоком. По умолчанию True.
-            loop (AbstractEventLoop, optional): Цикл событий для использования. По умолчанию None.
-            **kwargs: Дополнительные именованные аргументы.
+#### `create_completion`
 
-        Returns:
-            CreateResult: Результат создания потоковой передачи завершения.
-        """
-        ...
-    ```
+```python
+@classmethod
+def create_completion(
+    cls,
+    model: str,
+    messages: Messages,
+    stream: bool = True,
+    **kwargs
+) -> CreateResult:
+    """
+    Args:
+        cls (type): Класс, на котором вызывается этот метод.
+        model (str): Модель для использования при создании.
+        messages (Messages): Сообщения для обработки.
+        stream (bool): Указывает, следует ли передавать результаты потоком. По умолчанию `True`.
+        loop (AbstractEventLoop, optional): Событийный цикл для использования. По умолчанию `None`.
+        **kwargs: Дополнительные именованные аргументы.
 
-    **Назначение**:
-    Создает синхронный генератор для потоковой передачи результатов, используя асинхронный генератор `create_async_generator`.
+    Returns:
+        CreateResult: Результат создания потоковой передачи завершения.
+    """
+```
 
-    **Параметры**:
-    - `model` (str): Модель для использования при создании.
-    - `messages` (Messages): Сообщения для обработки.
-    - `stream` (bool, optional): Указывает, следует ли использовать потоковую передачу результатов. По умолчанию `True`.
-    - `**kwargs`: Дополнительные именованные аргументы, передаваемые в `create_async_generator`.
+**Назначение**:
+Создает результат потоковой передачи завершения синхронно.
 
-    **Возвращает**:
-    - `CreateResult`: Результат создания потоковой передачи завершения.
+**Параметры**:
+- `cls` (type): Класс, на котором вызывается этот метод.
+- `model` (str): Модель для использования при создании.
+- `messages` (Messages): Сообщения для обработки.
+- `stream` (bool, optional): Указывает, следует ли передавать результаты потоком. По умолчанию `True`.
+- `**kwargs`: Дополнительные именованные аргументы.
 
-    **Как работает функция**:
+**Возвращает**:
+- `CreateResult`: Результат создания потоковой передачи завершения.
 
-    1.  Вызывает асинхронный генератор `cls.create_async_generator` с переданными аргументами.
-    2.  Использует `to_sync_generator` для преобразования асинхронного генератора в синхронный генератор.
-    3.  Возвращает синхронный генератор, который выдает результаты потоком.
+**Как работает функция**:
 
-*   `create_async_generator`
+1. Метод `create_completion` принимает имя модели, список сообщений и необязательный параметр `stream`.
+2. Преобразует асинхронный генератор, полученный от `create_async_generator`, в синхронный генератор с помощью `to_sync_generator`.
+3. Возвращает полученный синхронный генератор.
 
-    ```python
+```python
+A[Получение параметров: model, messages, stream]
+|
+B[Преобразование асинхронного генератора в синхронный с помощью to_sync_generator]
+|
+C[Возврат синхронного генератора]
+```
+
+**Примеры**:
+
+```python
+import asyncio
+from src.endpoints.gpt4free.g4f.typing import Messages, AsyncResult
+
+class MyAsyncGeneratorProvider(AsyncGeneratorProvider):
     @staticmethod
-    @abstractmethod
     async def create_async_generator(
         model: str,
         messages: Messages,
@@ -495,330 +790,189 @@
         **kwargs
     ) -> AsyncResult:
         """
-        Абстрактный метод для создания асинхронного генератора.
-
-        Args:
-            model (str): Модель для использования при создании.
-            messages (Messages): Сообщения для обработки.
-            stream (bool): Указывает, следует ли передавать результаты потоком. По умолчанию True.
-            **kwargs: Дополнительные именованные аргументы.
-
-        Raises:
-            NotImplementedError: Если этот метод не переопределен в производных классах.
-
-        Returns:
-            AsyncResult: Асинхронный генератор, выдающий результаты.
+        Реализация асинхронного метода create_async_generator для MyAsyncGeneratorProvider.
         """
-        ...
-    ```
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
 
-    **Назначение**:
-    Абстрактный метод для создания асинхронного генератора. Этот метод должен быть переопределен в подклассах.
+messages: Messages = [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Hello!"}]
+result = MyAsyncGeneratorProvider.create_completion(model="my_model", messages=messages, stream=True)
+# result теперь содержит синхронный генератор, полученный из create_async_generator
+```
 
-    **Параметры**:
-    - `model` (str): Модель для использования при создании.
-    - `messages` (Messages): Сообщения для обработки.
-    - `stream` (bool, optional): Указывает, следует ли использовать потоковую передачу результатов. По умолчанию `True`.
-    - `**kwargs`: Дополнительные именованные аргументы.
+#### `create_async_generator`
 
-    **Возвращает**:
-    - `AsyncResult`: Асинхронный генератор, выдающий результаты.
+```python
+@staticmethod
+@abstractmethod
+async def create_async_generator(
+    model: str,
+    messages: Messages,
+    stream: bool = True,
+    **kwargs
+) -> AsyncResult:
+    """
+    Args:
+        model (str): Модель для использования при создании.
+        messages (Messages): Сообщения для обработки.
+        stream (bool): Указывает, следует ли передавать результаты потоком. По умолчанию `True`.
+        **kwargs: Дополнительные именованные аргументы.
 
-    **Вызывает исключения**:
-    - `NotImplementedError`: Если метод не переопределен в производных классах.
+    Raises:
+        NotImplementedError: Если этот метод не переопределен в производных классах.
 
-    **Как работает функция**:
+    Returns:
+        AsyncResult: Асинхронный генератор, выдающий результаты.
+    """
+```
 
-    1.  Метод является абстрактным и должен быть реализован в подклассах `AsyncGeneratorProvider`.
-    2.  При реализации в подклассе, метод должен использовать параметры `model`, `messages` и `kwargs` для взаимодействия с API и создания асинхронного генератора.
+**Назначение**:
+Абстрактный асинхронный метод для создания генератора.
 
-*   `get_create_function`
+**Параметры**:
+- `model` (str): Модель для использования при создании.
+- `messages` (Messages): Сообщения для обработки.
+- `stream` (bool, optional): Указывает, следует ли передавать результаты потоком. По умолчанию `True`.
+- `**kwargs`: Дополнительные именованные аргументы.
 
-    ```python
-    @classmethod
-    def get_create_function(cls) -> callable:
-        return cls.create_completion
-    ```
+**Возвращает**:
+- `AsyncResult`: Асинхронный генератор, выдающий результаты.
 
-    **Назначение**:
-    Возвращает функцию для создания завершений.
+**Вызывает исключения**:
+- `NotImplementedError`: Если этот метод не переопределен в производных классах.
 
-    **Возвращает**:
-    - `callable`: Функция `create_completion`.
+**Как работает функция**:
 
-    **Как работает функция**:
+1. Метод `create_async_generator` является абстрактным, то есть он не содержит реализации в классе `AsyncGeneratorProvider`.
+2. Подклассы, наследующие от `AsyncGeneratorProvider`, должны предоставить свою реализацию этого метода.
+3. Реализация должна принимать имя модели, список сообщений и флаг потоковой передачи, а также любые дополнительные аргументы.
+4. На основе этих входных данных, реализация должна вызывать API или другой механизм для генерации завершения асинхронно в виде генератора.
+5. Результат генерации должен быть возвращен в виде асинхронного генератора.
 
-    1.  Функция просто возвращает ссылку на метод `create_completion` класса.
+**Примеры**:
+Поскольку метод является абстрактным, примеры его вызова не могут быть предоставлены в контексте класса `AsyncGeneratorProvider`. Однако, ниже приведен пример гипотетической реализации в подклассе:
 
-*   `get_async_create_function`
+```python
+import asyncio
+from typing import AsyncGenerator
+from src.endpoints.gpt4free.g4f.typing import Messages
 
-    ```python
-    @classmethod
-    def get_async_create_function(cls) -> callable:
-        return cls.create_async_generator
-    ```
+class MyAsyncGeneratorProvider(AsyncGeneratorProvider):
+    @staticmethod
+    async def create_async_generator(
+        model: str,
+        messages: Messages,
+        stream: bool = True,
+        **kwargs
+    ) -> AsyncGenerator[str, None]:
+        """
+        Реализация асинхронного метода create_async_generator для MyAsyncGeneratorProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
+```
 
-    **Назначение**:
-    Возвращает асинхронную функцию для создания завершений.
+#### `get_create_function`
 
-    **Возвращает**:
-    - `callable`: Асинхронная функция `create_async_generator`.
+```python
+@classmethod
+def get_create_function(cls) -> callable:
+    """
+    Returns:
+        callable:
+    """
+```
 
-    **Как работает функция**:
+**Назначение**:
+Возвращает функцию создания завершения.
 
-    1.  Функция просто возвращает ссылку на метод `create_async_generator` класса.
+**Параметры**:
+Отсутствуют.
+
+**Возвращает**:
+- `callable`: Функция, используемая для создания завершения.
+
+**Как работает функция**:
+
+1. Метод `get_create_function` возвращает метод `create_completion` класса.
+
+**Примеры**:
+
+```python
+class MyAsyncGeneratorProvider(AsyncGeneratorProvider):
+    @staticmethod
+    async def create_async_generator(
+        model: str,
+        messages: Messages,
+        stream: bool = True,
+        **kwargs
+    ) -> AsyncGenerator[str, None]:
+        """
+        Реализация асинхронного метода create_async_generator для MyAsyncGeneratorProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
+
+create_function = MyAsyncGeneratorProvider.get_create_function()
+# create_function теперь указывает на MyAsyncGeneratorProvider.create_completion
+```
+
+#### `get_async_create_function`
+
+```python
+@classmethod
+def get_async_create_function(cls) -> callable:
+    """
+    Returns:
+        callable:
+    """
+```
+
+**Назначение**:
+Возвращает асинхронную функцию создания завершения.
+
+**Параметры**:
+Отсутствуют.
+
+**Возвращает**:
+- `callable`: Асинхронная функция, используемая для создания завершения.
+
+**Как работает функция**:
+
+1. Метод `get_async_create_function` возвращает метод `create_async_generator` класса.
+
+**Примеры**:
+
+```python
+class MyAsyncGeneratorProvider(AsyncGeneratorProvider):
+    @staticmethod
+    async def create_async_generator(
+        model: str,
+        messages: Messages,
+        stream: bool = True,
+        **kwargs
+    ) -> AsyncGenerator[str, None]:
+        """
+        Реализация асинхронного метода create_async_generator для MyAsyncGeneratorProvider.
+        """
+        # Здесь вызывается API или другой механизм для генерации завершения.
+        # В данном примере просто возвращается заглушка.
+        yield "This is a dummy completion."
+
+async_create_function = MyAsyncGeneratorProvider.get_async_create_function()
+# async_create_function теперь указывает на MyAsyncGeneratorProvider.create_async_generator
+```
 
 ### `ProviderModelMixin`
 
-Миксин для работы с моделями провайдера.
-
 **Описание**:
-Этот миксин предоставляет атрибуты и методы для управления моделями, поддерживаемыми провайдером. Он позволяет определять модель по умолчанию, список поддерживаемых моделей и псевдонимы моделей.
-
-#### Методы класса `ProviderModelMixin`
-
-*   `get_models`
-
-    ```python
-    @classmethod
-    def get_models(cls, **kwargs) -> list[str]:
-        if not cls.models and cls.default_model is not None:
-            return [cls.default_model]
-        return cls.models
-    ```
-
-    **Назначение**:
-    Возвращает список моделей, поддерживаемых провайдером.
-
-    **Параметры**:
-    - `**kwargs`: Дополнительные именованные аргументы.
-
-    **Возвращает**:
-    - `list[str]`: Список поддерживаемых моделей.
-
-    **Как работает функция**:
-
-    1.  Проверяет, определен ли список моделей (`cls.models`). Если список не определен и определена модель по умолчанию (`cls.default_model`), возвращает список, содержащий только модель по умолчанию.
-    2.  В противном случае возвращает список моделей (`cls.models`).
-
-*   `get_model`
-
-    ```python
-    @classmethod
-    def get_model(cls, model: str, **kwargs) -> str:
-        if not model and cls.default_model is not None:
-            model = cls.default_model
-        elif model in cls.model_aliases:
-            model = cls.model_aliases[model]
-        else:
-            if model not in cls.get_models(**kwargs) and cls.models:
-                raise ModelNotSupportedError(f"Model is not supported: {model} in: {cls.__name__} Valid models: {cls.models}")
-        cls.last_model = model
-        debug.last_model = model
-        return model
-    ```
-
-    **Назначение**:
-    Возвращает имя модели, используя псевдонимы и проверяя поддержку модели.
-
-    **Параметры**:
-    - `model` (str): Имя модели.
-    - `**kwargs`: Дополнительные именованные аргументы.
-
-    **Возвращает**:
-    - `str`: Имя модели.
-
-    **Вызывает исключения**:
-    - `ModelNotSupportedError`: Если модель не поддерживается.
-
-    **Как работает функция**:
-
-    1.  Если `model` не указана и определена модель по умолчанию (`cls.default_model`), использует модель по умолчанию.
-    2.  Если `model` есть в `cls.model_aliases`, заменяет `model` на соответствующий псевдоним.
-    3.  Если `model` не поддерживается (нет в `cls.get_models(**kwargs)`) и список моделей `cls.models` не пуст, выбрасывает исключение `ModelNotSupportedError`.
-    4.  Сохраняет `model` в `cls.last_model` и `debug.last_model`.
-    5.  Возвращает `model`.
-
-### `RaiseErrorMixin`
-
-Миксин для обработки ошибок.
-
-**Описание**:
-Этот миксин предоставляет статический метод `raise_error` для обработки ошибок, возвращаемых API. Он проверяет наличие ключей `error_message` или `error` в данных и выбрасывает соответствующее исключение.
-
-#### Методы класса `RaiseErrorMixin`
-
-*   `raise_error`
-
-    ```python
-    @staticmethod
-    def raise_error(data: dict, status: int = None):
-        if "error_message" in data:
-            raise ResponseError(data["error_message"])
-        elif "error" in data:
-            if isinstance(data["error"], str):
-                if status is not None:
-                    if status == 401:
-                        raise MissingAuthError(f"Error {status}: {data['error']}")
-                    elif status == 402:
-                        raise PaymentRequiredError(f"Error {status}: {data['error']}")
-                    raise ResponseError(f"Error {status}: {data['error']}")
-                raise ResponseError(data["error"])
-            elif isinstance(data["error"], bool):
-                raise ResponseError(data)
-            elif "code" in data["error"]:
-                raise ResponseError("\n".join(
-                    [e for e in [f'Error {data["error"]["code"]}: {data["error"]["message"]}', data["error"].get("failed_generation")] if e is not None]
-                ))
-            elif "message" in data["error"]:
-                raise ResponseError(data["error"]["message"])
-            else:
-                raise ResponseError(data["error"])
-        elif ("choices" not in data or not data["choices"]) and "data" not in data:
-            raise ResponseError(f"Invalid response: {json.dumps(data)}")
-    ```
-
-    **Назначение**:
-    Вызывает исключение на основе данных об ошибке.
-
-    **Параметры**:
-    - `data` (dict): Словарь с данными об ошибке.
-    - `status` (int, optional): HTTP-статус код. По умолчанию `None`.
-
-    **Вызывает исключения**:
-    - `ResponseError`: Если обнаружено сообщение об ошибке.
-    - `MissingAuthError`: Если статус код 401.
-    - `PaymentRequiredError`: Если статус код 402.
-
-    **Как работает функция**:
-
-    1.  Проверяет наличие ключа `"error_message"` в словаре `data`. Если он есть, выбрасывает исключение `ResponseError` с соответствующим сообщением.
-    2.  Если ключ `"error_message"` отсутствует, проверяет наличие ключа `"error"`.
-        - Если `"error"` является строкой, проверяет наличие `status` и, в зависимости от его значения (401 или 402), выбрасывает исключения `MissingAuthError` или `PaymentRequiredError` соответственно. Если `status` не равен 401 или 402, выбрасывает исключение `ResponseError` с сообщением об ошибке и кодом статуса.
-        - Если `"error"` является булевым значением, выбрасывает исключение `ResponseError` с данными об ошибке.
-        - Если `"error"` является словарем и содержит ключ `"code"`, формирует сообщение об ошибке из кода и сообщения об ошибке и выбрасывает исключение `ResponseError`.
-        - Если `"error"` является словарем и содержит ключ `"message"`, выбрасывает исключение `ResponseError` с сообщением об ошибке.
-        - В противном случае выбрасывает исключение `ResponseError` с данными об ошибке.
-    3.  Если ключи `"choices"` или `"data"` отсутствуют в словаре `data`, выбрасывает исключение `ResponseError` с сообщением о неверном ответе.
-
-### `AuthFileMixin`
-
-Миксин для работы с файлом аутентификации.
-
-**Описание**:
-Этот миксин предоставляет метод для получения пути к файлу кэша, используемому для хранения информации об аутентификации.
-
-#### Методы класса `AuthFileMixin`
-
-*   `get_cache_file`
-
-    ```python
-    @classmethod
-    def get_cache_file(cls) -> Path:
-        return Path(get_cookies_dir()) / f"auth_{cls.parent if hasattr(cls, 'parent') else cls.__name__}.json"
-    ```
-
-    **Назначение**:
-    Возвращает путь к файлу кэша.
-
-    **Возвращает**:
-    - `Path`: Путь к файлу кэша.
-
-    **Как работает функция**:
-
-    1.  Получает путь к директории cookies с помощью `get_cookies_dir()`.
-    2.  Формирует имя файла кэша, используя имя класса (`cls.__name__`) или имя родительского класса (`cls.parent`, если он существует).
-    3.  Возвращает объект `Path`, представляющий путь к файлу кэша.
-
-### `AsyncAuthedProvider`
-
-Предоставляет асинхронную аутентификацию для провайдеров, использующих генераторы.
-
-**Описание**:
-Этот класс расширяет `AsyncGeneratorProvider` и `AuthFileMixin` и предоставляет функциональность для асинхронной аутентификации провайдеров. Он использует файл кэша для хранения информации об аутентификации и предоставляет методы для аутентификации, создания запросов и управления файлом кэша.
-
-#### Методы класса `AsyncAuthedProvider`
-
-*   `on_auth_async`
-
-    ```python
-    @classmethod
-    async def on_auth_async(cls, **kwargs) -> AuthResult:
-       if "api_key" not in kwargs:
-           raise MissingAuthError(f"API key is required for {cls.__name__}")
-       return AuthResult()
-    ```
-
-    **Назначение**:
-    Асинхронно выполняет аутентификацию провайдера.
-
-    **Параметры**:
-    - `**kwargs`: Дополнительные именованные аргументы, содержащие параметры аутентификации.
-
-    **Возвращает**:
-    - `AuthResult`: Результат аутентификации.
-
-    **Вызывает исключения**:
-    - `MissingAuthError`: Если отсутствует ключ API.
-
-    **Как работает функция**:
-
-    1.  Проверяет наличие ключа `api_key` в `kwargs`. Если ключ отсутствует, выбрасывает исключение `MissingAuthError`.
-    2.  Возвращает объект `AuthResult`, представляющий результат аутентификации.
-
-*   `on_auth`
-
-    ```python
-    @classmethod
-    def on_auth(cls, **kwargs) -> AuthResult:
-        auth_result = cls.on_auth_async(**kwargs)
-        if hasattr(auth_result, "__aiter__"):
-            return to_sync_generator(auth_result)
-        return asyncio.run(auth_result)
-    ```
-
-    **Назначение**:
-    Синхронно выполняет аутентификацию провайдера.
-
-    **Параметры**:
-    - `**kwargs`: Дополнительные именованные аргументы, содержащие параметры аутентификации.
-
-    **Возвращает**:
-    - `AuthResult`: Результат аутентификации.
-
-    **Как работает функция**:
-
-    1.  Вызывает асинхронный метод `cls.on_auth_async` с переданными аргументами.
-    2.  Если результат является асинхронным итератором, преобразует его в синхронный генератор с помощью `to_sync_generator`.
-    3.  В противном случае запускает асинхронную операцию с помощью `asyncio.run` и возвращает результат.
-
-*   `get_create_function`
-
-    ```python
-    @classmethod
-    def get_create_function(cls) -> callable:
-        return cls.create_completion
-    ```
-
-    **Назначение**:
-    Возвращает функцию для создания завершений.
-
-    **Возвращает**:
-    - `callable`: Функция `create_completion`.
-
-    **Как работает функция**:
-
-    1.  Функция просто возвращает ссылку на метод `create_completion` класса.
-
-*   `get_async_create_function`
-
-    ```python
-    @classmethod
-    def get_async_create_function(cls) -> callable:
-        return cls.create_async_generator
-    ```
-
-    **Назначение**:
-    Возвращает асинхронную функцию для создания завершений.
-
-    **
+Предоставляет атрибуты и методы для управления моделями, поддерживаемыми провайдером.
+
+**Атрибуты**:
+- `default_model` (str): Модель, используемая по умолчанию.
+- `models` (list[str]): Список поддерживаемых моделей.
+- `model_aliases` (dict[str, str]): Словарь псевдонимов моделей.
+- `image_models` (list): Список моделей

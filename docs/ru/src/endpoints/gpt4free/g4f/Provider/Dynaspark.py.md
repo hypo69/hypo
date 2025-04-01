@@ -1,39 +1,42 @@
-# Модуль Dynaspark
+# Модуль для работы с Dynaspark API
+=======================================
+
+Модуль предоставляет асинхронный генератор для взаимодействия с Dynaspark API, позволяющий генерировать ответы на основе предоставленных сообщений, поддерживая передачу изображений.
 
 ## Обзор
 
-Модуль `Dynaspark` предоставляет асинхронный генератор для взаимодействия с API Dynaspark для получения ответов от AI моделей, включая модели Gemini. Он поддерживает передачу текстовых сообщений и изображений. Модуль предназначен для использования в асинхронных приложениях.
+Модуль `Dynaspark` является частью проекта `hypotez` и предназначен для работы с API Dynaspark. Он предоставляет возможность отправлять запросы к Dynaspark API для генерации ответов на основе текстовых сообщений и изображений. Модуль поддерживает асинхронную работу и потоковую передачу данных, что позволяет эффективно обрабатывать большие объемы информации.
 
-## Подробней
+## Подробнее
 
-Модуль реализует взаимодействие с Dynaspark API через асинхронные запросы. Он использует `aiohttp` для отправки запросов и `FormData` для передачи данных, включая текст и изображения. Поддерживается потоковая передача ответов от сервера.
+Модуль `Dynaspark` использует библиотеку `aiohttp` для выполнения асинхронных HTTP-запросов. Он формирует данные запроса в формате `FormData`, что позволяет передавать как текстовые данные, так и изображения. Модуль также включает функции для форматирования запросов и обработки ответов от API Dynaspark.
+Модуль предназначен для интеграции с другими частями проекта `hypotez`, где требуется взаимодействие с Dynaspark API для генерации контента на основе текстовых и графических данных.
 
 ## Классы
 
 ### `Dynaspark`
 
-**Описание**: Класс `Dynaspark` является асинхронным провайдером, который реализует взаимодействие с API Dynaspark. Он поддерживает текстовые и визуальные запросы к различным моделям Gemini.
+**Описание**: Класс `Dynaspark` предоставляет методы для взаимодействия с Dynaspark API. Он поддерживает асинхронную генерацию ответов на основе текстовых сообщений и изображений.
 
-**Принцип работы**:
-Класс использует `aiohttp.ClientSession` для отправки асинхронных HTTP-запросов к API Dynaspark. Основной метод `create_async_generator` формирует запрос с необходимыми данными (текстовые сообщения, изображения, параметры модели) и отправляет его на сервер. Ответ от сервера возвращается как асинхронный генератор, который выдает части ответа по мере их поступления.
+**Наследует**:
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
+- `ProviderModelMixin`: Предоставляет функциональность для работы с моделями.
 
-**Атрибуты класса**:
+**Аттрибуты**:
 - `url` (str): URL Dynaspark.
-- `login_url` (Optional[str]): URL для логина (в данном случае `None`).
+- `login_url` (str | None): URL для логина (в данном случае `None`).
 - `api_endpoint` (str): URL API Dynaspark для генерации ответов.
-- `working` (bool): Флаг, указывающий, что провайдер работает (в данном случае `True`).
-- `needs_auth` (bool): Флаг, указывающий необходимость аутентификации (в данном случае `False`).
-- `use_nodriver` (bool): Флаг, указывающий на использование драйвера (в данном случае `True`).
-- `supports_stream` (bool): Флаг, указывающий на поддержку потоковой передачи (в данном случае `True`).
-- `supports_system_message` (bool): Флаг, указывающий на поддержку системных сообщений (в данном случае `False`).
-- `supports_message_history` (bool): Флаг, указывающий на поддержку истории сообщений (в данном случае `False`).
+- `working` (bool): Указывает, работает ли провайдер (в данном случае `True`).
+- `needs_auth` (bool): Указывает, требуется ли аутентификация (в данном случае `False`).
+- `use_nodriver` (bool): Указывает, используется ли драйвер (в данном случае `True`).
+- `supports_stream` (bool): Указывает, поддерживает ли потоковую передачу (в данном случае `True`).
+- `supports_system_message` (bool): Указывает, поддерживает ли системные сообщения (в данном случае `False`).
+- `supports_message_history` (bool): Указывает, поддерживает ли историю сообщений (в данном случае `False`).
 - `default_model` (str): Модель, используемая по умолчанию (`gemini-1.5-flash`).
-- `default_vision_model` (str): Модель для обработки изображений по умолчанию.
-- `vision_models` (List[str]): Список поддерживаемых моделей для обработки изображений.
-- `models` (List[str]): Список поддерживаемых моделей.
-- `model_aliases` (Dict[str, str]): Словарь псевдонимов моделей.
-
-## Функции
+- `default_vision_model` (str): Модель для обработки изображений по умолчанию (`gemini-1.5-flash`).
+- `vision_models` (list[str]): Список поддерживаемых моделей для обработки изображений.
+- `models` (list[str]): Список поддерживаемых моделей.
+- `model_aliases` (dict[str, str]): Словарь с псевдонимами моделей.
 
 ### `create_async_generator`
 
@@ -47,76 +50,98 @@
         media: MediaListType = None,
         **kwargs
     ) -> AsyncResult:
-        """Создает асинхронный генератор для получения ответов от API Dynaspark.
+        """
+        Создает асинхронный генератор для получения ответов от Dynaspark API.
 
         Args:
-            model (str): Имя модели, используемой для генерации ответа.
-            messages (Messages): Список сообщений для отправки в API.
+            model (str): Имя используемой модели.
+            messages (Messages): Список сообщений для отправки.
             proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
-            media (MediaListType, optional): Список медиафайлов (изображений) для отправки в API. По умолчанию `None`.
+            media (MediaListType, optional): Список медиафайлов для отправки. По умолчанию `None`.
 
         Returns:
-            AsyncResult: Асинхронный генератор, выдающий части ответа от API.
-
-        Raises:
-            Exception: Если возникает ошибка при отправке запроса или обработке ответа.
-
-        Как работает функция:
-        1. **Формирование заголовков**: Функция создает заголовки HTTP-запроса, включая `accept`, `accept-language`, `origin`, `referer` и `user-agent`.
-        2. **Создание асинхронной сессии**: Создается асинхронная сессия `aiohttp.ClientSession` с заданными заголовками.
-        3. **Формирование данных формы**: Создается объект `FormData` для отправки данных в формате multipart/form-data. В форму добавляются текстовые сообщения (`user_input`) и имя модели (`ai_model`).
-        4. **Обработка медиафайлов**: Если переданы медиафайлы (изображения), функция извлекает первый файл, преобразует его в байты и добавляет в форму с соответствующим именем файла и типом содержимого.
-        5. **Отправка запроса**: Функция отправляет POST-запрос на `cls.api_endpoint` с данными формы и прокси-сервером (если указан).
-        6. **Обработка ответа**: После получения ответа функция проверяет статус код, преобразует текст ответа в JSON и извлекает поле `response`.
-        7. **Генерация результата**: Извлеченное значение `response` передается в генератор `yield`, который возвращает его вызывающей стороне.
-
-        Внутри функции происхоят следующие действия и преобразования:
-            - `create_headers` - Формирование заголовков HTTP-запроса.
-            |
-            - `create_session` - Создание асинхронной сессии для отправки запроса.
-            |
-            - `create_form_data` - Формирование данных формы, включая текстовые сообщения и медиафайлы.
-            |
-            - `send_request` - Отправка POST-запроса на API endpoint.
-            |
-            - `process_response` - Обработка ответа от сервера и извлечение данных.
-            |
-            - `yield_response` - Передача результата в генератор.
-
-        Примеры:
-            >>> model = "gemini-1.5-flash"
-            >>> messages = [{"role": "user", "content": "Hello, how are you?"}]
-            >>> async for response in Dynaspark.create_async_generator(model=model, messages=messages):
-            ...     print(response)
-            'I am doing well, thank you for asking. How can I help you today?'
-
-            >>> model = "gemini-1.5-flash"
-            >>> messages = [{"role": "user", "content": "Describe this image."}]
-            >>> media = [("image.jpg", b"image_bytes")]
-            >>> async for response in Dynaspark.create_async_generator(model=model, messages=messages, media=media):
-            ...     print(response)
-            'The image shows...'
+            AsyncResult: Асинхронный генератор, возвращающий ответы от API.
+        
         """
-        headers = {
-            'accept': '*/*',
-            'accept-language': 'en-US,en;q=0.9',
-            'origin': 'https://dynaspark.onrender.com',
-            'referer': 'https://dynaspark.onrender.com/',
-            'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
-            'x-requested-with': 'XMLHttpRequest'
-        }
-        async with ClientSession(headers=headers) as session:
-            form = FormData()
-            form.add_field('user_input', format_prompt(messages))
-            form.add_field('ai_model', model)
+```
 
-            if media is not None and len(media) > 0:
-                image, image_name = media[0]
-                image_bytes = to_bytes(image)
-                form.add_field('file', image_bytes, filename=image_name, content_type=is_accepted_format(image_bytes))
+**Назначение**: Создает асинхронный генератор для взаимодействия с Dynaspark API и получения ответов на основе предоставленных сообщений и медиафайлов.
 
-            async with session.post(f"{cls.api_endpoint}", data=form, proxy=proxy) as response:
-                await raise_for_status(response)
-                response_text = await response.text()
-                response_json = json.loads(response_text)
-                yield response_json["response"]
+**Параметры**:
+- `model` (str): Имя модели, которую следует использовать для генерации ответа.
+- `messages` (Messages): Список сообщений, которые будут отправлены в API для получения ответа.
+- `proxy` (str, optional): URL прокси-сервера, если необходимо использовать прокси для подключения к API. По умолчанию `None`.
+- `media` (MediaListType, optional): Список медиафайлов (например, изображений), которые будут отправлены в API вместе с сообщениями. По умолчанию `None`.
+- `**kwargs`: Дополнительные параметры, которые могут быть переданы в API.
+
+**Возвращает**:
+- `AsyncResult`: Асинхронный генератор, который возвращает ответы от API.
+
+**Как работает функция**:
+
+1. **Подготовка заголовков**: Функция начинает с подготовки заголовков HTTP-запроса, включая `accept`, `accept-language`, `origin`, `referer`, `user-agent` и `x-requested-with`. Эти заголовки используются для имитации запроса от веб-браузера.
+2. **Создание сессии `aiohttp`**: Далее, создается асинхронная сессия `aiohttp.ClientSession` с использованием подготовленных заголовков. Эта сессия будет использоваться для отправки HTTP-запроса к API Dynaspark.
+3. **Формирование данных запроса**: Создается объект `FormData` из библиотеки `aiohttp`, который будет содержать данные, отправляемые в запросе. В `FormData` добавляются следующие поля:
+   - `user_input`: Форматированный промпт, полученный из списка сообщений `messages` с помощью функции `format_prompt`.
+   - `ai_model`: Имя модели, указанное в параметре `model`.
+   - `file`: Если предоставлены медиафайлы (параметр `media` не `None` и содержит хотя бы один элемент), первый медиафайл преобразуется в байты с помощью функции `to_bytes` и добавляется в `FormData` с указанием имени файла и типа контента.
+4. **Отправка запроса и обработка ответа**: Используя асинхронную сессию, отправляется POST-запрос к API Dynaspark по адресу `cls.api_endpoint`. В запросе передаются данные `FormData` и, если указано, прокси-сервер.
+5. **Обработка ответа**: После получения ответа от API, функция проверяет статус ответа с помощью `raise_for_status`, чтобы убедиться, что запрос был успешным. Затем извлекается текстовое содержимое ответа и преобразуется в JSON-формат.
+6. **Генерация ответа**: Из JSON-ответа извлекается поле `response`, которое содержит сгенерированный ответ от API. Этот ответ возвращается как значение асинхронного генератора с помощью `yield`.
+
+**Внутренние функции**:
+- Внутри функции `create_async_generator` нет внутренних функций.
+
+**Flowchart**:
+
+```
+    Начало
+      ↓
+    [Подготовка заголовков]
+      ↓
+    [Создание асинхронной сессии aiohttp]
+      ↓
+    [Формирование данных запроса FormData]
+      ↓
+    [Отправка POST-запроса к API Dynaspark]
+      ↓
+    [Проверка статуса ответа]
+      ↓
+    [Извлечение текстового содержимого ответа]
+      ↓
+    [Преобразование ответа в JSON-формат]
+      ↓
+    [Извлечение поля 'response' из JSON]
+      ↓
+    [Генерация ответа через yield]
+      ↓
+    Конец
+```
+
+**Примеры**:
+
+```python
+# Пример 1: Создание асинхронного генератора с текстовым сообщением и моделью
+model = "gemini-1.5-flash"
+messages = [{"role": "user", "content": "Hello, how are you?"}]
+generator = Dynaspark.create_async_generator(model=model, messages=messages)
+
+# Пример 2: Создание асинхронного генератора с текстовым сообщением, моделью и прокси
+model = "gemini-1.5-flash"
+messages = [{"role": "user", "content": "Hello, how are you?"}]
+proxy = "http://your-proxy-server:8080"
+generator = Dynaspark.create_async_generator(model=model, messages=messages, proxy=proxy)
+
+# Пример 3: Создание асинхронного генератора с текстовым сообщением, моделью и изображением
+from io import BytesIO
+from PIL import Image
+
+model = "gemini-1.5-flash"
+messages = [{"role": "user", "content": "Describe this image."}]
+image = Image.new("RGB", (100, 100), color="red")
+image_bytes = BytesIO()
+image.save(image_bytes, format="PNG")
+image_bytes = image_bytes.getvalue()
+media = [(image_bytes, "image.png")]
+generator = Dynaspark.create_async_generator(model=model, messages=messages, media=media)
+```

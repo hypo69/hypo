@@ -1,311 +1,171 @@
-# Документация для `base_provider.py`
+# Документация модуля `base_provider.py`
 
 ## Обзор
 
-Модуль `base_provider.py` определяет базовые классы и типы, используемые для взаимодействия с различными провайдерами в проекте `hypotez`. Он предоставляет основу для создания и управления провайдерами, обработки запросов и ответов, а также для поддержки потоковой передачи данных.
+Модуль `base_provider.py` предназначен для определения базового класса провайдера, который служит основой для создания различных провайдеров, используемых в проекте `hypotez` для взаимодействия с различными сервисами. Модуль также содержит импорты необходимых типов и классов для работы с провайдерами и их ответами.
 
-## Содержание
+## Подробней
 
-- [Обзор](#обзор)
-- [Подробнее](#подробнее)
-- [Классы](#классы)
-    - [`BaseProvider`](#BaseProvider)
-    - [`AsyncProvider`](#AsyncProvider)
-    - [`ProviderUtils`](#ProviderUtils)
-- [Импортированные модули](#Импортированные-модули)
-
-## Подробнее
-
-Этот модуль служит основой для реализации различных провайдеров, обеспечивая единообразный интерфейс для взаимодействия с ними. Он определяет абстрактные классы, которые должны быть реализованы конкретными провайдерами, а также вспомогательные функции и классы для упрощения разработки.
-
-## Импортированные модули
-
-В данном файле импортируются следующие модули:
-
-- `..providers.base_provider`: Импортирует базовые классы провайдеров, определенные в родительском каталоге.
-- `..providers.types`: Импортирует типы данных, используемые для работы с провайдерами, такие как `Streaming`.
-- `..providers.response`: Импортирует классы для представления ответов от провайдеров, такие как `BaseConversation`, `Sources`, `FinishReason`.
-- `.helper`: Импортирует вспомогательные функции из локального модуля `helper`, такие как `get_cookies` и `format_prompt`.
+Этот модуль определяет абстрактный класс `AbstractProvider`, от которого наследуются конкретные реализации провайдеров. Он задает структуру и общие методы, которые должны быть реализованы в каждом провайдере. Это позволяет обеспечить единообразие и упростить добавление новых провайдеров.
 
 ## Классы
 
-### `BaseProvider`
+### `AbstractProvider`
 
-**Описание**: Базовый класс для всех провайдеров.
+**Описание**: Абстрактный базовый класс для всех провайдеров.
 
-**Принцип работы**: Этот класс является абстрактным и предоставляет общую структуру для провайдеров. Он определяет основные методы, которые должны быть реализованы в дочерних классах, такие как `create_completion`, `create_conversation` и другие.
+**Принцип работы**:
+Класс `AbstractProvider` определяет интерфейс, которому должны соответствовать все провайдеры. Он содержит абстрактные методы, такие как `_create_completion` и `conversation`, которые должны быть реализованы в дочерних классах.
 
-**Методы**:
-
-- `__init__(self, **kwargs: Any)`:
-   ```python
-   def __init__(self, **kwargs: Any):
-        """Инициализирует экземпляр класса BaseProvider.
-
-        Args:
-            **kwargs (Any): Произвольные аргументы ключевых слов.
-        """
-   ```
-
-- `create_completion(self, prompt: str, stream: bool = False, **kwargs: Any) -> str | Generator[str, None, None] | None`:
-   ```python
-   def create_completion(self, prompt: str, stream: bool = False, **kwargs: Any) -> str | Generator[str, None, None] | None:
-        """Создает завершение на основе предоставленного запроса.
-
-        Args:
-            prompt (str): Запрос для создания завершения.
-            stream (bool, optional): Если `True`, возвращает генератор для потоковой передачи данных. По умолчанию `False`.
-            **kwargs (Any): Дополнительные аргументы для создания завершения.
-
-        Returns:
-            str | Generator[str, None, None] | None: Завершенный текст или генератор потока текста, или None в случае ошибки.
-        """
-   ```
-
-- `create_conversation(self, messages: list[dict[str, str]], stream: bool = False, **kwargs: Any) -> BaseConversation | None`:
-   ```python
-   def create_conversation(self, messages: list[dict[str, str]], stream: bool = False, **kwargs: Any) -> BaseConversation | None:
-        """Создает разговор на основе предоставленных сообщений.
-
-        Args:
-            messages (list[dict[str, str]]): Список сообщений для создания разговора.
-            stream (bool, optional): Если `True`, возвращает генератор для потоковой передачи данных. По умолчанию `False`.
-            **kwargs (Any): Дополнительные аргументы для создания разговора.
-
-        Returns:
-            BaseConversation | None: Объект разговора или None в случае ошибки.
-        """
-   ```
-
-- `supports_streaming(self) -> bool`:
-   ```python
-   def supports_streaming(self) -> bool:
-        """Проверяет, поддерживает ли провайдер потоковую передачу данных.
-
-        Returns:
-            bool: `True`, если провайдер поддерживает потоковую передачу данных, `False` в противном случае.
-        """
-   ```
-
-- `get_sources(self, response: str, prompt: str, **kwargs: Any) -> Sources | None`:
-   ```python
-   def get_sources(self, response: str, prompt: str, **kwargs: Any) -> Sources | None:
-        """Извлекает источники для предоставленного ответа.
-
-        Args:
-            response (str): Ответ для извлечения источников.
-            prompt (str): Исходный запрос.
-            **kwargs (Any): Дополнительные аргументы для извлечения источников.
-
-        Returns:
-            Sources | None: Объект источников или None, если источники не найдены.
-        """
-   ```
-
-- `report(self, data: dict[str, str]) -> None`:
-   ```python
-   def report(self, data: dict[str, str]) -> None:
-        """Отправляет отчет о данных.
-
-        Args:
-            data (dict[str, str]): Данные для отправки в отчете.
-        """
-   ```
-
-- `convert_to_base_class(self, response: str, **kwargs: Any) -> BaseConversation`:
-   ```python
-   def convert_to_base_class(self, response: str, **kwargs: Any) -> BaseConversation:
-        """Преобразует ответ в базовый класс разговора.
-
-        Args:
-            response (str): Ответ для преобразования.
-            **kwargs (Any): Дополнительные аргументы для преобразования.
-
-        Returns:
-            BaseConversation: Объект BaseConversation.
-        """
-   ```
-
-- `process_message(self, message: str) -> str`:
-   ```python
-   def process_message(self, message: str) -> str:
-        """Обрабатывает сообщение.
-
-        Args:
-            message (str): Сообщение для обработки.
-
-        Returns:
-            str: Обработанное сообщение.
-        """
-   ```
-
-- `get_cost(self, model: str, prompt_tokens: int, completion_tokens: int) -> float | None`:
-   ```python
-   def get_cost(self, model: str, prompt_tokens: int, completion_tokens: int) -> float | None:
-        """Рассчитывает стоимость использования модели.
-
-        Args:
-            model (str): Название модели.
-            prompt_tokens (int): Количество токенов в запросе.
-            completion_tokens (int): Количество токенов в завершении.
-
-        Returns:
-            float | None: Стоимость использования модели или None, если стоимость не может быть рассчитана.
-        """
-   ```
-
-- `check_response(self, response: str | None, prompt: str | None = None) -> None`:
-   ```python
-   def check_response(self, response: str | None, prompt: str | None = None) -> None:
-        """Проверяет ответ на наличие ошибок.
-
-        Args:
-            response (str | None): Ответ для проверки.
-            prompt (str | None, optional): Исходный запрос. По умолчанию None.
-        """
-   ```
-
-- `adapt_model_name(self, model: str) -> str`:
-   ```python
-   def adapt_model_name(self, model: str) -> str:
-        """Адаптирует название модели к формату, требуемому провайдером.
-
-        Args:
-            model (str): Название модели для адаптации.
-
-        Returns:
-            str: Адаптированное название модели.
-        """
-   ```
-
-- `to_system(self) -> dict[str, str]`:
-   ```python
-   def to_system(self) -> dict[str, str]:
-        """Преобразует настройки провайдера в формат системного сообщения.
-
-        Returns:
-            dict[str, str]: Словарь с настройками провайдера.
-        """
-   ```
-
-- `to_user(self, messages: list[dict[str, str]]) -> list[dict[str, str]]`:
-   ```python
-   def to_user(self, messages: list[dict[str, str]]) -> list[dict[str, str]]:
-        """Преобразует список сообщений в формат, требуемый провайдером.
-
-        Args:
-            messages (list[dict[str, str]]): Список сообщений для преобразования.
-
-        Returns:
-            list[dict[str, str]]: Преобразованный список сообщений.
-        """
-   ```
-
-- `get_token_price(self, model: str, is_input: bool) -> float`:
-   ```python
-   def get_token_price(self, model: str, is_input: bool) -> float:
-        """Получает цену токена для указанной модели.
-
-        Args:
-            model (str): Название модели.
-            is_input (bool): Определяет, является ли токен входным или выходным.
-
-        Returns:
-            float: Цена токена.
-        """
-   ```
-
-- `max_model_tokens(self, model: str) -> int | None`:
-   ```python
-   def max_model_tokens(self, model: str) -> int | None:
-        """Возвращает максимальное количество токенов, поддерживаемых моделью.
-
-        Args:
-            model (str): Название модели.
-
-        Returns:
-            int | None: Максимальное количество токенов или None, если информация недоступна.
-        """
-   ```
-### `AsyncProvider`
-
-**Описание**: Асинхронный базовый класс для всех провайдеров.
-
-**Принцип работы**: Этот класс является асинхронной версией `BaseProvider` и предоставляет асинхронные методы для взаимодействия с провайдерами.
+**Аттрибуты**:
+- `name` (str): Имя провайдера.
+- `supports_stream` (bool): Указывает, поддерживает ли провайдер потоковую передачу данных.
+- `needs_auth` (bool): Указывает, требуется ли аутентификация для использования провайдера.
+- `working` (bool): Указывает, работает ли провайдер в данный момент.
 
 **Методы**:
-
-- `__init__(self, **kwargs: Any)`:
-   ```python
-   def __init__(self, **kwargs: Any):
-        """Инициализирует экземпляр класса AsyncProvider.
-
-        Args:
-            **kwargs (Any): Произвольные аргументы ключевых слов.
-        """
-   ```
-
-- `create_completion(self, prompt: str, stream: bool = False, **kwargs: Any) -> str | Generator[str, None, None] | None`:
-   ```python
-   def create_completion(self, prompt: str, stream: bool = False, **kwargs: Any) -> str | Generator[str, None, None] | None:
-        """Создает завершение на основе предоставленного запроса.
-
-        Args:
-            prompt (str): Запрос для создания завершения.
-            stream (bool, optional): Если `True`, возвращает генератор для потоковой передачи данных. По умолчанию `False`.
-            **kwargs (Any): Дополнительные аргументы для создания завершения.
-
-        Returns:
-            str | Generator[str, None, None] | None: Завершенный текст или генератор потока текста, или None в случае ошибки.
-        """
-   ```
-
-- `create_conversation(self, messages: list[dict[str, str]], stream: bool = False, **kwargs: Any) -> BaseConversation | None`:
-   ```python
-   def create_conversation(self, messages: list[dict[str, str]], stream: bool = False, **kwargs: Any) -> BaseConversation | None:
-        """Создает разговор на основе предоставленных сообщений.
-
-        Args:
-            messages (list[dict[str, str]]): Список сообщений для создания разговора.
-            stream (bool, optional): Если `True`, возвращает генератор для потоковой передачи данных. По умолчанию `False`.
-            **kwargs (Any): Дополнительные аргументы для создания разговора.
-
-        Returns:
-            BaseConversation | None: Объект разговора или None в случае ошибки.
-        """
-   ```
+- `_create_completion(prompt: str, stream: bool, conversation: BaseConversation, **kwargs) -> str | Generator[str, None, None] | None`: Абстрактный метод для создания завершения.
+- `conversation(prompt: str, stream: bool = False, **kwargs) -> BaseConversation`: Метод для создания и обработки разговора с провайдером.
 
 ### `ProviderUtils`
 
-**Описание**:  Это класс-контейнер, предоставляющий статические методы для работы с провайдерами.
+**Описание**: Класс, предоставляющий утилиты для работы с провайдерами.
 
-**Принцип работы**:  Он включает в себя методы для выполнения общих задач, таких как получение cookie, форматирование запросов и другие вспомогательные операции.
+**Принцип работы**:
+Класс `ProviderUtils` содержит методы для логирования ответов провайдеров и обработки ошибок. Он используется для упрощения процесса отладки и мониторинга работы провайдеров.
 
 **Методы**:
+- `log_response(text: str)`: Метод для логирования ответа провайдера.
 
-- `get_cookies(url: str) -> dict[str, str]`:
-   ```python
-   def get_cookies(url: str) -> dict[str, str]:
-        """Получает куки для указанного URL.
+## Функции
 
-        Args:
-            url (str): URL для получения куки.
+### `format_prompt`
 
-        Returns:
-            dict[str, str]: Словарь с куки.
-        """
-   ```
+```python
+def format_prompt(prompt: str, model: str) -> str:
+    """Форматирует промпт для использования с определенной моделью.
 
-- `format_prompt(prompt: str, model: str) -> str`:
-   ```python
-   def format_prompt(prompt: str, model: str) -> str:
-        """Форматирует запрос для указанной модели.
+    Args:
+        prompt (str): Исходный промпт.
+        model (str): Имя модели.
 
-        Args:
-            prompt (str): Запрос для форматирования.
-            model (str): Название модели.
+    Returns:
+        str: Отформатированный промпт.
 
-        Returns:
-            str: Отформатированный запрос.
-        """
-   ```
+    Raises:
+        Exception: Если модель не поддерживается.
+
+    """
+```
+
+**Назначение**: Форматирует промпт для использования с определенной моделью.
+
+**Параметры**:
+- `prompt` (str): Исходный промпт.
+- `model` (str): Имя модели.
+
+**Возвращает**:
+- `str`: Отформатированный промпт.
+
+**Вызывает исключения**:
+- `Exception`: Если модель не поддерживается.
+
+**Как работает функция**:
+1. Функция принимает на вход исходный промпт и имя модели.
+2. Если модель равна "llama2", функция добавляет к промпту специальные токены `<s>[INST] ` и ` </s>`.
+3. Если модель не поддерживается, функция вызывает исключение.
+4. В конце функция возвращает отформатированный промпт.
+
+```
+Форматирование промпта
+│
+prompt, model
+│
+Проверка модели (llama2)
+│
+Добавление токенов (если llama2)
+│
+Возврат отформатированного промпта
+│
+Конец
+```
+
+**Примеры**:
+
+```python
+prompt = "Hello, how are you?"
+model = "llama2"
+formatted_prompt = format_prompt(prompt, model)
+print(formatted_prompt)  # Вывод: <s>[INST] Hello, how are you? </s>
+
+prompt = "Tell me a joke."
+model = "gemini"
+try:
+    formatted_prompt = format_prompt(prompt, model)
+except Exception as ex:
+    print(f"Error: {ex}")  # Вывод: Error: Model not supported
+```
+
+### `get_cookies`
+
+```python
+def get_cookies(url: str, selenium: bool = False) -> dict[str, str]:
+    """Получает cookies для указанного URL.
+
+    Args:
+        url (str): URL для получения cookies.
+        selenium (bool): Использовать Selenium для получения cookies.
+
+    Returns:
+        dict[str, str]: Словарь cookies.
+
+    Raises:
+        Exception: Если не удалось получить cookies.
+
+    """
+```
+
+**Назначение**: Получает cookies для указанного URL.
+
+**Параметры**:
+- `url` (str): URL для получения cookies.
+- `selenium` (bool): Использовать Selenium для получения cookies.
+
+**Возвращает**:
+- `dict[str, str]`: Словарь cookies.
+
+**Вызывает исключения**:
+- `Exception`: Если не удалось получить cookies.
+
+**Как работает функция**:
+1. Функция принимает на вход URL и флаг, указывающий, использовать ли Selenium для получения cookies.
+2. Если `selenium` равен `True`, функция использует Selenium для получения cookies.
+3. Если `selenium` равен `False`, функция пытается получить cookies без использования Selenium.
+4. В случае успеха функция возвращает словарь cookies.
+5. Если не удалось получить cookies, функция вызывает исключение.
+
+```
+Получение cookies
+│
+url, selenium
+│
+Проверка selenium
+│
+Получение cookies (с Selenium или без)
+│
+Возврат словаря cookies
+│
+Конец
+```
+
+**Примеры**:
+
+```python
+url = "https://example.com"
+cookies = get_cookies(url)
+print(cookies)  # Вывод: {'cookie1': 'value1', 'cookie2': 'value2', ...}
+
+url = "https://example.com"
+selenium = True
+cookies = get_cookies(url, selenium)
+print(cookies)  # Вывод: {'cookie1': 'value1', 'cookie2': 'value2', ...}

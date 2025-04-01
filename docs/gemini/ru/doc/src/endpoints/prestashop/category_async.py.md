@@ -1,12 +1,12 @@
-# Модуль `src.endpoints.prestashop.category_async`
+# Модуль `category_async`
 
 ## Обзор
 
-Модуль предоставляет асинхронный класс `PrestaCategoryAsync` для управления категориями в PrestaShop. Он позволяет получать список родительских категорий для заданной категории асинхронно.
+Модуль `category_async` предоставляет асинхронный класс `PrestaCategoryAsync` для управления категориями в PrestaShop. Он позволяет асинхронно получать родительские категории для заданной категории.
 
-## Подробней
+## Подробнее
 
-Этот модуль является частью проекта `hypotez` и предназначен для работы с API PrestaShop. Он использует асинхронные запросы для получения информации о категориях, что позволяет повысить производительность при работе с большим количеством данных.
+Модуль предназначен для асинхронного взаимодействия с API PrestaShop для выполнения операций, связанных с категориями. Он использует асинхронные запросы для повышения производительности и эффективности при работе с большим количеством категорий. Расположен в `/src/endpoints/prestashop/category_async.py` и является частью подсистемы для интеграции с PrestaShop.
 
 ## Классы
 
@@ -14,68 +14,114 @@
 
 **Описание**: Асинхронный класс для управления категориями в PrestaShop.
 
-**Как работает класс**:
-Класс `PrestaCategoryAsync` наследуется от `PrestaShopAsync` и предоставляет методы для работы с категориями в PrestaShop. При инициализации класса требуется передать учетные данные (либо в виде словаря, либо как отдельные параметры `api_domain` и `api_key`). Класс позволяет асинхронно получать список родительских категорий для заданной категории.
+**Наследует**:
+- `PrestaShopAsync`: Наследует методы для асинхронного взаимодействия с API PrestaShop.
+
+**Атрибуты**:
+- `api_domain` (str): Домен API PrestaShop.
+- `api_key` (str): Ключ API PrestaShop.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр класса `PrestaCategoryAsync`.
-- `get_parent_categories_list_async`: Асинхронно получает список родительских категорий для заданной категории.
+- `__init__(credentials: Optional[Union[dict, SimpleNamespace]] = None, api_domain: Optional[str] = None, api_key: Optional[str] = None)`: Инициализирует экземпляр класса `PrestaCategoryAsync`.
+- `get_parent_categories_list_async(self, id_category: int|str, additional_categories_list: Optional[List[int] | int] = []) -> List[int]`: Асинхронно получает список родительских категорий для заданной категории.
 
 #### `__init__`
 
 ```python
 def __init__(self, credentials: Optional[Union[dict, SimpleNamespace]] = None, api_domain: Optional[str] = None, api_key: Optional[str] = None):
-    """! Async class for managing categories in PrestaShop."""
+    """
+    Инициализирует экземпляр класса `PrestaCategoryAsync`.
+
+    Args:
+        credentials (Optional[Union[dict, SimpleNamespace]], optional): Словарь или `SimpleNamespace` с учетными данными API. По умолчанию `None`.
+        api_domain (Optional[str], optional): Домен API PrestaShop. По умолчанию `None`.
+        api_key (Optional[str], optional): Ключ API PrestaShop. По умолчанию `None`.
+
+    Raises:
+        ValueError: Если `api_domain` или `api_key` не предоставлены.
+    """
     ...
 ```
 
-**Описание**: Инициализирует экземпляр класса `PrestaCategoryAsync`.
+**Как работает класс**:
 
-**Как работает функция**:
-Метод `__init__` инициализирует класс `PrestaCategoryAsync`, проверяя наличие переданных учетных данных. Учетные данные могут быть переданы либо в виде словаря `credentials`, либо как отдельные параметры `api_domain` и `api_key`. Если учетные данные не переданы или переданы не полностью, выбрасывается исключение `ValueError`.
-
-**Параметры**:
-- `credentials` (Optional[Union[dict, SimpleNamespace]], optional): Словарь или объект `SimpleNamespace`, содержащий учетные данные (api_domain и api_key). По умолчанию `None`.
-- `api_domain` (Optional[str], optional): Домен API PrestaShop. По умолчанию `None`.
-- `api_key` (Optional[str], optional): Ключ API PrestaShop. По умолчанию `None`.
-
-**Вызывает исключения**:
-- `ValueError`: Если не переданы `api_domain` и `api_key`.
+1.  Инициализация экземпляра класса `PrestaCategoryAsync`.
+2.  Извлекает `api_domain` и `api_key` из `credentials`, если они предоставлены.
+3.  Проверяет, что `api_domain` и `api_key` не пусты. В противном случае вызывает исключение `ValueError`.
+4.  Вызывает конструктор родительского класса `PrestaShopAsync` с `api_domain` и `api_key`.
 
 #### `get_parent_categories_list_async`
 
 ```python
 async def get_parent_categories_list_async(self, id_category: int|str , additional_categories_list: Optional[List[int] | int] = []) -> List[int]:
-    """! Asynchronously retrieve parent categories for a given category."""
+    """
+    Асинхронно получает родительские категории для заданной категории.
+
+    Args:
+        id_category (int | str): ID категории, для которой нужно получить родительские категории.
+        additional_categories_list (Optional[List[int] | int], optional): Список дополнительных категорий для обработки. По умолчанию пустой список `[]`.
+
+    Returns:
+        List[int]: Список ID родительских категорий.
+
+    Raises:
+        Exception: Если возникает ошибка при чтении категории.
+    """
     ...
 ```
 
-**Описание**: Асинхронно получает список родительских категорий для заданной категории.
-
 **Как работает функция**:
 
-Функция асинхронно извлекает список родительских категорий для указанной категории в PrestaShop.
+1.  Преобразует `id_category` в целое число, если это возможно. Если преобразование не удается, записывает ошибку в лог.
+2.  Преобразует `additional_categories_list` в список, если это не список.
+3.  Добавляет `id_category` в `additional_categories_list`.
+4.  Инициализирует пустой список `out_categories_list` для хранения ID родительских категорий.
+5.  Перебирает категории в `additional_categories_list`.
+6.  Для каждой категории пытается асинхронно прочитать информацию о родительской категории с помощью метода `read` родительского класса `PrestaShopAsync`.
+7.  Если чтение не удается, записывает ошибку в лог и переходит к следующей категории.
+8.  Если родительская категория <= 2, возвращает `out_categories_list`, так как это верхний уровень дерева категорий (дерево категорий начинается с 2).
+9.  Добавляет ID родительской категории в `out_categories_list`.
+10. Возвращает `out_categories_list`.
 
-Внутри функции происходят следующие действия и преобразования:
-A. Преобразует `id_category` в целое число, если это возможно. Логирует ошибку, если формат недопустимый.
-|
-B. Преобразует `additional_categories_list` в список, если это необходимо, и добавляет в него `id_category`.
-|
-C. Итерируется по списку категорий (`additional_categories_list`) и для каждой категории пытается получить информацию о родительской категории через API PrestaShop.
-|
-D. Если родительская категория меньше или равна 2, функция возвращает накопленный список родительских категорий (`out_categories_list`), так как дерево категорий начинается с 2.
-|
-E. Добавляет родительскую категорию в `out_categories_list`.
+**ASCII схема работы функции**:
 
-**Параметры**:
-- `id_category` (int|str): Идентификатор категории, для которой необходимо получить список родительских категорий.
-- `additional_categories_list` (Optional[List[int] | int], optional): Дополнительный список категорий для обработки. По умолчанию `[]`.
+```
+Начало --> Преобразование id_category в int --> Преобразование additional_categories_list в list --> Добавление id_category в additional_categories_list --> Инициализация out_categories_list -->
+    Цикл по категориям в additional_categories_list:
+        --> Асинхронное чтение родительской категории через API PrestaShop
+        --> Если ошибка при чтении: Лог ошибки --> Следующая категория
+        --> Если родительская категория <= 2: Возврат out_categories_list
+        --> Добавление ID родительской категории в out_categories_list
+    Конец цикла
+--> Возврат out_categories_list
+```
 
-**Возвращает**:
-- `List[int]`: Список идентификаторов родительских категорий.
+**Примеры**:
 
-**Вызывает исключения**:
-- `Exception`: Логируется в случае недопустимого формата категории или ошибки при чтении данных из API PrestaShop.
+```python
+# Пример использования класса PrestaCategoryAsync и метода get_parent_categories_list_async
+import asyncio
+from types import SimpleNamespace
+
+async def main():
+    # Предположим, что у вас есть учетные данные
+    credentials = SimpleNamespace(api_domain='your_api_domain', api_key='your_api_key')
+    
+    # Создаем экземпляр класса PrestaCategoryAsync
+    category_manager = PrestaCategoryAsync(credentials=credentials)
+    
+    # ID категории, для которой нужно получить родительские категории
+    category_id = 3
+    
+    # Получаем список родительских категорий
+    parent_categories = await category_manager.get_parent_categories_list_async(category_id)
+    
+    # Выводим список родительских категорий
+    print(f"Parent categories for category {category_id}: {parent_categories}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
 
 ## Функции
 
@@ -87,12 +133,4 @@ async def main():
     ...
 ```
 
-**Описание**:
-Функция `main` является асинхронной функцией, предназначенной для демонстрации или тестирования функциональности модуля.
-
-**Как работает функция**:
-Функция `main` в данном коде не содержит конкретной реализации (обозначена как `...`), но обычно в асинхронных программах она служит точкой входа для запуска асинхронных задач и координации их выполнения. В контексте данного модуля, она могла бы использоваться для демонстрации работы класса `PrestaCategoryAsync`, например, для получения списка родительских категорий для определенной категории в PrestaShop.
-
-## Примеры
-
-Примеры использования класса `PrestaCategoryAsync` и его методов могут быть добавлены здесь.
+Функция `main` является асинхронной функцией, предназначенной для демонстрации или тестирования функциональности модуля. В текущей реализации она не содержит конкретной логики (`...`).

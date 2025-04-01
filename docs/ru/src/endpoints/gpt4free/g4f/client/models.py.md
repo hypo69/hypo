@@ -1,32 +1,40 @@
-# Модуль для управления моделями клиентов
+# Модуль `models.py`
 
 ## Обзор
 
-Модуль `ClientModels` предоставляет класс для управления и получения информации о моделях, доступных через различных провайдеров, таких как языковые модели, модели для работы с изображениями и видео. Он предназначен для упрощения доступа к моделям и их конфигурациям, а также для работы с различными API-ключами.
+Модуль `models.py` предназначен для управления моделями, используемыми в клиентской части проекта. Он предоставляет класс `ClientModels`, который позволяет получать, фильтровать и управлять списком доступных моделей, включая текстовые, визуальные и мультимедийные модели.
 
-## Подробней
+## Подробнее
 
-Этот модуль является частью системы `gpt4free` в проекте `hypotez` и отвечает за организацию взаимодействия с различными поставщиками моделей (провайдерами). Он предоставляет методы для получения списка доступных моделей, моделей компьютерного зрения и мультимедийных моделей.
+Этот модуль обеспечивает абстракцию над различными типами моделей и провайдерами, позволяя клиентскому коду легко взаимодействовать с ними без необходимости знать детали реализации каждого провайдера. Он использует `ModelUtils` и `ProviderUtils` для конвертации и получения информации о моделях и провайдерах.
 
 ## Классы
 
 ### `ClientModels`
 
-**Описание**: Класс `ClientModels` предназначен для управления моделями, предоставляемыми различными провайдерами. Он инициализируется с клиентом, провайдером и медиа-провайдером, и предоставляет методы для получения моделей по имени, получения всех доступных моделей, моделей компьютерного зрения, изображений и видео.
+**Описание**: Класс `ClientModels` управляет списком доступных моделей, предоставляя методы для получения моделей различных типов от разных провайдеров.
 
 **Принцип работы**:
-Класс `ClientModels` агрегирует информацию о моделях от различных провайдеров. В конструкторе класса инициализируются клиент, основной провайдер моделей и провайдер мультимедийных моделей. Методы класса позволяют получать модели по имени, списки всех моделей, а также специализированные списки моделей для работы с изображениями и видео. Класс использует утилиты `ModelUtils` и `ProviderUtils` для конвертации и получения информации о моделях и провайдерах.
+Класс инициализируется с клиентским объектом и опциональными провайдерами для текстовых и мультимедийных моделей. Он предоставляет методы для получения списка всех моделей, визуальных моделей, а также мультимедийных моделей (изображений и видео) от указанных провайдеров.
+
+**Атрибуты**:
+- `client`: Клиентский объект, используемый для выполнения запросов к API.
+- `provider` (Optional[`ProviderType`]): Провайдер текстовых моделей. По умолчанию `None`.
+- `media_provider` (Optional[`ProviderType`]): Провайдер мультимедийных моделей. По умолчанию `None`.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр класса `ClientModels`.
-- `get`: Возвращает провайдера по имени модели или провайдера.
-- `get_all`: Возвращает список всех доступных моделей для данного провайдера.
-- `get_vision`: Возвращает список моделей, поддерживающих компьютерное зрение.
-- `get_media`: Возвращает список мультимедийных моделей для данного провайдера.
-- `get_image`: Возвращает список моделей для работы с изображениями.
-- `get_video`: Возвращает список моделей для работы с видео.
 
-#### `__init__`
+- `__init__(self, client, provider: ProviderType = None, media_provider: ProviderType = None)`
+- `get(self, name, default=None) -> ProviderType`
+- `get_all(self, api_key: str = None, **kwargs) -> list[str]`
+- `get_vision(self, **kwargs) -> list[str]`
+- `get_media(self, api_key: str = None, **kwargs) -> list[str]`
+- `get_image(self, **kwargs) -> list[str]`
+- `get_video(self, **kwargs) -> list[str]`
+
+## Функции
+
+### `__init__`
 
 ```python
 def __init__(self, client, provider: ProviderType = None, media_provider: ProviderType = None):
@@ -34,232 +42,286 @@ def __init__(self, client, provider: ProviderType = None, media_provider: Provid
     Инициализирует экземпляр класса `ClientModels`.
 
     Args:
-        client: Клиент, используемый для выполнения запросов.
-        provider (ProviderType, optional): Основной провайдер моделей. По умолчанию `None`.
-        media_provider (ProviderType, optional): Провайдер мультимедийных моделей. По умолчанию `None`.
+        client: Клиентский объект, используемый для выполнения запросов к API.
+        provider (Optional[ProviderType], optional): Провайдер текстовых моделей. По умолчанию `None`.
+        media_provider (Optional[ProviderType], optional): Провайдер мультимедийных моделей. По умолчанию `None`.
     """
 ```
 
+**Назначение**: Инициализирует объект `ClientModels` с указанным клиентом и провайдерами.
+
 **Параметры**:
-- `client`: Клиент, используемый для выполнения запросов к провайдерам.
-- `provider` (ProviderType, optional): Основной провайдер моделей. Используется для текстовых и других основных задач. По умолчанию `None`.
-- `media_provider` (ProviderType, optional): Провайдер мультимедийных моделей. Используется для работы с изображениями и видео. По умолчанию `None`.
+- `client`: Клиентский объект, используемый для выполнения запросов к API.
+- `provider` (Optional[`ProviderType`]): Провайдер текстовых моделей. По умолчанию `None`.
+- `media_provider` (Optional[`ProviderType`]): Провайдер мультимедийных моделей. По умолчанию `None`.
 
-**Как работает метод**:
-1. Метод `__init__` инициализирует класс `ClientModels`, сохраняя ссылки на клиент, основного провайдера и медиа-провайдера.
-2. Эти ссылки используются для последующего взаимодействия с моделями и получения информации о них.
+**Как работает функция**:
+1. Функция инициализирует атрибуты `self.client`, `self.provider` и `self.media_provider` значениями, переданными в качестве аргументов.
 
-#### `get`
+**Примеры**:
+
+```python
+from ..Provider import ProviderUtils
+from ..providers.types import ProviderType
+from ..models import ModelUtils, ImageModel, VisionModel
+client = None  #  
+provider = ProviderUtils.convert['g4f.provider.GptGo']
+media_provider = None
+client_models = ClientModels(client, provider, media_provider)
+```
+
+### `get`
 
 ```python
 def get(self, name, default=None) -> ProviderType:
     """
-    Возвращает провайдера по имени модели или провайдера.
+    Получает провайдера по имени модели или провайдера.
 
     Args:
-        name: Имя модели или провайдера.
-        default: Значение по умолчанию, если модель не найдена.
+        name (str): Имя модели или провайдера.
+        default: Значение по умолчанию, если провайдер не найден.
 
     Returns:
-        ProviderType: Провайдер, соответствующий имени, или значение по умолчанию.
+        ProviderType: Провайдер, соответствующий указанному имени, или значение по умолчанию.
     """
 ```
 
+**Назначение**: Получает провайдера по имени модели или провайдера.
+
 **Параметры**:
-- `name`: Имя модели или провайдера, для которого требуется получить информацию.
-- `default`: Значение, которое будет возвращено, если модель или провайдер не найдены. По умолчанию `None`.
+- `name` (str): Имя модели или провайдера.
+- `default`: Значение по умолчанию, если провайдер не найден.
 
 **Возвращает**:
-- `ProviderType`: Провайдер, соответствующий переданному имени, или значение по умолчанию, если провайдер не найден.
+- `ProviderType`: Провайдер, соответствующий указанному имени, или значение по умолчанию.
 
-**Как работает метод**:
-1. Метод `get` ищет провайдера в `ModelUtils.convert` и `ProviderUtils.convert` по имени.
-2. Если находит, возвращает соответствующего провайдера.
-3. Если провайдер не найден, возвращает значение по умолчанию.
+**Как работает функция**:
+1. Функция проверяет, есть ли указанное имя в словаре `ModelUtils.convert`. Если да, возвращает `best_provider` для данной модели.
+2. Если имя не найдено в `ModelUtils.convert`, функция проверяет, есть ли оно в словаре `ProviderUtils.convert`. Если да, возвращает соответствующего провайдера.
+3. Если имя не найдено ни в одном из словарей, функция возвращает значение по умолчанию (`default`).
 
 **Примеры**:
 
 ```python
-client_models = ClientModels(client=some_client)
-provider = client_models.get('gpt-3.5-turbo', default='fallback_provider')
-print(provider)  # Выводит: <провайдер gpt-3.5-turbo> или 'fallback_provider'
+from ..Provider import ProviderUtils
+from ..providers.types import ProviderType
+from ..models import ModelUtils, ImageModel, VisionModel
+client = None  # 
+provider_name = "g4f.provider.GptGo"
+client_models = ClientModels(client)
+provider = client_models.get(provider_name)
+print(provider)
 ```
 
-#### `get_all`
+### `get_all`
 
 ```python
 def get_all(self, api_key: str = None, **kwargs) -> list[str]:
     """
-    Возвращает список всех доступных моделей для данного провайдера.
+    Получает список всех моделей, поддерживаемых провайдером.
 
     Args:
-        api_key (str, optional): API-ключ для доступа к моделям. По умолчанию `None`.
-        **kwargs: Дополнительные аргументы, передаваемые провайдеру.
+        api_key (str, optional): API-ключ для провайдера. По умолчанию `None`.
+        **kwargs: Дополнительные аргументы для метода `get_models` провайдера.
 
     Returns:
-        list[str]: Список идентификаторов доступных моделей.
+        list[str]: Список идентификаторов моделей.
     """
 ```
 
+**Назначение**: Получает список всех моделей, поддерживаемых провайдером.
+
 **Параметры**:
-- `api_key` (str, optional): API-ключ, используемый для аутентификации при запросе списка моделей у провайдера. По умолчанию `None`.
-- `**kwargs`: Дополнительные аргументы, которые могут быть переданы методу `get_models` провайдера.
+- `api_key` (str, optional): API-ключ для провайдера. По умолчанию `None`.
+- `**kwargs`: Дополнительные аргументы для метода `get_models` провайдера.
 
 **Возвращает**:
-- `list[str]`: Список идентификаторов моделей, доступных через данного провайдера.
+- `list[str]`: Список идентификаторов моделей.
 
-**Как работает метод**:
-1. Метод `get_all` проверяет, установлен ли провайдер. Если нет, возвращает пустой список.
-2. Если `api_key` не передан, использует `api_key` клиента.
-3. Вызывает метод `get_models` провайдера, передавая `api_key` (если он есть) и дополнительные аргументы `kwargs`.
-4. Возвращает список моделей, полученный от провайдера.
+**Как работает функция**:
+1. Функция проверяет, установлен ли атрибут `self.provider`. Если нет, возвращает пустой список.
+2. Если `api_key` не передан, он берется из атрибута `self.client.api_key`.
+3. Функция вызывает метод `get_models` провайдера, передавая `api_key` (если он есть) и дополнительные аргументы `kwargs`.
+4. Возвращает список идентификаторов моделей, полученных от провайдера.
 
 **Примеры**:
 
 ```python
-client_models = ClientModels(client=some_client, provider=some_provider)
-models = client_models.get_all(api_key='your_api_key')
-print(models)  # Выводит: ['model1', 'model2', ...]
+from ..Provider import ProviderUtils
+from ..providers.types import ProviderType
+from ..models import ModelUtils, ImageModel, VisionModel
+client = None  #  
+provider = ProviderUtils.convert['g4f.provider.GptGo']
+client_models = ClientModels(client, provider)
+models = client_models.get_all()
+print(models)
 ```
 
-#### `get_vision`
+### `get_vision`
 
 ```python
 def get_vision(self, **kwargs) -> list[str]:
     """
-    Возвращает список моделей, поддерживающих компьютерное зрение.
+    Получает список vision-моделей.
 
     Args:
-        **kwargs: Дополнительные аргументы, передаваемые провайдеру.
+        **kwargs: Дополнительные аргументы для метода `get_all`.
 
     Returns:
-        list[str]: Список идентификаторов моделей компьютерного зрения.
+        list[str]: Список идентификаторов vision-моделей.
     """
 ```
 
+**Назначение**: Получает список vision-моделей.
+
 **Параметры**:
-- `**kwargs`: Дополнительные аргументы, которые могут быть переданы методу `get_all` провайдера.
+- `**kwargs`: Дополнительные аргументы для метода `get_all`.
 
 **Возвращает**:
-- `list[str]`: Список идентификаторов моделей, поддерживающих компьютерное зрение.
+- `list[str]`: Список идентификаторов vision-моделей.
 
-**Как работает метод**:
-1. Метод `get_vision` проверяет, установлен ли провайдер. Если нет, возвращает список моделей из `ModelUtils.convert`, которые являются экземплярами `VisionModel`.
-2. Если провайдер установлен, вызывает метод `get_all` для обновления списка моделей.
-3. Если у провайдера есть атрибут `vision_models`, возвращает его значение.
-4. В противном случае возвращает пустой список.
+**Как работает функция**:
+1. Функция проверяет, установлен ли атрибут `self.provider`.
+2. Если `self.provider` не установлен, возвращается список `model_id` для всех моделей, являющихся экземплярами класса `VisionModel`.
+3. Если `self.provider` установлен, вызывается функция `self.get_all(**kwargs)`, после чего проверяется наличие атрибута `vision_models` у `self.provider`.
+4. Если атрибут `vision_models` присутствует, возвращается его значение. В противном случае возвращается пустой список.
 
 **Примеры**:
 
 ```python
-client_models = ClientModels(client=some_client, provider=some_provider)
+from ..Provider import ProviderUtils
+from ..providers.types import ProviderType
+from ..models import ModelUtils, ImageModel, VisionModel
+client = None  #  
+provider = ProviderUtils.convert['g4f.provider.GptGo']
+client_models = ClientModels(client, provider)
 vision_models = client_models.get_vision()
-print(vision_models)  # Выводит: ['vision_model1', 'vision_model2', ...]
+print(vision_models)
 ```
 
-#### `get_media`
+### `get_media`
 
 ```python
 def get_media(self, api_key: str = None, **kwargs) -> list[str]:
     """
-    Возвращает список мультимедийных моделей для данного провайдера.
+    Получает список media-моделей, поддерживаемых медиа-провайдером.
 
     Args:
-        api_key (str, optional): API-ключ для доступа к моделям. По умолчанию `None`.
-        **kwargs: Дополнительные аргументы, передаваемые провайдеру.
+        api_key (str, optional): API-ключ для медиа-провайдера. По умолчанию `None`.
+        **kwargs: Дополнительные аргументы для метода `get_models` медиа-провайдера.
 
     Returns:
-        list[str]: Список идентификаторов мультимедийных моделей.
+        list[str]: Список идентификаторов медиа-моделей.
     """
 ```
 
+**Назначение**: Получает список media-моделей, поддерживаемых медиа-провайдером.
+
 **Параметры**:
-- `api_key` (str, optional): API-ключ, используемый для аутентификации при запросе списка моделей у медиа-провайдера. По умолчанию `None`.
-- `**kwargs`: Дополнительные аргументы, которые могут быть переданы методу `get_models` медиа-провайдера.
+- `api_key` (str, optional): API-ключ для медиа-провайдера. По умолчанию `None`.
+- `**kwargs`: Дополнительные аргументы для метода `get_models` медиа-провайдера.
 
 **Возвращает**:
-- `list[str]`: Список идентификаторов мультимедийных моделей, доступных через данного провайдера.
+- `list[str]`: Список идентификаторов медиа-моделей.
 
-**Как работает метод**:
-1. Метод `get_media` проверяет, установлен ли медиа-провайдер. Если нет, возвращает пустой список.
-2. Если `api_key` не передан, использует `api_key` клиента.
-3. Вызывает метод `get_models` медиа-провайдера, передавая `api_key` (если он есть) и дополнительные аргументы `kwargs`.
-4. Возвращает список моделей, полученный от медиа-провайдера.
+**Как работает функция**:
+1. Функция проверяет, установлен ли атрибут `self.media_provider`. Если нет, возвращает пустой список.
+2. Если `api_key` не передан, он берется из атрибута `self.client.api_key`.
+3. Функция вызывает метод `get_models` медиа-провайдера, передавая `api_key` (если он есть) и дополнительные аргументы `kwargs`.
+4. Возвращает список идентификаторов моделей, полученных от медиа-провайдера.
 
 **Примеры**:
 
 ```python
-client_models = ClientModels(client=some_client, media_provider=some_media_provider)
-media_models = client_models.get_media(api_key='your_api_key')
-print(media_models)  # Выводит: ['media_model1', 'media_model2', ...]
+from ..Provider import ProviderUtils
+from ..providers.types import ProviderType
+from ..models import ModelUtils, ImageModel, VisionModel
+client = None  #  
+media_provider = ProviderUtils.convert['g4f.provider.GptGo']
+client_models = ClientModels(client, media_provider=media_provider)
+media_models = client_models.get_media()
+print(media_models)
 ```
 
-#### `get_image`
+### `get_image`
 
 ```python
 def get_image(self, **kwargs) -> list[str]:
     """
-    Возвращает список моделей для работы с изображениями.
+    Получает список image-моделей.
 
     Args:
-        **kwargs: Дополнительные аргументы, передаваемые провайдеру.
+        **kwargs: Дополнительные аргументы для метода `get_media`.
 
     Returns:
-        list[str]: Список идентификаторов моделей для работы с изображениями.
+        list[str]: Список идентификаторов image-моделей.
     """
 ```
 
+**Назначение**: Получает список image-моделей.
+
 **Параметры**:
-- `**kwargs`: Дополнительные аргументы, которые могут быть переданы методу `get_media` медиа-провайдера.
+- `**kwargs`: Дополнительные аргументы для метода `get_media`.
 
 **Возвращает**:
-- `list[str]`: Список идентификаторов моделей, предназначенных для работы с изображениями.
+- `list[str]`: Список идентификаторов image-моделей.
 
-**Как работает метод**:
-1. Метод `get_image` проверяет, установлен ли медиа-провайдер. Если нет, возвращает список моделей из `ModelUtils.convert`, которые являются экземплярами `ImageModel`.
-2. Если медиа-провайдер установлен, вызывает метод `get_media` для обновления списка моделей.
-3. Если у медиа-провайдера есть атрибут `image_models`, возвращает его значение.
-4. В противном случае возвращает пустой список.
+**Как работает функция**:
+1. Функция проверяет, установлен ли атрибут `self.media_provider`.
+2. Если `self.media_provider` не установлен, возвращается список `model_id` для всех моделей, являющихся экземплярами класса `ImageModel`.
+3. Если `self.media_provider` установлен, вызывается функция `self.get_media(**kwargs)`, после чего проверяется наличие атрибута `image_models` у `self.media_provider`.
+4. Если атрибут `image_models` присутствует, возвращается его значение. В противном случае возвращается пустой список.
 
 **Примеры**:
 
 ```python
-client_models = ClientModels(client=some_client, media_provider=some_media_provider)
+from ..Provider import ProviderUtils
+from ..providers.types import ProviderType
+from ..models import ModelUtils, ImageModel, VisionModel
+client = None  #  
+media_provider = ProviderUtils.convert['g4f.provider.GptGo']
+client_models = ClientModels(client, media_provider=media_provider)
 image_models = client_models.get_image()
-print(image_models)  # Выводит: ['image_model1', 'image_model2', ...]
+print(image_models)
 ```
 
-#### `get_video`
+### `get_video`
 
 ```python
 def get_video(self, **kwargs) -> list[str]:
     """
-    Возвращает список моделей для работы с видео.
+    Получает список video-моделей.
 
     Args:
-        **kwargs: Дополнительные аргументы, передаваемые провайдеру.
+        **kwargs: Дополнительные аргументы для метода `get_media`.
 
     Returns:
-        list[str]: Список идентификаторов моделей для работы с видео.
+        list[str]: Список идентификаторов video-моделей.
     """
 ```
 
+**Назначение**: Получает список video-моделей.
+
 **Параметры**:
-- `**kwargs`: Дополнительные аргументы, которые могут быть переданы методу `get_media` медиа-провайдера.
+- `**kwargs`: Дополнительные аргументы для метода `get_media`.
 
 **Возвращает**:
-- `list[str]`: Список идентификаторов моделей, предназначенных для работы с видео.
+- `list[str]`: Список идентификаторов video-моделей.
 
-**Как работает метод**:
-1. Метод `get_video` проверяет, установлен ли медиа-провайдер. Если нет, возвращает пустой список.
-2. Если медиа-провайдер установлен, вызывает метод `get_media` для обновления списка моделей.
-3. Если у медиа-провайдера есть атрибут `video_models`, возвращает его значение.
-4. В противном случае возвращает пустой список.
+**Как работает функция**:
+1. Функция проверяет, установлен ли атрибут `self.media_provider`.
+2. Если `self.media_provider` не установлен, возвращается пустой список.
+3. Если `self.media_provider` установлен, вызывается функция `self.get_media(**kwargs)`, после чего проверяется наличие атрибута `video_models` у `self.media_provider`.
+4. Если атрибут `video_models` присутствует, возвращается его значение. В противном случае возвращается пустой список.
 
 **Примеры**:
 
 ```python
-client_models = ClientModels(client=some_client, media_provider=some_media_provider)
+from ..Provider import ProviderUtils
+from ..providers.types import ProviderType
+from ..models import ModelUtils, ImageModel, VisionModel
+client = None  #  
+media_provider = ProviderUtils.convert['g4f.provider.GptGo']
+client_models = ClientModels(client, media_provider=media_provider)
 video_models = client_models.get_video()
-print(video_models)  # Выводит: ['video_model1', 'video_model2', ...]
-```
+print(video_models)

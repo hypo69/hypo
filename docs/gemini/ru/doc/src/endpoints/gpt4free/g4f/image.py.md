@@ -2,123 +2,128 @@
 
 ## Обзор
 
-Модуль предоставляет набор функций для обработки изображений, включая конвертацию в различные форматы, изменение размеров, проверку форматов и извлечение данных из URI. Он использует библиотеку PIL (Pillow) для обработки изображений и поддерживает различные форматы, такие как PNG, JPEG, GIF и WEBP.
+Модуль `image.py` предоставляет набор функций для обработки изображений, включая конвертацию в различные форматы, изменение размеров, проверку формата и извлечение данных из URI. Он также включает классы для обработки запросов и ответов, связанных с изображениями.
 
-## Подробнее
+## Подробней
 
-Этот модуль предоставляет функции для работы с изображениями, такие как преобразование изображений из различных форматов в объекты PIL Image, проверку допустимых расширений файлов, проверку допустимых форматов изображений, извлечение двоичных данных из URI данных, получение ориентации изображений, обработку изображений путем корректировки их ориентации и изменения их размеров, преобразование изображений в байты и преобразование изображений в URI данных.
+Модуль предназначен для работы с изображениями в различных форматах и представлениях, обеспечивая их преобразование, проверку и подготовку для дальнейшей обработки или передачи. Он используется для обработки изображений, полученных из разных источников, таких как файлы, байтовые строки или URI данных. Модуль также предоставляет классы для структурирования запросов и ответов, связанных с изображениями.
 
 ## Классы
 
 ### `ImageDataResponse`
 
-**Описание**: Класс, представляющий ответ с данными об изображении.
+**Описание**: Класс для представления ответа, содержащего изображения и альтернативный текст.
 
 **Принцип работы**:
-Класс `ImageDataResponse` используется для хранения информации об изображении, включая список изображений и альтернативный текст. Он предоставляет метод `get_list` для получения списка изображений.
+Класс `ImageDataResponse` используется для хранения информации об изображении (или списке изображений) и альтернативном тексте, связанном с этими изображениями. Он предоставляет метод для получения списка изображений, независимо от того, было ли передано одно изображение или список.
+
+**Атрибуты**:
+- `images` (Union[str, list]): Изображение или список изображений.
+- `alt` (str): Альтернативный текст для изображения.
 
 **Методы**:
-
-- `__init__(self, images: Union[str, list], alt: str)`
-    - **Назначение**: Инициализирует объект `ImageDataResponse`.
-    - **Параметры**:
-        - `images` (Union[str, list]): Список изображений или строка с одним изображением.
-        - `alt` (str): Альтернативный текст для изображения.
-    - **Возвращает**: Ничего.
-    - **Как работает функция**: Функция сохраняет переданные значения `images` и `alt` в атрибуты объекта.
-    - **Примеры**:
-        ```python
-        image_data = ImageDataResponse(images=['image1.jpg', 'image2.png'], alt='Пример изображения')
-        ```
-
-- `get_list(self) -> list[str]`
-    - **Назначение**: Возвращает список изображений.
-    - **Параметры**: None
-    - **Возвращает**: `list[str]`: Список строк, представляющих изображения. Если `self.images` является строкой, возвращает список, содержащий эту строку.
-    - **Как работает функция**: Функция проверяет, является ли атрибут `self.images` списком. Если да, то возвращает его. Если нет, то возвращает список, содержащий `self.images` как единственный элемент.
-    - **Примеры**:
-        ```python
-        image_data = ImageDataResponse(images='image1.jpg', alt='Пример изображения')
-        image_list = image_data.get_list()  # Возвращает ['image1.jpg']
-        ```
+- `get_list()`: Возвращает список изображений. Если `self.images` является строкой, то возвращается список, содержащий эту строку. Если `self.images` является списком, то возвращается сам список.
 
 ### `ImageRequest`
 
-**Описание**: Класс, представляющий запрос изображения.
+**Описание**: Класс для представления запроса изображения с опциями.
 
 **Принцип работы**:
-Класс `ImageRequest` используется для хранения опций запроса изображения. Он предоставляет метод `get` для получения значения опции по ключу.
+Класс `ImageRequest` используется для хранения опций, связанных с запросом изображения. Он предоставляет метод для получения значения опции по ключу.
+
+**Атрибуты**:
+- `options` (dict): Словарь с опциями запроса.
 
 **Методы**:
-
-- `__init__(self, options: dict = {})`
-    - **Назначение**: Инициализирует объект `ImageRequest`.
-    - **Параметры**:
-        - `options` (dict, optional): Словарь опций запроса. По умолчанию пустой словарь.
-    - **Возвращает**: Ничего.
-    - **Как работает функция**: Функция сохраняет переданные значения `options` в атрибуты объекта.
-    - **Примеры**:
-        ```python
-        image_request = ImageRequest(options={'width': 100, 'height': 200})
-        ```
-
-- `get(self, key: str)`
-    - **Назначение**: Возвращает значение опции по ключу.
-    - **Параметры**:
-        - `key` (str): Ключ опции.
-    - **Возвращает**: Значение опции или `None`, если опция не найдена.
-    - **Как работает функция**: Функция пытается получить значение из словаря `self.options` по ключу `key`. Если ключ не найден, возвращается `None`.
-    - **Примеры**:
-        ```python
-        image_request = ImageRequest(options={'width': 100, 'height': 200})
-        width = image_request.get('width')  # Возвращает 100
-        ```
+- `get(key: str)`: Возвращает значение опции по ключу. Если ключ не найден, возвращает `None`.
 
 ## Функции
 
-### `to_image(image: ImageType, is_svg: bool = False) -> Image`
+### `to_image`
 
-**Назначение**: Преобразует входное изображение в объект PIL Image.
+```python
+def to_image(image: ImageType, is_svg: bool = False) -> Image:
+    """
+    Converts the input image to a PIL Image object.
+
+    Args:
+        image (Union[str, bytes, Image]): The input image.
+
+    Returns:
+        Image: The converted PIL Image object.
+    """
+```
+
+**Назначение**: Преобразует входное изображение в объект `PIL Image`.
 
 **Параметры**:
-- `image` (ImageType): Входное изображение (строка, байты или объект Image).
-- `is_svg` (bool, optional): Указывает, является ли изображение SVG. По умолчанию `False`.
+- `image` (ImageType): Входное изображение (строка, байты или объект `Image`).
+- `is_svg` (bool, optional): Флаг, указывающий, является ли изображение SVG. По умолчанию `False`.
 
 **Возвращает**:
-- `Image`: Преобразованный объект PIL Image.
+- `Image`: Преобразованный объект `PIL Image`.
 
 **Вызывает исключения**:
-- `MissingRequirementsError`: Если не установлены необходимые пакеты (`pillow` для обычных изображений, `cairosvg` для SVG).
-- `ValueError`: Если URI данных изображения недействителен или формат изображения не поддерживается.
+- `MissingRequirementsError`: Если не установлены необходимые библиотеки (`pillow` или `cairosvg`).
+- `ValueError`: Если data URI является невалидным или формат изображения не поддерживается.
 
 **Как работает функция**:
 
-1.  Проверяет, установлены ли необходимые библиотеки (`pillow`). Если нет, вызывает исключение `MissingRequirementsError`.
-2.  Если входное изображение является строкой и начинается с "data:", проверяет, является ли URI данных изображением, и извлекает данные из URI.
-3.  Если изображение является SVG, пытается импортировать `cairosvg`. Если `cairosvg` не установлен, вызывает исключение `MissingRequirementsError`. Преобразует SVG в PNG, используя `cairosvg`, и открывает полученный буфер с помощью PIL.
-4.  Если изображение является байтами, проверяет, является ли формат изображения допустимым, и открывает изображение из байтов с помощью PIL.
-5.  Если изображение уже является объектом PIL Image, возвращает его без изменений.
+1. **Проверка зависимостей**: Функция проверяет, установлена ли библиотека `pillow`, необходимая для работы с изображениями. Если она не установлена, вызывается исключение `MissingRequirementsError`.
+2. **Обработка Data URI**: Если входное изображение является строкой и начинается с "data:", функция проверяет, является ли URI корректным изображением, и извлекает данные изображения из URI.
+3. **Обработка SVG**: Если `is_svg` установлен в `True`, функция пытается импортировать библиотеку `cairosvg` и, если она не установлена, вызывает исключение `MissingRequirementsError`. Затем происходит преобразование SVG-изображения в PNG с использованием `cairosvg`.
+4. **Обработка байтов**: Если входное изображение является байтами, функция проверяет, является ли формат изображения поддерживаемым, и открывает изображение с использованием `PIL.Image.open`.
+5. **Обработка PIL Image**: Если входное изображение уже является объектом `PIL Image`, функция просто возвращает его.
+
+**ASCII flowchart**:
+
+```
+A [Проверка наличия pillow]
+|
+B [Является ли изображение строкой и начинается ли с "data:"]
+|
+C [Проверка is_svg]
+|
+D [Является ли изображение байтами]
+|
+E [Является ли изображение PIL Image]
+|
+F [Возврат PIL Image]
+```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
-from PIL import Image
+from PIL.Image import Image
+from io import BytesIO
+image_path = 'path/to/image.jpg'
+image_bytes = b'...' # bytes of image
+image_data_uri = 'data:image/png;base64,...'
 
-# Преобразование изображения из файла
-image_path = Path('example.jpg')
-image = to_image(image_path)
+# Преобразование из пути к файлу
+image_from_path = to_image(image_path)
 
-# Преобразование изображения из байтов
-with open('example.png', 'rb') as f:
-    image_bytes = f.read()
-image = to_image(image_bytes)
+# Преобразование из байтов
+image_from_bytes = to_image(image_bytes)
 
-# Преобразование SVG изображения
-image_svg = to_image('<svg width="100" height="100"></svg>', is_svg=True)
+# Преобразование из data URI
+image_from_data_uri = to_image(image_data_uri)
 ```
 
-### `is_allowed_extension(filename: str) -> bool`
+### `is_allowed_extension`
+
+```python
+def is_allowed_extension(filename: str) -> bool:
+    """
+    Checks if the given filename has an allowed extension.
+
+    Args:
+        filename (str): The filename to check.
+
+    Returns:
+        bool: True if the extension is allowed, False otherwise.
+    """
+```
 
 **Назначение**: Проверяет, имеет ли заданное имя файла допустимое расширение.
 
@@ -130,90 +135,215 @@ image_svg = to_image('<svg width="100" height="100"></svg>', is_svg=True)
 
 **Как работает функция**:
 
-1.  Проверяет, содержит ли имя файла точку (`.`).
-2.  Разделяет имя файла по точке и получает расширение.
-3.  Приводит расширение к нижнему регистру и проверяет, входит ли оно в список допустимых расширений (`ALLOWED_EXTENSIONS`).
+Функция проверяет, содержит ли имя файла точку (`.`) и входит ли расширение файла (в нижнем регистре) в список допустимых расширений (`ALLOWED_EXTENSIONS`).
+
+**ASCII flowchart**:
+
+```
+A [Проверка наличия точки в имени файла]
+|
+B [Извлечение расширения файла]
+|
+C [Проверка расширения на соответствие списку ALLOWED_EXTENSIONS]
+|
+D [Возврат результата]
+```
 
 **Примеры**:
 
 ```python
-is_allowed_extension('image.png')  # Возвращает True
-is_allowed_extension('document.txt')  # Возвращает False
+# Допустимое расширение
+is_allowed_extension('image.png')  # Вернет True
+
+# Недопустимое расширение
+is_allowed_extension('image.txt')  # Вернет False
+
+# Имя файла без расширения
+is_allowed_extension('image')      # Вернет False
 ```
 
-### `is_data_uri_an_image(data_uri: str) -> bool`
+### `is_data_uri_an_image`
 
-**Назначение**: Проверяет, представляет ли заданный URI данных изображение.
+```python
+def is_data_uri_an_image(data_uri: str) -> bool:
+    """
+    Checks if the given data URI represents an image.
+
+    Args:
+        data_uri (str): The data URI to check.
+
+    Raises:
+        ValueError: If the data URI is invalid or the image format is not allowed.
+    """
+```
+
+**Назначение**: Проверяет, представляет ли заданный data URI изображение.
 
 **Параметры**:
-- `data_uri` (str): URI данных для проверки.
+- `data_uri` (str): Data URI для проверки.
 
 **Вызывает исключения**:
-- `ValueError`: Если URI данных недействителен или формат изображения не поддерживается.
+- `ValueError`: Если data URI невалиден или формат изображения не поддерживается.
 
 **Как работает функция**:
 
-1.  Проверяет, начинается ли URI данных с "data:image/" и содержит ли формат изображения (например, jpeg, png, gif).
-2.  Извлекает формат изображения из URI данных.
-3.  Проверяет, входит ли формат изображения в список допустимых форматов (`ALLOWED_EXTENSIONS`) или является "svg+xml".
+Функция проверяет, начинается ли data URI с 'data:image' и содержит ли он формат изображения (например, jpeg, png, gif). Затем извлекается формат изображения из data URI и проверяется, входит ли он в список допустимых форматов.
+
+**ASCII flowchart**:
+
+```
+A [Проверка начала data URI с 'data:image']
+|
+B [Извлечение формата изображения из data URI]
+|
+C [Проверка формата изображения на соответствие списку ALLOWED_EXTENSIONS]
+|
+D [Вызов исключения ValueError при невалидном URI или формате]
+```
 
 **Примеры**:
 
 ```python
-is_data_uri_an_image('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w+n/f2cgALVlOg...')  # Не выдает исключение
+# Валидный data URI
+valid_data_uri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w+rAI0EyQNgFBAEcAwUAwt0KjUIAAAAASUVORK5CYII='
+is_data_uri_an_image(valid_data_uri)  # Не вызовет исключение
+
+# Невалидный data URI (не начинается с 'data:image')
+invalid_data_uri = 'text/plain;base64,SGVsbG8sIHdvcmxkIQ=='
+#is_data_uri_an_image(invalid_data_uri)  # Вызовет ValueError
+
+# Неподдерживаемый формат изображения
+invalid_format_uri = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMCwxMCBMOTAsOTAiLz48L3N2Zz4='
+#is_data_uri_an_image(invalid_format_uri) # Вызовет ValueError
 ```
 
-### `is_accepted_format(binary_data: bytes) -> str`
+### `is_accepted_format`
 
-**Назначение**: Проверяет, представляет ли заданные двоичные данные изображение с допустимым форматом.
+```python
+def is_accepted_format(binary_data: bytes) -> str:
+    """
+    Checks if the given binary data represents an image with an accepted format.
+
+    Args:
+        binary_data (bytes): The binary data to check.
+
+    Raises:
+        ValueError: If the image format is not allowed.
+    """
+```
+
+**Назначение**: Проверяет, представляет ли заданный набор двоичных данных изображение с допустимым форматом.
 
 **Параметры**:
 - `binary_data` (bytes): Двоичные данные для проверки.
 
 **Возвращает**:
-- `str`: MIME-тип изображения (например, "image/jpeg", "image/png").
+- `str`: Строка, представляющая MIME-тип изображения (например, `"image/jpeg"`).
 
 **Вызывает исключения**:
 - `ValueError`: Если формат изображения не поддерживается.
 
 **Как работает функция**:
 
-1.  Проверяет сигнатуры (магические числа) в начале двоичных данных, чтобы определить формат изображения.
-2.  Возвращает соответствующий MIME-тип, если формат распознан.
+Функция проверяет двоичные данные на соответствие известным сигнатурам (magic numbers) различных форматов изображений (JPEG, PNG, GIF, WEBP). Если соответствие найдено, функция возвращает соответствующий MIME-тип.
+
+**ASCII flowchart**:
+
+```
+A [Проверка сигнатуры JPEG]
+|
+B [Проверка сигнатуры PNG]
+|
+C [Проверка сигнатуры GIF]
+|
+D [Проверка сигнатуры JPEG (альтернативная)]
+|
+E [Проверка сигнатуры WEBP]
+|
+F [Вызов исключения ValueError при неподдерживаемом формате]
+|
+G [Возврат MIME-типа]
+```
 
 **Примеры**:
 
 ```python
-with open('example.jpg', 'rb') as f:
-    image_bytes = f.read()
-is_accepted_format(image_bytes)  # Возвращает "image/jpeg"
+# JPEG image
+jpeg_data = b'\\xFF\\xD8\\xFF\\xE0\\x00\\x10JFIF\\x00\\x01...'
+is_accepted_format(jpeg_data)  # Вернет "image/jpeg"
+
+# PNG image
+png_data = b'\\x89PNG\\r\\n\\x1a\\n\\x00\\x00\\x00\\rIHDR...'
+is_accepted_format(png_data)   # Вернет "image/png"
+
+# Неподдерживаемый формат
+unknown_data = b'\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\x09...'
+#is_accepted_format(unknown_data) # Вызовет ValueError
 ```
 
-### `extract_data_uri(data_uri: str) -> bytes`
+### `extract_data_uri`
 
-**Назначение**: Извлекает двоичные данные из заданного URI данных.
+```python
+def extract_data_uri(data_uri: str) -> bytes:
+    """
+    Extracts the binary data from the given data URI.
+
+    Args:
+        data_uri (str): The data URI.
+
+    Returns:
+        bytes: The extracted binary data.
+    """
+```
+
+**Назначение**: Извлекает двоичные данные из заданного data URI.
 
 **Параметры**:
-- `data_uri` (str): URI данных.
+- `data_uri` (str): Data URI.
 
 **Возвращает**:
 - `bytes`: Извлеченные двоичные данные.
 
 **Как работает функция**:
 
-1.  Разделяет URI данных по запятой и получает часть, содержащую данные в кодировке Base64.
-2.  Декодирует данные из Base64.
+Функция разделяет data URI по запятой, извлекает последнюю часть (содержащую base64-encoded data), декодирует ее из base64 и возвращает полученные двоичные данные.
+
+**ASCII flowchart**:
+
+```
+A [Разделение data URI по запятой]
+|
+B [Извлечение base64-encoded data]
+|
+C [Декодирование из base64]
+|
+D [Возврат двоичных данных]
+```
 
 **Примеры**:
 
 ```python
-data_uri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w+n/f2cgALVlOg...'
-image_bytes = extract_data_uri(data_uri)
+data_uri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w+rAI0EyQNgFBAEcAwUAwt0KjUIAAAAASUVORK5CYII='
+binary_data = extract_data_uri(data_uri)
+print(type(binary_data)) # bytes
 ```
 
-### `get_orientation(image: Image) -> int`
+### `get_orientation`
 
-**Назначение**: Получает ориентацию заданного изображения из EXIF-данных.
+```python
+def get_orientation(image: Image) -> int:
+    """
+    Gets the orientation of the given image.
+
+    Args:
+        image (Image): The image.
+
+    Returns:
+        int: The orientation value.
+    """
+```
+
+**Назначение**: Получает ориентацию заданного изображения.
 
 **Параметры**:
 - `image` (Image): Изображение.
@@ -223,18 +353,45 @@ image_bytes = extract_data_uri(data_uri)
 
 **Как работает функция**:
 
-1.  Пытается получить EXIF-данные из изображения.
-2.  Если EXIF-данные существуют, получает значение тега ориентации (274).
+Функция пытается получить EXIF-данные из изображения. Если EXIF-данные существуют, функция извлекает значение тега ориентации (274) и возвращает его.
+
+**ASCII flowchart**:
+
+```
+A [Попытка получить EXIF-данные]
+|
+B [Проверка наличия EXIF-данных]
+|
+C [Извлечение значения тега ориентации (274)]
+|
+D [Возврат значения ориентации]
+```
 
 **Примеры**:
 
 ```python
 from PIL import Image
-image = Image.open('example.jpg')
+image = Image.open('path/to/image_with_exif.jpg')
 orientation = get_orientation(image)
+print(orientation) # 6, 1, or None
 ```
 
-### `process_image(image: Image, new_width: int, new_height: int) -> Image`
+### `process_image`
+
+```python
+def process_image(image: Image, new_width: int, new_height: int) -> Image:
+    """
+    Processes the given image by adjusting its orientation and resizing it.
+
+    Args:
+        image (Image): The image to process.
+        new_width (int): The new width of the image.
+        new_height (int): The new height of the image.
+
+    Returns:
+        Image: The processed image.
+    """
+```
 
 **Назначение**: Обрабатывает заданное изображение, корректируя его ориентацию и изменяя размер.
 
@@ -248,21 +405,50 @@ orientation = get_orientation(image)
 
 **Как работает функция**:
 
-1.  Получает ориентацию изображения с помощью `get_orientation`.
-2.  Корректирует ориентацию изображения, используя `transpose`, если необходимо.
-3.  Изменяет размер изображения с помощью `thumbnail`.
-4.  Удаляет прозрачность, если изображение в режиме RGBA.
-5.  Преобразует изображение в режим RGB, если оно не в этом режиме.
+1. **Коррекция ориентации**: Функция получает ориентацию изображения с помощью `get_orientation` и, если ориентация определена, выполняет транспонирование изображения для коррекции ориентации.
+2. **Изменение размера**: Функция изменяет размер изображения с использованием метода `thumbnail`.
+3. **Удаление прозрачности**: Если изображение имеет режим "RGBA", функция удаляет прозрачность, создавая новое белое изображение и вставляя в него исходное изображение с использованием маски.
+4. **Преобразование в RGB**: Если изображение имеет режим, отличный от "RGB", функция преобразует его в режим "RGB".
+
+**ASCII flowchart**:
+
+```
+A [Получение ориентации изображения]
+|
+B [Коррекция ориентации (транспонирование)]
+|
+C [Изменение размера (thumbnail)]
+|
+D [Удаление прозрачности (если режим RGBA)]
+|
+E [Преобразование в RGB (если режим не RGB)]
+|
+F [Возврат обработанного изображения]
+```
 
 **Примеры**:
 
 ```python
 from PIL import Image
-image = Image.open('example.png')
-processed_image = process_image(image, 100, 100)
+image = Image.open('path/to/image.jpg')
+new_image = process_image(image, 200, 200)
+new_image.save('path/to/processed_image.jpg')
 ```
 
-### `to_bytes(image: ImageType) -> bytes`
+### `to_bytes`
+
+```python
+def to_bytes(image: ImageType) -> bytes:
+    """
+    Converts the given image to bytes.
+
+    Args:
+        image (ImageType): The image to convert.
+
+    Returns:
+        bytes: The image as bytes.
+    """
+```
 
 **Назначение**: Преобразует заданное изображение в байты.
 
@@ -274,39 +460,112 @@ processed_image = process_image(image, 100, 100)
 
 **Как работает функция**:
 
-1.  Проверяет тип изображения и преобразует его в байты в зависимости от типа:
-    *   Если это байты, возвращает их.
-    *   Если это строка, начинающаяся с "data:", извлекает байты из URI данных.
-    *   Если это объект PIL Image, сохраняет его в BytesIO и возвращает содержимое.
-    *   Если это путь к файлу, читает файл и возвращает байты.
+Функция проверяет тип входного изображения и преобразует его в байты в зависимости от типа:
+- Если изображение уже является байтами, оно возвращается без изменений.
+- Если изображение является строкой и начинается с "data:", вызывается `is_data_uri_an_image` для проверки формата и `extract_data_uri` для извлечения байтов.
+- Если изображение является объектом `PIL Image`, оно сохраняется во временный буфер `BytesIO`, и его содержимое возвращается.
+- Если изображение является строкой или объектом `Path`, представляющим путь к файлу, файл считывается и его содержимое возвращается.
+- В противном случае, функция пытается считать содержимое изображения, предполагая, что это файлоподобный объект.
+
+**ASCII flowchart**:
+
+```
+A [Проверка: является ли изображение байтами?]
+|
+B [Проверка: является ли изображение строкой, начинающейся с "data:"?]
+|
+C [Извлечение данных из URI]
+|
+D [Проверка: является ли изображение объектом PIL Image?]
+|
+E [Преобразование изображения в байты через BytesIO]
+|
+F [Проверка: является ли изображение строкой или Path (путь к файлу)?]
+|
+G [Чтение байтов из файла по указанному пути]
+|
+H [Чтение байтов из файлоподобного объекта]
+|
+I [Возврат изображения в виде байтов]
+```
 
 **Примеры**:
 
 ```python
 from PIL import Image
-image = Image.open('example.png')
+from io import BytesIO
+from pathlib import Path
+
+# Преобразование изображения из PIL Image в байты
+image = Image.new('RGB', (60, 30), color='red')
 image_bytes = to_bytes(image)
+
+# Преобразование изображения из пути к файлу в байты
+image_path = Path('path/to/image.png')
+image_bytes = to_bytes(image_path)
+
+# Преобразование изображения из байтовой строки
+image_bytes = b'...'  # Замените на реальные байты изображения
+image_bytes_result = to_bytes(image_bytes)
+
+# Преобразование изображения из файлоподобного объекта
+with open('path/to/image.png', 'rb') as f:
+    image_bytes_from_file = to_bytes(f)
 ```
 
-### `to_data_uri(image: ImageType) -> str`
+### `to_data_uri`
 
-**Назначение**: Преобразует заданное изображение в URI данных.
+```python
+def to_data_uri(image: ImageType) -> str:
+    if not isinstance(image, str):
+        data = to_bytes(image)
+        data_base64 = base64.b64encode(data).decode()
+        return f"data:{is_accepted_format(data)};base64,{data_base64}"
+    return image
+```
+
+**Назначение**: Преобразует заданное изображение в data URI.
 
 **Параметры**:
 - `image` (ImageType): Изображение для преобразования.
 
 **Возвращает**:
-- `str`: URI данных изображения.
+- `str`: Изображение в формате data URI.
 
 **Как работает функция**:
 
-1.  Если изображение не является строкой, преобразует его в байты с помощью `to_bytes`.
-2.  Кодирует байты в Base64 и формирует URI данных.
+Функция проверяет, является ли входное изображение строкой. Если нет, она преобразует изображение в байты с помощью `to_bytes`, кодирует байты в base64 и возвращает data URI. Если изображение уже является строкой, функция возвращает его без изменений.
+
+**ASCII flowchart**:
+
+```
+A [Проверка: является ли изображение строкой?]
+|
+B [Преобразование изображения в байты (to_bytes)]
+|
+C [Кодирование байтов в base64]
+|
+D [Формирование data URI]
+|
+E [Возврат data URI]
+```
 
 **Примеры**:
 
 ```python
 from PIL import Image
-image = Image.open('example.png')
+
+# Преобразование изображения из PIL Image в data URI
+image = Image.new('RGB', (60, 30), color='red')
 data_uri = to_data_uri(image)
-```
+print(data_uri)  # Выведет data URI
+
+# Преобразование изображения из пути к файлу в data URI
+image_path = 'path/to/image.png'
+data_uri = to_data_uri(image_path)
+print(data_uri)  # Выведет data URI
+
+# Преобразование изображения из байтовой строки
+image_bytes = b'...'  # Замените на реальные байты изображения
+data_uri = to_data_uri(image_bytes)
+print(data_uri)  # Выведет data URI

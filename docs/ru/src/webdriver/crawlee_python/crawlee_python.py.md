@@ -6,33 +6,33 @@
 
 ## Подробней
 
-Этот модуль предназначен для создания и управления веб-скраперами на основе Crawlee и Playwright. Он предоставляет удобный интерфейс для настройки параметров браузера, обработки веб-страниц и извлечения данных. Модуль позволяет запускать браузер в headless-режиме, выбирать тип браузера (Chromium, Firefox, WebKit) и передавать пользовательские параметры запуска браузера.
+Этот модуль предназначен для создания и управления веб-скрейперами с использованием Crawlee и Playwright. Он позволяет запускать браузеры в headless-режиме, устанавливать максимальное количество запросов и экспортировать извлеченные данные в JSON-файл.
 
 ## Классы
 
 ### `CrawleePython`
 
-**Описание**: Класс `CrawleePython` представляет собой пользовательскую реализацию веб-скрапера на основе `PlaywrightCrawler` из библиотеки Crawlee.
+**Описание**: Пользовательская реализация `PlaywrightCrawler` с использованием библиотеки Crawlee.
 
-**Как работает класс**:
-1.  **Инициализация**: При инициализации класса задаются основные параметры краулера, такие как максимальное количество запросов (`max_requests`), режим работы браузера без графического интерфейса (`headless`), тип используемого браузера (`browser_type`) и дополнительные опции для запуска браузера (`options`).
-2.  **Настройка краулера**: Метод `setup_crawler` создает экземпляр `PlaywrightCrawler` с заданными параметрами и определяет обработчик запросов по умолчанию (`request_handler`).
-3.  **Обработка запросов**: `request_handler` вызывается для каждой посещенной страницы. Он извлекает информацию, такую как URL, заголовок и контент страницы, а также добавляет найденные на странице ссылки в очередь для дальнейшей обработки.
-4.  **Запуск краулера**: Метод `run_crawler` запускает процесс сканирования с использованием предоставленного списка URL.
-5.  **Экспорт данных**: Метод `export_data` экспортирует извлеченные данные в JSON-файл.
-6.  **Получение данных**: Метод `get_data` возвращает извлеченные данные в виде словаря.
-7.  **Запуск и управление**: Метод `run` объединяет все этапы: настройку, запуск краулера и экспорт данных.
+**Принцип работы**:
+Класс `CrawleePython` инициализируется с параметрами, определяющими поведение краулера, такими как максимальное количество запросов, режим работы браузера (headless или нет) и тип браузера. Он создает экземпляр `PlaywrightCrawler` и настраивает обработчик запросов по умолчанию, который извлекает данные со страниц и добавляет найденные ссылки в очередь.
+
+**Аттрибуты**:
+- `max_requests` (int): Максимальное количество запросов для выполнения во время обхода.
+- `headless` (bool): Определяет, запускать ли браузер в headless-режиме.
+- `browser_type` (str): Тип используемого браузера ('chromium', 'firefox', 'webkit').
+- `crawler` (PlaywrightCrawler): Экземпляр PlaywrightCrawler.
+- `options` (Optional[List[str]]): Список пользовательских параметров для передачи в браузер.
 
 **Методы**:
+- `__init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox', options: Optional[List[str]] = None)`: Инициализирует краулер CrawleePython с указанными параметрами.
+- `setup_crawler(self)`: Настраивает экземпляр PlaywrightCrawler с указанной конфигурацией.
+- `run_crawler(self, urls: List[str])`: Запускает краулер с начальным списком URL-адресов.
+- `export_data(self, file_path: str)`: Экспортирует весь набор данных в JSON-файл.
+- `get_data(self) -> Dict[str, Any]`: Извлекает извлеченные данные.
+- `run(self, urls: List[str])`: Основной метод для настройки, запуска краулера и экспорта данных.
 
-*   `__init__`: Инициализирует экземпляр класса `CrawleePython`.
-*   `setup_crawler`: Настраивает экземпляр `PlaywrightCrawler`.
-*   `run_crawler`: Запускает краулер с заданным списком URL.
-*   `export_data`: Экспортирует данные в JSON-файл.
-*   `get_data`: Возвращает извлеченные данные.
-*   `run`: Запускает краулер, обрабатывает данные и экспортирует результаты.
-
-### `__init__`
+#### `__init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox', options: Optional[List[str]] = None)`
 
 ```python
 def __init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox', options: Optional[List[str]] = None):
@@ -43,74 +43,86 @@ def __init__(self, max_requests: int = 5, headless: bool = False, browser_type: 
     :type max_requests: int
     :param headless: Whether to run the browser in headless mode.
     :type headless: bool
-    :param browser_type: The type of browser to use ('chromium', 'firefox', 'webkit').
+    :param browser_type: The type of browser to use (\'chromium\', \'firefox\', \'webkit\').
     :type browser_type: str
     :param options: A list of custom options to pass to the browser.
     :type options: Optional[List[str]]
     """
+    self.max_requests = max_requests
+    self.headless = headless
+    self.browser_type = browser_type
+    self.options = options or []
+    self.crawler = None
 ```
 
-**Назначение**: Инициализация экземпляра класса `CrawleePython` с заданными параметрами.
-
-**Как работает функция**:
-
-1.  Принимает параметры: `max_requests` (максимальное количество запросов), `headless` (режим без графического интерфейса), `browser_type` (тип браузера) и `options` (дополнительные опции для запуска браузера).
-2.  Устанавливает значения атрибутов экземпляра класса на основе переданных параметров. Если `options` не переданы, инициализирует их пустым списком.
+**Назначение**: Инициализирует экземпляр класса `CrawleePython` с заданными параметрами.
 
 **Параметры**:
+- `max_requests` (int): Максимальное количество запросов для выполнения во время обхода. По умолчанию `5`.
+- `headless` (bool): Определяет, запускать ли браузер в headless-режиме. По умолчанию `False`.
+- `browser_type` (str): Тип используемого браузера ('chromium', 'firefox', 'webkit'). По умолчанию `'firefox'`.
+- `options` (Optional[List[str]]): Список пользовательских параметров для передачи в браузер. По умолчанию `None`.
 
-*   `max_requests` (int): Максимальное количество запросов для выполнения во время обхода. По умолчанию 5.
-*   `headless` (bool): Определяет, запускать ли браузер в режиме без графического интерфейса. По умолчанию `False`.
-*   `browser_type` (str): Тип используемого браузера (`'chromium'`, `'firefox'`, `'webkit'`). По умолчанию `'firefox'`.
-*   `options` (Optional[List[str]]): Список пользовательских опций для передачи в браузер. По умолчанию `None`.
+**Как работает функция**:
+1.  Присваивает значения атрибутам экземпляра класса на основе переданных аргументов.
+2.  Если `options` не переданы, инициализирует `self.options` пустым списком.
+3.  Устанавливает `self.crawler` в `None`.
 
-**Возвращает**:
-    -   `None`
-
-**Вызывает исключения**:
-    -   Отсутствуют
-
-**Примеры**:
-
-```python
-crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium', options=['--disable-gpu'])
-```
-
-### `setup_crawler`
+#### `setup_crawler(self)`
 
 ```python
 async def setup_crawler(self):
     """
     Sets up the PlaywrightCrawler instance with the specified configuration.
     """
+    self.crawler = PlaywrightCrawler(
+        max_requests_per_crawl=self.max_requests,
+        headless=self.headless,
+        browser_type=self.browser_type,
+        launch_options={"args": self.options}
+    )
+
+    @self.crawler.router.default_handler
+    async def request_handler(context: PlaywrightCrawlingContext) -> None:
+        """
+        Default request handler for processing web pages.
+
+        :param context: The crawling context.
+        :type context: PlaywrightCrawlingContext
+        """
+        context.log.info(f'Processing {context.request.url} ...')
+
+        # Enqueue all links found on the page.
+        await context.enqueue_links()
+
+        # Extract data from the page using Playwright API.
+        data = {
+            'url': context.request.url,
+            'title': await context.page.title(),
+            'content': (await context.page.content())[:100],
+        }
+
+        # Push the extracted data to the default dataset.
+        await context.push_data(data)
 ```
 
 **Назначение**: Настраивает экземпляр `PlaywrightCrawler` с указанной конфигурацией.
 
 **Как работает функция**:
+1.  Создает экземпляр `PlaywrightCrawler` с заданными параметрами, такими как `max_requests_per_crawl`, `headless`, `browser_type` и `launch_options`.
+2.  Определяет асинхронный обработчик запросов `request_handler` для обработки веб-страниц.
 
-1.  Создает экземпляр `PlaywrightCrawler` с параметрами, установленными при инициализации класса: `max_requests_per_crawl`, `headless` и `browser_type`.
-2.  Устанавливает обработчик запросов по умолчанию (`request_handler`) для обработки веб-страниц.
-3.  Обработчик запросов извлекает URL, заголовок и первые 100 символов контента страницы, а также добавляет найденные на странице ссылки в очередь для дальнейшей обработки.
-4.  Извлеченные данные помещаются в набор данных по умолчанию.
+**Внутренние функции**:
+- `request_handler(context: PlaywrightCrawlingContext) -> None`: Обработчик запросов по умолчанию для обработки веб-страниц.
+    - **Параметры**:
+        - `context` (PlaywrightCrawlingContext): Контекст обхода.
+    - **Как работает функция**:
+        1.  Логирует информацию об обрабатываемом URL.
+        2.  Добавляет все найденные ссылки на странице в очередь.
+        3.  Извлекает данные со страницы с использованием Playwright API, такие как URL, заголовок и первые 100 символов содержимого.
+        4.  Помещает извлеченные данные в набор данных по умолчанию.
 
-**Параметры**:
-
-*   `self` (CrawleePython): Экземпляр класса `CrawleePython`.
-
-**Возвращает**:
-    -   `None`
-
-**Вызывает исключения**:
-    -   Отсутствуют
-
-**Примеры**:
-
-```python
-await crawler.setup_crawler()
-```
-
-### `run_crawler`
+#### `run_crawler(self, urls: List[str])`
 
 ```python
 async def run_crawler(self, urls: List[str]):
@@ -120,33 +132,18 @@ async def run_crawler(self, urls: List[str]):
     :param urls: List of URLs to start the crawl.
     :type urls: List[str]
     """
+    await self.crawler.run(urls)
 ```
 
-**Назначение**: Запускает краулер с начальным списком URL.
-
-**Как работает функция**:
-
-1.  Принимает список URL в качестве аргумента.
-2.  Вызывает метод `run` экземпляра `PlaywrightCrawler` для запуска процесса сканирования с использованием предоставленных URL.
+**Назначение**: Запускает краулер с начальным списком URL-адресов.
 
 **Параметры**:
+- `urls` (List[str]): Список URL-адресов для начала обхода.
 
-*   `self` (CrawleePython): Экземпляр класса `CrawleePython`.
-*   `urls` (List[str]): Список URL для запуска сканирования.
+**Как работает функция**:
+1.  Вызывает метод `run` экземпляра `PlaywrightCrawler` с переданным списком URL-адресов.
 
-**Возвращает**:
-    -   `None`
-
-**Вызывает исключения**:
-    -   Отсутствуют
-
-**Примеры**:
-
-```python
-await crawler.run_crawler(['https://www.example.com', 'https://www.example.org'])
-```
-
-### `export_data`
+#### `export_data(self, file_path: str)`
 
 ```python
 async def export_data(self, file_path: str):
@@ -156,33 +153,18 @@ async def export_data(self, file_path: str):
     :param file_path: Path to save the exported JSON file.
     :type file_path: str
     """
+    await self.crawler.export_data(file_path)
 ```
 
 **Назначение**: Экспортирует весь набор данных в JSON-файл.
 
-**Как работает функция**:
-
-1.  Принимает путь к файлу, в который нужно сохранить экспортированные данные.
-2.  Вызывает метод `export_data` экземпляра `PlaywrightCrawler` для выполнения экспорта данных в указанный файл.
-
 **Параметры**:
+- `file_path` (str): Путь для сохранения экспортированного JSON-файла.
 
-*   `self` (CrawleePython): Экземпляр класса `CrawleePython`.
-*   `file_path` (str): Путь для сохранения экспортированного JSON-файла.
+**Как работает функция**:
+1.  Вызывает метод `export_data` экземпляра `PlaywrightCrawler` с указанным путем к файлу.
 
-**Возвращает**:
-    -   `None`
-
-**Вызывает исключения**:
-    -   Отсутствуют
-
-**Примеры**:
-
-```python
-await crawler.export_data('data.json')
-```
-
-### `get_data`
+#### `get_data(self) -> Dict[str, Any]`
 
 ```python
 async def get_data(self) -> Dict[str, Any]:
@@ -192,34 +174,20 @@ async def get_data(self) -> Dict[str, Any]:
     :return: Extracted data as a dictionary.
     :rtype: Dict[str, Any]
     """
+    data = await self.crawler.get_data()
+    return data
 ```
 
-**Назначение**: Извлекает полученные данные.
-
-**Как работает функция**:
-
-1.  Вызывает метод `get_data` экземпляра `PlaywrightCrawler` для получения извлеченных данных.
-2.  Возвращает извлеченные данные в виде словаря.
-
-**Параметры**:
-
-*   `self` (CrawleePython): Экземпляр класса `CrawleePython`.
+**Назначение**: Извлекает извлеченные данные.
 
 **Возвращает**:
+- `Dict[str, Any]`: Извлеченные данные в виде словаря.
 
-*   `Dict[str, Any]`: Извлеченные данные в виде словаря.
+**Как работает функция**:
+1.  Вызывает метод `get_data` экземпляра `PlaywrightCrawler`.
+2.  Возвращает извлеченные данные.
 
-**Вызывает исключения**:
-    -   Отсутствуют
-
-**Примеры**:
-
-```python
-data = await crawler.get_data()
-print(data)
-```
-
-### `run`
+#### `run(self, urls: List[str])`
 
 ```python
 async def run(self, urls: List[str]):
@@ -229,81 +197,39 @@ async def run(self, urls: List[str]):
     :param urls: List of URLs to start the crawl.
     :type urls: List[str]
     """
+    try:
+        await self.setup_crawler()
+        await self.run_crawler(urls)
+        await self.export_data(str(Path(gs.path.tmp / 'results.json')))
+        data = await self.get_data()
+        logger.info(f'Extracted data: {data.items()}')
+    except Exception as ex:
+        logger.critical('Crawler failed with an error:', ex)
 ```
 
 **Назначение**: Основной метод для настройки, запуска краулера и экспорта данных.
 
-**Как работает функция**:
-
-1.  Принимает список URL в качестве аргумента для запуска сканирования.
-2.  Вызывает метод `setup_crawler` для настройки краулера.
-3.  Вызывает метод `run_crawler` для запуска процесса сканирования.
-4.  Вызывает метод `export_data` для экспорта извлеченных данных в JSON-файл `results.json` во временную директорию.
-5.  Вызывает метод `get_data` для получения извлеченных данных.
-6.  Логирует извлеченные данные, используя `logger.info`.
-7.  Обрабатывает возможные исключения, возникающие в процессе, и логирует критическую ошибку с использованием `logger.critical`.
-
 **Параметры**:
+- `urls` (List[str]): Список URL-адресов для начала обхода.
 
-*   `self` (CrawleePython): Экземпляр класса `CrawleePython`.
-*   `urls` (List[str]): Список URL для запуска сканирования.
-
-**Возвращает**:
-    -   `None`
-
-**Вызывает исключения**:
-    -   `Exception`: Если возникает ошибка во время настройки, запуска или экспорта данных.
-
-**Примеры**:
-
-```python
-await crawler.run(['https://www.example.com', 'https://www.example.org'])
-```
+**Как работает функция**:
+1.  Вызывает метод `setup_crawler` для настройки краулера.
+2.  Вызывает метод `run_crawler` для запуска краулера с переданным списком URL-адресов.
+3.  Вызывает метод `export_data` для экспорта данных в JSON-файл `results.json` во временной директории.
+4.  Вызывает метод `get_data` для извлечения данных.
+5.  Логирует извлеченные данные.
+6.  В случае возникновения ошибки логирует критическую информацию об ошибке.
 
 ## Функции
 
-### `request_handler`
+В данном модуле нет отдельных функций, только методы класса `CrawleePython`.
+
+## Примеры
 
 ```python
-async def request_handler(context: PlaywrightCrawlingContext) -> None:
-    """
-    Default request handler for processing web pages.
-
-    :param context: The crawling context.
-    :type context: PlaywrightCrawlingContext
-    """
-```
-
-**Назначение**: Обработчик запросов по умолчанию для обработки веб-страниц.
-
-**Как работает функция**:
-
-1.  Логирует информацию об обрабатываемом URL с использованием `context.log.info`.
-2.  Добавляет все найденные на странице ссылки в очередь для дальнейшей обработки с использованием `context.enqueue_links()`.
-3.  Извлекает данные со страницы, такие как URL, заголовок и первые 100 символов контента, используя API Playwright.
-4.  Помещает извлеченные данные в набор данных по умолчанию с использованием `context.push_data()`.
-
-**Параметры**:
-
-*   `context` (PlaywrightCrawlingContext): Контекст сканирования, предоставляющий доступ к информации о текущем запросе и странице.
-
-**Возвращает**:
-    -   `None`
-
-**Вызывает исключения**:
-    -   Отсутствуют
-
-**Примеры**:
-    -   Этот обработчик устанавливается внутри `setup_crawler` и вызывается автоматически для каждой страницы, посещенной краулером.
-
-## Примеры использования
-
-```python
-if __name__ == "__main__":
+if __name__ == '__main__':
     async def main():
         crawler = CrawleePython(max_requests=5, headless=False, browser_type='firefox', options=["--headless"])
         await crawler.run(['https://www.example.com'])
 
     asyncio.run(main())
-```
-```

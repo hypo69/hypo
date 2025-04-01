@@ -1,30 +1,26 @@
-# Модуль для поддержки инструментов у провайдеров g4f
+# Модуль поддержки инструментов
+
 ## Обзор
 
-Модуль `tool_support.py` предназначен для обеспечения поддержки инструментов (tools) в асинхронных провайдерах g4f (gpt4free). Он предоставляет класс `ToolSupportProvider`, который позволяет использовать инструменты, такие как функции, при взаимодействии с различными моделями.
+Модуль `tool_support.py` предоставляет класс `ToolSupportProvider`, который является асинхронным провайдером для работы с инструментами (tools) в запросах к моделям. Он позволяет использовать инструменты, такие как JSON, для форматирования ответов.
 
 ## Подробней
 
-Этот модуль играет роль связующего звена между запросами, требующими использования инструментов, и асинхронными провайдерами, которые эти инструменты поддерживают. Он обрабатывает запросы с инструментами, форматирует ответы и обеспечивает совместимость между различными компонентами системы.
+Этот модуль предназначен для упрощения взаимодействия с различными моделями, поддерживающими инструменты, такие как JSON. Он обрабатывает запросы, форматирует сообщения и предоставляет ответы в нужном формате.
+Модуль использует другие модули проекта, такие как `typing`, `service`, `helper`, `base_provider` и `response`.
 
 ## Классы
 
 ### `ToolSupportProvider`
 
-**Описание**: Класс `ToolSupportProvider` является асинхронным провайдером, обеспечивающим поддержку инструментов.
+**Описание**:
+Класс `ToolSupportProvider` предоставляет асинхронный генератор для поддержки инструментов при взаимодействии с моделями.
 
-**Принцип работы**:
-1.  При получении запроса с инструментами класс проверяет их количество и формат.
-2.  Форматирует запрос, добавляя информацию о требуемом формате ответа (JSON).
-3.  Передает запрос асинхронному провайдеру.
-4.  Обрабатывает полученные чанки данных, собирает их и формирует `ToolCalls` с информацией о вызванных инструментах.
-5.  Возвращает результат в виде `ToolCalls` или просто чанков текста.
+**Наследует**:
+`AsyncGeneratorProvider` - базовый класс для асинхронных провайдеров генераторов.
 
-**Методы**:
-
-*   `create_async_generator`: Асинхронный генератор для создания ответов с использованием инструментов.
-
-## Функции
+**Атрибуты**:
+- `working` (bool): Флаг, указывающий, работает ли провайдер. Установлен в `True`.
 
 ### `create_async_generator`
 
@@ -41,86 +37,122 @@ async def create_async_generator(
     **kwargs
 ) -> AsyncResult:
     """
-    Создает асинхронный генератор для получения ответов с использованием инструментов.
+    Создает асинхронный генератор для работы с моделями, поддерживающими инструменты.
 
     Args:
-        model (str): Имя модели для использования.
-        messages (Messages): Список сообщений для отправки модели.
-        stream (bool, optional): Флаг потоковой передачи данных. По умолчанию True.
-        media (MediaListType, optional): Список медиафайлов для отправки модели. По умолчанию None.
-        tools (list[str], optional): Список инструментов для использования. По умолчанию None.
-        response_format (dict, optional): Формат ответа. По умолчанию None.
-        **kwargs: Дополнительные аргументы для передачи провайдеру.
+        model (str): Имя модели. Может включать имя провайдера через двоеточие (например, "provider:model").
+        messages (Messages): Список сообщений для отправки в модель.
+        stream (bool): Флаг, указывающий, использовать ли потоковую передачу данных. По умолчанию `True`.
+        media (MediaListType, optional): Список медиафайлов для отправки в модель. По умолчанию `None`.
+        tools (list[str], optional): Список инструментов для использования. Поддерживается только один инструмент. По умолчанию `None`.
+        response_format (dict, optional): Формат ответа. По умолчанию `None`.
+        **kwargs: Дополнительные аргументы, передаваемые в функцию создания модели.
 
     Returns:
-        AsyncResult: Асинхронный генератор, возвращающий чанки данных, Usage и FinishReason.
+        AsyncResult: Асинхронный генератор, возвращающий чанки данных.
 
     Raises:
-        ValueError: Если передано больше одного инструмента.
+        ValueError: Если передано более одного инструмента.
+
+    Как работает функция:
+    1.  Определяется провайдер и модель на основе входного параметра `model`. Если в `model` указан провайдер через двоеточие, то он извлекается.
+    2.  Полученные провайдер и модель передаются в функцию `get_model_and_provider`, которая возвращает соответствующие объекты.
+    3.  Если указаны инструменты (`tools` is not `None`):
+        *   Проверяется, что передан только один инструмент. Если инструментов больше одного, вызывается исключение `ValueError`.
+        *   Если `response_format` не указан, устанавливается значение по умолчанию `{"type": "json"}`.
+        *   Извлекаются параметры инструмента и формируется сообщение для модели с инструкцией о формате ответа.
+        *   Обновляется список сообщений (`messages`), добавляя в начало сообщение с инструкцией о формате ответа.
+    4.  Инициализируются переменные `finish`, `chunks` и `has_usage` для хранения промежуточных результатов.
+    5.  Вызывается асинхронный генератор `provider.get_async_create_function()`, который возвращает чанки данных от модели.
+    6.  В цикле перебираются чанки данных:
+        *   Если чанк является строкой (`str`), он добавляется в список `chunks`.
+        *   Если чанк является объектом `Usage`, он передается в вызывающий код и устанавливается флаг `has_usage`.
+        *   Если чанк является объектом `FinishReason`, он сохраняется в переменной `finish` и цикл завершается.
+        *   В противном случае чанк передается в вызывающий код.
+    7.  Если не было информации об использовании токенов (`not has_usage`), генерируется объект `Usage` на основе длины накопленных чанков и передается в вызывающий код.
+    8.  Накопленные чанки объединяются в одну строку (`chunks`).
+    9.  Если использовались инструменты (`tools` is not `None`):
+        *   Формируется объект `ToolCalls` с информацией о вызове инструмента, включая имя функции и аргументы, извлеченные из чанков.
+        *   Объект `ToolCalls` передается в вызывающий код.
+    10. Объединенная строка чанков передается в вызывающий код.
+    11. Если была получена причина завершения (`finish` is not `None`), она передается в вызывающий код.
+
+    A --> get_model_and_provider
+    |
+    B --> Проверка инструментов
+    |
+    C --> provider.get_async_create_function
+    |
+    D --> Обработка чанков
+    |
+    E --> ToolCalls
+    |
+    F
+
+    Примеры:
+    async def example():
+        model = "gpt-3.5-turbo"
+        messages = [{"role": "user", "content": "Hello, how are you?"}]
+        async for chunk in ToolSupportProvider.create_async_generator(model=model, messages=messages):
+            print(chunk)
 
     """
-```
+    provider = None
+    if ":" in model:
+        provider, model = model.split(":", 1)
+    model, provider = get_model_and_provider(
+        model, provider,
+        stream, logging=False,
+        has_images=media is not None
+    )
+    if tools is not None:
+        if len(tools) > 1:
+            raise ValueError("Only one tool is supported.")
+        if response_format is None:
+            response_format = {"type": "json"}
+        tools = tools.pop()
+        lines = ["Respone in JSON format."]
+        properties = tools["function"]["parameters"]["properties"]
+        properties = {key: value["type"] for key, value in properties.items()}
+        lines.append(f"Response format: {json.dumps(properties, indent=2)}")
+        messages = [{"role": "user", "content": "\\n".join(lines)}] + messages
 
-**Назначение**: Создание асинхронного генератора для получения ответов с использованием инструментов.
+    finish = None
+    chunks = []
+    has_usage = False
+    async for chunk in provider.get_async_create_function()(
+        model,
+        messages,
+        stream=stream,
+        media=media,
+        response_format=response_format,
+        **kwargs
+    ):
+        if isinstance(chunk, str):
+            chunks.append(chunk)
+        elif isinstance(chunk, Usage):
+            yield chunk
+            has_usage = True
+        elif isinstance(chunk, FinishReason):
+            finish = chunk
+            break
+        else:
+            yield chunk
 
-**Параметры**:
+    if not has_usage:
+        yield Usage(completion_tokens=len(chunks), total_tokens=len(chunks))
 
-*   `cls`: Ссылка на класс `ToolSupportProvider`.
-*   `model` (str): Имя модели для использования.
-*   `messages` (Messages): Список сообщений для отправки модели.
-*   `stream` (bool, optional): Флаг потоковой передачи данных. По умолчанию `True`.
-*   `media` (MediaListType, optional): Список медиафайлов для отправки модели. По умолчанию `None`.
-*   `tools` (list[str], optional): Список инструментов для использования. По умолчанию `None`.
-*   `response_format` (dict, optional): Формат ответа. По умолчанию `None`.
-*   `**kwargs`: Дополнительные аргументы для передачи провайдеру.
+    chunks = "".join(chunks)
+    if tools is not None:
+        yield ToolCalls([{\
+            "id": "",\
+            "type": "function",\
+            "function": {\
+                "name": tools["function"]["name"],\
+                "arguments": filter_json(chunks)\
+            }\
+        }])
+    yield chunks
 
-**Возвращает**:
-
-*   `AsyncResult`: Асинхронный генератор, возвращающий чанки данных, `Usage` и `FinishReason`.
-
-**Вызывает исключения**:
-
-*   `ValueError`: Если передано больше одного инструмента.
-
-**Как работает функция**:
-
-1.  Функция принимает параметры, необходимые для создания запроса к модели с использованием инструментов.
-2.  Определяет провайдера и модель, используя функцию `get_model_and_provider`.
-3.  Если указаны инструменты, проверяет их количество и формат, а также формирует сообщение с инструкцией о формате ответа (JSON).
-4.  Создает асинхронный генератор на основе `provider.get_async_create_function()`, который отправляет запросы и получает ответы от модели.
-5.  Обрабатывает чанки данных, собирает их и формирует объекты `ToolCalls` с информацией о вызванных инструментах.
-6.  Возвращает асинхронный генератор, который выдает чанки данных, информацию об использовании (`Usage`) и причину завершения (`FinishReason`).
-
-**Внутренние логические блоки функции**:
-
-*   **Определение провайдера и модели**: Определяет используемого провайдера и модель на основе входных параметров.
-*   **Обработка инструментов**: Проверяет и форматирует инструменты, если они указаны.
-*   **Создание асинхронного генератора**: Создает асинхронный генератор для взаимодействия с моделью.
-*   **Обработка чанков данных**: Обрабатывает чанки данных, полученные от модели, и формирует объекты `ToolCalls`.
-*   **Формирование результата**: Возвращает асинхронный генератор, выдающий чанки данных, информацию об использовании и причину завершения.
-
-**Примеры**:
-
-```python
-# Пример использования create_async_generator с инструментами
-model = "gpt-4"
-messages = [{"role": "user", "content": "Напиши функцию на Python, которая складывает два числа."}]
-tools = [{"function": {"name": "add_numbers", "parameters": {"properties": {"a": {"type": "number"}, "b": {"type": "number"}}}}}]
-async for chunk in ToolSupportProvider.create_async_generator(model=model, messages=messages, tools=tools):
-    print(chunk)
-```
-
-```python
-# Пример использования create_async_generator без инструментов
-model = "gpt-3.5-turbo"
-messages = [{"role": "user", "content": "Привет!"}]
-async for chunk in ToolSupportProvider.create_async_generator(model=model, messages=messages):
-    print(chunk)
-```
-```python
-# Пример с response_format
-model = "gpt-3.5-turbo"
-messages = [{"role": "user", "content": "Привет!"}]
-response_format = {"type": "json_object"}
-async for chunk in ToolSupportProvider.create_async_generator(model=model, messages=messages, response_format = response_format):
-    print(chunk)
+    if finish is not None:
+        yield finish

@@ -1,27 +1,34 @@
-# Модуль `shop.py`
+# Модуль для работы с магазином PrestaShop
 
 ## Обзор
 
-Модуль `shop.py` предназначен для работы с магазинами PrestaShop. Он содержит класс `PrestaShopShop`, который наследует функциональность от класса `PrestaShop` и предоставляет методы для взаимодействия с API PrestaShop.
+Модуль `shop.py` предназначен для взаимодействия с магазинами, созданными на платформе PrestaShop. Он включает в себя класс `PrestaShopShop`, который наследуется от класса `PrestaShop` и предоставляет функциональность для работы с API PrestaShop. Модуль обеспечивает возможность инициализации магазина PrestaShop с использованием домена API и ключа API.
 
 ## Подробнее
 
-Этот модуль является частью проекта `hypotez` и предназначен для упрощения взаимодействия с API PrestaShop. Он позволяет инициализировать магазины PrestaShop, используя домен API и ключ API. Модуль также обрабатывает исключения, связанные с PrestaShop, и использует логирование для отслеживания ошибок.
+Этот модуль обеспечивает удобный интерфейс для работы с магазинами PrestaShop, позволяя упростить процесс взаимодействия с API и выполнения различных операций, таких как получение данных о продуктах, категориях и т.д. Он использует модуль `src.logger` для логирования событий и ошибок, а также модуль `src.utils.jjson` для работы с JSON-данными.
 
 ## Классы
 
 ### `PrestaShopShop`
 
-**Описание**: Класс `PrestaShopShop` предназначен для работы с магазинами PrestaShop.
+**Описание**: Класс `PrestaShopShop` предназначен для работы с магазинами PrestaShop. Он наследуется от класса `PrestaShop` и предоставляет методы для взаимодействия с API PrestaShop.
 
-**Как работает класс**:
-Класс `PrestaShopShop` наследуется от класса `PrestaShop` и расширяет его функциональность, предоставляя методы для взаимодействия с API PrestaShop. При инициализации класса требуется передать домен API и ключ API, которые используются для аутентификации при взаимодействии с API PrestaShop.
+**Наследует**:
+
+- `PrestaShop`: Класс, предоставляющий базовую функциональность для работы с API PrestaShop.
+
+**Атрибуты**:
+
+- Отсутствуют специфичные атрибуты, кроме тех, что наследуются от `PrestaShop`.
 
 **Методы**:
 
 - `__init__`: Инициализирует экземпляр класса `PrestaShopShop`.
 
-#### `__init__`
+## Функции
+
+### `__init__`
 
 ```python
 def __init__(self, 
@@ -39,40 +46,50 @@ def __init__(self,
     ...
 ```
 
-**Как работает функция**:
-Функция `__init__` инициализирует экземпляр класса `PrestaShopShop`. Она принимает параметры `credentials`, `api_domain` и `api_key`, которые используются для аутентификации при взаимодействии с API PrestaShop. Если параметр `credentials` передан, он должен содержать параметры `api_domain` и `api_key`. Если параметры `api_domain` и `api_key` не переданы, функция вызывает исключение `ValueError`.
-
-Внутри функции происходят следующие действия и преобразования:
-A. Проверяется, передан ли параметр `credentials`.
-|
-B. Если параметр `credentials` передан, из него извлекаются значения `api_domain` и `api_key`.
-|
-C. Проверяется, установлены ли значения `api_domain` и `api_key`.
-|
-D. Если значения `api_domain` или `api_key` не установлены, вызывается исключение `ValueError`.
-|
-E. Вызывается конструктор родительского класса `PrestaShop` с переданными параметрами.
+**Назначение**: Инициализация экземпляра класса `PrestaShopShop`.
 
 **Параметры**:
-- `credentials` (Optional[dict | SimpleNamespace], optional): Словарь или объект `SimpleNamespace` с параметрами `api_domain` и `api_key`. По умолчанию `None`.
+
+- `credentials` (Optional[dict | SimpleNamespace], optional): Словарь или объект `SimpleNamespace`, содержащий параметры `api_domain` и `api_key`. По умолчанию `None`.
 - `api_domain` (Optional[str], optional): Домен API. По умолчанию `None`.
 - `api_key` (Optional[str], optional): Ключ API. По умолчанию `None`.
 - `*args`: Произвольные позиционные аргументы, передаваемые в конструктор родительского класса.
 - `**kwards`: Произвольные именованные аргументы, передаваемые в конструктор родительского класса.
 
 **Возвращает**:
+
 - None
 
 **Вызывает исключения**:
-- `ValueError`: Если не переданы параметры `api_domain` и `api_key`.
+
+- `ValueError`: Если не указаны оба параметра `api_domain` и `api_key`.
+
+**Как работает функция**:
+
+1. **Проверка наличия credentials**: Функция проверяет, передан ли параметр `credentials`. Если да, извлекает значения `api_domain` и `api_key` из него, перезаписывая значения, переданные напрямую, если они есть.
+2. **Валидация параметров**: Проверяет, указаны ли `api_domain` и `api_key`. Если хотя бы один из них не указан, возбуждается исключение `ValueError`.
+3. **Вызов конструктора родительского класса**: Вызывает конструктор родительского класса `PrestaShop` с переданными параметрами.
+
+```
+A: Проверка credentials
+|
+-- B: Извлечение api_domain и api_key из credentials (если credentials переданы)
+|
+C: Валидация api_domain и api_key
+|
+-- D: Вызов конструктора родительского класса PrestaShop
+```
 
 **Примеры**:
 
 ```python
-# Пример инициализации класса PrestaShopShop с использованием параметров api_domain и api_key
-shop = PrestaShopShop(api_domain='https://example.com/api', api_key='YOUR_API_KEY')
+# Пример 1: Инициализация с использованием отдельных параметров
+shop = PrestaShopShop(api_domain='https://example.com/api', api_key='your_api_key')
 
-# Пример инициализации класса PrestaShopShop с использованием параметра credentials
-credentials = {'api_domain': 'https://example.com/api', 'api_key': 'YOUR_API_KEY'}
+# Пример 2: Инициализация с использованием credentials в виде словаря
+credentials = {'api_domain': 'https://example.com/api', 'api_key': 'your_api_key'}
 shop = PrestaShopShop(credentials=credentials)
-```
+
+# Пример 3: Инициализация с использованием credentials в виде SimpleNamespace
+credentials = SimpleNamespace(api_domain='https://example.com/api', api_key='your_api_key')
+shop = PrestaShopShop(credentials=credentials)
