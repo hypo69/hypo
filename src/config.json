@@ -1,7 +1,8 @@
 {
-  "host": "127.0.0.1",
+  "host": "0.0.0.0",
   "git": "hypo",
   "git_user": "hypo69",
+  "current_release": "",
 
   "path": {
     "external_storage": "E:\\hypo69\\data",

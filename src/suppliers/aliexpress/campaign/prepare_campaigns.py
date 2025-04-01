@@ -1,12 +1,12 @@
 ## \file /src/suppliers/aliexpress/campaign/prepare_campaigns.py
 # -*- coding: utf-8 -*-
-
 #! .pyenv/bin/python3
-
 """
+```rst
 .. module:: src.suppliers.aliexpress.campaign 
 	:platform: Windows, Unix
 	:synopsis: module prepares AliExpress campaigns by processing categories, handling campaign data, and generating promotional materials
+```
 
 ### Examples:
 To run the script for a specific campaign:

@@ -80,7 +80,6 @@ class ProgramSettings:
     
     base_dir: Path = field(default_factory=lambda: set_project_root())
     config: SimpleNamespace = field(default_factory=lambda: SimpleNamespace())
-    
     credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         aliexpress=SimpleNamespace(
             api_key=None,
@@ -130,7 +129,6 @@ class ProgramSettings:
         facebook=[],
         gapi={}
     ))
-
     path: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         root = None,
         src = None,
@@ -144,8 +142,12 @@ class ProgramSettings:
         tools = None,
         dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
     ))
+    host:str = field(default='')
+    git:str = field(default='')
+    git_user:str = field(default='')
+    current_release:str = field(default='')
 
-    host:str = field(default = '127.0.0.1')
+
 
     def __post_init__(self):
         """Выполняет инициализацию после создания экземпляра класса."""
@@ -156,7 +158,10 @@ class ProgramSettings:
             sys.exit()
         self.config.timestamp_format = getattr(self.config, 'timestamp_format', '%y_%m_%d_%H_%M_%S_%f')
         self.config.project_name = self.base_dir.name
-        self.host = getattr( self.config,'host', '127.0.0.1')
+        self.host = getattr( self.config,'host', '0.0.0.0')
+        self.git = getattr( self.config,'git', 'hypo') 
+        self.git_user = getattr( self.config,'git_user', 'hypo69')
+        self.current_release = getattr( self.config,'current_release', '')
         self.path:SimpleNamespace = SimpleNamespace(
             root = Path(self.base_dir),
             bin = Path(self.base_dir / 'bin'), # <- тут бинарники (chrome, firefox, ffmpeg, ...)
@@ -171,8 +176,7 @@ class ProgramSettings:
             external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') ), # <- Внешний диск 
         )
 
-        if check_latest_release(self.config.git_user, self.config.git):
-            ...  # Логика что делать когда есть новая версия hypo69 на github 
+
 
     
         # Paths to bin directories
