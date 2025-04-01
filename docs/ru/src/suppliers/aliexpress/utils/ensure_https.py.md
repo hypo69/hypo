@@ -2,11 +2,12 @@
 
 ## Обзор
 
-Модуль `ensure_https` предназначен для проверки и добавления префикса `https://` к предоставленным URL или идентификаторам продуктов. Если на вход передается идентификатор продукта, модуль конструирует полный URL с использованием этого идентификатора и добавляет префикс `https://`.
+Модуль `ensure_https` предназначен для проверки и добавления префикса `https://` к строкам URL или идентификаторам продуктов AliExpress. Если передается идентификатор продукта, модуль формирует полную ссылку с использованием этого идентификатора.
 
 ## Подробней
 
-Этот модуль используется для стандартизации URL, используемых в проекте `hypotez`, особенно при работе с данными, полученными от AliExpress. Он гарантирует, что все URL имеют безопасный протокол HTTPS, что важно для безопасности и надежности приложения. Функция `ensure_https` принимает строку или список строк и возвращает строку или список строк с добавленным или сохраненным префиксом `https://`.
+Этот модуль важен для обеспечения безопасного доступа к ресурсам AliExpress. Он проверяет, начинается ли URL с `https://`, и добавляет этот префикс, если он отсутствует. Если передается идентификатор продукта, он формирует полную ссылку на продукт на AliExpress.
+Код используется в проекте `hypotez` для <целей проекта hypotez: для стандартизации и обеспечения безопасности URL-адресов при работе с данными о товарах с AliExpress>.
 
 ## Функции
 
@@ -36,73 +37,72 @@ def ensure_https(prod_ids: str | list[str]) -> str | list[str]:
         >>> ensure_https("https://www.example.com/item/example_product_id")
         'https://www.example.com/item/example_product_id'
     """
-    ...
 ```
 
-**Описание**: Функция `ensure_https` проверяет, содержит ли предоставленная строка URL-адрес или идентификатор продукта префикс `https://`. Если входные данные являются идентификатором продукта, функция создает полный URL-адрес с префиксом `https://`.
-
-**Как работает функция**:
-1. Функция `ensure_https` принимает на вход либо строку `prod_ids`, представляющую собой URL или идентификатор продукта, либо список строк, содержащих URL-ы или идентификаторы продуктов.
-2. Если `prod_ids` является списком, функция применяет функцию `ensure_https_single` к каждому элементу списка и возвращает новый список с обработанными URL.
-3. Если `prod_ids` является строкой, функция вызывает `ensure_https_single` для обработки этой строки и возвращает результат.
+**Назначение**:
+Функция `ensure_https` проверяет, содержит ли предоставленная строка URL или список URL-ов префикс `https://`. Если входные данные являются идентификатором продукта, функция создает полный URL с префиксом `https://`.
 
 **Параметры**:
-- `prod_ids` (str | list[str]): URL-адрес или список URL-адресов для проверки и изменения при необходимости.
+- `prod_ids` (str | list[str]): URL-адрес в виде строки или список URL-адресов для проверки и изменения при необходимости.
 
 **Возвращает**:
-- `str | list[str]`: URL-адрес или список URL-адресов с префиксом `https://`.
+- `str | list[str]`: URL-адрес в виде строки или список URL-адресов с префиксом `https://`.
 
 **Вызывает исключения**:
 - `ValueError`: Если `prod_ids` является экземпляром `WindowsPath`.
 
-**Примеры**:
-
-```python
-ensure_https("example_product_id")
-# Результат: 'https://www.aliexpress.com/item/example_product_id.html'
-
-ensure_https(["example_product_id1", "https://www.aliexpress.com/item/example_product_id2.html"])
-# Результат: ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
-
-ensure_https("https://www.example.com/item/example_product_id")
-# Результат: 'https://www.example.com/item/example_product_id'
-```
-
-### `ensure_https_single`
-
-```python
-def ensure_https_single(prod_id: str) -> str:
-    """ Ensures a single URL or product ID string has the https:// prefix.
-
-    Args:
-        prod_id (str): The URL or product ID string.
-
-    Returns:
-        str: The URL string with the https:// prefix.
-
-    Raises:
-        ValueError: If `prod_id` is an instance of `WindowsPath`.
-
-    Examples:
-        >>> ensure_https_single("example_product_id")
-        'https://www.aliexpress.com/item/example_product_id.html'
-
-        >>> ensure_https_single("https://www.example.com/item/example_product_id")
-        'https://www.example.com/item/example_product_id'
-    """
-    ...
-```
-
-**Описание**: Функция `ensure_https_single` проверяет, содержит ли предоставленная строка URL-адрес или идентификатор продукта префикс `https://`. Если входные данные являются идентификатором продукта, функция создает полный URL-адрес с префиксом `https://`.
-
 **Как работает функция**:
-1. Функция `ensure_https_single` принимает на вход строку `prod_id`, представляющую собой URL или идентификатор продукта.
-2. Использует функцию `extract_prod_ids` для извлечения идентификатора продукта из входной строки.
-3. Если `extract_prod_ids` возвращает значение (т.е. был обнаружен идентификатор продукта), функция формирует URL-адрес на основе этого идентификатора с префиксом `https://` и возвращает его.
-4. Если `extract_prod_ids` возвращает `None` (т.е. не удалось извлечь идентификатор продукта), функция логирует ошибку с помощью `logger.error` и возвращает исходную строку `prod_id`.
+1. Функция `ensure_https` принимает на вход строку `prod_ids`, которая может быть как отдельным URL или ID продукта, так и списком таких строк.
+2. Проверяется, является ли `prod_ids` списком.
+3. Если `prod_ids` является списком, то функция применяет внутреннюю функцию `ensure_https_single` к каждому элементу списка и возвращает новый список с обработанными URL.
+4. Если `prod_ids` не является списком (то есть строка), функция вызывает `ensure_https_single` для этой строки и возвращает результат.
+
+Внутри функции происходят следующие действия и преобразования:
+
+A. **Проверка типа входных данных**: Определяется, является ли входной параметр списком или строкой.
+|
+B. **Обработка списка URL**: Если входной параметр является списком, каждый URL в списке обрабатывается с помощью функции `ensure_https_single`.
+|
+C. **Обработка отдельного URL**: Если входной параметр является строкой, он непосредственно передается в функцию `ensure_https_single`.
+
+**Внутренние функции**:
+
+#### `ensure_https_single`
+
+```python
+    def ensure_https_single(prod_id: str) -> str:
+        """ Ensures a single URL or product ID string has the https:// prefix.
+
+        Args:
+            prod_id (str): The URL or product ID string.
+
+        Returns:
+            str: The URL string with the https:// prefix.
+
+        Raises:
+            ValueError: If `prod_id` is an instance of `WindowsPath`.
+
+        Examples:
+            >>> ensure_https_single("example_product_id")
+            'https://www.aliexpress.com/item/example_product_id.html'
+
+            >>> ensure_https_single("https://www.example.com/item/example_product_id")
+            'https://www.example.com/item/example_product_id'
+        """
+        ...
+        _prod_id = extract_prod_ids(prod_id)
+        if _prod_id:
+            return f"https://www.aliexpress.com/item/{_prod_id}.html"
+        else:
+            logger.error(f"Invalid product ID or URL: {prod_id=}", exc_info=False)
+            return prod_id
+```
+
+**Назначение**:
+Функция `ensure_https_single` обеспечивает добавление префикса `https://` к одному URL-адресу или идентификатору продукта.
 
 **Параметры**:
-- `prod_id` (str): URL-адрес или идентификатор продукта.
+- `prod_id` (str): URL-адрес или идентификатор продукта в виде строки.
 
 **Возвращает**:
 - `str`: URL-адрес с префиксом `https://`.
@@ -110,11 +110,42 @@ def ensure_https_single(prod_id: str) -> str:
 **Вызывает исключения**:
 - `ValueError`: Если `prod_id` является экземпляром `WindowsPath`.
 
+**Как работает функция**:
+
+1. Функция `ensure_https_single` принимает на вход строку `prod_id`, которая может быть URL-ом или ID продукта.
+2. Извлекает ID продукта из входной строки с помощью функции `extract_prod_ids`.
+3. Если `_prod_id` не пустой, функция возвращает URL с префиксом `https://` и извлеченным ID продукта.
+4. В противном случае, если `_prod_id` пустой, функция логирует ошибку и возвращает исходный `prod_id` без изменений.
+
+Внутри функции происходят следующие действия и преобразования:
+
+A. **Извлечение ID продукта**: Используется функция `extract_prod_ids` для извлечения ID продукта из входной строки.
+|
+B. **Проверка ID продукта**: Проверяется, был ли успешно извлечен ID продукта.
+|
+C. **Формирование URL**: Если ID продукта был успешно извлечен, формируется URL с использованием префикса `https://` и ID продукта.
+|
+D. **Обработка ошибки**: Если ID продукта не был извлечен, логируется ошибка и возвращается исходная строка.
+
 **Примеры**:
 
-```python
-ensure_https_single("example_product_id")
-# Результат: 'https://www.aliexpress.com/item/example_product_id.html'
+- Пример 1: Проверка и добавление `https://` к идентификатору продукта.
 
-ensure_https_single("https://www.example.com/item/example_product_id")
-# Результат: 'https://www.example.com/item/example_product_id'
+```python
+result = ensure_https("1234567890")
+print(result)  # Вывод: https://www.aliexpress.com/item/1234567890.html
+```
+
+- Пример 2: Проверка URL-адреса с уже имеющимся `https://`.
+
+```python
+result = ensure_https("https://www.aliexpress.com/item/1234567890.html")
+print(result)  # Вывод: https://www.aliexpress.com/item/1234567890.html
+```
+
+- Пример 3: Проверка списка URL-адресов и идентификаторов продуктов.
+
+```python
+result = ensure_https(["1234567890", "https://www.example.com/item/1234567890.html"])
+print(result)  # Вывод: ['https://www.aliexpress.com/item/1234567890.html', 'https://www.example.com/item/1234567890.html']
+```

@@ -2,69 +2,103 @@
 
 ## Обзор
 
-Модуль предназначен для экспериментов над сценарием создания новой рекламной кампании AliExpress. Он использует класс `AliCampaignEditor` для обработки и запуска новой кампании.
+Модуль `prepare_new_campaign.py` предназначен для экспериментов с процессом создания новой рекламной кампании на платформе AliExpress. Он использует функциональность класса `AliCampaignEditor` для управления и обработки кампаний.
 
 ## Подробней
 
-Этот модуль содержит логику для автоматизации процесса подготовки и запуска новых рекламных кампаний на платформе AliExpress. Он включает в себя функциональность для создания, настройки и запуска кампаний с использованием `AliCampaignEditor`. Модуль использует различные утилиты для работы с файлами и директориями, а также для логирования событий.
-
-## Импортированные модули
-
-- `header`: Предположительно, модуль содержащий общие заголовки или настройки.
-- `pathlib.Path`: Используется для работы с путями к файлам и директориям.
-- `src.gs`: Модуль, вероятно, предоставляет глобальные настройки или сервисы.
-- `src.suppliers.aliexpress.campaign.AliCampaignEditor`: Класс для редактирования и управления кампаниями AliExpress.
-- `src.utils.get_filenames`, `src.utils.get_directory_names`: Функции для получения списка файлов и директорий.
-- `src.utils.printer.pprint`: Функция для форматированного вывода данных.
-- `src.logger.logger.logger`: Модуль для логирования событий.
-
-## Переменные
-
-- `campaign_name` (str): Имя рекламной кампании, установленное как `'rc'`.
-- `aliexpress_editor` (AliCampaignEditor): Экземпляр класса `AliCampaignEditor`, используемый для управления кампанией.
+Этот модуль является частью пакета `src.suppliers.aliexpress.campaign._experiments` и служит для автоматизации и экспериментирования с настройками рекламных кампаний на AliExpress. Он включает в себя импорт необходимых модулей, инициализацию редактора кампаний и запуск процесса создания новой кампании.
 
 ## Функции
 
-### `process_new_campaign`
+В данном модуле нет явно определенных функций, однако используется класс `AliCampaignEditor` и его методы для выполнения основных операций.
 
-```python
-def process_new_campaign(campaign_name: str) -> None:
-    """
-    Запускает процесс создания и настройки новой рекламной кампании.
+## Переменные
 
-    Args:
-        campaign_name (str): Имя кампании.
-
-    Returns:
-        None
-
-    Raises:
-        Exception: Если возникает ошибка во время обработки кампании.
-
-    Example:
-        >>> process_new_campaign('my_new_campaign')
-    """
-```
-
-**Описание**: Запускает процесс создания и настройки новой рекламной кампании AliExpress.
-
-**Как работает функция**:
-
-1.  Создается экземпляр класса `AliCampaignEditor` с переданным именем кампании.
-2.  Вызывается метод `process_new_campaign` у экземпляра `AliCampaignEditor`, который выполняет всю необходимую логику для создания и настройки кампании.
+- `campaign_name (str)`: Имя рекламной кампании, используемое в модуле.
+- `aliexpress_editor (AliCampaignEditor)`: Экземпляр класса `AliCampaignEditor`, предназначенный для редактирования и обработки рекламных кампаний AliExpress.
 
 ## Классы
 
 ### `AliCampaignEditor`
 
+**Описание**: Класс `AliCampaignEditor` предназначен для редактирования и управления рекламными кампаниями AliExpress.
+
+**Принцип работы**:
+Класс инициализируется с именем кампании и предоставляет методы для обработки и настройки кампании. В данном модуле используется метод `process_new_campaign` для запуска процесса создания новой кампании.
+
+**Методы**:
+- `__init__(self, campaign_name)`:
+    ```python
+    def __init__(self, campaign_name):
+        """
+        Инициализирует экземпляр класса `AliCampaignEditor`.
+
+        Args:
+            campaign_name (str): Имя кампании.
+        """
+        ...
+    ```
+
+- `process_new_campaign(self, campaign_name)`:
+    ```python
+    def process_new_campaign(self, campaign_name):
+        """
+        Запускает процесс создания новой рекламной кампании.
+
+        Args:
+            campaign_name (str): Имя кампании.
+        """
+        ...
+    ```
+
+## Использование
+
 ```python
-class AliCampaignEditor:
-    """
-    Редактор рекламных кампаний AliExpress.
-    """
+import header
+
+from pathlib import Path
+
+from src import gs
+
+from src.suppliers.aliexpress.campaign import AliCampaignEditor
+from src.utils import get_filenames, get_directory_names
+from src.utils.printer import pprint
+from src.logger.logger import logger
+
+campaign_name = 'rc'
+aliexpress_editor =  AliCampaignEditor(campaign_name)
+aliexpress_editor.process_new_campaign(campaign_name)
 ```
 
-**Описание**: Класс для редактирования и управления рекламными кампаниями AliExpress.
+**Пояснения**:
+1. Импортируются необходимые модули и классы.
+2. Создается экземпляр класса `AliCampaignEditor` с именем кампании `'rc'`.
+3. Вызывается метод `process_new_campaign` для запуска процесса создания новой кампании.
 
-**Как работает класс**:
-Предоставляет методы для создания, настройки и запуска рекламных кампаний на платформе AliExpress. Подробная реализация класса не предоставлена в данном коде.
+## Как работает модуль:
+
+1. **Импорт необходимых модулей**:
+   - Импортируются модули `header`, `Path`, `gs`, `AliCampaignEditor`, `get_filenames`, `get_directory_names`, `pprint`, `logger`.
+2. **Инициализация переменных**:
+   - `campaign_name` присваивается значение `'rc'`.
+   - Создается экземпляр класса `AliCampaignEditor` с именем кампании `campaign_name`.
+3. **Запуск процесса создания новой кампании**:
+   - Вызывается метод `process_new_campaign` у экземпляра `aliexpress_editor` с именем кампании `campaign_name`.
+
+## Примеры
+
+### Пример 1: Запуск процесса создания новой кампании
+
+```python
+campaign_name = 'new_campaign'
+aliexpress_editor = AliCampaignEditor(campaign_name)
+aliexpress_editor.process_new_campaign(campaign_name)
+```
+
+### Пример 2: Использование другого имени для кампании
+
+```python
+campaign_name = 'summer_sale'
+aliexpress_editor = AliCampaignEditor(campaign_name)
+aliexpress_editor.process_new_campaign(campaign_name)
+```

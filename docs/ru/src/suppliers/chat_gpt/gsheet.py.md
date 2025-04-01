@@ -2,60 +2,67 @@
 
 ## Обзор
 
-Модуль `gsheet` предназначен для управления Google Sheets в рамках AliExpress кампаний. Он предоставляет класс `GptGs`, который наследуется от `SpreadSheet` и `AliCampaignEditor` для управления Google Sheets, записи данных о категориях и продуктах, а также форматирования листов.
+Модуль `gsheet.py` предназначен для управления Google Sheets в контексте рекламных кампаний AliExpress. Он содержит класс `GptGs`, который наследуется от `SpreadSheet` и предоставляет функциональность для чтения и записи данных кампании, категорий и продуктов в Google Sheets.
 
 ## Подробней
 
-Этот модуль позволяет автоматизировать работу с Google Sheets для управления данными в кампаниях AliExpress. Он предоставляет методы для чтения и записи данных о категориях и продуктах, а также для создания и удаления листов. Модуль использует библиотеку `gspread` для взаимодействия с Google Sheets и модуль `logger` для логирования.
+Модуль `gsheet` обеспечивает интеграцию с Google Sheets для автоматизации работы с данными в рекламных кампаниях. Он позволяет читать данные о кампаниях и категориях из Google Sheets, записывать данные о продуктах, а также очищать и обновлять листы.
 
 ## Классы
 
 ### `GptGs`
 
-**Описание**: Класс для управления Google Sheets в рамках AliExpress кампаний.
+**Описание**: Класс `GptGs` предназначен для управления Google Sheets в рекламных кампаниях AliExpress. Он наследуется от класса `SpreadSheet` и предоставляет методы для работы с данными категорий и продуктов.
 
 **Как работает класс**:
-- Класс наследуется от `SpreadSheet` и `AliCampaignEditor`.
-- Инициализируется с указанием ID Google Sheets таблицы.
-- Предоставляет методы для очистки данных, обновления листов, чтения и записи данных о категориях и продуктах, а также для удаления листов.
+
+Класс `GptGs` использует идентификатор Google Sheets для доступа к таблице. Он предоставляет методы для очистки листов, обновления данных кампании, чтения и записи данных категорий и продуктов.
 
 **Методы**:
-- `__init__`: Инициализирует класс `GptGs`.
-- `clear`: Очищает содержимое Google Sheets.
-- `update_chat_worksheet`: Записывает данные кампании в Google Sheets.
-- `get_campaign_worksheet`: Читает данные кампании из Google Sheets.
-- `set_category_worksheet`: Записывает данные категории в Google Sheets.
-- `get_category_worksheet`: Читает данные категории из Google Sheets.
-- `set_categories_worksheet`: Записывает данные о категориях в Google Sheets.
-- `get_categories_worksheet`: Читает данные о категориях из Google Sheets.
-- `set_product_worksheet`: Записывает данные продукта в Google Sheets.
-- `get_product_worksheet`: Читает данные продукта из Google Sheets.
-- `set_products_worksheet`: Записывает данные о продуктах в Google Sheets.
-- `delete_products_worksheets`: Удаляет листы продуктов из Google Sheets.
-- `save_categories_from_worksheet`: Сохраняет данные категорий из Google Sheets.
-- `save_campaign_from_worksheet`: Сохраняет данные кампании из Google Sheets.
+
+- `__init__`: Инициализирует объект `GptGs` с указанным ID Google Sheets.
+- `clear`: Очищает содержимое листов продуктов, категорий и кампании.
+- `update_chat_worksheet`: Записывает данные кампании в указанный лист Google Sheets.
+- `get_campaign_worksheet`: Читает данные кампании из листа 'campaign'.
+- `set_category_worksheet`: Записывает данные категории в лист 'category'.
+- `get_category_worksheet`: Читает данные категории из листа 'category'.
+- `set_categories_worksheet`: Записывает данные о категориях в лист 'categories'.
+- `get_categories_worksheet`: Читает данные о категориях из листа 'categories'.
+- `set_product_worksheet`: Записывает данные продукта в новый лист Google Sheets.
+- `get_product_worksheet`: Читает данные продукта из листа 'products'.
+- `set_products_worksheet`: Записывает данные о продуктах в лист категории.
+- `delete_products_worksheets`: Удаляет все листы, кроме 'categories', 'product', 'category' и 'campaign'.
+- `save_categories_from_worksheet`: Сохраняет данные категорий из Google Sheets в атрибут `category` объекта `campaign`.
+- `save_campaign_from_worksheet`: Сохраняет данные рекламной кампании из Google Sheets, включая категории, и обновляет объект `campaign`.
+
+## Функции
 
 ### `__init__`
 
 ```python
 def __init__(self):
-    """ Initialize AliCampaignGoogleSheet with specified Google Sheets spreadsheet ID and additional parameters.
-    @param campaign_name `str`: The name of the campaign.
-    @param category_name `str`: The name of the category.
-    @param language `str`: The language for the campaign.
-    @param currency `str`: The currency for the campaign.
+    """ 
+    Инициализирует класс `AliCampaignGoogleSheet` с указанным ID Google Sheets spreadsheet и дополнительными параметрами.
+
+    Args:
+        campaign_name (str): Название рекламной кампании.
+        category_name (str): Название категории.
+        language (str): Язык рекламной кампании.
+        currency (str): Валюта рекламной кампании.
     """
     # Initialize SpreadSheet with the spreadsheet ID
     super().__init__('1nu4mNNFMzSePlggaaL_QM2vdKVP_NNBl2OG7R9MNrs0')
 ```
 
-**Как работает функция**:
-- Инициализирует класс `GptGs`, вызывая конструктор родительского класса `SpreadSheet` с указанием ID Google Sheets таблицы.
+**Назначение**: Инициализация класса `GptGs` с указанием ID Google Sheets.
 
-**Параметры**:
-- Нет явных параметров, но конструктор родительского класса `SpreadSheet` принимает ID таблицы Google Sheets.
+**Как работает функция**:
+
+1. Вызывает конструктор родительского класса `SpreadSheet` с ID Google Sheets `'1nu4mNNFMzSePlggaaL_QM2vdKVP_NNBl2OG7R9MNrs0'`.
+2. Устанавливает соединение с Google Sheets для дальнейшей работы с данными.
 
 **Примеры**:
+
 ```python
 gpt_gs = GptGs()
 ```
@@ -64,28 +71,30 @@ gpt_gs = GptGs()
 
 ```python
 def clear(self):
-    """ Clear contents.
-    Delete product sheets and clear data on the categories and other specified sheets.
+    """ 
+    Очищает содержимое листов.
+    Удаляет листы продуктов и очищает данные на листах категорий и других указанных листах.
     """
     try:
         self.delete_products_worksheets()
         # ws_to_clear = ['category','categories','campaign']
         # for ws in self.spreadsheet.worksheets():
         #     self.get_worksheet(ws).clear()
-            
+
     except Exception as ex:
-        logger.error("Ошибка очистки",ex)
+        logger.error("Ошибка очистки", ex)
 ```
 
-**Как работает функция**:
-- Пытается удалить все листы продуктов из Google Sheets.
-- В закомментированном коде предполагалась очистка листов `'category'`, `'categories'` и `'campaign'`.
-- В случае ошибки логирует ее с использованием `logger.error`.
+**Назначение**: Очистка содержимого листов Google Sheets.
 
-**Вызывает исключения**:
-- `Exception`: В случае ошибки при удалении листов продуктов.
+**Как работает функция**:
+
+1. Вызывает метод `delete_products_worksheets` для удаления всех листов продуктов.
+2. Пытается выполнить очистку листов категорий и кампании (закомментировано в текущей версии кода).
+3. В случае ошибки логирует сообщение об ошибке.
 
 **Примеры**:
+
 ```python
 gpt_gs.clear()
 ```
@@ -94,16 +103,21 @@ gpt_gs.clear()
 
 ```python
 def update_chat_worksheet(self, data: SimpleNamespace|dict|list, conversation_name:str, language: str = None):
-    """ Write campaign data to a Google Sheets worksheet.
-    @param campaign `SimpleNamespace | str`: SimpleNamespace object with campaign data fields for writing.
-    @param language `str`: Optional language parameter.
-    @param currency `str`: Optional currency parameter.
+    """ 
+    Записывает данные кампании в лист Google Sheets.
+
+    Args:
+        campaign (SimpleNamespace | str): Объект SimpleNamespace с полями данных кампании для записи.
+        language (str): Необязательный параметр языка.
+        currency (str): Необязательный параметр валюты.
+    
+    Raises:
+        Exception: Пробрасывает исключение, если происходит ошибка при записи данных кампании в лист.
     """
-   
     try:
         ws: Worksheet = self.get_worksheet(conversation_name)
         _ = data.__dict__
-            # Extract data from the SimpleNamespace attribute
+        # Extract data from the SimpleNamespace attribute
         name =  _.get('name','')
         title =  _.get('title')
         description =  _.get('description')
@@ -124,40 +138,41 @@ def update_chat_worksheet(self, data: SimpleNamespace|dict|list, conversation_na
         raise
 ```
 
+**Назначение**: Запись данных кампании в указанный лист Google Sheets.
+
 **Как работает функция**:
-- Записывает данные кампании в Google Sheets.
-- Получает лист Google Sheets по имени `conversation_name`.
-- Извлекает данные из объекта `SimpleNamespace` или словаря `data`.
-- Подготавливает обновления для записи в Google Sheets.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Параметры**:
-- `data` (SimpleNamespace | dict | list): Объект `SimpleNamespace`, словарь или список с данными кампании для записи.
-- `conversation_name` (str): Имя листа Google Sheets для записи данных.
-- `language` (str, optional): Необязательный параметр языка. По умолчанию `None`.
-
-**Вызывает исключения**:
-- `Exception`: В случае ошибки при записи данных в Google Sheets.
+1. Пытается получить указанный лист Google Sheets.
+2. Извлекает данные из объекта `SimpleNamespace` или словаря.
+3. Формирует список обновлений для записи данных в лист.
+4. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
-from types import SimpleNamespace
-data = SimpleNamespace(name='test', title='Test', description='Test', tags=['test'], products_count=1)
-gpt_gs.update_chat_worksheet(data, 'test')
+data = SimpleNamespace(name='Test Campaign', title='Test Title', description='Test Description', tags=['tag1', 'tag2'], products_count=100)
+gpt_gs.update_chat_worksheet(data, 'campaign_name')
 ```
 
 ### `get_campaign_worksheet`
 
 ```python
 def get_campaign_worksheet(self) -> SimpleNamespace:
-    """ Read campaign data from the 'campaign' worksheet.
-    @return `SimpleNamespace`: SimpleNamespace object with campaign data fields.
+    """ 
+    Считывает данные кампании из листа 'campaign'.
+
+    Returns:
+        SimpleNamespace: Объект SimpleNamespace с полями данных кампании.
+
+    Raises:
+        ValueError: Если лист 'campaign' не найден.
+        Exception: Пробрасывает исключение, если происходит ошибка при получении данных кампании из листа.
     """
     try:
         ws: Worksheet = self.get_worksheet('campaign')
         if not ws:
-            raise ValueError("Worksheet 'campaign' not found.")
-        
+            raise ValueError("Worksheet \'campaign\' not found.")
+
         data = ws.get_all_values()
         campaign_data = SimpleNamespace(
             name=data[0][1],
@@ -166,8 +181,8 @@ def get_campaign_worksheet(self) -> SimpleNamespace:
             currency=data[3][1],
             description=data[4][1]
         )
-        
-        logger.info("Campaign data read from 'campaign' worksheet.")
+
+        logger.info("Campaign data read from \'campaign\' worksheet.")
         return campaign_data
 
     except Exception as ex:
@@ -175,20 +190,20 @@ def get_campaign_worksheet(self) -> SimpleNamespace:
         raise
 ```
 
+**Назначение**: Чтение данных кампании из листа 'campaign'.
+
 **Как работает функция**:
-- Читает данные кампании из листа `'campaign'` Google Sheets.
-- Получает лист Google Sheets по имени `'campaign'`.
-- Извлекает данные из листа и создает объект `SimpleNamespace` с данными кампании.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Возвращает**:
-- `SimpleNamespace`: Объект `SimpleNamespace` с данными кампании.
-
-**Вызывает исключения**:
-- `ValueError`: Если лист `'campaign'` не найден.
-- `Exception`: В случае ошибки при чтении данных из Google Sheets.
+1. Пытается получить лист 'campaign'.
+2. Если лист не найден, выбрасывает исключение `ValueError`.
+3. Считывает все значения из листа.
+4. Создает объект `SimpleNamespace` с данными кампании.
+5. Логирует сообщение об успешном чтении данных.
+6. Возвращает объект `SimpleNamespace` с данными кампании.
+7. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
 campaign_data = gpt_gs.get_campaign_worksheet()
 print(campaign_data.name)
@@ -198,8 +213,15 @@ print(campaign_data.name)
 
 ```python
 def set_category_worksheet(self, category: SimpleNamespace | str):
-    """ Write data from a SimpleNamespace object to Google Sheets cells vertically.
-    @param category `SimpleNamespace`: SimpleNamespace object with data fields for writing.
+    """ 
+    Записывает данные из объекта SimpleNamespace в ячейки Google Sheets по вертикали.
+
+    Args:
+        category (SimpleNamespace): Объект SimpleNamespace с полями данных для записи.
+
+    Raises:
+        TypeError: Если передан не SimpleNamespace для категории.
+        Exception: Пробрасывает исключение, если происходит ошибка при установке данных категории в лист.
     """
     category = category if isinstance(category, SimpleNamespace) else self.get_campaign_category(category)
     try:
@@ -215,11 +237,11 @@ def set_category_worksheet(self, category: SimpleNamespace | str):
                 ['Tags', ', '.join(map(str, _.get('tags', [])))],
                 ['Products Count', _.get('products_count', '~')]
             ]
-        
+
             # Write data vertically
             ws.update('A1:B{}'.format(len(vertical_data)), vertical_data)
 
-            logger.info("Category data written to 'category' worksheet vertically.")
+            logger.info("Category data written to \'category\' worksheet vertically.")
         else:
             raise TypeError("Expected SimpleNamespace for category.")
 
@@ -228,40 +250,44 @@ def set_category_worksheet(self, category: SimpleNamespace | str):
         raise
 ```
 
+**Назначение**: Запись данных категории в лист 'category'.
+
 **Как работает функция**:
-- Записывает данные категории в лист `'category'` Google Sheets.
-- Получает лист Google Sheets по имени `'category'`.
-- Извлекает данные из объекта `SimpleNamespace` `category`.
-- Подготавливает данные для вертикальной записи в Google Sheets.
-- Записывает данные в Google Sheets.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Параметры**:
-- `category` (SimpleNamespace | str): Объект `SimpleNamespace` с данными категории для записи.
-
-**Вызывает исключения**:
-- `TypeError`: Если `category` не является объектом `SimpleNamespace`.
-- `Exception`: В случае ошибки при записи данных в Google Sheets.
+1. Проверяет, является ли входной параметр `category` объектом `SimpleNamespace`.
+2. Если `category` не является `SimpleNamespace`, пытается получить категорию кампании.
+3. Пытается получить лист 'category'.
+4. Формирует данные для вертикальной записи в лист.
+5. Записывает данные в лист 'category'.
+6. Логирует сообщение об успешной записи данных.
+7. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
-from types import SimpleNamespace
-category = SimpleNamespace(name='test', title='Test', description='Test', tags=['test'], products_count=1)
-gpt_gs.set_category_worksheet(category)
+category_data = SimpleNamespace(name='Test Category', title='Test Title', description='Test Description', tags=['tag1', 'tag2'], products_count=100)
+gpt_gs.set_category_worksheet(category_data)
 ```
 
 ### `get_category_worksheet`
 
 ```python
 def get_category_worksheet(self) -> SimpleNamespace:
-    """ Read category data from the 'category' worksheet.
-    @return `SimpleNamespace`: SimpleNamespace object with category data fields.
+    """ 
+    Считывает данные категории из листа 'category'.
+
+    Returns:
+        SimpleNamespace: Объект SimpleNamespace с полями данных категории.
+
+    Raises:
+        ValueError: Если лист 'category' не найден.
+        Exception: Пробрасывает исключение, если происходит ошибка при получении данных категории из листа.
     """
     try:
         ws: Worksheet = self.get_worksheet('category')
         if not ws:
-            raise ValueError("Worksheet 'category' not found.")
-        
+            raise ValueError("Worksheet \'category\' not found.")
+
         data = ws.get_all_values()
         category_data = SimpleNamespace(
             name=data[1][1],
@@ -270,8 +296,8 @@ def get_category_worksheet(self) -> SimpleNamespace:
             tags=data[4][1].split(', '),
             products_count=int(data[5][1])
         )
-        
-        logger.info("Category data read from 'category' worksheet.")
+
+        logger.info("Category data read from \'category\' worksheet.")
         return category_data
 
     except Exception as ex:
@@ -279,20 +305,20 @@ def get_category_worksheet(self) -> SimpleNamespace:
         raise
 ```
 
+**Назначение**: Чтение данных категории из листа 'category'.
+
 **Как работает функция**:
-- Читает данные категории из листа `'category'` Google Sheets.
-- Получает лист Google Sheets по имени `'category'`.
-- Извлекает данные из листа и создает объект `SimpleNamespace` с данными категории.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Возвращает**:
-- `SimpleNamespace`: Объект `SimpleNamespace` с данными категории.
-
-**Вызывает исключения**:
-- `ValueError`: Если лист `'category'` не найден.
-- `Exception`: В случае ошибки при чтении данных из Google Sheets.
+1. Пытается получить лист 'category'.
+2. Если лист не найден, выбрасывает исключение `ValueError`.
+3. Считывает все значения из листа.
+4. Создает объект `SimpleNamespace` с данными категории.
+5. Логирует сообщение об успешном чтении данных.
+6. Возвращает объект `SimpleNamespace` с данными категории.
+7. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
 category_data = gpt_gs.get_category_worksheet()
 print(category_data.name)
@@ -302,8 +328,11 @@ print(category_data.name)
 
 ```python
 def set_categories_worksheet(self, categories: SimpleNamespace):
-    """ Write data from a SimpleNamespace object to Google Sheets cells.
-    @param categories `SimpleNamespace`: SimpleNamespace object with data fields for writing.
+    """ 
+    Записывает данные из объекта SimpleNamespace в ячейки Google Sheets.
+
+    Args:
+        categories (SimpleNamespace): Объект SimpleNamespace с полями данных для записи.
     """
     ws: Worksheet = self.get_worksheet('categories')
     # ws.clear()  # Clear the 'categories' worksheet
@@ -315,7 +344,7 @@ def set_categories_worksheet(self, categories: SimpleNamespace):
         # Iterate over all attributes of the categories object
         for attr_name in dir(categories):
             attr_value = getattr(categories, attr_name, None)
-        
+
             # Skip non-SimpleNamespace attributes or attributes with no data
             if not isinstance(attr_value, SimpleNamespace) or not any(
                 hasattr(attr_value, field) for field in ['name', 'title', 'description', 'tags', 'products_count']
@@ -341,8 +370,8 @@ def set_categories_worksheet(self, categories: SimpleNamespace):
             # Perform batch update
             if updates:
                 ws.batch_update(updates)
-                logger.info(f"Category data written to 'categories' worksheet for {attr_name}.")
-        
+                logger.info(f"Category data written to \'categories\' worksheet for {attr_name}.")
+
             # Move to the next row
             start_row += 1
 
@@ -351,50 +380,52 @@ def set_categories_worksheet(self, categories: SimpleNamespace):
         raise
 ```
 
+**Назначение**: Запись данных о категориях в лист 'categories'.
+
 **Как работает функция**:
-- Записывает данные о категориях в лист `'categories'` Google Sheets.
-- Получает лист Google Sheets по имени `'categories'`.
-- Итерируется по атрибутам объекта `categories`.
-- Извлекает данные из каждого атрибута, который является объектом `SimpleNamespace`.
-- Подготавливает обновления для записи в Google Sheets.
-- Записывает данные в Google Sheets с использованием `batch_update`.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Параметры**:
-- `categories` (SimpleNamespace): Объект `SimpleNamespace` с данными о категориях для записи.
-
-**Вызывает исключения**:
-- `Exception`: В случае ошибки при записи данных в Google Sheets.
+1. Пытается получить лист 'categories'.
+2. Итерируется по атрибутам объекта `categories`.
+3. Проверяет, является ли атрибут объектом `SimpleNamespace` и содержит ли необходимые поля.
+4. Формирует список обновлений для записи данных в лист.
+5. Выполняет пакетное обновление листа.
+6. Логирует сообщение об успешной записи данных.
+7. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
-from types import SimpleNamespace
-categories = SimpleNamespace(
-    cat1=SimpleNamespace(name='test1', title='Test1', description='Test1', tags=['test1'], products_count=1),
-    cat2=SimpleNamespace(name='test2', title='Test2', description='Test2', tags=['test2'], products_count=2)
-)
-gpt_gs.set_categories_worksheet(categories)
+categories_data = SimpleNamespace(cat1=SimpleNamespace(name='Cat1', title='Title1', description='Desc1', tags=['tag1'], products_count=10), 
+                                 cat2=SimpleNamespace(name='Cat2', title='Title2', description='Desc2', tags=['tag2'], products_count=20))
+gpt_gs.set_categories_worksheet(categories_data)
 ```
 
 ### `get_categories_worksheet`
 
 ```python
 def get_categories_worksheet(self) -> List[List[str]]:
-    """ Read data from columns A to E, starting from the second row, from the 'categories' worksheet.
-    @return `List[List[str]]`: List of rows with data from columns A to E.
+    """ 
+    Считывает данные из столбцов A по E, начиная со второй строки, из листа 'categories'.
+
+    Returns:
+        List[List[str]]: Список строк с данными из столбцов A по E.
+
+    Raises:
+        ValueError: Если лист 'categories' не найден.
+        Exception: Пробрасывает исключение, если происходит ошибка при получении данных категории из листа.
     """
     try:
         ws: Worksheet = self.get_worksheet('categories')
         if not ws:
-            raise ValueError("Worksheet 'categories' not found.")
-    
+            raise ValueError("Worksheet \'categories\' not found.")
+
         # Read all values from the worksheet
         data = ws.get_all_values()
-    
+
         # Extract data from columns A to E, starting from the second row
         data = [row[:5] for row in data[1:] if len(row) >= 5]  
-    
-        logger.info("Category data read from 'categories' worksheet.")
+
+        logger.info("Category data read from \'categories\' worksheet.")
         return data
 
     except Exception as ex:
@@ -402,32 +433,36 @@ def get_categories_worksheet(self) -> List[List[str]]:
         raise
 ```
 
+**Назначение**: Чтение данных о категориях из листа 'categories'.
+
 **Как работает функция**:
-- Читает данные о категориях из листа `'categories'` Google Sheets.
-- Получает лист Google Sheets по имени `'categories'`.
-- Извлекает данные из столбцов A по E, начиная со второй строки.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Возвращает**:
-- `List[List[str]]`: Список строк с данными о категориях.
-
-**Вызывает исключения**:
-- `ValueError`: Если лист `'categories'` не найден.
-- `Exception`: В случае ошибки при чтении данных из Google Sheets.
+1. Пытается получить лист 'categories'.
+2. Если лист не найден, выбрасывает исключение `ValueError`.
+3. Считывает все значения из листа.
+4. Извлекает данные из столбцов A по E, начиная со второй строки.
+5. Логирует сообщение об успешном чтении данных.
+6. Возвращает список строк с данными о категориях.
+7. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
 categories_data = gpt_gs.get_categories_worksheet()
-print(categories_data)
+for row in categories_data:
+    print(row)
 ```
 
 ### `set_product_worksheet`
 
 ```python
 def set_product_worksheet(self, product: SimpleNamespace | str, category_name: str):
-    """ Write product data to a new Google Sheets spreadsheet.
-    @param category_name Category name.
-    @param product SimpleNamespace object with product data fields for writing.
+    """ 
+    Записывает данные продукта в новый лист Google Sheets.
+
+    Args:
+        category_name Category name.
+        product SimpleNamespace object with product data fields for writing.
     """
     time.sleep(10)
     ws = self.copy_worksheet('product_template', category_name)  # Copy 'product_template' to new worksheet
@@ -480,51 +515,56 @@ def set_product_worksheet(self, product: SimpleNamespace | str, category_name: s
         raise
 ```
 
+**Назначение**: Запись данных продукта в новый лист Google Sheets.
+
 **Как работает функция**:
-- Записывает данные продукта в новый лист Google Sheets, копируя лист `'product_template'`.
-- Копирует лист `'product_template'` и присваивает ему имя `category_name`.
-- Записывает заголовки в первую строку листа.
-- Извлекает данные из объекта `SimpleNamespace` `product`.
-- Записывает данные продукта во вторую строку листа.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Параметры**:
-- `product` (SimpleNamespace | str): Объект `SimpleNamespace` с данными продукта для записи.
-- `category_name` (str): Имя категории продукта.
-
-**Вызывает исключения**:
-- `Exception`: В случае ошибки при записи данных в Google Sheets.
+1. Делает паузу в 10 секунд.
+2. Копирует лист 'product_template' и создает новый лист с именем `category_name`.
+3. Пытается записать данные продукта в новый лист.
+4. Формирует заголовки для листа.
+5. Извлекает данные из объекта `product`.
+6. Формирует список данных для записи в лист.
+7. Записывает данные в лист.
+8. Логирует сообщение об успешной записи данных.
+9. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
-from types import SimpleNamespace
-product = SimpleNamespace(
-    product_id='123', app_sale_price='10', original_price='20', sale_price='15', discount='5',
-    product_main_image_url='http://example.com/image.jpg', local_image_path='/tmp/image.jpg',
-    product_small_image_urls=['http://example.com/image1.jpg', 'http://example.com/image2.jpg'],
-    product_video_url='http://example.com/video.mp4', local_video_path='/tmp/video.mp4',
-    first_level_category_id='1', first_level_category_name='Category1',
-    second_level_category_id='2', second_level_category_name='Category2',
-    target_sale_price='12', target_sale_price_currency='USD', target_app_sale_price_currency='USD',
-    target_original_price_currency='USD', original_price_currency='USD', product_title='Product Title',
-    evaluate_rate='4.5', promotion_link='http://example.com/promotion', shop_url='http://example.com/shop',
-    shop_id='456', tags=['tag1', 'tag2']
-)
-gpt_gs.set_product_worksheet(product, 'test_category')
+product_data = SimpleNamespace(product_id=123, app_sale_price=10.0, original_price=20.0, sale_price=15.0, discount=0.25,
+                                product_main_image_url='http://example.com/image.jpg', local_image_path='/tmp/image.jpg',
+                                product_small_image_urls=['http://example.com/image1.jpg', 'http://example.com/image2.jpg'],
+                                product_video_url='http://example.com/video.mp4', local_video_path='/tmp/video.mp4',
+                                first_level_category_id=1, first_level_category_name='Category1',
+                                second_level_category_id=2, second_level_category_name='Category2',
+                                target_sale_price=12.0, target_sale_price_currency='USD',
+                                target_app_sale_price_currency='USD', target_original_price_currency='USD',
+                                original_price_currency='USD', product_title='Test Product', evaluate_rate=4.5,
+                                promotion_link='http://example.com/promotion', shop_url='http://example.com/shop',
+                                shop_id=456, tags=['tag1', 'tag2'])
+gpt_gs.set_product_worksheet(product_data, 'TestCategory')
 ```
 
 ### `get_product_worksheet`
 
 ```python
 def get_product_worksheet(self) -> SimpleNamespace:
-    """ Read product data from the 'products' worksheet.
-    @return `SimpleNamespace`: SimpleNamespace object with product data fields.
+    """ 
+    Считывает данные продукта из листа 'products'.
+
+    Returns:
+        SimpleNamespace: Объект SimpleNamespace с полями данных продукта.
+
+    Raises:
+        ValueError: Если лист 'products' не найден.
+        Exception: Пробрасывает исключение, если происходит ошибка при получении данных продукта из листа.
     """
     try:
         ws: Worksheet = self.get_worksheet('products')
         if not ws:
-            raise ValueError("Worksheet 'products' not found.")
-        
+            raise ValueError("Worksheet \'products\' not found.")
+
         data = ws.get_all_values()
         product_data = SimpleNamespace(
             id=data[1][1],
@@ -534,8 +574,8 @@ def get_product_worksheet(self) -> SimpleNamespace:
             tags=data[5][1].split(', '),
             price=float(data[6][1])
         )
-        
-        logger.info("Product data read from 'products' worksheet.")
+
+        logger.info("Product data read from \'products\' worksheet.")
         return product_data
 
     except Exception as ex:
@@ -543,20 +583,20 @@ def get_product_worksheet(self) -> SimpleNamespace:
         raise
 ```
 
+**Назначение**: Чтение данных продукта из листа 'products'.
+
 **Как работает функция**:
-- Читает данные продукта из листа `'products'` Google Sheets.
-- Получает лист Google Sheets по имени `'products'`.
-- Извлекает данные из листа и создает объект `SimpleNamespace` с данными продукта.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Возвращает**:
-- `SimpleNamespace`: Объект `SimpleNamespace` с данными продукта.
-
-**Вызывает исключения**:
-- `ValueError`: Если лист `'products'` не найден.
-- `Exception`: В случае ошибки при чтении данных из Google Sheets.
+1. Пытается получить лист 'products'.
+2. Если лист не найден, выбрасывает исключение `ValueError`.
+3. Считывает все значения из листа.
+4. Создает объект `SimpleNamespace` с данными продукта.
+5. Логирует сообщение об успешном чтении данных.
+6. Возвращает объект `SimpleNamespace` с данными продукта.
+7. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
 product_data = gpt_gs.get_product_worksheet()
 print(product_data.name)
@@ -566,17 +606,20 @@ print(product_data.name)
 
 ```python
 def set_products_worksheet(self, category_name:str):
-    """ Write data from a list of SimpleNamespace objects to Google Sheets cells.
-    @param ns_list `List[SimpleNamespace]`|`SimpleNamespace`: List of SimpleNamespace objects with data fields for writing.
+    """ 
+    Записывает данные из списка объектов SimpleNamespace в ячейки Google Sheets.
+
+    Args:
+        ns_list (List[SimpleNamespace]|SimpleNamespace): Список объектов SimpleNamespace с полями данных для записи.
     """
     if category_name:
         category_ns:SimpleNamespace = getattr(self.campaign.category,category_name)
         products_ns:SimpleNamespace = category_ns.products
     else:
         logger.warning(f"На ашел товары в {pprint(category_ns)}")
-        return    
+        return
     ws: Worksheet = self.get_worksheet(category_name)
-    
+
     try:
         updates:list=[]
         for index, value in enumerate(products_ns, start=2):
@@ -590,43 +633,41 @@ def set_products_worksheet(self, category_name:str):
             updates.append({'range': f'F{index}', 'values': [[str(_.get('app_sale_price',''))]]})
             updates.append({'range': f'F{index}', 'values': [[str(_.get('target_sale_price',''))]]})
             updates.append({'range': f'F{index}', 'values': [[str(_.get('target_sale_price',''))]]})
-            
-        ws.batch_update(updates)
-        logger.info("Products data written to 'products' worksheet.")
 
-    
+        ws.batch_update(updates)
+        logger.info("Products data written to \'products\' worksheet.")
+
+
     except Exception as ex:
         logger.error("Error setting products worksheet.", ex, exc_info=True)
         raise
 ```
 
+**Назначение**: Запись данных о продуктах в лист категории.
+
 **Как работает функция**:
-- Записывает данные о продуктах в лист Google Sheets с именем `category_name`.
-- Получает лист Google Sheets по имени `category_name`.
-- Итерируется по списку объектов `SimpleNamespace` `products_ns`.
-- Извлекает данные из каждого объекта `SimpleNamespace`.
-- Подготавливает обновления для записи в Google Sheets.
-- Записывает данные в Google Sheets с использованием `batch_update`.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
 
-**Параметры**:
-- `category_name` (str): Имя категории продукта.
-
-**Вызывает исключения**:
-- `Exception`: В случае ошибки при записи данных в Google Sheets.
+1. Если `category_name` указан, пытается получить данные о категории и продуктах из атрибутов объекта `campaign`.
+2. Если `category_name` не указан, логирует предупреждение и завершает работу.
+3. Пытается получить лист Google Sheets с именем `category_name`.
+4. Формирует список обновлений для записи данных о продуктах в лист.
+5. Выполняет пакетное обновление листа.
+6. Логирует сообщение об успешной записи данных.
+7. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
-from types import SimpleNamespace
-category_name = 'test_category'
-gpt_gs.set_products_worksheet(category_name)
+# Предположим, что self.campaign.category.TestCategory.products содержит данные о продуктах
+gpt_gs.set_products_worksheet('TestCategory')
 ```
 
 ### `delete_products_worksheets`
 
 ```python
 def delete_products_worksheets(self):
-    """ Delete all sheets from the Google Sheets spreadsheet except 'categories' and 'product_template'.
+    """ 
+    Удаляет все листы из Google Sheets, кроме 'categories' и 'product_template'.
     """
     excluded_titles = {'categories', 'product', 'category', 'campaign'}
     try:
@@ -634,22 +675,24 @@ def delete_products_worksheets(self):
         for sheet in worksheets:
             if sheet.title not in excluded_titles:
                 self.spreadsheet.del_worksheet_by_id(sheet.id)
-                logger.success(f"Worksheet '{sheet.title}' deleted.")
+                logger.success(f"Worksheet \'{sheet.title}\' deleted.")
     except Exception as ex:
         logger.error("Error deleting all worksheets.", ex, exc_info=True)
         raise
 ```
 
-**Как работает функция**:
-- Удаляет все листы из Google Sheets, кроме `'categories'`, `'product'`, `'category'` и `'campaign'`.
-- Получает список всех листов в Google Sheets.
-- Итерируется по списку листов и удаляет каждый лист, если его имя не входит в список исключений.
-- В случае ошибки логирует ее с использованием `logger.error` и пробрасывает исключение выше.
+**Назначение**: Удаление всех листов, кроме 'categories', 'product', 'category' и 'campaign'.
 
-**Вызывает исключения**:
-- `Exception`: В случае ошибки при удалении листов из Google Sheets.
+**Как работает функция**:
+
+1. Определяет набор листов, которые не нужно удалять (`excluded_titles`).
+2. Получает список всех листов в Google Sheets.
+3. Итерируется по списку листов и удаляет каждый лист, если его имя не входит в `excluded_titles`.
+4. Логирует сообщение об успешном удалении каждого листа.
+5. В случае ошибки логирует сообщение об ошибке и пробрасывает исключение.
 
 **Примеры**:
+
 ```python
 gpt_gs.delete_products_worksheets()
 ```
@@ -677,17 +720,18 @@ def save_categories_from_worksheet(self, update:bool=False):
     if update: self.update_campaign()
 ```
 
-**Как работает функция**:
-- Сохраняет данные категорий, отредактированные в Google Sheets.
-- Получает данные категорий из Google Sheets с помощью `get_categories_worksheet`.
-- Итерируется по списку категорий и создает объекты `SimpleNamespace` для каждой категории.
-- Устанавливает атрибуты объекта `_categories_ns` с данными каждой категории.
-- Если `update` равен `True`, вызывает метод `update_campaign`.
+**Назначение**: Сохранение данных категорий из Google Sheets в атрибут `category` объекта `campaign`.
 
-**Параметры**:
-- `update` (bool, optional): Флаг, указывающий, нужно ли обновлять кампанию. По умолчанию `False`.
+**Как работает функция**:
+
+1. Получает данные из листа 'categories' с помощью `self.get_categories_worksheet()`.
+2. Итерируется по списку категорий и создает объекты `SimpleNamespace` для каждой категории.
+3. Устанавливает атрибуты объекта `_categories_ns` с данными каждой категории.
+4. Присваивает объект `_categories_ns` атрибуту `category` объекта `campaign`.
+5. Если параметр `update` равен `True`, вызывает метод `self.update_campaign()` для обновления данных кампании.
 
 **Примеры**:
+
 ```python
 gpt_gs.save_categories_from_worksheet()
 ```
@@ -705,14 +749,17 @@ def save_campaign_from_worksheet(self):
     ...
 ```
 
+**Назначение**: Сохранение данных рекламной кампании из Google Sheets, включая категории, и обновление объекта `campaign`.
+
 **Как работает функция**:
-- Сохраняет данные рекламной кампании из Google Sheets.
-- Вызывает метод `save_categories_from_worksheet` с параметром `False`.
-- Получает данные кампании из Google Sheets с помощью `get_campaign_worksheet`.
-- Устанавливает атрибут `category` объекта `data` равным `self.campaign.category`.
-- Обновляет кампанию с помощью метода `update_campaign`.
+
+1. Вызывает метод `self.save_categories_from_worksheet(False)` для сохранения данных категорий.
+2. Получает данные кампании из листа 'campaign' с помощью `self.get_campaign_worksheet()`.
+3. Присваивает атрибуту `category` объекта `data` значение `self.campaign.category`.
+4. Присваивает объект `data` атрибуту `campaign` объекта `self`.
+5. Вызывает метод `self.update_campaign()` для обновления данных кампании.
 
 **Примеры**:
+
 ```python
 gpt_gs.save_campaign_from_worksheet()
-```

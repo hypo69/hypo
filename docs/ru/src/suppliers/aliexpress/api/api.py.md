@@ -1,45 +1,36 @@
-# Модуль `src.suppliers.aliexpress.api`
+# Модуль `src.suppliers.aliexpress.api.api`
 
 ## Обзор
 
-Модуль предоставляет обертку для API AliExpress для Python. Он упрощает получение информации о продуктах и партнерских ссылок с AliExpress, используя официальный API.
+Модуль предоставляет обертку для работы с API AliExpress. Он упрощает получение информации о товарах и партнерских ссылок с использованием официального API AliExpress.
 
 ## Подробней
 
-Этот модуль предназначен для упрощения взаимодействия с API AliExpress. Он предоставляет удобные методы для получения информации о продуктах, создания партнерских ссылок и получения списка категорий. Модуль использует классы моделей данных для представления ответов API и обрабатывает ошибки, возвращая информативные исключения.
+Этот модуль предоставляет класс `AliexpressApi`, который позволяет взаимодействовать с API AliExpress для получения информации о продуктах, создания партнерских ссылок и получения категорий товаров. Он использует ключи API, секреты и идентификаторы отслеживания для аутентификации и авторизации запросов к API AliExpress.
 
 ## Классы
 
 ### `AliexpressApi`
 
-**Описание**:
-Предоставляет методы для получения информации с AliExpress с использованием API credentials.
+**Описание**: Предоставляет методы для получения информации с AliExpress, используя учетные данные API.
 
 **Как работает класс**:
-Класс `AliexpressApi` инициализируется с ключом API, секретом, языком и валютой. Он предоставляет методы для получения деталей продукта, создания партнерских ссылок и получения списка категорий. Класс также поддерживает кэширование категорий для уменьшения количества запросов к API.
+Класс `AliexpressApi` инициализируется с использованием ключа API, секрета, языка и валюты. Он предоставляет методы для получения деталей продукта, создания партнерских ссылок и запроса горячих продуктов. Класс также включает методы для получения категорий, родительских категорий и дочерних категорий.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр класса `AliexpressApi` с ключом API, секретом, языком и валютой.
+- `__init__`: Инициализирует экземпляр класса `AliexpressApi` с предоставленными учетными данными API.
 - `retrieve_product_details`: Получает информацию о продуктах.
 - `get_affiliate_links`: Преобразует список ссылок в партнерские ссылки.
-- `get_hotproducts`: Поиск партнерских продуктов с высокой комиссией.
+- `get_hotproducts`: Выполняет поиск партнерских продуктов с высокой комиссией.
 - `get_categories`: Получает все доступные категории, как родительские, так и дочерние.
 - `get_parent_categories`: Получает все доступные родительские категории.
-- `get_child_categories`: Получает все доступные дочерние категории для определенной родительской категории.
-
-**Параметры**:
-- `key` (str): Ваш API key.
-- `secret` (str): Ваш API secret.
-- `language` (model_Language): Языковой код. По умолчанию EN.
-- `currency` (model_Currency): Код валюты. По умолчанию USD.
-- `tracking_id` (str, optional): The tracking id для link generator. По умолчанию None.
-- `app_signature` (str, optional): Подпись приложения. По умолчанию None.
-
-### `__init__`
+- `get_child_categories`: Получает все доступные дочерние категории для указанной родительской категории.
 
 ```python
-def __init__(
-        self,
+class AliexpressApi:
+    """Provides methods to get information from AliExpress using your API credentials."""
+
+    def __init__(self,
         key: str,
         secret: str,
         language: model_Language,
@@ -47,353 +38,386 @@ def __init__(
         tracking_id: str = None,
         app_signature: str = None,
         **kwargs):
-    """
-    Args:
-        key (str): Your API key.
-        secret (str): Your API secret.
-        language (str): Language code. Defaults to EN.
-        currency (str): Currency code. Defaults to USD.
-        tracking_id (str): The tracking id for link generator. Defaults to None.
-    """
+        """
+        Args:
+            key (str): Your API key.
+            secret (str): Your API secret.
+            language (str): Language code. Defaults to EN.
+            currency (str): Currency code. Defaults to USD.
+            tracking_id (str): The tracking id for link generator. Defaults to None.
+        """
+        self._key = key
+        self._secret = secret
+        self._tracking_id = tracking_id
+        self._language = language
+        self._currency = currency
+        self._app_signature = app_signature
+        self.categories = None
+        setDefaultAppInfo(self._key, self._secret)
 ```
-
-**Как работает функция**:
-
-Метод инициализации класса `AliexpressApi`. Он принимает ключ API, секрет, язык, валюту, tracking ID и подпись приложения. Он сохраняет эти значения в атрибутах экземпляра класса и инициализирует API.
 
 **Параметры**:
-- `key` (str): API ключ для доступа к AliExpress API.
-- `secret` (str): Секретный ключ для доступа к AliExpress API.
-- `language` (model_Language): Язык, на котором будут возвращены результаты (например, 'EN' для английского).
-- `currency` (model_Currency): Валюта, в которой будут отображаться цены (например, 'USD' для долларов США).
-- `tracking_id` (str, optional): ID отслеживания для партнерских ссылок. По умолчанию `None`.
+- `key` (str): Ваш ключ API.
+- `secret` (str): Ваш секрет API.
+- `language` (model_Language): Код языка. По умолчанию EN.
+- `currency` (model_Currency): Код валюты. По умолчанию USD.
+- `tracking_id` (str, optional): Идентификатор отслеживания для генератора ссылок. По умолчанию `None`.
 - `app_signature` (str, optional): Подпись приложения. По умолчанию `None`.
 
-**Примеры**:
-
 ```python
-aliexpress_api = AliexpressApi(
-    key='your_api_key',
-    secret='your_api_secret',
-    language=model_Language.EN,
-    currency=model_Currency.USD,
-    tracking_id='your_tracking_id'
-)
-```
-
-### `retrieve_product_details`
-
-```python
-def retrieve_product_details(
-        self,
+    def retrieve_product_details(self,
         product_ids: str | list,
         fields: str | list = None,
         country: str = None,
         **kwargs) -> List[model_Product]:
-    """ Get products information.
+        """ Get products information.
 
-    Args:
-        product_ids (``str | list[str]``): One or more links or product IDs.
-        fields (``str | list[str]``): The fields to include in the results. Defaults to all.
-        country (``str``): Filter products that can be sent to that country. Returns the price
-            according to the country's tax rate policy.
+        Args:
+            product_ids (``str | list[str]``): One or more links or product IDs.
+            fields (``str | list[str]``): The fields to include in the results. Defaults to all.
+            country (``str``): Filter products that can be sent to that country. Returns the price
+                according to the country\'s tax rate policy.
 
-    Returns:
-        ``list[model_Product]``: A list of products.
+        Returns:
+            ``list[model_Product]``: A list of products.
 
-    Raises:
-        ``ProductsNotFoudException``
-        ``InvalidArgumentException``
-        ``ApiRequestException``
-        ``ApiRequestResponseException``
-    """
+        Raises:
+            ``ProductsNotFoudException``
+            ``InvalidArgumentException``
+            ``ApiRequestException``
+            ``ApiRequestResponseException``
+        """
+        product_ids = get_product_ids(product_ids)
+        product_ids = get_list_as_string(product_ids)
+
+        request = aliapi.rest.AliexpressAffiliateProductdetailGetRequest()
+        request.app_signature = self._app_signature
+        request.fields = get_list_as_string(fields)
+        request.product_ids = product_ids
+        request.country = country
+        request.target_currency = self._currency.upper()
+        request.target_language = self._language.upper()
+        request.tracking_id = self._tracking_id
+
+        response = api_request(request, 'aliexpress_affiliate_productdetail_get_response')
+        try:
+            if response.current_record_count > 0:
+                response = parse_products(response.products.product)
+                return response
+            else:
+                #raise ProductsNotFoudException('No products found with current parameters')
+                logger.warning('No products found with current parameters')
+                ...
+                return
+        except Exception as ex:
+            logger.error(ex, exc_info=False)
+            ...
+            return
 ```
 
-**Как работает функция**:
-
-Метод `retrieve_product_details` используется для получения информации о продуктах из AliExpress по их ID. Он принимает ID продуктов, список полей для включения в результаты и страну для фильтрации продуктов. Он возвращает список объектов `model_Product` с информацией о продуктах.  Функция сначала преобразует входные `product_ids` в строку, разделенную запятыми. Затем формируется запрос к API AliExpress для получения детальной информации о продуктах. Если продукты найдены, они парсятся и возвращаются в виде списка. Если продукты не найдены, в лог записывается предупреждение.
-
 **Параметры**:
-- `product_ids` (str | list): ID продукта или список ID продуктов для получения информации.
-- `fields` (str | list, optional): Список полей, которые необходимо включить в результаты. По умолчанию `None` (все поля).
-- `country` (str, optional): Страна, в которую может быть отправлен продукт. Используется для получения цены с учетом налогов. По умолчанию `None`.
+- `product_ids` (str | list): Одна или несколько ссылок или идентификаторов продуктов.
+- `fields` (str | list, optional): Поля для включения в результаты. По умолчанию включает все поля.
+- `country` (str, optional): Страна, в которую может быть отправлен продукт. Возвращает цену в соответствии с налоговой политикой страны.
 
 **Возвращает**:
-- `list[model_Product]`: Список объектов `model_Product`, содержащих информацию о продуктах.
+- `list[model_Product]`: Список продуктов.
 
 **Вызывает исключения**:
 - `ProductsNotFoudException`: Если продукты не найдены.
 - `InvalidArgumentException`: Если переданы неверные аргументы.
-- `ApiRequestException`: Если произошла ошибка при выполнении запроса к API.
-- `ApiRequestResponseException`: Если получен некорректный ответ от API.
+- `ApiRequestException`: Если произошла ошибка при запросе к API.
+- `ApiRequestResponseException`: Если произошла ошибка в ответе от API.
 
-**Примеры**:
-
-```python
-product_ids = ['1234567890', '0987654321']
-products = aliexpress_api.retrieve_product_details(product_ids=product_ids, fields=['product_title', 'product_price'], country='US')
-if products:
-    for product in products:
-        print(f'Product Title: {product.product_title}, Price: {product.product_price}')
-```
-
-### `get_affiliate_links`
+**Как работает функция**:
+1. Функция `retrieve_product_details` извлекает информацию о продуктах из API AliExpress.
+2. Идентификаторы продуктов преобразуются в строку, разделенную запятыми.
+3. Формируется запрос к API AliExpress для получения детальной информации о продуктах.
+4. В запрос добавляются подпись приложения, список полей, идентификаторы продуктов, страна, валюта и язык.
+5. Выполняется API-запрос и обрабатывается ответ.
+6. Если продукты найдены, они преобразуются и возвращаются.
+7. В случае отсутствия продуктов функция логирует предупреждение и возвращает `None`.
+8. Если в процессе выполнения возникают исключения, они логируются и возвращается `None`.
 
 ```python
-def get_affiliate_links(
-        self,
+    def get_affiliate_links(self,
         links: str | list,
         link_type: model_LinkType = model_LinkType.NORMAL,
         **kwargs) -> List[model_AffiliateLink]:
-    """ Converts a list of links in affiliate links.
-    Args:
-        links (``str | list[str]``): One or more links to convert.
-        link_type (``model_LinkType``): Choose between normal link with standard commission
-            or hot link with hot product commission. Defaults to NORMAL.
-            @code
-            link_type: model_LinkType = model_LinkType.HOTLINK
-            @endcode
+        """ Converts a list of links in affiliate links.
+        Args:
+            links (``str | list[str]``): One or more links to convert.
+            link_type (``model_LinkType``): Choose between normal link with standard commission
+                or hot link with hot product commission. Defaults to NORMAL.
+                @code
+                link_type: model_LinkType = model_LinkType.HOTLINK
+                @endcode
 
-    Returns:
-        ``list[model_AffiliateLink]``: A list containing the affiliate links.
+        Returns:
+            ``list[model_AffiliateLink]``: A list containing the affiliate links.
 
-    Raises:
-        ``InvalidArgumentException``
-        ``InvalidTrackingIdException``
-        ``ProductsNotFoudException``
-        ``ApiRequestException``
-        ``ApiRequestResponseException``
-    """
+        Raises:
+            ``InvalidArgumentException``
+            ``InvalidTrackingIdException``
+            ``ProductsNotFoudException``
+            ``ApiRequestException``
+            ``ApiRequestResponseException``
+        """
+        if not self._tracking_id:
+            #raise InvalidTrackingIdException('The tracking id is required for affiliate links')
+            logger.error('The tracking id is required for affiliate links')
+            return
+
+        links = get_list_as_string(links)
+
+        request = aliapi.rest.AliexpressAffiliateLinkGenerateRequest()
+        request.app_signature = self._app_signature
+        request.source_values = links
+        request.promotion_link_type = link_type
+        request.tracking_id = self._tracking_id
+        ...
+        response = api_request(request, 'aliexpress_affiliate_link_generate_response')
+        if not response:
+            return 
+        if response.total_result_count > 0:
+            return response.promotion_links.promotion_link
+        else:
+            #raise ProductsNotFoudException('Affiliate links not available')
+            logger.warning('Affiliate links not available')
+            return 
 ```
-
-**Как работает функция**:
-
-Метод `get_affiliate_links` преобразует список ссылок в партнерские ссылки AliExpress. Он принимает список ссылок и тип ссылки (обычная или горячая) в качестве аргументов. Для работы этого метода требуется `tracking_id`. Если `tracking_id` не указан, будет зарегистрирована ошибка. Функция возвращает список объектов `model_AffiliateLink`, содержащих партнерские ссылки. Сначала проверяется наличие `tracking_id`. Если он отсутствует, функция завершается и возвращает `None`. Затем формируется запрос к API AliExpress для генерации партнерских ссылок. Если ссылки сгенерированы успешно, они возвращаются в виде списка. В противном случае в лог записывается предупреждение.
 
 **Параметры**:
-- `links` (str | list): Ссылка или список ссылок для конвертации в партнерские ссылки.
-- `link_type` (model_LinkType, optional): Тип ссылки (обычная или горячая). По умолчанию `model_LinkType.NORMAL`.
+- `links` (str | list): Одна или несколько ссылок для преобразования.
+- `link_type` (model_LinkType, optional): Тип ссылки: обычная или горячая. По умолчанию `NORMAL`.
 
 **Возвращает**:
-- `list[model_AffiliateLink]`: Список объектов `model_AffiliateLink`, содержащих партнерские ссылки.
+- `list[model_AffiliateLink]`: Список партнерских ссылок.
 
 **Вызывает исключения**:
-- `InvalidArgumentException`: Если переданы неверные аргументы.
-- `InvalidTrackingIdException`: Если не указан `tracking_id`.
-- `ProductsNotFoudException`: Если продукты не найдены.
-- `ApiRequestException`: Если произошла ошибка при выполнении запроса к API.
-- `ApiRequestResponseException`: Если получен некорректный ответ от API.
+- `InvalidArgumentException`: Если передан неверный аргумент.
+- `InvalidTrackingIdException`: Если отсутствует идентификатор отслеживания.
+- `ProductsNotFoudException`: Если партнерские ссылки не найдены.
+- `ApiRequestException`: Если произошла ошибка при запросе к API.
+- `ApiRequestResponseException`: Если произошла ошибка в ответе от API.
 
-**Примеры**:
-
-```python
-links = ['https://www.aliexpress.com/item/1234567890.html', 'https://www.aliexpress.com/item/0987654321.html']
-affiliate_links = aliexpress_api.get_affiliate_links(links=links, link_type=model_LinkType.HOTLINK)
-if affiliate_links:
-    for link in affiliate_links:
-        print(f'Affiliate Link: {link}')
-```
-
-### `get_hotproducts`
+**Как работает функция**:
+1. Функция `get_affiliate_links` преобразует список обычных ссылок в партнерские ссылки AliExpress.
+2. Проверяется наличие идентификатора отслеживания. Если он отсутствует, функция логирует ошибку и возвращает `None`.
+3. Список ссылок преобразуется в строку, разделенную запятыми.
+4. Формируется запрос к API AliExpress для генерации партнерских ссылок.
+5. В запрос добавляются подпись приложения, список ссылок, тип ссылки и идентификатор отслеживания.
+6. Выполняется API-запрос и обрабатывается ответ.
+7. Если партнерские ссылки найдены, они возвращаются.
+8. В случае отсутствия партнерских ссылок функция логирует предупреждение и возвращает `None`.
 
 ```python
-def get_hotproducts(
-        self,
+    def get_hotproducts(self,
         category_ids: str | list = None,
         delivery_days: int = None,
-        fields: str | list = None,
-        keywords: str = None,
-        max_sale_price: int = None,
-        min_sale_price: int = None,
-        page_no: int = None,
-        page_size: int = None,
-        platform_product_type: model_ProductType = None,
-        ship_to_country: str = None,
-        sort: model_SortBy = None,
+		fields: str | list = None,
+		keywords: str = None,
+		max_sale_price: int = None,
+		min_sale_price: int = None,
+		page_no: int = None,
+		page_size: int = None,
+		platform_product_type: model_ProductType = None,
+		ship_to_country: str = None,
+		sort: model_SortBy = None,
         **kwargs) -> model_HotProductsResponse:
-    """Search for affiliated products with high commission.
+        """Search for affiliated products with high commission.
 
-    Args:
-        category_ids (``str | list[str]``): One or more category IDs.
-        delivery_days (``int``): Estimated delivery days.
-        fields (``str | list[str]``): The fields to include in the results list. Defaults to all.
-        keywords (``str``): Search products based on keywords.
-        max_sale_price (``int``): Filters products with price below the specified value.
-            Prices appear in lowest currency denomination. So $31.41 should be 3141.
-        min_sale_price (``int``): Filters products with price above the specified value.
-            Prices appear in lowest currency denomination. So $31.41 should be 3141.
-        page_no (``int``):\
-        page_size (``int``): Products on each page. Should be between 1 and 50.
-        platform_product_type (``model_ProductType``): Specify platform product type.
-        ship_to_country (``str``): Filter products that can be sent to that country.
-            Returns the price according to the country's tax rate policy.
-        sort (``model_SortBy``): Specifies the sort method.
+        Args:
+            category_ids (``str | list[str]``): One or more category IDs.
+            delivery_days (``int``): Estimated delivery days.
+            fields (``str | list[str]``): The fields to include in the results list. Defaults to all.
+            keywords (``str``): Search products based on keywords.
+            max_sale_price (``int``): Filters products with price below the specified value.
+                Prices appear in lowest currency denomination. So $31.41 should be 3141.
+            min_sale_price (``int``): Filters products with price above the specified value.
+                Prices appear in lowest currency denomination. So $31.41 should be 3141.
+            page_no (``int``):
+            page_size (``int``): Products on each page. Should be between 1 and 50.
+            platform_product_type (``model_ProductType``): Specify platform product type.
+            ship_to_country (``str``): Filter products that can be sent to that country.
+                Returns the price according to the country\'s tax rate policy.
+            sort (``model_SortBy``): Specifies the sort method.
 
-    Returns:
-        ``model_HotProductsResponse``: Contains response information and the list of products.
+        Returns:
+            ``model_HotProductsResponse``: Contains response information and the list of products.
 
-    Raises:
-        ``ProductsNotFoudException``
-        ``ApiRequestException``
-        ``ApiRequestResponseException``
-    """
+        Raises:
+            ``ProductsNotFoudException``
+            ``ApiRequestException``
+            ``ApiRequestResponseException``
+        """
+        request = aliapi.rest.AliexpressAffiliateHotproductQueryRequest()
+        request.app_signature = self._app_signature
+        request.category_ids = get_list_as_string(category_ids)
+        request.delivery_days = str(delivery_days)
+        request.fields = get_list_as_string(fields)
+        request.keywords = keywords
+        request.max_sale_price = max_sale_price
+        request.min_sale_price = min_sale_price
+        request.page_no = page_no
+        request.page_size = page_size
+        request.platform_product_type = platform_product_type
+        request.ship_to_country = ship_to_country
+        request.sort = sort
+        request.target_currency = self._currency
+        request.target_language = self._language
+        request.tracking_id = self._tracking_id
+
+        response = api_request(request, 'aliexpress_affiliate_hotproduct_query_response')
+
+        if response.current_record_count > 0:
+            response.products = parse_products(response.products.product)
+            return response
+        else:
+            raise ProductsNotFoudException('No products found with current parameters')
 ```
 
-**Как работает функция**:
-
-Метод `get_hotproducts` выполняет поиск партнерских продуктов с высокой комиссией на AliExpress. Он принимает различные параметры фильтрации, такие как ID категории, количество дней доставки, ключевые слова, минимальная и максимальная цена, номер страницы, размер страницы, тип продукта платформы, страна доставки и метод сортировки. Метод возвращает объект `model_HotProductsResponse`, содержащий информацию об ответе и список продуктов. Формируется запрос к API AliExpress с указанными параметрами. Если продукты найдены, они парсятся и возвращаются в виде объекта `model_HotProductsResponse`. Если продукты не найдены, выбрасывается исключение `ProductsNotFoudException`.
-
 **Параметры**:
-- `category_ids` (str | list, optional): ID категории или список ID категорий для поиска. По умолчанию `None`.
-- `delivery_days` (int, optional): Количество дней доставки. По умолчанию `None`.
-- `fields` (str | list, optional): Список полей для включения в результаты. По умолчанию `None` (все поля).
-- `keywords` (str, optional): Ключевые слова для поиска продуктов. По умолчанию `None`.
-- `max_sale_price` (int, optional): Максимальная цена продукта. По умолчанию `None`.
-- `min_sale_price` (int, optional): Минимальная цена продукта. По умолчанию `None`.
-- `page_no` (int, optional): Номер страницы результатов. По умолчанию `None`.
-- `page_size` (int, optional): Количество продуктов на странице (от 1 до 50). По умолчанию `None`.
-- `platform_product_type` (model_ProductType, optional): Тип продукта платформы. По умолчанию `None`.
-- `ship_to_country` (str, optional): Страна доставки. По умолчанию `None`.
-- `sort` (model_SortBy, optional): Метод сортировки результатов. По умолчанию `None`.
+- `category_ids` (str | list, optional): Одна или несколько категорий ID.
+- `delivery_days` (int, optional): Предполагаемое количество дней доставки.
+- `fields` (str | list, optional): Поля для включения в результаты. По умолчанию включает все поля.
+- `keywords` (str, optional): Ключевые слова для поиска продуктов.
+- `max_sale_price` (int, optional): Максимальная цена продажи.
+- `min_sale_price` (int, optional): Минимальная цена продажи.
+- `page_no` (int, optional): Номер страницы.
+- `page_size` (int, optional): Количество продуктов на странице. Должно быть между 1 и 50.
+- `platform_product_type` (model_ProductType, optional): Тип продукта платформы.
+- `ship_to_country` (str, optional): Страна доставки.
+- `sort` (model_SortBy, optional): Метод сортировки.
 
 **Возвращает**:
-- `model_HotProductsResponse`: Объект `model_HotProductsResponse`, содержащий информацию об ответе и список продуктов.
+- `model_HotProductsResponse`: Ответ, содержащий информацию и список продуктов.
 
 **Вызывает исключения**:
 - `ProductsNotFoudException`: Если продукты не найдены.
-- `ApiRequestException`: Если произошла ошибка при выполнении запроса к API.
-- `ApiRequestResponseException`: Если получен некорректный ответ от API.
-
-**Примеры**:
-
-```python
-hot_products = aliexpress_api.get_hotproducts(category_ids=['123', '456'], keywords='electronics', ship_to_country='US')
-if hot_products:
-    for product in hot_products.products:
-        print(f'Product Title: {product.product_title}, Price: {product.product_price}')
-```
-
-### `get_categories`
-
-```python
-def get_categories(self, **kwargs) -> List[model_Category | model_ChildCategory]:
-    """Get all available categories, both parent and child.
-
-    Returns:
-        ``list[model_Category | model_ChildCategory]``: A list of categories.
-
-    Raises:
-        ``CategoriesNotFoudException``
-        ``ApiRequestException``
-        ``ApiRequestResponseException``
-    """
-```
+- `ApiRequestException`: Если произошла ошибка при запросе к API.
+- `ApiRequestResponseException`: Если произошла ошибка в ответе от API.
 
 **Как работает функция**:
+1. Функция `get_hotproducts` выполняет поиск партнерских продуктов с высокой комиссией на AliExpress.
+2. Формируется запрос к API AliExpress для поиска популярных продуктов.
+3. В запрос добавляются подпись приложения, категории ID, количество дней доставки, список полей, ключевые слова, максимальная и минимальная цены, номер страницы, размер страницы, тип продукта платформы, страна доставки и метод сортировки.
+4. Выполняется API-запрос и обрабатывается ответ.
+5. Если продукты найдены, они преобразуются и возвращаются в объекте `model_HotProductsResponse`.
+6. В случае отсутствия продуктов выбрасывается исключение `ProductsNotFoudException`.
 
-Метод `get_categories` используется для получения списка всех доступных категорий, как родительских, так и дочерних, из API AliExpress. Он не принимает никаких аргументов, кроме `kwargs`. Функция возвращает список объектов `model_Category` и `model_ChildCategory`, представляющих категории. Формируется запрос к API AliExpress для получения списка категорий. Если категории найдены, они сохраняются в атрибуте `categories` экземпляра класса и возвращаются в виде списка. Если категории не найдены, выбрасывается исключение `CategoriesNotFoudException`.
+```python
+    def get_categories(self, **kwargs) -> List[model_Category | model_ChildCategory]:
+        """Get all available categories, both parent and child.
+
+        Returns:
+            ``list[model_Category | model_ChildCategory]``: A list of categories.
+
+        Raises:
+            ``CategoriesNotFoudException``
+            ``ApiRequestException``
+            ``ApiRequestResponseException``
+        """
+        request = aliapi.rest.AliexpressAffiliateCategoryGetRequest()
+        request.app_signature = self._app_signature
+
+        response = api_request(request, 'aliexpress_affiliate_category_get_response')
+
+        if response.total_result_count > 0:
+            self.categories = response.categories.category
+            return self.categories
+        else:
+            raise CategoriesNotFoudException('No categories found')
+```
 
 **Возвращает**:
-- `list[model_Category | model_ChildCategory]`: Список объектов `model_Category` и `model_ChildCategory`, представляющих категории.
+- `list[model_Category | model_ChildCategory]`: Список категорий.
 
 **Вызывает исключения**:
 - `CategoriesNotFoudException`: Если категории не найдены.
-- `ApiRequestException`: Если произошла ошибка при выполнении запроса к API.
-- `ApiRequestResponseException`: Если получен некорректный ответ от API.
-
-**Примеры**:
-
-```python
-categories = aliexpress_api.get_categories()
-if categories:
-    for category in categories:
-        print(f'Category ID: {category.category_id}, Name: {category.category_name}')
-```
-
-### `get_parent_categories`
-
-```python
-def get_parent_categories(self, use_cache=True, **kwargs) -> List[model_Category]:
-    """Get all available parent categories.
-
-    Args:
-        use_cache (``bool``): Uses cached categories to reduce API requests.
-
-    Returns:
-        ``list[model_Category]``: A list of parent categories.
-
-    Raises:
-        ``CategoriesNotFoudException``
-        ``ApiRequestException``
-        ``ApiRequestResponseException``
-    """
-```
+- `ApiRequestException`: Если произошла ошибка при запросе к API.
+- `ApiRequestResponseException`: Если произошла ошибка в ответе от API.
 
 **Как работает функция**:
+1. Функция `get_categories` получает все доступные категории (родительские и дочерние) из API AliExpress.
+2. Формируется запрос к API AliExpress для получения категорий.
+3. В запрос добавляется подпись приложения.
+4. Выполняется API-запрос и обрабатывается ответ.
+5. Если категории найдены, они сохраняются в атрибуте `categories` экземпляра класса и возвращаются.
+6. В случае отсутствия категорий выбрасывается исключение `CategoriesNotFoudException`.
 
-Метод `get_parent_categories` используется для получения списка всех доступных родительских категорий из API AliExpress. Он принимает аргумент `use_cache`, который определяет, использовать ли кэшированные категории для уменьшения количества запросов к API. Функция возвращает список объектов `model_Category`, представляющих родительские категории. Сначала проверяется, нужно ли использовать кэшированные категории. Если `use_cache` равен `True` и категории уже загружены, используется кэшированный список. В противном случае вызывается метод `get_categories` для получения списка категорий из API. Затем вызывается функция `filter_parent_categories` для фильтрации списка категорий и возврата только родительских категорий.
+```python
+    def get_parent_categories(self, use_cache=True, **kwargs) -> List[model_Category]:
+        """Get all available parent categories.
+
+        Args:
+            use_cache (``bool``): Uses cached categories to reduce API requests.
+
+        Returns:
+            ``list[model_Category]``: A list of parent categories.
+
+        Raises:
+            ``CategoriesNotFoudException``
+            ``ApiRequestException``
+            ``ApiRequestResponseException``
+        """
+        if not use_cache or not self.categories:
+            self.get_categories()
+        return filter_parent_categories(self.categories)
+```
 
 **Параметры**:
-- `use_cache` (bool, optional): Определяет, использовать ли кэшированные категории. По умолчанию `True`.
+- `use_cache` (bool, optional): Использовать кэшированные категории для уменьшения количества запросов к API. По умолчанию `True`.
 
 **Возвращает**:
-- `list[model_Category]`: Список объектов `model_Category`, представляющих родительские категории.
+- `list[model_Category]`: Список родительских категорий.
 
 **Вызывает исключения**:
 - `CategoriesNotFoudException`: Если категории не найдены.
-- `ApiRequestException`: Если произошла ошибка при выполнении запроса к API.
-- `ApiRequestResponseException`: Если получен некорректный ответ от API.
-
-**Примеры**:
-
-```python
-parent_categories = aliexpress_api.get_parent_categories(use_cache=True)
-if parent_categories:
-    for category in parent_categories:
-        print(f'Category ID: {category.category_id}, Name: {category.category_name}')
-```
-
-### `get_child_categories`
-
-```python
-def get_child_categories(self, parent_category_id: int, use_cache=True, **kwargs) -> List[model_ChildCategory]:
-    """Get all available child categories for a specific parent category.
-
-    Args:
-        parent_category_id (``int``): The parent category id.
-        use_cache (``bool``): Uses cached categories to reduce API requests.
-
-    Returns:
-        ``list[model_ChildCategory]``: A list of child categories.
-
-    Raises:
-        ``CategoriesNotFoudException``
-        ``ApiRequestException``
-        ``ApiRequestResponseException``
-    """
-```
+- `ApiRequestException`: Если произошла ошибка при запросе к API.
+- `ApiRequestResponseException`: Если произошла ошибка в ответе от API.
 
 **Как работает функция**:
+1. Функция `get_parent_categories` получает все доступные родительские категории из API AliExpress.
+2. Проверяется, нужно ли использовать кэшированные категории. Если кэш не используется или категории еще не были загружены, вызывается метод `get_categories` для получения категорий из API.
+3. Вызывается функция `filter_parent_categories` для фильтрации родительских категорий из списка всех категорий.
+4. Возвращается список родительских категорий.
 
-Метод `get_child_categories` используется для получения списка всех доступных дочерних категорий для определенной родительской категории из API AliExpress. Он принимает ID родительской категории `parent_category_id` и аргумент `use_cache`, который определяет, использовать ли кэшированные категории для уменьшения количества запросов к API. Функция возвращает список объектов `model_ChildCategory`, представляющих дочерние категории. Сначала проверяется, нужно ли использовать кэшированные категории. Если `use_cache` равен `True` и категории уже загружены, используется кэшированный список. В противном случае вызывается метод `get_categories` для получения списка категорий из API. Затем вызывается функция `filter_child_categories` для фильтрации списка категорий и возврата только дочерних категорий для указанной родительской категории.
+```python
+    def get_child_categories(self, parent_category_id: int, use_cache=True, **kwargs) -> List[model_ChildCategory]:
+        """Get all available child categories for a specific parent category.
+
+        Args:
+            parent_category_id (``int``): The parent category id.
+            use_cache (``bool``): Uses cached categories to reduce API requests.
+
+        Returns:
+            ``list[model_ChildCategory]``: A list of child categories.
+
+        Raises:
+            ``CategoriesNotFoudException``
+            ``ApiRequestException``
+            ``ApiRequestResponseException``
+        """
+        if not use_cache or not self.categories:
+            self.get_categories()
+        return filter_child_categories(self.categories, parent_category_id)
+```
 
 **Параметры**:
-- `parent_category_id` (int): ID родительской категории.
-- `use_cache` (bool, optional): Определяет, использовать ли кэшированные категории. По умолчанию `True`.
+- `parent_category_id` (int): Идентификатор родительской категории.
+- `use_cache` (bool, optional): Использовать кэшированные категории для уменьшения количества запросов к API. По умолчанию `True`.
 
 **Возвращает**:
-- `list[model_ChildCategory]`: Список объектов `model_ChildCategory`, представляющих дочерние категории.
+- `list[model_ChildCategory]`: Список дочерних категорий.
 
 **Вызывает исключения**:
 - `CategoriesNotFoudException`: Если категории не найдены.
-- `ApiRequestException`: Если произошла ошибка при выполнении запроса к API.
-- `ApiRequestResponseException`: Если получен некорректный ответ от API.
+- `ApiRequestException`: Если произошла ошибка при запросе к API.
+- `ApiRequestResponseException`: Если произошла ошибка в ответе от API.
 
-**Примеры**:
-
-```python
-child_categories = aliexpress_api.get_child_categories(parent_category_id=123456, use_cache=True)
-if child_categories:
-    for category in child_categories:
-        print(f'Category ID: {category.category_id}, Name: {category.category_name}')
-```
+**Как работает функция**:
+1. Функция `get_child_categories` получает все доступные дочерние категории для указанной родительской категории из API AliExpress.
+2. Проверяется, нужно ли использовать кэшированные категории. Если кэш не используется или категории еще не были загружены, вызывается метод `get_categories` для получения категорий из API.
+3. Вызывается функция `filter_child_categories` для фильтрации дочерних категорий из списка всех категорий на основе идентификатора родительской категории.
+4. Возвращается список дочерних категорий.

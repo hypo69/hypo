@@ -1,18 +1,14 @@
-# Модуль тестирования подготовки кампаний
+# Модуль для тестирования подготовки кампаний AliExpress
 
 ## Обзор
 
-Модуль `test_prepeare_campaigns.py` содержит набор тестов, предназначенных для проверки функциональности подготовки кампаний AliExpress. Он использует библиотеку `pytest` для организации и выполнения тестов, а также `unittest.mock` для создания мок-объектов, имитирующих взаимодействие с внешними зависимостями и API.
+Модуль содержит набор тестов для функций, связанных с подготовкой кампаний AliExpress, включая обновление категорий, обработку кампаний и запуск основного процесса подготовки.
 
-## Подробней
+## Подробнее
 
-Этот модуль тестирует функции, отвечающие за обновление категорий, обработку кампаний по категориям и обработку кампаний в целом. Он также включает тесты для основной функции `main`, которая координирует процесс подготовки кампаний. Модуль использует моки для изоляции тестируемых функций и проверки их поведения в различных сценариях, включая успешное выполнение и возникновение ошибок.
+Этот файл содержит тесты, проверяющие корректность работы функций `update_category`, `process_campaign_category`, `process_campaign` и `main` из модуля `src.suppliers.aliexpress.campaign.prepare_campaigns`.  В тестах используются моки (mocks) для изоляции тестируемых функций от внешних зависимостей и для контроля их поведения.
 
-## Классы
-
-В данном модуле классы отсутствуют. Вместо этого используются фикстуры `pytest` для подготовки тестового окружения и предоставления мок-объектов.
-
-## Функции
+## Fixtures (фикстуры)
 
 ### `mock_j_loads`
 
@@ -23,30 +19,12 @@ def mock_j_loads():
         yield mock
 ```
 
-**Описание**: Фикстура `mock_j_loads` создает мок-объект для функции `j_loads` из модуля `src.utils.jjson`.
+**Назначение**: Создает мок для функции `j_loads` из модуля `src.utils.jjson`.
 
-**Как работает функция**:
-- Использует `patch` для замены `j_loads` мок-объектом.
-- Предоставляет мок-объект для использования в тестах.
-- После завершения теста `patch` восстанавливает оригинальную функцию `j_loads`.
+**Как работает фикстура**:
 
-**Параметры**:
-- Отсутствуют.
-
-**Возвращает**:
-- `mock`: Мок-объект функции `j_loads`.
-
-**Вызывает исключения**:
-- Отсутствуют.
-
-**Примеры**:
-
-```python
-def test_function(mock_j_loads):
-    mock_j_loads.return_value = {"key": "value"}
-    result = some_function()
-    assert result == "value"
-```
+1.  Использует `patch` из модуля `unittest.mock` для замены функции `j_loads` моком.
+2.  Передает мок в тест через `yield`.
 
 ### `mock_j_dumps`
 
@@ -57,30 +35,12 @@ def mock_j_dumps():
         yield mock
 ```
 
-**Описание**: Фикстура `mock_j_dumps` создает мок-объект для функции `j_dumps` из модуля `src.utils.jjson`.
+**Назначение**: Создает мок для функции `j_dumps` из модуля `src.utils.jjson`.
 
-**Как работает функция**:
-- Использует `patch` для замены `j_dumps` мок-объектом.
-- Предоставляет мок-объект для использования в тестах.
-- После завершения теста `patch` восстанавливает оригинальную функцию `j_dumps`.
+**Как работает фикстура**:
 
-**Параметры**:
-- Отсутствуют.
-
-**Возвращает**:
-- `mock`: Мок-объект функции `j_dumps`.
-
-**Вызывает исключения**:
-- Отсутствуют.
-
-**Примеры**:
-
-```python
-def test_function(mock_j_dumps):
-    some_data = {"key": "value"}
-    some_function(some_data)
-    mock_j_dumps.assert_called_once_with(some_data, "filename.json")
-```
+1.  Использует `patch` из модуля `unittest.mock` для замены функции `j_dumps` моком.
+2.  Передает мок в тест через `yield`.
 
 ### `mock_logger`
 
@@ -91,29 +51,12 @@ def mock_logger():
         yield mock
 ```
 
-**Описание**: Фикстура `mock_logger` создает мок-объект для логгера из модуля `src.logger`.
+**Назначение**: Создает мок для объекта `logger` из модуля `src.logger`.
 
-**Как работает функция**:
-- Использует `patch` для замены логгера мок-объектом.
-- Предоставляет мок-объект для использования в тестах.
-- После завершения теста `patch` восстанавливает оригинальный логгер.
+**Как работает фикстура**:
 
-**Параметры**:
-- Отсутствуют.
-
-**Возвращает**:
-- `mock`: Мок-объект логгера.
-
-**Вызывает исключения**:
-- Отсутствуют.
-
-**Примеры**:
-
-```python
-def test_function(mock_logger):
-    some_function()
-    mock_logger.info.assert_called_once_with("Some message")
-```
+1.  Использует `patch` из модуля `unittest.mock` для замены объекта `logger` моком.
+2.  Передает мок в тест через `yield`.
 
 ### `mock_get_directory_names`
 
@@ -124,30 +67,12 @@ def mock_get_directory_names():
         yield mock
 ```
 
-**Описание**: Фикстура `mock_get_directory_names` создает мок-объект для функции `get_directory_names` из модуля `src.utils`.
+**Назначение**: Создает мок для функции `get_directory_names` из модуля `src.utils`.
 
-**Как работает функция**:
-- Использует `patch` для замены `get_directory_names` мок-объектом.
-- Предоставляет мок-объект для использования в тестах.
-- После завершения теста `patch` восстанавливает оригинальную функцию `get_directory_names`.
+**Как работает фикстура**:
 
-**Параметры**:
-- Отсутствуют.
-
-**Возвращает**:
-- `mock`: Мок-объект функции `get_directory_names`.
-
-**Вызывает исключения**:
-- Отсутствуют.
-
-**Примеры**:
-
-```python
-def test_function(mock_get_directory_names):
-    mock_get_directory_names.return_value = ["dir1", "dir2"]
-    result = some_function()
-    assert result == ["dir1", "dir2"]
-```
+1.  Использует `patch` из модуля `unittest.mock` для замены функции `get_directory_names` моком.
+2.  Передает мок в тест через `yield`.
 
 ### `mock_ali_promo_campaign`
 
@@ -158,264 +83,250 @@ def mock_ali_promo_campaign():
         yield mock
 ```
 
-**Описание**: Фикстура `mock_ali_promo_campaign` создает мок-объект для класса `AliPromoCampaign` из модуля `src.suppliers.aliexpress.campaign`.
+**Назначение**: Создает мок для класса `AliPromoCampaign` из модуля `src.suppliers.aliexpress.campaign`.
 
-**Как работает функция**:
-- Использует `patch` для замены класса `AliPromoCampaign` мок-объектом.
-- Предоставляет мок-объект для использования в тестах.
-- После завершения теста `patch` восстанавливает оригинальный класс `AliPromoCampaign`.
+**Как работает фикстура**:
 
-**Параметры**:
-- Отсутствуют.
+1.  Использует `patch` из модуля `unittest.mock` для замены класса `AliPromoCampaign` моком.
+2.  Передает мок в тест через `yield`.
 
-**Возвращает**:
-- `mock`: Мок-объект класса `AliPromoCampaign`.
-
-**Вызывает исключения**:
-- Отсутствуют.
-
-**Примеры**:
-
-```python
-def test_function(mock_ali_promo_campaign):
-    instance = mock_ali_promo_campaign.return_value
-    instance.process_data.return_value = "success"
-    result = some_function()
-    assert result == "success"
-```
+## Функции
 
 ### `test_update_category_success`
 
 ```python
 def test_update_category_success(mock_j_loads, mock_j_dumps, mock_logger):
-    mock_json_path = Path("mock/path/to/category.json")
-    mock_category = SimpleNamespace(name="test_category")
+    """
+    Тестирует успешное обновление категории.
 
-    mock_j_loads.return_value = {"category": {}}
-    
-    result = update_category(mock_json_path, mock_category)
-    
-    assert result is True
-    mock_j_dumps.assert_called_once_with({"category": {"name": "test_category"}}, mock_json_path)
-    mock_logger.error.assert_not_called()
+    Args:
+        mock_j_loads: Мок функции j_loads.
+        mock_j_dumps: Мок функции j_dumps.
+        mock_logger: Мок объекта logger.
+    """
+    ...
 ```
 
-**Описание**: Тест проверяет успешное обновление категории с использованием функции `update_category`.
-
-**Как работает функция**:
-- Создает мок-путь к JSON-файлу и мок-объект категории.
-- Устанавливает возвращаемое значение для `mock_j_loads`, чтобы имитировать успешную загрузку данных.
-- Вызывает функцию `update_category` с мок-объектами.
-- Проверяет, что функция вернула `True`, `mock_j_dumps` был вызван с ожидаемыми аргументами, и `mock_logger.error` не был вызван.
+**Назначение**: Тестирует успешный сценарий функции `update_category`.
 
 **Параметры**:
-- `mock_j_loads`: Мок-объект функции `j_loads`.
-- `mock_j_dumps`: Мок-объект функции `j_dumps`.
-- `mock_logger`: Мок-объект логгера.
 
-**Возвращает**:
-- Отсутствует.
+*   `mock_j_loads`: Мок функции `j_loads`.
+*   `mock_j_dumps`: Мок функции `j_dumps`.
+*   `mock_logger`: Мок объекта `logger`.
 
-**Вызывает исключения**:
-- Отсутствуют.
+**Как работает функция**:
+
+1.  Определяет путь к мок-файлу JSON и создает объект `SimpleNamespace` для представления категории.
+2.  Настраивает `mock_j_loads` для возврата словаря с категорией.
+3.  Вызывает функцию `update_category` с мок-путем и мок-категорией.
+4.  Проверяет, что функция вернула `True`.
+5.  Проверяет, что `mock_j_dumps` был вызван с ожидаемыми аргументами.
+6.  Проверяет, что `mock_logger.error` не был вызван.
 
 **Примеры**:
-- Пример вызова функции не требуется, так как это тестовая функция.
+
+```python
+# Пример вызова теста с использованием фикстур
+def test_update_category_success(mock_j_loads, mock_j_dumps, mock_logger):
+    # ... (код теста)
+    pass
+```
 
 ### `test_update_category_failure`
 
 ```python
 def test_update_category_failure(mock_j_loads, mock_j_dumps, mock_logger):
-    mock_json_path = Path("mock/path/to/category.json")
-    mock_category = SimpleNamespace(name="test_category")
+    """
+    Тестирует ситуацию, когда обновление категории завершается с ошибкой.
 
-    mock_j_loads.side_effect = Exception("Error")
-    
-    result = update_category(mock_json_path, mock_category)
-    
-    assert result is False
-    mock_j_dumps.assert_not_called()
-    mock_logger.error.assert_called_once()
+    Args:
+        mock_j_loads: Мок функции j_loads.
+        mock_j_dumps: Мок функции j_dumps.
+        mock_logger: Мок объекта logger.
+    """
+    ...
 ```
 
-**Описание**: Тест проверяет ситуацию, когда обновление категории завершается с ошибкой из-за исключения при загрузке JSON.
-
-**Как работает функция**:
-- Создает мок-путь к JSON-файлу и мок-объект категории.
-- Устанавливает `side_effect` для `mock_j_loads`, чтобы имитировать исключение при загрузке данных.
-- Вызывает функцию `update_category` с мок-объектами.
-- Проверяет, что функция вернула `False`, `mock_j_dumps` не был вызван, и `mock_logger.error` был вызван один раз.
+**Назначение**: Тестирует сценарий, когда функция `update_category` завершается с ошибкой.
 
 **Параметры**:
-- `mock_j_loads`: Мок-объект функции `j_loads`.
-- `mock_j_dumps`: Мок-объект функции `j_dumps`.
-- `mock_logger`: Мок-объект логгера.
 
-**Возвращает**:
-- Отсутствует.
+*   `mock_j_loads`: Мок функции `j_loads`.
+*   `mock_j_dumps`: Мок функции `j_dumps`.
+*   `mock_logger`: Мок объекта `logger`.
 
-**Вызывает исключения**:
-- Отсутствуют.
+**Как работает функция**:
+
+1.  Определяет путь к мок-файлу JSON и создает объект `SimpleNamespace` для представления категории.
+2.  Настраивает `mock_j_loads` для вызова исключения.
+3.  Вызывает функцию `update_category` с мок-путем и мок-категорией.
+4.  Проверяет, что функция вернула `False`.
+5.  Проверяет, что `mock_j_dumps` не был вызван.
+6.  Проверяет, что `mock_logger.error` был вызван один раз.
 
 **Примеры**:
-- Пример вызова функции не требуется, так как это тестовая функция.
+
+```python
+# Пример вызова теста с использованием фикстур
+def test_update_category_failure(mock_j_loads, mock_j_dumps, mock_logger):
+    # ... (код теста)
+    pass
+```
 
 ### `test_process_campaign_category_success`
 
 ```python
 @pytest.mark.asyncio
 async def test_process_campaign_category_success(mock_ali_promo_campaign, mock_logger):
-    mock_campaign_name = "test_campaign"
-    mock_category_name = "test_category"
-    mock_language = "EN"
-    mock_currency = "USD"
+    """
+    Тестирует успешную обработку категории кампании.
 
-    mock_ali_promo = mock_ali_promo_campaign.return_value
-    mock_ali_promo.process_affiliate_products = MagicMock()
-
-    result = await process_campaign_category(mock_campaign_name, mock_category_name, mock_language, mock_currency)
-
-    assert result is not None
-    mock_logger.error.assert_not_called()
+    Args:
+        mock_ali_promo_campaign: Мок класса AliPromoCampaign.
+        mock_logger: Мок объекта logger.
+    """
+    ...
 ```
 
-**Описание**: Тест проверяет успешную обработку категории кампании с использованием функции `process_campaign_category`.
-
-**Как работает функция**:
-- Создает мок-имена кампании и категории, язык и валюту.
-- Получает мок-объект `AliPromoCampaign` и устанавливает `MagicMock` для метода `process_affiliate_products`.
-- Вызывает функцию `process_campaign_category` с мок-объектами.
-- Проверяет, что функция вернула не `None`, и `mock_logger.error` не был вызван.
+**Назначение**: Тестирует успешный сценарий функции `process_campaign_category`.
 
 **Параметры**:
-- `mock_ali_promo_campaign`: Мок-объект класса `AliPromoCampaign`.
-- `mock_logger`: Мок-объект логгера.
 
-**Возвращает**:
-- Отсутствует.
+*   `mock_ali_promo_campaign`: Мок класса `AliPromoCampaign`.
+*   `mock_logger`: Мок объекта `logger`.
 
-**Вызывает исключения**:
-- Отсутствуют.
+**Как работает функция**:
+
+1.  Определяет мок-имена кампании и категории, язык и валюту.
+2.  Настраивает `mock_ali_promo_campaign` для возврата мок-объекта.
+3.  Настраивает мок-объект для успешной обработки аффилированных продуктов.
+4.  Вызывает функцию `process_campaign_category` с мок-параметрами.
+5.  Проверяет, что функция вернула не `None`.
+6.  Проверяет, что `mock_logger.error` не был вызван.
 
 **Примеры**:
-- Пример вызова функции не требуется, так как это тестовая функция.
+
+```python
+# Пример вызова теста с использованием фикстур
+@pytest.mark.asyncio
+async def test_process_campaign_category_success(mock_ali_promo_campaign, mock_logger):
+    # ... (код теста)
+    pass
+```
 
 ### `test_process_campaign_category_failure`
 
 ```python
 @pytest.mark.asyncio
 async def test_process_campaign_category_failure(mock_ali_promo_campaign, mock_logger):
-    mock_campaign_name = "test_campaign"
-    mock_category_name = "test_category"
-    mock_language = "EN"
-    mock_currency = "USD"
+    """
+    Тестирует ситуацию, когда обработка категории кампании завершается с ошибкой.
 
-    mock_ali_promo = mock_ali_promo_campaign.return_value
-    mock_ali_promo.process_affiliate_products.side_effect = Exception("Error")
-
-    result = await process_campaign_category(mock_campaign_name, mock_category_name, mock_language, mock_currency)
-
-    assert result is None
-    mock_logger.error.assert_called_once()
+    Args:
+        mock_ali_promo_campaign: Мок класса AliPromoCampaign.
+        mock_logger: Мок объекта logger.
+    """
+    ...
 ```
 
-**Описание**: Тест проверяет ситуацию, когда обработка категории кампании завершается с ошибкой из-за исключения в методе `process_affiliate_products`.
-
-**Как работает функция**:
-- Создает мок-имена кампании и категории, язык и валюту.
-- Получает мок-объект `AliPromoCampaign` и устанавливает `side_effect` для метода `process_affiliate_products`, чтобы имитировать исключение.
-- Вызывает функцию `process_campaign_category` с мок-объектами.
-- Проверяет, что функция вернула `None`, и `mock_logger.error` был вызван один раз.
+**Назначение**: Тестирует сценарий, когда функция `process_campaign_category` завершается с ошибкой.
 
 **Параметры**:
-- `mock_ali_promo_campaign`: Мок-объект класса `AliPromoCampaign`.
-- `mock_logger`: Мок-объект логгера.
 
-**Возвращает**:
-- Отсутствует.
+*   `mock_ali_promo_campaign`: Мок класса `AliPromoCampaign`.
+*   `mock_logger`: Мок объекта `logger`.
 
-**Вызывает исключения**:
-- Отсутствуют.
+**Как работает функция**:
+
+1.  Определяет мок-имена кампании и категории, язык и валюту.
+2.  Настраивает `mock_ali_promo_campaign` для возврата мок-объекта.
+3.  Настраивает мок-объект для вызова исключения при обработке аффилированных продуктов.
+4.  Вызывает функцию `process_campaign_category` с мок-параметрами.
+5.  Проверяет, что функция вернула `None`.
+6.  Проверяет, что `mock_logger.error` был вызван один раз.
 
 **Примеры**:
-- Пример вызова функции не требуется, так как это тестовая функция.
+
+```python
+# Пример вызова теста с использованием фикстур
+@pytest.mark.asyncio
+async def test_process_campaign_category_failure(mock_ali_promo_campaign, mock_logger):
+    # ... (код теста)
+    pass
+```
 
 ### `test_process_campaign`
 
 ```python
 def test_process_campaign(mock_get_directory_names, mock_logger):
-    mock_campaign_name = "test_campaign"
-    mock_categories = ["category1", "category2"]
-    mock_language = "EN"
-    mock_currency = "USD"
-    mock_force = False
+    """
+    Тестирует обработку кампании.
 
-    mock_get_directory_names.return_value = mock_categories
-
-    results = process_campaign(mock_campaign_name, mock_categories, mock_language, mock_currency, mock_force)
-
-    assert len(results) == 2
-    for category_name, result in results:
-        assert category_name in mock_categories
-        assert result is not None
-    mock_logger.warning.assert_not_called()
+    Args:
+        mock_get_directory_names: Мок функции get_directory_names.
+        mock_logger: Мок объекта logger.
+    """
+    ...
 ```
 
-**Описание**: Тест проверяет обработку кампании с использованием функции `process_campaign`.
-
-**Как работает функция**:
-- Создает мок-имя кампании, список категорий, язык, валюту и флаг `force`.
-- Устанавливает возвращаемое значение для `mock_get_directory_names`, чтобы имитировать получение списка категорий.
-- Вызывает функцию `process_campaign` с мок-объектами.
-- Проверяет, что функция вернула список результатов длиной 2, каждая категория присутствует в списке мок-категорий, результат не `None`, и `mock_logger.warning` не был вызван.
+**Назначение**: Тестирует функцию `process_campaign`.
 
 **Параметры**:
-- `mock_get_directory_names`: Мок-объект функции `get_directory_names`.
-- `mock_logger`: Мок-объект логгера.
 
-**Возвращает**:
-- Отсутствует.
+*   `mock_get_directory_names`: Мок функции `get_directory_names`.
+*   `mock_logger`: Мок объекта `logger`.
 
-**Вызывает исключения**:
-- Отсутствуют.
+**Как работает функция**:
+
+1.  Определяет мок-имя кампании, список категорий, язык, валюту и флаг `force`.
+2.  Настраивает `mock_get_directory_names` для возврата списка мок-категорий.
+3.  Вызывает функцию `process_campaign` с мок-параметрами.
+4.  Проверяет, что длина списка результатов равна 2.
+5.  Проверяет, что имя категории присутствует в списке мок-категорий и что результат не `None` для каждой категории.
+6.  Проверяет, что `mock_logger.warning` не был вызван.
 
 **Примеры**:
-- Пример вызова функции не требуется, так как это тестовая функция.
+
+```python
+# Пример вызова теста с использованием фикстур
+def test_process_campaign(mock_get_directory_names, mock_logger):
+    # ... (код теста)
+    pass
+```
 
 ### `test_main`
 
 ```python
 @pytest.mark.asyncio
 async def test_main(mock_get_directory_names):
-    mock_campaign_name = "test_campaign"
-    mock_categories = ["category1", "category2"]
-    mock_language = "EN"
-    mock_currency = "USD"
-    mock_force = False
+    """
+    Тестирует основную функцию.
 
-    mock_get_directory_names.return_value = mock_categories
-
-    await main(mock_campaign_name, mock_categories, mock_language, mock_currency, mock_force)
-
-    mock_get_directory_names.assert_called_once()
+    Args:
+        mock_get_directory_names: Мок функции get_directory_names.
+    """
+    ...
 ```
 
-**Описание**: Тест проверяет основную функцию `main`, которая координирует процесс подготовки кампаний.
-
-**Как работает функция**:
-- Создает мок-имя кампании, список категорий, язык, валюту и флаг `force`.
-- Устанавливает возвращаемое значение для `mock_get_directory_names`, чтобы имитировать получение списка категорий.
-- Вызывает асинхронную функцию `main` с мок-объектами.
-- Проверяет, что функция `mock_get_directory_names` была вызвана один раз.
+**Назначение**: Тестирует функцию `main`.
 
 **Параметры**:
-- `mock_get_directory_names`: Мок-объект функции `get_directory_names`.
 
-**Возвращает**:
-- Отсутствует.
+*   `mock_get_directory_names`: Мок функции `get_directory_names`.
 
-**Вызывает исключения**:
-- Отсутствуют.
+**Как работает функция**:
+
+1.  Определяет мок-имя кампании, список категорий, язык, валюту и флаг `force`.
+2.  Настраивает `mock_get_directory_names` для возврата списка мок-категорий.
+3.  Вызывает функцию `main` с мок-параметрами.
+4.  Проверяет, что `mock_get_directory_names` был вызван один раз.
 
 **Примеры**:
-- Пример вызова функции не требуется, так как это тестовая функция.
+
+```python
+# Пример вызова теста с использованием фикстур
+@pytest.mark.asyncio
+async def test_main(mock_get_directory_names):
+    # ... (код теста)
+    pass

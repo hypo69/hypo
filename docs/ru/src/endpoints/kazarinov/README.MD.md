@@ -2,40 +2,23 @@
 
 ## Обзор
 
-Документация для модуля `src.endpoints.kazarinov`, который отвечает за создание PDF-документов Mexiron. 
-Модуль включает в себя описание взаимодействия клиентской части (Kazarinov) с Telegram ботами `prod` и `test`, а также схемы работы с данными One-Tab.
+Документация представляет собой обзор работы Telegram-ботов `KazarinovTelegramBot`, `BotHandler`, а также описание логики взаимодействия между клиентской и серверной частями.
 
-## Оглавление
+## Подробней
 
-- [Обзор](#обзор)
-- [Подробнее](#подробнее)
-- [`KazarinovTelegramBot`](#kazarinovtelegrambot)
-- [`BotHandler`](#bothandler)
-- [Client side (Kazarinov)](#client-side-kazarinov)
-- [Code side](#code-side)
-- [Next](#next)
+Данный код описывает взаимодействие пользователя с Telegram-ботом для выбора комплектующих компьютера, объединения их в One-Tab и отправки ссылки боту для дальнейшей обработки и выполнения сценария Mexiron.
 
-## Подробнее
+## Классы
 
-Модуль предоставляет функциональность для работы с Telegram ботами и сценариями Mexiron, 
-включая обработку данных из One-Tab и отправку сгенерированных ссылок в WhatsApp.
+В данном файле отсутствуют классы. Описаны только общая схема работы ботов и последовательность действий.
 
-## `KazarinovTelegramBot`
+## Функции
 
-Ссылки на ресурсы:
-- https://one-tab.co.il
-- https://morlevi.co.il
-- https://grandavance.co.il
-- https://ivory.co.il
-- https://ksp.co.il
+В данном файле отсутствуют функции. Описаны только общая схема работы ботов и последовательность действий.
 
-## `BotHandler`
+## Схема взаимодействия
 
-Описание обработки ботов.
-
-## Client side (Kazarinov)
-
-### Схема взаимодействия клиентской части с Telegram ботами
+### Клиентская часть (Kazarinov)
 
 ```mermaid
 flowchart TD
@@ -45,9 +28,9 @@ flowchart TD
     SendToBot -->|hypo69_test_bot| TestBot[Telegram бот <code>test</code>]
 ```
 
-## Code side
+**Описание**: Пользователь выбирает комплектующие для сборки компьютера, объединяет их в One-Tab и отправляет ссылку Telegram-боту (`prod` или `test`).
 
-### Схема обработки данных и выполнения сценария
+### Серверная часть (Code side)
 
 ```mermaid
 flowchart TD
@@ -66,9 +49,25 @@ flowchart TD
     J --> K[Return]
 ```
 
-## Next
+**Описание**: Схема описывает логику обработки URL, полученного от пользователя, проверку данных и запуск сценария Mexiron.
 
-### Ссылки на связанные модули
+**Как работает схема**:
 
-- [Kazarinov bot](https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.md)
-- [Scenario Execution](https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/README.MD)
+1.  **Start**: Начало процесса.
+2.  **URL is from OneTab?**: Проверка, является ли URL ссылкой OneTab.
+    *   Если **Да**: Переход к шагу **Get data from OneTab**.
+    *   Если **Нет**: Ответ пользователю с просьбой повторить попытку (**Reply - Try again**).
+3.  **Get data from OneTab**: Получение данных из OneTab.
+4.  **Data valid?**: Проверка валидности полученных данных.
+    *   Если **Нет**: Ответ пользователю о некорректных данных (**Reply Incorrect data**).
+    *   Если **Да**: Запуск сценария Mexiron (**Run Mexiron scenario**).
+5.  **Run Mexiron scenario**: Запуск сценария Mexiron.
+6.  **Scenario successful?**: Проверка успешности выполнения сценария.
+    *   Если **Да**: Ответ пользователю об успешном выполнении и отправке ссылки в WhatsApp (**Reply Done! I will send the link to WhatsApp**).
+    *   Если **Нет**: Ответ пользователю об ошибке выполнения сценария (**Reply Error running scenario**).
+7.  **Return**: Завершение процесса.
+
+## Ссылки
+
+-   [Kazarinov bot](https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.md)
+-   [Scenario Execution](https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/README.MD)

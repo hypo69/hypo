@@ -1,60 +1,42 @@
-# Модуль для хранения учетных данных
+# Модуль для хранения учетных данных для Google Drive
 
 ## Обзор
 
-Модуль содержит класс `Creds`, предназначенный для хранения учетных данных, таких как токен Telegram-бота, ID папки TeamDrive и ID TeamDrive. Это позволяет удобно хранить и использовать эти данные в других частях проекта.
+Модуль `creds.py` предназначен для хранения учетных данных, необходимых для работы с Google Drive API, в частности, токена Telegram-бота (TG_TOKEN) и идентификаторов TeamDrive (TEAMDRIVE_FOLDER_ID и TEAMDRIVE_ID). Этот модуль предоставляет централизованное место для хранения этих параметров, что упрощает их настройку и использование в других частях проекта.
 
 ## Подробней
 
-Этот модуль предоставляет простой способ централизованного хранения учетных данных, необходимых для работы с Telegram Bot API и Google Drive API. Использование класса `Creds` позволяет избежать жесткого кодирования учетных данных непосредственно в коде, что повышает безопасность и упрощает управление конфигурацией.
+Этот файл содержит класс `Creds`, который используется для хранения учетных данных, необходимых для интеграции с Google Drive. В частности, он хранит токен Telegram-бота, идентификатор папки TeamDrive и идентификатор TeamDrive. Эти параметры используются для авторизации и определения места хранения файлов в Google Drive.
 
 ## Классы
 
 ### `Creds`
 
-**Описание**: Класс для хранения учетных данных.
+**Описание**: Класс `Creds` предназначен для хранения учетных данных, необходимых для работы с Google Drive API.
 
 **Как работает класс**:
-Класс `Creds` содержит статические атрибуты, которые хранят токен Telegram-бота (`TG_TOKEN`), ID папки TeamDrive (`TEAMDRIVE_FOLDER_ID`) и ID TeamDrive (`TEAMDRIVE_ID`). Эти атрибуты предназначены для хранения и доступа к соответствующим учетным данным.
+Класс `Creds` содержит статические переменные, которые хранят учетные данные, такие как токен Telegram-бота, идентификатор папки TeamDrive и идентификатор TeamDrive. Эти переменные используются для настройки доступа к Google Drive и Telegram-боту.
 
-**Атрибуты**:
-- `TG_TOKEN` (str): Токен Telegram-бота.
-- `TEAMDRIVE_FOLDER_ID` (str): ID папки TeamDrive.
-- `TEAMDRIVE_ID` (str): ID TeamDrive.
+**Переменные класса**:
+- `TG_TOKEN` (str): Токен Telegram-бота. Используется для аутентификации бота и взаимодействия с Telegram API.
+- `TEAMDRIVE_FOLDER_ID` (str): Идентификатор папки TeamDrive. Указывает на конкретную папку в TeamDrive, куда будут загружаться файлы.
+- `TEAMDRIVE_ID` (str): Идентификатор TeamDrive. Определяет TeamDrive, в котором находится папка для загрузки файлов.
 
 **Примеры**:
 
 ```python
-# Пример использования класса Creds
+# Пример использования класса Creds для хранения учетных данных
 creds = Creds()
-creds.TG_TOKEN = "your_bot_token"
+creds.TG_TOKEN = "your_telegram_bot_token"
 creds.TEAMDRIVE_FOLDER_ID = "your_teamdrive_folder_id"
 creds.TEAMDRIVE_ID = "your_teamdrive_id"
-
-# Получение значений
-token = creds.TG_TOKEN
-folder_id = creds.TEAMDRIVE_FOLDER_ID
-teamdrive_id = creds.TEAMDRIVE_ID
 ```
+## Примеры
+В классе Creds предоставлены примеры значений для переменных TG_TOKEN, TEAMDRIVE_FOLDER_ID и TEAMDRIVE_ID, которые закомментированы. Это сделано для того, чтобы показать формат и структуру данных, которые ожидаются для правильной работы интеграции с Telegram и Google Drive.
+
 ```python
-class Creds():
-    # ENTER Your bot Token Here
-    TG_TOKEN = ""
-    
-    
-    
-    #  Make Sure You Are Providing both value if you need Teamdrive upload
-    # Because of pydrive And pydrive v2 Api
-    
-    #Folder Id Of Teamdrive
-    TEAMDRIVE_FOLDER_ID = ""
-    
-    # Id of Team drive 
-    TEAMDRIVE_ID = ""
-    
-    
-    
-    #Example 
-    #TG_TOKEN = "dkjfksdkffdkfdkfdj"
-    #TEAMDRIVE_FOLDER_ID = "13v4MaZnBz-iEHlZ0gFXk7rh"
-    #TEAMDRIVE_ID = "0APh6R4WVvguEUk9PV"
+#Примеры
+#TG_TOKEN = "dkjfksdkffdkfdkfdj"
+#TEAMDRIVE_FOLDER_ID = "13v4MaZnBz-iEHlZ0gFXk7rh"
+#TEAMDRIVE_ID = "0APh6R4WVvguEUk9PV"
+```

@@ -1,52 +1,54 @@
-# `JUPYTER_header.py`
+# Модуль _experiments
 
 ## Обзор
 
-Файл содержит набор импортов и определение функции `start_supplier`. Это экспериментальный файл, используемый в Jupyter Notebook для разработки и тестирования.
+Модуль содержит экспериментальные наработки и заготовки для поставщика `grandadvance`. 
+Включает в себя импорты необходимых библиотек и классов, а также функцию для запуска поставщика.
+Модуль предназначен для Windows и Unix платформ.
 
 ## Подробней
 
-Этот файл содержит определения, необходимые для запуска и тестирования поставщиков (suppliers) в контексте Jupyter Notebook. Файл содержит импорты модулей и определение функции `start_supplier()`, которая создает экземпляр класса `Supplier` с заданными параметрами.
+Модуль содержит определение путей к директориям проекта, импорты необходимых модулей и классов, 
+а также функцию `start_supplier` для запуска поставщика с указанными параметрами. Он является частью 
+экспериментального раздела и может использоваться для тестирования новых идей и подходов к работе с поставщиками.
 
 ## Функции
 
 ### `start_supplier`
 
 ```python
-def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en'):
-    """ Старт поставщика """
+def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en' ):
+    """ Старт поставщика 
+    Args:
+        supplier_prefix (str, optional): Префикс поставщика. По умолчанию 'aliexpress'.
+        locale (str, optional): Локаль. По умолчанию 'en'.
+
+    Returns:
+        Supplier: Объект поставщика.
+
+    """
 ```
 
-**Описание**: Функция для инициализации и запуска поставщика.
-
-**Как работает функция**:
-Функция принимает префикс поставщика и локаль в качестве параметров и создает словарь `params` с этими значениями. Затем она возвращает экземпляр класса `Supplier`, инициализированный с использованием переданных параметров.
+**Назначение**: Функция запускает поставщика с заданными параметрами.
 
 **Параметры**:
-- `supplier_prefix` (str, optional): Префикс поставщика. По умолчанию 'aliexpress'.
-- `locale` (str, optional): Локаль. По умолчанию 'en'.
+- `supplier_prefix` (str, optional): Префикс поставщика. Используется для определения, какого поставщика следует запустить. По умолчанию `'aliexpress'`.
+- `locale` (str, optional): Локаль, определяющая язык и регион для поставщика. По умолчанию `'en'`.
 
 **Возвращает**:
 - `Supplier`: Объект поставщика, созданный с использованием переданных параметров.
 
+**Как работает функция**:
+
+1.  Функция принимает на вход префикс поставщика (`supplier_prefix`) и локаль (`locale`).
+2.  Определяет параметры в виде словаря, используя переданные аргументы `supplier_prefix` и `locale`.
+3.  Создает и возвращает объект класса `Supplier`, передавая словарь `params` в качестве аргументов конструктора.
+
 **Примеры**:
 
 ```python
+# Пример запуска поставщика aliexpress с английской локалью
 supplier = start_supplier(supplier_prefix='aliexpress', locale='en')
-print(supplier)
-# <src.suppliers.Supplier object at 0x...>
-```
-```python
-supplier = start_supplier()
-print(supplier)
-# <src.suppliers.Supplier object at 0x...>
-```
-```python
-supplier = start_supplier(locale='ru')
-print(supplier)
-# <src.suppliers.Supplier object at 0x...>
-```
-```python
-supplier = start_supplier(supplier_prefix='amazon', locale='de')
-print(supplier)
-# <src.suppliers.Supplier object at 0x...>
+
+# Пример запуска поставщика grandadvance с русской локалью
+supplier = start_supplier(supplier_prefix='grandadvance', locale='ru')

@@ -2,27 +2,15 @@
 
 ## Обзор
 
-Модуль содержит набор импортов и определение переменной `dir_root`, используемой для добавления корневой директории проекта в `sys.path`. Также содержит функцию `start_supplier`, предназначенную для запуска поставщика с заданными параметрами.
+Модуль содержит настройки путей и импорты, необходимые для работы с поставщиком Amazon. Включает в себя добавление корневой директории проекта в `sys.path`, импорт необходимых модулей и определение функции `start_supplier` для инициализации поставщика.
 
 ## Подробней
 
-Этот модуль, вероятно, используется для настройки окружения и импорта необходимых модулей для экспериментов, связанных с поставщиком Amazon. Он подготавливает пути и выполняет импорты, необходимые для работы с драйверами веб-браузеров, поставщиками, продуктами и категориями.
+Этот модуль выполняет следующие задачи:
 
-## Переменные
-
-### `dir_root`
-
-**Описание**: Переменная `dir_root` определяет корневую директорию проекта `hypotez`.
-
-**Как работает переменная**:
-1.  Получает текущую рабочую директорию с помощью `os.getcwd()`.
-2.  Определяет индекс последнего вхождения строки `'hypotez'` в текущей рабочей директории.
-3.  Извлекает подстроку текущей рабочей директории до конца слова `'hypotez'`, включая его (добавляет 7 символов, чтобы включить `'hypotez'`).
-4.  Создает объект `Path` из полученной подстроки.
-
-```python
-dir_root : Path = Path (os.getcwd()[:os.getcwd().rfind('hypotez')+7])
-```
+1.  Настраивает пути для импорта модулей, добавляя корневую директорию проекта и директорию `src` в `sys.path`. Это позволяет импортировать модули из этих директорий без указания полных путей.
+2.  Импортирует необходимые модули и классы, такие как `gs`, `Driver`, `Supplier`, `Product`, `Category`, `StringFormatter`, `StringNormalizer` и другие, необходимые для работы с поставщиком Amazon.
+3.  Определяет функцию `start_supplier`, которая принимает префикс поставщика и локаль в качестве аргументов и возвращает объект `Supplier`.
 
 ## Функции
 
@@ -30,53 +18,33 @@ dir_root : Path = Path (os.getcwd()[:os.getcwd().rfind('hypotez')+7])
 
 ```python
 def start_supplier(supplier_prefix, locale):
-    """ Старт поставщика """
-    if not supplier_prefix and not locale: return "Не задан сценарий и язык"
-    
-    params: dict = \
-    {
-        'supplier_prefix': supplier_prefix,
-        'locale': locale
-    }
-    
-    return Supplier(**params)
+    """ Старт поставщика
+    Args:
+        supplier_prefix (str): Префикс поставщика.
+        locale (str): Локаль.
+
+    Returns:
+        Supplier | str: Объект `Supplier` или сообщение об ошибке, если сценарий и язык не заданы.
+
+    Raises:
+        Нет.
+
+    """
 ```
 
-**Описание**: Функция `start_supplier` создает экземпляр класса `Supplier` с заданными параметрами `supplier_prefix` и `locale`.
+**Как работает функция:**
 
-**Как работает функция**:
+1.  Функция `start_supplier` принимает два аргумента: `supplier_prefix` и `locale`.
+2.  Проверяет, заданы ли `supplier_prefix` и `locale`. Если хотя бы один из них не задан, возвращает сообщение об ошибке "Не задан сценарий и язык".
+3.  Создает словарь `params` с ключами `'supplier_prefix'` и `'locale'`, значения которых берутся из аргументов функции.
+4.  Создает и возвращает объект `Supplier`, передавая словарь `params` в качестве аргумента.
 
-1.  Проверяет, заданы ли параметры `supplier_prefix` и `locale`. Если хотя бы один из них не задан, функция возвращает сообщение об ошибке "Не задан сценарий и язык".
-2.  Создает словарь `params`, содержащий параметры `supplier_prefix` и `locale`.
-3.  Создает и возвращает экземпляр класса `Supplier`, передавая словарь `params` в качестве аргументов конструктора.
-
-**Параметры**:
-
-*   `supplier_prefix` (str): Префикс поставщика.
-*   `locale` (str): Локаль.
-
-**Возвращает**:
-
-*   `Supplier`: Экземпляр класса `Supplier` с заданными параметрами.
-*   `str`: Строка "Не задан сценарий и язык", если параметры `supplier_prefix` и `locale` не заданы.
-
-**Примеры**:
+**Примеры:**
 
 ```python
-from src.suppliers import Supplier # Это надо импортировать чтобы пример заработал
-supplier = start_supplier(supplier_prefix='amazon', locale='us')
-print(supplier) #  <src.suppliers.supplier.Supplier object at 0x...>
-```
-```python
-supplier = start_supplier(supplier_prefix='', locale='')
-print(supplier) # Не задан сценарий и язык
-```
-```python
-supplier = start_supplier(supplier_prefix='amazon', locale='')
+supplier = start_supplier('amazon', 'ru_RU')
 print(supplier) # <src.suppliers.supplier.Supplier object at 0x...>
 ```
 ```python
-supplier = start_supplier(supplier_prefix='', locale='ru')
-print(supplier) # <src.suppliers.supplier.Supplier object at 0x...>
-```
-```
+error_message = start_supplier('', '')
+print(error_message) # Не задан сценарий и язык

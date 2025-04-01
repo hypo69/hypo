@@ -1,36 +1,42 @@
-# Модуль: src.suppliers.aliexpress.gui.campaign
+# Модуль `campaign.py`
 
 ## Обзор
 
-Модуль `campaign.py` предоставляет графический интерфейс (GUI) для редактирования и подготовки кампаний AliExpress. Он включает в себя функциональность открытия JSON-файлов, отображения данных кампании в редактируемых полях и асинхронной подготовки кампании с использованием класса `AliCampaignEditor`.
+Модуль `campaign.py` предоставляет виджет `CampaignEditor` для редактирования кампаний AliExpress. Он позволяет открывать JSON-файлы с данными кампаний, отображать их содержимое в графическом интерфейсе и подготавливать кампании к дальнейшей обработке.
 
 ## Подробней
 
-Этот модуль является частью проекта `hypotez` и отвечает за визуальное представление и редактирование данных кампаний AliExpress. Он использует библиотеку `PyQt6` для создания графического интерфейса и асинхронные операции для подготовки кампаний. Модуль позволяет пользователям загружать JSON-файлы с данными кампаний, редактировать основные параметры, такие как заголовок, описание и название промоакции, а также запускать процесс подготовки кампании.
+Модуль использует библиотеку PyQt6 для создания графического интерфейса. Он позволяет пользователю загружать JSON-файлы, отображать и редактировать данные кампаний, такие как заголовок, описание и название рекламной акции. Класс `CampaignEditor` является основным виджетом, который предоставляет этот функционал.
+Данный код используется для визуализации и редактирования параметров рекламных кампаний AliExpress в графическом интерфейсе приложения `hypotez`.
 
 ## Классы
 
 ### `CampaignEditor`
 
-**Описание**: Класс `CampaignEditor` представляет собой виджет (QWidget) для редактирования кампаний. Он содержит методы для настройки пользовательского интерфейса, загрузки файлов, создания виджетов на основе данных и подготовки кампании.
+**Описание**: Основной класс виджета для редактирования кампаний. Он содержит методы для загрузки файлов, создания виджетов на основе данных из файла и подготовки кампании.
 
-**Как работает класс**:
-
-1.  **Инициализация**: При инициализации класса `CampaignEditor` создается экземпляр виджета, сохраняется ссылка на главное приложение (`main_app`) и вызываются методы `setup_ui` и `setup_connections` для настройки интерфейса и соединений.
-2.  **Настройка UI**: Метод `setup_ui` создает основные элементы интерфейса, такие как кнопки "Open JSON File" и "Prepare Campaign", текстовые поля для заголовка, описания и названия промоакции, а также область прокрутки для размещения виджетов.
-3.  **Загрузка файла**: Метод `open_file` открывает диалоговое окно выбора файла, позволяя пользователю выбрать JSON-файл с данными кампании. После выбора файла вызывается метод `load_file` для загрузки данных.
-4.  **Создание виджетов**: Метод `create_widgets` создает виджеты на основе загруженных данных, отображая заголовок, описание и название промоакции в соответствующих текстовых полях.
-5.  **Подготовка кампании**: Метод `prepare_campaign` асинхронно подготавливает кампанию, используя экземпляр класса `AliCampaignEditor`.
+**Принцип работы**:
+1.  Инициализация виджета: при создании экземпляра `CampaignEditor` инициализируется пользовательский интерфейс и устанавливаются связи между сигналами и слотами.
+2.  Загрузка файла: метод `open_file` открывает диалоговое окно выбора файла, позволяя пользователю выбрать JSON-файл с данными кампании.
+3.  Отображение данных: метод `create_widgets` создает виджеты (например, текстовые поля) на основе данных, загруженных из JSON-файла, и отображает их в интерфейсе.
+4.  Подготовка кампании: метод `prepare_campaign` асинхронно подготавливает кампанию с использованием класса `AliCampaignEditor`.
 
 **Методы**:
 
-*   `__init__`: Инициализирует виджет `CampaignEditor`.
-*   `setup_ui`: Настраивает пользовательский интерфейс.
-*   `setup_connections`: Устанавливает соединения между сигналами и слотами.
-*   `open_file`: Открывает диалоговое окно выбора файла.
-*   `load_file`: Загружает JSON-файл с данными кампании.
-*   `create_widgets`: Создает виджеты на основе данных из JSON-файла.
-*   `prepare_campaign`: Асинхронно подготавливает кампанию.
+*   `__init__(self, parent=None, main_app=None)`:
+    *   Инициализирует виджет `CampaignEditor`.
+*   `setup_ui(self)`:
+    *   Настраивает пользовательский интерфейс, включая создание кнопок, текстовых полей и макетов.
+*   `setup_connections(self)`:
+    *   Устанавливает связи между сигналами и слотами.
+*   `open_file(self)`:
+    *   Открывает диалоговое окно выбора файла для загрузки JSON-файла кампании.
+*   `load_file(self, campaign_file)`:
+    *   Загружает JSON-файл кампании и создает виджеты для отображения данных.
+*   `create_widgets(self, data)`:
+    *   Создает виджеты (текстовые поля) на основе данных из JSON-файла и добавляет их в макет.
+*   `prepare_campaign(self)`:
+    *   Асинхронно подготавливает кампанию с использованием `AliCampaignEditor`.
 
 **Параметры**:
 
@@ -41,7 +47,7 @@
 
 ```python
 from PyQt6 import QtWidgets
-from src.suppliers.aliexpress.gui.campaign import CampaignEditor
+from campaign import CampaignEditor
 
 app = QtWidgets.QApplication([])
 campaign_editor = CampaignEditor()
@@ -56,27 +62,32 @@ app.exec()
 ```python
 def __init__(self, parent=None, main_app=None):
     """ Initialize the CampaignEditor widget """
-    super().__init__(parent)
-    self.main_app = main_app  # Save the MainApp instance
-
-    self.setup_ui()
-    self.setup_connections()
+    ...
 ```
 
-**Описание**: Инициализирует виджет `CampaignEditor`.
-
-**Как работает функция**:
-Вызывает конструктор родительского класса `QtWidgets.QWidget`, сохраняет ссылку на экземпляр главного приложения (`main_app`), настраивает пользовательский интерфейс (`setup_ui`) и устанавливает соединения (`setup_connections`).
+**Назначение**: Инициализирует виджет `CampaignEditor`.
 
 **Параметры**:
 
 *   `parent` (QtWidgets.QWidget, optional): Родительский виджет. По умолчанию `None`.
 *   `main_app` (MainApp, optional): Экземпляр главного приложения. По умолчанию `None`.
 
+**Как работает функция**:
+
+1.  Вызывает конструктор родительского класса `QtWidgets.QWidget`.
+2.  Сохраняет ссылку на экземпляр главного приложения `main_app`.
+3.  Вызывает методы `setup_ui` и `setup_connections` для настройки пользовательского интерфейса и связей между сигналами и слотами.
+
 **Примеры**:
 
 ```python
+from PyQt6 import QtWidgets
+from campaign import CampaignEditor
+
+app = QtWidgets.QApplication([])
 campaign_editor = CampaignEditor()
+campaign_editor.show()
+app.exec()
 ```
 
 ### `setup_ui`
@@ -84,114 +95,53 @@ campaign_editor = CampaignEditor()
 ```python
 def setup_ui(self):
     """ Setup the user interface """
-    self.setWindowTitle("Campaign Editor")
-    self.resize(1800, 800)
-
-    # Create a QScrollArea
-    self.scroll_area = QtWidgets.QScrollArea()
-    self.scroll_area.setWidgetResizable(True)
-
-    # Create a QWidget for the content of the scroll area
-    self.scroll_content_widget = QtWidgets.QWidget()
-    self.scroll_area.setWidget(self.scroll_content_widget)
-
-    # Create the layout for the scroll content widget
-    self.layout = QtWidgets.QGridLayout(self.scroll_content_widget)
-    self.layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
-
-    # Define UI components
-    self.open_button = QtWidgets.QPushButton("Open JSON File")
-    self.open_button.clicked.connect(self.open_file)
-    set_fixed_size(self.open_button, width=250, height=25)
-
-    self.file_name_label = QtWidgets.QLabel("No file selected")
-    set_fixed_size(self.file_name_label, width=500, height=25)
-
-    self.prepare_button = QtWidgets.QPushButton("Prepare Campaign")
-    self.prepare_button.clicked.connect(self.prepare_campaign)
-    set_fixed_size(self.prepare_button, width=250, height=25)
-
-    # Add components to layout
-    self.layout.addWidget(self.open_button, 0, 0)
-    self.layout.addWidget(self.file_name_label, 0, 1)
-    self.layout.addWidget(self.prepare_button, 1, 0, 1, 2)  # Span across two columns
-
-    # Add the scroll area to the main layout of the widget
-    main_layout = QtWidgets.QVBoxLayout(self)
-    main_layout.addWidget(self.scroll_area)
-    self.setLayout(main_layout)
+    ...
 ```
 
-**Описание**: Настраивает пользовательский интерфейс виджета `CampaignEditor`.
+**Назначение**: Настраивает пользовательский интерфейс виджета `CampaignEditor`.
 
 **Как работает функция**:
-Устанавливает заголовок окна, изменяет размер окна, создает область прокрутки, создает виджет для содержимого области прокрутки, создает макет для содержимого области прокрутки, определяет компоненты пользовательского интерфейса (кнопки, метки), добавляет компоненты в макет и добавляет область прокрутки в основной макет виджета.
 
-**Параметры**:
-
-*   Отсутствуют
-
-**Примеры**:
-
-```python
-campaign_editor = CampaignEditor()
-campaign_editor.setup_ui()
-```
+1.  Устанавливает заголовок окна виджета.
+2.  Изменяет размер окна виджета.
+3.  Создает область прокрутки `QScrollArea` и помещает в нее виджет с контентом `scroll_content_widget`.
+4.  Создает макет `QGridLayout` для виджета с контентом и выравнивает его по верхнему краю.
+5.  Определяет компоненты пользовательского интерфейса, такие как кнопки "Open JSON File" (открытие файла) и "Prepare Campaign" (подготовка кампании), а также текстовое поле для отображения имени выбранного файла.
+6.  Добавляет компоненты в макет.
+7.  Добавляет область прокрутки в главный макет виджета.
 
 ### `setup_connections`
 
 ```python
 def setup_connections(self):
     """ Setup signal-slot connections """
-    pass
+    ...
 ```
 
-**Описание**: Устанавливает соединения между сигналами и слотами.
+**Назначение**: Устанавливает связи между сигналами и слотами.
 
 **Как работает функция**:
-В текущей реализации функция пуста и не выполняет никаких действий. Она предназначена для установки соединений между сигналами и слотами, но в данном коде эти соединения не определены.
 
-**Параметры**:
-
-*   Отсутствуют
-
-**Примеры**:
-
-```python
-campaign_editor = CampaignEditor()
-campaign_editor.setup_connections()
-```
+Функция `setup_connections` в данном коде пуста и не выполняет никаких действий.
 
 ### `open_file`
 
 ```python
 def open_file(self):
     """ Open a file dialog to select and load a JSON file """
-    campaign_file, _ = QtWidgets.QFileDialog.getOpenFileName(
-        self,
-        "Open JSON File",
-        "c:/user/documents/repos/hypotez/data/aliexpress/campaigns",
-        "JSON files (*.json)"
-    )
-    if not campaign_file:
-        return
-
-    self.load_file(campaign_file)
+    ...
 ```
 
-**Описание**: Открывает диалоговое окно выбора файла для выбора и загрузки JSON-файла.
+**Назначение**: Открывает диалоговое окно выбора файла для загрузки JSON-файла кампании.
 
 **Как работает функция**:
-Вызывает `QtWidgets.QFileDialog.getOpenFileName` для отображения диалогового окна выбора файла. Если файл выбран, вызывает метод `load_file` для загрузки выбранного файла.
 
-**Параметры**:
-
-*   Отсутствуют
+1.  Открывает диалоговое окно выбора файла с помощью `QtWidgets.QFileDialog.getOpenFileName`.
+2.  Если файл выбран, вызывает метод `load_file` для загрузки содержимого файла.
 
 **Примеры**:
 
 ```python
-campaign_editor = CampaignEditor()
 campaign_editor.open_file()
 ```
 
@@ -200,24 +150,23 @@ campaign_editor.open_file()
 ```python
 def load_file(self, campaign_file):
     """ Load a JSON file """
-    try:
-        self.data = j_loads_ns(campaign_file)
-        self.current_campaign_file = campaign_file
-        self.file_name_label.setText(f"File: {self.current_campaign_file}")
-        self.create_widgets(self.data)
-        self.editor = AliCampaignEditor(campaign_file=campaign_file)
-    except Exception as ex:
-        QtWidgets.QMessageBox.critical(self, "Error", f"Failed to load JSON file: {ex}")
+    ...
 ```
 
-**Описание**: Загружает JSON-файл.
-
-**Как работает функция**:
-Пытается загрузить JSON-файл, используя `j_loads_ns`. В случае успеха сохраняет данные, устанавливает текст метки имени файла и создает виджеты на основе загруженных данных. В случае неудачи отображает сообщение об ошибке.
+**Назначение**: Загружает JSON-файл кампании.
 
 **Параметры**:
 
 *   `campaign_file` (str): Путь к JSON-файлу.
+
+**Как работает функция**:
+
+1.  Пытается загрузить JSON-файл с использованием `j_loads_ns`.
+2.  Сохраняет путь к файлу в `self.current_campaign_file`.
+3.  Устанавливает текст в `self.file_name_label`.
+4.  Вызывает метод `create_widgets` для создания виджетов на основе данных из файла.
+5.  Инициализирует `AliCampaignEditor`.
+6.  В случае ошибки отображает сообщение об ошибке.
 
 **Вызывает исключения**:
 
@@ -226,8 +175,7 @@ def load_file(self, campaign_file):
 **Примеры**:
 
 ```python
-campaign_editor = CampaignEditor()
-campaign_editor.load_file("path/to/campaign.json")
+campaign_editor.load_file('campaign.json')
 ```
 
 ### `create_widgets`
@@ -235,45 +183,24 @@ campaign_editor.load_file("path/to/campaign.json")
 ```python
 def create_widgets(self, data):
     """ Create widgets based on the data loaded from the JSON file """
-    layout = self.layout
-
-    # Remove previous widgets except open button and file label
-    for i in reversed(range(layout.count())):
-        widget = layout.itemAt(i).widget()
-        if widget not in [self.open_button, self.file_name_label, self.prepare_button]:
-            widget.deleteLater()
-
-    self.title_input = QtWidgets.QLineEdit(data.title)
-    layout.addWidget(QtWidgets.QLabel("Title:"), 2, 0)
-    layout.addWidget(self.title_input, 2, 1)
-    set_fixed_size(self.title_input, width=500, height=25)
-
-    self.description_input = QtWidgets.QLineEdit(data.description)
-    layout.addWidget(QtWidgets.QLabel("Description:"), 3, 0)
-    layout.addWidget(self.description_input, 3, 1)
-    set_fixed_size(self.description_input, width=500, height=25)
-
-    self.promotion_name_input = QtWidgets.QLineEdit(data.promotion_name)
-    layout.addWidget(QtWidgets.QLabel("Promotion Name:"), 4, 0)
-    layout.addWidget(self.promotion_name_input, 4, 1)
-    set_fixed_size(self.promotion_name_input, width=500, height=25)
+    ...
 ```
 
-**Описание**: Создает виджеты на основе данных, загруженных из JSON-файла.
-
-**Как работает функция**:
-Удаляет предыдущие виджеты (за исключением кнопок "Open JSON File", "Prepare Campaign" и метки имени файла), создает текстовые поля для заголовка, описания и названия промоакции, добавляет метки и текстовые поля в макет.
+**Назначение**: Создает виджеты (текстовые поля) на основе данных из JSON-файла и добавляет их в макет.
 
 **Параметры**:
 
 *   `data` (SimpleNamespace): Данные, загруженные из JSON-файла.
 
+**Как работает функция**:
+
+1.  Удаляет предыдущие виджеты, кроме кнопок "Open JSON File" и текстового поля для имени файла.
+2.  Создает текстовые поля `QLineEdit` для заголовка, описания и названия рекламной акции на основе данных из `data`.
+3.  Добавляет метки и текстовые поля в макет.
+
 **Примеры**:
 
 ```python
-from types import SimpleNamespace
-campaign_editor = CampaignEditor()
-data = SimpleNamespace(title="Example Campaign", description="Example Description", promotion_name="Example Promotion")
 campaign_editor.create_widgets(data)
 ```
 
@@ -283,22 +210,16 @@ campaign_editor.create_widgets(data)
 @asyncSlot()
 async def prepare_campaign(self):
     """ Asynchronously prepare the campaign """
-    if self.editor:
-        try:
-            await self.editor.prepare()
-            QtWidgets.QMessageBox.information(self, "Success", "Campaign prepared successfully.")
-        except Exception as ex:
-            QtWidgets.QMessageBox.critical(self, "Error", f"Failed to prepare campaign: {ex}")
+    ...
 ```
 
-**Описание**: Асинхронно подготавливает кампанию.
+**Назначение**: Асинхронно подготавливает кампанию.
 
 **Как работает функция**:
-Если `self.editor` существует, пытается асинхронно подготовить кампанию, используя `self.editor.prepare()`. В случае успеха отображает сообщение об успехе, в случае неудачи отображает сообщение об ошибке.
 
-**Параметры**:
-
-*   Отсутствуют
+1.  Проверяет, инициализирован ли `self.editor` (экземпляр `AliCampaignEditor`).
+2.  Вызывает метод `prepare` объекта `self.editor` асинхронно.
+3.  Отображает сообщение об успехе или ошибке в зависимости от результата.
 
 **Вызывает исключения**:
 
@@ -307,6 +228,4 @@ async def prepare_campaign(self):
 **Примеры**:
 
 ```python
-import asyncio
-campaign_editor = CampaignEditor()
-asyncio.run(campaign_editor.prepare_campaign())
+await campaign_editor.prepare_campaign()

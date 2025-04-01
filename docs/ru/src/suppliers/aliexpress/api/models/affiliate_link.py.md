@@ -1,37 +1,36 @@
-# Модуль: src.suppliers.aliexpress.api.models.affiliate_link
+# Модуль affiliate_link
 
 ## Обзор
 
-Этот модуль содержит класс `AffiliateLink`, предназначенный для представления партнерской ссылки, включающей саму ссылку и источник, из которого она была получена.
+Модуль `affiliate_link` содержит класс `AffiliateLink`, который предназначен для хранения информации о партнерской ссылке.
+Класс включает в себя атрибуты для хранения самой партнерской ссылки и источника, из которого она была получена.
 
 ## Подробней
 
-Модуль определяет структуру данных для хранения информации о партнерских ссылках, используемых для отслеживания продаж и получения комиссионных от AliExpress. Класс `AffiliateLink` упрощает работу с партнерскими ссылками, предоставляя удобный способ хранения и доступа к соответствующим данным.
+Данный модуль используется для представления данных о партнерских ссылках, полученных от AliExpress.
+Он обеспечивает удобный способ хранения и доступа к этим данным.
 
 ## Классы
 
 ### `AffiliateLink`
 
-**Описание**: Класс для представления партнерской ссылки с информацией об источнике.
+**Описание**: Класс `AffiliateLink` используется для представления партнерской ссылки и источника её получения.
 
-**Как работает класс**:
-Класс `AffiliateLink` имеет два атрибута: `promotion_link` и `source_value`. `promotion_link` содержит саму партнерскую ссылку, а `source_value` указывает на источник, из которого была получена эта ссылка. Класс используется для хранения и передачи этих данных в приложении.
+**Принцип работы**:
+Класс `AffiliateLink` представляет собой структуру данных, содержащую два атрибута: `promotion_link` и `source_value`.
+`promotion_link` хранит саму партнерскую ссылку, а `source_value` - источник, из которого была получена данная ссылка.
 
-**Методы**:
-- Отсутствуют явно определенные методы, но можно использовать стандартные методы Python, такие как `__init__` (если необходимо добавить логику инициализации) и другие магические методы.
-
-**Параметры**:
+**Атрибуты**:
 - `promotion_link` (str): Партнерская ссылка.
 - `source_value` (str): Источник партнерской ссылки.
 
-**Примеры**
-```python
-# Пример создания экземпляра класса AffiliateLink
-affiliate_link = AffiliateLink()
-affiliate_link.promotion_link = "https://example.com/aliexpress_affiliate_link"
-affiliate_link.source_value = "admitad"
+**Примеры**:
 
-# Вывод значений атрибутов
-print(affiliate_link.promotion_link)
-print(affiliate_link.source_value)
+```python
+affiliate_link = AffiliateLink()
+affiliate_link.promotion_link = "https://example.com/aliexpress_promotion"
+affiliate_link.source_value = "aliexpress"
+
+print(affiliate_link.promotion_link)  # Вывод: https://example.com/aliexpress_promotion
+print(affiliate_link.source_value)  # Вывод: aliexpress
 ```

@@ -1,301 +1,259 @@
-# Модуль `ali_campaign_editor.py`
+# Модуль ali_campaign_editor
 
 ## Обзор
 
-Модуль `ali_campaign_editor.py` предоставляет класс `AliCampaignEditor`, который используется для редактирования рекламных кампаний AliExpress. Он позволяет создавать, изменять и удалять продукты, обновлять информацию о кампаниях и категориях, а также управлять данными о товарах в формате JSON. Модуль включает в себя функциональность для работы с файлами, чтения и записи JSON данных, а также интеграцию с Google Sheets через класс `AliCampaignGoogleSheet`.
+Модуль `ali_campaign_editor.py` предоставляет класс `AliCampaignEditor`, который используется для редактирования рекламных кампаний на AliExpress. Он позволяет добавлять, удалять, обновлять и получать информацию о товарах и категориях в рамках кампании.
 
 ## Подробней
 
-`AliCampaignEditor` является расширением класса `AliPromoCampaign` и предоставляет дополнительные методы для редактирования кампаний. Этот модуль важен для автоматизации управления рекламными кампаниями на AliExpress, позволяя программно обновлять и поддерживать актуальность данных.
+Этот модуль является частью проекта `hypotez` и предназначен для работы с рекламными кампаниями AliExpress. Он предоставляет инструменты для управления категориями и товарами в рамках кампании, включая обновление информации о товарах, удаление товаров, не имеющих партнерских ссылок, и обновление свойств кампании. Модуль использует другие модули проекта, такие как `ali_promo_campaign`, `ali_campaign_gsheet`, `j_loads_ns`, `j_dumps` и другие утилиты для работы с файлами и данными.
 
 ## Классы
 
 ### `AliCampaignEditor`
 
-**Описание**: Класс `AliCampaignEditor` предназначен для редактирования рекламных кампаний AliExpress. Он наследует функциональность от `AliPromoCampaign` и добавляет методы для управления продуктами, категориями и общими параметрами кампании.
+**Описание**: Редактор для рекламных кампаний. Наследуется от класса `AliPromoCampaign`.
 
 **Как работает класс**:
-- Инициализация класса (`__init__`) позволяет создать объект редактора кампании, указав имя кампании, язык и валюту. Можно также загрузить параметры кампании из JSON-файла.
-- Методы класса позволяют выполнять операции по добавлению, удалению и обновлению продуктов, а также изменять параметры кампании и категорий.
-- Класс использует другие модули, такие как `AliPromoCampaign`, `AliCampaignGoogleSheet`, `j_loads_ns`, `j_loads`, `j_dumps` и другие утилиты для работы с файлами и данными.
+
+1.  **Инициализация**: При инициализации класса создается инстанс класса `AliCampaignEditor` с указанием имени кампании, языка и валюты. Также вызывается конструктор родительского класса `AliPromoCampaign` для инициализации общих параметров кампании.
+2.  **Удаление товара**: Метод `delete_product` позволяет удалить товар из кампании, если у него нет партнерской ссылки.
+3.  **Обновление товара**: Метод `update_product` позволяет обновить информацию о товаре в рамках определенной категории.
+4.  **Обновление кампании**: Метод `update_campaign` позволяет обновить свойства кампании, такие как описание и теги.
+5.  **Обновление категории**: Метод `update_category` позволяет обновить информацию о категории в JSON-файле.
+6.  **Получение категории**: Метод `get_category` позволяет получить объект `SimpleNamespace`, представляющий категорию по ее имени.
+7.  **Получение списка категорий**: Метод `list_categories` позволяет получить список категорий в текущей кампании.
+8.  **Получение товаров категории**: Метод `get_category_products` позволяет получить список товаров для заданной категории.
 
 **Методы**:
-- `__init__`: Инициализация класса `AliCampaignEditor`.
-- `delete_product`: Удаление продукта, у которого нет партнерской ссылки.
-- `update_product`: Обновление деталей продукта в рамках категории.
-- `update_campaign`: Обновление свойств кампании, таких как описание и теги.
-- `update_category`: Обновление категории в JSON-файле.
-- `get_category`: Получение объекта `SimpleNamespace` для указанной категории.
-- `list_categories`: Получение списка категорий в текущей кампании.
-- `get_category_products`: Чтение данных о товарах из JSON файлов для конкретной категории.
 
-#### `__init__`
+-   `__init__`: Инициализирует экземпляр класса `AliCampaignEditor`.
+-   `delete_product`: Удаляет товар, у которого нет партнерской ссылки.
+-   `update_product`: Обновляет информацию о товаре в рамках категории.
+-   `update_campaign`: Обновляет свойства кампании, такие как описание и теги.
+-   `update_category`: Обновляет категорию в JSON-файле.
+-   `get_category`: Возвращает объект `SimpleNamespace` для указанного имени категории.
+-   `list_categories`: Возвращает список категорий в текущей кампании.
+-   `get_category_products`: Возвращает список товаров для заданной категории.
+
+## Функции
+
+### `__init__`
 
 ```python
-def __init__(self, 
-             campaign_name: str, 
-             language: Optional[str | dict] = None, 
-             currency: Optional[str] = None) -> None:
-    """ Initialize the AliCampaignEditor with the given parameters.
-    
+def __init__(
+    self,
+    campaign_name: str,
+    language: Optional[str | dict] = None,
+    currency: Optional[str] = None,
+):
+    """Инициализирует AliCampaignEditor с заданными параметрами.
 
     Args:
-        campaign_name (str): The name of the campaign.
-        language (Optional[str | dict], optional): The language of the campaign. Defaults to 'EN'.
-        currency (Optional[str], optional): The currency for the campaign. Defaults to 'USD'.
-        campaign_file (Optional[str | Path], optional): Optionally load a `<lang>_<currency>.json` file from the campaign root folder. Defaults to `None`.
+        campaign_name (str): Название кампании.
+        language (Optional[str | dict], optional): Язык кампании. По умолчанию 'EN'.
+        currency (Optional[str], optional): Валюта для кампании. По умолчанию 'USD'.
 
     Raises:
-        CriticalError: If neither `campaign_name` nor `campaign_file` is provided.
+        CriticalError: Если не указаны `campaign_name` и не загружен `campaign_file`.
 
     Example:
-    # 1. by campaign parameters
         >>> editor = AliCampaignEditor(campaign_name="Summer Sale", language="EN", currency="USD")
-    # 2. load fom file
-        >>> editor = AliCampaignEditor(campaign_name="Summer Sale", campaign_file="EN_USD.JSON")
     """
-    ...
 ```
 
-**Описание**: Инициализирует класс `AliCampaignEditor` с заданными параметрами.
-
-**Как работает функция**:
-- Принимает имя кампании, язык и валюту в качестве параметров.
-- Вызывает конструктор родительского класса `AliPromoCampaign` для инициализации основных параметров кампании.
-- Может загружать параметры кампании из JSON-файла, если указан `campaign_file`.
+**Назначение**: Инициализация экземпляра класса `AliCampaignEditor` с заданными параметрами, такими как имя кампании, язык и валюта.
 
 **Параметры**:
-- `campaign_name` (str): Имя кампании.
-- `language` (Optional[str | dict], optional): Язык кампании. По умолчанию 'EN'.
-- `currency` (Optional[str], optional): Валюта кампании. По умолчанию 'USD'.
-- `campaign_file` (Optional[str | Path], optional): Путь к файлу конфигурации кампании. По умолчанию `None`.
 
-**Вызывает исключения**:
-- `CriticalError`: Если не указано имя кампании и не предоставлен файл конфигурации.
+-   `campaign_name` (str): Имя кампании.
+-   `language` (Optional[str | dict], optional): Язык кампании. Может быть строкой или словарем. По умолчанию `None`.
+-   `currency` (Optional[str], optional): Валюта кампании. По умолчанию `None`.
+-   `campaign_file` (Optional[str | Path], optional): Путь к файлу кампании `<lang>_<currency>.json` в корневой папке кампании.
 
-**Примеры**:
-```python
-# 1. Инициализация с параметрами кампании
-editor = AliCampaignEditor(campaign_name="Summer Sale", language="EN", currency="USD")
-# 2. Загрузка из файла
-editor = AliCampaignEditor(campaign_name="Summer Sale", campaign_file="EN_USD.JSON")
-```
+**Как работает функция**:
 
-#### `delete_product`
+1.  Вызывается конструктор родительского класса `AliPromoCampaign` с переданными параметрами.
+2.  Инициализируется атрибут `google_sheet` экземпляром класса `AliCampaignGoogleSheet`.
+
+### `delete_product`
 
 ```python
-def delete_product(self, product_id: str, exc_info: bool = False) -> None:
-    """ Delete a product that does not have an affiliate link.
-    
+def delete_product(self, product_id: str, exc_info: bool = False):
+    """Удаляет товар, у которого нет партнерской ссылки.
 
     Args:
-        product_id (str): The ID of the product to be deleted.
-        exc_info (bool): Whether to include exception information in logs. Defaults to `False`.
+        product_id (str): ID товара, который нужно удалить.
+        exc_info (bool): Включать ли информацию об исключении в логи. По умолчанию `False`.
 
     Example:
         >>> editor = AliCampaignEditor(campaign_name="Summer Sale")
         >>> editor.delete_product("12345")
     """
-    ...
 ```
 
-**Описание**: Удаляет продукт, у которого нет партнерской ссылки.
-
-**Как работает функция**:
-- Извлекает ID продукта с помощью функции `extract_prod_ids`.
-- Проверяет наличие файла `sources.txt` в каталоге категории.
-- Если файл существует, читает список продуктов из файла и удаляет запись, соответствующую указанному `product_id`.
-- Если файл не существует, пытается переименовать HTML-файл продукта, добавляя символ подчеркивания (`_`) в конце имени.
+**Назначение**: Удаление товара из кампании, если у него нет партнерской ссылки.
 
 **Параметры**:
-- `product_id` (str): ID продукта, который нужно удалить.
-- `exc_info` (bool): Флаг, указывающий, нужно ли включать информацию об исключении в логи. По умолчанию `False`.
 
-**Примеры**:
+-   `product_id` (str): ID товара, который необходимо удалить.
+-   `exc_info` (bool): Флаг, указывающий, следует ли включать информацию об исключении в логи. По умолчанию `False`.
+
+**Как работает функция**:
+
+1.  Извлекает ID товара из строки `product_id` с помощью функции `extract_prod_ids`.
+2.  Определяет пути к файлу `sources.txt` и временному файлу `_sources.txt` в директории категории.
+3.  Читает содержимое файла `sources.txt` с помощью функции `read_text_file`.
+4.  Если файл `sources.txt` существует, то перебирает записи в списке товаров.
+    -   Если `_product_id` не пустой, извлекает ID записи и сравнивает с `product_id`. Если ID совпадают, удаляет запись из списка, сохраняет обновленный список во временный файл `_sources.txt` и прерывает цикл.
+    -   Если `_product_id` пустой, сравнивает запись с `product_id`. Если они совпадают, удаляет запись из списка и сохраняет обновленный список в файл `sources.txt`.
+5.  Если файл `sources.txt` не существует, формирует путь к файлу товара в директории `sources` и переименовывает его, добавляя символ `_` в конце имени файла.
+6.  Логирует успешное переименование файла товара.
+7.  Обрабатывает исключения `FileNotFoundError` и `Exception`, логируя ошибки с использованием модуля `logger`.
+
+### `update_product`
+
 ```python
-editor = AliCampaignEditor(campaign_name="Summer Sale")
-editor.delete_product("12345")
-```
-
-#### `update_product`
-
-```python
-def update_product(self, category_name: str, lang: str, product: dict) -> None:
-    """ Update product details within a category.
+def update_product(self, category_name: str, lang: str, product: dict):
+    """Обновляет детали товара в категории.
 
     Args:
-        category_name (str): The name of the category where the product should be updated.
-        lang (str): The language of the campaign.
-        product (dict): A dictionary containing product details.
+        category_name (str): Название категории, в которой нужно обновить товар.
+        lang (str): Язык кампании.
+        product (dict): Словарь с деталями товара.
 
     Example:
         >>> editor = AliCampaignEditor(campaign_name="Summer Sale")
         >>> editor.update_product("Electronics", "EN", {"product_id": "12345", "title": "Smartphone"})
     """
-    ...
 ```
 
-**Описание**: Обновляет детали продукта в рамках указанной категории.
-
-**Как работает функция**:
-- Вызывает метод `dump_category_products_files` для обновления информации о продукте в файлах категории.
+**Назначение**: Обновление информации о товаре в указанной категории.
 
 **Параметры**:
-- `category_name` (str): Имя категории, в которой нужно обновить продукт.
-- `lang` (str): Язык кампании.
-- `product` (dict): Словарь, содержащий детали продукта.
 
-**Примеры**:
+-   `category_name` (str): Название категории, в которой необходимо обновить информацию о товаре.
+-   `lang` (str): Язык кампании.
+-   `product` (dict): Словарь, содержащий информацию о товаре, которую необходимо обновить.
+
+**Как работает функция**:
+
+1.  Вызывает метод `dump_category_products_files` для сохранения информации о товаре в файле категории.
+
+### `update_campaign`
+
 ```python
-editor = AliCampaignEditor(campaign_name="Summer Sale")
-editor.update_product("Electronics", "EN", {"product_id": "12345", "title": "Smartphone"})
-```
+def update_campaign(self):
+    """Обновляет свойства кампании, такие как описание, теги и т.д.
 
-#### `update_campaign`
-
-```python
-def update_campaign(self) -> None:
-    """ Update campaign properties such as `description`, `tags`, etc.
-    
     Example:
         >>> editor = AliCampaignEditor(campaign_name="Summer Sale")
         >>> editor.update_campaign()
     """
-    ...
 ```
 
-**Описание**: Обновляет свойства кампании, такие как описание и теги.
+**Назначение**: Обновление свойств рекламной кампании, таких как описание и теги.
 
 **Как работает функция**:
-- <описание работы функции>
 
-**Примеры**:
-```python
-editor = AliCampaignEditor(campaign_name="Summer Sale")
-editor.update_campaign()
-```
+1.  Функция пока не реализована (`...`).
+    <инструкция для модели gemini:Опиши что делает функция, после ее реализации>
 
-#### `update_category`
+### `update_category`
 
 ```python
 def update_category(self, json_path: Path, category: SimpleNamespace) -> bool:
-    """ Update the category in the JSON file.
+    """Обновляет категорию в JSON-файле.
 
     Args:
-        json_path (Path): Path to the JSON file.
-        category (SimpleNamespace): Category object to be updated.
+        json_path (Path): Путь к JSON-файлу.
+        category (SimpleNamespace): Объект категории для обновления.
 
     Returns:
-        bool: True if update is successful, False otherwise.
+        bool: True, если обновление успешно, False в противном случае.
 
     Example:
         >>> category = SimpleNamespace(name="New Category", description="Updated description")
         >>> editor = AliCampaignEditor(campaign_name="Summer Sale")
         >>> result = editor.update_category(Path("category.json"), category)
-        >>> print(result)  # True if successful
+        >>> print(result)  # True, если успешно
     """
-    ...
 ```
 
-**Описание**: Обновляет категорию в JSON-файле.
-
-**Как работает функция**:
-- Читает JSON данные из файла, указанного в `json_path`, используя `j_loads`.
-- Преобразует объект `SimpleNamespace` категории в словарь и обновляет данные категории в JSON.
-- Записывает обновленные JSON данные обратно в файл с помощью `j_dumps`.
-- Возвращает `True`, если обновление прошло успешно, и `False` в противном случае.
+**Назначение**: Обновление информации о категории в JSON-файле.
 
 **Параметры**:
-- `json_path` (Path): Путь к JSON-файлу.
-- `category` (SimpleNamespace): Объект категории, который нужно обновить.
 
-**Возвращает**:
-- `bool`: `True`, если обновление успешно, `False` в противном случае.
+-   `json_path` (Path): Путь к JSON-файлу, который необходимо обновить.
+-   `category` (SimpleNamespace): Объект `SimpleNamespace`, содержащий информацию о категории, которую необходимо обновить.
 
-**Примеры**:
-```python
-category = SimpleNamespace(name="New Category", description="Updated description")
-editor = AliCampaignEditor(campaign_name="Summer Sale")
-result = editor.update_category(Path("category.json"), category)
-print(result)  # True if successful
-```
+**Как работает функция**:
 
-#### `get_category`
+1.  Загружает данные из JSON-файла по указанному пути с помощью функции `j_loads`.
+2.  Преобразует объект `SimpleNamespace` в словарь и присваивает его ключу `'category'` в загруженных данных.
+3.  Записывает обновленные данные обратно в JSON-файл с помощью функции `j_dumps`.
+4.  Возвращает `True`, если обновление выполнено успешно, и `False` в случае ошибки.
+5.  В случае возникновения исключения, логирует ошибку с использованием модуля `logger` и возвращает `False`.
+
+### `get_category`
 
 ```python
 def get_category(self, category_name: str) -> Optional[SimpleNamespace]:
-    """ Returns the SimpleNamespace object for a given category name.
+    """Возвращает объект SimpleNamespace для указанного имени категории.
 
     Args:
-        category_name (str): The name of the category to retrieve.
+        category_name (str): Имя категории для получения.
 
     Returns:
-        Optional[SimpleNamespace]: SimpleNamespace object representing the category or `None` if not found.
+        Optional[SimpleNamespace]: Объект SimpleNamespace, представляющий категорию, или None, если категория не найдена.
 
     Example:
         >>> editor = AliCampaignEditor(campaign_name="Summer Sale")
         >>> category = editor.get_category("Electronics")
-        >>> print(category)  # SimpleNamespace or None
+        >>> print(category)  # SimpleNamespace или None
     """
-    ...
 ```
 
-**Описание**: Возвращает объект `SimpleNamespace` для указанного имени категории.
-
-**Как работает функция**:
-- Проверяет, существует ли атрибут категории с указанным именем в объекте кампании.
-- Если категория найдена, возвращает соответствующий объект `SimpleNamespace`.
-- Если категория не найдена, записывает предупреждение в лог и возвращает `None`.
+**Назначение**: Получение объекта `SimpleNamespace`, представляющего категорию по ее имени.
 
 **Параметры**:
-- `category_name` (str): Имя категории, которую нужно получить.
 
-**Возвращает**:
-- `Optional[SimpleNamespace]`: Объект `SimpleNamespace`, представляющий категорию, или `None`, если категория не найдена.
+-   `category_name` (str): Имя категории, которую необходимо получить.
 
-**Примеры**:
-```python
-editor = AliCampaignEditor(campaign_name="Summer Sale")
-category = editor.get_category("Electronics")
-print(category)  # SimpleNamespace or None
-```
+**Как работает функция**:
 
-#### `list_categories`
+1.  Проверяет, существует ли атрибут с именем `category_name` в атрибуте `self.campaign.category`.
+2.  Если категория найдена, возвращает объект `SimpleNamespace`, представляющий категорию.
+3.  Если категория не найдена, логирует предупреждение с использованием модуля `logger` и возвращает `None`.
+4.  В случае возникновения ошибки, логирует ошибку с использованием модуля `logger` и возвращает `None`.
+
+### `list_categories`
 
 ```python
 @property
 def list_categories(self) -> Optional[List[str]]:
-    """ Retrieve a list of categories in the current campaign.
+    """Получает список категорий в текущей кампании.
 
     Returns:
-        Optional[List[str]]: A list of category names, or None if no categories are found.
+        Optional[List[str]]: Список названий категорий или None, если категории не найдены.
 
     Example:
         >>> editor = AliCampaignEditor(campaign_name="Summer Sale")
         >>> categories = editor.categories_list
         >>> print(categories)  # ['Electronics', 'Fashion', 'Home']
     """
-    ...
 ```
 
-**Описание**: Получает список категорий в текущей кампании.
+**Назначение**: Получение списка категорий в текущей кампании.
 
 **Как работает функция**:
-- Проверяет, есть ли у кампании атрибут `category` и является ли он экземпляром `SimpleNamespace`.
-- Если категории найдены, возвращает список имен категорий.
-- Если категории не найдены, записывает предупреждение в лог и возвращает `None`.
 
-**Возвращает**:
-- `Optional[List[str]]`: Список имен категорий или `None`, если категории не найдены.
+1.  Проверяет, существует ли атрибут `category` в объекте `self.campaign` и является ли он экземпляром класса `SimpleNamespace`.
+2.  Если категория существует, возвращает список ключей словаря, полученного из атрибута `category` с помощью функции `vars`.
+3.  Если категория не найдена, логирует предупреждение с использованием модуля `logger` и возвращает `None`.
+4.  В случае возникновения ошибки, логирует ошибку с использованием модуля `logger` и возвращает `None`.
 
-**Примеры**:
-```python
-editor = AliCampaignEditor(campaign_name="Summer Sale")
-categories = editor.categories_list
-print(categories)  # ['Electronics', 'Fashion', 'Home']
-```
-
-#### `get_category_products`
+### `get_category_products`
 
 ```python
 async def get_category_products(
@@ -314,50 +272,21 @@ async def get_category_products(
         >>> print(len(products))
         15
     """
-    category_path = (
-        self.base_path
-        / "category"
-        / category_name
-        / f"{self.language}_{self.currency}"
-    )
-    json_filenames = await get_filenames_from_directory (category_path, extensions="json")
-    products = []
-
-    if json_filenames:
-        for json_filename in json_filenames:
-            product_data = j_loads_ns(category_path / json_filename)
-            product = SimpleNamespace(**vars(product_data))
-            products.append(product)
-        return products
-    else:
-        logger.error(
-            f"No JSON files found for {category_name=} at {category_path=}.\nStart prepare category"
-        )
-        self.process_category_products(category_name)
-        return 
 ```
 
-**Описание**: Чтение данных о товарах из JSON файлов для конкретной категории.
-
-**Как работает функция**:
-- Формирует путь к директории категории на основе базового пути, имени категории, языка и валюты.
-- Получает список JSON файлов в директории категории.
-- Если JSON файлы найдены, читает данные из каждого файла, преобразует их в объекты `SimpleNamespace` и добавляет в список товаров.
-- Если JSON файлы не найдены, записывает ошибку в лог и запускает процесс подготовки товаров для категории.
+**Назначение**: Чтение данных о товарах из JSON-файлов для указанной категории.
 
 **Параметры**:
-- `category_name` (str): Имя категории.
 
-**Возвращает**:
-- `Optional[List[SimpleNamespace]]`: Список объектов `SimpleNamespace`, представляющих товары.
+-   `category_name` (str): Имя категории, для которой необходимо получить список товаров.
 
-**Примеры**:
-```python
-products = campaign.get_category_products("Electronics")
-print(len(products))
-15
-```
+**Как работает функция**:
 
-## Функции
-
-В данном модуле не представлены отдельные функции, не относящиеся к классам.
+1.  Формирует путь к директории категории, используя базовый путь, имя категории, язык и валюту.
+2.  Получает список JSON-файлов в директории категории с помощью асинхронной функции `get_filenames_from_directory`.
+3.  Если JSON-файлы найдены, то для каждого файла:
+    -   Загружает данные из JSON-файла с помощью функции `j_loads_ns`.
+    -   Преобразует данные в объект `SimpleNamespace`.
+    -   Добавляет объект `SimpleNamespace` в список товаров.
+4.  Возвращает список товаров.
+5.  Если JSON-файлы не найдены, логирует ошибку с использованием модуля `logger`, вызывает метод `process_category_products` для подготовки категории и возвращает `None`.

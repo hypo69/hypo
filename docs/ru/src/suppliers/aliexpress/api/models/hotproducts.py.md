@@ -2,61 +2,54 @@
 
 ## Обзор
 
-Модуль содержит класс `HotProductsResponse`, который представляет собой структуру данных для хранения информации об ответе, содержащем список популярных товаров (hot products) с AliExpress. Он включает в себя информацию о текущей странице, количестве записей на текущей странице, общем количестве записей и список самих товаров.
+Модуль `hotproducts` содержит классы для представления ответа с горячими продуктами от AliExpress API. Основной класс `HotProductsResponse` используется для хранения информации о текущей странице, количестве записей на странице, общем количестве записей и списке продуктов.
 
 ## Подробней
 
-Данный модуль предназначен для организации данных, возвращаемых API AliExpress при запросе списка популярных товаров. Класс `HotProductsResponse` служит контейнером для хранения этих данных, что облегчает их дальнейшую обработку и использование в других частях проекта `hypotez`. Информация о товарах представлена в виде списка объектов класса `Product`, импортированного из модуля `product`.
+Этот модуль определяет структуру данных, которая соответствует формату ответа API AliExpress для запросов горячих продуктов. Он включает класс `HotProductsResponse`, который содержит информацию о пагинации и список объектов `Product`. Класс `Product` импортируется из модуля `product`.
 
 ## Классы
 
 ### `HotProductsResponse`
 
-**Описание**: Класс, представляющий ответ, содержащий список популярных товаров.
+**Описание**: Класс `HotProductsResponse` представляет собой структуру данных для хранения ответа, содержащего информацию о горячих продуктах.
 
-**Как работает класс**:
-Класс `HotProductsResponse` предназначен для хранения данных, полученных в ответ на запрос популярных товаров с AliExpress. Он содержит атрибуты, описывающие текущую страницу, количество товаров на странице и общее количество товаров, а также список объектов `Product`, представляющих сами товары.
-
-**Методы**:
-- Отсутствуют
-
-**Параметры**:
-- `current_page_no` (int): Номер текущей страницы.
-- `current_record_count` (int): Количество записей (товаров) на текущей странице.
-- `total_record_count` (int): Общее количество записей (товаров) во всех страницах.
-- `products` (List[Product]): Список объектов `Product`, представляющих товары на текущей странице.
-
-**Примеры**:
+**Принцип работы**:
+Класс содержит атрибуты, соответствующие полям ответа API AliExpress:
+- `current_page_no`: номер текущей страницы.
+- `current_record_count`: количество записей на текущей странице.
+- `total_record_count`: общее количество записей.
+- `products`: список объектов `Product`, представляющих горячие продукты на текущей странице.
 
 ```python
-# Пример создания объекта HotProductsResponse
-from typing import List
-class Product:
-    product_id: int
-    product_title: str
-    product_price: float
-    product_url: str
 class HotProductsResponse:
     current_page_no: int
     current_record_count: int
     total_record_count: int
     products: List[Product]
+```
 
-product1 = Product()
-product1.product_id = 123
-product1.product_title = 'Example Product 1'
-product1.product_price = 10.0
-product1.product_url = 'http://example.com/product1'
+**Параметры**:
+- `current_page_no` (int): Номер текущей страницы.
+- `current_record_count` (int): Количество записей на текущей странице.
+- `total_record_count` (int): Общее количество записей.
+- `products` (List[Product]): Список объектов `Product`.
 
-product2 = Product()
-product2.product_id = 456
-product2.product_title = 'Example Product 2'
-product2.product_price = 20.0
-product2.product_url = 'http://example.com/product2'
+**Примеры**:
 
+```python
+from typing import List
+from .product import Product
+
+# Пример создания экземпляра класса HotProductsResponse
+products: List[Product] = []  # Предположим, что у вас есть список объектов Product
 hot_products_response = HotProductsResponse()
 hot_products_response.current_page_no = 1
-hot_products_response.current_record_count = 2
-hot_products_response.total_record_count = 20
-hot_products_response.products = [product1, product2]
-```
+hot_products_response.current_record_count = 10
+hot_products_response.total_record_count = 100
+hot_products_response.products = products
+
+print(f"Current Page No: {hot_products_response.current_page_no}")
+print(f"Current Record Count: {hot_products_response.current_record_count}")
+print(f"Total Record Count: {hot_products_response.total_record_count}")
+print(f"Products: {hot_products_response.products}")
