@@ -1,34 +1,34 @@
-**Instructions for Code Documentation Generation**
+```markdown
+**Instructions for Generating Code Documentation**
 
-1. **Analyze the code**: Understand the logic and actions performed by the given code block.
-  
-2. **Create a step-by-step guide**:
+1. **Analyze the Code**: Understand the logic and actions performed by the code snippet.
+
+2. **Create a Step-by-Step Guide**:
     - **Description**: Explain what the code block does.
-    - **Execution steps**: Outline the sequence of actions in the code.
-    - **Usage example**: Provide a code example showing how to use this block in a project.
+    - **Execution Steps**: Describe the sequence of actions in the code.
+    - **Usage Example**: Provide a code example of how to use the snippet in the project.
 
-3. **Formatting**: Follow the structure in `reStructuredText (RST)`:
+3. **Example**:
 
-```rst
-How to use this code block
+How to Use This Code Block
 =========================================================================================
 
 Description
 -------------------------
-[Explain what the code does.]
+[Explanation of what the code does.]
 
-Execution steps
+Execution Steps
 -------------------------
-1. [First step description.]
-2. [Second step description.]
-3. [Continue as necessary...]
+1. [Description of the first step.]
+2. [Description of the second step.]
+3. [Continue as needed...]
 
-Usage example
+Usage Example
 -------------------------
-.. code-block:: python
 
-    [Example usage code]
+```python
+    [Code usage example]
 ```
 
-4. **Avoid vague terms** like "getting" or "doing." Be specific about what the code does, e.g., "checks," "validates," or "sends."
-
+4. **Avoid Vague Terms** like "getting" or "doing". Be specific about what the code does, for example: "checks", "validates", or "sends".
+```

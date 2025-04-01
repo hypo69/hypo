@@ -2,9 +2,15 @@
   "role": "doc_writer_md",
   "lang": "EN",
   "model": [ "gemini" ],
+  "process_dirs": [
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\client",
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\server"
+  ],
 
-  "start_dirs": [
 
+  "exclude_dirs": [
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\freegpt-webui-ru\\g4f",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\utils\\convertors",
 
@@ -86,17 +92,8 @@
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\morlevi",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\visualdg",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\wallashop",
-    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\wallmart"
-  ],
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\scenario\\wallmart",
 
-  "gemini_generation_config": {
-    "response_mime_type": "text/plain"
-  },
-  "gemini_model_name": "gemini-2.0-flash-exp",
-  "openai_model_name": "gpt-4o-mini",
-  "openai_assistant_id": "<OpenAI Assistant ID>",
-
-  "exclude_dirs": [
     ".ipynb_checkpoints",
     "resources",
     "profiles",
@@ -169,14 +166,14 @@
     "header.py"
   ],
 
-  "exclude_file_patterns": [
+  "exclude_files_patterns": [
     ".*\\(.*\\).*",
     "___{3,}.*",
     "___.*",
     ".*___.*\\..*",
     ".*___.*"
   ],
-  "include_files": [
+  "include_files_patterns": [
     "*.py",
     "*.md"
   ],
@@ -208,7 +205,7 @@
 
   ],
 
-  "output_directory": {
+  "output_dirs": {
     "code_checker_md": "<model>/<lang>/consultant/src",
     "code_explainer_md": "<model>/<lang>/explainer/src",
     "how_to_writer_md": "<model>/<lang>/how_to/src",
@@ -232,7 +229,12 @@
     "doc_writer_rst",
     "pytest"
   ],
-  "languages": [ "ru", "en" ]
+  "languages": [ "ru", "en" ],
 
+
+  "response_mime_type": "text/plain",
+  "gemini_model_name": "gemini-2.0-flash-exp",
+  "openai_model_name": "gpt-4o-mini",
+  "openai_assistant_id": "<OpenAI Assistant ID>"
 
 }

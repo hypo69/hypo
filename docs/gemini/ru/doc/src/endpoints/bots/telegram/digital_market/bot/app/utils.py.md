@@ -1,12 +1,12 @@
-# Модуль утилит для работы с Robokassa
+# Модуль utils.py для работы с Robokassa
 
 ## Обзор
 
-Модуль `utils.py` содержит набор функций для взаимодействия с платежной системой Robokassa. Он включает функции для генерации платежных ссылок, проверки подписи, обработки результатов оплаты и проверки успешности платежей. Модуль использует параметры из файла конфигурации `bot.config.settings`.
+Модуль `utils.py` предоставляет набор функций для генерации платежных ссылок Robokassa, проверки подписи и обработки ответов от Robokassa. Этот модуль используется для интеграции с платежной системой Robokassa в боте Telegram для цифрового рынка.
 
-## Подробнее
+## Подробней
 
-Этот модуль играет важную роль в процессе интеграции с Robokassa, обеспечивая безопасное и надежное взаимодействие для проведения платежей. Функции модуля позволяют генерировать ссылки для оплаты, проверять подлинность ответов от Robokassa и обрабатывать результаты платежей.
+Модуль содержит функции для расчета подписи, генерации платежных ссылок, разбора ответов от Robokassa и проверки успешности платежей. Эти функции обеспечивают безопасное взаимодействие с Robokassa и позволяют боту Telegram принимать платежи от пользователей.
 
 ## Функции
 
@@ -25,20 +25,18 @@ def calculate_signature(login, cost, inv_id, password, user_id, user_telegram_id
         user_id (int): ID пользователя.
         user_telegram_id (int): Telegram ID пользователя.
         product_id (int): ID продукта.
-        is_result (bool, optional): Флаг, указывающий, является ли запрос результатом оплаты. По умолчанию `False`.
+        is_result (bool, optional): Флаг, указывающий, что подпись вычисляется для Result URL. По умолчанию `False`.
 
     Returns:
-        str: MD5-хеш, представляющий подпись.
-
-    Как работает функция:
-    1. Определяется базовая строка для подписи в зависимости от флага `is_result`. Если `is_result` равен `True`, используется формат для URL результата, иначе — для начального URL и URL успеха.
-    2. Создается словарь `additional_params` с дополнительными параметрами, такими как `user_id`, `user_telegram_id` и `product_id`.
-    3. Параметры из `additional_params` сортируются по ключам и добавляются к базовой строке в формате `:{key}={value}`.
-    4. Вычисляется MD5-хеш от полученной строки в кодировке UTF-8.
-    5. Возвращается полученный хеш в виде строки.
+        str: Вычисленная подпись в виде MD5 хеша.
     """
-    ...
 ```
+
+**Как работает функция**:
+
+1.  Формирует строку для вычисления подписи в зависимости от типа URL (Result URL или initial/Success URL).
+2.  Добавляет дополнительные параметры (user\_id, user\_telegram\_id, product\_id) к строке, сортируя их по ключам.
+3.  Вычисляет MD5 хеш от полученной строки.
 
 ### `generate_payment_link`
 
@@ -61,14 +59,27 @@ def generate_payment_link(cost: float, number: int, description: str,
 
     Returns:
         str: Ссылка на страницу оплаты.
-
-    Как работает функция:
-    1. Вызывает функцию `calculate_signature` для генерации подписи на основе переданных параметров и настроек магазина.
-    2. Создает словарь `data` с параметрами, необходимыми для формирования платежной ссылки, включая логин магазина, сумму, номер заказа, описание, подпись и дополнительные параметры пользователя и продукта.
-    3. Формирует URL, объединяя базовый URL Robokassa и параметры из словаря `data`, закодированные с помощью `parse.urlencode`.
-    4. Возвращает полученную ссылку для оплаты.
     """
-    ...
+```
+
+**Как работает функция**:
+
+1.  Вычисляет подпись с использованием функции `calculate_signature`.
+2.  Формирует словарь с параметрами запроса к Robokassa, включая логин магазина, сумму, номер заказа, описание, подпись, флаг тестового режима и дополнительные параметры.
+3.  Кодирует параметры в строку запроса и добавляет её к базовому URL Robokassa.
+
+**Примеры**:
+
+```python
+cost = 100.0
+number = 123
+description = 'Test order'
+user_id = 1
+user_telegram_id = 123456789
+product_id = 1
+payment_link = generate_payment_link(cost, number, description, user_id, user_telegram_id, product_id)
+print(payment_link)
+# Output: https://auth.robokassa.ru/Merchant/Index.aspx?MerchantLogin=<merchant_login>&OutSum=100.0&InvId=123&Description=Test+order&SignatureValue=<signature>&IsTest=1&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=1
 ```
 
 ### `parse_response`
@@ -83,14 +94,21 @@ def parse_response(request: str) -> dict:
 
     Returns:
         dict: Словарь с параметрами.
-
-    Как работает функция:
-    1. Использует `urllib.parse.urlparse` для разбора URL из строки запроса.
-    2. Извлекает строку запроса (query) из разобранного URL.
-    3. Использует `urllib.parse.parse_qsl` для разбора строки запроса в список пар ключ-значение.
-    4. Преобразует список пар ключ-значение в словарь и возвращает его.
     """
-    ...
+```
+
+**Как работает функция**:
+
+1.  Использует `urlparse` для разбора URL из строки запроса.
+2.  Использует `parse_qsl` для разбора строки запроса в словарь.
+
+**Примеры**:
+
+```python
+request = 'https://example.com/path?param1=value1&param2=value2'
+params = parse_response(request)
+print(params)
+# Output: {'param1': 'value1', 'param2': 'value2'}
 ```
 
 ### `check_signature_result`
@@ -98,7 +116,7 @@ def parse_response(request: str) -> dict:
 ```python
 def check_signature_result(out_sum, inv_id, received_signature, password, user_id, user_telegram_id, product_id) -> bool:
     """
-    Проверяет подпись результата оплаты.
+    Проверяет подпись для Result URL.
 
     Args:
         out_sum (float): Сумма платежа.
@@ -111,14 +129,13 @@ def check_signature_result(out_sum, inv_id, received_signature, password, user_i
 
     Returns:
         bool: `True`, если подпись верна, иначе `False`.
-
-    Как работает функция:
-    1. Вызывает функцию `calculate_signature` для генерации подписи на основе переданных параметров и пароля магазина. Важно, что флаг `is_result` установлен в `True`.
-    2. Сравнивает сгенерированную подпись с полученной подписью, приводя обе строки к нижнему регистру для регистронезависимого сравнения.
-    3. Возвращает `True`, если подписи совпадают, и `False` в противном случае.
     """
-    ...
 ```
+
+**Как работает функция**:
+
+1.  Вычисляет подпись с использованием функции `calculate_signature` и флага `is_result=True`.
+2.  Сравнивает вычисленную подпись с полученной подписью, приводя обе к нижнему регистру.
 
 ### `result_payment`
 
@@ -132,15 +149,23 @@ def result_payment(request: str) -> str:
 
     Returns:
         str: 'OK' + номер заказа, если оплата прошла успешно, иначе 'bad sign'.
-
-    Как работает функция:
-    1. Извлекает параметры из строки запроса с помощью функции `parse_response`.
-    2. Получает значения `out_sum`, `inv_id`, `signature`, `user_id`, `user_telegram_id` и `product_id` из извлеченных параметров.
-    3. Вызывает функцию `check_signature_result` для проверки подписи результата оплаты. Используется второй пароль магазина (`settings.MRH_PASS_2`).
-    4. Если подпись верна, возвращает строку 'OK' + номер заказа (`inv_id`).
-    5. Если подпись неверна, возвращает строку "bad sign".
     """
-    ...
+```
+
+**Как работает функция**:
+
+1.  Разбирает строку запроса с использованием функции `parse_response`.
+2.  Извлекает параметры (out\_sum, inv\_id, signature, user\_id, user\_telegram\_id, product\_id) из словаря параметров.
+3.  Проверяет подпись с использованием функции `check_signature_result` и второго пароля магазина (settings.MRH\_PASS\_2).
+4.  Возвращает 'OK' + номер заказа, если подпись верна, иначе возвращает 'bad sign'.
+
+**Примеры**:
+
+```python
+request = 'https://example.com/result?OutSum=100.0&InvId=123&SignatureValue=<signature>&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=1'
+result = result_payment(request)
+print(result)
+# Output: OK123 или bad sign
 ```
 
 ### `check_success_payment`
@@ -155,12 +180,20 @@ def check_success_payment(request: str) -> str:
 
     Returns:
         str: Сообщение об успешной оплате или 'bad sign' при неверной подписи.
-
-    Как работает функция:
-    1. Извлекает параметры из строки запроса с помощью функции `parse_response`.
-    2. Получает значения `out_sum`, `inv_id`, `signature`, `user_id`, `user_telegram_id` и `product_id` из извлеченных параметров.
-    3. Вызывает функцию `check_signature_result` для проверки подписи. Используется первый пароль магазина (`settings.MRH_PASS_1`).
-    4. Если подпись верна, возвращает сообщение "Thank you for using our service".
-    5. Если подпись неверна, возвращает строку "bad sign".
     """
-    ...
+```
+
+**Как работает функция**:
+
+1.  Разбирает строку запроса с использованием функции `parse_response`.
+2.  Извлекает параметры (out\_sum, inv\_id, signature, user\_id, user\_telegram\_id, product\_id) из словаря параметров.
+3.  Проверяет подпись с использованием функции `check_signature_result` и первого пароля магазина (settings.MRH\_PASS\_1).
+4.  Возвращает сообщение об успешной оплате, если подпись верна, иначе возвращает 'bad sign'.
+
+**Примеры**:
+
+```python
+request = 'https://example.com/success?OutSum=100.0&InvId=123&SignatureValue=<signature>&Shp_user_id=1&Shp_user_telegram_id=123456789&Shp_product_id=1'
+result = check_success_payment(request)
+print(result)
+# Output: Thank you for using our service или bad sign

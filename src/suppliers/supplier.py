@@ -9,20 +9,29 @@
 ```
 Модуль описывает базовый класс поставщиков `Supplier`.
 ======================================================
-Отсюда удобно запускать сценарии. У каждого поставщика определены собственные локаторы полей товара.
-Каждый поставщик имеет свои наборы сценариев сбора данных.
+Этот модуль является ключевым компонентом системы, обеспечивающим абстракцию и унификацию взаимодействия с различными поставщиками. 
+Модуль включает функциональность для загрузки связанных модулей поставщика и управления сценариями.
 
 Класс `Supplier` предназначен для:
  - Запуска сценариев сбора данных.
  - Управления локаторами элементов страницы.
  - Взаимодействия с веб-драйвером.
 
+[Документция к модулю](https://github.com/hypo69/hypo/blob/master/docs/ru/src/suppliers/supplier.py.md)
+
 [Докумeнтация по локаторам](https://github.com/hypo69/hypo/blob/master/docs/ru/src/webdriver/locator.ru.md)
 
 Далее: класс [Graber](https://github.com/hypo69/hypo/blob/master/docs/ru/src/suppliers/graber.py.md)
 
 Flowchart:
+
+
+                   supplier_prefix
+                         |
 web <-> webdriver <-> SUPPLIER -> product
+                         ^
+                         |
+                      scenario
 """
 
 
@@ -91,36 +100,15 @@ class Supplier(BaseModel):
         """
         logger.info(f'Загрузка настроек для поставщика: {self.supplier_prefix}')
         
-        # Импорт модуля, связанного с поставщиком
+        # Импорт модулей, связанных с конкртетным поставщиком
         try:
-            related_module = importlib.import_module(f'src.suppliers.{self.supplier_prefix}')
-            object.__setattr__(self, 'related_modules', related_module)
+            related_modules = importlib.import_module(f'src.suppliers.{self.supplier_prefix}')
+            object.__setattr__(self, 'related_modules', related_modules)
         except ModuleNotFoundError as ex:
             logger.error(f'Модуль не найден для поставщика {self.supplier_prefix}: ', ex)
             return False
-        
-        # Путь к файлу настроек поставщика
-        settings_path = gs.path.src / 'suppliers' / f'{self.supplier_prefix}_settings.json'
-        
-        # Загрузка настроек с использованием j_loads_ns
-        try:
-            settings: SimpleNamespace = j_loads_ns(settings_path)
-            if not settings:
-                logger.error(f'Настройки не найдены для поставщика: {self.supplier_prefix}')
-                return False
+   
 
-            # Загрузка настроек в атрибуты класса
-            object.__setattr__(self, 'price_rule', getattr(settings, 'price_rule', 'default_rule'))
-            object.__setattr__(self, 'locale', getattr(settings, 'locale', 'en'))
-            object.__setattr__(self, 'scenario_files', getattr(settings, 'scenario_files', []))
-            object.__setattr__(self, 'locators', getattr(settings, 'locators', {}))
-
-            logger.info(f'Настройки для поставщика {self.supplier_prefix} успешно загружены')
-            return True
-        
-        except Exception as ex:
-            logger.error(f'Ошибка при загрузке настроек для поставщика {self.supplier_prefix}: ', ex)
-            return False
 
     def login(self) -> bool:
         """Выполняет вход на сайт поставщика.

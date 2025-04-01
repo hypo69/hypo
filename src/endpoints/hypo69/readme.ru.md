@@ -20,6 +20,4 @@
 **hypo69**: эндпоинты для разработчика
 ==============================================
 
-**small_talk_bot** - бот с чатом модели ии
-**code_assistant** - модуль обучения модели коду проекта
-**psychologist_bot** - ранняя разработка модуля парсинга диалогов
+[документация](https://github.com/hypo69/hypo/blob/master/docs/ru/src/endpoints/hypo69/readme.ru.md)
