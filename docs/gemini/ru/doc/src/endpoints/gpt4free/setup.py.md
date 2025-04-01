@@ -1,18 +1,18 @@
-# Модуль setup.py для gpt4free
+# Модуль установки g4f
 
 ## Обзор
 
-Этот модуль используется для установки и настройки пакета `g4f` (gpt4free). Он определяет зависимости, дополнительные компоненты, точки входа и метаданные, необходимые для распространения и установки пакета.
+Этот модуль используется для настройки и установки пакета `g4f`, который представляет собой коллекцию различных мощных языковых моделей. Он автоматизирует процесс установки, определения зависимостей и создания исполняемых скриптов.
 
-## Подробней
+## Подробнее
 
-Этот файл является скриптом установки, который использует `setuptools` для сборки и установки пакета `g4f`. Он выполняет следующие задачи:
+Модуль `setup.py` является стандартным файлом для сборки, упаковки и установки пакетов Python. В данном случае, он используется для пакета `g4f`, который, судя по описанию, предоставляет интерфейс к различным языковым моделям.
+Этот скрипт выполняет следующие задачи:
 
-1.  Чтение файла `README.md` для получения длинного описания пакета.
-2.  Определение списка необходимых зависимостей (`INSTALL_REQUIRE`).
-3.  Определение дополнительных наборов зависимостей (`EXTRA_REQUIRE`) для различных функций, таких как работа с изображениями, веб-интерфейсом, API, графическим интерфейсом, поиском, локальными моделями и файлами.
-4.  Настройка метаданных пакета, таких как имя, версия, автор, описание, URL, ключевые слова и классификаторы.
-5.  Определение точек входа (entry points) для консольных скриптов.
+- Чтение и обработка файла `README.md` для получения длинного описания пакета.
+- Определение зависимостей пакета, как обязательных (`INSTALL_REQUIRE`), так и дополнительных (`EXTRA_REQUIRE`).
+- Настройка пакета с использованием `setuptools.setup`, включая имя, версию, автора, описание, зависимости и другие метаданные.
+- Создание точки входа для консольной команды `g4f`.
 
 ## Функции
 
@@ -78,193 +78,100 @@ setup(
 )
 ```
 
-**Назначение**: Настраивает установку пакета `g4f`.
+**Назначение**: Функция `setup` из `setuptools` используется для настройки процесса установки пакета. Она принимает различные аргументы, определяющие метаданные пакета, зависимости, точки входа и другие параметры.
 
 **Параметры**:
 
-*   `name` (str): Имя пакета.
-*   `version` (str): Версия пакета, полученная из переменной окружения `G4F_VERSION`.
-*   `author` (str): Имя автора пакета.
-*   `author_email` (str): Email автора пакета.
-*   `description` (str): Краткое описание пакета.
-*   `long_description_content_type` (str): Тип контента длинного описания (в данном случае, `text/markdown`).
-*   `long_description` (str): Длинное описание пакета, полученное из файла `README.md`.
-*   `packages` (list): Список пакетов, которые нужно включить в установку, найденных с помощью `find_packages()`.
-*   `package_data` (dict): Дополнительные файлы, которые нужно включить в пакет.
-*   `include_package_data` (bool): Если `True`, включает все файлы, соответствующие шаблонам в `package_data`.
-*   `install_requires` (list): Список необходимых зависимостей для установки пакета.
-*   `extras_require` (dict): Словарь дополнительных зависимостей, разделенных по категориям.
-*   `entry_points` (dict): Словарь точек входа, определяющих консольные скрипты.
-*   `url` (str): URL репозитория пакета.
-*   `project_urls` (dict): Словарь URL, связанных с проектом, таких как URL исходного кода и URL отслеживания ошибок.
-*   `keywords` (list): Список ключевых слов, связанных с пакетом.
-*   `classifiers` (list): Список классификаторов, описывающих пакет.
+-   `name` (str): Имя пакета (`g4f`).
+-   `version` (str): Версия пакета, извлекается из переменной окружения `G4F_VERSION`.
+-   `author` (str): Автор пакета (`Tekky`).
+-   `author_email` (str): Email автора пакета (`<support@g4f.ai>`).
+-   `description` (str): Краткое описание пакета (`DESCRIPTION`).
+-   `long_description_content_type` (str): Тип контента для длинного описания (`text/markdown`).
+-   `long_description` (str): Длинное описание пакета, прочитанное из файла `README.md`.
+-   `packages` (list): Список пакетов, которые нужно включить, найденных с помощью `find_packages()`.
+-   `package_data` (dict): Дополнительные файлы, которые нужно включить в пакет.
+-   `include_package_data` (bool): Если `True`, включает все файлы, указанные в `package_data`.
+-   `install_requires` (list): Список обязательных зависимостей пакета.
+-   `extras_require` (dict): Словарь дополнительных зависимостей пакета, разделенных по категориям.
+-   `entry_points` (dict): Словарь точек входа, определяющих консольные скрипты и другие расширения.
+-   `url` (str): URL репозитория пакета на GitHub.
+-   `project_urls` (dict): Словарь URL, содержащий ссылки на исходный код и систему отслеживания ошибок.
+-   `keywords` (list): Список ключевых слов, описывающих пакет.
+-   `classifiers` (list): Список классификаторов, описывающих целевую аудиторию, операционные системы и языки программирования.
 
 **Возвращает**:
-- `None`: Функция ничего не возвращает.
+
+-   `None`
+
+**Вызывает исключения**:
+
+-   `OSError`: Если не удается прочитать файл `README.md`.
 
 **Как работает функция**:
 
-1.  Функция `setup` вызывается для настройки процесса установки пакета `g4f`.
-2.  Она определяет метаданные пакета, такие как имя, версия, автор и описание.
-3.  Она находит все пакеты, которые нужно включить в установку, с помощью функции `find_packages()`.
-4.  Она определяет список необходимых зависимостей и дополнительных зависимостей для различных функций.
-5.  Она определяет точки входа для консольных скриптов, позволяя запускать скрипты из командной строки.
-6.  Она определяет URL репозитория пакета и другие URL, связанные с проектом.
-7.  Она определяет список ключевых слов и классификаторов, описывающих пакет.
+1.  Определяются основные параметры пакета, такие как имя, версия, автор и описание.
+2.  Извлекается длинное описание пакета из файла `README.md` и выполняется замена некоторых строк в этом описании.
+3.  Определяются зависимости пакета, как обязательные, так и дополнительные.
+4.  Настраивается пакет с использованием функции `setup` из `setuptools`, передавая ей все необходимые параметры.
+5.  Определяется точка входа для консольной команды `g4f`, которая указывает на функцию `main` в модуле `g4f.cli`.
+6.  Указываются URL для репозитория пакета и системы отслеживания ошибок.
+7.  Определяются ключевые слова и классификаторы, описывающие пакет.
 
 **Примеры**:
 
+Пример вызова функции `setup`:
+
 ```python
-# Пример вызова функции setup
 setup(
     name='g4f',
     version='1.0.0',
     author='Tekky',
-    author_email='<support@g4f.ai>',
+    author_email='support@g4f.ai',
     description='The official gpt4free repository',
     long_description='...',
-    packages=['g4f'],
+    packages=find_packages(),
     install_requires=['requests', 'aiohttp'],
-    entry_points={
-        'console_scripts': ['g4f=g4f.cli:main'],
-    },
+    entry_points={'console_scripts': ['g4f=g4f.cli:main']},
     url='https://github.com/xtekky/gpt4free',
 )
+```
+```python
+def find_packages(where: str = ".") -> list[str]:
+    """
+    Find all packages in a directory.
+    """
+```
+
+**Назначение**: Находит все пакеты в указанной директории.
+
+**Параметры**:
+
+-   `where` (str, optional): Директория, в которой нужно искать пакеты. По умолчанию "." (текущая директория).
+
+**Возвращает**:
+
+-   `list[str]`: Список имен найденных пакетов.
+
+**Как работает функция**:
+
+1.  Использует `setuptools.find_packages` для поиска всех пакетов в указанной директории.
+2.  Возвращает список имен найденных пакетов.
+
+**Примеры**:
+
+Пример использования функции `find_packages`:
+
+```python
+packages = find_packages()
+print(packages)
+# ['g4f', 'g4f.cli', 'g4f.Provider']
 ```
 
 ## Переменные
 
-### `here`
-
-```python
-here = os.path.abspath(os.path.dirname(__file__))
-```
-
-**Описание**: Абсолютный путь к директории, в которой находится текущий файл (`setup.py`).
-Используется для определения местоположения других файлов, таких как `README.md`.
-
-### `long_description`
-
-```python
-with codecs.open(os.path.join(here, 'README.md'), encoding='utf-8') as fh:
-    long_description = '\n' + fh.read()
-
-long_description = long_description.replace("[!NOTE]", "")
-long_description = long_description.replace("(docs/images/", "(https://raw.githubusercontent.com/xtekky/gpt4free/refs/heads/main/docs/images/")
-long_description = long_description.replace("(docs/", "(https://github.com/xtekky/gpt4free/blob/main/docs/")
-```
-
-**Описание**:  Содержимое файла `README.md`, которое используется как длинное описание пакета.  
-Код открывает файл `README.md`, читает его содержимое и выполняет замену определенных строк в содержимом файла.
-
-### `INSTALL_REQUIRE`
-
-```python
-INSTALL_REQUIRE = [
-    "requests",
-    "aiohttp",
-    "brotli",
-    "pycryptodome",
-    "nest_asyncio",
-]
-```
-
-**Описание**: Список основных зависимостей, необходимых для установки пакета `g4f`.
-
-### `EXTRA_REQUIRE`
-
-```python
-EXTRA_REQUIRE = {
-    'all': [
-        "curl_cffi>=0.6.2",
-        "certifi",
-        "browser_cookie3",         # get_cookies
-        "duckduckgo-search>=5.0",  # internet.search
-        "beautifulsoup4",          # internet.search and bing.create_images
-        "platformdirs",
-        "aiohttp_socks",           # proxy
-        "pillow",                  # image
-        "cairosvg",                # svg image
-        "werkzeug", "flask",       # gui
-        "fastapi",                 # api
-        "uvicorn",                 # api
-        "nodriver",
-        "python-multipart",
-        "pywebview",
-        "plyer",
-        "setuptools",
-        "pypdf2", # files
-        "python-docx",
-        "odfpy",
-        "ebooklib",
-        "openpyxl",
-    ],
-    'slim': [
-        "curl_cffi>=0.6.2",
-        "certifi",
-        "browser_cookie3",
-        "duckduckgo-search>=5.0"  ,# internet.search
-        "beautifulsoup4",          # internet.search and bing.create_images
-        "aiohttp_socks",           # proxy
-        "pillow",                  # image
-        "werkzeug", "flask",       # gui
-        "fastapi",                 # api
-        "uvicorn",                 # api
-        "python-multipart",
-        "pypdf2", # files
-        "python-docx",
-    ],
-    "image": [
-        "pillow",
-        "cairosvg",
-        "beautifulsoup4"
-    ],
-    "webview": [
-        "pywebview",
-        "platformdirs",
-        "plyer",
-        "cryptography",
-    ],
-    "api": [
-        "loguru", "fastapi",
-        "uvicorn",
-        "python-multipart",
-    ],
-    "gui": [
-        "werkzeug", "flask",
-        "beautifulsoup4", "pillow",
-        "duckduckgo-search>=5.0",
-    ],
-    "search": [
-        "beautifulsoup4",
-        "pillow",
-        "duckduckgo-search>=5.0",
-    ],
-    "local": [
-        "gpt4all"
-    ],
-    "files": [
-        "spacy",
-        "beautifulsoup4",
-        "pypdf2",
-        "python-docx",
-        "odfpy",
-        "ebooklib",
-        "openpyxl",
-    ]
-}
-```
-
-**Описание**: Словарь, определяющий дополнительные зависимости для различных компонентов и функций пакета `g4f`.  
-Например, зависимости для работы с изображениями, веб-интерфейсом и т.д.
-
-### `DESCRIPTION`
-
-```python
-DESCRIPTION = (
-    'The official gpt4free repository | various collection of powerful language models'
-)
-```
-
-**Описание**: Краткое описание пакета `g4f`.
+-   `here` (str): Абсолютный путь к директории, в которой находится файл `setup.py`.
+-   `long_description` (str): Длинное описание пакета, прочитанное из файла `README.md`.
+-   `INSTALL_REQUIRE` (list): Список обязательных зависимостей пакета.
+-   `EXTRA_REQUIRE` (dict): Словарь дополнительных зависимостей пакета, разделенных по категориям.
+-   `DESCRIPTION` (str): Краткое описание пакета.

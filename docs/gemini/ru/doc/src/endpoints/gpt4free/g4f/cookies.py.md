@@ -1,72 +1,37 @@
-# Модуль для работы с cookies в g4f
+# Модуль для работы с куки (cookies)
 ## Обзор
 
-Модуль `cookies.py` предназначен для управления файлами cookie, используемыми в проекте `g4f`. Он предоставляет функциональность для загрузки файлов cookie из различных браузеров, установки, получения и чтения файлов cookie из каталогов.
+Модуль `cookies.py` предназначен для управления и загрузки куки (cookies) из различных источников, таких как браузеры и файлы (`.har` и `.json`). Он предоставляет функциональность для автоматического получения куки из поддерживаемых браузеров, а также для чтения куки из файлов, что позволяет использовать их в различных запросах.
 
 ## Подробнее
 
-Этот модуль играет важную роль в управлении аутентификацией и сохранении состояния сессий при взаимодействии с различными веб-сервисами. Он использует библиотеку `browser_cookie3` для извлечения файлов cookie из установленных браузеров и предоставляет инструменты для работы с cookie, сохраненными в формате HAR (HTTP Archive) и JSON.
-
-## Содержание
-
-1.  [Импорты](#Импорты)
-2.  [Исключения](#Исключения)
-3.  [Функции](#Функции)
-    *   [g4f](#g4f)
-    *   [get_cookies](#get_cookies)
-    *   [set_cookies](#set_cookies)
-    *   [load_cookies_from_browsers](#load_cookies_from_browsers)
-    *   [set_cookies_dir](#set_cookies_dir)
-    *   [get_cookies_dir](#get_cookies_dir)
-    *   [read_cookie_files](#read_cookie_files)
-        *   [get_domain](#get_domain)
-3.  [Классы](#Классы)
-    *   [CookiesConfig](#CookiesConfig)
-
-## Импорты
-
-В данном модуле используются следующие импорты:
-
--   `os`: для работы с операционной системой, например, для проверки существования файлов и доступа к ним.
--   `time`: для работы со временем, например, для проверки срока действия cookie.
--   `json`: для работы с JSON-форматом, используемым для хранения cookie в файлах.
--   `platformdirs.user_config_dir`: (опционально) для определения каталога конфигурации пользователя.
--   `browser_cookie3`: (опционально) для загрузки cookie из различных браузеров.
--   `.typing.Dict, Cookies`: для аннотации типов.
--   `.errors.MissingRequirementsError`: для обработки ошибок, связанных с отсутствием необходимых зависимостей.
--   `. import debug`: для отладочного логирования.
-
-## Исключения
-
-В модуле используется исключение `MissingRequirementsError`, которое вызывается, если не установлена библиотека `browser_cookie3`.
+Этот модуль является частью проекта `hypotez` и предназначен для автоматизации процессов, связанных с веб-скрапингом и тестированием, где требуется работа с куки для имитации поведения пользователя. Он позволяет загружать куки из различных браузеров, таких как Chrome, Firefox, Opera и других, а также из файлов в форматах HAR и JSON.
 
 ## Классы
 
 ### `CookiesConfig`
 
-```python
-class CookiesConfig():
-    cookies: Dict[str, Cookies] = {}
-    cookies_dir: str = "./har_and_cookies"
-```
-
 **Описание**:
-Класс `CookiesConfig` предназначен для хранения глобальных настроек, связанных с cookie.
+Класс `CookiesConfig` предназначен для хранения конфигурации куки, включая сами куки и директорию, в которой они хранятся.
 
 **Принцип работы**:
-Класс содержит два атрибута:
+Класс содержит статические переменные для хранения куки и директории с куками. Это позволяет использовать куки, полученные из разных источников, в одном месте.
 
-*   `cookies`: Словарь, где ключи - доменные имена, а значения - словари cookie для этих доменов.
-*   `cookies_dir`: Путь к каталогу, где хранятся файлы cookie.
+**Методы**:
+- Нет методов, только статические переменные.
+
+**Переменные класса**:
+- `cookies (Dict[str, Cookies])`: Словарь, содержащий куки для каждого домена.
+- `cookies_dir (str)`: Путь к директории, в которой хранятся файлы с куками. По умолчанию `"./har_and_cookies"`.
 
 ## Функции
 
-### `g4f`
+### `g4f(domain_name: str) -> list`
 
 ```python
 def g4f(domain_name: str) -> list:
     """
-    Load cookies from the 'g4f' browser (if exists).
+    Load cookies from the \'g4f\' browser (if exists).
 
     Args:
         domain_name (str): The domain for which to load cookies.
@@ -78,30 +43,32 @@ def g4f(domain_name: str) -> list:
 ```
 
 **Назначение**:
-Загружает файлы cookie из браузера `g4f` (если он существует).
+Функция загружает куки из браузера `'g4f'`, если он существует.
 
 **Параметры**:
--   `domain_name` (str): Домен, для которого необходимо загрузить cookie.
+- `domain_name (str)`: Домен, для которого необходимо загрузить куки.
 
 **Возвращает**:
--   `list`: Список cookie.
+- `list`: Список куки. Возвращает пустой список, если `platformdirs` не установлен или файл с куками не существует.
 
 **Как работает функция**:
-
-1.  Проверяет, установлена ли библиотека `platformdirs`. Если нет, возвращает пустой список.
-2.  Определяет каталог конфигурации пользователя для `g4f`.
-3.  Формирует путь к файлу cookie.
-4.  Если файл cookie не существует, возвращает пустой список.
-5.  В противном случае загружает cookie из файла с помощью функции `chrome` из `browser_cookie3` и возвращает их.
+1. Проверяет, установлен ли пакет `platformdirs`. Если нет, возвращает пустой список.
+2. Определяет директорию пользовательских конфигураций для `'g4f'` с помощью `user_config_dir("g4f")`.
+3. Формирует путь к файлу с куками: `os.path.join(user_data_dir, "Default", "Cookies")`.
+4. Проверяет, существует ли файл с куками. Если нет, возвращает пустой список.
+5. Если файл существует, вызывает функцию `chrome` из `browser_cookie3` для загрузки куки из файла и возвращает результат.
 
 **Примеры**:
-
 ```python
-cookies = g4f('.google.com')
-print(cookies) #  Вывод:  [<cookie .google.com ...>, ...]
+domain = "example.com"
+cookies = g4f(domain)
+if cookies:
+    print(f"Cookies for {domain}: {cookies}")
+else:
+    print(f"No cookies found for {domain} in g4f browser.")
 ```
 
-### `get_cookies`
+### `get_cookies(domain_name: str, raise_requirements_error: bool = True, single_browser: bool = False, cache_result: bool = True) -> Dict[str, str]`
 
 ```python
 def get_cookies(domain_name: str, raise_requirements_error: bool = True, single_browser: bool = False, cache_result: bool = True) -> Dict[str, str]:
@@ -110,9 +77,6 @@ def get_cookies(domain_name: str, raise_requirements_error: bool = True, single_
 
     Args:
         domain_name (str): The domain for which to load cookies.
-        raise_requirements_error (bool): определяет, нужно ли вызывать исключение, если не установлены необходимые библиотеки.
-        single_browser (bool):  определяет, нужно ли загружать cookie только из одного браузера.
-        cache_result (bool): определяет, нужно ли кэшировать результат.
 
     Returns:
         Dict[str, str]: A dictionary of cookie names and values.
@@ -121,43 +85,43 @@ def get_cookies(domain_name: str, raise_requirements_error: bool = True, single_
 ```
 
 **Назначение**:
-Загружает cookie для указанного домена из всех поддерживаемых браузеров и кэширует результаты.
+Функция загружает куки для заданного домена из всех поддерживаемых браузеров и кэширует результаты.
 
 **Параметры**:
-
-*   `domain_name` (str): Домен, для которого необходимо загрузить cookie.
-*   `raise_requirements_error` (bool, optional): Определяет, нужно ли вызывать исключение `MissingRequirementsError`, если не установлена библиотека `browser_cookie3`. По умолчанию `True`.
-*   `single_browser` (bool, optional): Если `True`, загружает cookie только из первого браузера, в котором они найдены. По умолчанию `False`.
-*   `cache_result` (bool, optional): Если `True`, кэширует результаты загрузки cookie в `CookiesConfig.cookies`. По умолчанию `True`.
+- `domain_name (str)`: Домен, для которого необходимо загрузить куки.
+- `raise_requirements_error (bool, optional)`: Если `True`, вызывает исключение `MissingRequirementsError`, если не установлен пакет `browser_cookie3`. По умолчанию `True`.
+- `single_browser (bool, optional)`: Если `True`, загружает куки только из одного браузера. По умолчанию `False`.
+- `cache_result (bool, optional)`: Если `True`, кэширует результаты загрузки куки. По умолчанию `True`.
 
 **Возвращает**:
-
-*   `Dict[str, str]`: Словарь, где ключи - имена cookie, а значения - их значения.
+- `Dict[str, str]`: Словарь, содержащий имена и значения куки.
 
 **Как работает функция**:
-
-1.  Проверяет, есть ли cookie для данного домена в кэше (`CookiesConfig.cookies`). Если есть и `cache_result` равен `True`, возвращает cookie из кэша.
-2.  Если cookie нет в кэше, вызывает функцию `load_cookies_from_browsers` для загрузки cookie из браузеров.
-3.  Если `cache_result` равен `True`, сохраняет загруженные cookie в кэше (`CookiesConfig.cookies`).
-4.  Возвращает загруженные cookie.
+1. Проверяет, нужно ли использовать кэшированные куки. Если да, и куки для данного домена уже есть в кэше (`CookiesConfig.cookies`), возвращает кэшированные куки.
+2. Вызывает функцию `load_cookies_from_browsers` для загрузки куки из браузеров.
+3. Если `cache_result` равен `True`, сохраняет загруженные куки в кэш (`CookiesConfig.cookies`).
+4. Возвращает загруженные куки.
 
 **Примеры**:
-
 ```python
-cookies = get_cookies('.google.com')
-print(cookies) #  Вывод:  {'cookie_name': 'cookie_value', ...}
+domain = "example.com"
+cookies = get_cookies(domain)
+if cookies:
+    print(f"Cookies for {domain}: {cookies}")
+else:
+    print(f"No cookies found for {domain}.")
 ```
 
-### `set_cookies`
+### `set_cookies(domain_name: str, cookies: Cookies = None) -> None`
 
 ```python
 def set_cookies(domain_name: str, cookies: Cookies = None) -> None:
     """
-    Sets the cookies for a given domain name.
+    Sets cookies for a given domain.
 
     Args:
-        domain_name (str): The domain name for which to set cookies.
-        cookies (Cookies, optional): The cookies to set for the domain. Defaults to None.
+        domain_name (str): The domain for which to set cookies.
+        cookies (Cookies, optional): Cookies to set for the domain. If None, cookies for the domain are removed. Defaults to None.
 
     Returns:
         None
@@ -166,29 +130,31 @@ def set_cookies(domain_name: str, cookies: Cookies = None) -> None:
 ```
 
 **Назначение**:
-Устанавливает cookie для указанного домена.
+Функция устанавливает куки для заданного домена.
 
 **Параметры**:
-
-*   `domain_name` (str): Домен, для которого необходимо установить cookie.
-*   `cookies` (Cookies, optional): Словарь cookie, которые необходимо установить для домена. Если `None`, удаляет cookie для данного домена из кэша (`CookiesConfig.cookies`). По умолчанию `None`.
+- `domain_name (str)`: Домен, для которого необходимо установить куки.
+- `cookies (Cookies, optional)`: Куки, которые необходимо установить для домена. Если `None`, куки для домена будут удалены. По умолчанию `None`.
 
 **Возвращает**:
-
-*   `None`
+- `None`
 
 **Как работает функция**:
-
-1.  Если передан словарь `cookies`, сохраняет его в кэше (`CookiesConfig.cookies`) для указанного домена.
-2.  Если `cookies` равен `None`, удаляет cookie для данного домена из кэша (`CookiesConfig.cookies`), если они там есть.
+1. Если переданы куки (`cookies` не `None`), сохраняет их в кэш (`CookiesConfig.cookies`).
+2. Если `cookies` равен `None`, и куки для данного домена есть в кэше, удаляет их из кэша.
 
 **Примеры**:
-
 ```python
-set_cookies('.google.com', {'cookie_name': 'cookie_value'})
+domain = "example.com"
+new_cookies = {"cookie1": "value1", "cookie2": "value2"}
+set_cookies(domain, new_cookies)
+print(f"Cookies for {domain} set successfully.")
+
+set_cookies(domain)
+print(f"Cookies for {domain} removed successfully.")
 ```
 
-### `load_cookies_from_browsers`
+### `load_cookies_from_browsers(domain_name: str, raise_requirements_error: bool = True, single_browser: bool = False) -> Cookies`
 
 ```python
 def load_cookies_from_browsers(domain_name: str, raise_requirements_error: bool = True, single_browser: bool = False) -> Cookies:
@@ -197,8 +163,6 @@ def load_cookies_from_browsers(domain_name: str, raise_requirements_error: bool 
 
     Args:
         domain_name (str): The domain for which to load cookies.
-        raise_requirements_error (bool): определяет, нужно ли вызывать исключение, если не установлены необходимые библиотеки.
-        single_browser (bool):  определяет, нужно ли загружать cookie только из одного браузера.
 
     Returns:
         Dict[str, str]: A dictionary of cookie names and values.
@@ -207,183 +171,192 @@ def load_cookies_from_browsers(domain_name: str, raise_requirements_error: bool 
 ```
 
 **Назначение**:
-Загружает cookie из различных браузеров.
+Вспомогательная функция для загрузки куки из различных браузеров.
 
 **Параметры**:
-
-*   `domain_name` (str): Домен, для которого необходимо загрузить cookie.
-*   `raise_requirements_error` (bool, optional): Определяет, нужно ли вызывать исключение `MissingRequirementsError`, если не установлена библиотека `browser_cookie3`. По умолчанию `True`.
-*   `single_browser` (bool, optional): Если `True`, загружает cookie только из первого браузера, в котором они найдены. По умолчанию `False`.
+- `domain_name (str)`: Домен, для которого необходимо загрузить куки.
+- `raise_requirements_error (bool, optional)`: Если `True`, вызывает исключение `MissingRequirementsError`, если не установлен пакет `browser_cookie3`. По умолчанию `True`.
+- `single_browser (bool, optional)`: Если `True`, загружает куки только из одного браузера. По умолчанию `False`.
 
 **Возвращает**:
-
-*   `Dict[str, str]`: Словарь, где ключи - имена cookie, а значения - их значения.
+- `Dict[str, str]`: Словарь, содержащий имена и значения куки.
 
 **Как работает функция**:
-
-1.  Проверяет, установлена ли библиотека `browser_cookie3`. Если нет и `raise_requirements_error` равен `True`, вызывает исключение `MissingRequirementsError`.
-2.  Перебирает список браузеров (`browsers`).
-3.  Для каждого браузера пытается загрузить cookie с помощью соответствующей функции.
-4.  Если cookie успешно загружены, добавляет их в общий словарь `cookies`, пропуская cookie с истекшим сроком действия.
-5.  Если `single_browser` равен `True`, прекращает загрузку cookie после первого успешного браузера.
-6.  Обрабатывает исключения `BrowserCookieError` и другие исключения, возникающие при загрузке cookie из браузера.
+1. Проверяет, установлен ли пакет `browser_cookie3`. Если нет, и `raise_requirements_error` равен `True`, вызывает исключение `MissingRequirementsError`. В противном случае возвращает пустой словарь.
+2. Инициализирует пустой словарь `cookies` для хранения куки.
+3. Перебирает список браузеров (`browsers`).
+4. Для каждого браузера пытается загрузить куки с помощью соответствующей функции (`cookie_fn`).
+5. Если загрузка прошла успешно, добавляет куки в словарь `cookies`, исключая куки с истекшим сроком действия.
+6. Если `single_browser` равен `True`, останавливает перебор браузеров после первого успешного получения куки.
+7. Обрабатывает исключения `BrowserCookieError` и другие исключения, логируя ошибки.
+8. Возвращает словарь `cookies`.
 
 **Примеры**:
-
 ```python
-cookies = load_cookies_from_browsers('.google.com')
-print(cookies) #  Вывод:  {'cookie_name': 'cookie_value', ...}
+domain = "example.com"
+cookies = load_cookies_from_browsers(domain)
+if cookies:
+    print(f"Cookies for {domain}: {cookies}")
+else:
+    print(f"No cookies found for {domain} in any browser.")
 ```
 
-### `set_cookies_dir`
+### `set_cookies_dir(dir: str) -> None`
 
 ```python
 def set_cookies_dir(dir: str) -> None:
     """
-    Sets the directory where cookies are stored.
+    Set the directory for cookie files.
 
     Args:
-        dir (str): The directory where cookies are stored.
-
-    Returns:
-        None
+        dir (str): The directory to set for cookie files.
     """
     ...
 ```
 
 **Назначение**:
-Устанавливает каталог, в котором хранятся файлы cookie.
+Функция устанавливает директорию для файлов с куками.
 
 **Параметры**:
-
-*   `dir` (str): Путь к каталогу, в котором хранятся файлы cookie.
+- `dir (str)`: Директория, которую необходимо установить для файлов с куками.
 
 **Возвращает**:
-
-*   `None`
+- `None`
 
 **Как работает функция**:
-
-1.  Устанавливает значение атрибута `cookies_dir` класса `CookiesConfig` равным переданному значению `dir`.
+1. Устанавливает значение статической переменной `CookiesConfig.cookies_dir` равным переданной директории.
 
 **Примеры**:
-
 ```python
-set_cookies_dir('./my_cookies')
+new_dir = "/path/to/cookies"
+set_cookies_dir(new_dir)
+print(f"Cookies directory set to: {new_dir}")
 ```
 
-### `get_cookies_dir`
+### `get_cookies_dir() -> str`
 
 ```python
 def get_cookies_dir() -> str:
     """
-    Gets the directory where cookies are stored.
+    Get the directory for cookie files.
 
     Returns:
-        str: The directory where cookies are stored.
+        str: The directory for cookie files.
     """
     ...
 ```
 
 **Назначение**:
-Возвращает каталог, в котором хранятся файлы cookie.
+Функция возвращает директорию, в которой хранятся файлы с куками.
 
 **Параметры**:
-
-*   Нет
+- Нет параметров.
 
 **Возвращает**:
-
-*   `str`: Путь к каталогу, в котором хранятся файлы cookie.
+- `str`: Директория, в которой хранятся файлы с куками.
 
 **Как работает функция**:
-
-1.  Возвращает значение атрибута `cookies_dir` класса `CookiesConfig`.
+1. Возвращает значение статической переменной `CookiesConfig.cookies_dir`.
 
 **Примеры**:
-
 ```python
 cookies_dir = get_cookies_dir()
-print(cookies_dir) #  Вывод:  ./har_and_cookies
+print(f"Cookies directory: {cookies_dir}")
 ```
 
-### `read_cookie_files`
+### `read_cookie_files(dirPath: str = None)`
 
 ```python
 def read_cookie_files(dirPath: str = None):
     """
-    Reads cookie files from the specified directory.
+    Reads cookie files (HAR and JSON) from a directory and stores them in CookiesConfig.cookies.
 
     Args:
-        dirPath (str, optional): The path to the directory containing cookie files. Defaults to None.
-
-    Returns:
-        None
+        dirPath (str, optional): The directory to read cookie files from. Defaults to CookiesConfig.cookies_dir if None.
     """
     ...
 ```
 
 **Назначение**:
-Считывает файлы cookie из указанного каталога.
+Функция считывает файлы с куками (в форматах HAR и JSON) из директории и сохраняет их в `CookiesConfig.cookies`.
 
 **Параметры**:
-
-*   `dirPath` (str, optional): Путь к каталогу, содержащему файлы cookie. Если `None`, используется значение `CookiesConfig.cookies_dir`. По умолчанию `None`.
-
-**Возвращает**:
-
-*   `None`
+- `dirPath (str, optional)`: Директория, из которой необходимо считать файлы с куками. Если `None`, используется значение `CookiesConfig.cookies_dir`.
 
 **Как работает функция**:
-
-1.  Определяет путь к каталогу с файлами cookie. Если `dirPath` не указан, используется значение `CookiesConfig.cookies_dir`.
-2.  Проверяет, доступен ли каталог для чтения. Если нет, выводит сообщение в лог и завершает работу.
-3.  Находит все файлы с расширениями `.har` и `.json` в указанном каталоге и его подкаталогах.
-4.  Перебирает найденные HAR-файлы.
-5.  Для каждого HAR-файла пытается загрузить JSON-содержимое. Если загрузка не удалась, переходит к следующему файлу.
-6.  Извлекает домен из каждого элемента `entries` в HAR-файле с помощью функции `get_domain`.
-7.  Извлекает cookie из каждого элемента `entries` и сохраняет их в `CookiesConfig.cookies`.
-8.  Перебирает найденные JSON-файлы.
-9.  Для каждого JSON-файла пытается загрузить JSON-содержимое. Если загрузка не удалась или файл не является списком словарей с доменами, переходит к следующему файлу.
-10. Извлекает cookie из каждого элемента и сохраняет их в `CookiesConfig.cookies`.
+1. Определяет директорию для чтения файлов с куками. Если `dirPath` не передан, использует значение `CookiesConfig.cookies_dir`.
+2. Проверяет, доступна ли директория для чтения. Если нет, логирует сообщение и выходит из функции.
+3. Инициализирует пустые списки `harFiles` и `cookieFiles` для хранения путей к файлам в форматах HAR и JSON соответственно.
+4. Обходит директорию `dirPath` и добавляет пути к файлам с расширениями ".har" и ".json" в соответствующие списки.
+5. Очищает словарь `CookiesConfig.cookies`.
+6. Перебирает список файлов в формате HAR (`harFiles`):
+   - Открывает каждый файл, пытается загрузить его содержимое как JSON. Если происходит ошибка JSONDecodeError, переходит к следующему файлу.
+   - Извлекает домен из каждого HAR-файла.
+   - Извлекает куки из каждого HAR-файла и добавляет их в `CookiesConfig.cookies`.
+7. Перебирает список файлов в формате JSON (`cookieFiles`):
+   - Открывает каждый файл, пытается загрузить его содержимое как JSON. Если происходит ошибка JSONDecodeError или файл не является списком словарей с ключом "domain", переходит к следующему файлу.
+   - Извлекает куки из каждого JSON-файла и добавляет их в `CookiesConfig.cookies`.
+8. Логирует информацию о количестве добавленных куки для каждого домена.
 
 **Внутренние функции**:
-
-#### `get_domain`
-
+### `get_domain(v: dict) -> str`
 ```python
-def get_domain(v: dict) -> str:
-    """
-    Extracts the domain from a HAR entry.
+        def get_domain(v: dict) -> str:
+            """
+            Extracts the domain from a HAR file entry.
 
-    Args:
-        v (dict): A HAR entry.
+            Args:
+                v (dict): A HAR file entry.
 
-    Returns:
-        str: The domain name, or None if not found.
-    """
-    ...
+            Returns:
+                str: The domain name, or None if not found.
+            """
+            ...
 ```
-
 **Назначение**:
-Извлекает домен из записи HAR.
+Функция извлекает домен из записи HAR-файла.
 
 **Параметры**:
-
-*   `v` (dict): Запись HAR.
+- `v (dict)`: Запись HAR-файла.
 
 **Возвращает**:
-
-*   `str`: Имя домена или `None`, если домен не найден.
+- `str`: Доменное имя или `None`, если домен не найден.
 
 **Как работает функция**:
-
-1.  Извлекает заголовок `host` или `:authority` из записи HAR.
-2.  Если заголовок не найден, возвращает `None`.
-3.  Проверяет, содержится ли домен в списке `DOMAINS`.
-4.  Если домен найден, возвращает его.
+1. Извлекает значения заголовков "host" или ":authority" из записи HAR-файла.
+2. Если заголовки не найдены, возвращает `None`.
+3. Извлекает первое значение заголовка и проверяет, содержится ли в нем один из доменов из списка `DOMAINS`.
+4. Если домен найден, возвращает его. В противном случае возвращает `None`.
 
 **Примеры**:
-
 ```python
-read_cookie_files('./my_cookies')
+read_cookie_files("/path/to/cookie/files")
+print(f"Cookies loaded from files. Available domains: {CookiesConfig.cookies.keys()}")
+```
+```python
+# Пример структуры файла cookieFile (JSON):
+# [
+#     {"domain": ".example.com", "name": "cookie1", "value": "value1"},
+#     {"domain": ".example.com", "name": "cookie2", "value": "value2"}
+# ]
+```
+```python
+# Пример структуры файла harFile (HAR):
+# {
+#     "log": {
+#         "entries": [
+#             {
+#                 "request": {
+#                     "headers": [
+#                         {"name": "Host", "value": "www.example.com"},
+#                         {"name": ":authority", "value": "www.example.com"}
+#                     ],
+#                     "cookies": [
+#                         {"name": "cookie1", "value": "value1"},
+#                         {"name": "cookie2", "value": "value2"}
+#                     ]
+#                 }
+#             }
+#         ]
+#     }
+# }
