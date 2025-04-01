@@ -89,7 +89,7 @@ class Config:
         """Инструкция для модели.
         При каждом вызове читает файл с инструкцией, что позволяет обновлять инструкции "на лету
         """        
-        return Path(__root__ / 'src' / 'ai' / 'prompts' / f'CODE_RULES.{Config.lang}.MD'
+        return Path(Config.base_path / 'instructions' / f'CODE_RULES.{Config.lang}.MD'
                             ).read_text(encoding='UTF-8')
 
 

@@ -32,19 +32,44 @@ from src.ai.gemini import GoogleGenerativeAI
 from src.endpoints.kazarinov.scenarios.scenario import fetch_target_urls_onetab, Scenario
 from src.utils.url import is_url
 from src.utils.printer import pprint as print
+from src import USE_ENV
 
-##############################################################
 
-ENDPOINT = 'kazarinov'
-USE_ENV:bool = True # <- Определает откуда брать ключи. Если False - то из базы данных с паролями, иначе из .env
-MODE:str = 'PRODUCTION' # <- Определяет режим разработчика. Если MODE=='PRODUCTION' будет запущен kazarionaov бот, иначе тестбот
-MODE:str = 'DEV'
-#############################################################
+# --- config.py -----------------
 
-if USE_ENV:
-    from dotenv import load_dotenv
-    load_dotenv()
+class Config:
     
+    ENDPOINT = 'kazarinov'
+    MODE:str = 'PRODUCTION' # <- Определяет режим разработчика. Если MODE=='PRODUCTION' будет запущен kazarionaov бот, иначе тестбот
+    MODE:str = 'DEV'
+    BOT_TOKEN:str
+
+    if MODE=='PRODUCTION':
+        BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_kazarinov_bot
+    else:
+        BOT_TOKEN = os.getenv('TEST_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_test_bot
+
+    CHANNEL_ID = '@onela'
+    PHOTO_DIR = Path(__root__ / 'endpoints' / 'kazarinov' / 'assets')
+    COMMAND_INFO = 'This is a simple bot. Use /help to see commands.'
+    UNKNOWN_COMMAND_MESSAGE = 'Unknown command. Use /help to see available commands.'
+    START_MESSAGE = "Howdy, how are you doing?"
+    HELP_MESSAGE = """
+    Here are the available commands:
+    /start - Starts the bot.
+    /help - Shows this help message.
+    /info - Shows information about the bot.
+    /time - Shows the current time.
+    /photo - Sends a random photo.
+    """
+
+    if USE_ENV:
+        from dotenv import load_dotenv
+        load_dotenv()
+    
+# --- config.py end -----------------
+
+
 
 class BotHandler:
     """Исполнитель команд, полученных ботом."""
@@ -190,28 +215,7 @@ class BotHandler:
             bot.send_message(message.chat.id, 'Произошла ошибка при обработке документа. Попробуй ещё раз.')
             return False
 
-# --- config.py -----------------
 
-class Config:
-    if MODE=='PRODUCTION':
-        BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_kazarinov_bot
-    else:
-        BOT_TOKEN = os.getenv('TEST_BOT_TOKEN') if USE_ENV else gs.credentials.telegram.hypo69_test_bot
-
-    CHANNEL_ID = '@onela'
-    PHOTO_DIR = Path(__root__ / 'endpoints' / 'kazarinov' / 'assets')
-    COMMAND_INFO = 'This is a simple bot. Use /help to see commands.'
-    UNKNOWN_COMMAND_MESSAGE = 'Unknown command. Use /help to see available commands.'
-    START_MESSAGE = "Howdy, how are you doing?"
-    HELP_MESSAGE = """
-    Here are the available commands:
-    /start - Starts the bot.
-    /help - Shows this help message.
-    /info - Shows information about the bot.
-    /time - Shows the current time.
-    /photo - Sends a random photo.
-    """
-# --- config.py end -----------------
 
 
 # --- bot.py ---
@@ -279,7 +283,7 @@ def handle_unknown_command(message):
 def main(restarts:int = 5):
 
     try:
-        logger.info(f"Starting bot in {MODE} mode")
+        logger.info(f"Starting bot in {Config.MODE} mode")
         bot.polling(none_stop=True)
         
     except Exception as ex:

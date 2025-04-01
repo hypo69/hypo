@@ -66,7 +66,7 @@
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\kazarinov\\scenarios",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\code_assistant",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\whatsapp",
-
+    "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\juliana",
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\endpoints\\hypo69\\tiny_troupe",
 
     "C:\\Users\\user\\Documents\\repos\\hypotez\\src\\suppliers",
@@ -99,7 +99,7 @@
 
 
   "exclude_dirs": [
-    
+
 
     ".ipynb_checkpoints",
     "resources",
@@ -136,34 +136,33 @@
     "getting_started_in_classroom_computing",
     "more_basic_computer_games",
     "Understanding_Mathematics_And_Logic_Using_BASIC_Computer_Games",
-    "projecteuler",
-    
-
+    "projecteuler"
   ],
-  "exclude_files": [
-    "version.py",
-    "__init__.py",
-    "*.js",
-    "*.js",
-    "*.png",
-    "*.jpg",
-    "*.jpeg",
-    "*.svg",
+  "include_files": [
     "*.json",
-    "*.mmd",
-    "*.yaml",
-    "*.yml",
-    "*.ini",
-    "*.cfg",
-    "*.git*",
     "*.js",
     "*.mjs",
     "*.htm*",
     "*.php",
     "*.txt",
     "*.md",
-    "*.rst",
-    "*.md",
+    "*.rst"
+  ],
+  "exclude_files": [
+    "version.py",
+    "__init__.py",
+    "*.png",
+    "*.jpg",
+    "*.jpeg",
+    "*.svg",
+    
+    "*.mmd",
+    "*.yaml",
+    "*.yml",
+    "*.ini",
+    "*.cfg",
+    "*.git*",
+
     "Makefile",
     "LICENSE*",
     "CHANGELOG*",
@@ -207,9 +206,6 @@
     "```plaintext\n",
     "```PALINTEXT",
     "```PALINTEXT\n"
-
-
-
   ],
 
   "output_dirs": {
