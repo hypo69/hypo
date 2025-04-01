@@ -1,104 +1,101 @@
-# Модуль `prepare_new_campaign.py`
+# Модуль подготовки новой рекламной кампании на AliExpress
 
 ## Обзор
 
-Модуль `prepare_new_campaign.py` предназначен для экспериментов с процессом создания новой рекламной кампании на платформе AliExpress. Он использует функциональность класса `AliCampaignEditor` для управления и обработки кампаний.
+Модуль `prepare_new_campaign.py` предназначен для автоматизации процесса подготовки и запуска новой рекламной кампании на платформе AliExpress. Он использует класс `AliCampaignEditor` для управления и настройки параметров кампании.
 
 ## Подробней
 
-Этот модуль является частью пакета `src.suppliers.aliexpress.campaign._experiments` и служит для автоматизации и экспериментирования с настройками рекламных кампаний на AliExpress. Он включает в себя импорт необходимых модулей, инициализацию редактора кампаний и запуск процесса создания новой кампании.
+Модуль выполняет эксперименты над сценарием создания новой рекламной кампании. Он импортирует необходимые библиотеки, такие как `header`, `Path`, `gs`, `AliCampaignEditor`, `get_filenames`, `get_directory_names`, `pprint` и `logger`. Основная функциональность заключается в создании экземпляра класса `AliCampaignEditor` и вызове метода `process_new_campaign` для запуска процесса подготовки кампании.
 
 ## Функции
 
-В данном модуле нет явно определенных функций, однако используется класс `AliCampaignEditor` и его методы для выполнения основных операций.
+В данном коде присутствуют импорты, переменные и вызовы функций.
 
-## Переменные
-
-- `campaign_name (str)`: Имя рекламной кампании, используемое в модуле.
-- `aliexpress_editor (AliCampaignEditor)`: Экземпляр класса `AliCampaignEditor`, предназначенный для редактирования и обработки рекламных кампаний AliExpress.
-
-## Классы
-
-### `AliCampaignEditor`
-
-**Описание**: Класс `AliCampaignEditor` предназначен для редактирования и управления рекламными кампаниями AliExpress.
-
-**Принцип работы**:
-Класс инициализируется с именем кампании и предоставляет методы для обработки и настройки кампании. В данном модуле используется метод `process_new_campaign` для запуска процесса создания новой кампании.
-
-**Методы**:
-- `__init__(self, campaign_name)`:
-    ```python
-    def __init__(self, campaign_name):
-        """
-        Инициализирует экземпляр класса `AliCampaignEditor`.
-
-        Args:
-            campaign_name (str): Имя кампании.
-        """
-        ...
-    ```
-
-- `process_new_campaign(self, campaign_name)`:
-    ```python
-    def process_new_campaign(self, campaign_name):
-        """
-        Запускает процесс создания новой рекламной кампании.
-
-        Args:
-            campaign_name (str): Имя кампании.
-        """
-        ...
-    ```
-
-## Использование
+### `campaign_name`
 
 ```python
-import header
+campaign_name = 'rc'
+```
 
-from pathlib import Path
+**Назначение**: Определяет название рекламной кампании.
 
-from src import gs
+**Как работает функция**:
 
+1.  Присваивает строковое значение `'rc'` переменной `campaign_name`.
+
+**Примеры**:
+
+```python
+campaign_name = 'rc'
+print(campaign_name)  # Вывод: rc
+```
+
+### `aliexpress_editor`
+
+```python
+aliexpress_editor =  AliCampaignEditor(campaign_name)
+```
+
+**Назначение**: Создает экземпляр класса `AliCampaignEditor` для работы с рекламной кампанией AliExpress.
+
+**Параметры**:
+
+*   `campaign_name` (str): Название рекламной кампании.
+
+**Как работает функция**:
+
+1.  Создает экземпляр класса `AliCampaignEditor`, передавая название кампании в качестве аргумента.
+2.  Этот экземпляр будет использоваться для дальнейшей настройки и управления кампанией.
+
+```
+Начало
+    ↓
+Создание экземпляра AliCampaignEditor с campaign_name
+    ↓
+Конец
+```
+
+**Примеры**:
+
+```python
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
-from src.utils import get_filenames, get_directory_names
-from src.utils.printer import pprint
-from src.logger.logger import logger
 
 campaign_name = 'rc'
-aliexpress_editor =  AliCampaignEditor(campaign_name)
-aliexpress_editor.process_new_campaign(campaign_name)
+aliexpress_editor = AliCampaignEditor(campaign_name)
+print(aliexpress_editor)  #  <src.suppliers.aliexpress.campaign.editor.AliCampaignEditor object at 0x...>
 ```
 
-**Пояснения**:
-1. Импортируются необходимые модули и классы.
-2. Создается экземпляр класса `AliCampaignEditor` с именем кампании `'rc'`.
-3. Вызывается метод `process_new_campaign` для запуска процесса создания новой кампании.
-
-## Как работает модуль:
-
-1. **Импорт необходимых модулей**:
-   - Импортируются модули `header`, `Path`, `gs`, `AliCampaignEditor`, `get_filenames`, `get_directory_names`, `pprint`, `logger`.
-2. **Инициализация переменных**:
-   - `campaign_name` присваивается значение `'rc'`.
-   - Создается экземпляр класса `AliCampaignEditor` с именем кампании `campaign_name`.
-3. **Запуск процесса создания новой кампании**:
-   - Вызывается метод `process_new_campaign` у экземпляра `aliexpress_editor` с именем кампании `campaign_name`.
-
-## Примеры
-
-### Пример 1: Запуск процесса создания новой кампании
+### `aliexpress_editor.process_new_campaign(campaign_name)`
 
 ```python
-campaign_name = 'new_campaign'
-aliexpress_editor = AliCampaignEditor(campaign_name)
 aliexpress_editor.process_new_campaign(campaign_name)
 ```
 
-### Пример 2: Использование другого имени для кампании
+**Назначение**: Запускает процесс подготовки новой рекламной кампании.
+
+**Параметры**:
+
+*   `campaign_name` (str): Название рекламной кампании.
+
+**Как работает функция**:
+
+1.  Вызывает метод `process_new_campaign` экземпляра `aliexpress_editor`, передавая название кампании в качестве аргумента.
+2.  Этот метод выполняет все необходимые шаги для подготовки и запуска кампании, такие как настройка параметров, выбор товаров и т.д.
+
+```
+Начало
+    ↓
+Вызов process_new_campaign с campaign_name
+    ↓
+Конец
+```
+
+**Примеры**:
 
 ```python
-campaign_name = 'summer_sale'
+from src.suppliers.aliexpress.campaign import AliCampaignEditor
+
+campaign_name = 'rc'
 aliexpress_editor = AliCampaignEditor(campaign_name)
-aliexpress_editor.process_new_campaign(campaign_name)
-```
+aliexpress_editor.process_new_campaign(campaign_name) # Запускает процесс подготовки кампании

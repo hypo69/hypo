@@ -195,5 +195,5 @@ ___*
 # Windows TEMP directory
 C:\WINDOWS\TEMP
 
-# PrestaShop images
-src/endpoints/websites/emil-design.com/public_html/img/
+# Draw.io backups
+*.bkp

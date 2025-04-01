@@ -1,76 +1,44 @@
 # Модуль для сокращения партнерских ссылок AliExpress
-
 ## Обзор
 
-Этот модуль предназначен для сокращения партнерских ссылок AliExpress с использованием класса `AffiliateLinksShortener`.
+Модуль содержит эксперимент по сокращению партнерских ссылок для AliExpress. Включает импорт необходимых модулей и вызов функции сокращения партнерской ссылки.
 
 ## Подробней
 
-Модуль содержит эксперимент по сокращению партнерских ссылок, предположительно для использования в рамках проекта `hypotez`. Он импортирует класс `AffiliateLinksShortener` и использует его для сокращения заданной URL.
+Данный код является частью экспериментов, связанных с AliExpress. Он предназначен для демонстрации и тестирования функциональности сокращения партнерских ссылок с использованием класса `AffiliateLinksShortener`. Файл импортирует необходимые модули и выполняет вызов метода `short_affiliate_link` для сокращения предоставленной ссылки.
 
 ## Функции
 
 ### `short_affiliate_link`
 
 ```python
-    def short_affiliate_link(self, url: str) -> str:
-        """Сокращает партнерскую ссылку AliExpress.
-
-        Args:
-            url (str): Полная партнерская ссылка AliExpress.
-
-        Returns:
-            str: Сокращенная партнерская ссылка.
-
-        Raises:
-            Exception: Если происходит ошибка при сокращении ссылки.
-        """
-        ...
+link = a.short_affiliate_link(url)
 ```
+
+**Назначение**: Сокращение партнерской ссылки AliExpress.
 
 **Как работает функция**:
 
-1. Функция `short_affiliate_link` принимает URL в качестве входных данных.
-2. Она использует внутренние методы класса `AffiliateLinksShortener` для сокращения URL.
-3. Возвращает сокращенную версию URL.
+1.  Создается экземпляр класса `AffiliateLinksShortener`.
+2.  Определяется URL для сокращения.
+3.  Вызывается метод `short_affiliate_link` с переданным URL.
+4.  Результат сокращения ссылки сохраняется в переменной `link`.
+
+```
+Создание экземпляра класса AffiliateLinksShortener
+↓
+Определение URL для сокращения
+↓
+Вызов метода short_affiliate_link(url)
+↓
+Сохранение результата в переменной link
+```
 
 **Примеры**:
 
 ```python
 from src.suppliers.aliexpress import AffiliateLinksShortener
+
 a = AffiliateLinksShortener()
 url = 'https://aliexpress.com'
 link = a.short_affiliate_link(url)
-print(link)
-```
-
-## Классы
-
-### `AffiliateLinksShortener`
-
-**Описание**: Класс для сокращения партнерских ссылок AliExpress.
-
-**Принцип работы**:
-
-Класс `AffiliateLinksShortener` предоставляет методы для сокращения длинных партнерских ссылок AliExpress. Он может использовать различные стратегии и API для достижения этой цели.
-
-**Методы**:
-
-- `short_affiliate_link`: Краткое описание метода.
-
-**Параметры**:
-
-- `url` (str): Полная партнерская ссылка AliExpress.
-
-**Примеры**:
-
-```python
-from src.suppliers.aliexpress import AffiliateLinksShortener
-
-# Создание экземпляра класса AffiliateLinksShortener
-affiliate_links_shortener = AffiliateLinksShortener()
-
-# Сокращение партнерской ссылки
-long_url = "https://aliexpress.com/some/very/long/affiliate/link"
-short_url = affiliate_links_shortener.short_affiliate_link(long_url)
-print(f"Сокращенная ссылка: {short_url}")

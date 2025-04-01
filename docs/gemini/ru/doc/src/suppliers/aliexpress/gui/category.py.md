@@ -1,48 +1,44 @@
-# Модуль `category.py`
+# Модуль `category`
 
 ## Обзор
 
-Модуль предоставляет графический интерфейс для подготовки рекламных кампаний AliExpress. Он позволяет пользователю загружать JSON-файлы с данными о категориях, просматривать их и запускать процесс подготовки категорий для рекламных кампаний как целиком, так и по отдельности.
+Модуль `category.py` предоставляет графический интерфейс для редактирования категорий рекламных кампаний AliExpress. Он позволяет загружать JSON-файлы с данными о кампаниях, отображать информацию о категориях и подготавливать все или отдельные категории для дальнейшей обработки. Модуль использует библиотеку PyQt6 для создания графического интерфейса и `AliCampaignEditor` для подготовки категорий.
 
-## Подробней
+## Подробнее
 
-Этот модуль является частью GUI (графического интерфейса пользователя) для работы с рекламными кампаниями AliExpress. Он использует библиотеку `PyQt6` для создания окон и элементов интерфейса, а также `asyncio` и `qasync` для асинхронного выполнения операций, таких как подготовка категорий.
-
-Модуль предоставляет следующие возможности:
-
-1.  Загрузка данных о категориях из JSON-файла.
-2.  Отображение основной информации о категориях в интерфейсе.
-3.  Подготовка всех категорий или отдельной категории в асинхронном режиме.
-4.  Отображение сообщений об успехе или ошибке в процессе подготовки.
+Этот модуль предназначен для визуализации и редактирования данных категорий, используемых в рекламных кампаниях AliExpress. Он позволяет загружать данные из JSON-файлов, отображать их в удобном формате и запускать процесс подготовки категорий. Подготовка категорий включает в себя обработку данных и их приведение к нужному формату для дальнейшего использования в рекламных кампаниях.
+Модуль взаимодействует с классом `AliCampaignEditor` для выполнения задач подготовки категорий.
 
 ## Классы
 
 ### `CategoryEditor`
 
-**Описание**: Главный класс, представляющий окно редактора категорий.
+**Описание**: Основной класс, представляющий виджет графического интерфейса для редактирования категорий.
 
 **Наследует**: `QtWidgets.QWidget`
 
 **Атрибуты**:
-
-*   `campaign_name` (str): Имя кампании. По умолчанию `None`.
-*   `data` (`SimpleNamespace`): Данные, загруженные из JSON-файла. По умолчанию `None`.
-*   `language` (str): Язык кампании. По умолчанию `'EN'`.
-*   `currency` (str): Валюта кампании. По умолчанию `'USD'`.
-*   `file_path` (str): Путь к файлу кампании. По умолчанию `None`.
-*   `editor` (`AliCampaignEditor`): Экземпляр класса `AliCampaignEditor` для подготовки кампании.
-*   `main_app`: Ссылка на главный экземпляр приложения.
+- `campaign_name` (str): Имя кампании. Инициализируется как `None`.
+- `data` (SimpleNamespace): Данные, загруженные из JSON-файла. Инициализируется как `None`.
+- `language` (str): Язык кампании. По умолчанию `'EN'`.
+- `currency` (str): Валюта кампании. По умолчанию `'USD'`.
+- `file_path` (str): Путь к файлу с данными кампании. Инициализируется как `None`.
+- `editor` (AliCampaignEditor): Экземпляр класса `AliCampaignEditor` для подготовки кампании.
+- `main_app`: Ссылка на основной экземпляр приложения.
+- `open_button`: Кнопка для открытия JSON-файла.
+- `file_name_label`: Метка для отображения имени выбранного файла.
+- `prepare_all_button`: Кнопка для подготовки всех категорий.
+- `prepare_specific_button`: Кнопка для подготовки конкретной категории.
 
 **Методы**:
-
-*   `__init__(self, parent=None, main_app=None)`: Инициализирует окно редактора категорий.
-*   `setup_ui(self)`: Настраивает пользовательский интерфейс, добавляет кнопки и метки.
-*   `setup_connections(self)`: Устанавливает соединения между сигналами и слотами. В данном случае не используется.
-*   `open_file(self)`: Открывает диалоговое окно для выбора JSON-файла и загружает его.
-*   `load_file(self, campaign_file)`: Загружает JSON-файл и создает виджеты на основе данных.
-*   `create_widgets(self, data)`: Создает виджеты для отображения данных о категориях.
-*   `prepare_all_categories_async(self)`: Асинхронно подготавливает все категории.
-*   `prepare_category_async(self)`: Асинхронно подготавливает выбранную категорию.
+- `__init__(self, parent=None, main_app=None)`: Инициализирует виджет, устанавливает пользовательский интерфейс и соединения между сигналами и слотами.
+- `setup_ui(self)`: Создает и настраивает элементы пользовательского интерфейса (кнопки, метки, макеты).
+- `setup_connections(self)`: Устанавливает соединения между сигналами и слотами. В текущей реализации не содержит соединений.
+- `open_file(self)`: Открывает диалоговое окно для выбора JSON-файла и загружает его содержимое.
+- `load_file(self, campaign_file)`: Загружает JSON-файл, устанавливает имя кампании, язык и создает виджеты на основе загруженных данных.
+- `create_widgets(self, data)`: Создает виджеты для отображения данных о категориях кампании.
+- `prepare_all_categories_async(self)`: Асинхронно подготавливает все категории с использованием `AliCampaignEditor`.
+- `prepare_category_async(self)`: Асинхронно подготавливает определенную категорию с использованием `AliCampaignEditor`.
 
 ## Функции
 
@@ -51,34 +47,38 @@
 ```python
 def __init__(self, parent=None, main_app=None):
     """ Initialize the main window"""
+    super().__init__(parent)
+    self.main_app = main_app  # Save the MainApp instance
+
+    self.setup_ui()
+    self.setup_connections()
 ```
 
-**Назначение**: Инициализация главного окна редактора категорий.
+**Назначение**: Инициализирует класс `CategoryEditor`.
 
 **Параметры**:
-
-*   `parent` (QtWidgets.QWidget, optional): Родительский виджет. По умолчанию `None`.
-*   `main_app` (MainApp, optional): Главный экземпляр приложения. По умолчанию `None`.
-
-**Возвращает**: `None`
+- `parent` (QtWidgets.QWidget, optional): Родительский виджет. По умолчанию `None`.
+- `main_app` (MainApp, optional): Экземпляр основного приложения. По умолчанию `None`.
 
 **Как работает функция**:
+1. Вызывает конструктор родительского класса `QtWidgets.QWidget`.
+2. Сохраняет ссылку на основной экземпляр приложения `main_app`.
+3. Вызывает методы `setup_ui()` и `setup_connections()` для настройки пользовательского интерфейса и соединений.
 
-1.  Вызывает конструктор родительского класса `QtWidgets.QWidget`.
-2.  Сохраняет ссылку на главный экземпляр приложения `main_app`.
-3.  Вызывает методы `setup_ui()` и `setup_connections()` для настройки интерфейса и соединений.
-
-```mermaid
-graph TD
-    A[Вызов конструктора QtWidgets.QWidget] --> B{Сохранение ссылки на main_app};
-    B --> C{Вызов setup_ui()};
-    C --> D{Вызов setup_connections()};
+```
+A: Вызов конструктора родительского класса
+|
+B: Сохранение ссылки на экземпляр MainApp
+|
+C: Настройка пользовательского интерфейса (setup_ui)
+|
+D: Установка соединений (setup_connections)
 ```
 
 **Примеры**:
 
 ```python
-editor = CategoryEditor(main_app=app)
+category_editor = CategoryEditor(main_app=main_app_instance)
 ```
 
 ### `setup_ui`
@@ -86,38 +86,70 @@ editor = CategoryEditor(main_app=app)
 ```python
 def setup_ui(self):
     """ Setup the user interface"""
+    self.setWindowTitle("Category Editor")
+    self.resize(1800, 800)
+
+    # Define UI components
+    self.open_button = QtWidgets.QPushButton("Open JSON File")
+    self.open_button.clicked.connect(self.open_file)
+    
+    self.file_name_label = QtWidgets.QLabel("No file selected")
+    
+    self.prepare_all_button = QtWidgets.QPushButton("Prepare All Categories")
+    self.prepare_all_button.clicked.connect(self.prepare_all_categories_async)
+
+    self.prepare_specific_button = QtWidgets.QPushButton("Prepare Category")
+    self.prepare_specific_button.clicked.connect(self.prepare_category_async)
+
+    layout = QtWidgets.QVBoxLayout(self)
+    layout.addWidget(self.open_button)
+    layout.addWidget(self.file_name_label)
+    layout.addWidget(self.prepare_all_button)
+    layout.addWidget(self.prepare_specific_button)
+
+    self.setLayout(layout)
 ```
 
-**Назначение**: Настройка пользовательского интерфейса главного окна.
-
-**Параметры**:
-
-*   `self`: Ссылка на экземпляр класса.
-
-**Возвращает**: `None`
+**Назначение**: Настраивает пользовательский интерфейс виджета `CategoryEditor`.
 
 **Как работает функция**:
+1. Устанавливает заголовок окна как "Category Editor".
+2. Устанавливает размеры окна на 1800x800 пикселей.
+3. Определяет компоненты пользовательского интерфейса:
+   - Кнопку "Open JSON File" (`self.open_button`) и подключает её к методу `self.open_file`.
+   - Метку для отображения имени файла (`self.file_name_label`) с начальным текстом "No file selected".
+   - Кнопку "Prepare All Categories" (`self.prepare_all_button`) и подключает её к асинхронному методу `self.prepare_all_categories_async`.
+   - Кнопку "Prepare Category" (`self.prepare_specific_button`) и подключает её к асинхронному методу `self.prepare_category_async`.
+4. Создает вертикальный макет (`QVBoxLayout`) и добавляет в него созданные компоненты.
+5. Устанавливает созданный макет для виджета.
 
-1.  Устанавливает заголовок окна.
-2.  Устанавливает размеры окна.
-3.  Определяет и добавляет кнопки "Open JSON File", "Prepare All Categories" и "Prepare Category".
-4.  Добавляет метку для отображения имени выбранного файла.
-5.  Создает вертикальный макет (`QVBoxLayout`) и добавляет в него созданные элементы интерфейса.
-6.  Устанавливает созданный макет для главного окна.
-
-```mermaid
-graph TD
-    A[Установка заголовка окна] --> B{Установка размеров окна};
-    B --> C{Создание кнопок и метки};
-    C --> D{Создание вертикального макета};
-    D --> E{Добавление элементов в макет};
-    E --> F{Установка макета для окна};
+```
+A: Установка заголовка окна
+|
+B: Установка размеров окна
+|
+C: Определение компонентов UI
+|   |
+|   C1: Создание кнопки "Open JSON File" и подключение к self.open_file
+|   |
+|   C2: Создание метки для имени файла
+|   |
+|   C3: Создание кнопки "Prepare All Categories" и подключение к self.prepare_all_categories_async
+|   |
+|   C4: Создание кнопки "Prepare Category" и подключение к self.prepare_category_async
+|
+D: Создание вертикального макета
+|
+E: Добавление компонентов в макет
+|
+F: Установка макета для виджета
 ```
 
 **Примеры**:
 
 ```python
-self.setup_ui()
+category_editor = CategoryEditor(main_app=main_app_instance)
+category_editor.setup_ui()
 ```
 
 ### `setup_connections`
@@ -125,28 +157,23 @@ self.setup_ui()
 ```python
 def setup_connections(self):
     """ Setup signal-slot connections"""
+    pass
 ```
 
-**Назначение**: Установка соединений между сигналами и слотами.
-
-**Параметры**:
-
-*   `self`: Ссылка на экземпляр класса.
-
-**Возвращает**: `None`
+**Назначение**: Устанавливает соединения между сигналами и слотами.
 
 **Как работает функция**:
-В текущей реализации функция пуста, что означает отсутствие каких-либо соединений между сигналами и слотами.
+В текущей реализации функция пуста и не выполняет никаких действий.  Предполагается, что в будущем здесь будут установлены соединения между сигналами и слотами для обеспечения интерактивности пользовательского интерфейса.
 
-```mermaid
-graph TD
-    A[Функция пуста, соединения не устанавливаются];
+```
+A: (Функция пуста и ничего не делает)
 ```
 
 **Примеры**:
 
 ```python
-self.setup_connections()
+category_editor = CategoryEditor(main_app=main_app_instance)
+category_editor.setup_connections()  # В текущем виде ничего не делает
 ```
 
 ### `open_file`
@@ -154,33 +181,41 @@ self.setup_connections()
 ```python
 def open_file(self):
     """ Open a file dialog to select and load a JSON file """
+    file_path, _ = QtWidgets.QFileDialog.getOpenFileName(
+        self,
+        "Open JSON File",
+        "c:/user/documents/repos/hypotez/data/aliexpress/campaigns",
+        "JSON files (*.json)"
+    )
+    if not file_path:
+        return  # No file selected
+
+    self.load_file(file_path)
 ```
 
-**Назначение**: Открытие диалогового окна для выбора и загрузки JSON-файла.
-
-**Параметры**:
-
-*   `self`: Ссылка на экземпляр класса.
-
-**Возвращает**: `None`
+**Назначение**: Открывает диалоговое окно для выбора JSON-файла и загружает его содержимое.
 
 **Как работает функция**:
+1. Открывает диалоговое окно выбора файла с помощью `QtWidgets.QFileDialog.getOpenFileName()`.
+   - Устанавливает заголовок окна как "Open JSON File".
+   - Устанавливает начальный каталог для поиска файлов.
+   - Устанавливает фильтр файлов для отображения только JSON-файлов.
+2. Проверяет, был ли выбран файл. Если файл не выбран (пустой путь), функция завершает работу.
+3. Если файл выбран, вызывает метод `self.load_file()` для загрузки содержимого файла.
 
-1.  Открывает диалоговое окно выбора файла с фильтром JSON-файлов.
-2.  Если файл выбран, вызывает метод `load_file()` для загрузки содержимого файла.
-3.  Если файл не выбран, функция завершается.
-
-```mermaid
-graph TD
-    A[Открытие диалогового окна выбора файла] --> B{Проверка, выбран ли файл};
-    B -- Да --> C{Вызов load_file()};
-    B -- Нет --> D[Завершение функции];
+```
+A: Открытие диалогового окна выбора файла
+|
+B: Проверка, был ли выбран файл
+|
+C: Загрузка содержимого файла (load_file) - если файл был выбран
 ```
 
 **Примеры**:
 
 ```python
-self.open_file()
+category_editor = CategoryEditor(main_app=main_app_instance)
+category_editor.open_file()
 ```
 
 ### `load_file`
@@ -188,38 +223,59 @@ self.open_file()
 ```python
 def load_file(self, campaign_file):
     """ Load a JSON file """
+    try:
+        self.data = j_loads_ns(campaign_file)
+        self.campaign_file = campaign_file
+        self.file_name_label.setText(f"File: {self.campaign_file}")
+        self.campaign_name = self.data.campaign_name
+        path = Path(campaign_file)
+        self.language = path.stem  # This will give you the file name without extension
+        self.editor = AliCampaignEditor(campaign_file=campaign_file)
+        self.create_widgets(self.data)
+    except Exception as ex:
+        QtWidgets.QMessageBox.critical(self, "Error", f"Failed to load JSON file: {ex}")
 ```
 
-**Назначение**: Загрузка JSON-файла и инициализация данных кампании.
-
-**Параметры**:
-
-*   `campaign_file` (str): Путь к JSON-файлу.
-
-**Возвращает**: `None`
+**Назначение**: Загружает JSON-файл, устанавливает имя кампании, язык и создает виджеты на основе загруженных данных.
 
 **Как работает функция**:
+1. Пытается выполнить следующие действия:
+   - Загружает данные из JSON-файла с помощью функции `j_loads_ns()` и сохраняет их в атрибуте `self.data`.
+   - Сохраняет путь к файлу в атрибуте `self.campaign_file`.
+   - Устанавливает текст метки `self.file_name_label` с именем файла.
+   - Извлекает имя кампании из загруженных данных и сохраняет его в атрибуте `self.campaign_name`.
+   - Извлекает язык кампании из имени файла (без расширения) и сохраняет его в атрибуте `self.language`.
+   - Создает экземпляр класса `AliCampaignEditor` с путем к файлу кампании.
+   - Вызывает метод `self.create_widgets()` для создания виджетов на основе загруженных данных.
+2. Если возникает исключение, отображает сообщение об ошибке с помощью `QtWidgets.QMessageBox.critical()`.
 
-1.  Использует `j_loads_ns` для загрузки данных из JSON-файла в объект `SimpleNamespace`.
-2.  Сохраняет путь к файлу и имя кампании.
-3.  Извлекает язык кампании из имени файла (без расширения).
-4.  Создает экземпляр класса `AliCampaignEditor` для редактирования кампании.
-5.  Вызывает метод `create_widgets()` для создания виджетов на основе загруженных данных.
-6.  Обрабатывает возможные исключения при загрузке файла и отображает сообщение об ошибке.
-
-```mermaid
-graph TD
-    A[Загрузка данных из JSON-файла с помощью j_loads_ns] --> B{Сохранение пути к файлу и имени кампании};
-    B --> C{Извлечение языка кампании из имени файла};
-    C --> D{Создание экземпляра AliCampaignEditor};
-    D --> E{Вызов create_widgets()};
-    E --> F{Обработка исключений};
+```
+A: Попытка загрузки данных из JSON-файла
+|
+B: Загрузка данных (j_loads_ns)
+|
+C: Сохранение пути к файлу
+|
+D: Установка текста метки с именем файла
+|
+E: Извлечение имени кампании
+|
+F: Извлечение языка кампании
+|
+G: Создание экземпляра AliCampaignEditor
+|
+H: Создание виджетов (create_widgets)
+|
+I: Обработка исключений (если возникли)
+|
+J: Отображение сообщения об ошибке (если возникло исключение)
 ```
 
 **Примеры**:
 
 ```python
-self.load_file("path/to/campaign.json")
+category_editor = CategoryEditor(main_app=main_app_instance)
+category_editor.load_file("path/to/campaign.json")
 ```
 
 ### `create_widgets`
@@ -227,41 +283,56 @@ self.load_file("path/to/campaign.json")
 ```python
 def create_widgets(self, data):
     """ Create widgets based on the data loaded from the JSON file """
+    layout = self.layout()
+
+    # Remove previous widgets except open button and file label
+    for i in reversed(range(layout.count())):
+        widget = layout.itemAt(i).widget()
+        if widget not in [self.open_button, self.file_name_label, self.prepare_all_button, self.prepare_specific_button]:
+            widget.deleteLater()
+
+    title_label = QtWidgets.QLabel(f"Title: {data.title}")
+    layout.addWidget(title_label)
+
+    campaign_label = QtWidgets.QLabel(f"Campaign Name: {data.campaign_name}")
+    layout.addWidget(campaign_label)
+
+    # Correct way to handle SimpleNamespace as a dict
+    for category in data.categories:
+        category_label = QtWidgets.QLabel(f"Category: {category.name}")
+        layout.addWidget(category_label)
 ```
 
-**Назначение**: Создание виджетов на основе данных, загруженных из JSON-файла.
-
-**Параметры**:
-
-*   `data` (`SimpleNamespace`): Данные, загруженные из JSON-файла.
-
-**Возвращает**: `None`
+**Назначение**: Создает виджеты для отображения данных о категориях кампании.
 
 **Как работает функция**:
+1. Получает текущий макет виджета.
+2. Удаляет все предыдущие виджеты из макета, кроме кнопок `open_button`, `prepare_all_button`, `prepare_specific_button` и метки `file_name_label`.
+3. Создает метку для отображения заголовка кампании (`data.title`) и добавляет ее в макет.
+4. Создает метку для отображения имени кампании (`data.campaign_name`) и добавляет ее в макет.
+5. Перебирает категории в данных (`data.categories`) и для каждой категории создает метку с именем категории (`category.name`) и добавляет ее в макет.
 
-1.  Получает текущий макет (`layout`).
-2.  Удаляет все предыдущие виджеты из макета, кроме кнопок "Open JSON File","Prepare All Categories" и "Prepare Category" и метки имени файла.
-3.  Создает метки для отображения заголовка и имени кампании.
-4.  Создает метки для отображения категорий.
-5.  Добавляет все созданные метки в макет.
-
-```mermaid
-graph TD
-    A[Получение текущего макета] --> B{Удаление предыдущих виджетов};
-    B --> C{Создание метки для заголовка};
-    C --> D{Создание метки для имени кампании};
-    D --> E{Перебор категорий};
-    E --> F{Создание метки для категории};
-    F --> G{Добавление метки в макет};
-    G --> H{Проверка, есть ли еще категории};
-    H -- Да --> E;
-    H -- Нет --> I[Завершение функции];
+```
+A: Получение текущего макета
+|
+B: Удаление предыдущих виджетов (кроме open_button и file_name_label)
+|
+C: Создание и добавление метки для заголовка кампании
+|
+D: Создание и добавление метки для имени кампании
+|
+E: Перебор категорий
+|
+F: Создание и добавление метки для имени каждой категории
 ```
 
 **Примеры**:
 
 ```python
-self.create_widgets(self.data)
+category_editor = CategoryEditor(main_app=main_app_instance)
+category_editor.load_file("path/to/campaign.json")
+# После загрузки файла:
+category_editor.create_widgets(category_editor.data)
 ```
 
 ### `prepare_all_categories_async`
@@ -270,32 +341,44 @@ self.create_widgets(self.data)
 @asyncSlot()
 async def prepare_all_categories_async(self):
     """ Asynchronously prepare all categories """
+    if self.editor:
+        try:
+            await self.editor.prepare_all_categories()
+            QtWidgets.QMessageBox.information(self, "Success", "All categories prepared successfully.")
+        except Exception as ex:
+            QtWidgets.QMessageBox.critical(self, "Error", f"Failed to prepare all categories: {ex}")
 ```
 
-**Назначение**: Асинхронная подготовка всех категорий.
-
-**Параметры**:
-
-*   `self`: Ссылка на экземпляр класса.
-
-**Возвращает**: `None`
+**Назначение**: Асинхронно подготавливает все категории с использованием `AliCampaignEditor`.
 
 **Как работает функция**:
+1. Проверяет, инициализирован ли `self.editor`.
+2. Если `self.editor` инициализирован, пытается выполнить следующие действия:
+   - Вызывает асинхронный метод `self.editor.prepare_all_categories()` для подготовки всех категорий.
+   - Отображает сообщение об успешной подготовке категорий с помощью `QtWidgets.QMessageBox.information()`.
+3. Если возникает исключение, отображает сообщение об ошибке с помощью `QtWidgets.QMessageBox.critical()`.
 
-1.  Проверяет, инициализирован ли редактор кампании (`self.editor`).
-2.  Если редактор инициализирован, вызывает асинхронный метод `prepare_all_categories()` редактора.
-3.  Отображает сообщение об успехе или ошибке в зависимости от результата выполнения.
-
-```mermaid
-graph TD
-    A{Проверка, инициализирован ли редактор} --> B{Вызов prepare_all_categories()};
-    B --> C{Отображение сообщения об успехе/ошибке};
+```
+A: Проверка, инициализирован ли self.editor
+|
+B: Подготовка всех категорий (если self.editor инициализирован)
+|   |
+|   B1: Вызов self.editor.prepare_all_categories()
+|   |
+|   B2: Отображение сообщения об успехе
+|
+C: Обработка исключений (если возникли)
+|
+D: Отображение сообщения об ошибке (если возникло исключение)
 ```
 
 **Примеры**:
 
 ```python
-await self.prepare_all_categories_async()
+category_editor = CategoryEditor(main_app=main_app_instance)
+category_editor.load_file("path/to/campaign.json")
+# После загрузки файла:
+await category_editor.prepare_all_categories_async()
 ```
 
 ### `prepare_category_async`
@@ -304,29 +387,41 @@ await self.prepare_all_categories_async()
 @asyncSlot()
 async def prepare_category_async(self):
     """ Asynchronously prepare a specific category """
+    if self.editor:
+        try:
+            await self.editor.prepare_category(self.data.campaign_name)
+            QtWidgets.QMessageBox.information(self, "Success", "Category prepared successfully.")
+        except Exception as ex:
+            QtWidgets.QMessageBox.critical(self, "Error", f"Failed to prepare category: {ex}")
 ```
 
-**Назначение**: Асинхронная подготовка конкретной категории.
-
-**Параметры**:
-
-*   `self`: Ссылка на экземпляр класса.
-
-**Возвращает**: `None`
+**Назначение**: Асинхронно подготавливает определенную категорию с использованием `AliCampaignEditor`.
 
 **Как работает функция**:
+1. Проверяет, инициализирован ли `self.editor`.
+2. Если `self.editor` инициализирован, пытается выполнить следующие действия:
+   - Вызывает асинхронный метод `self.editor.prepare_category()` для подготовки определенной категории.
+   - Отображает сообщение об успешной подготовке категории с помощью `QtWidgets.QMessageBox.information()`.
+3. Если возникает исключение, отображает сообщение об ошибке с помощью `QtWidgets.QMessageBox.critical()`.
 
-1.  Проверяет, инициализирован ли редактор кампании (`self.editor`).
-2.  Если редактор инициализирован, вызывает асинхронный метод `prepare_category()` редактора, передавая имя кампании.
-3.  Отображает сообщение об успехе или ошибке в зависимости от результата выполнения.
-
-```mermaid
-graph TD
-    A{Проверка, инициализирован ли редактор} --> B{Вызов prepare_category()};
-    B --> C{Отображение сообщения об успехе/ошибке};
+```
+A: Проверка, инициализирован ли self.editor
+|
+B: Подготовка определенной категории (если self.editor инициализирован)
+|   |
+|   B1: Вызов self.editor.prepare_category()
+|   |
+|   B2: Отображение сообщения об успехе
+|
+C: Обработка исключений (если возникли)
+|
+D: Отображение сообщения об ошибке (если возникло исключение)
 ```
 
 **Примеры**:
 
 ```python
-await self.prepare_category_async()
+category_editor = CategoryEditor(main_app=main_app_instance)
+category_editor.load_file("path/to/campaign.json")
+# После загрузки файла:
+await category_editor.prepare_category_async()

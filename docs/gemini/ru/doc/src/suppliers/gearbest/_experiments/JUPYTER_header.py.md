@@ -1,56 +1,75 @@
-# Модуль `src.suppliers.gearbest._experiments.JUPYTER_header`
+# Модуль _experiments
 
 ## Обзор
 
-Модуль предназначен для экспериментов с поставщиком Gearbest. Он содержит функциональность для запуска поставщика, чтения конфигурационных файлов и работы с веб-драйвером.
+Модуль содержит экспериментальный код, связанный с поставщиком Gearbest. Включает в себя импорты различных модулей и классов, необходимых для работы с веб-драйвером, поставщиками, продуктами, категориями и утилитами.
 
 ## Подробнее
 
-Этот модуль, по-видимому, используется для экспериментов и отладки работы с поставщиком Gearbest. Он включает в себя импорты различных модулей, необходимых для работы с веб-драйвером, обработки данных о продуктах и категориях, а также для взаимодействия с PrestaShop.
+Данный код является частью проекта `hypotez` и содержит эксперименты, связанные с поставщиком Gearbest. В нем импортируются необходимые модули и классы для работы с веб-драйвером, поставщиками, продуктами, категориями и утилитами. Также модуль содержит функцию `start_supplier`, предназначенную для запуска поставщика с заданными параметрами.
 
 ## Функции
 
 ### `start_supplier`
 
 ```python
-def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en') -> Supplier:
-    """Старт поставщика
-
-    Args:
-        supplier_prefix (str, optional): Префикс поставщика. По умолчанию 'aliexpress'.
-        locale (str, optional): Локаль. По умолчанию 'en'.
-
-    Returns:
-        Supplier: Объект поставщика.
-    """
+def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en' ):
+    """ Старт поставщика """
+    ...
 ```
 
-**Назначение**: Функция `start_supplier` создает и возвращает объект поставщика с заданными параметрами.
+**Назначение**: Функция для запуска поставщика с заданными параметрами.
 
 **Параметры**:
-
-- `supplier_prefix` (str, optional): Префикс поставщика, используемый для определения поставщика. По умолчанию имеет значение `'aliexpress'`.
-- `locale` (str, optional): Локаль, используемая поставщиком. По умолчанию имеет значение `'en'`.
+- `supplier_prefix` (str): Префикс поставщика. По умолчанию 'aliexpress'.
+- `locale` (str): Локаль. По умолчанию 'en'.
 
 **Возвращает**:
-
-- `Supplier`: Объект поставщика, созданный с использованием переданных параметров.
+- `Supplier`: Объект поставщика, созданный с указанными параметрами.
 
 **Как работает функция**:
 
-1. Функция создает словарь `params`, содержащий переданные аргументы `supplier_prefix` и `locale`.
-2. Затем функция создает и возвращает экземпляр класса `Supplier`, передавая словарь `params` в качестве аргументов для конструктора.
+1.  Определяет параметры в виде словаря, содержащего префикс и локаль поставщика.
+2.  Создает и возвращает экземпляр класса `Supplier` с переданными параметрами.
+
+```mermaid
+graph LR
+    A[Определение параметров] --> B(Создание экземпляра Supplier);
+    B --> C(Возврат экземпляра Supplier);
+```
 
 **Примеры**:
 
 ```python
+# Пример запуска поставщика с префиксом 'gearbest' и локалью 'ru'
 supplier = start_supplier(supplier_prefix='gearbest', locale='ru')
-# Создаст объект поставщика Gearbest с русской локалью.
-```
-```python
+
+# Пример запуска поставщика с параметрами по умолчанию
 supplier = start_supplier()
-# Создаст объект поставщика с префиксом 'aliexpress' и английской локалью.
 ```
 ```python
-supplier = start_supplier(locale='de')
-# Создаст объект поставщика с префиксом 'aliexpress' и немецкой локалью.
+from pathlib import Path
+import json
+import re
+
+
+#from settings import gs
+from src.webdriver.driver import Driver
+from src.suppliers import Supplier
+from src.product import Product, ProductFields
+from src.category import Category
+from src.utils import StringFormatter, StringNormalizer
+from src.utils.printer import  pprint
+from src.endpoints.PrestaShop import Product as PrestaProduct
+, save_text_file
+# ----------------
+
+def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en' ):
+    """ Старт поставщика """
+    params: dict = \
+    {
+        'supplier_prefix': supplier_prefix,
+        'locale': locale
+    }
+    
+    return Supplier(**params))

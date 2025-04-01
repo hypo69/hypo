@@ -2,215 +2,282 @@
 
 ## Обзор
 
-Модуль `test_absolute_paths.py` содержит тесты для функции `set_absolute_paths` класса `Supplier`.
-Он проверяет правильность формирования абсолютных путей на основе предоставленных префиксов и имен файлов.
+Модуль `test_absolute_paths` предназначен для тестирования функции `set_absolute_paths` класса `Supplier`. Он содержит набор тестов, проверяющих правильность формирования абсолютных путей на основе предоставленных префиксов и имен файлов.
 
-## Подробней
+## Подробнее
 
-Этот модуль использует библиотеку `unittest` для автоматизированного тестирования.
-Он создает тестовые случаи, которые охватывают различные сценарии использования функции `set_absolute_paths`,
-включая случаи с строковыми префиксами, списочными префиксами, одним файлом, несколькими файлами и отсутствием файлов.
+Модуль использует библиотеку `unittest` для организации и запуска тестов. Каждый тестовый метод проверяет определенный сценарий использования функции `set_absolute_paths`, сравнивая полученный результат с ожидаемым.
 
 ## Классы
 
 ### `TestSetAbsolutePaths`
 
-**Описание**: Класс `TestSetAbsolutePaths` наследуется от `unittest.TestCase` и содержит набор тестов для функции `set_absolute_paths`.
+**Описание**: Класс `TestSetAbsolutePaths` содержит набор тестов для проверки функции `set_absolute_paths` класса `Supplier`.
 
-**Как работает класс**:
+**Наследует**:
+- `unittest.TestCase`: Класс наследует `unittest.TestCase`, предоставляя методы для определения и запуска тестов.
 
-1.  В методе `setUp` определяется `supplier_abs_path` как `/path/to/supplier` (абсолютный путь к поставщику) и `function` как метод `set_absolute_paths` экземпляра класса `Supplier`.
-2.  Каждый метод `test_*` выполняет проверку функции `set_absolute_paths` с разными входными данными.
-3.  В каждом тестовом методе вызывается функция `set_absolute_paths` с определенными параметрами и сравнивается полученный результат с ожидаемым с использованием метода `assertEqual`.
+**Атрибуты**:
+- `supplier_abs_path` (str): Абсолютный путь к директории поставщика.
+- `function` (Callable): Ссылка на функцию `set_absolute_paths` класса `Supplier`, которая будет тестироваться.
 
 **Методы**:
 
-*   `setUp`: Подготавливает тестовую среду, инициализируя `supplier_abs_path` и `function`.
-*   `test_single_filename_with_prefix_as_string`: Тестирует случай, когда префикс задан строкой и передано одно имя файла.
-*   `test_single_filename_with_prefix_as_list`: Тестирует случай, когда префикс задан списком и передано одно имя файла.
-*   `test_multiple_filenames_with_prefix_as_string`: Тестирует случай, когда префикс задан строкой и передано несколько имен файлов.
-*   `test_multiple_filenames_with_prefix_as_list`: Тестирует случай, когда префикс задан списком и передано несколько имен файлов.
-*   `test_no_related_filenames_with_prefix_as_string`: Тестирует случай, когда префикс задан строкой и имена файлов отсутствуют.
-*   `test_no_related_filenames_with_prefix_as_list`: Тестирует случай, когда префикс задан списком и имена файлов отсутствуют.
-
-## Функции
+- `setUp()`: Метод, выполняющийся перед каждым тестом. Инициализирует `supplier_abs_path` и получает ссылку на функцию `set_absolute_paths`.
+- `test_single_filename_with_prefix_as_string()`: Тест проверяет случай, когда передается один файл и префикс в виде строки.
+- `test_single_filename_with_prefix_as_list()`: Тест проверяет случай, когда передается один файл и префикс в виде списка.
+- `test_multiple_filenames_with_prefix_as_string()`: Тест проверяет случай, когда передается несколько файлов и префикс в виде строки.
+- `test_multiple_filenames_with_prefix_as_list()`: Тест проверяет случай, когда передается несколько файлов и префикс в виде списка.
+- `test_no_related_filenames_with_prefix_as_string()`: Тест проверяет случай, когда не передаются имена файлов, а префикс передан в виде строки.
+- `test_no_related_filenames_with_prefix_as_list()`: Тест проверяет случай, когда не передаются имена файлов, а префикс передан в виде списка.
 
 ### `setUp`
 
 ```python
 def setUp(self):
-    """
-    Подготавливает тестовую среду перед каждым тестом.
-
-    Args:
-        self (TestSetAbsolutePaths): Экземпляр класса TestSetAbsolutePaths.
-
-    Returns:
-        None
-
-    """
-    ...
+    self.supplier_abs_path = '/path/to/supplier'
+    self.function = Supplier().set_absolute_paths
 ```
 
-**Назначение**: Инициализирует атрибуты `supplier_abs_path` (абсолютный путь к поставщику) и `function` (метод `set_absolute_paths` класса `Supplier`) перед каждым тестовым случаем.
+**Назначение**: Подготовка к каждому тесту.
 
 **Как работает функция**:
-
-1.  `self.supplier_abs_path` устанавливается в строковое значение '/path/to/supplier', представляющее собой базовый путь для формирования абсолютных путей.
-2.  `self.function` устанавливается как метод `set_absolute_paths` экземпляра класса `Supplier`. Это позволяет вызывать тестируемую функцию напрямую через `self.function`.
+1. Инициализирует атрибут `self.supplier_abs_path` абсолютным путем к директории поставщика (в данном случае `/path/to/supplier`).
+2. Получает ссылку на функцию `set_absolute_paths` экземпляра класса `Supplier` и сохраняет её в атрибуте `self.function`.
 
 ### `test_single_filename_with_prefix_as_string`
 
 ```python
 def test_single_filename_with_prefix_as_string(self):
-    """
-    Тестирует функцию set_absolute_paths с префиксом в виде строки и одним именем файла.
+    prefix = 'subfolder'
+    related_filenames = 'file.txt'
+    expected_result = Path(self.supplier_abs_path, prefix, related_filenames)
 
-    Args:
-        self (TestSetAbsolutePaths): Экземпляр класса TestSetAbsolutePaths.
+    result = self.function(prefix, related_filenames)
 
-    Returns:
-        None
-    """
-    ...
+    self.assertEqual(result, expected_result)
 ```
 
-**Назначение**: Проверяет, что функция `set_absolute_paths` правильно формирует абсолютный путь, когда префикс задан строкой, и передается одно имя файла.
+**Назначение**: Тестирование формирования абсолютного пути с одним именем файла и префиксом в виде строки.
+
+**Параметры**:
+- `self` (TestSetAbsolutePaths): Экземпляр класса `TestSetAbsolutePaths`.
 
 **Как работает функция**:
 
-1.  Определяется префикс `prefix` как строка 'subfolder'.
-2.  Определяется имя файла `related_filenames` как строка 'file.txt'.
-3.  Вычисляется ожидаемый результат `expected_result` с использованием `Path` из библиотеки `pathlib`, объединяя `self.supplier_abs_path`, `prefix` и `related_filenames`.
-4.  Вызывается функция `self.function` с параметрами `prefix` и `related_filenames`, результат сохраняется в переменной `result`.
-5.  Сравнивается `result` и `expected_result` с использованием `self.assertEqual`.
+1. Определяет `prefix` как строку `'subfolder'`.
+2. Определяет `related_filenames` как строку `'file.txt'`.
+3. Формирует ожидаемый результат `expected_result` с использованием `Path` из `pathlib`, объединяя `self.supplier_abs_path`, `prefix` и `related_filenames`.
+4. Вызывает тестируемую функцию `self.function` с аргументами `prefix` и `related_filenames`, сохраняя результат в `result`.
+5. Сравнивает полученный `result` с ожидаемым `expected_result` с помощью метода `assertEqual`.
+
+**Примеры**:
+
+```python
+# Пример вызова
+test_instance = TestSetAbsolutePaths()
+test_instance.setUp()
+test_instance.test_single_filename_with_prefix_as_string()
+```
 
 ### `test_single_filename_with_prefix_as_list`
 
 ```python
 def test_single_filename_with_prefix_as_list(self):
-    """
-    Тестирует функцию set_absolute_paths с префиксом в виде списка и одним именем файла.
+    prefix = ['subfolder', 'subsubfolder']
+    related_filenames = 'file.txt'
+    expected_result = Path(self.supplier_abs_path, *prefix, related_filenames)
 
-    Args:
-        self (TestSetAbsolutePaths): Экземпляр класса TestSetAbsolutePaths.
+    result = self.function(prefix, related_filenames)
 
-    Returns:
-        None
-    """
-    ...
+    self.assertEqual(result, expected_result)
 ```
 
-**Назначение**: Проверяет, что функция `set_absolute_paths` правильно формирует абсолютный путь, когда префикс задан списком, и передается одно имя файла.
+**Назначение**: Тестирование формирования абсолютного пути с одним именем файла и префиксом в виде списка.
+
+**Параметры**:
+- `self` (TestSetAbsolutePaths): Экземпляр класса `TestSetAbsolutePaths`.
 
 **Как работает функция**:
 
-1.  Определяется префикс `prefix` как список строк \['subfolder', 'subsubfolder'].
-2.  Определяется имя файла `related_filenames` как строка 'file.txt'.
-3.  Вычисляется ожидаемый результат `expected_result` с использованием `Path` из библиотеки `pathlib`, объединяя `self.supplier_abs_path`, элементы списка `prefix` (распакованные с помощью `*prefix`) и `related_filenames`.
-4.  Вызывается функция `self.function` с параметрами `prefix` и `related_filenames`, результат сохраняется в переменной `result`.
-5.  Сравнивается `result` и `expected_result` с использованием `self.assertEqual`.
+1. Определяет `prefix` как список строк `['subfolder', 'subsubfolder']`.
+2. Определяет `related_filenames` как строку `'file.txt'`.
+3. Формирует ожидаемый результат `expected_result` с использованием `Path` из `pathlib`, объединяя `self.supplier_abs_path`, элементы списка `prefix` (распакованные через `*prefix`) и `related_filenames`.
+4. Вызывает тестируемую функцию `self.function` с аргументами `prefix` и `related_filenames`, сохраняя результат в `result`.
+5. Сравнивает полученный `result` с ожидаемым `expected_result` с помощью метода `assertEqual`.
+
+**Примеры**:
+
+```python
+# Пример вызова
+test_instance = TestSetAbsolutePaths()
+test_instance.setUp()
+test_instance.test_single_filename_with_prefix_as_list()
+```
 
 ### `test_multiple_filenames_with_prefix_as_string`
 
 ```python
 def test_multiple_filenames_with_prefix_as_string(self):
-    """
-    Тестирует функцию set_absolute_paths с префиксом в виде строки и списком имен файлов.
+    prefix = 'subfolder'
+    related_filenames = ['file1.txt', 'file2.txt', 'file3.txt']
+    expected_result = [
+        Path(self.supplier_abs_path, prefix, filename)
+        for filename in related_filenames
+    ]
 
-    Args:
-        self (TestSetAbsolutePaths): Экземпляр класса TestSetAbsolutePaths.
+    result = self.function(prefix, related_filenames)
 
-    Returns:
-        None
-    """
-    ...
+    self.assertEqual(result, expected_result)
 ```
 
-**Назначение**: Проверяет, что функция `set_absolute_paths` правильно формирует абсолютные пути для списка файлов, когда префикс задан строкой.
+**Назначение**: Тестирование формирования абсолютных путей с несколькими именами файлов и префиксом в виде строки.
+
+**Параметры**:
+- `self` (TestSetAbsolutePaths): Экземпляр класса `TestSetAbsolutePaths`.
 
 **Как работает функция**:
 
-1.  Определяется префикс `prefix` как строка 'subfolder'.
-2.  Определяется список имен файлов `related_filenames` как \['file1.txt', 'file2.txt', 'file3.txt'].
-3.  Вычисляется ожидаемый результат `expected_result` как список объектов `Path`, где каждый объект представляет собой объединение `self.supplier_abs_path`, `prefix` и соответствующего имени файла из списка `related_filenames`.
-4.  Вызывается функция `self.function` с параметрами `prefix` и `related_filenames`, результат сохраняется в переменной `result`.
-5.  Сравнивается `result` и `expected_result` с использованием `self.assertEqual`.
+1. Определяет `prefix` как строку `'subfolder'`.
+2. Определяет `related_filenames` как список строк `['file1.txt', 'file2.txt', 'file3.txt']`.
+3. Формирует ожидаемый результат `expected_result` как список объектов `Path`, каждый из которых объединяет `self.supplier_abs_path`, `prefix` и соответствующее имя файла из списка `related_filenames`. Используется генератор списка для создания списка путей.
+4. Вызывает тестируемую функцию `self.function` с аргументами `prefix` и `related_filenames`, сохраняя результат в `result`.
+5. Сравнивает полученный `result` с ожидаемым `expected_result` с помощью метода `assertEqual`.
+
+**Примеры**:
+
+```python
+# Пример вызова
+test_instance = TestSetAbsolutePaths()
+test_instance.setUp()
+test_instance.test_multiple_filenames_with_prefix_as_string()
+```
 
 ### `test_multiple_filenames_with_prefix_as_list`
 
 ```python
 def test_multiple_filenames_with_prefix_as_list(self):
-    """
-    Тестирует функцию set_absolute_paths с префиксом в виде списка и списком имен файлов.
+    prefix = ['subfolder', 'subsubfolder']
+    related_filenames = ['file1.txt', 'file2.txt', 'file3.txt']
+    expected_result = [
+        Path(self.supplier_abs_path, *prefix, filename)
+        for filename in related_filenames
+    ]
 
-    Args:
-        self (TestSetAbsolutePaths): Экземпляр класса TestSetAbsolutePaths.
+    result = self.function(prefix, related_filenames)
 
-    Returns:
-        None
-    """
-    ...
+    self.assertEqual(result, expected_result)
 ```
 
-**Назначение**: Проверяет, что функция `set_absolute_paths` правильно формирует абсолютные пути для списка файлов, когда префикс задан списком.
+**Назначение**: Тестирование формирования абсолютных путей с несколькими именами файлов и префиксом в виде списка.
+
+**Параметры**:
+- `self` (TestSetAbsolutePaths): Экземпляр класса `TestSetAbsolutePaths`.
 
 **Как работает функция**:
 
-1.  Определяется префикс `prefix` как список строк \['subfolder', 'subsubfolder'].
-2.  Определяется список имен файлов `related_filenames` как \['file1.txt', 'file2.txt', 'file3.txt'].
-3.  Вычисляется ожидаемый результат `expected_result` как список объектов `Path`, где каждый объект представляет собой объединение `self.supplier_abs_path`, элементов списка `prefix` (распакованных с помощью `*prefix`) и соответствующего имени файла из списка `related_filenames`.
-4.  Вызывается функция `self.function` с параметрами `prefix` и `related_filenames`, результат сохраняется в переменной `result`.
-5.  Сравнивается `result` и `expected_result` с использованием `self.assertEqual`.
+1. Определяет `prefix` как список строк `['subfolder', 'subsubfolder']`.
+2. Определяет `related_filenames` как список строк `['file1.txt', 'file2.txt', 'file3.txt']`.
+3. Формирует ожидаемый результат `expected_result` как список объектов `Path`, каждый из которых объединяет `self.supplier_abs_path`, элементы списка `prefix` (распакованные через `*prefix`) и соответствующее имя файла из списка `related_filenames`. Используется генератор списка для создания списка путей.
+4. Вызывает тестируемую функцию `self.function` с аргументами `prefix` и `related_filenames`, сохраняя результат в `result`.
+5. Сравнивает полученный `result` с ожидаемым `expected_result` с помощью метода `assertEqual`.
+
+**Примеры**:
+
+```python
+# Пример вызова
+test_instance = TestSetAbsolutePaths()
+test_instance.setUp()
+test_instance.test_multiple_filenames_with_prefix_as_list()
+```
 
 ### `test_no_related_filenames_with_prefix_as_string`
 
 ```python
 def test_no_related_filenames_with_prefix_as_string(self):
-    """
-    Тестирует функцию set_absolute_paths с префиксом в виде строки и отсутствием имен файлов.
+    prefix = 'subfolder'
+    related_filenames = None
+    expected_result = Path(self.supplier_abs_path, prefix)
 
-    Args:
-        self (TestSetAbsolutePaths): Экземпляр класса TestSetAbsolutePaths.
+    result = self.function(prefix, related_filenames)
 
-    Returns:
-        None
-    """
-    ...
+    self.assertEqual(result, expected_result)
 ```
 
-**Назначение**: Проверяет, что функция `set_absolute_paths` правильно формирует абсолютный путь, когда префикс задан строкой, и имена файлов не переданы (None).
+**Назначение**: Тестирование формирования абсолютного пути без имен файлов, с префиксом в виде строки.
+
+**Параметры**:
+- `self` (TestSetAbsolutePaths): Экземпляр класса `TestSetAbsolutePaths`.
 
 **Как работает функция**:
 
-1.  Определяется префикс `prefix` как строка 'subfolder'.
-2.  `related_filenames` устанавливается в `None`, что означает отсутствие имен файлов.
-3.  Вычисляется ожидаемый результат `expected_result` с использованием `Path` из библиотеки `pathlib`, объединяя `self.supplier_abs_path` и `prefix`.
-4.  Вызывается функция `self.function` с параметрами `prefix` и `related_filenames`, результат сохраняется в переменной `result`.
-5.  Сравнивается `result` и `expected_result` с использованием `self.assertEqual`.
+1. Определяет `prefix` как строку `'subfolder'`.
+2. Определяет `related_filenames` как `None`.
+3. Формирует ожидаемый результат `expected_result` с использованием `Path` из `pathlib`, объединяя `self.supplier_abs_path` и `prefix`.
+4. Вызывает тестируемую функцию `self.function` с аргументами `prefix` и `related_filenames`, сохраняя результат в `result`.
+5. Сравнивает полученный `result` с ожидаемым `expected_result` с помощью метода `assertEqual`.
+
+**Примеры**:
+
+```python
+# Пример вызова
+test_instance = TestSetAbsolutePaths()
+test_instance.setUp()
+test_instance.test_no_related_filenames_with_prefix_as_string()
+```
 
 ### `test_no_related_filenames_with_prefix_as_list`
 
 ```python
 def test_no_related_filenames_with_prefix_as_list(self):
-    """
-    Тестирует функцию set_absolute_paths с префиксом в виде списка и отсутствием имен файлов.
+    prefix = ['subfolder', 'subsubfolder']
+    related_filenames = None
+    expected_result = Path(self.supplier_abs_path, *prefix)
 
-    Args:
-        self (TestSetAbsolutePaths): Экземпляр класса TestSetAbsolutePaths.
+    result = self.function(prefix, related_filenames)
 
-    Returns:
-        None
-    """
-    ...
+    self.assertEqual(result, expected_result)
 ```
 
-**Назначение**: Проверяет, что функция `set_absolute_paths` правильно формирует абсолютный путь, когда префикс задан списком, и имена файлов не переданы (None).
+**Назначение**: Тестирование формирования абсолютного пути без имен файлов, с префиксом в виде списка.
+
+**Параметры**:
+- `self` (TestSetAbsolutePaths): Экземпляр класса `TestSetAbsolutePaths`.
 
 **Как работает функция**:
 
-1.  Определяется префикс `prefix` как список строк \['subfolder', 'subsubfolder'].
-2.  `related_filenames` устанавливается в `None`, что означает отсутствие имен файлов.
-3.  Вычисляется ожидаемый результат `expected_result` с использованием `Path` из библиотеки `pathlib`, объединяя `self.supplier_abs_path` и элементы списка `prefix` (распакованные с помощью `*prefix`).
-4.  Вызывается функция `self.function` с параметрами `prefix` и `related_filenames`, результат сохраняется в переменной `result`.
-5.  Сравнивается `result` и `expected_result` с использованием `self.assertEqual`.
+1. Определяет `prefix` как список строк `['subfolder', 'subsubfolder']`.
+2. Определяет `related_filenames` как `None`.
+3. Формирует ожидаемый результат `expected_result` с использованием `Path` из `pathlib`, объединяя `self.supplier_abs_path` и элементы списка `prefix` (распакованные через `*prefix`).
+4. Вызывает тестируемую функцию `self.function` с аргументами `prefix` и `related_filenames`, сохраняя результат в `result`.
+5. Сравнивает полученный `result` с ожидаемым `expected_result` с помощью метода `assertEqual`.
+
+**Примеры**:
+
+```python
+# Пример вызова
+test_instance = TestSetAbsolutePaths()
+test_instance.setUp()
+test_instance.test_no_related_filenames_with_prefix_as_list()
+```
+
+## Функции
+
+В модуле `test_absolute_paths` нет отдельных функций, только методы класса `TestSetAbsolutePaths`.
+
+```python
+if __name__ == '__main__':
+    unittest.main()
+```
+
+**Назначение**: Обеспечивает запуск тестов при непосредственном вызове файла.
+
+**Как работает функция**:
+1. Проверяет, является ли текущий модуль главным (`__name__ == '__main__'`).
+2. Если да, то запускает все тесты, определенные в модуле, с помощью `unittest.main()`.
+
+**Примеры**:
+
+```python
+# Запуск тестов из командной строки
+python test_absolute_paths.py
