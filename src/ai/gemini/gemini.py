@@ -1,4 +1,5 @@
 ## \file src/ai/gemini/gemini.py
+## \file src/ai/gemini/gemini.py
 # -*- coding: utf-8 -*-
 #! .pyenv/bin/python3
 
@@ -329,12 +330,13 @@ class GoogleGenerativeAI:
                 max_attempts = 5
                 if attempt > max_attempts:
                     break
+                timeout:int = 1200
                 logger.debug(
                     f"Network error. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
                     ex,
                     False,
                 )
-                await asyncio.sleep(1200)  # Use asyncio.sleep
+                await asyncio.sleep(timeout)  # Use asyncio.sleep
                 continue  # Повторить попытку
             except (GatewayTimeout, ServiceUnavailable) as ex:
                 logger.error("Service unavailable:", ex, False)
@@ -345,12 +347,13 @@ class GoogleGenerativeAI:
                 await asyncio.sleep(2 ** attempt + 10)  # Use asyncio.sleep
                 continue
             except ResourceExhausted as ex:
+                timeout:int = 14440
                 logger.debug(
                     f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
                     ex,
                     False,
                 )
-                await asyncio.sleep(10800)  # Use asyncio.sleep
+                await asyncio.sleep(timeout)  # Use asyncio.sleep
                 continue
             except (DefaultCredentialsError, RefreshError) as ex:
                 logger.error("Authentication error:", ex, False)

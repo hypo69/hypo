@@ -1,262 +1,400 @@
-# Модуль: `src.suppliers.aliexpress.gui.product`
+# Модуль `product.py`
 
 ## Обзор
 
-Модуль `src.suppliers.aliexpress.gui.product` предоставляет графический интерфейс (GUI) для редактирования информации о товарах, полученных с AliExpress. Он включает в себя функциональность для открытия JSON-файлов с данными о товарах, отображения этих данных в пользовательском интерфейсе и подготовки товаров к дальнейшей обработке, например, для создания рекламных кампаний.
+Модуль `product.py` предоставляет графический интерфейс для редактирования информации о продуктах, получаемых от поставщика AliExpress. Он включает в себя функциональность для загрузки данных о продуктах из JSON-файлов, отображения этих данных в пользовательском интерфейсе и подготовки продукта к дальнейшему использованию, например, для рекламных кампаний. Модуль использует библиотеку PyQt6 для создания графического интерфейса и включает асинхронные операции для обеспечения отзывчивости интерфейса во время выполнения длительных задач.
 
 ## Подробнее
 
-Этот модуль является частью системы для работы с данными AliExpress и предоставляет удобный способ просмотра и редактирования информации о товарах. Он использует библиотеку PyQt6 для создания графического интерфейса и взаимодействует с другими модулями, такими как `AliCampaignEditor`, для подготовки товаров к рекламным кампаниям.
+Этот модуль является частью GUI-интерфейса для работы с данными AliExpress. Он позволяет пользователю загружать информацию о продукте из JSON-файла, просматривать основные характеристики продукта (например, заголовок и детали) и запускать процесс подготовки продукта с помощью `AliCampaignEditor`. Подготовка продукта может включать в себя различные операции, такие как оптимизация описания, выбор целевой аудитории и настройка параметров рекламной кампании.
 
 ## Классы
 
 ### `ProductEditor`
 
-**Описание**: Класс `ProductEditor` представляет собой виджет (QWidget) для редактирования информации о товарах. Он позволяет открывать JSON-файлы с данными о товарах, отображать эти данные в пользовательском интерфейсе и подготавливать товары к дальнейшей обработке.
+**Описание**: Класс `ProductEditor` является основным виджетом для редактирования информации о продукте. Он предоставляет интерфейс для загрузки JSON-файлов с данными о продуктах, отображения этих данных и запуска процесса подготовки продукта.
 
 **Принцип работы**:
-1.  При инициализации виджета устанавливается связь с главным приложением (`main_app`), настраивается пользовательский интерфейс и устанавливаются связи между сигналами и слотами.
-2.  Метод `setup_ui` создает основные элементы интерфейса, такие как кнопки "Open JSON File" и "Prepare Product", а также текстовое поле для отображения имени выбранного файла.
-3.  Метод `open_file` открывает диалоговое окно выбора файла, позволяя пользователю выбрать JSON-файл с данными о товаре.
-4.  Метод `load_file` загружает выбранный JSON-файл, используя функцию `j_loads_ns` из модуля `src.utils.jjson`, и отображает основные сведения о товаре, такие как заголовок и детали.
-5.  Метод `create_widgets` создает виджеты для отображения информации о товаре на основе загруженных данных.
-6.  Асинхронный метод `prepare_product_async` подготавливает товар к дальнейшей обработке, используя экземпляр класса `AliCampaignEditor`.
+Класс `ProductEditor` создает окно с кнопками "Open JSON File" и "Prepare Product", а также меткой для отображения имени выбранного файла. При нажатии на кнопку "Open JSON File" открывается диалоговое окно выбора файла, позволяющее пользователю выбрать JSON-файл с данными о продукте. После выбора файла данные загружаются, отображаются в интерфейсе, и создается экземпляр класса `AliCampaignEditor` для подготовки продукта. Кнопка "Prepare Product" запускает асинхронный процесс подготовки продукта с использованием `AliCampaignEditor`.
+
+**Аттрибуты**:
+
+- `data` (SimpleNamespace): Пространство имен для хранения данных о продукте, загруженных из JSON-файла.
+- `language` (str): Язык, используемый в данных о продукте (по умолчанию 'EN').
+- `currency` (str): Валюта, используемая в данных о продукте (по умолчанию 'USD').
+- `file_path` (str): Путь к загруженному JSON-файлу.
+- `editor` (AliCampaignEditor): Экземпляр класса `AliCampaignEditor`, используемый для подготовки продукта.
+- `main_app`: Ссылка на главный экземпляр приложения.
 
 **Методы**:
 
-*   `__init__(self, parent=None, main_app=None)`
-    *   **Описание**: Инициализирует виджет `ProductEditor`.
-    *   **Параметры**:
-        *   `parent` (QWidget, optional): Родительский виджет. По умолчанию `None`.
-        *   `main_app` (MainApp, optional): Экземпляр главного приложения. По умолчанию `None`.
-
-*   `setup_ui(self)`
-    *   **Описание**: Настраивает пользовательский интерфейс виджета.
-
-*   `setup_connections(self)`
-    *   **Описание**: Устанавливает связи между сигналами и слотами. В текущей версии метода отсутствует реализация.
-
-*   `open_file(self)`
-    *   **Описание**: Открывает диалоговое окно выбора файла для загрузки JSON-файла с данными о товаре.
-        После выбора файла вызывается метод `load_file` для загрузки содержимого файла.
-
-*   `load_file(self, file_path)`
-    *   **Описание**: Загружает JSON-файл с данными о товаре.
-    *   **Параметры**:
-        *   `file_path` (str): Путь к JSON-файлу.
-    *   **Как работает функция**:
-        1.  Функция `load_file` загружает JSON-файл, используя функцию `j_loads_ns` из модуля `src.utils.jjson`.
-        2.  Сохраняет путь к файлу в атрибуте `file_path` и устанавливает текст метки `file_name_label`.
-        3.  Создает экземпляр класса `AliCampaignEditor` для подготовки товара к рекламной кампании.
-        4.  Вызывает метод `create_widgets` для создания виджетов на основе загруженных данных.
-    *   **Пример**:
-        ```python
-        editor = ProductEditor(main_app=self)
-        editor.load_file('path/to/your/file.json')
-        ```
-
-*   `create_widgets(self, data)`
-    *   **Описание**: Создает виджеты для отображения информации о товаре на основе загруженных данных.
-    *   **Параметры**:
-        *   `data` (SimpleNamespace): Объект, содержащий данные о товаре.
-    *   **Как работает функция**:
-        1.  Функция `create_widgets` удаляет все предыдущие виджеты, кроме кнопок "Open JSON File", "Prepare Product" и метки имени файла.
-        2.  Создает метки для отображения заголовка и деталей товара.
-        3.  Добавляет созданные виджеты в макет.
-    *   **Пример**:
-        ```python
-        data = j_loads_ns('path/to/your/file.json')
-        editor = ProductEditor(main_app=self)
-        editor.create_widgets(data)
-        ```
-
-*   `prepare_product_async(self)`
-    *   **Описание**: Асинхронно подготавливает товар к дальнейшей обработке.
-    *   **Как работает функция**:
-        1.  Функция `prepare_product_async` асинхронно вызывает метод `prepare_product` класса `AliCampaignEditor` для подготовки товара.
-        2.  Выводит сообщение об успехе или ошибке в зависимости от результата выполнения.
-    *   **Пример**:
-        ```python
-        import asyncio
-        editor = ProductEditor(main_app=self)
-        asyncio.run(editor.prepare_product_async())
-        ```
+- `__init__(self, parent=None, main_app=None)`: Инициализирует виджет `ProductEditor`, устанавливает пользовательский интерфейс и соединения между сигналами и слотами.
+- `setup_ui(self)`: Настраивает пользовательский интерфейс виджета, добавляя кнопки, метки и определяя их расположение.
+- `setup_connections(self)`: Устанавливает соединения между сигналами и слотами.
+- `open_file(self)`: Открывает диалоговое окно выбора файла и загружает выбранный JSON-файл.
+- `load_file(self, file_path)`: Загружает JSON-файл, извлекает данные и создает виджеты для отображения информации о продукте.
+- `create_widgets(self, data)`: Создает виджеты для отображения информации о продукте на основе загруженных данных.
+- `prepare_product_async(self)`: Асинхронно подготавливает продукт с использованием `AliCampaignEditor`.
 
 ## Функции
 
 ### `__init__`
 
 ```python
-    def __init__(self, parent=None, main_app=None):
-        """ Initialize the ProductEditor widget """
+def __init__(self, parent=None, main_app=None):
+    """ Initialize the ProductEditor widget """
+    super().__init__(parent)
+    self.main_app = main_app  # Save the MainApp instance
+
+    self.setup_ui()
+    self.setup_connections()
 ```
 
-**Назначение**: Инициализация класса `ProductEditor`.
+**Назначение**: Инициализирует виджет `ProductEditor`.
 
 **Параметры**:
+- `parent` (QtWidgets.QWidget, optional): Родительский виджет. По умолчанию `None`.
+- `main_app` (MainApp, optional): Экземпляр главного приложения. По умолчанию `None`.
 
-*   `parent` (QWidget, optional): Родительский виджет. По умолчанию `None`.
-*   `main_app` (MainApp, optional): Экземпляр главного приложения. По умолчанию `None`.
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. Вызывает конструктор родительского класса (`QtWidgets.QWidget`).
+2. Сохраняет ссылку на экземпляр главного приложения.
+3. Вызывает методы `setup_ui()` и `setup_connections()` для настройки пользовательского интерфейса и соединений между сигналами и слотами.
 
-1.  Вызывается конструктор родительского класса `QtWidgets.QWidget`.
-2.  Сохраняется ссылка на экземпляр главного приложения `main_app`.
-3.  Вызывается метод `setup_ui` для настройки пользовательского интерфейса.
-4.  Вызывается метод `setup_connections` для установки связей между сигналами и слотами.
+```
+Инициализация ProductEditor
+│
+├─── Сохранение ссылки на главное приложение
+│
+├─── Настройка пользовательского интерфейса
+│
+└─── Установка соединений между сигналами и слотами
+```
 
 **Примеры**:
-
 ```python
-editor = ProductEditor(main_app=self)
+editor = ProductEditor(main_app=app)
 ```
 
 ### `setup_ui`
 
 ```python
-    def setup_ui(self):
-        """ Setup the user interface """
+def setup_ui(self):
+    """ Setup the user interface """
+    self.setWindowTitle("Product Editor")
+    self.resize(1800, 800)
+
+    # Define UI components
+    self.open_button = QtWidgets.QPushButton("Open JSON File")
+    self.open_button.clicked.connect(self.open_file)
+
+    self.file_name_label = QtWidgets.QLabel("No file selected")
+    
+    self.prepare_button = QtWidgets.QPushButton("Prepare Product")
+    self.prepare_button.clicked.connect(self.prepare_product_async)
+
+    layout = QtWidgets.QVBoxLayout(self)
+    layout.addWidget(self.open_button)
+    layout.addWidget(self.file_name_label)
+    layout.addWidget(self.prepare_button)
+
+    self.setLayout(layout)
 ```
 
-**Назначение**: Настройка пользовательского интерфейса.
+**Назначение**: Настраивает пользовательский интерфейс виджета `ProductEditor`.
+
+**Параметры**:
+- `self` (ProductEditor): Экземпляр класса `ProductEditor`.
+
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. Устанавливает заголовок окна.
+2. Устанавливает размеры окна.
+3. Создает кнопку "Open JSON File" и подключает ее к методу `open_file()`.
+4. Создает метку для отображения имени выбранного файла.
+5. Создает кнопку "Prepare Product" и подключает ее к асинхронному методу `prepare_product_async()`.
+6. Создает вертикальный макет и добавляет в него кнопку "Open JSON File", метку для имени файла и кнопку "Prepare Product".
+7. Устанавливает макет для виджета.
 
-1.  Устанавливается заголовок окна `Product Editor`.
-2.  Устанавливается размер окна 1800x800 пикселей.
-3.  Создаются кнопки "Open JSON File" и "Prepare Product", а также текстовое поле для отображения имени выбранного файла.
-4.  Устанавливаются обработчики событий для кнопок.
-5.  Компоновка элементов интерфейса с использованием `QVBoxLayout`.
+```
+Настройка UI
+│
+├─── Установка заголовка окна
+│
+├─── Установка размеров окна
+│
+├─── Создание кнопки "Open JSON File"
+│   │
+│   └─── Подключение к методу open_file()
+│
+├─── Создание метки для имени файла
+│
+├─── Создание кнопки "Prepare Product"
+│   │
+│   └─── Подключение к асинхронному методу prepare_product_async()
+│
+├─── Создание вертикального макета
+│   │
+│   ├─── Добавление кнопки "Open JSON File"
+│   │
+│   ├─── Добавление метки для имени файла
+│   │
+│   └─── Добавление кнопки "Prepare Product"
+│
+└─── Установка макета для виджета
+```
 
 **Примеры**:
-
 ```python
-editor = ProductEditor(main_app=self)
+editor = ProductEditor()
 editor.setup_ui()
 ```
 
 ### `setup_connections`
 
 ```python
-    def setup_connections(self):
-        """ Setup signal-slot connections """
+def setup_connections(self):
+    """ Setup signal-slot connections """
+    pass
 ```
 
-**Назначение**: Установка связей между сигналами и слотами.
+**Назначение**: Устанавливает соединения между сигналами и слотами.
+
+**Параметры**:
+- `self` (ProductEditor): Экземпляр класса `ProductEditor`.
+
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+- В текущей реализации функция ничего не делает (`pass`). Она предназначена для установки соединений между сигналами и слотами, но в данном коде такие соединения не определены.
 
-*   В текущей версии метода отсутствует реализация.
+```
+Установка соединений
+│
+└─── (В текущей реализации ничего не делает)
+```
 
 **Примеры**:
-
 ```python
-editor = ProductEditor(main_app=self)
+editor = ProductEditor()
 editor.setup_connections()
 ```
 
 ### `open_file`
 
 ```python
-    def open_file(self):
-        """ Open a file dialog to select and load a JSON file """
+def open_file(self):
+    """ Open a file dialog to select and load a JSON file """
+    file_path, _ = QtWidgets.QFileDialog.getOpenFileName(
+        self,
+        "Open JSON File",
+        "c:/user/documents/repos/hypotez/data/aliexpress/products",
+        "JSON files (*.json)"
+    )
+    if not file_path:
+        return  # No file selected
+
+    self.load_file(file_path)
 ```
 
-**Назначение**: Открытие диалогового окна выбора файла для загрузки JSON-файла.
+**Назначение**: Открывает диалоговое окно выбора файла и загружает выбранный JSON-файл.
+
+**Параметры**:
+- `self` (ProductEditor): Экземпляр класса `ProductEditor`.
+
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. Открывает диалоговое окно выбора файла с заголовком "Open JSON File" и фильтром для JSON-файлов.
+2. Если файл не выбран, функция завершается.
+3. Вызывает метод `load_file()` для загрузки выбранного файла.
 
-1.  Открывается диалоговое окно выбора файла с использованием `QtWidgets.QFileDialog.getOpenFileName`.
-2.  Устанавливаются фильтры для отображения только JSON-файлов.
-3.  Если файл выбран, вызывается метод `load_file` для загрузки содержимого файла.
+```
+Открытие файла
+│
+├─── Открытие диалогового окна выбора файла
+│
+├─── Проверка, выбран ли файл
+│   │
+│   └─── Если нет, завершение функции
+│
+└─── Загрузка выбранного файла
+```
 
 **Примеры**:
-
 ```python
-editor = ProductEditor(main_app=self)
+editor = ProductEditor()
 editor.open_file()
 ```
 
 ### `load_file`
 
 ```python
-    def load_file(self, file_path):
-        """ Load a JSON file """
+def load_file(self, file_path):
+    """ Load a JSON file """
+    try:
+        self.data = j_loads_ns(file_path)
+        self.file_path = file_path
+        self.file_name_label.setText(f"File: {self.file_path}")
+        self.editor = AliCampaignEditor(file_path=file_path)
+        self.create_widgets(self.data)
+    except Exception as ex:
+        QtWidgets.QMessageBox.critical(self, "Error", f"Failed to load JSON file: {ex}")
 ```
 
-**Назначение**: Загрузка JSON-файла с данными о товаре.
+**Назначение**: Загружает JSON-файл, извлекает данные и создает виджеты для отображения информации о продукте.
 
 **Параметры**:
+- `self` (ProductEditor): Экземпляр класса `ProductEditor`.
+- `file_path` (str): Путь к JSON-файлу.
 
-*   `file_path` (str): Путь к JSON-файлу.
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. Пытается загрузить JSON-файл с использованием функции `j_loads_ns()` из модуля `src.utils.jjson`.
+2. Сохраняет путь к файлу в атрибуте `file_path`.
+3. Устанавливает текст метки `file_name_label` с именем загруженного файла.
+4. Создает экземпляр класса `AliCampaignEditor`, передавая путь к файлу.
+5. Вызывает метод `create_widgets()` для создания виджетов на основе загруженных данных.
+6. Если возникает исключение, отображает сообщение об ошибке.
 
-1.  Загружается JSON-файл, используя функцию `j_loads_ns` из модуля `src.utils.jjson`.
-2.  Сохраняется путь к файлу в атрибуте `file_path` и устанавливается текст метки `file_name_label`.
-3.  Создается экземпляр класса `AliCampaignEditor` для подготовки товара к рекламной кампании.
-4.  Вызывается метод `create_widgets` для создания виджетов на основе загруженных данных.
-
-**Вызывает исключения**:
-
-*   `Exception`: Если возникает ошибка при загрузке JSON-файла.
+```
+Загрузка файла
+│
+├─── Попытка загрузки JSON-файла
+│   │
+│   ├─── Сохранение пути к файлу
+│   │
+│   ├─── Установка текста метки с именем файла
+│   │
+│   ├─── Создание экземпляра AliCampaignEditor
+│   │
+│   └─── Создание виджетов на основе загруженных данных
+│
+└─── Обработка исключения
+│   │
+│   └─── Отображение сообщения об ошибке
+```
 
 **Примеры**:
-
 ```python
-editor = ProductEditor(main_app=self)
-editor.load_file('path/to/your/file.json')
+editor = ProductEditor()
+editor.load_file("path/to/product.json")
 ```
 
 ### `create_widgets`
 
 ```python
-    def create_widgets(self, data):
-        """ Create widgets based on the data loaded from the JSON file """
+def create_widgets(self, data):
+    """ Create widgets based on the data loaded from the JSON file """
+    layout = self.layout()
+
+    # Remove previous widgets except open button and file label
+    for i in reversed(range(layout.count())):
+        widget = layout.itemAt(i).widget()
+        if widget not in [self.open_button, self.file_name_label, self.prepare_button]:
+            widget.deleteLater()
+
+    title_label = QtWidgets.QLabel(f"Product Title: {data.title}")
+    layout.addWidget(title_label)
+
+    # Additional product-specific details
+    product_details_label = QtWidgets.QLabel(f"Product Details: {data.details}")
+    layout.addWidget(product_details_label)
 ```
 
-**Назначение**: Создание виджетов для отображения информации о товаре на основе загруженных данных.
+**Назначение**: Создает виджеты для отображения информации о продукте на основе загруженных данных.
 
 **Параметры**:
+- `self` (ProductEditor): Экземпляр класса `ProductEditor`.
+- `data` (SimpleNamespace): Данные о продукте, загруженные из JSON-файла.
 
-*   `data` (SimpleNamespace): Объект, содержащий данные о товаре.
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. Получает макет виджета.
+2. Удаляет все предыдущие виджеты из макета, кроме кнопок "Open JSON File" и "Prepare Product" и метки имени файла.
+3. Создает метку для отображения заголовка продукта.
+4. Добавляет метку заголовка в макет.
+5. Создает метку для отображения деталей продукта.
+6. Добавляет метку деталей продукта в макет.
 
-1.  Удаляются все предыдущие виджеты, кроме кнопок "Open JSON File", "Prepare Product" и метки имени файла.
-2.  Создаются метки для отображения заголовка и деталей товара.
-3.  Добавляются созданные виджеты в макет.
+```
+Создание виджетов
+│
+├─── Получение макета виджета
+│
+├─── Удаление предыдущих виджетов
+│
+├─── Создание метки для заголовка продукта
+│
+├─── Добавление метки заголовка в макет
+│
+├─── Создание метки для деталей продукта
+│
+└─── Добавление метки деталей продукта в макет
+```
 
 **Примеры**:
-
 ```python
-data = j_loads_ns('path/to/your/file.json')
-editor = ProductEditor(main_app=self)
+editor = ProductEditor()
+data = j_loads_ns("path/to/product.json")
 editor.create_widgets(data)
 ```
 
 ### `prepare_product_async`
 
 ```python
-    @asyncSlot()
-    async def prepare_product_async(self):
-        """ Asynchronously prepare the product """
+@asyncSlot()
+async def prepare_product_async(self):
+    """ Asynchronously prepare the product """
+    if self.editor:
+        try:
+            await self.editor.prepare_product()
+            QtWidgets.QMessageBox.information(self, "Success", "Product prepared successfully.")
+        except Exception as ex:
+            QtWidgets.QMessageBox.critical(self, "Error", f"Failed to prepare product: {ex}")
 ```
 
-**Назначение**: Асинхронная подготовка товара к дальнейшей обработке.
+**Назначение**: Асинхронно подготавливает продукт с использованием `AliCampaignEditor`.
+
+**Параметры**:
+- `self` (ProductEditor): Экземпляр класса `ProductEditor`.
+
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. Проверяет, создан ли экземпляр `AliCampaignEditor`.
+2. Пытается асинхронно подготовить продукт, вызвав метод `prepare_product()` у экземпляра `AliCampaignEditor`.
+3. Если подготовка продукта прошла успешно, отображает сообщение об успехе.
+4. Если возникает исключение, отображает сообщение об ошибке.
 
-1.  Асинхронно вызывается метод `prepare_product` класса `AliCampaignEditor` для подготовки товара.
-2.  Выводится сообщение об успехе или ошибке в зависимости от результата выполнения.
-
-**Вызывает исключения**:
-
-*   `Exception`: Если возникает ошибка при подготовке товара.
+```
+Асинхронная подготовка продукта
+│
+├─── Проверка наличия AliCampaignEditor
+│
+├─── Попытка асинхронной подготовки продукта
+│   │
+│   ├─── Отображение сообщения об успехе
+│
+└─── Обработка исключения
+│   │
+│   └─── Отображение сообщения об ошибке
+```
 
 **Примеры**:
-
 ```python
-import asyncio
-editor = ProductEditor(main_app=self)
-asyncio.run(editor.prepare_product_async())
+editor = ProductEditor()
+editor.editor = AliCampaignEditor()
+await editor.prepare_product_async()

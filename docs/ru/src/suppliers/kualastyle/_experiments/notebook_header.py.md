@@ -1,12 +1,12 @@
-# Модуль для запуска поставщика Kualastyle
+# Модуль notebook_header.py
 
 ## Обзор
 
-Модуль предназначен для запуска поставщика Kualastyle. Он определяет функцию `start_supplier`, которая создает и возвращает экземпляр класса `Supplier` с заданными параметрами.
+Модуль `notebook_header.py` предназначен для экспериментов с поставщиком `kualastyle`. Он содержит импорты необходимых библиотек и классов для работы с поставщиками, продуктами и категориями, а также функцию для запуска поставщика.
 
 ## Подробней
 
-Этот модуль используется для инициализации и запуска процесса сбора и обработки данных о товарах от поставщика Kualastyle. Он импортирует необходимые классы и модули из других частей проекта `hypotez`, такие как `Supplier`, `Product`, `Category`, а также утилиты для работы со строками и нормализации данных.
+Этот файл содержит код для экспериментов, связанных с поставщиком `kualastyle`. Он включает импорт различных модулей и классов, таких как `Supplier`, `Product`, `Category` и другие утилиты.  Файл также содержит функцию `start_supplier`, которая используется для запуска поставщика с заданным префиксом.
 
 ## Функции
 
@@ -14,46 +14,46 @@
 
 ```python
 def start_supplier(supplier_prefix: str = 'kualastyle'):
-    """
-    Запускает поставщика Kualastyle.
-
+    """ Старт поставщика (kualastyle)
     Args:
         supplier_prefix (str, optional): Префикс поставщика. По умолчанию 'kualastyle'.
 
     Returns:
-        Supplier: Экземпляр класса Supplier с заданными параметрами.
+        Supplier: Объект поставщика.
     """
+    ...
 ```
 
-**Назначение**: Функция `start_supplier` создает и возвращает экземпляр класса `Supplier` с заданным префиксом.
+**Назначение**: Запускает поставщика с заданным префиксом.
 
 **Параметры**:
 
-- `supplier_prefix` (str, optional): Префикс поставщика. Используется для определения параметров конфигурации поставщика. По умолчанию имеет значение `'kualastyle'`.
+- `supplier_prefix` (str): Префикс поставщика. По умолчанию `'kualastyle'`.
 
 **Возвращает**:
 
-- `Supplier`: Экземпляр класса `Supplier`, созданный с параметром `supplier_prefix`.
+- `Supplier`: Объект поставщика.
 
 **Как работает функция**:
 
-1. **Определение параметров**: Функция создает словарь `params`, содержащий параметр `supplier_prefix`.
-2. **Создание экземпляра `Supplier`**: Создается экземпляр класса `Supplier` с использованием словаря `params` в качестве аргументов.
-3. **Возврат экземпляра**: Функция возвращает созданный экземпляр класса `Supplier`.
+1.  Функция создает словарь `params` с параметром `'supplier_prefix'`, значение которого равно переданному аргументу `supplier_prefix`.
+2.  Создает и возвращает экземпляр класса `Supplier`, передавая словарь `params` в качестве аргумента.
+
+```mermaid
+graph TD
+    A[Создание словаря params] --> B(Создание экземпляра класса Supplier);
+    B --> C(Возврат экземпляра Supplier);
+```
 
 **Примеры**:
 
 ```python
 from src.suppliers import Supplier
-from src.suppliers.kualastyle._experiments.notebook_header import start_supplier
 
-# Запуск поставщика с префиксом по умолчанию
+# Пример 1: Запуск поставщика с префиксом по умолчанию
 supplier = start_supplier()
-print(type(supplier))
-# <class 'src.suppliers.supplier.Supplier'>
+print(type(supplier))  # Вывод: <class 'src.suppliers.Supplier'>
 
-# Запуск поставщика с указанием префикса
-supplier = start_supplier(supplier_prefix='test_supplier')
-print(type(supplier))
-# <class 'src.suppliers.supplier.Supplier'>
-```
+# Пример 2: Запуск поставщика с указанным префиксом
+supplier = start_supplier(supplier_prefix='another_supplier')
+print(type(supplier))  # Вывод: <class 'src.suppliers.Supplier'>

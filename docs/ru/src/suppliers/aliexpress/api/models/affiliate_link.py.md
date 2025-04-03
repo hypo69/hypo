@@ -1,36 +1,38 @@
-# Модуль affiliate_link
+# Модуль для работы с партнерскими ссылками AliExpress
 
 ## Обзор
 
-Модуль `affiliate_link` содержит класс `AffiliateLink`, который предназначен для хранения информации о партнерской ссылке.
-Класс включает в себя атрибуты для хранения самой партнерской ссылки и источника, из которого она была получена.
+Модуль содержит класс `AffiliateLink`, который используется для представления партнерских ссылок, полученных от AliExpress.
 
 ## Подробней
 
-Данный модуль используется для представления данных о партнерских ссылках, полученных от AliExpress.
-Он обеспечивает удобный способ хранения и доступа к этим данным.
+Этот модуль предназначен для хранения данных о партнерской ссылке, включая саму ссылку и источник, из которого она была получена. Он используется для унификации представления данных о партнерских ссылках в проекте.
 
 ## Классы
 
 ### `AffiliateLink`
 
-**Описание**: Класс `AffiliateLink` используется для представления партнерской ссылки и источника её получения.
+**Описание**: Класс для представления партнерской ссылки AliExpress.
 
 **Принцип работы**:
-Класс `AffiliateLink` представляет собой структуру данных, содержащую два атрибута: `promotion_link` и `source_value`.
-`promotion_link` хранит саму партнерскую ссылку, а `source_value` - источник, из которого была получена данная ссылка.
+Класс `AffiliateLink` предназначен для хранения и передачи информации о партнерской ссылке, включая саму ссылку (`promotion_link`) и значение источника (`source_value`). Он служит контейнером для этих данных, обеспечивая структурированный способ их использования в других частях проекта.
 
 **Атрибуты**:
-- `promotion_link` (str): Партнерская ссылка.
-- `source_value` (str): Источник партнерской ссылки.
 
-**Примеры**:
+- `promotion_link` (str): Партнерская ссылка.
+- `source_value` (str): Источник, из которого была получена ссылка.
+
+**Методы**:
+Отсутствуют
+
+**Примеры**
 
 ```python
+# Пример создания экземпляра класса AffiliateLink
 affiliate_link = AffiliateLink()
-affiliate_link.promotion_link = "https://example.com/aliexpress_promotion"
-affiliate_link.source_value = "aliexpress"
+affiliate_link.promotion_link = "https://example.com/affiliate_link"
+affiliate_link.source_value = "admitad"
 
-print(affiliate_link.promotion_link)  # Вывод: https://example.com/aliexpress_promotion
-print(affiliate_link.source_value)  # Вывод: aliexpress
+print(affiliate_link.promotion_link) # Вывод: https://example.com/affiliate_link
+print(affiliate_link.source_value) # Вывод: admitad
 ```
