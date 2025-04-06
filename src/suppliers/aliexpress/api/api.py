@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
  # <- venv win
 ## ~~~~~~~~~~~~~
-""" module: src.suppliers.aliexpress.api 
-""" AliExpress API wrapper for Python
-
+""" 
+AliExpress API wrapper for Python
+====================================
 A simple Python wrapper for the AliExpress Open Platform API. This module allows
 to get product information and affiliate links from AliExpress using the official
 API in an easier way.
+module: src.suppliers.aliexpress.api
 """
 ...
 

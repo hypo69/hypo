@@ -1,117 +1,48 @@
 # Модуль для работы с Telegram ботом через FastAPI и RPC
 ====================================================
 
-Модуль содержит класс `TelegramBot`, который используется для создания и управления Telegram ботом, интегрированным с сервером FastAPI через RPC.
+Модуль содержит класс `TelegramBot`, который обеспечивает интеграцию Telegram бота с FastAPI сервером через RPC.
 
 ## Обзор
 
-Этот модуль обеспечивает создание, запуск и остановку Telegram бота, а также регистрацию обработчиков команд и вебхуков. Он использует FastAPI для обработки вебхуков и RPC для взаимодействия с другими сервисами.
+Данный модуль предоставляет функциональность для создания и управления Telegram ботом, включая регистрацию обработчиков, настройку вебхуков и взаимодействие с сервером FastAPI через RPC.
 
 ## Подробней
 
-Этот код определяет класс `TelegramBot`, который управляет Telegram ботом. Он использует библиотеку `aiogram` для обработки Telegram сообщений и `FastAPI` для создания вебхука. RPC используется для связи с другими сервисами. Класс инициализирует бота, регистрирует обработчики, запускает сервер и обрабатывает ошибки. Он также поддерживает установку и удаление вебхуков, а также регистрацию маршрутов через RPC.
+Этот модуль является ключевым компонентом для реализации Telegram бота, управляемого через FastAPI сервер. Он использует библиотеку `aiogram` для работы с Telegram API и `xmlrpc.client` для взаимодействия с RPC сервером. Модуль также включает поддержку для обработки различных типов сообщений, включая текст, голос и документы.
 
 ## Классы
 
 ### `TelegramBot`
 
-Описание: Класс для управления Telegram ботом через FastAPI и RPC.
-        **Наследует**: 
-            Класс не наследует другие классы
+**Описание**: Класс для управления Telegram ботом.
 
-         **Аттрибуты**:
-            token (str): Токен Telegram бота.
-            port (int): Порт для вебхука. По умолчанию 443.
-            route (str): Маршрут для вебхука FastAPI. По умолчанию 'telegram_webhook'.
-            config (SimpleNamespace): Конфигурация бота, загруженная из JSON файла.
-            bot (Bot): Экземпляр бота aiogram.
-            dp (Dispatcher): Диспетчер aiogram.
-            bot_handler (BotHandler): Обработчик бота.
-            app (Optional[web.Application]): Веб-приложение aiohttp.
-            rpc_client (Optional[ServerProxy]): RPC клиент для взаимодействия с сервером.
+**Принцип работы**:
+Класс `TelegramBot` инициализирует бота с использованием токена, настраивает диспетчер `aiogram`, регистрирует обработчики сообщений и управляет вебхуками для приема обновлений от Telegram. Он также отвечает за установление соединения с RPC сервером для выполнения задач на стороне сервера.
 
-         **Методы**:
-            run(): Запускает бота и инициализирует RPC и вебхук.
-            _register_default_handlers(): Регистрирует обработчики команд по умолчанию.
-            _handle_message(message): Обрабатывает текстовые сообщения.
-            initialize_bot_webhook(route): Инициализирует вебхук бота.
-            _register_route_via_rpc(rpc_client): Регистрирует маршрут вебхука Telegram через RPC.
-            stop(): Останавливает бота и удаляет вебхук.
+**Аттрибуты**:
+- `token` (str): Токен Telegram бота.
+- `port` (int): Порт для вебхука.
+- `route` (str): Маршрут для вебхука FastAPI. По умолчанию `/telegram_webhook`.
+- `config` (SimpleNamespace): Конфигурация бота, загруженная из JSON файла.
+- `bot` (Bot): Экземпляр бота aiogram.
+- `dp` (Dispatcher): Диспетчер aiogram для обработки обновлений.
+- `bot_handler` (BotHandler): Экземпляр обработчика бота для логики обработки сообщений.
+- `app` (Optional[web.Application]): Веб-приложение aiohttp для обработки вебхуков.
+- `rpc_client` (Optional[ServerProxy]): Клиент RPC для взаимодействия с сервером.
 
-#### Принцип работы:
-
-1.  **Инициализация**: Класс `TelegramBot` инициализируется с токеном, маршрутом вебхука и другими параметрами. Он загружает конфигурацию из JSON файла, создает экземпляры `Bot` и `Dispatcher` из библиотеки `aiogram`, а также создает экземпляр `BotHandler` для обработки сообщений.
-2.  **Регистрация обработчиков**: Метод `_register_default_handlers` регистрирует обработчики команд по умолчанию, такие как `/start`, `/help`, `/sendpdf`, а также обработчики текстовых сообщений, голосовых сообщений и документов.
-3.  **Запуск бота**: Метод `run` запускает бота. Он инициализирует RPC клиент, запускает RPC сервер, регистрирует маршрут вебхука через RPC и запускает веб-приложение `aiohttp` для обработки вебхуков. Если вебхук не удается инициализировать, бот запускается в режиме опроса (`polling`).
-4.  **Обработка сообщений**: Когда Telegram бот получает сообщение, оно обрабатывается соответствующим обработчиком, зарегистрированным в диспетчере `dp`. Например, текстовые сообщения обрабатываются методом `_handle_message`, который вызывает метод `handle_message` экземпляра `BotHandler`.
-5.  **Остановка бота**: Метод `stop` останавливает бота, удаляет вебхук и закрывает веб-приложение `aiohttp`.
-
-```ascii
-TelegramBot
-│
-├── __init__ (Инициализация бота и его компонентов)
-│   │
-│   ├── Загрузка конфигурации из telegram.json
-│   │
-│   ├── Создание экземпляров Bot, Dispatcher, BotHandler
-│   │
-│   └── Регистрация обработчиков по умолчанию
-│
-├── run (Запуск бота и инициализация RPC и вебхука)
-│   │
-│   ├── Инициализация RPC клиента и сервера
-│   │
-│   ├── Регистрация маршрута через RPC
-│   │
-│   └── Инициализация и запуск веб-приложения aiohttp
-│       │
-│       └── Регистрация обработчика вебхуков
-│
-├── _register_default_handlers (Регистрация обработчиков команд)
-│   │
-│   └── Регистрация обработчиков для /start, /help, /sendpdf и других команд
-│
-├── _handle_message (Обработка текстовых сообщений)
-│   │
-│   └── Вызов BotHandler.handle_message для обработки сообщения
-│
-├── initialize_bot_webhook (Инициализация вебхука бота)
-│   │
-│   ├── Определение URL вебхука
-│   │
-│   └── Установка вебхука через bot.set_webhook
-│
-├── _register_route_via_rpc (Регистрация маршрута вебхука через RPC)
-│   │
-│   └── Вызов rpc_client.add_new_route для регистрации маршрута
-│
-└── stop (Остановка бота и удаление вебхука)
-    │
-    ├── Остановка веб-приложения aiohttp
-    │
-    └── Удаление вебхука через bot.delete_webhook
-```
-
-**Примеры**
-
-```python
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Инициализация и запуск бота с использованием токена из переменной окружения
-bot = TelegramBot(token=os.getenv('TELEGRAM_TOKEN'))
-bot.run()
-
-# Остановка бота
-bot.stop()
-```
+**Методы**:
+- `__init__`: Инициализирует экземпляр класса `TelegramBot`.
+- `run`: Запускает бота, инициализирует RPC и вебхук.
+- `_register_default_handlers`: Регистрирует обработчики по умолчанию.
+- `_handle_message`: Обрабатывает текстовые сообщения.
+- `initialize_bot_webhook`: Инициализирует вебхук бота.
+- `_register_route_via_rpc`: Регистрирует маршрут вебхука Telegram через RPC.
+- `stop`: Останавливает бота и удаляет вебхук.
 
 ## Функции
 
-### `TelegramBot.__init__`
+### `__init__`
 
 ```python
  def __init__(self, token: str, route: str = 'telegram_webhook'):
@@ -124,335 +55,190 @@ bot.stop()
         """
 ```
 
-**Назначение**: Инициализация экземпляра класса `TelegramBot`.
+**Назначение**: Инициализирует экземпляр класса `TelegramBot`.
 
 **Параметры**:
-
-*   `token` (str): Токен Telegram бота.
-*   `route` (str): Маршрут вебхука для FastAPI. По умолчанию `/telegram_webhook`.
+- `token` (str): Токен Telegram бота.
+- `route` (str): Маршрут для вебхука FastAPI. По умолчанию `telegram_webhook`.
 
 **Как работает функция**:
 
-1.  Сохраняет токен и маршрут вебхука в атрибутах экземпляра класса.
-2.  Загружает конфигурацию из JSON файла `telegram.json` с использованием `j_loads_ns`.
-3.  Создает экземпляры `Bot` и `Dispatcher` из библиотеки `aiogram`.
-4.  Создает экземпляр `BotHandler` для обработки сообщений.
-5.  Регистрирует обработчики команд по умолчанию.
-
-```ascii
-__init__
-│
-├── Сохранение токена и маршрута
-│
-├── Загрузка конфигурации из telegram.json
-│
-├── Создание экземпляров Bot, Dispatcher, BotHandler
-│
-└── Регистрация обработчиков по умолчанию
-```
+1.  **Инициализация атрибутов**: Функция инициализирует атрибуты экземпляра класса `TelegramBot`, такие как токен бота, порт, маршрут вебхука и загружает конфигурацию из JSON файла.
+2.  **Создание экземпляров `Bot` и `Dispatcher`**: Создаются экземпляры `Bot` и `Dispatcher` из библиотеки `aiogram`, которые используются для взаимодействия с Telegram API и обработки входящих обновлений.
+3.  **Регистрация обработчиков**: Вызывается метод `_register_default_handlers` для регистрации обработчиков сообщений по умолчанию.
 
 **Примеры**:
 
 ```python
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-
-# Инициализация TelegramBot с токеном и маршрутом по умолчанию
-bot = TelegramBot(token='your_token')
-
-# Инициализация TelegramBot с указанием токена и маршрута
-bot = TelegramBot(token='your_token', route='/custom_route')
+bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN', route='/custom_webhook')
 ```
 
-### `TelegramBot.run`
+### `run`
 
 ```python
     def run(self):
         """Run the bot and initialize RPC and webhook."""
 ```
 
-**Назначение**: Запуск бота, инициализация RPC и вебхука.
+**Назначение**: Запускает бота, инициализирует RPC и вебхук.
 
 **Как работает функция**:
 
-1.  Инициализирует RPC клиент для взаимодействия с RPC сервером.
-2.  Запускает RPC сервер.
-3.  Регистрирует маршрут вебхука через RPC.
-4.  Инициализирует и запускает веб-приложение `aiohttp` для обработки вебхуков.
-5.  Если инициализация вебхука не удалась, запускает бота в режиме опроса (`polling`).
-6.  Логирует успешный запуск RPC сервера и приложения.
+1.  **Инициализация RPC клиента**: Пытается установить соединение с RPC сервером, используя параметры хоста и порта из конфигурации.
+2.  **Запуск RPC сервера**: Вызывает RPC метод `start_server` для запуска сервера на указанном порту и хосте.
+3.  **Регистрация маршрута через RPC**: Регистрирует маршрут вебхука Telegram через RPC, вызывая метод `_register_route_via_rpc`.
+4.  **Инициализация вебхука Telegram**: Вызывает метод `initialize_bot_webhook` для установки вебхука Telegram и получения URL вебхука.
+5.  **Запуск веб-приложения**: Если URL вебхука успешно получен, запускает веб-приложение `aiohttp` для обработки входящих запросов вебхука.
+6.  **Запуск опроса (polling)**: Если не удалось установить вебхук, запускает режим опроса (polling) для получения обновлений от Telegram.
+7.  **Обработка исключений**: В случае возникновения ошибок при инициализации RPC, установке вебхука или запуске приложения, регистрирует ошибки с использованием `logger.error` и завершает работу программы.
 
-```ascii
-run
-│
-├── Инициализация RPC клиента
-│   │
-│   └── Создание ServerProxy для взаимодействия с RPC сервером
-│
-├── Запуск RPC сервера
-│   │
-│   └── Вызов rpc_client.start_server для запуска сервера
-│
-├── Регистрация маршрута через RPC
-│   │
-│   └── Вызов _register_route_via_rpc для регистрации маршрута
-│
-├── Инициализация и запуск веб-приложения aiohttp
-│   │
-│   └── Создание web.Application и регистрация обработчика вебхуков
-│
-└── Запуск бота в режиме опроса (если не удалось установить вебхук)
+```
+Инициализация RPC клиента --> Запуск RPC сервера --> Регистрация маршрута через RPC
+    |
+    V
+Инициализация вебхука Telegram --> Запуск веб-приложения
+    |
+    V
+Запуск режима опроса (polling)
 ```
 
 **Примеры**:
 
 ```python
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Инициализация и запуск бота
-bot = TelegramBot(token=os.getenv('TELEGRAM_TOKEN'))
+bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
 bot.run()
 ```
 
-### `TelegramBot._register_default_handlers`
+### `_register_default_handlers`
 
 ```python
     def _register_default_handlers(self):
         """Register the default handlers using the BotHandler instance."""
 ```
 
-**Назначение**: Регистрация обработчиков команд по умолчанию с использованием экземпляра `BotHandler`.
+**Назначение**: Регистрирует обработчики по умолчанию, используя экземпляр `BotHandler`.
 
 **Как работает функция**:
 
-1.  Регистрирует обработчики для команд `/start`, `/help`, `/sendpdf`.
-2.  Регистрирует обработчик для текстовых сообщений (`_handle_message`).
-3.  Регистрирует обработчики для голосовых сообщений и документов.
-4.  Регистрирует обработчик для логов.
-
-```ascii
-_register_default_handlers
-│
-├── Регистрация обработчиков для /start, /help, /sendpdf
-│
-├── Регистрация обработчика для текстовых сообщений (_handle_message)
-│
-├── Регистрация обработчиков для голосовых сообщений и документов
-│
-└── Регистрация обработчика для логов
-```
+1.  **Регистрация обработчиков сообщений**: Функция регистрирует различные обработчики сообщений с использованием метода `dp.message.register` из библиотеки `aiogram`. Каждый обработчик связывается с определенной командой или условием, и при получении соответствующего сообщения вызывается соответствующая функция-обработчик.
+    *   `self.bot_handler.start`: Обработчик команды `/start`.
+    *   `self.bot_handler.help_command`: Обработчик команды `/help`.
+    *   `self.bot_handler.send_pdf`: Обработчик команды `/sendpdf`.
+    *   `self._handle_message`: Обработчик для любых текстовых сообщений.
+    *   `self.bot_handler.handle_voice`: Обработчик голосовых сообщений.
+    *   `self.bot_handler.handle_document`: Обработчик документов.
+    *   `self.bot_handler.handle_log`: Обработчик текстовых сообщений для обработки логов.
 
 **Примеры**:
 
 ```python
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Инициализация бота
-bot = TelegramBot(token=os.getenv('TELEGRAM_TOKEN'))
-
-# Регистрация обработчиков по умолчанию
+bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
 bot._register_default_handlers()
 ```
 
-### `TelegramBot._handle_message`
+### `_handle_message`
 
 ```python
     async def _handle_message(self, message: types.Message):
         """Handle any text message."""
 ```
 
-**Назначение**: Обработка любого текстового сообщения.
+**Назначение**: Обрабатывает любое текстовое сообщение.
 
 **Параметры**:
-
-*   `message` (types.Message): Объект сообщения `aiogram`.
+- `message` (types.Message): Объект сообщения `aiogram`.
 
 **Как работает функция**:
 
-1.  Вызывает метод `handle_message` экземпляра `BotHandler` для обработки сообщения.
-
-```ascii
-_handle_message
-│
-└── Вызов BotHandler.handle_message для обработки сообщения
-```
+1.  **Вызов обработчика сообщений**: Функция вызывает метод `handle_message` из экземпляра `BotHandler` для обработки текстового сообщения.
 
 **Примеры**:
 
 ```python
-from aiogram import types
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-import os
-from dotenv import load_dotenv
-import asyncio
-
-load_dotenv()
-
-# Инициализация бота
-bot = TelegramBot(token=os.getenv('TELEGRAM_TOKEN'))
-
-# Создание экземпляра сообщения (для примера)
-message = types.Message(text='Привет, бот!')
-
-# Обработка сообщения
+bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
 asyncio.run(bot._handle_message(message))
 ```
 
-### `TelegramBot.initialize_bot_webhook`
+### `initialize_bot_webhook`
 
 ```python
     def initialize_bot_webhook(self, route: str):
         """Initialize the bot webhook."""
 ```
 
-**Назначение**: Инициализация вебхука бота.
+**Назначение**: Инициализирует вебхук бота.
 
 **Параметры**:
-
-*   `route` (str): Маршрут вебхука.
+- `route` (str): Маршрут для вебхука.
 
 **Как работает функция**:
 
-1.  Формирует URL вебхука на основе хоста и маршрута.
-2.  Если хост указан как `127.0.0.1` или `localhost`, использует `ngrok` для создания туннеля.
-3.  Устанавливает вебхук с использованием `bot.set_webhook`.
-4.  Логирует URL для проверки вебхука.
+1.  **Формирование URL вебхука**: Функция формирует URL вебхука на основе предоставленного маршрута и хоста. Если хост указывает на локальную машину (`127.0.0.1` или `localhost`), используется `ngrok` для создания публичного URL.
+2.  **Установка вебхука**: Пытается установить вебхук для бота с использованием сформированного URL.
+3.  **Обработка исключений**: В случае возникновения ошибок при установке вебхука, регистрирует ошибку с использованием `logger.error` и возвращает `False`.
 
-```ascii
-initialize_bot_webhook
-│
-├── Формирование URL вебхука
-│   │
-│   ├── Определение хоста и маршрута
-│   │
-│   └── Использование ngrok для создания туннеля (если хост локальный)
-│
-└── Установка вебхука
-    │
-    └── Вызов bot.set_webhook для установки вебхука
+```
+Формирование URL вебхука --> Установка вебхука
+    |
+    V
+Обработка исключений
 ```
 
 **Примеры**:
 
 ```python
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Инициализация бота
-bot = TelegramBot(token=os.getenv('TELEGRAM_TOKEN'))
-
-# Инициализация вебхука
-webhook_url = bot.initialize_bot_webhook(route='/webhook')
-print(f'Webhook URL: {webhook_url}')
+bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
+webhook_url = bot.initialize_bot_webhook(route='/telegram_webhook')
 ```
 
-### `TelegramBot._register_route_via_rpc`
+### `_register_route_via_rpc`
 
 ```python
     def _register_route_via_rpc(self, rpc_client: ServerProxy):
         """Register the Telegram webhook route via RPC."""
 ```
 
-**Назначение**: Регистрация маршрута вебхука Telegram через RPC.
+**Назначение**: Регистрирует маршрут вебхука Telegram через RPC.
 
 **Параметры**:
-
-*   `rpc_client` (ServerProxy): RPC клиент для взаимодействия с сервером.
+- `rpc_client` (ServerProxy): Клиент RPC для взаимодействия с сервером.
 
 **Как работает функция**:
 
-1.  Формирует маршрут вебхука.
-2.  Вызывает метод `add_new_route` RPC клиента для регистрации маршрута.
-3.  Логирует успешную регистрацию маршрута.
-
-```ascii
-_register_route_via_rpc
-│
-├── Формирование маршрута вебхука
-│
-└── Регистрация маршрута через RPC
-    │
-    └── Вызов rpc_client.add_new_route для регистрации маршрута
-```
+1.  **Регистрация маршрута**: Функция вызывает RPC метод `add_new_route` для регистрации маршрута вебхука Telegram на сервере.
+2.  **Обработка исключений**: В случае возникновения ошибок при регистрации маршрута, регистрирует ошибку с использованием `logger.error`.
 
 **Примеры**:
 
 ```python
-from xmlrpc.client import ServerProxy
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Инициализация бота
-bot = TelegramBot(token=os.getenv('TELEGRAM_TOKEN'))
-
-# Создание RPC клиента (для примера)
-rpc_client = ServerProxy(f"http://localhost:9000", allow_none=True)
-
-# Регистрация маршрута через RPC
+bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
 bot._register_route_via_rpc(rpc_client)
 ```
 
-### `TelegramBot.stop`
+### `stop`
 
 ```python
     def stop(self):
          """Stop the bot and delete the webhook."""
 ```
 
-**Назначение**: Остановка бота и удаление вебхука.
+**Назначение**: Останавливает бота и удаляет вебхук.
 
 **Как работает функция**:
 
-1.  Останавливает веб-приложение `aiohttp`.
-2.  Удаляет вебхук с использованием `bot.delete_webhook`.
-3.  Логирует остановку бота.
+1.  **Остановка веб-приложения**: Если веб-приложение `aiohttp` запущено, останавливает его и выполняет очистку ресурсов.
+2.  **Удаление вебхука**: Пытается удалить вебхук бота с использованием метода `bot.delete_webhook`.
+3.  **Обработка исключений**: В случае возникновения ошибок при удалении вебхука, регистрирует ошибку с использованием `logger.error`.
 
-```ascii
-stop
-│
-├── Остановка веб-приложения aiohttp
-│
-└── Удаление вебхука
-    │
-    └── Вызов bot.delete_webhook для удаления вебхука
+```
+Остановка веб-приложения --> Удаление вебхука
+    |
+    V
+Обработка исключений
 ```
 
 **Примеры**:
 
 ```python
-from src.endpoints.bots.telegram.bot_aiogram import TelegramBot
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Инициализация и запуск бота
-bot = TelegramBot(token=os.getenv('TELEGRAM_TOKEN'))
-bot.run()
-
-# Остановка бота
+bot = TelegramBot(token='YOUR_TELEGRAM_BOT_TOKEN')
 bot.stop()
-```
-
-```python
-if __name__ == "__main__":
-    from dotenv import load_dotenv
-    load_dotenv()
-    bot = TelegramBot(os.getenv('TELEGRAM_TOKEN'))
-    bot.run()
-```
-
-Этот блок кода выполняется только при запуске скрипта напрямую (а не при импорте как модуля). Он загружает переменные окружения из файла `.env`, создает экземпляр класса `TelegramBot` с использованием токена, полученного из переменной окружения `TELEGRAM_TOKEN`, и запускает бота.

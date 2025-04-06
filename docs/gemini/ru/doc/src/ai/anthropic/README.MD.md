@@ -2,175 +2,214 @@
 
 ## Обзор
 
-Этот модуль предоставляет простой интерфейс для взаимодействия с языковой моделью Claude от Anthropic. Он включает в себя базовые функции для генерации текста, анализа тональности и перевода текста.
+Этот модуль предоставляет простой интерфейс для взаимодействия с языковой моделью Claude от Anthropic. Он включает в себя основные функции для генерации текста, анализа тональности и перевода текста.
 
 ## Подробнее
 
-Модуль `src.ai.anthropic` предоставляет интерфейс для работы с API Claude от Anthropic, позволяя выполнять такие задачи, как генерация текста на основе заданного запроса, анализ тональности текста и перевод текста с одного языка на другой. Этот модуль упрощает интеграцию с Claude для выполнения различных задач обработки естественного языка.
+Этот модуль позволяет легко интегрировать возможности Claude в ваши Python-приложения. Он предоставляет удобные функции для выполнения распространенных задач обработки текста.
 
-## Классы
+## Установка
 
-### `ClaudeClient`
+Для использования этого модуля необходимо установить библиотеку `anthropic`:
 
-**Описание**: Класс `ClaudeClient` предоставляет методы для взаимодействия с языковой моделью Claude от Anthropic. Он позволяет генерировать текст, анализировать тональность и переводить текст.
-
-**Принцип работы**:
-Класс инициализируется с использованием API-ключа Anthropic. Затем он предоставляет методы для выполнения различных операций, таких как генерация текста, анализ тональности и перевод текста, используя API Claude.
-
-**Атрибуты**:
-- `api_key` (str): API-ключ для аутентификации в Anthropic.
-
-**Методы**:
-- `generate_text(prompt: str, max_tokens_to_sample: int = 100) -> str`: Генерирует текст на основе заданного запроса.
-- `analyze_sentiment(text: str) -> str`: Анализирует тональность заданного текста.
-- `translate_text(text: str, source_language: str, target_language: str) -> str`: Переводит заданный текст с одного языка на другой.
-
-## Функции
-
-### `generate_text`
-
-```python
-def generate_text(prompt: str, max_tokens_to_sample: int = 100) -> str:
-    """Генерирует текст на основе заданного запроса.
-
-    Args:
-        prompt (str): Запрос для генерации текста.
-        max_tokens_to_sample (int, optional): Максимальное количество токенов для генерации. По умолчанию 100.
-
-    Returns:
-        str: Сгенерированный текст.
-    """
-    ...
+```bash
+pip install anthropic
 ```
 
-**Назначение**: Функция `generate_text` генерирует текст на основе предоставленного запроса (`prompt`), используя языковую модель Claude. Максимальное количество токенов, которые должны быть сгенерированы, можно указать с помощью параметра `max_tokens_to_sample`.
+## Использование
+
+### Инициализация
+
+Сначала инициализируйте `ClaudeClient` с вашим ключом API Anthropic:
+
+```python
+from claude_client import ClaudeClient
+
+api_key = "your-api-key"
+claude_client = ClaudeClient(api_key)
+```
+
+### Генерация текста
+
+Сгенерируйте текст на основе заданного запроса:
+
+```python
+prompt = "Write a short story about a robot learning to love."
+generated_text = claude_client.generate_text(prompt)
+print("Generated Text:", generated_text)
+```
+
+### Анализ тональности
+
+Проанализируйте тональность заданного текста:
+
+```python
+text_to_analyze = "I am very happy today!"
+sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
+print("Sentiment Analysis:", sentiment_analysis)
+```
+
+### Перевод текста
+
+Переведите текст с одного языка на другой:
+
+```python
+text_to_translate = "Hello, how are you?"
+source_language = "en"
+target_language = "es"
+translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
+print("Translated Text:", translated_text)
+```
+
+## Пример кода
+
+Вот полный пример того, как использовать `ClaudeClient`:
+
+```python
+from claude_client import ClaudeClient
+
+api_key = "your-api-key"
+claude_client = ClaudeClient(api_key)
+
+# Generate text
+prompt = "Write a short story about a robot learning to love."
+generated_text = claude_client.generate_text(prompt)
+print("Generated Text:", generated_text)
+
+# Analyze sentiment
+text_to_analyze = "I am very happy today!"
+sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
+print("Sentiment Analysis:", sentiment_analysis)
+
+# Translate text
+text_to_translate = "Hello, how are you?"
+source_language = "en"
+target_language = "es"
+translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
+print("Translated Text:", translated_text)
+```
+
+## Методы
+
+### `generate_text(prompt: str, max_tokens_to_sample: int = 100) -> str`
+
+Генерирует текст на основе заданного запроса.
 
 **Параметры**:
 - `prompt` (str): Запрос, на основе которого генерируется текст.
-- `max_tokens_to_sample` (int, optional): Максимальное количество токенов, которое может быть сгенерировано. По умолчанию равно 100.
+- `max_tokens_to_sample` (int): Максимальное количество токенов для генерации. По умолчанию 100.
 
 **Возвращает**:
-- `str`: Сгенерированный текст на основе предоставленного запроса.
+- `str`: Сгенерированный текст.
 
 **Как работает функция**:
-1.  Функция принимает запрос `prompt` и максимальное количество токенов `max_tokens_to_sample`.
-2.  Запрос передается языковой модели Claude, которая генерирует текст на основе запроса.
-3.  Сгенерированный текст возвращается.
+1. Функция принимает текстовый запрос `prompt` и максимальное количество токенов `max_tokens_to_sample`.
+2. Использует API Claude для генерации текста на основе запроса.
+3. Возвращает сгенерированный текст.
 
 ```
-Запрос -> Claude -> Сгенерированный текст
+Запрос 
+   prompt, max_tokens_to_sample
+   |
+   | Использование API Claude
+   |
+   Сгенерированный текст
 ```
 
 **Примеры**:
 
 ```python
-# Пример генерации текста с использованием запроса
-prompt = "Напиши короткий рассказ о коте, который учится летать."
-generated_text = claude_client.generate_text(prompt)
+# Пример генерации текста с запросом и ограничением на количество токенов
+generated_text = claude_client.generate_text("Напиши короткий рассказ о коте", max_tokens_to_sample=50)
 print(generated_text)
 
-# Пример генерации текста с ограничением на количество токенов
-prompt = "Напиши короткое стихотворение о звездах."
-generated_text = claude_client.generate_text(prompt, max_tokens_to_sample=50)
+# Пример генерации текста только с запросом
+generated_text = claude_client.generate_text("Напиши стихотворение о весне")
 print(generated_text)
 ```
 
-### `analyze_sentiment`
+### `analyze_sentiment(text: str) -> str`
 
-```python
-def analyze_sentiment(text: str) -> str:
-    """Анализирует тональность заданного текста.
-
-    Args:
-        text (str): Текст для анализа.
-
-    Returns:
-        str: Результат анализа тональности.
-    """
-    ...
-```
-
-**Назначение**: Функция `analyze_sentiment` анализирует тональность предоставленного текста (`text`), используя языковую модель Claude.
+Анализирует тональность заданного текста.
 
 **Параметры**:
-- `text` (str): Текст, который необходимо проанализировать.
+- `text` (str): Текст для анализа.
 
 **Возвращает**:
-- `str`: Результат анализа тональности текста.
+- `str`: Результат анализа тональности.
 
 **Как работает функция**:
-1.  Функция принимает текст `text` для анализа.
-2.  Текст передается языковой модели Claude, которая анализирует тональность текста.
-3.  Результат анализа тональности возвращается.
+1. Функция принимает текстовую строку `text`.
+2. Использует API Claude для анализа тональности текста.
+3. Возвращает результат анализа тональности.
 
 ```
-Текст -> Claude -> Анализ тональности
+Текст для анализа 
+   text
+   |
+   | Использование API Claude
+   |
+   Результат анализа тональности
 ```
 
 **Примеры**:
 
 ```python
 # Пример анализа тональности положительного текста
-text_to_analyze = "Я очень счастлив сегодня!"
-sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
+sentiment_analysis = claude_client.analyze_sentiment("Я очень счастлив сегодня!")
 print(sentiment_analysis)
 
 # Пример анализа тональности отрицательного текста
-text_to_analyze = "Я очень расстроен из-за этой новости."
-sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
+sentiment_analysis = claude_client.analyze_sentiment("Я очень расстроен из-за этой новости.")
 print(sentiment_analysis)
 ```
 
-### `translate_text`
+### `translate_text(text: str, source_language: str, target_language: str) -> str`
 
-```python
-def translate_text(text: str, source_language: str, target_language: str) -> str:
-    """Переводит заданный текст с одного языка на другой.
-
-    Args:
-        text (str): Текст для перевода.
-        source_language (str): Код исходного языка.
-        target_language (str): Код целевого языка.
-
-    Returns:
-        str: Переведенный текст.
-    """
-    ...
-```
-
-**Назначение**: Функция `translate_text` переводит предоставленный текст (`text`) с исходного языка (`source_language`) на целевой язык (`target_language`), используя языковую модель Claude.
+Переводит заданный текст с исходного языка на целевой язык.
 
 **Параметры**:
-- `text` (str): Текст, который необходимо перевести.
-- `source_language` (str): Код исходного языка (например, "en" для английского).
-- `target_language` (str): Код целевого языка (например, "es" для испанского).
+- `text` (str): Текст для перевода.
+- `source_language` (str): Код исходного языка.
+- `target_language` (str): Код целевого языка.
 
 **Возвращает**:
 - `str`: Переведенный текст.
 
 **Как работает функция**:
-1.  Функция принимает текст `text`, код исходного языка `source_language` и код целевого языка `target_language`.
-2.  Текст и коды языков передаются языковой модели Claude, которая переводит текст.
-3.  Переведенный текст возвращается.
+1. Функция принимает текст `text`, код исходного языка `source_language` и код целевого языка `target_language`.
+2. Использует API Claude для перевода текста.
+3. Возвращает переведенный текст.
 
 ```
-Текст, Исходный язык, Целевой язык -> Claude -> Переведенный текст
+Текст, Исходный язык, Целевой язык
+   text, source_language, target_language
+   |
+   | Использование API Claude
+   |
+   Переведенный текст
 ```
 
 **Примеры**:
 
 ```python
 # Пример перевода текста с английского на испанский
-text_to_translate = "Hello, how are you?"
-source_language = "en"
-target_language = "es"
-translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
+translated_text = claude_client.translate_text("Hello, how are you?", "en", "es")
 print(translated_text)
 
 # Пример перевода текста с французского на английский
-text_to_translate = "Bonjour, comment allez-vous?"
-source_language = "fr"
-target_language = "en"
-translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
+translated_text = claude_client.translate_text("Bonjour, comment allez-vous?", "fr", "en")
 print(translated_text)
 ```
+
+## Вклад
+
+Вклад приветствуется! Не стесняйтесь отправлять запросы на включение изменений или открывать проблему, если вы столкнулись с какими-либо проблемами или у вас есть предложения по улучшению.
+
+## Лицензия
+
+Этот проект лицензирован в соответствии с лицензией MIT. Подробности см. в файле [LICENSE](LICENSE).
+
+---
+
+**Примечание:** Замените `"your-api-key"` своим фактическим ключом API Anthropic.

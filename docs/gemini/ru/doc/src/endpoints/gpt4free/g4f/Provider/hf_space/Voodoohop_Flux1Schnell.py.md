@@ -2,34 +2,32 @@
 
 ## Обзор
 
-Модуль `Voodoohop_Flux1Schnell` предоставляет асинхронный интерфейс для взаимодействия с сервисом Voodoohop Flux-1-Schnell, размещенным на платформе Hugging Face Spaces. Этот сервис позволяет генерировать изображения на основе текстовых запросов. Модуль предоставляет функции для форматирования запросов, отправки их в API и получения сгенерированных изображений.
+Модуль `Voodoohop_Flux1Schnell` предоставляет асинхронный генератор изображений, использующий API Voodoohop Flux-1-Schnell. Он позволяет генерировать изображения на основе текстовых подсказок (prompt) с возможностью настройки различных параметров, таких как ширина, высота, количество шагов обработки и зерно (seed).
 
 ## Подробней
 
-Модуль предназначен для интеграции в систему, где требуется генерация изображений на основе текстовых описаний. Он использует асинхронные запросы для взаимодействия с API Voodoohop Flux-1-Schnell, что позволяет эффективно обрабатывать множество запросов параллельно.
+Этот модуль является частью проекта `hypotez` и предназначен для интеграции с другими компонентами, требующими генерации изображений на основе текстовых описаний. Он использует асинхронные запросы для взаимодействия с API Voodoohop Flux-1-Schnell, что позволяет эффективно обрабатывать запросы и генерировать изображения.
 
 ## Классы
 
 ### `Voodoohop_Flux1Schnell`
 
-**Описание**: Класс `Voodoohop_Flux1Schnell` является поставщиком (провайдером) изображений, использующим Hugging Face Space Voodoohop Flux-1-Schnell.
+**Описание**: Класс `Voodoohop_Flux1Schnell` предоставляет методы для асинхронной генерации изображений с использованием API Voodoohop Flux-1-Schnell.
 
 **Наследует**:
-
-- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
-- `ProviderModelMixin`: Предоставляет функциональность для работы с моделями.
+- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность для асинхронных генераторов.
+- `ProviderModelMixin`: Предоставляет общие методы для работы с моделями.
 
 **Атрибуты**:
-
-- `label` (str): Метка провайдера, `"Voodoohop Flux-1-Schnell"`.
-- `url` (str): URL сервиса, `"https://voodoohop-flux-1-schnell.hf.space"`.
-- `api_endpoint` (str): URL API endpoint, `"https://voodoohop-flux-1-schnell.hf.space/call/infer"`.
-- `working` (bool): Флаг, указывающий на работоспособность провайдера, `True`.
-- `default_model` (str): Модель по умолчанию, `"voodoohop-flux-1-schnell"`.
-- `default_image_model` (str): Модель изображения по умолчанию, соответствует `default_model`.
-- `model_aliases` (dict): Псевдонимы моделей, `{"flux-schnell": default_model, "flux": default_model}`.
-- `image_models` (list): Список моделей изображений, полученный из ключей `model_aliases`.
-- `models` (list): Список моделей, соответствует `image_models`.
+- `label` (str): Метка провайдера, используемая для идентификации.
+- `url` (str): URL главной страницы Voodoohop Flux-1-Schnell.
+- `api_endpoint` (str): URL API для отправки запросов на генерацию изображений.
+- `working` (bool): Флаг, указывающий, работает ли провайдер в данный момент.
+- `default_model` (str): Модель, используемая по умолчанию.
+- `default_image_model` (str): Модель изображения, используемая по умолчанию.
+- `model_aliases` (dict): Псевдонимы моделей для удобства использования.
+- `image_models` (list): Список моделей изображений.
+- `models` (list): Список моделей.
 
 ### `create_async_generator`
 
@@ -48,98 +46,137 @@
         randomize_seed: bool = True,
         **kwargs
     ) -> AsyncResult:
-        ...
+        """Создает асинхронный генератор изображений на основе API Voodoohop Flux-1-Schnell.
+
+        Args:
+            model (str): Модель для генерации изображений.
+            messages (Messages): Список сообщений, используемых для формирования подсказки.
+            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+            prompt (str, optional): Текстовая подсказка для генерации изображения. По умолчанию `None`.
+            width (int, optional): Ширина генерируемого изображения. По умолчанию 768.
+            height (int, optional): Высота генерируемого изображения. По умолчанию 768.
+            num_inference_steps (int, optional): Количество шагов обработки для генерации изображения. По умолчанию 2.
+            seed (int, optional): Зерно для генерации случайных чисел. По умолчанию 0.
+            randomize_seed (bool, optional): Флаг, указывающий, нужно ли рандомизировать зерно. По умолчанию `True`.
+            **kwargs: Дополнительные параметры.
+
+        Returns:
+            AsyncResult: Асинхронный генератор, возвращающий изображения в формате `ImageResponse`.
+
+        Raises:
+            ResponseError: Если возникает ошибка при генерации изображения.
+
+        Как работает функция:
+         1. **Подготовка параметров изображения**: Функция принимает различные параметры, такие как модель, сообщения, прокси, текстовый запрос, ширину, высоту, количество шагов обработки, зерно и флаг рандомизации зерна, для настройки процесса генерации изображения.
+         2. **Корректировка размеров изображения**: Функция корректирует ширину и высоту изображения, чтобы они были кратны 8, обеспечивая совместимость с требованиями API.
+         3. **Форматирование текстового запроса**: Функция форматирует текстовый запрос на основе предоставленных сообщений и запроса, подготавливая его для отправки в API.
+         4. **Создание полезной нагрузки**: Функция создает полезную нагрузку (payload) с данными, необходимыми для запроса к API, включая текстовый запрос, зерно, флаг рандомизации зерна, ширину, высоту и количество шагов обработки.
+         5. **Отправка запроса и обработка ответа**: Функция отправляет асинхронный POST-запрос к API с полезной нагрузкой и обрабатывает ответ, получая идентификатор события (event_id) для отслеживания статуса генерации изображения.
+         6. **Цикл ожидания и получения статуса**: Функция входит в бесконечный цикл, в котором она отправляет GET-запросы к API для получения статуса генерации изображения по идентификатору события.
+         7. **Обработка событий**: Функция читает события из ответа, разделяя их по типу (ошибка, завершение) и обрабатывая соответствующие данные.
+         8. **Генерация изображения и возврат результата**: При получении события `complete` функция извлекает URL изображения из данных, создает объект `ImageResponse` с URL и текстовым запросом, и возвращает его через генератор.
+         9. **Обработка ошибок**: Если возникает ошибка при генерации изображения, функция вызывает исключение `ResponseError` с сообщением об ошибке.
+         10. **Завершение работы**: После успешной генерации и возврата изображения функция завершает свою работу.
+
+        ```
+        Подготовка параметров изображения
+             │
+             ▼
+        Корректировка размеров изображения
+             │
+             ▼
+        Форматирование текстового запроса
+             │
+             ▼
+        Создание полезной нагрузки
+             │
+             ▼
+        Отправка запроса и обработка ответа
+             │
+             ▼
+        Цикл ожидания и получения статуса
+             │
+             ▼
+        Обработка событий ──► Ошибка: ResponseError
+             │
+             ▼
+        Генерация изображения и возврат результата
+             │
+             ▼
+        Завершение работы
+        ```
+
+        """
+        width = max(32, width - (width % 8))
+        height = max(32, height - (height % 8))
+        prompt = format_image_prompt(messages, prompt)
+        payload = {
+            "data": [
+                prompt,
+                seed,
+                randomize_seed,
+                width,
+                height,
+                num_inference_steps
+            ]
+        }
+        async with ClientSession() as session:
+            async with session.post(cls.api_endpoint, json=payload, proxy=proxy) as response:
+                await raise_for_status(response)
+                response_data = await response.json()
+                event_id = response_data['event_id']
+                while True:
+                    async with session.get(f"{cls.api_endpoint}/{event_id}", proxy=proxy) as status_response:
+                        await raise_for_status(status_response)
+                        while not status_response.content.at_eof():
+                            event = await status_response.content.readuntil(b'\n\n')
+                            if event.startswith(b'event:'):
+                                event_parts = event.split(b'\ndata: ')
+                                if len(event_parts) < 2:
+                                    continue
+                                event_type = event_parts[0].split(b': ')[1]
+                                data = event_parts[1]
+                                if event_type == b'error':
+                                    raise ResponseError(f"Error generating image: {data}")
+                                elif event_type == b'complete':
+                                    json_data = json.loads(data)
+                                    image_url = json_data[0]['url']
+                                    yield ImageResponse(images=[image_url], alt=prompt)
+                                    return
+
 ```
 
-**Назначение**: Создает асинхронный генератор изображений на основе предоставленных параметров.
+## Функции
 
-**Параметры**:
+### `format_image_prompt`
 
-- `cls` (class): Класс, для которого создается генератор.
-- `model` (str): Используемая модель.
-- `messages` (Messages): Список сообщений для формирования запроса.
-- `proxy` (str, optional): Прокси-сервер для использования. По умолчанию `None`.
-- `prompt` (str, optional): Дополнительный текст запроса. По умолчанию `None`.
-- `width` (int): Ширина изображения в пикселях. По умолчанию `768`.
-- `height` (int): Высота изображения в пикселях. По умолчанию `768`.
-- `num_inference_steps` (int): Количество шагов для генерации изображения. По умолчанию `2`.
-- `seed` (int): Зерно для генерации случайных чисел. По умолчанию `0`.
-- `randomize_seed` (bool): Флаг, указывающий на необходимость рандомизации зерна. По умолчанию `True`.
-- `**kwargs`: Дополнительные аргументы.
+Функция `format_image_prompt` используется для форматирования текстовых подсказок для генерации изображений. Описание этой функции отсутствует в предоставленном коде.
 
-**Возвращает**:
+## Примеры
 
-- `AsyncResult`: Асинхронный генератор, возвращающий объекты `ImageResponse` с URL сгенерированных изображений.
-
-**Вызывает исключения**:
-
-- `ResponseError`: Если при генерации изображения произошла ошибка.
-
-**Как работает функция**:
-
-1.  **Подготовка параметров**:
-    *   Определяются размеры изображения, гарантируя, что они кратны 8 и не меньше 32.
-    *   Формируется промпт на основе предоставленных сообщений.
-
-2.  **Формирование запроса**:
-    *   Создается полезная нагрузка (payload) с данными, необходимыми для запроса к API, включая промпт, зерно, размеры изображения и количество шагов генерации.
-
-3.  **Отправка запроса и обработка ответа**:
-    *   Используется асинхронная сессия для отправки POST-запроса к API endpoint.
-    *   Проверяется статус ответа и извлекается `event_id` из JSON-ответа.
-
-4.  **Ожидание и получение результатов**:
-    *   В цикле отправляются GET-запросы к API для получения статуса события (генерации изображения).
-    *   Обрабатываются поступающие события, разделяя их по типу (`error`, `complete`).
-    *   В случае ошибки выбрасывается исключение `ResponseError`.
-    *   При получении события `complete` извлекается URL изображения из JSON-данных и возвращается объект `ImageResponse`.
-
-```text
-    Начало
-    │
-    ├── Подготовка параметров (ширина, высота, промпт)
-    │
-    ├── Формирование запроса (payload)
-    │
-    ├── Отправка POST-запроса к API
-    │   │
-    │   └── Получение event_id
-    │
-    ├── Цикл ожидания и получения результатов
-    │   │
-    │   ├── Отправка GET-запросов к API
-    │   │
-    │   ├── Обработка событий (error, complete)
-    │   │   │
-    │   │   ├── Если error:  ResponseError
-    │   │   │
-    │   │   └── Если complete: Извлечение URL изображения и возврат ImageResponse
-    │   │
-    │   └── Конец цикла при получении complete
-    │
-    └── Завершение
-```
-
-**Примеры**:
-
-Пример 1: Генерация изображения с использованием минимальных параметров.
+Пример использования класса `Voodoohop_Flux1Schnell` для создания асинхронного генератора изображений:
 
 ```python
-    model = "voodoohop-flux-1-schnell"
-    messages = [{"role": "user", "content": "A cat playing guitar"}]
-    async for image_response in Voodoohop_Flux1Schnell.create_async_generator(model=model, messages=messages):
-        print(image_response.images)
+import asyncio
+from src.endpoints.gpt4free.g4f.Provider.hf_space.Voodoohop_Flux1Schnell import Voodoohop_Flux1Schnell
+from src.endpoints.gpt4free.g4f.typing import Messages
+
+async def generate_image(prompt: str):
+    """Генерирует изображение на основе текстовой подсказки."""
+    messages: Messages = [{"role": "user", "content": prompt}]
+    generator = Voodoohop_Flux1Schnell.create_async_generator(
+        model="voodoohop-flux-1-schnell",
+        messages=messages
+    )
+    async for image_response in await generator:
+        print(f"Image URL: {image_response.images[0]}")
+
+async def main():
+    """Главная функция для запуска генерации изображения."""
+    await generate_image("A cat sitting on a couch")
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
-Пример 2: Генерация изображения с указанием размеров и зерна.
-
-```python
-    model = "voodoohop-flux-1-schnell"
-    messages = [{"role": "user", "content": "A dog running in a park"}]
-    width = 512
-    height = 512
-    seed = 42
-    async for image_response in Voodoohop_Flux1Schnell.create_async_generator(
-        model=model, messages=messages, width=width, height=height, seed=seed
-    ):
-        print(image_response.images)
+Этот пример показывает, как создать асинхронный генератор изображений с использованием класса `Voodoohop_Flux1Schnell` и получить URL сгенерированного изображения.

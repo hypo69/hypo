@@ -2,157 +2,106 @@
 
 ## Обзор
 
-Модуль `Cerebras` предоставляет класс для взаимодействия с API Cerebras Inference для генерации текста. Он наследуется от класса `OpenaiAPI` и использует асинхронные запросы для получения результатов. Модуль поддерживает различные модели, предоставляемые Cerebras, и предоставляет методы для аутентификации и создания асинхронного генератора для получения ответов от API.
+Модуль `Cerebras` предназначен для взаимодействия с API Cerebras Inference, предоставляя асинхронный генератор для обработки сообщений с использованием различных моделей, таких как `llama3.1-70b`, `llama3.1-8b` и `deepseek-r1-distill-llama-70b`. Он наследуется от класса `OpenaiAPI` и использует `aiohttp` для выполнения асинхронных HTTP-запросов. Этот модуль предназначен для использования в проектах, требующих доступа к моделям Cerebras Inference.
 
 ## Подробней
 
-Этот модуль позволяет использовать модели Cerebras Inference для генерации текста. Он обеспечивает аутентификацию через API-ключ или cookies, а также предоставляет удобный интерфейс для отправки запросов и получения результатов в асинхронном режиме. Класс `Cerebras` поддерживает несколько моделей и предоставляет алиасы для удобства использования. Расположение файла в проекте указывает на то, что он является частью g4f (GPT4Free) и предназначен для работы с конкретным провайдером (Cerebras).
+Модуль `Cerebras` предоставляет возможность использования моделей Cerebras Inference API. Он автоматически получает `api_key` из cookies, если он не передан явно. Этот модуль является частью проекта `hypotez` и предназначен для интеграции с другими компонентами, требующими доступа к моделям Cerebras Inference.
 
 ## Классы
 
-### `Cerebras(OpenaiAPI)`
+### `Cerebras`
 
-**Описание**: Класс для взаимодействия с API Cerebras Inference.
+**Описание**: Класс `Cerebras` предназначен для взаимодействия с API Cerebras Inference.
 
 **Наследует**:
-- `OpenaiAPI`: Предоставляет базовую функциональность для взаимодействия с API OpenAI.
+
+- `OpenaiAPI`: Этот класс наследует функциональность от `OpenaiAPI`, предоставляя базовые методы для работы с API.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера "Cerebras Inference".
-- `url` (str): URL главной страницы Cerebras Inference.
-- `login_url` (str): URL страницы логина Cerebras Cloud.
-- `api_base` (str): Базовый URL API Cerebras.
-- `working` (bool): Указывает, что провайдер работает (True).
-- `default_model` (str): Модель по умолчанию "llama3.1-70b".
-- `models` (list[str]): Список поддерживаемых моделей.
-- `model_aliases` (dict[str, str]): Алиасы моделей для удобства использования.
+
+- `label` (str): Метка для идентификации провайдера, значение: "Cerebras Inference".
+- `url` (str): URL для доступа к Cerebras Inference, значение: "https://inference.cerebras.ai/".
+- `login_url` (str): URL для логина, значение: "https://cloud.cerebras.ai".
+- `api_base` (str): Базовый URL для API Cerebras, значение: "https://api.cerebras.ai/v1".
+- `working` (bool): Указывает, работает ли провайдер, значение: `True`.
+- `default_model` (str): Модель по умолчанию, значение: "llama3.1-70b".
+- `models` (List[str]): Список поддерживаемых моделей.
+- `model_aliases` (Dict[str, str]): Словарь псевдонимов моделей.
 
 **Методы**:
-- `create_async_generator()`: Создает асинхронный генератор для получения ответов от API.
+
+- `create_async_generator()`: Создает асинхронный генератор для обработки сообщений с использованием Cerebras Inference API.
 
 ## Функции
 
 ### `create_async_generator`
 
 ```python
-    @classmethod
-    async def create_async_generator(
-        cls,
-        model: str,
-        messages: Messages,
-        api_key: str = None,
-        cookies: Cookies = None,
-        **kwargs
-    ) -> AsyncResult:
-        """Создает асинхронный генератор для получения ответов от API Cerebras Inference.
+@classmethod
+async def create_async_generator(
+    cls,
+    model: str,
+    messages: Messages,
+    api_key: str = None,
+    cookies: Cookies = None,
+    **kwargs
+) -> AsyncResult:
+    """Создает асинхронный генератор для обработки сообщений с использованием Cerebras Inference API.
 
-        Args:
-            model (str): Название используемой модели.
-            messages (Messages): Список сообщений для отправки в API.
-            api_key (str, optional): API-ключ для аутентификации. По умолчанию `None`.
-            cookies (Cookies, optional): Cookies для аутентификации. По умолчанию `None`.
-            **kwargs: Дополнительные аргументы, передаваемые в базовый класс.
+    Args:
+        model (str): Название используемой модели.
+        messages (Messages): Список сообщений для обработки.
+        api_key (str, optional): API ключ для доступа к Cerebras Inference API. Defaults to None.
+        cookies (Cookies, optional): Cookies для аутентификации. Defaults to None.
+        **kwargs: Дополнительные аргументы.
 
-        Returns:
-            AsyncResult: Асинхронный генератор, выдающий чанки ответов от API.
-
-        Как работает функция:
-         1. **Проверка наличия API-ключа**:
-            - Функция сначала проверяет, был ли предоставлен API-ключ (`api_key`).
-            - Если API-ключ не предоставлен, функция пытается получить его через cookies.
-
-         2. **Получение API-ключа через cookies**:
-            - Если `cookies` также не предоставлены, функция пытается получить их из домена ".cerebras.ai" с помощью `get_cookies(".cerebras.ai")`.
-            - Открывается асинхронная сессия с использованием `ClientSession` и переданных cookies.
-            - Выполняется GET-запрос к "https://inference.cerebras.ai/api/auth/session".
-            - Функция `raise_for_status` проверяет, что ответ имеет статус 200 OK.
-            - Извлекается JSON-ответ, который должен содержать API-ключ.
-            - API-ключ извлекается из `data.get("user", {}).get("demoApiKey")`.
-
-         3. **Создание асинхронного генератора**:
-            - Независимо от того, как был получен `api_key`, функция вызывает метод `create_async_generator` родительского класса (`super().create_async_generator(...)`) для создания асинхронного генератора.
-            - При вызове передаются следующие аргументы:
-              - `model`: Модель, указанная при вызове функции.
-              - `messages`: Сообщения для отправки в API.
-              - `impersonate="chrome"`: Указывает, что запросы должны имитировать браузер Chrome.
-              - `api_key`: API-ключ, полученный на предыдущих шагах.
-              - `headers={"User-Agent": "ex/JS 1.5.0"}`: Заголовки, включающие User-Agent.
-              - `**kwargs`: Дополнительные аргументы, переданные при вызове функции.
-
-         4. **Генерация чанков ответов**:
-            - Асинхронный генератор, созданный в родительском классе, возвращает чанки ответов от API.
-            - Каждый чанк передается вызывающей стороне с помощью `yield chunk`.
-
-        A -- Проверка API-ключа
-        |
-        B -- Получение API-ключа через Cookies
-        |
-        C -- Создание асинхронного генератора
-        |
-        D -- Генерация чанков ответов
-        |
-        E -- Выдача чанка ответа
-
-        ASCII flowchart:
-
-        Проверка API-ключа
-        │
-        ├── Нет API-ключа ── Получение API-ключа через Cookies
-        │   │
-        │   └── Получение Cookies, запрос к API, извлечение API-ключа
-        │
-        └── Есть API-ключ
-        │
-        Создание асинхронного генератора (с API-ключом, сообщениями и заголовками)
-        │
-        Генерация чанков ответов (из асинхронного генератора)
-        │
-        Выдача чанка ответа (yield)
-
-        """
-        if api_key is None:
-            if cookies is None:
-                cookies = get_cookies(".cerebras.ai")
-            async with ClientSession(cookies=cookies) as session:
-                async with session.get("https://inference.cerebras.ai/api/auth/session") as response:
-                    await raise_for_status(response)
-                    data = await response.json()
-                    if data:
-                        api_key = data.get("user", {}).get("demoApiKey")
-        async for chunk in super().create_async_generator(
-            model, messages,
-            impersonate="chrome",
-            api_key=api_key,
-            headers={
-                "User-Agent": "ex/JS 1.5.0",
-            },
-            **kwargs
-        ):
-            yield chunk
+    Returns:
+        AsyncResult: Асинхронный генератор чанков ответа.
+    """
 ```
 
+**Назначение**:
+
+Функция `create_async_generator` создает и возвращает асинхронный генератор, который используется для обработки сообщений с помощью моделей Cerebras Inference API. Она получает API-ключ либо из cookies, либо напрямую, если он передан. Затем она вызывает метод `create_async_generator` из родительского класса (`OpenaiAPI`) для фактической генерации чанков ответа.
+
 **Параметры**:
-- `cls` (type[Cerebras]): Ссылка на класс `Cerebras`.
+
+- `cls` (class): Ссылка на класс `Cerebras`.
 - `model` (str): Название используемой модели.
-- `messages` (Messages): Список сообщений для отправки в API.
-- `api_key` (str, optional): API-ключ для аутентификации. По умолчанию `None`.
+- `messages` (Messages): Список сообщений для обработки.
+- `api_key` (str, optional): API ключ для доступа к Cerebras Inference API. По умолчанию `None`.
 - `cookies` (Cookies, optional): Cookies для аутентификации. По умолчанию `None`.
-- `**kwargs`: Дополнительные аргументы, передаваемые в базовый класс.
+- `**kwargs`: Дополнительные аргументы, которые будут переданы в метод `create_async_generator` родительского класса.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор, выдающий чанки ответов от API.
+
+- `AsyncResult`: Асинхронный генератор, выдающий чанки ответа от API.
+
+**Как работает функция**:
+
+1. **Проверка наличия API-ключа**: Функция проверяет, передан ли `api_key` напрямую.
+2. **Получение API-ключа из cookies**: Если `api_key` не передан, функция пытается получить его из cookies домена `.cerebras.ai`.
+3. **Создание сессии**: Создается асинхронная сессия `ClientSession` с использованием cookies.
+4. **Получение API-ключа из сессии**: Если `api_key` не был передан напрямую, выполняется запрос к "https://inference.cerebras.ai/api/auth/session" для получения `api_key` из JSON-ответа.
+5. **Вызов родительского метода**: Функция вызывает метод `create_async_generator` из родительского класса (`OpenaiAPI`) с полученным или переданным `api_key` и другими параметрами.
+6. **Генерация чанков**: Асинхронный генератор возвращает чанки ответа, полученные от API.
+
+```
+Проверка API-ключа  --> Получение API-ключа из cookies --> Создание асинхронной сессии --> Получение API-ключа из сессии (если необходимо) --> Вызов родительского метода create_async_generator --> Генерация чанков
+```
 
 **Примеры**:
 
 ```python
-# Пример использования create_async_generator
-async def main():
-    model = "llama3.1-70b"
-    messages = [{"role": "user", "content": "Hello, how are you?"}]
-    api_key = "your_api_key"  # Замените на ваш фактический API-ключ
+# Пример использования функции create_async_generator
+model = "llama3.1-70b"
+messages = [{"role": "user", "content": "Hello, how are you?"}]
+api_key = "YOUR_API_KEY"
 
+async def main():
     async for chunk in Cerebras.create_async_generator(model=model, messages=messages, api_key=api_key):
-        print(chunk, end="")
+        print(chunk)
 
 # Запуск примера
 # asyncio.run(main())

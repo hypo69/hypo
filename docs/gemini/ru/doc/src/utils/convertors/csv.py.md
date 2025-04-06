@@ -1,12 +1,26 @@
-# Модуль для конвертации CSV в JSON
+# Модуль для конвертации CSV в JSON и наоборот
+=================================================
+
+Модуль содержит функции для конвертации данных из формата CSV в JSON и из JSON в CSV.
+Он предоставляет удобные инструменты для преобразования данных между этими двумя распространенными форматами.
+
+## Оглавление
+
+- [Обзор](#обзор)
+- [Подробнее](#подробнее)
+- [Функции](#функции)
+    - [csv2dict](#csv2dict)
+    - [csv2ns](#csv2ns)
+    - [csv_to_json](#csv_to_json)
 
 ## Обзор
 
-Модуль `csv.py` предоставляет утилиты для конвертации данных из формата CSV в JSON и наоборот. Он включает функции для чтения данных из CSV файлов и преобразования их в словари (`dict`) или объекты `SimpleNamespace`, а также для сохранения данных в формате JSON.
+Модуль `src.utils.convertors.csv` предоставляет функции для конвертации данных между форматами CSV и JSON. Он включает функции для чтения CSV файлов, преобразования их в словари или объекты SimpleNamespace, а также для сохранения данных в формате JSON.
 
-## Подробней
+## Подробнее
 
-Этот модуль предназначен для обеспечения удобного способа преобразования между форматами CSV и JSON, что может быть полезно при обработке и анализе данных, хранящихся в различных форматах. Модуль использует стандартные библиотеки `json` и `csv`, а также библиотеку `pathlib` для работы с путями к файлам.
+Этот модуль предназначен для облегчения работы с данными в формате CSV и JSON. Он предоставляет простой и удобный интерфейс для преобразования данных между этими форматами, что может быть полезно во многих сценариях, таких как обработка данных, импорт/экспорт данных и т.д.
+Анализируя предоставленный код можно сказать, что этот модуль используется для конвертации файлов с данными, например логов диалогов.
 
 ## Функции
 
@@ -15,57 +29,62 @@
 ```python
 def csv2dict(csv_file: str | Path, *args, **kwargs) -> dict | None:
     """
-    Конвертирует CSV данные в словарь.
+    Convert CSV data to a dictionary.
 
     Args:
-        csv_file (str | Path): Путь к CSV файлу для чтения.
+        csv_file (str | Path): Path to the CSV file to read.
 
     Returns:
-        dict | None: Словарь, содержащий данные из CSV, конвертированные в формат JSON, или `None`, если конвертация не удалась.
+        dict | None: Dictionary containing the data from CSV converted to JSON format, or `None` if conversion failed.
 
     Raises:
-        Exception: Если не удается прочитать CSV файл.
+        Exception: If unable to read CSV.
     """
 ```
 
-**Назначение**: Функция `csv2dict` преобразует содержимое CSV-файла в словарь Python.
+**Назначение**: Преобразует данные из CSV файла в словарь.
 
 **Параметры**:
-- `csv_file` (str | Path): Путь к CSV-файлу, который необходимо преобразовать.
+- `csv_file` (str | Path): Путь к CSV файлу, который нужно прочитать.
 - `*args`: Произвольные позиционные аргументы, передаваемые в функцию `read_csv_as_dict`.
 - `**kwargs`: Произвольные именованные аргументы, передаваемые в функцию `read_csv_as_dict`.
 
 **Возвращает**:
-- `dict | None`: Функция возвращает словарь, содержащий данные из CSV-файла, или `None`, если преобразование не удалось.
+- `dict | None`: Словарь, содержащий данные из CSV файла, преобразованные в формат JSON, или `None`, если преобразование не удалось.
 
 **Вызывает исключения**:
-- `Exception`: Возникает, если не удается прочитать CSV-файл.
+- `Exception`: Возникает, если не удается прочитать CSV файл.
 
 **Как работает функция**:
 
-1. Функция вызывает функцию `read_csv_as_dict` из модуля `src.utils.csv`, передавая ей путь к CSV-файлу и все дополнительные аргументы.
-2. Функция `read_csv_as_dict` читает содержимое CSV-файла и преобразует его в словарь Python.
-3. Функция `csv2dict` возвращает полученный словарь.
+1. Функция `csv2dict` принимает путь к CSV файлу (`csv_file`).
+2. Она вызывает функцию `read_csv_as_dict` с переданным путем и дополнительными аргументами (`*args`, `**kwargs`).
+3. Функция `read_csv_as_dict` читает данные из CSV файла и преобразует их в словарь.
+4. Если чтение и преобразование прошли успешно, функция возвращает полученный словарь.
+5. Если произошла ошибка, функция возвращает `None`.
 
 ```
-Чтение CSV файла --> Преобразование в словарь --> Возврат словаря
+CSV файл --> Прочитать CSV как словарь --> Возвращает словарь
 ```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 # Пример 1: Преобразование CSV файла в словарь
-csv_file_path = Path('data.csv')
-data_dict = csv2dict(csv_file_path)
-if data_dict:
-    print(data_dict)
+csv_file_path = 'data.csv'
+data = csv2dict(csv_file_path)
+if data:
+    print(data)
+else:
+    print('Не удалось преобразовать CSV файл в словарь.')
 
-# Пример 2: Преобразование CSV файла с дополнительными параметрами
-csv_file_path = Path('data.csv')
-data_dict = csv2dict(csv_file_path, delimiter=';')
-if data_dict:
-    print(data_dict)
+# Пример 2: Преобразование CSV файла с дополнительными аргументами
+csv_file_path = 'data.csv'
+data = csv2dict(csv_file_path, delimiter=';')  # Указание разделителя
+if data:
+    print(data)
+else:
+    print('Не удалось преобразовать CSV файл в словарь.')
 ```
 
 ### `csv2ns`
@@ -73,57 +92,62 @@ if data_dict:
 ```python
 def csv2ns(csv_file: str | Path, *args, **kwargs) -> SimpleNamespace | None:
     """
-    Конвертирует CSV данные в объекты SimpleNamespace.
+    Convert CSV data to SimpleNamespace objects.
 
     Args:
-        csv_file (str | Path): Путь к CSV файлу для чтения.
+        csv_file (str | Path): Path to the CSV file to read.
 
     Returns:
-        SimpleNamespace | None: Объект SimpleNamespace, содержащий данные из CSV, или `None`, если конвертация не удалась.
+        SimpleNamespace | None: SimpleNamespace object containing the data from CSV, or `None` if conversion failed.
 
     Raises:
-        Exception: Если не удается прочитать CSV файл.
+        Exception: If unable to read CSV.
     """
 ```
 
-**Назначение**: Функция `csv2ns` преобразует содержимое CSV-файла в объект `SimpleNamespace`.
+**Назначение**: Преобразует данные из CSV файла в объекты `SimpleNamespace`.
 
 **Параметры**:
-- `csv_file` (str | Path): Путь к CSV-файлу, который необходимо преобразовать.
+- `csv_file` (str | Path): Путь к CSV файлу, который нужно прочитать.
 - `*args`: Произвольные позиционные аргументы, передаваемые в функцию `read_csv_as_ns`.
 - `**kwargs`: Произвольные именованные аргументы, передаваемые в функцию `read_csv_as_ns`.
 
 **Возвращает**:
-- `SimpleNamespace | None`: Функция возвращает объект `SimpleNamespace`, содержащий данные из CSV-файла, или `None`, если преобразование не удалось.
+- `SimpleNamespace | None`: Объект `SimpleNamespace`, содержащий данные из CSV файла, или `None`, если преобразование не удалось.
 
 **Вызывает исключения**:
-- `Exception`: Возникает, если не удается прочитать CSV-файл.
+- `Exception`: Возникает, если не удается прочитать CSV файл.
 
 **Как работает функция**:
 
-1. Функция вызывает функцию `read_csv_as_ns` из модуля `src.utils.csv`, передавая ей путь к CSV-файлу и все дополнительные аргументы.
-2. Функция `read_csv_as_ns` читает содержимое CSV-файла и преобразует его в объект `SimpleNamespace`.
-3. Функция `csv2ns` возвращает полученный объект `SimpleNamespace`.
+1. Функция `csv2ns` принимает путь к CSV файлу (`csv_file`).
+2. Она вызывает функцию `read_csv_as_ns` с переданным путем и дополнительными аргументами (`*args`, `**kwargs`).
+3. Функция `read_csv_as_ns` читает данные из CSV файла и преобразует их в объекты `SimpleNamespace`.
+4. Если чтение и преобразование прошли успешно, функция возвращает полученный объект `SimpleNamespace`.
+5. Если произошла ошибка, функция возвращает `None`.
 
 ```
-Чтение CSV файла --> Преобразование в SimpleNamespace --> Возврат SimpleNamespace
+CSV файл --> Прочитать CSV как SimpleNamespace --> Возвращает SimpleNamespace
 ```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 # Пример 1: Преобразование CSV файла в SimpleNamespace
-csv_file_path = Path('data.csv')
-data_ns = csv2ns(csv_file_path)
-if data_ns:
-    print(data_ns)
+csv_file_path = 'data.csv'
+data = csv2ns(csv_file_path)
+if data:
+    print(data)
+else:
+    print('Не удалось преобразовать CSV файл в SimpleNamespace.')
 
-# Пример 2: Преобразование CSV файла с дополнительными параметрами
-csv_file_path = Path('data.csv')
-data_ns = csv2ns(csv_file_path, delimiter=';')
-if data_ns:
-    print(data_ns)
+# Пример 2: Преобразование CSV файла с дополнительными аргументами
+csv_file_path = 'data.csv'
+data = csv2ns(csv_file_path, delimiter=';')  # Указание разделителя
+if data:
+    print(data)
+else:
+    print('Не удалось преобразовать CSV файл в SimpleNamespace.')
 ```
 
 ### `csv_to_json`
@@ -149,44 +173,64 @@ def csv_to_json(
         >>> print(json_data)
         [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi there!'}]
     """
+    try:
+        data = read_csv_file(csv_file_path, exc_info=exc_info)
+        if data is not None:
+            with open(json_file_path, 'w', encoding='utf-8') as jsonfile:
+                json.dump(data, jsonfile, indent=4)
+            return data
+        return
+    except Exception as ex:
+        logger.error("Failed to convert CSV to JSON", ex, exc_info=exc_info)
+        return
 ```
 
-**Назначение**: Функция `csv_to_json` преобразует содержимое CSV-файла в формат JSON и сохраняет его в JSON-файл.
+**Назначение**: Преобразует CSV файл в формат JSON и сохраняет его в JSON файл.
 
 **Параметры**:
-- `csv_file_path` (str | Path): Путь к CSV-файлу, который необходимо преобразовать.
-- `json_file_path` (str | Path): Путь к JSON-файлу, в который будет сохранено преобразованное содержимое.
-- `exc_info` (bool, optional): Если `True`, включает информацию об исключении в лог. По умолчанию `True`.
+- `csv_file_path` (str | Path): Путь к CSV файлу, который нужно прочитать.
+- `json_file_path` (str | Path): Путь к JSON файлу, в который нужно сохранить данные.
+- `exc_info` (bool, optional): Если `True`, включает информацию об отслеживании в журнал. По умолчанию `True`.
 
 **Возвращает**:
-- `List[Dict[str, str]] | None`: Функция возвращает JSON-данные в виде списка словарей или `None`, если преобразование не удалось.
+- `List[Dict[str, str]] | None`: Данные JSON в виде списка словарей, или `None`, если преобразование не удалось.
+
+**Вызывает исключения**:
+- `Exception`: Возникает, если не удается преобразовать CSV в JSON.
 
 **Как работает функция**:
 
-1. Функция вызывает функцию `read_csv_file` из модуля `src.utils.csv`, передавая ей путь к CSV-файлу и флаг `exc_info`.
-2. Если данные успешно прочитаны из CSV-файла, функция открывает JSON-файл для записи в кодировке UTF-8.
-3. Функция записывает JSON-данные в файл с отступом 4 для удобочитаемости.
-4. Функция возвращает JSON-данные.
-5. Если во время процесса возникает исключение, функция логирует ошибку с использованием `logger.error` и возвращает `None`.
+1. Функция `csv_to_json` принимает путь к CSV файлу (`csv_file_path`) и путь к JSON файлу (`json_file_path`).
+2. Она вызывает функцию `read_csv_file` для чтения данных из CSV файла. Параметр `exc_info` определяет, будет ли включена информация об исключениях в логи.
+3. Если данные успешно прочитаны, функция открывает JSON файл для записи (`json_file_path`) в кодировке UTF-8.
+4. Данные записываются в JSON файл с отступом в 4 пробела для удобочитаемости.
+5. Функция возвращает данные JSON в виде списка словарей.
+6. Если в процессе преобразования возникает исключение, оно логируется с помощью `logger.error`, и функция возвращает `None`.
 
 ```
-Чтение CSV файла --> Преобразование в JSON --> Запись в JSON файл --> Возврат JSON данных
+CSV файл --> Прочитать CSV файл --> Записать в JSON файл --> Возвращает JSON данные
+                                      ^
+                                      |
+                                      Если ошибка
 ```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 # Пример 1: Преобразование CSV файла в JSON
-csv_file_path = Path('data.csv')
-json_file_path = Path('data.json')
+csv_file_path = 'data.csv'
+json_file_path = 'data.json'
 json_data = csv_to_json(csv_file_path, json_file_path)
 if json_data:
     print(json_data)
+else:
+    print('Не удалось преобразовать CSV файл в JSON.')
 
-# Пример 2: Преобразование CSV файла в JSON с отключением информации об исключении
-csv_file_path = Path('data.csv')
-json_file_path = Path('data.json')
+# Пример 2: Преобразование CSV файла в JSON с отключением информации об исключениях в логах
+csv_file_path = 'data.csv'
+json_file_path = 'data.json'
 json_data = csv_to_json(csv_file_path, json_file_path, exc_info=False)
 if json_data:
     print(json_data)
+else:
+    print('Не удалось преобразовать CSV файл в JSON.')

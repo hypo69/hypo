@@ -1,30 +1,31 @@
-# Модуль для работы с Perplexity Labs API
+# Модуль `PerplexityLabs`
+
 ## Обзор
 
-Модуль `PerplexityLabs` предоставляет асинхронный интерфейс для взаимодействия с API Perplexity Labs. Он позволяет отправлять сообщения и получать ответы от различных моделей, предоставляемых Perplexity Labs, таких как `r1-1776`, `sonar-pro`, `sonar` и другие. Модуль использует вебсокеты для потоковой передачи данных, что позволяет получать ответы в режиме реального времени.
+Модуль `PerplexityLabs` предоставляет асинхронный интерфейс для взаимодействия с моделями Perplexity AI Labs. Он позволяет генерировать текст на основе предоставленных сообщений, используя различные модели, такие как `r1-1776`, `sonar-pro` и другие. Модуль использует WebSocket для потоковой передачи данных и поддерживает прокси-серверы для безопасного подключения.
 
-## Подробнее
+## Подробней
 
-Этот модуль является частью проекта `hypotez` и предназначен для интеграции с другими компонентами, требующими взаимодействия с AI-моделями Perplexity Labs. Он предоставляет удобный способ отправки запросов и обработки ответов в асинхронном режиме.
+Модуль предназначен для асинхронного взаимодействия с API Perplexity Labs. Он устанавливает WebSocket-соединение, отправляет сообщения и обрабатывает ответы, предоставляя сгенерированный текст и информацию об источниках.
 
 ## Классы
 
 ### `PerplexityLabs`
 
-**Описание**: Класс `PerplexityLabs` является асинхронным генератором, который позволяет взаимодействовать с API Perplexity Labs.
+**Описание**: Класс `PerplexityLabs` реализует функциональность асинхронного провайдера для моделей Perplexity AI Labs.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность для асинхронных генераторов.
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
 - `ProviderModelMixin`: Предоставляет методы для работы с моделями.
 
 **Атрибуты**:
 - `url` (str): URL главной страницы Perplexity Labs.
-- `working` (bool): Указывает, работает ли провайдер.
+- `working` (bool): Флаг, указывающий на работоспособность провайдера.
 - `default_model` (str): Модель, используемая по умолчанию (`r1-1776`).
 - `models` (List[str]): Список поддерживаемых моделей.
 
 **Методы**:
-- `create_async_generator()`: Создает асинхронный генератор для получения ответов от API Perplexity Labs.
+- `create_async_generator`: Асинхронный генератор для создания потока сообщений с использованием WebSocket.
 
 ## Функции
 
@@ -40,104 +41,53 @@ async def create_async_generator(
     **kwargs
 ) -> AsyncResult:
     """
-    Создает асинхронный генератор для взаимодействия с API Perplexity Labs.
+    Асинхронно создает генератор для взаимодействия с Perplexity Labs API.
 
     Args:
-        cls: Класс, для которого вызывается метод.
+        cls (PerplexityLabs): Класс PerplexityLabs.
         model (str): Имя используемой модели.
         messages (Messages): Список сообщений для отправки.
-        proxy (str, optional): Прокси-сервер для использования. По умолчанию `None`.
-        **kwargs: Дополнительные параметры.
+        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        **kwargs: Дополнительные аргументы.
 
     Returns:
-        AsyncResult: Асинхронный генератор, возвращающий ответы от API Perplexity Labs.
+        AsyncResult: Асинхронный генератор, возвращающий текст и информацию об источниках.
 
     Raises:
-        ResponseError: Если возникает ошибка при получении ответа от API.
-        RuntimeError: Если возникает неизвестная ошибка.
+        ResponseError: Если возникает ошибка при обработке ответа от сервера.
+        RuntimeError: При возникновении неизвестной ошибки.
 
+    Внутренние функции:
+        Нет
     """
 ```
 
-**Назначение**: Функция `create_async_generator` создает и возвращает асинхронный генератор, который отправляет сообщения в API Perplexity Labs и возвращает ответы.
-
-**Параметры**:
-- `cls`: Ссылка на класс `PerplexityLabs`.
-- `model` (str): Имя модели, которую нужно использовать для генерации ответа.
-- `messages` (Messages): Список сообщений, которые нужно отправить в API.
-- `proxy` (str, optional): Адрес прокси-сервера, если необходимо использовать прокси для подключения к API. По умолчанию `None`.
-- `**kwargs`: Дополнительные параметры, которые могут быть переданы в API.
-
-**Возвращает**:
-- `AsyncResult`: Асинхронный генератор, который выдает части ответа от API Perplexity Labs.
-
-**Вызывает исключения**:
-- `ResponseError`: Если возникает ошибка при обработке ответа от API.
-- `RuntimeError`: Если возникает неизвестная ошибка во время обмена сообщениями с сервером.
+**Назначение**: Функция `create_async_generator` создает асинхронный генератор для взаимодействия с API Perplexity Labs. Она устанавливает WebSocket-соединение, отправляет сообщения и обрабатывает ответы, предоставляя сгенерированный текст и информацию об источниках.
 
 **Как работает функция**:
 
-1. **Инициализация**:
-   - Устанавливаются заголовки запроса, включая `Origin` и `Referer`.
-   - Открывается асинхронная сессия с использованием `StreamSession` для поддержки потоковой передачи данных.
-
-2. **Получение SID (Session ID)**:
-   - Отправляется GET-запрос к API для получения идентификатора сессии (SID).
-   - Проверяется, что ответ начинается с "0", и извлекается SID из JSON-ответа.
-
-3. **Аутентификация**:
-   - Отправляется POST-запрос для аутентификации с использованием JWT.
-   - Проверяется, что ответ равен "OK".
-
-4. **Подключение к WebSocket**:
-   - Устанавливается WebSocket-соединение с сервером Perplexity Labs.
-   - Отправляются probe-сообщения для установления соединения.
-
-5. **Отправка сообщений и получение ответов**:
-   - Формируется JSON-сообщение с данными для отправки, включая версию, источник, модель и список сообщений.
-   - Отправляется сообщение через WebSocket.
-   - В цикле ожидаются ответы от сервера.
-   - Обрабатываются различные типы сообщений:
-     - "2": Отправляется ответное сообщение "3".
-     - Данные с ответом: Извлекаются данные из JSON, и извлекается полезная нагрузка `data["output"][last_message:]`.
-     - Если `data["final"]` равно `True`, извлекаются цитаты (`data["citations"]`), и генератор завершается.
-
-6. **Обработка ошибок**:
-   - Если происходит ошибка при обработке сообщения, выбрасывается исключение `ResponseError`.
-   - Если происходит неизвестная ошибка, выбрасывается исключение `RuntimeError`.
+1. **Инициализация**: Устанавливает заголовки и создает асинхронную сессию с использованием `StreamSession`.
+2. **Получение SID**: Выполняет GET-запрос к API для получения идентификатора сессии (SID).
+3. **Авторизация**: Отправляет POST-запрос для авторизации с использованием JWT.
+4. **Установка WebSocket-соединения**: Устанавливает WebSocket-соединение с сервером.
+5. **Отправка сообщений**: Отправляет сообщения пользователя в формате JSON через WebSocket.
+6. **Обработка ответов**: Получает сообщения от сервера, извлекает текст и информацию об источниках, и передает их через генератор.
+7. **Завершение**: Завершает соединение при получении финального сообщения.
 
 **ASCII Flowchart**:
 
 ```
-Начало
-  ↓
-Установка заголовков и открытие сессии
-  ↓
-Получение SID через GET-запрос
-  ↓
-Аутентификация через POST-запрос
-  ↓
-Установка WebSocket-соединения
-  ↓
-Отправка probe-сообщений
-  ↓
-Отправка данных сообщений через WebSocket
-  ↓
-Начало цикла получения ответов
-  ↓
-Получение сообщения
-  ↓
-Обработка сообщения:
-  ├── "2" -> Отправка "3"
-  └── Данные -> Извлечение данных и выдача ответа
-  ↓
-Проверка data["final"]
-  ├── True -> Извлечение цитат и завершение
-  └── False -> Продолжение цикла
-  ↓
-Обработка ошибок (ResponseError, RuntimeError)
-  ↓
-Конец
+A[Создание сессии и получение SID]
+|
+B[Авторизация]
+|
+C[Установка WebSocket-соединения]
+|
+D[Отправка сообщений]
+|
+E[Получение и обработка ответов]
+|
+F[Завершение]
 ```
 
 **Примеры**:
@@ -145,74 +95,27 @@ async def create_async_generator(
 ```python
 import asyncio
 from src.endpoints.gpt4free.g4f.Provider.PerplexityLabs import PerplexityLabs
-from src.endpoints.gpt4free.g4f.typing import Messages
+from src.endpoints.gpt4free.g4f.typing import Message
 
 async def main():
     model = "r1-1776"
-    messages: Messages = [{"role": "user", "content": "Hello, how are you?"}]
+    messages = [
+        {"role": "user", "content": "What is the capital of France?"}
+    ]
 
-    async for message in PerplexityLabs.create_async_generator(model=model, messages=messages):
-        print(message, end="")
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-```python
-import asyncio
-from src.endpoints.gpt4free.g4f.Provider.PerplexityLabs import PerplexityLabs
-from src.endpoints.gpt4free.g4f.typing import Messages
-
-async def main():
-    model = "sonar-pro"
-    messages: Messages = [{"role": "user", "content": "Tell me a joke"}]
-
-    async for message in PerplexityLabs.create_async_generator(model=model, messages=messages):
-        print(message, end="")
+    generator = PerplexityLabs.create_async_generator(model=model, messages=messages)
+    async for message in await generator:
+        print(message)
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
-```python
-import asyncio
-from src.endpoints.gpt4free.g4f.Provider.PerplexityLabs import PerplexityLabs
-from src.endpoints.gpt4free.g4f.typing import Messages
 
-async def main():
-    model = "sonar"
-    messages: Messages = [{"role": "user", "content": "Write a short poem about the sea"}]
+**Описание блоков ASCII Flowchart**:
 
-    async for message in PerplexityLabs.create_async_generator(model=model, messages=messages):
-        print(message, end="")
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-```python
-import asyncio
-from src.endpoints.gpt4free.g4f.Provider.PerplexityLabs import PerplexityLabs
-from src.endpoints.gpt4free.g4f.typing import Messages
-
-async def main():
-    model = "sonar-reasoning"
-    messages: Messages = [{"role": "user", "content": "What is the capital of France?"}]
-
-    async for message in PerplexityLabs.create_async_generator(model=model, messages=messages):
-        print(message, end="")
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-```python
-import asyncio
-from src.endpoints.gpt4free.g4f.Provider.PerplexityLabs import PerplexityLabs
-from src.endpoints.gpt4free.g4f.typing import Messages
-
-async def main():
-    model = "sonar-reasoning-pro"
-    messages: Messages = [{"role": "user", "content": "Explain the theory of relativity"}]
-
-    async for message in PerplexityLabs.create_async_generator(model=model, messages=messages):
-        print(message, end="")
-
-if __name__ == "__main__":
-    asyncio.run(main())
+- **A [Создание сессии и получение SID]**: Устанавливает асинхронную сессию и отправляет GET-запрос для получения идентификатора сессии (SID).
+- **B [Авторизация]**: Отправляет POST-запрос для авторизации с использованием JWT.
+- **C [Установка WebSocket-соединения]**: Устанавливает WebSocket-соединение с сервером Perplexity Labs.
+- **D [Отправка сообщений]**: Отправляет сообщения пользователя в формате JSON через WebSocket.
+- **E [Получение и обработка ответов]**: Получает сообщения от сервера, извлекает текст и информацию об источниках, и передает их через генератор.
+- **F [Завершение]**: Завершает соединение при получении финального сообщения.

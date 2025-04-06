@@ -41,7 +41,7 @@ class Config:
     
     ENDPOINT = 'kazarinov'
     MODE:str = 'PRODUCTION' # <- Определяет режим разработчика. Если MODE=='PRODUCTION' будет запущен kazarionaov бот, иначе тестбот
-    MODE:str = 'DEV'
+    #MODE:str = 'DEV'
     BOT_TOKEN:str
 
     if MODE=='PRODUCTION':

@@ -1,12 +1,12 @@
-# Модуль: `post_message_async.py`
+# Модуль: `post_message_async`
 
 ## Обзор
 
-Модуль `post_message_async.py` предназначен для автоматизации процесса публикации рекламных сообщений в Facebook, включая добавление заголовка, описания и медиафайлов (изображений или видео). Он содержит функции для загрузки медиафайлов, обновления подписей к изображениям и публикации поста.
+Модуль `post_message_async.py` предназначен для автоматизации процесса публикации рекламных сообщений в Facebook, включая загрузку медиафайлов и добавление подписей к ним. Он использует Selenium WebDriver для взаимодействия с веб-интерфейсом Facebook.
 
 ## Подробней
 
-Этот модуль является частью системы автоматизации для размещения рекламы в Facebook. Он использует библиотеку `selenium` для взаимодействия с веб-интерфейсом Facebook и модуль `asyncio` для асинхронного выполнения задач. Код предназначен для работы с данными о рекламных кампаниях и продуктах, полученными из `aliexpress`.
+Этот модуль является частью системы автоматизации маркетинговых кампаний в Facebook. Он предоставляет функции для составления и публикации рекламных постов, включая добавление текста, изображений и видео. Модуль асинхронный и позволяет параллельно обрабатывать несколько продуктов, что ускоряет процесс публикации.
 
 ## Функции
 
@@ -14,166 +14,163 @@
 
 ```python
 def post_title(d: Driver, category: SimpleNamespace) -> bool:
-    """ Sends the title and description of a campaign to the post message box.
+    """ Отправляет заголовок и описание кампании в поле сообщения.
 
     Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        category (SimpleNamespace): The category containing the title and description to be sent.
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        category (SimpleNamespace): Объект, содержащий заголовок и описание для отправки.
 
     Returns:
-        bool: `True` if the title and description were sent successfully, otherwise `None`.
+        bool: `True`, если заголовок и описание успешно отправлены, в противном случае `None`.
 
-    Examples:
-        >>> driver = Driver(...)
-        >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> post_title(driver, category)
+    Example:
+        >>> driver = Driver(...)\n
+        >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")\n
+        >>> post_title(driver, category)\n
         True
     """
-    ...
 ```
 
-**Назначение**: Отправляет заголовок и описание рекламной кампании в поле для ввода сообщения.
+**Назначение**: Функция отправляет заголовок и описание рекламной кампании в поле для создания нового поста в Facebook.
 
 **Параметры**:
 - `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
 - `category` (SimpleNamespace): Объект, содержащий заголовок (`title`) и описание (`description`) кампании.
 
 **Возвращает**:
-- `bool`: `True`, если заголовок и описание успешно отправлены, иначе `None`.
+- `bool`: `True`, если заголовок и описание были успешно отправлены, в противном случае `None`.
 
 **Как работает функция**:
 
-1. **Прокрутка страницы**: Прокручивает страницу назад.
-2. **Открытие формы добавления поста**: Открывает форму для добавления нового поста.
-3. **Формирование сообщения**: Формирует сообщение, объединяя заголовок и описание категории.
-4. **Отправка сообщения**: Отправляет сообщение в поле для ввода текста.
-5. **Логирование ошибок**: В случае неудачи при прокрутке, открытии формы или отправке сообщения, функция записывает сообщение об ошибке в лог.
+1.  **Прокрутка страницы**: Прокручивает страницу вверх, чтобы убедиться, что все элементы видны.
+2.  **Открытие окна добавления поста**: Нажимает на кнопку "Добавить пост", чтобы открыть форму для создания нового сообщения.
+3.  **Формирование сообщения**: Собирает текст сообщения, используя заголовок и описание из объекта `category`.
+4.  **Ввод сообщения**: Вставляет сформированное сообщение в текстовое поле поста.
 
-```mermaid
-graph LR
-A[Начало] --> B{Прокрутка страницы};
-B -- Успех --> C{Открытие формы добавления поста};
-B -- Ошибка --> E[Лог: Ошибка прокрутки];
-C -- Успех --> D{Формирование сообщения};
-C -- Ошибка --> F[Лог: Ошибка открытия формы];
-D --> G{Отправка сообщения};
-G -- Успех --> H[Конец: True];
-G -- Ошибка --> I[Лог: Ошибка отправки сообщения];
-E --> H;
-F --> H;
-I --> H;
+**ASCII flowchart**:
+
+```
+A: Прокрутка страницы
+↓
+B: Открытие окна добавления поста
+↓
+C: Формирование сообщения (заголовок + описание)
+↓
+D: Ввод сообщения в текстовое поле
+↓
+E: Возврат True (если успешно) или None (если ошибка)
 ```
 
 **Примеры**:
 
 ```python
-driver = Driver(Firefox)  # пример создания драйвера
-category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
+driver = Driver(Chrome)
+category = SimpleNamespace(title="Супер скидки!", description="Только сегодня!")
 result = post_title(driver, category)
-print(result)  # Выведет True или None в случае ошибки
+print(result)  # Выведет True, если успешно
 ```
 
 ### `upload_media`
 
 ```python
 async def upload_media(d: Driver, products: List[SimpleNamespace], no_video:bool = False) -> bool:
-    """ Uploads media files to the images section and updates captions.
+    """ Загружает медиафайлы в раздел изображений и обновляет подписи.
 
     Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        products (List[SimpleNamespace]): List of products containing media file paths.
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        products (List[SimpleNamespace]): Список продуктов, содержащих пути к медиафайлам.
+        no_video (bool): Если True - не загружать видео даже если `product` содержит `local_video_path`. По умолчанию `False`.
 
     Returns:
-        bool: `True` if media files were uploaded successfully, otherwise `None`.
+        bool: `True`, если медиафайлы были успешно загружены, в противном случае `None`.
 
     Raises:
-        Exception: If there is an error during media upload or caption update.
+        Exception: Если возникает ошибка во время загрузки медиа или обновления подписи.
 
-    Examples:
-        >>> driver = Driver(...)
-        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
-        >>> await upload_media(driver, products)
+    Example:
+        >>> driver = Driver(...)\n
+        >>> products = [SimpleNamespace(local_image_path=\'path/to/image.jpg\', ...)]\n
+        >>> await upload_media(driver, products)\n
         True
     """
-    ...
 ```
 
-**Назначение**: Загружает медиафайлы (изображения или видео) в раздел изображений и обновляет подписи к ним.
+**Назначение**: Функция загружает медиафайлы (изображения или видео) в рекламный пост в Facebook и обновляет подписи к ним.
 
 **Параметры**:
 - `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
-- `products` (List[SimpleNamespace]): Список продуктов, содержащих пути к медиафайлам.
-- `no_video` (bool): Если `True`, загружает только изображения, иначе пытается загрузить видео, если оно доступно. По умолчанию `False`.
+- `products` (List[SimpleNamespace]): Список объектов, содержащих информацию о продуктах, включая пути к медиафайлам.
+- `no_video` (bool):  Если `True` - не загружать видео даже если `product` содержит `local_video_path`. По умолчанию `False`.
 
 **Возвращает**:
-- `bool`: `True`, если медиафайлы успешно загружены, иначе `None`.
+- `bool`: `True`, если медиафайлы были успешно загружены, в противном случае `None`.
 
 **Вызывает исключения**:
-- `Exception`: Если возникает ошибка при загрузке медиафайла или обновлении подписи.
+- `Exception`: Если возникает ошибка во время загрузки медиа или обновления подписи.
 
 **Как работает функция**:
 
-1. **Открытие формы добавления медиа**: Открывает форму для добавления фото или видео.
-2. **Подготовка списка продуктов**: Преобразует `products` в список, если это не список.
-3. **Итерация по продуктам**: Перебирает продукты в списке.
-4. **Выбор медиафайла**: Определяет, какой медиафайл загружать (видео или изображение) в зависимости от наличия видео и значения `no_video`.
-5. **Загрузка медиафайла**: Загружает медиафайл, используя локатор `foto_video_input`.
-6. **Обновление подписей**: После загрузки всех медиафайлов, нажимает кнопку редактирования загруженных медиафайлов и асинхронно обновляет подписи к изображениям.
-7. **Логирование ошибок**: В случае неудачи при открытии формы, загрузке файла или обновлении подписи, функция записывает сообщение об ошибке в лог.
+1.  **Открытие формы добавления медиа**: Открывает форму для добавления фото/видео в пост.
+2.  **Обработка списка продуктов**: Проверяет, что `products` является списком, и если нет, преобразует его в список.
+3.  **Загрузка медиа для каждого продукта**: Перебирает продукты и загружает медиафайлы (сначала пытается загрузить видео, если `no_video = False`, иначе загружает изображение).
+4.  **Обновление подписей**: После загрузки всех медиафайлов нажимает кнопку редактирования и вызывает функцию `update_images_captions` для добавления подписей к изображениям.
 
-```mermaid
-graph LR
-A[Начало] --> B{Открыть форму добавления медиа};
-B -- Успех --> C{Преобразование products в список};
-B -- Ошибка --> I[Конец: None];
-C --> D{Итерация по продуктам};
-D --> E{Выбор медиафайла (видео или изображение)};
-E --> F{Загрузка медиафайла};
-F -- Успех --> D;
-F -- Ошибка --> H[Лог: Ошибка загрузки изображения];
-D -- Конец итерации --> G{Нажатие кнопки редактирования};
-G -- Успех --> J{Обновление подписей};
-G -- Ошибка --> K[Лог: Ошибка редактирования];
-J --> L[Конец: True];
-H --> I;
-K --> I
+**ASCII flowchart**:
+
+```
+A: Открытие формы добавления медиа
+↓
+B: Проверка типа products (list или не list)
+↓
+C: Цикл по products
+    ↓
+    D: Определение типа медиа (видео или изображение)
+    ↓
+    E: Загрузка медиафайла
+    ↓
+F: Нажатие кнопки редактирования медиа
+↓
+G: Вызов update_images_captions
+↓
+H: Возврат True (если успешно) или None (если ошибка)
 ```
 
 **Примеры**:
 
 ```python
-driver = Driver(Firefox)  # пример создания драйвера
-products = [SimpleNamespace(local_image_path='path/to/image.jpg', product_title='Title', original_price='100', sale_price='50', discount='50%', evaluate_rate='5', promotion_link='link', tags='tags', language='ru')]
-result = await upload_media(driver, products)
-print(result)  # Выведет True или None в случае ошибки
+driver = Driver(Chrome)
+products = [
+    SimpleNamespace(local_image_path="image1.jpg", product_title="Product 1"),
+    SimpleNamespace(local_image_path="image2.jpg", product_title="Product 2")
+]
+asyncio.run(upload_media(driver, products))
 ```
 
 ### `update_images_captions`
 
 ```python
 async def update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
-    """ Adds descriptions to uploaded media files asynchronously.
+    """ Добавляет описания к загруженным медиафайлам асинхронно.
 
     Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        products (List[SimpleNamespace]): List of products with details to update.
-        textarea_list (List[WebElement]): List of textareas where captions are added.
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        products (List[SimpleNamespace]): Список продуктов с деталями для обновления.
+        textarea_list (List[WebElement]): Список текстовых полей, где добавляются подписи.
 
     Raises:
-        Exception: If there\'s an error updating the media captions.
+        Exception: Если возникает ошибка при обновлении подписей медиафайлов.
     """
-    ...
 ```
 
-**Назначение**: Асинхронно добавляет описания к загруженным медиафайлам.
+**Назначение**: Функция добавляет описания (подписи) к загруженным медиафайлам в Facebook.  Функция асинхронная.
 
 **Параметры**:
 - `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
-- `products` (List[SimpleNamespace]): Список продуктов с деталями для обновления.
-- `textarea_list` (List[WebElement]): Список элементов textarea, в которые добавляются подписи.
+- `products` (List[SimpleNamespace]): Список объектов с информацией о продуктах, для которых нужно добавить подписи.
+- `textarea_list` (List[WebElement]): Список элементов `<textarea>`, в которые нужно добавить текст подписи.
 
 **Вызывает исключения**:
-- `Exception`: Если возникает ошибка при обновлении подписи к медиафайлу.
+- `Exception`: Если возникает ошибка при обновлении подписей медиафайлов.
 
 **Внутренние функции**:
 
@@ -181,112 +178,122 @@ async def update_images_captions(d: Driver, products: List[SimpleNamespace], tex
 
 ```python
 def handle_product(product: SimpleNamespace, textarea_list: List[WebElement], i: int) -> None:
-    """ Handles the update of media captions for a single product synchronously.
+    """ Обрабатывает обновление подписей медиафайлов для одного продукта синхронно.
 
     Args:
-        product (SimpleNamespace): The product to update.
-        textarea_list (List[WebElement]): List of textareas where captions are added.
-        i (int): Index of the product in the list.
+        product (SimpleNamespace): Продукт для обновления.
+        textarea_list (List[WebElement]): Список текстовых полей, где добавляются подписи.
+        i (int): Индекс продукта в списке.
     """
-    ...
 ```
 
-**Назначение**: Обновляет подпись к медиафайлу для одного продукта синхронно.
+**Назначение**: Внутренняя функция, которая формирует текст подписи для одного продукта и добавляет его в соответствующее текстовое поле.
 
 **Параметры**:
-- `product` (SimpleNamespace): Продукт, для которого нужно обновить подпись.
-- `textarea_list` (List[WebElement]): Список элементов textarea, в которые добавляются подписи.
-- `i` (int): Индекс продукта в списке.
+- `product` (SimpleNamespace): Объект с информацией о продукте.
+- `textarea_list` (List[WebElement]): Список элементов `<textarea>`.
+- `i` (int): Индекс текущего продукта в списке.
 
 **Как работает функция**:
 
-1. **Определение направления текста**: Определяет направление текста (слева направо или справа налево) на основе языка продукта.
-2. **Формирование сообщения**: Формирует сообщение, объединяя детали продукта (название, цены, скидки и т.д.) в зависимости от направления текста.
-3. **Отправка сообщения в textarea**: Отправляет сформированное сообщение в соответствующий элемент `textarea`.
-4. **Логирование ошибок**: В случае ошибки при формировании сообщения или отправке текста в `textarea`, функция записывает сообщение об ошибке в лог.
+1.  **Определение направления текста**: Определяет направление текста (слева направо или справа налево) на основе языка продукта.
+2.  **Формирование сообщения**: Формирует текст сообщения, используя детали продукта (название, цены, скидки и т.д.) и локализованные строки из файла `translations.json`.
+3.  **Отправка сообщения в textarea**: Отправляет сформированный текст в соответствующий элемент `<textarea>`.
+
+**ASCII flowchart `handle_product`**:
+
+```
+A: Определение направления текста (LTR/RTL)
+↓
+B: Формирование сообщения (название, цены, скидки, локализация)
+↓
+C: Отправка сообщения в textarea
+```
 
 **Как работает функция `update_images_captions`**:
 
-1. **Загрузка локализованных единиц**: Загружает локализованные текстовые единицы из файла `translations.json`.
-2. **Итерация по продуктам**: Перебирает продукты в списке.
-3. **Асинхронное обновление подписей**: Для каждого продукта запускает функцию `handle_product` в отдельном потоке для асинхронного обновления подписи.
+1.  **Загрузка локализованных строк**: Загружает локализованные строки из файла `translations.json`.
+2.  **Цикл по продуктам**: Перебирает все продукты в списке.
+3.  **Асинхронный вызов handle_product**: Для каждого продукта асинхронно вызывает функцию `handle_product`, чтобы добавить подпись.
 
-```mermaid
-graph LR
-A[Начало] --> B{Загрузка локализованных единиц};
-B --> C{Итерация по продуктам};
-C --> D{Запуск handle_product в отдельном потоке};
-D --> E{handle_product: Определение направления текста};
-E --> F{handle_product: Формирование сообщения};
-F --> G{handle_product: Отправка сообщения в textarea};
-G -- Успех --> C;
-G -- Ошибка --> H[handle_product: Лог: Ошибка отправки];
-H --> C;
-C -- Конец итерации --> I[Конец];
+**ASCII flowchart `update_images_captions`**:
+
+```
+A: Загрузка локализованных строк из translations.json
+↓
+B: Цикл по products
+↓
+C: Асинхронный вызов handle_product для каждого продукта
 ```
 
 **Примеры**:
 
 ```python
-driver = Driver(Firefox)  # пример создания драйвера
-products = [SimpleNamespace(product_title='Title', original_price='100', sale_price='50', discount='50%', evaluate_rate='5', promotion_link='link', tags='tags', language='ru')]
-textarea_list = driver.execute_locator(locator.edit_image_properties_textarea)
-await update_images_captions(driver, products, textarea_list)
+driver = Driver(Chrome)
+products = [
+    SimpleNamespace(language="ru", product_title="Продукт 1", original_price="1000", sale_price="500"),
+    SimpleNamespace(language="en", product_title="Product 2", original_price="20", sale_price="10")
+]
+textarea_list = driver.execute_locator(locator.edit_image_properties_textarea)  # Получаем список textarea элементов
+asyncio.run(update_images_captions(driver, products, textarea_list))
 ```
 
 ### `promote_post`
 
 ```python
 async def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video:bool = False) -> bool:
-    """ Manages the process of promoting a post with a title, description, and media files.
+    """ Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
 
     Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        category (SimpleNamespace): The category details used for the post title and description.
-        products (List[SimpleNamespace]): List of products containing media and details to be posted.
+        d (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+        category (SimpleNamespace): Детали категории, используемые для заголовка и описания поста.
+        products (List[SimpleNamespace]): Список продуктов, содержащих медиа и детали для публикации.
+        no_video (bool): Если True - не загружать видео даже если `product` содержит `local_video_path`. По умолчанию `False`.
 
-    Examples:
-        >>> driver = Driver(...)
-        >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
-        >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
+    Example:
+        >>> driver = Driver(...)\n
+        >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")\n
+        >>> products = [SimpleNamespace(local_image_path=\'path/to/image.jpg\', ...)]\n
         >>> await promote_post(driver, category, products)
     """
-    ...
 ```
 
-**Назначение**: Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
+**Назначение**: Функция управляет процессом создания и публикации рекламного поста в Facebook, включая добавление заголовка, описания и медиафайлов.
 
 **Параметры**:
 - `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
-- `category` (SimpleNamespace): Детали категории, используемые для заголовка и описания поста.
-- `products` (List[SimpleNamespace]): Список продуктов, содержащих медиафайлы и детали для публикации.
-- `no_video` (bool): Если `True`, загружает только изображения, иначе пытается загрузить видео, если оно доступно. По умолчанию `False`.
+- `category` (SimpleNamespace): Объект, содержащий заголовок и описание рекламной кампании.
+- `products` (List[SimpleNamespace]): Список объектов с информацией о продуктах (медиафайлы и детали).
+- `no_video` (bool): Если True - не загружать видео даже если `product` содержит `local_video_path`. По умолчанию `False`.
 
 **Как работает функция**:
 
-1. **Публикация заголовка и описания**: Вызывает функцию `post_title` для добавления заголовка и описания.
-2. **Загрузка медиафайлов**: Вызывает функцию `upload_media` для загрузки медиафайлов.
-3. **Завершение редактирования**: Нажимает кнопку завершения редактирования.
-4. **Публикация поста**: Нажимает кнопку публикации.
+1.  **Публикация заголовка**: Вызывает функцию `post_title` для добавления заголовка и описания в пост.
+2.  **Загрузка медиа**: Вызывает функцию `upload_media` для загрузки медиафайлов (изображений или видео).
+3.  **Завершение редактирования**: Нажимает кнопку "Завершить редактирование".
+4.  **Публикация поста**: Нажимает кнопку "Опубликовать".
 
-```mermaid
-graph LR
-A[Начало] --> B{Публикация заголовка и описания (post_title)};
-B -- Успех --> C{Загрузка медиафайлов (upload_media)};
-B -- Ошибка --> G[Конец: None];
-C -- Успех --> D{Нажатие кнопки завершения редактирования};
-C -- Ошибка --> G;
-D -- Успех --> E{Нажатие кнопки публикации};
-D -- Ошибка --> G;
-E -- Успех --> F[Конец: True];
-E -- Ошибка --> G;
+**ASCII flowchart**:
+
+```
+A: Вызов post_title (добавление заголовка и описания)
+↓
+B: Вызов upload_media (загрузка медиафайлов)
+↓
+C: Нажатие кнопки "Завершить редактирование"
+↓
+D: Нажатие кнопки "Опубликовать"
+↓
+E: Возврат True (если успешно) или None (если ошибка)
 ```
 
 **Примеры**:
 
 ```python
-driver = Driver(Firefox)  # пример создания драйвера
-category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-products = [SimpleNamespace(local_image_path='path/to/image.jpg', product_title='Title', original_price='100', sale_price='50', discount='50%', evaluate_rate='5', promotion_link='link', tags='tags', language='ru')]
-result = await promote_post(driver, category, products)
-print(result)  # Выведет True или None в случае ошибки
+driver = Driver(Chrome)
+category = SimpleNamespace(title="Новая коллекция", description="Скидки до 50%!")
+products = [
+    SimpleNamespace(local_image_path="product1.jpg"),
+    SimpleNamespace(local_image_path="product2.jpg")
+]
+asyncio.run(promote_post(driver, category, products))

@@ -267,7 +267,7 @@ class GoogleGenerativeAI:
                 time.sleep(2**attempt + 10)
                 continue
             except ResourceExhausted as ex:
-                timeout = 10800
+                timeout = 14400
                 logger.debug(
                     f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
                     ex,

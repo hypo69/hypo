@@ -1,116 +1,51 @@
-# Модуль для работы с Hugging Face API для генерации текста
+# Модуль HuggingFaceAPI
+
 ## Обзор
 
-Модуль `HuggingFaceAPI` предназначен для взаимодействия с API Hugging Face для генерации текста. Он наследует функциональность от класса `OpenaiTemplate` и предоставляет методы для получения моделей, создания асинхронных генераторов и обработки запросов к API Hugging Face.
+Модуль `HuggingFaceAPI` предназначен для взаимодействия с моделями Hugging Face для генерации текста. Он наследует функциональность от `OpenaiTemplate` и адаптирует её для работы с API Hugging Face, обеспечивая поддержку различных моделей, включая модели для обработки текста и изображений. Модуль обеспечивает аутентификацию, выбор моделей и обработку ответов от API Hugging Face.
 
-## Подробней
+## Подробнее
 
-Модуль `HuggingFaceAPI` предоставляет интерфейс для взаимодействия с различными моделями Hugging Face, включая модели для генерации текста и модели для работы с изображениями. Он использует API-инференс Hugging Face для выполнения запросов и обработки ответов. Модуль также поддерживает работу с провайдерами, такими как Novita.
+Модуль `HuggingFaceAPI` является частью системы для работы с различными поставщиками AI-моделей. Он предоставляет интерфейс для взаимодействия с Hugging Face API, позволяя выбирать модели, передавать запросы и получать ответы. Модуль поддерживает как текстовые, так и визуальные модели, а также обеспечивает обработку ошибок и выбор оптимального провайдера для каждой модели.
 
 ## Классы
 
 ### `HuggingFaceAPI`
 
-**Описание**: Класс для работы с API Hugging Face для генерации текста.
+**Описание**: Класс `HuggingFaceAPI` предоставляет методы для взаимодействия с API Hugging Face для генерации текста.
 
 **Наследует**:
-- `OpenaiTemplate`: Предоставляет базовую функциональность для работы с API OpenAI.
+- `OpenaiTemplate`: Класс наследует от `OpenaiTemplate`, предоставляя общую структуру для работы с API, подобными OpenAI.
 
 **Атрибуты**:
 - `label` (str): Метка провайдера "HuggingFace (Text Generation)".
 - `parent` (str): Родительский провайдер "HuggingFace".
-- `url` (str): URL API Hugging Face "https://api-inference.huggingface.com".
-- `api_base` (str): Базовый URL API Hugging Face "https://api-inference.huggingface.co/v1".
-- `working` (bool): Указывает, что провайдер работает (True).
-- `needs_auth` (bool): Указывает, что требуется аутентификация (True).
-- `default_model` (str): Модель по умолчанию `default_llama_model`.
-- `default_vision_model` (str): Модель для работы с изображениями по умолчанию `default_vision_model`.
-- `vision_models` (List[str]): Список моделей для работы с изображениями `vision_models`.
-- `model_aliases` (Dict[str, str]): Алиасы моделей `model_aliases`.
-- `fallback_models` (List[str]): Список запасных моделей `text_models` + `vision_models`.
-- `provider_mapping` (Dict[str, Dict]): Соответствие моделей и провайдеров.
+- `url` (str): URL API Hugging Face.
+- `api_base` (str): Базовый URL API Hugging Face.
+- `working` (bool): Указывает, что провайдер находится в рабочем состоянии.
+- `needs_auth` (bool): Указывает, что для работы с провайдером требуется аутентификация.
+- `default_model` (str): Модель по умолчанию (`default_llama_model`).
+- `default_vision_model` (str): Визуальная модель по умолчанию (`default_vision_model`).
+- `vision_models` (list[str]): Список визуальных моделей.
+- `model_aliases` (dict[str, str]): Псевдонимы моделей.
+- `fallback_models` (list[str]): Список запасных моделей.
+- `provider_mapping` (dict[str, dict]): Сопоставление моделей и провайдеров.
 
 **Методы**:
-- `get_model(model: str, **kwargs) -> str`: Возвращает имя модели.
-- `get_models(**kwargs) -> list[str]`: Возвращает список доступных моделей.
-- `get_mapping(model: str, api_key: str = None) -> dict`: Возвращает mapping для модели.
-- `create_async_generator(model: str, messages: Messages, api_base: str = None, api_key: str = None, max_tokens: int = 2048, max_inputs_lenght: int = 10000, media: MediaListType = None, **kwargs)`: Создает асинхронный генератор для обработки запросов.
+- `get_model()`: Возвращает имя модели.
+- `get_models()`: Возвращает список доступных моделей.
+- `get_mapping()`: Возвращает сопоставление моделей и провайдеров.
+- `create_async_generator()`: Создает асинхронный генератор для взаимодействия с API Hugging Face.
 
 ## Функции
 
-### `calculate_lenght`
+### `get_model`
 
 ```python
-def calculate_lenght(messages: Messages) -> int:
-    """
-    Вычисляет суммарную длину содержимого всех сообщений в списке.
-
-    Args:
-        messages (Messages): Список сообщений, каждое из которых является словарем с ключом "content".
-
-    Returns:
-        int: Суммарная длина содержимого всех сообщений.
-    """
-    ...
-```
-
-**Назначение**: Вычисляет суммарную длину содержимого всех сообщений в списке.
-
-**Параметры**:
-- `messages` (Messages): Список сообщений, каждое из которых является словарем с ключом "content".
-
-**Возвращает**:
-- `int`: Суммарная длина содержимого всех сообщений.
-
-**Как работает функция**:
-
-1.  Инициализирует переменную `total_length` значением 0.
-2.  Перебирает каждое сообщение в списке `messages`.
-3.  Для каждого сообщения вычисляет длину содержимого (message["content"]) и добавляет 16.
-4.  Суммирует длины содержимого всех сообщений и возвращает результат.
-
-```
-Начало --> Инициализация_длины
-|
---> Для_каждого_сообщения_в_messages
-|   |
-|   --> Вычисление_длины_сообщения
-|   |
-|   --> Суммирование_длин
-|
---> Возврат_суммарной_длины
-|
-Конец
-```
-
-**Примеры**:
-
-```python
-from typing import List, Dict, Union, Optional
-
-Messages = List[Dict[str, str]]
-
-messages1: Messages = [{"role": "user", "content": "Hello"}, {"role": "assistant", "content": "Hi"}]
-length1 = calculate_lenght(messages1)
-print(f"Length of messages1: {length1}")  # Output: Length of messages1: 21
-
-messages2: Messages = [{"role": "user", "content": "This is a longer message"}]
-length2 = calculate_lenght(messages2)
-print(f"Length of messages2: {length2}")  # Output: Length of messages2: 41
-
-messages3: Messages = []
-length3 = calculate_lenght(messages3)
-print(f"Length of messages3: {length3}")  # Output: Length of messages3: 0
-
-```
-
-### `HuggingFaceAPI.get_model`
-
-```python
-    @classmethod
+ @classmethod
     def get_model(cls, model: str, **kwargs) -> str:
         """
-        Получает имя модели.
+        Метод для получения имени модели.
 
         Args:
             model (str): Имя модели.
@@ -125,11 +60,11 @@ print(f"Length of messages3: {length3}")  # Output: Length of messages3: 0
         ...
 ```
 
-**Назначение**: Получает имя модели.
+**Назначение**: Получение имени модели, при необходимости обращается к родительскому классу.
 
 **Параметры**:
 - `model` (str): Имя модели.
-- `**kwargs`: Дополнительные аргументы.
+- `**kwargs`: Дополнительные параметры.
 
 **Возвращает**:
 - `str`: Имя модели.
@@ -139,39 +74,30 @@ print(f"Length of messages3: {length3}")  # Output: Length of messages3: 0
 
 **Как работает функция**:
 
-1.  Пытается получить модель, используя метод `super().get_model(model, **kwargs)`.
+1.  Пытается получить модель, используя метод `get_model` родительского класса (`super()`).
 2.  Если возникает исключение `ModelNotSupportedError`, возвращает исходное имя модели.
 
 ```
-Начало --> Попытка_получения_модели
+A: Попытка получения модели через родительский класс
 |
---> Если_ошибка
-|   |
-|   --> Возврат_имени_модели
+B: Обработка исключения ModelNotSupportedError
 |
---> Иначе
-|   |
-|   --> Возврат_полученной_модели
-|
-Конец
+C: Возврат имени модели
 ```
 
 **Примеры**:
-
 ```python
-# Пример использования get_model
 model_name = HuggingFaceAPI.get_model("some_model")
-print(f"Model name: {model_name}")
-
+print(model_name)
 ```
 
-### `HuggingFaceAPI.get_models`
+### `get_models`
 
 ```python
     @classmethod
     def get_models(cls, **kwargs) -> list[str]:
         """
-        Получает список доступных моделей из API Hugging Face.
+        Возвращает список доступных моделей Hugging Face.
 
         Args:
             **kwargs: Дополнительные аргументы.
@@ -182,118 +108,100 @@ print(f"Model name: {model_name}")
         ...
 ```
 
-**Назначение**: Получает список доступных моделей из API Hugging Face.
+**Назначение**: Метод для получения списка доступных моделей из Hugging Face.
 
 **Параметры**:
-- `**kwargs`: Дополнительные аргументы.
+- `**kwargs`: Дополнительные параметры.
 
 **Возвращает**:
 - `list[str]`: Список доступных моделей.
 
 **Как работает функция**:
 
-1.  Проверяет, если список моделей (`cls.models`) пуст.
-2.  Если список пуст, выполняет запрос к API Hugging Face для получения списка моделей.
-3.  Фильтрует список моделей, оставляя только те, у которых статус "live" и задача "conversational".
-4.  Добавляет ключи из `cls.provider_mapping` к списку моделей.
-5.  Если запрос к API не удался, использует список `cls.fallback_models` в качестве запасного варианта.
-6.  Возвращает список доступных моделей.
+1.  Проверяет, был ли уже получен список моделей.
+2.  Если список моделей не был получен, отправляет GET-запрос к API Hugging Face для получения списка моделей.
+3.  Обрабатывает ответ API и извлекает идентификаторы моделей, у которых статус "live" и задача "conversational".
+4.  Добавляет в список моделей ключи из `cls.provider_mapping`.
+5.  Если запрос не удался, использует список запасных моделей (`cls.fallback_models`).
+6.  Возвращает список моделей.
 
 ```
-Начало --> Проверка_пустоты_списка_моделей
+A: Проверка наличия списка моделей
 |
---> Если_список_пуст
-|   |
-|   --> Запрос_к_API_Hugging_Face
-|   |
-|   --> Фильтрация_моделей
-|   |
-|   --> Добавление_ключей_из_provider_mapping
-|   |
-|   --> Если_запрос_не_удался
-|   |   |
-|   |   --> Использование_fallback_models
+B: Получение списка моделей из API Hugging Face
 |
---> Возврат_списка_моделей
+C: Извлечение идентификаторов моделей
 |
-Конец
+D: Добавление ключей из provider_mapping
+|
+E: Использование списка запасных моделей при неудачном запросе
+|
+F: Возврат списка моделей
 ```
 
 **Примеры**:
-
 ```python
-# Пример использования get_models
-available_models = HuggingFaceAPI.get_models()
-print(f"Available models: {available_models}")
+models = HuggingFaceAPI.get_models()
+print(models)
 ```
 
-### `HuggingFaceAPI.get_mapping`
+### `get_mapping`
 
 ```python
     @classmethod
-    async def get_mapping(cls, model: str, api_key: str = None) -> dict:
+    async def get_mapping(cls, model: str, api_key: str = None):
         """
-        Получает mapping для модели.
+        Получает сопоставление моделей и провайдеров.
 
         Args:
             model (str): Имя модели.
-            api_key (str, optional): API ключ. По умолчанию None.
+            api_key (str, optional): API-ключ. По умолчанию `None`.
 
         Returns:
-            dict: Mapping для модели.
+            dict: Сопоставление моделей и провайдеров.
         """
         ...
 ```
 
-**Назначение**: Получает mapping для модели.
+**Назначение**: Получение сопоставления между моделями и провайдерами для Hugging Face.
 
 **Параметры**:
 - `model` (str): Имя модели.
-- `api_key` (str, optional): API ключ. По умолчанию `None`.
+- `api_key` (str, optional): API-ключ. По умолчанию `None`.
 
 **Возвращает**:
-- `dict`: Mapping для модели.
+- `dict`: Сопоставление моделей и провайдеров.
 
 **Как работает функция**:
 
-1.  Проверяет, если mapping для модели уже существует в `cls.provider_mapping`.
-2.  Если mapping существует, возвращает его.
-3.  Если mapping не существует, выполняет запрос к API Hugging Face для получения mapping.
-4.  Сохраняет полученный mapping в `cls.provider_mapping`.
-5.  Возвращает mapping для модели.
+1.  Проверяет, есть ли сопоставление для данной модели в `cls.provider_mapping`.
+2.  Если сопоставление найдено, возвращает его.
+3.  Если сопоставление не найдено, отправляет асинхронный GET-запрос к API Hugging Face для получения информации о модели и её сопоставлении с провайдерами.
+4.  Сохраняет полученное сопоставление в `cls.provider_mapping`.
+5.  Возвращает сопоставление.
 
 ```
-Начало --> Проверка_существования_mapping
+A: Проверка наличия сопоставления в provider_mapping
 |
---> Если_mapping_существует
-|   |
-|   --> Возврат_mapping
+B: Отправка асинхронного GET-запроса к API Hugging Face
 |
---> Иначе
-|   |
-|   --> Запрос_к_API_Hugging_Face
-|   |
-|   --> Сохранение_mapping
-|   |
-|   --> Возврат_mapping
+C: Сохранение сопоставления в provider_mapping
 |
-Конец
+D: Возврат сопоставления
 ```
 
 **Примеры**:
-
 ```python
-# Пример использования get_mapping
 import asyncio
 
 async def main():
-    model_mapping = await HuggingFaceAPI.get_mapping("some_model", api_key="some_api_key")
-    print(f"Model mapping: {model_mapping}")
+    mapping = await HuggingFaceAPI.get_mapping("some_model")
+    print(mapping)
 
 asyncio.run(main())
 ```
 
-### `HuggingFaceAPI.create_async_generator`
+### `create_async_generator`
 
 ```python
     @classmethod
@@ -309,94 +217,116 @@ asyncio.run(main())
         **kwargs
     ):
         """
-        Создает асинхронный генератор для обработки запросов.
+        Создает асинхронный генератор для взаимодействия с API Hugging Face.
 
         Args:
             model (str): Имя модели.
-            messages (Messages): Список сообщений.
-            api_base (str, optional): Базовый URL API. По умолчанию None.
-            api_key (str, optional): API ключ. По умолчанию None.
+            messages (Messages): Список сообщений для отправки.
+            api_base (str, optional): Базовый URL API. По умолчанию `None`.
+            api_key (str, optional): API-ключ. По умолчанию `None`.
             max_tokens (int, optional): Максимальное количество токенов в ответе. По умолчанию 2048.
             max_inputs_lenght (int, optional): Максимальная длина входных данных. По умолчанию 10000.
-            media (MediaListType, optional): Список медиафайлов. По умолчанию None.
+            media (MediaListType, optional): Список медиафайлов. По умолчанию `None`.
             **kwargs: Дополнительные аргументы.
-
-        Yields:
-            ProviderInfo: Информация о провайдере.
         """
         ...
 ```
 
-**Назначение**: Создает асинхронный генератор для обработки запросов.
+**Назначение**: Создание асинхронного генератора для взаимодействия с API Hugging Face для генерации текста.
 
 **Параметры**:
 - `model` (str): Имя модели.
-- `messages` (Messages): Список сообщений.
+- `messages` (Messages): Список сообщений для отправки.
 - `api_base` (str, optional): Базовый URL API. По умолчанию `None`.
-- `api_key` (str, optional): API ключ. По умолчанию `None`.
+- `api_key` (str, optional): API-ключ. По умолчанию `None`.
 - `max_tokens` (int, optional): Максимальное количество токенов в ответе. По умолчанию 2048.
 - `max_inputs_lenght` (int, optional): Максимальная длина входных данных. По умолчанию 10000.
 - `media` (MediaListType, optional): Список медиафайлов. По умолчанию `None`.
 - `**kwargs`: Дополнительные аргументы.
 
-**Yields**:
-- `ProviderInfo`: Информация о провайдере.
-
 **Как работает функция**:
 
-1.  Если модель не указана и есть медиафайлы, использует `cls.default_vision_model`.
-2.  Получает имя модели, используя метод `cls.get_model(model)`.
-3.  Получает mapping для модели, используя метод `cls.get_mapping(model, api_key)`.
-4.  Если mapping не существует, вызывает исключение `ModelNotSupportedError`.
-5.  Перебирает провайдеров в mapping.
-6.  Для каждого провайдера определяет `api_path` и `api_base`.
-7.  Проверяет, если задача провайдера "conversational". Если нет, вызывает исключение `ModelNotSupportedError`.
-8.  Извлекает `providerId` из mapping.
-9.  Генерирует `ProviderInfo` и передает его в yield.
-10. Вызывает `super().create_async_generator` для обработки запроса.
+1.  Если модель не указана и есть медиафайлы, использует модель по умолчанию для обработки изображений.
+2.  Получает имя модели с помощью `cls.get_model()`.
+3.  Получает сопоставление модели и провайдера с помощью `cls.get_mapping()`.
+4.  Если сопоставление не найдено, вызывает исключение `ModelNotSupportedError`.
+5.  Итерируется по провайдерам в сопоставлении.
+6.  Формирует URL API на основе информации о провайдере.
+7.  Проверяет, что задача провайдера — "conversational". Если это не так, вызывает исключение `ModelNotSupportedError`.
+8.  Извлекает идентификатор модели провайдера.
+9.  Возвращает информацию о провайдере (`ProviderInfo`).
+10. Вызывает `super().create_async_generator()` для фактической генерации текста, используя выбранного провайдера и модель.
+11. Перехватывает исключение `PaymentRequiredError` и пытается использовать другого провайдера.
+12. Если все провайдеры вызывают исключение `PaymentRequiredError`, вызывает последнее исключение.
 
 ```
-Начало --> Проверка_модели_и_медиа
+A: Проверка наличия медиафайлов и выбор модели по умолчанию
 |
---> Получение_имени_модели
+B: Получение имени модели
 |
---> Получение_mapping
+C: Получение сопоставления модели и провайдера
 |
---> Если_mapping_не_существует
-|   |
-|   --> Вызов_исключения_ModelNotSupportedError
+D: Итерация по провайдерам
 |
---> Перебор_провайдеров
-|   |
-|   --> Определение_api_path_и_api_base
-|   |
-|   --> Проверка_задачи_провайдера
-|   |
-|   --> Если_задача_не_conversational
-|   |   |
-|   |   --> Вызов_исключения_ModelNotSupportedError
+E: Формирование URL API
 |
---> Извлечение_providerId
+F: Проверка задачи провайдера
 |
---> Генерация_ProviderInfo_и_yield
+G: Вызов super().create_async_generator()
 |
---> Вызов_super_create_async_generator
+H: Обработка исключения PaymentRequiredError
 |
-Конец
+I: Вызов исключения, если все провайдеры вызвали PaymentRequiredError
 ```
 
 **Примеры**:
 
 ```python
-# Пример использования create_async_generator
 import asyncio
-from typing import List, Dict, Union, Optional
+from typing import List, Dict
 
 Messages = List[Dict[str, str]]
 
 async def main():
-    messages: Messages = [{"role": "user", "content": "Hello"}]
-    async for chunk in HuggingFaceAPI.create_async_generator(model="some_model", messages=messages, api_key="some_api_key"):
+    messages: Messages = [{"role": "user", "content": "Hello, how are you?"}]
+    generator = HuggingFaceAPI.create_async_generator(model="google/gemma-3-27b-it", messages=messages)
+    async for chunk in generator:
         print(chunk)
 
 asyncio.run(main())
+```
+
+### `calculate_lenght`
+
+```python
+def calculate_lenght(messages: Messages) -> int:\n    return sum([len(message["content"]) + 16 for message in messages])
+```
+
+**Назначение**: Подсчет длины сообщений.
+
+**Параметры**:
+- `messages` (Messages): Список сообщений, где каждое сообщение представляет собой словарь с ключом "content".
+
+**Возвращает**:
+- `int`: Суммарная длина всех сообщений, увеличенная на 16 для каждого сообщения.
+
+**Как работает функция**:
+
+1.  Вычисляет длину содержимого каждого сообщения в списке `messages` и добавляет к ней число 16.
+2.  Суммирует полученные значения для всех сообщений.
+3.  Возвращает общую сумму, представляющую собой оценку общей длины сообщений.
+
+```
+A: Вычисление длины содержимого каждого сообщения + 16
+|
+B: Суммирование полученных значений
+|
+C: Возврат общей суммы
+```
+
+**Примеры**:
+
+```python
+messages = [{"role": "user", "content": "Hello"}, {"role": "assistant", "content": "Hi there"}]
+total_length = calculate_lenght(messages)
+print(total_length)  # Вывод: 21

@@ -1,28 +1,28 @@
-# Модуль для простого чата Gemini
+# Модуль gemini_simplechat.main
 
 ## Обзор
 
-Этот модуль предоставляет простой API для взаимодействия с моделью Google Gemini AI. Он включает в себя FastAPI приложение с поддержкой CORS, которое позволяет отправлять запросы чата и получать ответы от модели Gemini.
+Модуль предоставляет простой чат на основе модели Google Gemini. Он включает в себя FastAPI приложение с настроенным CORS, эндпоинт для обработки запросов чата и функцию для запуска локального сервера.
 
 ## Подробнее
 
-Модуль использует FastAPI для создания API, который принимает текстовые запросы и отправляет их в модель Google Gemini AI. Ответ модели возвращается клиенту. Конфигурация API, такая как разрешенные домены и заголовки, настраивается через параметры CORS. Для обработки запросов используется модель `GoogleGenerativeAI`, которая инициализируется с использованием ключа API и имени модели из настроек, а также системной инструкции.
+Этот модуль является частью проекта `hypotez` и предназначен для обеспечения интерфейса взаимодействия с моделью Google Gemini. Он использует FastAPI для создания API, позволяющего отправлять текстовые запросы и получать ответы от модели Gemini. Расположение файла `hypotez/src/endpoints/gemini_simplechat/main.py` указывает на то, что он является основным файлом для функциональности чата Gemini.
 
 ## Классы
 
 ### `ChatRequest`
 
-**Описание**: Модель запроса для чата, определяющая структуру входящих сообщений.
+**Описание**: Модель запроса чата, используемая для валидации входящих сообщений.
 
-**Атрибуты**:
-- `message` (str): Текст сообщения, отправляемого в чат.
+**Аттрибуты**:
+- `message` (str): Текст сообщения, отправленного пользователем.
 
 ## Функции
 
 ### `root`
 
 ```python
-async def root() -> HTMLResponse:
+async def root():
     """
     Возвращает HTML-контент главной страницы.
 
@@ -30,168 +30,130 @@ async def root() -> HTMLResponse:
         HTMLResponse: HTML-контент главной страницы.
 
     Raises:
-        HTTPException: Если возникает ошибка при чтении шаблона.
+        HTTPException: Если происходит ошибка при чтении файла шаблона.
 
-    Example:
-        >>> response = await root()
-        >>> print(response.status_code)
-        200
     """
 ```
 
-**Назначение**: Функция возвращает HTML-контент главной страницы для FastAPI приложения.
+**Назначение**: Функция обрабатывает GET-запрос к корневому пути ("/"). Она пытается прочитать содержимое HTML-файла и вернуть его в качестве ответа.
 
 **Как работает функция**:
 
-1.  **Чтение HTML-файла**: Пытается прочитать содержимое HTML-файла, путь к которому берется из конфигурации (`gs.fast_api.index_path`).
-2.  **Возврат HTMLResponse**: Если чтение файла прошло успешно, возвращает `HTMLResponse` с содержимым файла.
-3.  **Обработка исключений**: Если во время чтения файла возникает исключение, перехватывает его и возбуждает `HTTPException` с кодом состояния 500 и детальным сообщением об ошибке.
-
-**ASCII flowchart**:
+1.  **Чтение HTML-файла**: Функция пытается прочитать содержимое HTML-файла, путь к которому определяется переменной `gs.fast_api.index_path`.
+2.  **Обработка исключений**: Если происходит ошибка при чтении файла (например, файл не найден), функция возбуждает исключение `HTTPException` с кодом состояния 500 и детальным сообщением об ошибке.
+3.  **Возврат HTML-контента**: Если чтение файла прошло успешно, функция возвращает `HTMLResponse` с содержимым файла.
 
 ```
-Чтение HTML-файла (Path(...).read_text()) --> Успешно?
-  |
-  Да: --> Возврат HTMLResponse
-  |
-  Нет: --> Обработка исключения --> Возврат HTTPException
+    A[Чтение HTML-файла]
+    |
+    B[Обработка исключений]
+    |
+    C[Возврат HTML-контента]
 ```
 
 **Примеры**:
 
 ```python
-from fastapi.responses import HTMLResponse
-from fastapi import HTTPException
-from pathlib import Path
-from types import SimpleNamespace
+# Пример успешного вызова
+# (Предполагается, что файл index.html существует и доступен)
+response = await root()
+print(response.status_code)  # 200
+```
 
-# Mock-объекты для имитации конфигурации и файла
-class MockGS:
-    class fast_api:
-        index_path = "index.html"
-        host = "127.0.0.1"
-        port = "8000"
-
-gs = MockGS()
-
-__root__ = Path(".")  # Укажите текущую директорию или путь к вашему проекту
-
-# Создаем фиктивный HTML-файл для чтения
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write("<html><body><h1>Hello, world!</h1></body></html>")
-
-async def test_root():
-    try:
-        response = await root()
-        assert isinstance(response, HTMLResponse)
-        assert response.status_code == 200
-        content = str(response.body, encoding='utf-8')
-        assert "Hello, world!" in content
-    except HTTPException as ex:
-        assert False, f"HTTPException был вызван: {ex.detail}"
-    finally:
-        # Удаляем созданный файл
-        Path("index.html").unlink()
-
-# Запускаем тест
-import asyncio
-asyncio.run(test_root())
+```python
+# Пример вызова, когда файл index.html не найден
+# (В этом случае будет возбуждено исключение HTTPException)
+try:
+    response = await root()
+except HTTPException as ex:
+    print(ex.status_code)  # 500
+    print(ex.detail)  # Error reading templates: [Errno 2] No such file or directory: ...
 ```
 
 ### `chat`
 
 ```python
-async def chat(request: ChatRequest) -> dict:
+async def chat(request: ChatRequest):
     """
-    Обрабатывает запрос чата и возвращает ответ от модели Gemini.
+    Обрабатывает POST-запрос к эндпоинту "/api/chat".
 
     Args:
-        request (ChatRequest): Запрос чата, содержащий сообщение.
+        request (ChatRequest): Объект запроса, содержащий сообщение пользователя.
 
     Returns:
         dict: Ответ от модели Gemini.
 
     Raises:
-        HTTPException: Если возникает ошибка во время обработки запроса.
-
-    Example:
-        >>> request = ChatRequest(message="Hello")
-        >>> response = await chat(request)
-        >>> print(response)
-        {'response': 'Some response from Gemini'}
+        HTTPException: Если происходит ошибка при взаимодействии с моделью Gemini.
     """
 ```
 
-**Назначение**: Функция обрабатывает POST-запросы к эндпоинту `/api/chat`. Она принимает сообщение от клиента, отправляет его в модель Gemini AI и возвращает ответ.
+**Назначение**: Функция обрабатывает POST-запросы к эндпоинту "/api/chat". Она принимает запрос, содержащий сообщение пользователя, и отправляет его в модель Google Gemini для получения ответа.
 
 **Как работает функция**:
 
-1.  **Прием запроса**: Функция принимает объект `ChatRequest`, содержащий сообщение.
-2.  **Отправка сообщения в модель**: Использует глобальный экземпляр модели `GoogleGenerativeAI` для отправки сообщения в чат.
-3.  **Получение ответа**: Получает ответ от модели Gemini.
-4.  **Возврат ответа**: Возвращает ответ в формате JSON.
-5.  **Обработка исключений**: Если во время обработки запроса возникает исключение, перехватывает его, логирует ошибку и возбуждает `HTTPException` с кодом состояния 500 и детальным сообщением об ошибке.
-
-**ASCII flowchart**:
+1.  **Получение сообщения**: Функция извлекает сообщение пользователя из объекта `request` типа `ChatRequest`.
+2.  **Взаимодействие с моделью Gemini**: Функция вызывает метод `chat` объекта `model` (экземпляр класса `GoogleGenerativeAI`), передавая ему сообщение пользователя.
+3.  **Обработка ответа**: Функция получает ответ от модели Gemini и возвращает его в виде словаря.
+4.  **Обработка исключений**: Если происходит ошибка при взаимодействии с моделью Gemini, функция логирует ошибку с помощью `logger.error` и возбуждает исключение `HTTPException` с кодом состояния 500 и детальным сообщением об ошибке.
 
 ```
-Прием запроса (ChatRequest) --> Отправка сообщения в модель (model.chat(request.message)) --> Получение ответа
-  |
-  Успешно?
-  |
-  Да: --> Возврат ответа
-  |
-  Нет: --> Обработка исключения --> Логирование ошибки --> Возврат HTTPException
+    A[Получение сообщения от пользователя]
+    |
+    B[Взаимодействие с моделью Gemini]
+    |
+    C[Обработка ответа]
+    |
+    D[Обработка исключений]
 ```
 
 **Примеры**:
 
 ```python
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import pytest
-from unittest.mock import AsyncMock
-
-# Модель запроса для чата
-class ChatRequest(BaseModel):
-    message: str
-
-# Mock-объект для имитации модели GoogleGenerativeAI
-class MockGoogleGenerativeAI:
-    async def chat(self, message: str) -> str:
-        return f"Response for: {message}"
-
-# Создаем FastAPI приложение
-app = FastAPI()
-
-# Определяем эндпоинт /api/chat
-@app.post("/api/chat")
-async def chat(request: ChatRequest):
-    global model
-    try:
-        response = await model.chat(request.message)
-        return {"response": response}
-    except Exception as ex:
-        raise HTTPException(status_code=500, detail=str(ex))
-
-# Фикстура для подмены модели GoogleGenerativeAI
-@pytest.fixture
-def mock_google_generative_ai(monkeypatch):
-    mock = MockGoogleGenerativeAI()
-    monkeypatch.setattr("main.model", mock)
-    return mock
-
-# Тест для эндпоинта /api/chat
-@pytest.mark.asyncio
-async def test_chat_endpoint(mock_google_generative_ai):
-    from fastapi.testclient import TestClient
-    client = TestClient(app)
-    message = "Test message"
-    response = client.post("/api/chat", json={"message": message})
-    assert response.status_code == 200
-    assert response.json() == {"response": f"Response for: {message}"}
+# Пример успешного вызова
+# (Предполагается, что модель Gemini доступна и возвращает ответ)
+request = ChatRequest(message="Hello")
+response = await chat(request)
+print(response)  # {'response': 'Hello from Gemini'}
 ```
 
-## Локальный запуск сервера
+```python
+# Пример вызова, когда модель Gemini недоступна
+# (В этом случае будет возбуждено исключение HTTPException)
+try:
+    request = ChatRequest(message="Hello")
+    response = await chat(request)
+except HTTPException as ex:
+    print(ex.status_code)  # 500
+    print(ex.detail)  # Error in chat: ...
+```
+```python
+if __name__ == "__main__":
+    """
+    Запускает Uvicorn-сервер, если скрипт вызывается напрямую.
+    """
+```
 
-В блоке `if __name__ == "__main__":` код запускает Uvicorn сервер, используя хост и порт, указанные в конфигурации (`gs.fast_api`). Это позволяет запускать API локально для тестирования и разработки.
+**Назначение**: Этот блок кода запускает Uvicorn-сервер, если скрипт вызывается напрямую (а не импортируется как модуль).
+
+**Как работает функция**:
+
+1.  **Проверка условия `if __name__ == "__main__":`**: Этот код выполняется только в том случае, если скрипт запускается как основная программа.
+2.  **Запуск Uvicorn**: Используется функция `uvicorn.run()` для запуска FastAPI-приложения. Параметры `host` и `port` берутся из конфигурации `gs.fast_api`.
+
+### Внутренние переменные
+- `app`: FastAPI приложение. Используется для определения эндпоинтов и обработки запросов.
+- `system_instruction`: Инструкция для модели Gemini, загруженная из файла.
+- `model`: Экземпляр класса `GoogleGenerativeAI`, используемый для взаимодействия с моделью Gemini.
+
+## Модули
+- `fastapi`: Используется для создания API.
+- `uvicorn`: Используется для запуска локального сервера.
+- `pydantic`: Используется для валидации данных.
+- `src.ai.GoogleGenerativeAI`: Используется для взаимодействия с моделью Gemini.
+- `src.utils.jjson`: Используется для загрузки JSON-файлов.
+- `src.logger`: Используется для логирования.
+
+```
+
+```

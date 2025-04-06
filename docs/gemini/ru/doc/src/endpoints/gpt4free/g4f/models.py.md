@@ -1,889 +1,930 @@
-# Модуль `models.py`
+# Модуль для определения моделей машинного обучения
 
 ## Обзор
 
-Модуль `models.py` содержит определения классов для представления различных моделей машинного обучения, используемых в проекте `hypotez`. Он также включает утилиты для работы с этими моделями, такие как преобразование строковых идентификаторов в экземпляры моделей и предоставление списка всех доступных моделей. Модуль предназначен для централизованного управления информацией о моделях и упрощения доступа к ним в других частях проекта.
+Модуль `models.py` содержит определения классов `Model`, `ImageModel`, `AudioModel`, `VisionModel`, а также статические определения различных моделей машинного обучения и утилиты для работы с ними. Он предназначен для централизованного хранения информации о моделях, их базовых провайдерах и предпочтительных провайдерах, обеспечивающих оптимальную работу.
 
-## Подробнее
+## Подробней
 
-Модуль определяет несколько классов, включая `Model`, `ImageModel`, `AudioModel` и `VisionModel`, которые используются для представления различных типов моделей машинного обучения. Класс `Model` является базовым классом для всех моделей и содержит информацию об имени модели, базовом провайдере и предпочтительном провайдере. Подклассы `ImageModel`, `AudioModel` и `VisionModel` используются для представления моделей, работающих с изображениями, аудио и видео соответственно.
-Модуль также определяет класс `ModelUtils`, который предоставляет утилиты для работы с моделями, такие как преобразование строковых идентификаторов в экземпляры моделей.
-В модуле определены различные модели, такие как `gpt_3_5_turbo`, `gpt_4`, `llama_2_7b`, `mixtral_8x7b` и другие, а также модели для работы с изображениями, такие как `sdxl_turbo`, `dall_e_3` и другие.
-Также в модуле создается словарь `demo_models`, содержащий список моделей для демонстрации и список провайдеров, которые с ними работают.
-В конце модуля создается список всех моделей и провайдеров, которые с ними работают.
+Этот модуль играет ключевую роль в проекте `hypotez`, предоставляя унифицированный способ доступа к различным моделям машинного обучения и их конфигурациям. Он позволяет легко расширять список поддерживаемых моделей и управлять провайдерами, используемыми для каждой модели.
 
 ## Классы
 
 ### `Model`
 
-**Описание**: Базовый класс для представления моделей машинного обучения.
+**Описание**: Базовый класс для представления модели машинного обучения.
+
+**Принцип работы**: Класс содержит информацию об имени модели, базовом провайдере и предпочтительном провайдере.
 
 **Атрибуты**:
 
-- `name` (str): Имя модели.
-- `base_provider` (str): Базовый провайдер для модели.
-- `best_provider` (ProviderType): Предпочтительный провайдер для модели. Обычно используется с логикой повторных попыток.
+-   `name` (str): Имя модели.
+-   `base_provider` (str): Базовый провайдер для модели.
+-   `best_provider` (ProviderType): Предпочтительный провайдер для модели.
 
 **Методы**:
 
-- `__all__() -> list[str]`: Возвращает список имен всех моделей.
+-   `__all__() -> list[str]`: Возвращает список всех имен моделей.
 
-### `ImageModel`
+    ```python
+    @staticmethod
+    def __all__() -> list[str]:
+        """Возвращает список всех имен моделей."""
+        return _all_models
+    ```
 
-**Описание**: Класс для представления моделей, работающих с изображениями.
-**Наследует**: `Model`
+    **Назначение**: Метод класса возвращает список всех доступных моделей, определенных в модуле.
 
-### `AudioModel`
+    **Возвращает**:
 
-**Описание**: Класс для представления моделей, работающих с аудио.
-**Наследует**: `Model`
+    -   `list[str]`: Список имен моделей.
 
-### `VisionModel`
+    **Как работает метод**:
 
-**Описание**: Класс для представления моделей, работающих с видео.
-**Наследует**: `Model`
+    1.  Метод возвращает значение глобальной переменной `_all_models`, которая содержит список имен всех моделей.
+
+    **Примеры**:
+
+    ```python
+    >>> Model.__all__()
+    ['gpt-3.5-turbo', 'gpt-4', ...]
+    ```
+
+### `ImageModel(Model)`
+
+**Описание**: Подкласс `Model` для представления моделей, работающих с изображениями.
+
+**Принцип работы**: Наследует все атрибуты и методы от класса `Model`.
+
+### `AudioModel(Model)`
+
+**Описание**: Подкласс `Model` для представления моделей, работающих с аудио.
+
+**Принцип работы**: Наследует все атрибуты и методы от класса `Model`.
+
+### `VisionModel(Model)`
+
+**Описание**: Подкласс `Model` для представления моделей, работающих с видео.
+
+**Принцип работы**: Наследует все атрибуты и методы от класса `Model`.
 
 ### `ModelUtils`
 
-**Описание**: Утилитный класс для сопоставления строковых идентификаторов с экземплярами моделей.
+**Описание**: Утилитный класс для сопоставления строковых идентификаторов с экземплярами класса `Model`.
+
+**Принцип работы**: Класс содержит словарь `convert`, который связывает имена моделей со значениями.
 
 **Атрибуты**:
 
-- `convert` (dict[str, Model]): Словарь, сопоставляющий строковые идентификаторы моделей с экземплярами `Model`.
+-   `convert` (dict[str, Model]): Словарь, сопоставляющий строковые идентификаторы моделей с экземплярами класса `Model`.
 
 ## Функции
 
-В данном модуле функции отсутствуют, так как основная логика реализована через классы и их методы. Ниже приведено описание атрибутов экземпляров классов, представляющих конкретные модели.
-
 ### `default`
 
-**Описание**: Модель, используемая по умолчанию.
+```python
+default = Model(
+    name = "",
+    base_provider = "",
+    best_provider = IterListProvider([
+        DDG,
+        Blackbox,
+        Copilot,
+        DeepInfraChat,
+        AllenAI,
+        PollinationsAI,
+        TypeGPT,
+        OIVSCode,
+        ChatGptEs,
+        Free2GPT,
+        FreeGpt,
+        Glider,
+        Dynaspark,
+        OpenaiChat,
+        Jmuz,
+        Cloudflare,
+    ])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель по умолчанию, используемую, когда конкретная модель не указана.
 
-- `name` (str): Пустая строка.
-- `base_provider` (str): Пустая строка.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DDG`, `Blackbox`, `Copilot`, `DeepInfraChat`, `AllenAI`, `PollinationsAI`, `TypeGPT`, `OIVSCode`, `ChatGptEs`, `Free2GPT`, `FreeGpt`, `Glider`, `Dynaspark`, `OpenaiChat`, `Jmuz`, `Cloudflare`.
+**Параметры**:
+
+-   `name` (str): Пустая строка `""`.
+-   `base_provider` (str): Пустая строка `""`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список провайдеров по умолчанию.
+
+**Как работает функция**:
+
+1.  Создается экземпляр класса `Model` с именем `""` (пустая строка).
+2.  В качестве базового провайдера устанавливается пустая строка `""`.
+3.  В качестве лучшего провайдера устанавливается `IterListProvider`, который содержит список провайдеров: `DDG`, `Blackbox`, `Copilot`, `DeepInfraChat`, `AllenAI`, `PollinationsAI`, `TypeGPT`, `OIVSCode`, `ChatGptEs`, `Free2GPT`, `FreeGpt`, `Glider`, `Dynaspark`, `OpenaiChat`, `Jmuz`, `Cloudflare`.
 
 ### `default_vision`
 
-**Описание**: Модель для работы с видео, используемая по умолчанию.
+```python
+default_vision = Model(
+    name = "",
+    base_provider = "",
+    best_provider = IterListProvider([
+        Blackbox,
+        OIVSCode,
+        TypeGPT,
+        DeepInfraChat,
+        PollinationsAI,
+        Dynaspark,
+        HuggingSpace,
+        GeminiPro,
+        HuggingFaceAPI,
+        CopilotAccount,
+        OpenaiAccount,
+        Gemini,
+    ], shuffle=False)
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель компьютерного зрения по умолчанию, используемую, когда конкретная модель не указана.
 
-- `name` (str): Пустая строка.
-- `base_provider` (str): Пустая строка.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Blackbox`, `OIVSCode`, `TypeGPT`, `DeepInfraChat`, `PollinationsAI`, `Dynaspark`, `HuggingSpace`, `GeminiPro`, `HuggingFaceAPI`, `CopilotAccount`, `OpenaiAccount`, `Gemini`. Параметр `shuffle` установлен в `False`.
+**Параметры**:
+
+-   `name` (str): Пустая строка `""`.
+-   `base_provider` (str): Пустая строка `""`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список провайдеров компьютерного зрения по умолчанию.
+
+**Как работает функция**:
+
+1.  Создается экземпляр класса `Model` с именем `""` (пустая строка).
+2.  В качестве базового провайдера устанавливается пустая строка `""`.
+3.  В качестве лучшего провайдера устанавливается `IterListProvider`, который содержит список провайдеров: `Blackbox`, `OIVSCode`, `TypeGPT`, `DeepInfraChat`, `PollinationsAI`, `Dynaspark`, `HuggingSpace`, `GeminiPro`, `HuggingFaceAPI`, `CopilotAccount`, `OpenaiAccount`, `Gemini`. Параметр `shuffle=False` указывает, что порядок провайдеров в списке должен быть сохранен.
 
 ### `gpt_3_5_turbo`
 
-**Описание**: Модель GPT-3.5 Turbo.
+```python
+gpt_3_5_turbo = Model(
+    name          = 'gpt-3.5-turbo',
+    base_provider = 'OpenAI'
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gpt-3.5-turbo` от OpenAI.
 
-- `name` (str): `'gpt-3.5-turbo'`.
-- `base_provider` (str): `'OpenAI'`.
+**Параметры**:
+
+-   `name` (str): `'gpt-3.5-turbo'`.
+-   `base_provider` (str): `'OpenAI'`.
 
 ### `gpt_4`
 
-**Описание**: Модель GPT-4.
+```python
+gpt_4 = Model(
+    name          = 'gpt-4',
+    base_provider = 'OpenAI',
+    best_provider = IterListProvider([DDG, Jmuz, ChatGptEs, PollinationsAI, Yqcloud, Goabror, Copilot, OpenaiChat, Liaobots])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gpt-4` от OpenAI.
 
-- `name` (str): `'gpt-4'`.
-- `base_provider` (str): `'OpenAI'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DDG`, `Jmuz`, `ChatGptEs`, `PollinationsAI`, `Yqcloud`, `Goabror`, `Copilot`, `OpenaiChat`, `Liaobots`.
+**Параметры**:
+
+-   `name` (str): `'gpt-4'`.
+-   `base_provider` (str): `'OpenAI'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gpt_4o`
 
-**Описание**: Модель GPT-4o.
+```python
+gpt_4o = VisionModel(
+    name          = 'gpt-4o',
+    base_provider = 'OpenAI',
+    best_provider = IterListProvider([Blackbox, Jmuz, ChatGptEs, PollinationsAI, Liaobots, OpenaiChat])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gpt-4o` от OpenAI, предназначенную для работы с видео.
 
-- `name` (str): `'gpt-4o'`.
-- `base_provider` (str): `'OpenAI'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Blackbox`, `Jmuz`, `ChatGptEs`, `PollinationsAI`, `Liaobots`, `OpenaiChat`.
+**Параметры**:
+
+-   `name` (str): `'gpt-4o'`.
+-   `base_provider` (str): `'OpenAI'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gpt_4o_mini`
 
-**Описание**: Модель GPT-4o Mini.
+```python
+gpt_4o_mini = Model(
+    name          = 'gpt-4o-mini',
+    base_provider = 'OpenAI',
+    best_provider = IterListProvider([DDG, Blackbox, ChatGptEs, TypeGPT, PollinationsAI, OIVSCode, Liaobots, Jmuz, OpenaiChat])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gpt-4o-mini` от OpenAI.
 
-- `name` (str): `'gpt-4o-mini'`.
-- `base_provider` (str): `'OpenAI'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DDG`, `Blackbox`, `ChatGptEs`, `TypeGPT`, `PollinationsAI`, `OIVSCode`, `Liaobots`, `Jmuz`, `OpenaiChat`.
+**Параметры**:
+
+-   `name` (str): `'gpt-4o-mini'`.
+-   `base_provider` (str): `'OpenAI'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gpt_4o_audio`
 
-**Описание**: Аудио модель GPT-4o.
+```python
+gpt_4o_audio = AudioModel(
+    name          = 'gpt-4o-audio',
+    base_provider = 'OpenAI',
+    best_provider = PollinationsAI
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gpt-4o-audio` от OpenAI, предназначенную для работы с аудио.
 
-- `name` (str): `'gpt-4o-audio'`.
-- `base_provider` (str): `'OpenAI'`.
-- `best_provider` (ProviderType): `PollinationsAI`.
+**Параметры**:
+
+-   `name` (str): `'gpt-4o-audio'`.
+-   `base_provider` (str): `'OpenAI'`.
+-   `best_provider` (ProviderType): `PollinationsAI`.
 
 ### `o1`
 
-**Описание**: Модель o1.
+```python
+o1 = Model(
+    name          = 'o1',
+    base_provider = 'OpenAI',
+    best_provider = IterListProvider([Blackbox, Copilot, OpenaiAccount])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `o1` от OpenAI.
 
-- `name` (str): `'o1'`.
-- `base_provider` (str): `'OpenAI'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Blackbox`, `Copilot`, `OpenaiAccount`.
+**Параметры**:
+
+-   `name` (str): `'o1'`.
+-   `base_provider` (str): `'OpenAI'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `o1_mini`
 
-**Описание**: Модель o1 Mini.
+```python
+o1_mini = Model(
+    name          = 'o1-mini',
+    base_provider = 'OpenAI',
+    best_provider = OpenaiAccount
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `o1-mini` от OpenAI.
 
-- `name` (str): `'o1-mini'`.
-- `base_provider` (str): `'OpenAI'`.
-- `best_provider` (ProviderType): `OpenaiAccount`.
+**Параметры**:
+
+-   `name` (str): `'o1-mini'`.
+-   `base_provider` (str): `'OpenAI'`.
+-   `best_provider` (ProviderType): `OpenaiAccount`.
 
 ### `o3_mini`
 
-**Описание**: Модель o3 Mini.
+```python
+o3_mini = Model(
+    name          = 'o3-mini',
+    base_provider = 'OpenAI',
+    best_provider = IterListProvider([DDG, Blackbox, PollinationsAI, Liaobots])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `o3-mini` от OpenAI.
 
-- `name` (str): `'o3-mini'`.
-- `base_provider` (str): `'OpenAI'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DDG`, `Blackbox`, `PollinationsAI`, `Liaobots`.
+**Параметры**:
+
+-   `name` (str): `'o3-mini'`.
+-   `base_provider` (str): `'OpenAI'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gigachat`
 
-**Описание**: Модель GigaChat.
+```python
+gigachat = Model(
+    name          = 'GigaChat:latest',
+    base_provider = 'gigachat',
+    best_provider = GigaChat
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `GigaChat:latest` от GigaChat.
 
-- `name` (str): `'GigaChat:latest'`.
-- `base_provider` (str): `'gigachat'`.
-- `best_provider` (ProviderType): `GigaChat`.
+**Параметры**:
+
+-   `name` (str): `'GigaChat:latest'`.
+-   `base_provider` (str): `'gigachat'`.
+-   `best_provider` (ProviderType): `GigaChat`.
 
 ### `meta`
 
-**Описание**: Модель Meta AI.
+```python
+meta = Model(
+    name          = "meta-ai",
+    base_provider = "Meta",
+    best_provider = MetaAI
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `meta-ai` от Meta.
 
-- `name` (str): `"meta-ai"`.
-- `base_provider` (str): `"Meta"`.
-- `best_provider` (ProviderType): `MetaAI`.
+**Параметры**:
+
+-   `name` (str): `"meta-ai"`.
+-   `base_provider` (str): `"Meta"`.
+-   `best_provider` (ProviderType): `MetaAI`.
 
 ### `llama_2_7b`
 
-**Описание**: Модель Llama 2 7b.
+```python
+llama_2_7b = Model(
+    name          = "llama-2-7b",
+    base_provider = "Meta Llama",
+    best_provider = Cloudflare
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-2-7b` от Meta Llama.
 
-- `name` (str): `"llama-2-7b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (ProviderType): `Cloudflare`.
+**Параметры**:
+
+-   `name` (str): `"llama-2-7b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): `Cloudflare`.
 
 ### `llama_3_8b`
 
-**Описание**: Модель Llama 3 8b.
+```python
+llama_3_8b = Model(
+    name          = "llama-3-8b",
+    base_provider = "Meta Llama",
+    best_provider = IterListProvider([Jmuz, Cloudflare])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3-8b` от Meta Llama.
 
-- `name` (str): `"llama-3-8b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Jmuz`, `Cloudflare`.
+**Параметры**:
+
+-   `name` (str): `"llama-3-8b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `llama_3_70b`
 
-**Описание**: Модель Llama 3 70b.
+```python
+llama_3_70b = Model(
+    name          = "llama-3-70b",
+    base_provider = "Meta Llama",
+    best_provider = Jmuz
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3-70b` от Meta Llama.
 
-- `name` (str): `"llama-3-70b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (ProviderType): `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `"llama-3-70b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): `Jmuz`.
 
 ### `llama_3_1_8b`
 
-**Описание**: Модель Llama 3.1 8b.
+```python
+llama_3_1_8b = Model(
+    name          = "llama-3.1-8b",
+    base_provider = "Meta Llama",
+    best_provider = IterListProvider([DeepInfraChat, Glider, PollinationsAI, AllenAI, Jmuz, Cloudflare])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.1-8b` от Meta Llama.
 
-- `name` (str): `"llama-3.1-8b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DeepInfraChat`, `Glider`, `PollinationsAI`, `AllenAI`, `Jmuz`, `Cloudflare`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.1-8b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `llama_3_1_70b`
 
-**Описание**: Модель Llama 3.1 70b.
+```python
+llama_3_1_70b = Model(
+    name          = "llama-3.1-70b",
+    base_provider = "Meta Llama",
+    best_provider = IterListProvider([Glider, AllenAI, Jmuz])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.1-70b` от Meta Llama.
 
-- `name` (str): `"llama-3.1-70b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Glider`, `AllenAI`, `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.1-70b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `llama_3_1_405b`
 
-**Описание**: Модель Llama 3.1 405b.
+```python
+llama_3_1_405b = Model(
+    name          = "llama-3.1-405b",
+    base_provider = "Meta Llama",
+    best_provider = IterListProvider([AllenAI, Jmuz])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.1-405b` от Meta Llama.
 
-- `name` (str): `"llama-3.1-405b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `AllenAI`, `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.1-405b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `llama_3_2_1b`
 
-**Описание**: Модель Llama 3.2 1b.
+```python
+llama_3_2_1b = Model(
+    name          = "llama-3.2-1b",
+    base_provider = "Meta Llama",
+    best_provider = Cloudflare
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.2-1b` от Meta Llama.
 
-- `name` (str): `"llama-3.2-1b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (ProviderType): `Cloudflare`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.2-1b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): `Cloudflare`.
 
 ### `llama_3_2_3b`
 
-**Описание**: Модель Llama 3.2 3b.
+```python
+llama_3_2_3b = Model(
+    name          = "llama-3.2-3b",
+    base_provider = "Meta Llama",
+    best_provider = Glider
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.2-3b` от Meta Llama.
 
-- `name` (str): `"llama-3.2-3b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (ProviderType): `Glider`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.2-3b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): `Glider`.
 
 ### `llama_3_2_11b`
 
-**Описание**: Модель Llama 3.2 11b.
+```python
+llama_3_2_11b = VisionModel(
+    name          = "llama-3.2-11b",
+    base_provider = "Meta Llama",
+    best_provider = IterListProvider([Jmuz, HuggingChat, HuggingFace])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.2-11b` от Meta Llama, предназначенную для работы с видео.
 
-- `name` (str): `"llama-3.2-11b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Jmuz`, `HuggingChat`, `HuggingFace`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.2-11b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `llama_3_2_90b`
 
-**Описание**: Модель Llama 3.2 90b.
+```python
+llama_3_2_90b = Model(
+    name          = "llama-3.2-90b",
+    base_provider = "Meta Llama",
+    best_provider = IterListProvider([DeepInfraChat, Jmuz])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.2-90b` от Meta Llama.
 
-- `name` (str): `"llama-3.2-90b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DeepInfraChat`, `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.2-90b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `llama_3_3_70b`
 
-**Описание**: Модель Llama 3.3 70b.
+```python
+llama_3_3_70b = Model(
+    name          = "llama-3.3-70b",
+    base_provider = "Meta Llama",
+    best_provider = IterListProvider([DDG, DeepInfraChat, LambdaChat, PollinationsAI, Jmuz, HuggingChat, HuggingFace])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `llama-3.3-70b` от Meta Llama.
 
-- `name` (str): `"llama-3.3-70b"`.
-- `base_provider` (str): `"Meta Llama"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DDG`, `DeepInfraChat`, `LambdaChat`, `PollinationsAI`, `Jmuz`, `HuggingChat`, `HuggingFace`.
+**Параметры**:
+
+-   `name` (str): `"llama-3.3-70b"`.
+-   `base_provider` (str): `"Meta Llama"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `mixtral_8x7b`
 
-**Описание**: Модель Mixtral 8x7b.
+```python
+mixtral_8x7b = Model(
+    name          = "mixtral-8x7b",
+    base_provider = "Mistral",
+    best_provider = Jmuz
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `mixtral-8x7b` от Mistral.
 
-- `name` (str): `"mixtral-8x7b"`.
-- `base_provider` (str): `"Mistral"`.
-- `best_provider` (ProviderType): `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `"mixtral-8x7b"`.
+-   `base_provider` (str): `"Mistral"`.
+-   `best_provider` (ProviderType): `Jmuz`.
 
 ### `mixtral_8x22b`
 
-**Описание**: Модель Mixtral 8x22b.
+```python
+mixtral_8x22b = Model(
+    name          = "mixtral-8x22b",
+    base_provider = "Mistral",
+    best_provider = DeepInfraChat
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `mixtral-8x22b` от Mistral.
 
-- `name` (str): `"mixtral-8x22b"`.
-- `base_provider` (str): `"Mistral"`.
-- `best_provider` (ProviderType): `DeepInfraChat`.
+**Параметры**:
+
+-   `name` (str): `"mixtral-8x22b"`.
+-   `base_provider` (str): `"Mistral"`.
+-   `best_provider` (ProviderType): `DeepInfraChat`.
 
 ### `mistral_nemo`
 
-**Описание**: Модель Mistral Nemo.
+```python
+mistral_nemo = Model(
+    name          = "mistral-nemo",
+    base_provider = "Mistral",
+    best_provider = IterListProvider([PollinationsAI, HuggingChat, HuggingFace])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `mistral-nemo` от Mistral.
 
-- `name` (str): `"mistral-nemo"`.
-- `base_provider` (str): `"Mistral"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `PollinationsAI`, `HuggingChat`, `HuggingFace`.
+**Параметры**:
+
+-   `name` (str): `"mistral-nemo"`.
+-   `base_provider` (str): `"Mistral"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `mixtral_small_24b`
 
-**Описание**: Модель Mixtral Small 24b.
+```python
+mixtral_small_24b = Model(
+    name          = "mixtral-small-24b",
+    base_provider = "Mistral",
+    best_provider = IterListProvider([DDG, DeepInfraChat])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `mixtral-small-24b` от Mistral.
 
-- `name` (str): `"mixtral-small-24b"`.
-- `base_provider` (str): `"Mistral"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DDG`, `DeepInfraChat`.
+**Параметры**:
+
+-   `name` (str): `"mixtral-small-24b"`.
+-   `base_provider` (str): `"Mistral"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `hermes_3`
 
-**Описание**: Модель Hermes 3.
+```python
+hermes_3 = Model(
+    name          = "hermes-3",
+    base_provider = "NousResearch",
+    best_provider = LambdaChat
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `hermes-3` от NousResearch.
 
-- `name` (str): `"hermes-3"`.
-- `base_provider` (str): `"NousResearch"`.
-- `best_provider` (ProviderType): `LambdaChat`.
+**Параметры**:
+
+-   `name` (str): `"hermes-3"`.
+-   `base_provider` (str): `"NousResearch"`.
+-   `best_provider` (ProviderType): `LambdaChat`.
 
 ### `phi_3_5_mini`
 
-**Описание**: Модель Phi 3.5 Mini.
+```python
+phi_3_5_mini = Model(
+    name          = "phi-3.5-mini",
+    base_provider = "Microsoft",
+    best_provider = HuggingChat
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `phi-3.5-mini` от Microsoft.
 
-- `name` (str): `"phi-3.5-mini"`.
-- `base_provider` (str): `"Microsoft"`.
-- `best_provider` (ProviderType): `HuggingChat`.
+**Параметры**:
+
+-   `name` (str): `"phi-3.5-mini"`.
+-   `base_provider` (str): `"Microsoft"`.
+-   `best_provider` (ProviderType): `HuggingChat`.
 
 ### `phi_4`
 
-**Описание**: Модель Phi 4.
+```python
+phi_4 = Model(
+    name          = "phi-4",
+    base_provider = "Microsoft",
+    best_provider = IterListProvider([DeepInfraChat, PollinationsAI, HuggingSpace])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `phi-4` от Microsoft.
 
-- `name` (str): `"phi-4"`.
-- `base_provider` (str): `"Microsoft"`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DeepInfraChat`, `PollinationsAI`, `HuggingSpace`.
+**Параметры**:
+
+-   `name` (str): `"phi-4"`.
+-   `base_provider` (str): `"Microsoft"`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `wizardlm_2_7b`
 
-**Описание**: Модель WizardLM 2 7b.
+```python
+wizardlm_2_7b = Model(
+    name = \'wizardlm-2-7b\',
+    base_provider = \'Microsoft\',
+    best_provider = DeepInfraChat
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `wizardlm-2-7b` от Microsoft.
 
-- `name` (str): `'wizardlm-2-7b'`.
-- `base_provider` (str): `'Microsoft'`.
-- `best_provider` (ProviderType): `DeepInfraChat`.
+**Параметры**:
+
+-   `name` (str): `'wizardlm-2-7b'`.
+-   `base_provider` (str): `'Microsoft'`.
+-   `best_provider` (ProviderType): `DeepInfraChat`.
 
 ### `wizardlm_2_8x22b`
 
-**Описание**: Модель WizardLM 2 8x22b.
+```python
+wizardlm_2_8x22b = Model(
+    name = \'wizardlm-2-8x22b\',
+    base_provider = \'Microsoft\',
+    best_provider = IterListProvider([DeepInfraChat, Jmuz])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `wizardlm-2-8x22b` от Microsoft.
 
-- `name` (str): `'wizardlm-2-8x22b'`.
-- `base_provider` (str): `'Microsoft'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DeepInfraChat`, `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `'wizardlm-2-8x22b'`.
+-   `base_provider` (str): `'Microsoft'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gemini`
 
-**Описание**: Модель Gemini 2.0.
+```python
+gemini = Model(
+    name          = \'gemini-2.0\',
+    base_provider = \'Google\',
+    best_provider = Gemini
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gemini-2.0` от Google.
 
-- `name` (str): `'gemini-2.0'`.
-- `base_provider` (str): `'Google'`.
-- `best_provider` (ProviderType): `Gemini`.
+**Параметры**:
+
+-   `name` (str): `'gemini-2.0'`.
+-   `base_provider` (str): `'Google'`.
+-   `best_provider` (ProviderType): `Gemini`.
 
 ### `gemini_exp`
 
-**Описание**: Модель Gemini Exp.
+```python
+gemini_exp = Model(
+    name          = \'gemini-exp\',
+    base_provider = \'Google\',
+    best_provider = Jmuz
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gemini-exp` от Google.
 
-- `name` (str): `'gemini-exp'`.
-- `base_provider` (str): `'Google'`.
-- `best_provider` (ProviderType): `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `'gemini-exp'`.
+-   `base_provider` (str): `'Google'`.
+-   `best_provider` (ProviderType): `Jmuz`.
 
 ### `gemini_1_5_flash`
 
-**Описание**: Модель Gemini 1.5 Flash.
+```python
+gemini_1_5_flash = Model(
+    name          = \'gemini-1.5-flash\',
+    base_provider = \'Google DeepMind\',
+    best_provider = IterListProvider([Free2GPT, FreeGpt, TeachAnything, Websim, Dynaspark, Jmuz, GeminiPro])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gemini-1.5-flash` от Google DeepMind.
 
-- `name` (str): `'gemini-1.5-flash'`.
-- `base_provider` (str): `'Google DeepMind'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Free2GPT`, `FreeGpt`, `TeachAnything`, `Websim`, `Dynaspark`, `Jmuz`, `GeminiPro`.
+**Параметры**:
+
+-   `name` (str): `'gemini-1.5-flash'`.
+-   `base_provider` (str): `'Google DeepMind'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gemini_1_5_pro`
 
-**Описание**: Модель Gemini 1.5 Pro.
+```python
+gemini_1_5_pro = Model(
+    name          = \'gemini-1.5-pro\',
+    base_provider = \'Google DeepMind\',
+    best_provider = IterListProvider([Free2GPT, FreeGpt, TeachAnything, Websim, Jmuz, GeminiPro])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gemini-1.5-pro` от Google DeepMind.
 
-- `name` (str): `'gemini-1.5-pro'`.
-- `base_provider` (str): `'Google DeepMind'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Free2GPT`, `FreeGpt`, `TeachAnything`, `Websim`, `Jmuz`, `GeminiPro`.
+**Параметры**:
+
+-   `name` (str): `'gemini-1.5-pro'`.
+-   `base_provider` (str): `'Google DeepMind'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gemini_2_0_flash`
 
-**Описание**: Модель Gemini 2.0 Flash.
+```python
+gemini_2_0_flash = Model(
+    name          = \'gemini-2.0-flash\',
+    base_provider = \'Google DeepMind\',
+    best_provider = IterListProvider([Dynaspark, GeminiPro, Gemini])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gemini-2.0-flash` от Google DeepMind.
 
-- `name` (str): `'gemini-2.0-flash'`.
-- `base_provider` (str): `'Google DeepMind'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Dynaspark`, `GeminiPro`, `Gemini`.
+**Параметры**:
+
+-   `name` (str): `'gemini-2.0-flash'`.
+-   `base_provider` (str): `'Google DeepMind'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `gemini_2_0_flash_thinking`
 
-**Описание**: Модель Gemini 2.0 Flash Thinking.
+```python
+gemini_2_0_flash_thinking = Model(
+    name          = \'gemini-2.0-flash-thinking\',
+    base_provider = \'Google DeepMind\',
+    best_provider = Gemini
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gemini-2.0-flash-thinking` от Google DeepMind.
 
-- `name` (str): `'gemini-2.0-flash-thinking'`.
-- `base_provider` (str): `'Google DeepMind'`.
-- `best_provider` (ProviderType): `Gemini`.
+**Параметры**:
+
+-   `name` (str): `'gemini-2.0-flash-thinking'`.
+-   `base_provider` (str): `'Google DeepMind'`.
+-   `best_provider` (ProviderType): `Gemini`.
 
 ### `gemini_2_0_flash_thinking_with_apps`
 
-**Описание**: Модель Gemini 2.0 Flash Thinking with Apps.
+```python
+gemini_2_0_flash_thinking_with_apps = Model(
+    name          = \'gemini-2.0-flash-thinking-with-apps\',
+    base_provider = \'Google DeepMind\',
+    best_provider = Gemini
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `gemini-2.0-flash-thinking-with-apps` от Google DeepMind.
 
-- `name` (str): `'gemini-2.0-flash-thinking-with-apps'`.
-- `base_provider` (str): `'Google DeepMind'`.
-- `best_provider` (ProviderType): `Gemini`.
+**Параметры**:
+
+-   `name` (str): `'gemini-2.0-flash-thinking-with-apps'`.
+-   `base_provider` (str): `'Google DeepMind'`.
+-   `best_provider` (ProviderType): `Gemini`.
 
 ### `claude_3_haiku`
 
-**Описание**: Модель Claude 3 Haiku.
+```python
+claude_3_haiku = Model(
+    name          = \'claude-3-haiku\',
+    base_provider = \'Anthropic\',
+    best_provider = IterListProvider([DDG, Jmuz])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `claude-3-haiku` от Anthropic.
 
-- `name` (str): `'claude-3-haiku'`.
-- `base_provider` (str): `'Anthropic'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DDG`, `Jmuz`.
+**Параметры**:
+
+-   `name` (str): `'claude-3-haiku'`.
+-   `base_provider` (str): `'Anthropic'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `claude_3_5_sonnet`
 
-**Описание**: Модель Claude 3.5 Sonnet.
+```python
+claude_3_5_sonnet = Model(
+    name          = \'claude-3.5-sonnet\',
+    base_provider = \'Anthropic\',
+    best_provider = IterListProvider([Jmuz, Liaobots])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `claude-3.5-sonnet` от Anthropic.
 
-- `name` (str): `'claude-3.5-sonnet'`.
-- `base_provider` (str): `'Anthropic'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Jmuz`, `Liaobots`.
+**Параметры**:
+
+-   `name` (str): `'claude-3.5-sonnet'`.
+-   `base_provider` (str): `'Anthropic'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `claude_3_7_sonnet`
 
-**Описание**: Модель Claude 3.7 Sonnet.
+```python
+claude_3_7_sonnet = Model(
+    name          = \'claude-3.7-sonnet\',
+    base_provider = \'Anthropic\',
+    best_provider = IterListProvider([Blackbox, Liaobots])
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `claude-3.7-sonnet` от Anthropic.
 
-- `name` (str): `'claude-3.7-sonnet'`.
-- `base_provider` (str): `'Anthropic'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Blackbox`, `Liaobots`.
+**Параметры**:
+
+-   `name` (str): `'claude-3.7-sonnet'`.
+-   `base_provider` (str): `'Anthropic'`.
+-   `best_provider` (ProviderType): Экземпляр `IterListProvider`, содержащий список предпочтительных провайдеров.
 
 ### `reka_core`
 
-**Описание**: Модель Reka Core.
+```python
+reka_core = Model(
+    name = \'reka-core\',
+    base_provider = \'Reka AI\',
+    best_provider = Reka
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `reka-core` от Reka AI.
 
-- `name` (str): `'reka-core'`.
-- `base_provider` (str): `'Reka AI'`.
-- `best_provider` (ProviderType): `Reka`.
+**Параметры**:
+
+-   `name` (str): `'reka-core'`.
+-   `base_provider` (str): `'Reka AI'`.
+-   `best_provider` (ProviderType): `Reka`.
 
 ### `blackboxai`
 
-**Описание**: Модель Blackbox AI.
+```python
+blackboxai = Model(
+    name = \'blackboxai\',
+    base_provider = \'Blackbox AI\',
+    best_provider = Blackbox
+)
+```
 
-**Атрибуты**:
+**Назначение**: Определяет модель `blackboxai` от Blackbox AI.
 
-- `name` (str): `'blackboxai'`.
-- `base_provider` (str): `'Blackbox AI'`.
-- `best_provider` (ProviderType): `Blackbox`.
+**Параметры**:
+
+-   `name` (str): `'blackboxai'`.
+-   `base_provider` (str): `'Blackbox AI'`.
+-   `best_provider` (ProviderType): `Blackbox`.
 
 ### `blackboxai_pro`
 
-**Описание**: Модель Blackbox AI Pro.
-
-**Атрибуты**:
-
-- `name` (str): `'blackboxai-pro'`.
-- `base_provider` (str): `'Blackbox AI'`.
-- `best_provider` (ProviderType): `Blackbox`.
-
-### `command_r`
-
-**Описание**: Модель Command-R.
-
-**Атрибуты**:
-
-- `name` (str): `'command-r'`.
-- `base_provider` (str): `'CohereForAI'`.
-- `best_provider` (ProviderType): `HuggingSpace`.
-
-### `command_r_plus`
-
-**Описание**: Модель Command-R-Plus.
-
-**Атрибуты**:
-
-- `name` (str): `'command-r-plus'`.
-- `base_provider` (str): `'CohereForAI'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `HuggingSpace`, `HuggingChat`.
-
-### `command_r7b`
-
-**Описание**: Модель Command-R7B.
-
-**Атрибуты**:
-
-- `name` (str): `'command-r7b'`.
-- `base_provider` (str): `'CohereForAI'`.
-- `best_provider` (ProviderType): `HuggingSpace`.
-
-### `command_a`
-
-**Описание**: Модель Command-A.
-
-**Атрибуты**:
-
-- `name` (str): `'command-a'`.
-- `base_provider` (str): `'CohereForAI'`.
-- `best_provider` (ProviderType): `HuggingSpace`.
-
-### `qwen_1_5_7b`
-
-**Описание**: Модель Qwen 1.5 7b.
-
-**Атрибуты**:
-
-- `name` (str): `'qwen-1.5-7b'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (ProviderType): `Cloudflare`.
-
-### `qwen_2_72b`
-
-**Описание**: Модель Qwen 2 72b.
-
-**Атрибуты**:
-
-- `name` (str): `'qwen-2-72b'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DeepInfraChat`, `HuggingSpace`.
-
-### `qwen_2_vl_7b`
-
-**Описание**: Модель Qwen 2 VL 7b.
-
-**Атрибуты**:
-
-- `name` (str): "qwen-2-vl-7b".
-- `base_provider` (str): 'Qwen'.
-- `best_provider` (ProviderType): `HuggingFaceAPI`.
-
-### `qwen_2_5`
-
-**Описание**: Модель Qwen 2.5.
-
-**Атрибуты**:
-
-- `name` (str): `'qwen-2.5'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (ProviderType): `HuggingSpace`.
-
-### `qwen_2_5_72b`
-
-**Описание**: Модель Qwen 2.5 72b.
-
-**Атрибуты**:
-
-- `name` (str): `'qwen-2.5-72b'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (ProviderType): `Jmuz`.
-
-### `qwen_2_5_coder_32b`
-
-**Описание**: Модель Qwen 2.5 Coder 32b.
-
-**Атрибуты**:
-
-- `name` (str): `'qwen-2.5-coder-32b'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `PollinationsAI`, `Jmuz`, `HuggingChat`.
-
-### `qwen_2_5_1m`
-
-**Описание**: Модель Qwen 2.5 1m.
-
-**Атрибуты**:
-
-- `name` (str): `'qwen-2.5-1m'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (ProviderType): `HuggingSpace`.
-
-### `qwen_2_5_max`
-
-**Описание**: Модель Qwen 2-5-max.
-
-**Атрибуты**:
-
-- `name` (str): `'qwen-2-5-max'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (ProviderType): `HuggingSpace`.
-
-### `qwq_32b`
-
-**Описание**: Модель Qwq 32b.
-
-**Атрибуты**:
-
-- `name` (str): `'qwq-32b'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Jmuz`, `HuggingChat`.
-
-### `qvq_72b`
-
-**Описание**: Модель Qvq 72b.
-
-**Атрибуты**:
-
-- `name` (str): `'qvq-72b'`.
-- `base_provider` (str): `'Qwen'`.
-- `best_provider` (ProviderType): `HuggingSpace`.
-
-### `pi`
-
-**Описание**: Модель Pi.
-
-**Атрибуты**:
-
-- `name` (str): `'pi'`.
-- `base_provider` (str): `'Inflection'`.
-- `best_provider` (ProviderType): `Pi`.
-
-### `deepseek_chat`
-
-**Описание**: Модель DeepSeek Chat.
-
-**Атрибуты**:
-
-- `name` (str): `'deepseek-chat'`.
-- `base_provider` (str): `'DeepSeek'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Blackbox`, `Jmuz`.
-
-### `deepseek_v3`
-
-**Описание**: Модель DeepSeek V3.
-
-**Атрибуты**:
-
-- `name` (str): `'deepseek-v3'`.
-- `base_provider` (str): `'DeepSeek'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Blackbox`, `DeepInfraChat`, `LambdaChat`, `OIVSCode`, `TypeGPT`, `Liaobots`.
-
-### `deepseek_r1`
-
-**Описание**: Модель DeepSeek R1.
-
-**Атрибуты**:
-
-- `name` (str): `'deepseek-r1'`.
-- `base_provider` (str): `'DeepSeek'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `Blackbox`, `DeepInfraChat`, `Glider`, `LambdaChat`, `PollinationsAI`, `TypeGPT`, `Liaobots`, `Jmuz`, `HuggingChat`, `HuggingFace`.
-
-### `janus_pro_7b`
-
-**Описание**: Модель Janus Pro 7b.
-
-**Атрибуты**:
-
-- `name` (str): DeepseekAI_JanusPro7b.default_model.
-- `base_provider` (str): 'DeepSeek'.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `DeepseekAI_JanusPro7b`, `G4F`.
-
-### `grok_3`
-
-**Описание**: Модель Grok 3.
-
-**Атрибуты**:
-
-- `name` (str): `'grok-3'`.
-- `base_provider` (str): `'x.ai'`.
-- `best_provider` (ProviderType): `Grok`.
-
-### `grok_3_r1`
-
-**Описание**: Модель Grok 3 R1.
-
-**Атрибуты**:
-
-- `name` (str): `'grok-3-r1'`.
-- `base_provider` (str): `'x.ai'`.
-- `best_provider` (ProviderType): `Grok`.
-
-### `sonar`
-
-**Описание**: Модель Sonar.
-
-**Атрибуты**:
-
-- `name` (str): `'sonar'`.
-- `base_provider` (str): `'Perplexity AI'`.
-- `best_provider` (ProviderType): `PerplexityLabs`.
-
-### `sonar_pro`
-
-**Описание**: Модель Sonar Pro.
-
-**Атрибуты**:
-
-- `name` (str): `'sonar-pro'`.
-- `base_provider` (str): `'Perplexity AI'`.
-- `best_provider` (ProviderType): `PerplexityLabs`.
-
-### `sonar_reasoning`
-
-**Описание**: Модель Sonar Reasoning.
-
-**Атрибуты**:
-
-- `name` (str): `'sonar-reasoning'`.
-- `base_provider` (str): `'Perplexity AI'`.
-- `best_provider` (ProviderType): `PerplexityLabs`.
-
-### `sonar_reasoning_pro`
-
-**Описание**: Модель Sonar Reasoning Pro.
-
-**Атрибуты**:
-
-- `name` (str): `'sonar-reasoning-pro'`.
-- `base_provider` (str): `'Perplexity AI'`.
-- `best_provider` (ProviderType): `PerplexityLabs`.
-
-### `r1_1776`
-
-**Описание**: Модель R1 1776.
-
-**Атрибуты**:
-
-- `name` (str): `'r1-1776'`.
-- `base_provider` (str): `'Perplexity AI'`.
-- `best_provider` (ProviderType): `PerplexityLabs`.
-
-### `nemotron_70b`
-
-**Описание**: Модель Nemotron 70b.
-
-**Атрибуты**:
-
-- `name` (str): `'nemotron-70b'`.
-- `base_provider` (str): `'Nvidia'`.
-- `best_provider` (IterListProvider): Объект `IterListProvider`, содержащий список провайдеров: `LambdaChat`, `HuggingChat`, `HuggingFace`.
-
-### `dbrx_instruct`
-
-**Описание**: Модель DBRX Instruct.
-
-**Атрибуты**:
-
-- `name` (str): `'dbrx-instruct'`.
-- `base_provider` (str): `'Databricks'`.
-- `best_provider` (ProviderType): `DeepInfraChat`.
-
-### `glm_4`
-
-**Описание**: Модель GLM-4.
-
-**Атрибуты**:
-
-- `name` (str): `'glm-4'`.
-- `base_provider` (str): `'THUDM'`.
-- `best_provider` (ProviderType): `ChatGLM`.
-
-### `mini_max`
-
-**Описание**: Модель MiniMax.
-
-**Атрибуты**:
-
-- `name` (str): "MiniMax".
-- `base_provider` (str): "MiniMax".
-- `best_provider` (ProviderType): `HailuoAI`.
-
-### `yi_34b`
-
-**Описание**: Модель Yi-34b.
-
-**Атрибуты**:
-
-- `name` (str): "yi-34b".
-- `base_provider` (str): "01-ai".
-- `best_provider` (ProviderType): `DeepInfraChat`.
-
-### `dolphin_2_6`
-
-**Описание**: Модель Dolphin 2.6.
-
-**Атрибуты**:
-
-- `name` (str): "dolphin-2.6".
-- `base_provider` (str): "Cognitive Computations".
-- `best_provider` (ProviderType): `DeepInfraChat`.
-
-### `dolphin_2_9`
-
-**Описание**: Модель Dolphin 2.9.
-
-**Атрибуты**:
-
-- `name` (str): "dolphin-2.9".
-- `base_provider` (str): "Cognitive Computations".
-- `best_provider` (ProviderType): `DeepInfraChat`.
-
-### `airoboros_70b`
-
-**Описание**: Модель Airoboros-70b.
-
-**Атрибуты**:
-
-- `name` (str): "airoboros-70b".
-- `base_provider` (str): "DeepInfra".
-- `best_provider` (ProviderType): `DeepInfraChat`.
-
-### `lzlv_70b`
-
-**Описание**: Модель Lzlv-70b.
-
-**Атрибуты**:
-
-- `name` (str): "lzlv-70b".
-- `base_provider` (str): "Lizpreciatior".
-- `best_provider` (ProviderType): `DeepInfraChat`.
-
-### `minicpm_2_5`
-
-**Описание**: Модель Minicpm-2.5.
-
-**Атрибуты**:
-
-- `name` (str): "minicpm-2.5".
-- `base_provider` (str): "OpenBMB".
-- `best_provider` (ProviderType): `DeepInfraChat`.
-
-### `tulu_3_405b`
-
-**Описание**: Модель Tulu-3-405b.
-
-**Атрибуты**:
-
-- `name` (str): "tulu-3-405b".
-- `base_provider` (str): "Ai2".
-- `best_provider` (ProviderType): `AllenAI`.
-
-### `olmo_2_13b`
-
-**Описание**: Модель Olmo-2-13b.
-
-**Атрибуты**:
-
-- `name` (str): "olmo-2-13b".
-- `base_provider` (str): "Ai2".
-- `best_provider` (ProviderType): `AllenAI`.
-
-### `tulu_3_1_8b`
-
-**Описание**:
+```python
+blackboxai_pro = Model(
+    name = \'blackboxai-pro\',
+    base_provider = \'Blackbox AI\',
+    best_provider = Blackbox
+)
+```
+
+**Назначение**: Определяет модель `blackboxai-pro` от Blackbox AI.
+
+**Параметры**:
+
+-   `name` (str): `'blackboxai-pro'`.
+-   `base_provider` (str):

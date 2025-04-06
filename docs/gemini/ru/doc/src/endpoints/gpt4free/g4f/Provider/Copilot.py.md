@@ -2,44 +2,51 @@
 
 ## Обзор
 
-Модуль `Copilot.py` предоставляет класс `Copilot` для взаимодействия с Microsoft Copilot API. Он поддерживает отправку текстовых сообщений и изображений, а также получение ответов в реальном времени через WebSocket.
+Модуль `Copilot.py` предоставляет интерфейс для взаимодействия с Microsoft Copilot. Он включает в себя функции для создания запросов к Copilot, обработки ответов, работы с изображениями и управления сессиями. Модуль поддерживает стриминг ответов, работу через прокси и аутентификацию с использованием access token.
 
 ## Подробнее
 
-Этот модуль позволяет использовать Microsoft Copilot для генерации текста и изображений. Он включает в себя механизмы для аутентификации, создания и управления беседами, а также обработки медиа-вложений. В модуле реализована поддержка как потоковой передачи ответов, так и получения полных ответов.
+Модуль предназначен для интеграции Copilot в проекты, требующие взаимодействия с AI-моделью Microsoft. Он использует библиотеку `curl_cffi` для выполнения HTTP-запросов и WebSocket-соединений, а также `nodriver` для автоматического получения access token и cookies.
 
 ## Классы
 
 ### `Conversation`
 
-**Описание**: Класс для представления беседы с Copilot.
+**Описание**: Класс представляет собой идентификатор разговора с Copilot.
+**Наследует**: `JsonConversation` - абстрактный базовый класс для представления ID беседы.
 
 **Атрибуты**:
-- `conversation_id` (str): Идентификатор беседы.
+
+-   `conversation_id` (str): Уникальный идентификатор разговора.
+
+**Методы**:
+Отсутствуют
 
 ### `Copilot`
 
-**Описание**: Класс для взаимодействия с Microsoft Copilot API.
+**Описание**: Класс для взаимодействия с Microsoft Copilot. Предоставляет методы для создания и управления сессиями Copilot, отправки запросов и получения ответов.
 
-**Наследует**:
-- `AbstractProvider`: Предоставляет базовую функциональность для взаимодействия с API.
-- `ProviderModelMixin`: Реализует общую логику для работы с моделями.
+**Наследует**: `AbstractProvider`, `ProviderModelMixin`.
+`AbstractProvider` - абстрактный базовый класс для всех поставщиков.
+`ProviderModelMixin` - класс, примесь для управления моделями поставщика.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера ("Microsoft Copilot").
-- `url` (str): URL Copilot ("https://copilot.microsoft.com").
-- `working` (bool): Индикатор работоспособности провайдера (True).
-- `supports_stream` (bool): Поддержка потоковой передачи (True).
-- `default_model` (str): Модель по умолчанию ("Copilot").
-- `models` (List[str]): Список поддерживаемых моделей (["Copilot", "Think Deeper"]).
-- `model_aliases` (Dict[str, str]): Псевдонимы моделей.
-- `websocket_url` (str): URL WebSocket API ("wss://copilot.microsoft.com/c/api/chat?api-version=2").
-- `conversation_url` (str): URL для управления беседами ("https://copilot.microsoft.com/c/api/conversations").
-- `_access_token` (str): Токен доступа.
-- `_cookies` (dict): Куки для аутентификации.
+
+-   `label` (str): Метка провайдера ("Microsoft Copilot").
+-   `url` (str): URL главной страницы Copilot ("https://copilot.microsoft.com").
+-   `working` (bool): Флаг, указывающий на работоспособность провайдера (True).
+-   `supports_stream` (bool): Флаг, указывающий на поддержку потоковой передачи (True).
+-   `default_model` (str): Модель, используемая по умолчанию ("Copilot").
+-   `models` (list[str]): Список поддерживаемых моделей (["Copilot", "Think Deeper"]).
+-   `model_aliases` (dict[str, str]): Словарь псевдонимов моделей ({"gpt-4": "Copilot", "gpt-4o": "Copilot", "o1": "Think Deeper", "reasoning": "Think Deeper", "dall-e-3": "Copilot"}).
+-   `websocket_url` (str): URL для WebSocket-соединения ("wss://copilot.microsoft.com/c/api/chat?api-version=2").
+-   `conversation_url` (str): URL для управления разговорами ("https://copilot.microsoft.com/c/api/conversations").
+-   `_access_token` (str): Приватный атрибут для хранения access token.
+-   `_cookies` (dict): Приватный атрибут для хранения cookies.
 
 **Методы**:
-- `create_completion`: Создает запрос на завершение.
+
+-   `create_completion()`: Отправляет запрос к Copilot и возвращает ответ.
 
 ## Функции
 
@@ -62,153 +69,112 @@ def create_completion(
     **kwargs
 ) -> CreateResult:
     """
-    Создает запрос на завершение и возвращает результат.
+    Создает запрос к Copilot и возвращает ответ.
 
     Args:
-        model (str): Название модели для использования.
+        model (str): Используемая модель.
         messages (Messages): Список сообщений для отправки.
-        stream (bool, optional): Включить потоковую передачу. По умолчанию `False`.
-        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
-        timeout (int, optional): Время ожидания запроса в секундах. По умолчанию `900`.
-        prompt (str, optional): Текст запроса. По умолчанию `None`.
-        media (MediaListType, optional): Список медиафайлов для отправки. По умолчанию `None`.
-        conversation (BaseConversation, optional): Объект беседы. По умолчанию `None`.
-        return_conversation (bool, optional): Вернуть объект беседы. По умолчанию `False`.
-        api_key (str, optional): API ключ для аутентификации. По умолчанию `None`.
-        **kwargs: Дополнительные параметры.
+        stream (bool, optional): Включить потоковый режим. По умолчанию False.
+        proxy (str, optional): Адрес прокси-сервера. По умолчанию None.
+        timeout (int, optional): Время ожидания запроса в секундах. По умолчанию 900.
+        prompt (str, optional): Текст запроса. По умолчанию None.
+        media (MediaListType, optional): Список медиафайлов для отправки. По умолчанию None.
+        conversation (BaseConversation, optional): Объект разговора. По умолчанию None.
+        return_conversation (bool, optional): Вернуть объект разговора. По умолчанию False.
+        api_key (str, optional): API ключ для аутентификации. По умолчанию None.
+        **kwargs: Дополнительные аргументы.
 
     Returns:
-        CreateResult: Результат завершения.
+        CreateResult: Результат запроса.
 
     Raises:
         MissingRequirementsError: Если не установлен пакет `curl_cffi`.
         NoValidHarFileError: Если не найден валидный HAR-файл.
-        MissingAuthError: Если не удалось получить токен доступа.
+        MissingAuthError: Если получен статус 401 (неверный access token).
+        RuntimeError: Если произошла ошибка при взаимодействии с Copilot.
 
     """
 ```
 
-**Назначение**: Создает запрос на завершение беседы с Copilot, отправляет сообщения и медиафайлы, обрабатывает ответы в реальном времени или возвращает результат целиком.
-
-**Параметры**:
-- `cls`: Ссылка на класс `Copilot`.
-- `model` (str): Название модели для использования (например, "Copilot" или "Think Deeper").
-- `messages` (Messages): Список сообщений для отправки в Copilot.
-- `stream` (bool, optional): Флаг, указывающий, следует ли использовать потоковую передачу ответов. По умолчанию `False`.
-- `proxy` (str, optional): URL прокси-сервера для использования при подключении к Copilot. По умолчанию `None`.
-- `timeout` (int, optional): Максимальное время ожидания ответа от Copilot в секундах. По умолчанию `900`.
-- `prompt` (str, optional): Текст запроса, если он не содержится в `messages`. По умолчанию `None`.
-- `media` (MediaListType, optional): Список медиафайлов (изображений) для отправки в Copilot. По умолчанию `None`.
-- `conversation` (BaseConversation, optional): Объект беседы для продолжения существующей беседы. По умолчанию `None`.
-- `return_conversation` (bool, optional): Флаг, указывающий, следует ли возвращать объект беседы. По умолчанию `False`.
-- `api_key` (str, optional): API ключ для аутентификации. По умолчанию `None`.
-- `**kwargs`: Дополнительные параметры, которые могут быть переданы в Copilot API.
-
-**Возвращает**:
-- `CreateResult`: Генератор, возвращающий части ответа, объекты `ImageResponse`, `FinishReason` или `SuggestedFollowups`.
-
-**Вызывает исключения**:
-- `MissingRequirementsError`: Если не установлен пакет `curl_cffi`.
-- `NoValidHarFileError`: Если не найден валидный HAR-файл.
-- `MissingAuthError`: Если не удалось получить токен доступа.
-- `RuntimeError`: При получении сообщения об ошибке от Copilot.
+**Назначение**: Функция `create_completion` отвечает за отправку запроса к Microsoft Copilot и получение ответа. Она обрабатывает аутентификацию, создание или использование существующей сессии разговора, загрузку медиафайлов и отправку запроса через WebSocket. Функция поддерживает потоковый режим, позволяя получать ответы по частям.
 
 **Как работает функция**:
 
-1. **Проверка зависимостей**:
-   - Проверяет, установлен ли пакет `curl_cffi`. Если нет, вызывает исключение `MissingRequirementsError`.
+1.  **Проверка зависимостей**:
+    -   Проверяет, установлен ли пакет `curl_cffi`. Если нет, вызывает исключение `MissingRequirementsError`.
+2.  **Подготовка параметров**:
+    -   Определяет используемую модель Copilot.
+    -   Определяет URL WebSocket для подключения.
+3.  **Аутентификация**:
+    -   Проверяет наличие access token. Если токен не предоставлен или устарел, пытается прочитать его из HAR-файла или получить с использованием `nodriver`.
+    -   Если не удается получить access token, пытается получить его автоматически, используя `nodriver` для открытия браузера и извлечения токена из localStorage.
+    -   Если автоматическое получение не удается, вызывает исключение `MissingAuthError`.
+4.  **Создание сессии**:
+    -   Использует `Session` из `curl_cffi` для выполнения HTTP-запросов и WebSocket-соединений.
+    -   Если не предоставлен объект разговора, создает новый разговор, отправляя POST-запрос к `conversation_url`.
+    -   Формирует текст запроса из списка сообщений.
+5.  **Загрузка медиафайлов**:
+    -   Если предоставлены медиафайлы, загружает их на сервер Copilot и получает URL для доступа.
+6.  **Отправка запроса через WebSocket**:
+    -   Устанавливает WebSocket-соединение с сервером Copilot.
+    -   Отправляет сообщение с текстом запроса и информацией о загруженных медиафайлах.
+7.  **Обработка ответов**:
+    -   Получает сообщения от сервера Copilot через WebSocket.
+    -   Обрабатывает различные типы сообщений, такие как текст, изображения, предложения и ошибки.
+    -   Возвращает результат запроса в потоковом режиме или целиком.
+8.  **Обработка ошибок**:
+    -   Обрабатывает ошибки, возникающие при взаимодействии с Copilot, и вызывает исключения `RuntimeError` в случае необходимости.
+9.  **Закрытие соединения**:
+    -   Закрывает WebSocket-соединение после завершения обмена сообщениями.
 
-2. **Получение модели**:
-   - Получает название модели из аргумента `model` с использованием `cls.get_model(model)`.
-
-3. **Аутентификация**:
-   - Проверяет наличие токена доступа `cls._access_token`.
-   - Если токен отсутствует, пытается прочитать его из HAR-файла с помощью `readHAR(cls.url)`.
-   - Если HAR-файл не найден или не содержит токен, пытается получить его с помощью `get_access_token_and_cookies(cls.url, proxy)` через браузер, используя `nodriver`.
-
-4. **Создание сессии**:
-   - Создает сессию с использованием `curl_cffi.requests.Session` с заданными параметрами (таймаут, прокси, заголовки, куки).
-
-5. **Получение информации о пользователе**:
-   - Отправляет запрос к API для получения информации о пользователе.
-   - Если возвращается статус 401, вызывает исключение `MissingAuthError`.
-
-6. **Создание или использование существующей беседы**:
-   - Если `conversation` равен `None`, создает новую беседу, отправляя POST-запрос к `cls.conversation_url`.
-   - Если `conversation` предоставлен, использует существующую беседу.
-
-7. **Загрузка медиафайлов**:
-   - Если в аргументе `media` переданы медиафайлы, загружает их на сервер Copilot и получает URL.
-
-8. **Установка WebSocket-соединения**:
-   - Устанавливает WebSocket-соединение с `cls.websocket_url`.
-
-9. **Отправка сообщений**:
-   - Отправляет сообщения в формате JSON через WebSocket.
-
-10. **Обработка ответов**:
-    - Принимает сообщения через WebSocket и обрабатывает их в цикле.
-    - В зависимости от типа события (`appendText`, `generatingImage`, `imageGenerated`, `done`, `suggestedFollowups`, `replaceText`, `error`) генерирует соответствующие результаты.
-
-11. **Завершение**:
-    - Закрывает WebSocket-соединение.
-
-**ASCII Flowchart**:
+**ASCII flowchart**:
 
 ```
-     Начало
-     ↓
-     Проверка зависимостей (curl_cffi)
-     ↓
-     Получение или обновление токена доступа
-     ↓
-     Создание сессии
-     ↓
-     Получение информации о пользователе
-     ↓
-     Создание или использование беседы
-     ↓
-     Загрузка медиафайлов (если есть)
-     ↓
-     Установка WebSocket-соединения
-     ↓
-     Отправка сообщения через WebSocket
-     ↓
-     Обработка ответов WebSocket
-     ├── appendText      → Генерация текста
-     ├── generatingImage → Запрос на генерацию изображения
-     ├── imageGenerated  → Возврат URL изображения
-     ├── done            → Завершение
-     ├── suggestedFollowups → Предложенные следующие шаги
-     ├── replaceText     → Замена текста
-     └── error           → Обработка ошибки
-     ↓
-     Закрытие WebSocket-соединения
-     ↓
-     Конец
+    [Проверка зависимостей curl_cffi]
+    |
+    [Определение используемой модели Copilot]
+    |
+    [Аутентификация: проверка и получение access token]
+    |
+    [Создание сессии curl_cffi]
+    |
+    [Создание или использование существующего разговора]
+    |
+    [Формирование текста запроса]
+    |
+    [Загрузка медиафайлов (если есть)]
+    |
+    [Установка WebSocket-соединения]
+    |
+    [Отправка сообщения с запросом]
+    |
+    [Обработка ответов Copilot]
+    |
+    [Закрытие WebSocket-соединения]
 ```
 
 **Примеры**:
 
 ```python
-# Пример 1: Создание простого текстового запроса
+# Пример 1: Отправка текстового запроса
 messages = [{"role": "user", "content": "Напиши короткое стихотворение о весне."}]
 result = Copilot.create_completion(model="Copilot", messages=messages)
-for chunk in result:
-    print(chunk, end="")
+for part in result:
+    print(part, end="")
 
-# Пример 2: Создание запроса с потоковой передачей
-messages = [{"role": "user", "content": "Расскажи о последних новостях в мире."}]
-result = Copilot.create_completion(model="Think Deeper", messages=messages, stream=True)
-for chunk in result:
-    print(chunk, end="")
-
-# Пример 3: Отправка изображения и текстового запроса
+# Пример 2: Отправка запроса с изображением
 media = "path/to/image.jpg"
-messages = [{"role": "user", "content": "Опиши, что ты видишь на этой картинке."}]
+messages = [{"role": "user", "content": "Опиши, что изображено на картинке."}]
 result = Copilot.create_completion(model="Copilot", messages=messages, media=media)
-for chunk in result:
-    print(chunk, end="")
+for part in result:
+    print(part, end="")
+
+# Пример 3: Использование существующего разговора
+conversation = Conversation(conversation_id="12345")
+messages = [{"role": "user", "content": "Продолжи разговор."}]
+result = Copilot.create_completion(model="Copilot", messages=messages, conversation=conversation)
+for part in result:
+    print(part, end="")
 ```
 
 ### `get_access_token_and_cookies`
@@ -216,77 +182,66 @@ for chunk in result:
 ```python
 async def get_access_token_and_cookies(url: str, proxy: str = None, target: str = "ChatAI",):
     """
-    Получает токен доступа и куки из браузера с использованием nodriver.
+    Асинхронно получает access token и cookies, используя автоматизированный браузер.
 
     Args:
-        url (str): URL для открытия в браузере.
-        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
-        target (str, optional): Цель для поиска токена доступа. По умолчанию "ChatAI".
+        url (str): URL для получения access token.
+        proxy (str, optional): Адрес прокси-сервера. По умолчанию None.
+        target (str, optional): Цель для access token. По умолчанию "ChatAI".
 
     Returns:
-        Tuple[str, dict]: Токен доступа и словарь куки.
+        tuple[str, dict]: Access token и словарь cookies.
+
+    Raises:
+        Exception: Если не удалось получить access token или cookies.
 
     """
 ```
 
-**Назначение**: Получает токен доступа и куки из браузера с использованием `nodriver`.
-
-**Параметры**:
-- `url` (str): URL для открытия в браузере.
-- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
-- `target` (str, optional): Цель для поиска токена доступа. По умолчанию "ChatAI".
-
-**Возвращает**:
-- `Tuple[str, dict]`: Кортеж, содержащий токен доступа и словарь куки.
+**Назначение**: Функция `get_access_token_and_cookies` использует автоматизированный браузер для получения access token и cookies с заданной страницы. Это необходимо для аутентификации в Copilot, когда прямой доступ к access token невозможен.
 
 **Как работает функция**:
 
-1. **Запуск браузера**:
-   - Запускает браузер с использованием `get_nodriver(proxy=proxy, user_data_dir="copilot")`.
+1.  **Запуск браузера**:
+    -   Использует `get_nodriver` для запуска автоматизированного браузера (например, Chrome или Firefox) с заданным прокси-сервером и каталогом пользовательских данных.
+2.  **Получение страницы**:
+    -   Открывает заданный URL в браузере.
+3.  **Извлечение access token**:
+    -   Выполняет JavaScript-код в браузере для извлечения access token из localStorage.
+    -   JavaScript-код ищет элементы localStorage, содержащие credentialType "AccessToken", не истекшие по времени и содержащие заданную цель (target).
+    -   Если access token не найден, повторяет попытку через 1 секунду.
+4.  **Получение cookies**:
+    -   Получает все cookies для заданного URL из браузера.
+5.  **Закрытие страницы и остановка браузера**:
+    -   Закрывает страницу в браузере.
+    -   Останавливает автоматизированный браузер.
+6.  **Возврат результата**:
+    -   Возвращает access token и словарь cookies.
 
-2. **Открытие страницы**:
-   - Открывает страницу с заданным `url`.
-
-3. **Извлечение токена доступа**:
-   - Выполняет JavaScript-код в браузере для извлечения токена доступа из `localStorage`.
-
-4. **Извлечение куки**:
-   - Получает куки из браузера.
-
-5. **Завершение**:
-   - Закрывает страницу и останавливает браузер.
-
-**ASCII Flowchart**:
+**ASCII flowchart**:
 
 ```
-     Начало
-     ↓
-     Запуск браузера (nodriver)
-     ↓
-     Открытие страницы (url)
-     ↓
-     Извлечение токена доступа (localStorage)
-     ↓
-     Извлечение куки
-     ↓
-     Закрытие страницы и остановка браузера
-     ↓
-     Конец
+    [Запуск автоматизированного браузера]
+    |
+    [Открытие URL в браузере]
+    |
+    [Выполнение JavaScript-кода для извлечения access token из localStorage]
+    |
+    [Получение cookies для URL]
+    |
+    [Закрытие страницы и остановка браузера]
+    |
+    [Возврат access token и cookies]
 ```
 
 **Примеры**:
 
 ```python
-# Пример получения токена доступа и куки
-import asyncio
-
-async def main():
-    url = "https://copilot.microsoft.com"
-    token, cookies = await get_access_token_and_cookies(url)
-    print(f"Токен доступа: {token}")
-    print(f"Куки: {cookies}")
-
-asyncio.run(main())
+# Пример: Получение access token и cookies
+url = "https://copilot.microsoft.com"
+access_token, cookies = asyncio.run(get_access_token_and_cookies(url))
+print(f"Access Token: {access_token}")
+print(f"Cookies: {cookies}")
 ```
 
 ### `readHAR`
@@ -294,72 +249,65 @@ asyncio.run(main())
 ```python
 def readHAR(url: str):
     """
-    Читает HAR-файлы и извлекает токен доступа и куки.
+    Читает HAR-файлы в поисках access token и cookies.
 
     Args:
         url (str): URL для поиска в HAR-файлах.
 
     Returns:
-        Tuple[str, dict]: Токен доступа и словарь куки.
+        tuple[str, dict]: Access token и словарь cookies.
 
     Raises:
-        NoValidHarFileError: Если не найдены HAR-файлы или токен доступа.
+        NoValidHarFileError: Если access token не найден в HAR-файлах.
 
     """
 ```
 
-**Назначение**: Читает HAR-файлы и извлекает токен доступа и куки.
-
-**Параметры**:
-- `url` (str): URL для поиска в HAR-файлах.
-
-**Возвращает**:
-- `Tuple[str, dict]`: Кортеж, содержащий токен доступа и словарь куки.
-
-**Вызывает исключения**:
-- `NoValidHarFileError`: Если не найдены HAR-файлы или токен доступа.
+**Назначение**: Функция `readHAR` анализирует HAR-файлы (HTTP Archive) для извлечения access token и cookies, связанных с заданным URL. HAR-файлы содержат записи HTTP-трафика, которые могут быть использованы для получения учетных данных.
 
 **Как работает функция**:
 
-1. **Поиск HAR-файлов**:
-   - Получает список HAR-файлов с помощью `get_har_files()`.
+1.  **Поиск HAR-файлов**:
+    -   Использует `get_har_files` для получения списка путей к HAR-файлам.
+2.  **Анализ HAR-файлов**:
+    -   Перебирает HAR-файлы в списке.
+    -   Читает содержимое каждого HAR-файла.
+    -   Ищет записи, соответствующие заданному URL.
+    -   Извлекает access token из заголовка "authorization".
+    -   Извлекает cookies из запроса.
+3.  **Возврат результата**:
+    -   Если access token найден, возвращает его и словарь cookies.
+    -   Если access token не найден ни в одном HAR-файле, вызывает исключение `NoValidHarFileError`.
 
-2. **Чтение HAR-файлов**:
-   - Читает каждый HAR-файл и ищет записи, соответствующие заданному `url`.
-
-3. **Извлечение токена доступа и куки**:
-   - Извлекает токен доступа из заголовка `authorization` и куки из запроса.
-
-4. **Завершение**:
-   - Возвращает токен доступа и куки.
-
-**ASCII Flowchart**:
+**ASCII flowchart**:
 
 ```
-     Начало
-     ↓
-     Поиск HAR-файлов
-     ↓
-     Чтение HAR-файлов
-     ↓
-     Поиск записей с заданным URL
-     ↓
-     Извлечение токена доступа и куки
-     ↓
-     Конец
+    [Получение списка HAR-файлов]
+    |
+    [Перебор HAR-файлов]
+    |
+    [Чтение содержимого HAR-файла]
+    |
+    [Поиск записей, соответствующих URL]
+    |
+    [Извлечение access token из заголовка "authorization"]
+    |
+    [Извлечение cookies из запроса]
+    |
+    [Возврат access token и cookies]
 ```
 
 **Примеры**:
 
 ```python
-# Пример чтения HAR-файла
+# Пример: Чтение access token и cookies из HAR-файла
 url = "https://copilot.microsoft.com"
 try:
-    token, cookies = readHAR(url)
-    print(f"Токен доступа: {token}")
-    print(f"Куки: {cookies}")
+    access_token, cookies = readHAR(url)
+    print(f"Access Token: {access_token}")
+    print(f"Cookies: {cookies}")
 except NoValidHarFileError as ex:
-    print(f"Ошибка: {ex}")
+    print(f"Error: {ex}")
 ```
 
 ### `get_clarity`
@@ -367,40 +315,37 @@ except NoValidHarFileError as ex:
 ```python
 def get_clarity() -> bytes:
     """
-    Возвращает тело запроса для Clarity.
+    Возвращает закодированное тело запроса для сервиса Clarity.
 
     Returns:
-        bytes: Тело запроса в виде байтов.
-
+        bytes: Закодированное тело запроса.
     """
 ```
 
-**Назначение**: Возвращает тело запроса для Clarity.
-
-**Возвращает**:
-- `bytes`: Тело запроса в виде байтов.
+**Назначение**: Функция `get_clarity` возвращает закодированное тело запроса, используемое для взаимодействия с сервисом Microsoft Clarity. Сервис Clarity предназначен для анализа поведения пользователей на веб-сайтах.
 
 **Как работает функция**:
 
-1. **Декодирование Base64**:
-   - Декодирует строку Base64, содержащую данные для Clarity.
+1.  **Определение закодированного тела запроса**:
+    -   Закодированное тело запроса представлено в виде строки base64.
+2.  **Декодирование тела запроса**:
+    -   Строка base64 декодируется с использованием `base64.b64decode`.
+3.  **Возврат результата**:
+    -   Возвращает декодированное тело запроса в виде байтов.
 
-2. **Завершение**:
-   - Возвращает декодированные данные.
-
-**ASCII Flowchart**:
+**ASCII flowchart**:
 
 ```
-     Начало
-     ↓
-     Декодирование Base64
-     ↓
-     Конец
+    [Определение закодированного тела запроса в base64]
+    |
+    [Декодирование строки base64]
+    |
+    [Возврат декодированного тела запроса в виде байтов]
 ```
 
 **Примеры**:
 
 ```python
-# Пример получения тела запроса для Clarity
+# Пример: Получение тела запроса для сервиса Clarity
 body = get_clarity()
-print(f"Тело запроса: {body}")
+print(f"Body: {body}")

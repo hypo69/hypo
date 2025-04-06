@@ -1,12 +1,12 @@
-# Модуль `Yqcloud.py`
+# Модуль Yqcloud.py
 
 ## Обзор
 
-Модуль предназначен для взаимодействия с Yqcloud API для генерации текста. Он предоставляет функцию `_create_completion`, которая отправляет запросы к API и возвращает сгенерированный текст. Модуль поддерживает потоковую передачу данных и не требует аутентификации.
+Модуль `Yqcloud.py` предоставляет класс для взаимодействия с сервисом Yqcloud для генерации текста. Он определяет функцию `_create_completion`, которая отправляет запросы к API Yqcloud и возвращает сгенерированный текст. Модуль также содержит информацию о поддерживаемых моделях и требованиях аутентификации.
 
 ## Подробней
 
-Этот модуль предоставляет интерфейс к API Yqcloud, который используется для генерации текста на основе предоставленных сообщений. Он отправляет POST-запросы к `https://api.aichatos.cloud/api/generateStream` и обрабатывает ответы в потоковом режиме. Модуль предназначен для интеграции с другими частями проекта `hypotez`, где требуется генерация текста с использованием Yqcloud API.
+Модуль `Yqcloud.py` предназначен для интеграции с сервисом Yqcloud, который предоставляет API для генерации текста.  Модуль определяет функцию `_create_completion`, которая формирует и отправляет POST-запросы к API `https://api.aichatos.cloud/api/generateStream` с использованием библиотеки `requests`. Функция обрабатывает ответ от API, извлекая токены сгенерированного текста и возвращая их. Модуль также определяет параметры, такие как поддерживаемые модели (`model`) и необходимость аутентификации (`needs_auth`).
 
 ## Функции
 
@@ -14,83 +14,108 @@
 
 ```python
 def _create_completion(model: str, messages: list, stream: bool, **kwargs):
-    """
-    Создает запрос к Yqcloud API для генерации текста на основе предоставленных сообщений.
+    """ Функция отправляет запрос к API Yqcloud и возвращает сгенерированный текст.
 
     Args:
-        model (str): Идентификатор модели для генерации текста.
-        messages (list): Список сообщений для генерации текста.
-        stream (bool): Флаг, указывающий, следует ли использовать потоковую передачу данных.
-        **kwargs: Дополнительные параметры.
+        model (str): Имя используемой модели.
+        messages (list): Список сообщений для отправки в API.
+        stream (bool): Флаг, указывающий, нужно ли возвращать результат в потоковом режиме.
+        **kwargs: Дополнительные аргументы.
 
-    Yields:
-        str: Сгенерированный текст.
+    Returns:
+        Generator[str, None, None]: Генератор токенов сгенерированного текста.
 
     Как работает функция:
-    1. Формирует заголовки запроса, включая `authority`, `origin`, `referer` и `user-agent`.
-    2. Создает JSON-данные для запроса, включая `prompt`, `userId`, `network`, `apikey` и `withoutContext`.
-       - `prompt` формируется как "always respond in english | %s", где %s - последнее сообщение из `messages`.
-       - `userId` генерируется на основе текущего времени.
-    3. Отправляет POST-запрос к `https://api.aichatos.cloud/api/generateStream` с использованием `requests.post`.
-    4. Итерируется по содержимому ответа в потоковом режиме с помощью `response.iter_content(chunk_size=2046)`.
-    5. Для каждого полученного токена проверяет, содержит ли он `b'always respond in english'`.
-       - Если не содержит, декодирует токен в UTF-8 и возвращает его.
+
+    1. Формирование заголовков HTTP-запроса.
+    2. Формирование тела запроса в формате JSON, включающего промпт, идентификатор пользователя и другие параметры.
+    3. Отправка POST-запроса к API `https://api.aichatos.cloud/api/generateStream` с использованием библиотеки `requests` и включением потоковой передачи данных.
+    4. Итерация по содержимому ответа, извлечение токенов сгенерированного текста и возврат их через генератор.
+
+    ASCII Flowchart:
+
+    Запрос к API Yqcloud
+    │
+    └── Запрос (headers, json_data)
+    │
+    Ответ от API Yqcloud
+    │
+    └── Итерация по содержимому ответа (response.iter_content)
+    │
+    Извлечение токенов
+    │
+    └── Декодирование токенов (token.decode('utf-8'))
+    │
+    Возврат токенов (yield)
 
     Примеры:
-        Пример вызова функции:
-        _create_completion(model='gpt-3.5-turbo', messages=[{'content': 'Hello, how are you?'}], stream=True)
+    - Вызов с минимальными параметрами:
+        _create_completion(model='gpt-3.5-turbo', messages=[{'content': 'Hello'}], stream=True)
+
+    - Вызов с дополнительными параметрами:
+        _create_completion(model='gpt-3.5-turbo', messages=[{'content': 'Translate to French: Hello'}], stream=True, temperature=0.7)
+
     """
+
+    def inner_function():
+        """Внутренняя функция не используется.
+
+        Args:
+            param (str): Описание параметра `param`.
+            param1 (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию `None`.
+
+        Returns:
+            dict | None: Описание возвращаемого значения. Возвращает словарь или `None`.
+
+        Raises:
+            SomeError: Описание ситуации, в которой возникает исключение `SomeError`.
+
+        ...
+        """
+
+        ...
+
+    headers = {
+        'authority': 'api.aichatos.cloud',
+        'origin': 'https://chat9.yqcloud.top',
+        'referer': 'https://chat9.yqcloud.top/',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
+    }
+
+    json_data = {
+        'prompt': 'always respond in english | %s' % messages[-1]['content'],
+        'userId': f'#/chat/{int(time.time() * 1000)}',
+        'network': True,
+        'apikey': '',
+        'system': '',
+        'withoutContext': False,
+    }
+
+    response = requests.post('https://api.aichatos.cloud/api/generateStream', headers=headers, json=json_data, stream=True)
+    for token in response.iter_content(chunk_size=2046):
+        if not b'always respond in english' in token:
+            yield (token.decode('utf-8'))
 ```
-
-**ASCII Flowchart функции `_create_completion`**:
-
-```
-A [Формирование заголовков запроса]
-│
-B [Создание JSON-данных для запроса]
-│
-C [Отправка POST-запроса к API]
-│
-D [Итерация по содержимому ответа в потоковом режиме]
-│
-E [Проверка наличия 'always respond in english' в токене]
-│
-F [Декодирование токена в UTF-8 и возврат]
-```
-
-**Параметры**
-- `model` (str): Идентификатор модели для генерации текста.
-- `messages` (list): Список сообщений для генерации текста.
-- `stream` (bool): Флаг, указывающий, следует ли использовать потоковую передачу данных.
-- `**kwargs`: Дополнительные параметры.
-
-**Возвращает**:
-- `str`: Сгенерированный текст.
-
-**Внутренние функции**: Нет
 
 ### `params`
 
 ```python
 params = f'g4f.Providers.{os.path.basename(__file__)[:-3]} supports: ' + \
-    '({0})'.format(', '.join(['{0}: {1}'.format(name, get_type_hints(_create_completion)[name].__name__) for name in _create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]]))
+    '({0})'.format(', '.join([f"{name}: {get_type_hints(_create_completion)[name].__name__}" for name in _create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]]))
 ```
 
-**Назначение**: Формирует строку с информацией о поддержке параметров функцией `_create_completion`.
+**Назначение**: Формирует строку с информацией о поддерживаемых параметрах функции `_create_completion`.
 
-**Как работает переменная**:
+**Как работает**:
 
-1.  **Извлечение имени файла**: `os.path.basename(__file__)[:-3]` извлекает имя текущего файла (например, `"Yqcloud.py"`) и удаляет последние три символа (".py"), чтобы получить имя модуля (например, `"Yqcloud"`).
-2.  **Формирование списка параметров**:
-    *   `_create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]` получает имена всех аргументов функции `_create_completion`.
-    *   `get_type_hints(_create_completion)` возвращает словарь, содержащий аннотации типов для аргументов функции `_create_completion`.
-    *   `['{0}: {1}'.format(name, get_type_hints(_create_completion)[name].__name__) for name in ...]` создает список строк, где каждая строка имеет формат `"имя_параметра: тип_параметра"`.
-3.  **Объединение параметров в строку**: `', '.join([...])` объединяет все элементы списка в одну строку, разделяя их запятой и пробелом.
-4.  **Формирование итоговой строки**: `'g4f.Providers.{os.path.basename(__file__)[:-3]} supports: ({0})'.format(...)` формирует итоговую строку, которая содержит имя модуля и список поддерживаемых параметров с их типами.
+1.  **`os.path.basename(__file__)[:-3]`**: Извлекает имя текущего файла (`Yqcloud.py`) и удаляет расширение `.py`.
+2.  **`_create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]`**: Получает список имен аргументов функции `_create_completion`.
+3.  **`get_type_hints(_create_completion)[name].__name__`**: Для каждого аргумента получает его тип из аннотации типов и извлекает имя типа.
+4.  **`', '.join(...)`**: Объединяет имена аргументов и их типы в строку, разделенную запятыми.
+5.  **`f'g4f.Providers.{...} supports: ({...})'`**: Формирует итоговую строку, включающую имя провайдера (`g4f.Providers.Yqcloud`) и список поддерживаемых параметров с их типами.
 
-**Примеры**:
+**Пример**:
 
-В результате работы этого кода может быть сформирована следующая строка:
-
-```
-'g4f.Providers.Yqcloud supports: (model: str, messages: list, stream: bool, kwargs: Dict)'
+```python
+print(params)
+# g4f.Providers.Yqcloud supports: (model: str, messages: list, stream: bool, kwargs: dict)
