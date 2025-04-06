@@ -1,12 +1,12 @@
-# Модуль для обработки успешных платежей в Telegram боте цифрового рынка
+# Модуль `utils.py` для обработки успешных платежей в Telegram боте
 
 ## Обзор
 
-Модуль содержит функцию `successful_payment_logic`, которая обрабатывает логику успешной оплаты товара пользователем в Telegram боте цифрового рынка. Она добавляет информацию о покупке в базу данных, отправляет уведомления администраторам и предоставляет пользователю информацию о приобретенном товаре.
+Модуль `utils.py` содержит функции, необходимые для обработки успешных платежей в Telegram боте цифрового рынка. Он включает логику добавления информации о покупке в базу данных, отправки уведомлений администраторам и предоставления информации о товаре пользователю. Модуль использует асинхронные функции для эффективного взаимодействия с базой данных и Telegram API.
 
 ## Подробнее
 
-Этот модуль играет важную роль в обработке финансовых транзакций в боте. Он обеспечивает фиксацию каждой покупки, уведомляет администраторов для контроля и учета, а также информирует пользователя о деталях его приобретения, обеспечивая прозрачность и удобство использования бота. Модуль использует интеграцию с Telegram API через `aiogram` для отправки сообщений и документов.
+Этот модуль играет ключевую роль в завершении процесса покупки в боте. Он обеспечивает запись данных о платеже, информирование заинтересованных сторон (администраторов и пользователей) и предоставление доступа к приобретенному контенту или информации. Использование `PurchaseDao` и `ProductDao` позволяет абстрагироваться от конкретной реализации базы данных, а применение `AsyncSession` обеспечивает асинхронность операций.
 
 ## Функции
 
@@ -14,181 +14,95 @@
 
 ```python
 async def successful_payment_logic(session: AsyncSession, payment_data, currency, user_tg_id, bot: Bot):
-    """ Функция обрабатывает логику успешной оплаты товара пользователем.
+    """Обрабатывает логику успешной оплаты, добавляет данные о покупке в БД, отправляет уведомления и информацию пользователю.
 
     Args:
-        session (AsyncSession): Сессия базы данных SQLAlchemy для выполнения операций с базой данных.
-        payment_data (dict): Словарь с данными о платеже, содержащий `product_id`, `price`, `payment_type`, `payment_id` и `user_id`.
-        currency (str): Валюта, в которой был произведен платеж.
-        user_tg_id (int): ID пользователя в Telegram, совершившего покупку.
-        bot (Bot): Экземпляр бота aiogram для отправки сообщений пользователю и администраторам.
+        session (AsyncSession): Асинхровая сессия SQLAlchemy для работы с базой данных.
+        payment_data: Данные о платеже.
+        currency: Валюта платежа.
+        user_tg_id: ID пользователя в Telegram.
+        bot (Bot): Экземпляр бота aiogram для отправки сообщений.
 
     Returns:
         None
 
     Raises:
         Exception: Если происходит ошибка при отправке уведомления администраторам.
+
     """
 ```
 
+**Назначение**: Обработка логики, связанной с успешным завершением платежа.
+
+**Параметры**:
+- `session` (AsyncSession): Асинхровая сессия SQLAlchemy для работы с базой данных.
+- `payment_data` (Any): Данные о платеже, полученные от платежной системы. Ожидается, что `payment_data` является словарем.
+- `currency` (str): Валюта, в которой был произведен платеж.
+- `user_tg_id` (int): Telegram ID пользователя, совершившего покупку.
+- `bot` (Bot): Экземпляр Telegram бота, используемый для отправки уведомлений и сообщений.
+
+**Возвращает**:
+- `None`: Функция ничего не возвращает явно, но выполняет ряд действий по обработке платежа.
+
+**Вызывает исключения**:
+- `Exception`: Может возникнуть при отправке уведомлений администраторам, обрабатывается внутри функции с помощью `logger.error`.
+
 **Как работает функция**:
 
-1.  **Извлечение данных о платеже**: Из словаря `payment_data` извлекаются `product_id`, `price`, `payment_type`, `payment_id` и `user_id`.
-2.  **Добавление информации о покупке в БД**: Используется `PurchaseDao.add` для добавления записи о покупке в базу данных с использованием предоставленных данных платежа.
-3.  **Получение данных о товаре**: Используется `ProductDao.find_one_or_none_by_id` для получения информации о купленном товаре из базы данных по `product_id`.
-4.  **Уведомление администраторов**:
-    *   Для каждого `admin_id` из `settings.ADMIN_IDS` отправляется уведомление о покупке товара.
-    *   В случае ошибки при отправке уведомления, информация об ошибке логируется с использованием `logger.error`.
-5.  **Формирование текста сообщения для пользователя**:
-    *   Формируется текст сообщения, включающий благодарность за покупку, информацию о товаре (название, описание, цену, скрытое описание) и указание на наличие или отсутствие файла в товаре.
-    *   В зависимости от наличия `file_id` у товара, формируется разный текст (`file_text`).
-6.  **Отправка информации пользователю**:
-    *   Если у товара есть `file_id`, отправляется документ с `file_id` и сформированным текстом в качестве подписи.
-    *   Если у товара нет `file_id`, отправляется сообщение с сформированным текстом.
-    *   В обоих случаях используется клавиатура `main_user_kb`.
-7.  **Автоматический возврат звезд за покупку**:
-    *   Если `payment_type` равен `'stars'`, вызывается функция `bot.refund_star_payment` для возврата звезд пользователю.
+1.  **Извлечение данных о продукте**: Извлекает `product_id`, `price`, `payment_type`, `payment_id` и `user_id` из `payment_data`.
+2.  **Добавление информации о покупке в БД**: Добавляет информацию о платеже в базу данных с помощью `PurchaseDao.add`.
+3.  **Получение информации о продукте**: Получает данные о продукте из базы данных с помощью `ProductDao.find_one_or_none_by_id`.
+4.  **Отправка уведомлений администраторам**: Отправляет уведомления администраторам о совершенной покупке. В случае ошибки логирует её.
+5.  **Отправка информации пользователю**: Формирует текст сообщения с информацией о покупке и отправляет его пользователю. Если у продукта есть файл, отправляет файл с подписью, иначе отправляет только текст.
+6.  **Автоматический возврат звезд за покупку**: Если тип оплаты - "stars", то производится возврат звезд пользователю.
+
+**ASII flowchart**:
 
 ```
-Данные платежа (payment_data) -> PurchaseDao.add(добавление в БД)
-↓
-ProductDao.find_one_or_none_by_id(получение данных о товаре)
-↓
-Цикл по admin_id из settings.ADMIN_IDS:
-    → Отправка уведомления администратору
-    → Обработка ошибок отправки уведомлений
-↓
-Формирование текста сообщения для пользователя (product_text)
-↓
-Проверка наличия file_id у товара
-↓
-Если file_id есть:
-    → Отправка документа с file_id и текстом
-Иначе:
-    → Отправка сообщения с текстом
-↓
-Если payment_type == 'stars':
-    → bot.refund_star_payment(автоматический возврат звезд)
+Начало --> Извлечение данных о продукте
+    |
+    --> Добавление информации о покупке в БД
+    |
+    --> Получение информации о продукте
+    |
+    --> Отправка уведомлений администраторам (с обработкой ошибок)
+    |
+    --> Формирование и отправка информации пользователю (текст или файл)
+    |
+    --> Если тип оплаты "stars" -> Автоматический возврат звезд за покупку
+    |
+    Конец
 ```
 
 **Примеры**:
 
-Пример 1: Успешная оплата товара с файлом.
-
 ```python
-from aiogram import Bot
-from sqlalchemy.ext.asyncio import AsyncSession
-from bot.dao.dao import PurchaseDao, ProductDao
-from bot.user.kbs import main_user_kb
-from bot.user.schemas import PaymentData
-
-async def test():
-    # Mock объекты и данные для примера
-    class MockAsyncSession:
-        async def execute(self, statement):
-            # Эмулируем выполнение запроса к БД
-            return MockResult()
-    
-        async def commit(self):
-            pass
-
-    class MockResult:
-        def scalar_one_or_none(self):
-            return MockProduct()
-
-    class MockProduct:
-        def __init__(self):
-            self.name = "Test Product"
-            self.description = "Test Description"
-            self.hidden_content = "Hidden Content"
-            self.file_id = "file123"
-
-    class MockBot:
-        async def send_message(self, chat_id, text, reply_markup):
-            print(f"Отправлено сообщение пользователю {chat_id}: {text}")
-
-        async def send_document(self, chat_id, document, caption, reply_markup):
-            print(f"Отправлен документ пользователю {chat_id}: {document} с подписью {caption}")
-            
-        async def refund_star_payment(self, user_id: int, telegram_payment_charge_id: str):
-            print(f"Возврат звезд пользователю {user_id} за платеж {telegram_payment_charge_id}")
-    
-    session = MockAsyncSession()
-    payment_data = {
-        "product_id": "1",
-        "price": "100",
-        "payment_type": "stars",
+# Пример вызова функции
+await successful_payment_logic(
+    session=db_session,
+    payment_data={
+        "product_id": 123,
+        "price": 100,
+        "payment_type": "card",
         "payment_id": "payment123",
-        "user_id": "user123"
-    }
-    currency = "USD"
-    user_tg_id = 123456789
-    bot = MockBot()
+        "user_id": 456
+    },
+    currency="USD",
+    user_tg_id=789,
+    bot=telegram_bot
+)
 
-    await successful_payment_logic(session, payment_data, currency, user_tg_id, bot)
-async def main():
-    await test()
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
-```
-
-Пример 2: Успешная оплата товара без файла.
-
-```python
-from aiogram import Bot
-from sqlalchemy.ext.asyncio import AsyncSession
-from bot.dao.dao import PurchaseDao, ProductDao
-from bot.user.kbs import main_user_kb
-from bot.user.schemas import PaymentData
-
-async def test():
-    # Mock объекты и данные для примера
-    class MockAsyncSession:
-        async def execute(self, statement):
-            # Эмулируем выполнение запроса к БД
-            return MockResult()
-    
-        async def commit(self):
-            pass
-
-    class MockResult:
-        def scalar_one_or_none(self):
-            return MockProduct()
-
-    class MockProduct:
-        def __init__(self):
-            self.name = "Test Product"
-            self.description = "Test Description"
-            self.hidden_content = "Hidden Content"
-            self.file_id = None  # Нет файла
-
-    class MockBot:
-        async def send_message(self, chat_id, text, reply_markup):
-            print(f"Отправлено сообщение пользователю {chat_id}: {text}")
-
-        async def send_document(self, chat_id, document, caption, reply_markup):
-            print(f"Отправлен документ пользователю {chat_id}: {document} с подписью {caption}")
-            
-        async def refund_star_payment(self, user_id: int, telegram_payment_charge_id: str):
-            print(f"Возврат звезд пользователю {user_id} за платеж {telegram_payment_charge_id}")
-    
-    session = MockAsyncSession()
-    payment_data = {
-        "product_id": "1",
-        "price": "100",
+# Пример вызова с оплатой звездами
+await successful_payment_logic(
+    session=db_session,
+    payment_data={
+        "product_id": 456,
+        "price": 50,
         "payment_type": "stars",
-        "payment_id": "payment123",
-        "user_id": "user123"
-    }
-    currency = "USD"
-    user_tg_id = 123456789
-    bot = MockBot()
-
-    await successful_payment_logic(session, payment_data, currency, user_tg_id, bot)
-async def main():
-    await test()
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
-```
+        "payment_id": "payment456",
+        "user_id": 123
+    },
+    currency="STARS",
+    user_tg_id=456,
+    bot=telegram_bot
+)

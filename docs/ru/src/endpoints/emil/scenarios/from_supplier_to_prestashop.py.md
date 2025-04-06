@@ -2,283 +2,250 @@
 
 ## Обзор
 
-Модуль `from_supplier_to_prestashop.py` предназначен для извлечения, разбора и обработки данных о товарах от поставщиков с целью их последующей публикации в PrestaShop. Модуль автоматизирует процесс подготовки данных, их обработки с использованием AI и интеграции с PrestaShop.
+Модуль предназначен для извлечения, обработки и загрузки данных о товарах от поставщиков в Prestashop. Он включает в себя функциональность для парсинга данных, обработки их с использованием AI, а также интеграцию с Prestashop для публикации товаров.
 
-## Подробнее
+## Подробней
 
-Модуль содержит класс `SupplierToPrestashopProvider`, который выполняет основные задачи по сбору данных о товарах, их обработке с использованием AI, сохранению и публикации в PrestaShop. Он также включает функции для создания отчетов и публикации информации в Facebook. Модуль использует различные вспомогательные функции для работы с файлами, изображениями и строками.
+Этот модуль является частью системы автоматизации процесса создания и публикации товаров в интернет-магазине Prestashop. Он позволяет автоматизировать получение данных о товарах от различных поставщиков, их обработку и подготовку к публикации, а также загрузку в Prestashop. Модуль использует веб-драйвер для парсинга данных с сайтов поставщиков и AI-модель для обработки текстовой информации о товарах.
 
 ## Классы
 
 ### `SupplierToPrestashopProvider`
 
-**Описание**: Класс обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков. Данные могут быть получены как с сайтов поставщиков, так и из файла JSON.
+**Описание**: Класс, отвечающий за извлечение, разбор и сохранение данных о продуктах поставщиков.
+
+**Принцип работы**:
+Класс инициализируется с необходимыми API ключами и URL для взаимодействия с Gemini AI и Prestashop. Он использует Selenium WebDriver для парсинга данных с сайтов поставщиков или загружает данные из JSON файлов. Далее, данные обрабатываются AI моделью для приведения их к нужному формату и сохраняются в Prestashop.
 
 **Атрибуты**:
 - `driver` (Driver): Экземпляр Selenium WebDriver для управления браузером.
 - `export_path` (Path): Путь для экспорта данных.
-- `mexiron_name` (str): Название мехирона.
-- `price` (float): Цена товара.
+- `mexiron_name` (str): Имя Mexiron.
+- `price` (float): Цена.
 - `timestamp` (str): Временная метка.
 - `products_list` (list): Список обработанных данных о продуктах.
-- `model` (GoogleGenerativeAI): Экземпляр модели Google Gemini для обработки текста.
-- `config` (SimpleNamespace): Объект с настройками конфигурации.
-- `local_images_path` (Path): Путь к локальным изображениям товаров.
+- `model` (GoogleGenerativeAI): Экземпляр AI модели Gemini.
+- `config` (SimpleNamespace): Конфигурация.
+- `local_images_path` (Path): Путь к локальным изображениям.
 - `lang` (str): Язык.
-- `gemini_api` (str): API ключ Gemini.
-- `presta_api` (str): API ключ PrestaShop.
-- `presta_url` (str): URL PrestaShop.
+- `gemini_api` (str): API ключ для Gemini.
+- `presta_api` (str): API ключ для Prestashop.
+- `presta_url` (str): URL Prestashop.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр класса `SupplierToPrestashopProvider`.
+
+- `__init__`: Инициализирует класс `SupplierToPrestashopProvider` с необходимыми компонентами.
 - `initialise_ai_model`: Инициализирует модель Gemini.
-- `run_scenario`: Выполняет сценарий разбора товаров, их обработки через AI и сохранения данных.
-- `save_product_data`: Сохраняет данные об отдельном товаре в файл.
-- `process_ai`: Обрабатывает список продуктов с использованием AI модели.
-- `read_data_from_json`: Загружает JSON файлы и фотографии, полученные через телеграм.
-- `save_in_prestashop`: Сохраняет товары в PrestaShop.
+- `run_scenario`: Запускает сценарий: парсит продукты, обрабатывает их через AI и сохраняет данные.
+- `save_product_data`: Сохраняет данные об отдельном продукте в файл.
+- `process_ai`: Обрабатывает список продуктов через AI модель.
+- `read_data_from_json`: Загружает JSON файлы и фотографии, полученные через Telegram.
+- `save_in_prestashop`: Сохраняет товары в Prestashop.
 - `post_facebook`: Исполняет сценарий рекламного модуля `facebook`.
 - `create_report`: Отправляет задание на создание мехирона в формате `html` и `pdf`.
 
-#### `__init__`
+### `SupplierToPrestashopProvider.__init__(lang: str, gemini_api: str, presta_api: str, presta_url: str, driver: Optional[Driver] = None)`
 
-```python
-    def __init__(self, 
-                 lang:str, 
-                 gemini_api: str,
-                 presta_api: str,
-                 presta_url: str,
-                 driver: Optional [Driver] = None,
-                 ):
-        """
-        Initializes SupplierToPrestashopProvider class with required components.
-
-        Args:
-            driver (Driver): Selenium WebDriver instance.
-            
-
-        """
-```
-
-**Назначение**: Инициализирует класс `SupplierToPrestashopProvider` с необходимыми компонентами.
+**Назначение**: Инициализация класса `SupplierToPrestashopProvider` с необходимыми компонентами.
 
 **Параметры**:
 - `lang` (str): Язык.
-- `gemini_api` (str): API ключ Gemini.
-- `presta_api` (str): API ключ PrestaShop.
-- `presta_url` (str): URL PrestaShop.
+- `gemini_api` (str): API ключ для Gemini.
+- `presta_api` (str): API ключ для Prestashop.
+- `presta_url` (str): URL Prestashop.
 - `driver` (Optional[Driver]): Экземпляр Selenium WebDriver. По умолчанию `None`.
 
 **Как работает функция**:
-1. Инициализирует API ключи и URL.
-2. Пытается загрузить конфигурационный файл `emil.json` из директории `src/endpoints/emil/`.
-3. Инициализирует временную метку.
-4. Инициализирует драйвер Firefox, если драйвер не был передан.
-5. Инициализирует модель Gemini.
+1. Инициализирует атрибуты класса `gemini_api`, `presta_api`, `presta_url` и `lang` переданными значениями.
+2. Пытается загрузить конфигурационный файл `emil.json` из директории `src/endpoints/emil`.
+3. Устанавливает атрибут `timestamp` текущим временем.
+4. Инициализирует атрибут `driver` переданным экземпляром `Driver` или создает новый экземпляр `Driver(Firefox)`, если `driver` не передан.
+5. Инициализирует атрибут `model` AI моделью, вызвав метод `initialise_ai_model`.
 
-#### `initialise_ai_model`
-
-```python
-    def initialise_ai_model(self):\n        """Инициализация модели Gemini"""
+```
+A: Инициализация атрибутов класса
+|
+B: Загрузка конфигурационного файла emil.json
+|
+C: Установка атрибута timestamp
+|
+D: Инициализация экземпляра Driver
+|
+E: Инициализация AI модели
 ```
 
-**Назначение**: Инициализирует модель Gemini.
+### `SupplierToPrestashopProvider.initialise_ai_model()`
+
+**Назначение**: Инициализация модели Gemini.
 
 **Как работает функция**:
-1. Формирует путь к файлу с системными инструкциями для Gemini.
-2. Читает содержимое файла.
-3. Инициализирует модель GoogleGenerativeAI с API ключом и системными инструкциями.
-4. Если происходит ошибка во время загрузки инструкций, логирует ошибку и возвращает `None`.
+1. Пытается прочитать содержимое файла `system_instruction_mexiron.{self.lang}.md` из директории `src/endpoints/emil/instructions`.
+2. Создает экземпляр класса `GoogleGenerativeAI` с использованием API ключа Gemini, прочитанных инструкций и конфигурации генерации.
+3. В случае возникновения ошибки, логирует ошибку и возвращает `None`.
 
-#### `run_scenario`
-
-```python
-    async def run_scenario(
-        self, 
-        urls: list[str],\n        price: Optional[str] = \'\', \n        mexiron_name: Optional[str] = \'\', \n        
-    ) -> bool:
-        """
-        Executes the scenario: parses products, processes them via AI, and stores data.
-
-        Args:
-            system_instruction (Optional[str]): System instructions for the AI model.
-            price (Optional[str]): Price to process.
-            mexiron_name (Optional[str]): Custom Mexiron name.
-            urls (Optional[str | List[str]]): Product page URLs.
-
-        Returns:
-            bool: True if the scenario executes successfully, False otherwise.
-
-        .. todo:
-            сделать логер перед отрицательным выходом из функции. 
-            Важно! модель ошибается. 
-
-        """
+```
+A: Чтение содержимого файла system_instruction_mexiron.{self.lang}.md
+|
+B: Создание экземпляра класса GoogleGenerativeAI
+|
+C: Обработка исключения и логирование ошибки
 ```
 
-**Назначение**: Выполняет сценарий: парсит продукты, обрабатывает их через AI и сохраняет данные.
+### `SupplierToPrestashopProvider.run_scenario(urls: list[str], price: Optional[str] = '', mexiron_name: Optional[str] = '') -> bool`
+
+**Назначение**: Запускает сценарий: парсит продукты, обрабатывает их через AI и сохраняет данные.
 
 **Параметры**:
-- `urls` (list[str]): Список URL-адресов товаров.
-- `price` (Optional[str]): Цена товара. По умолчанию `''`.
-- `mexiron_name` (Optional[str]): Название мехирона. По умолчанию `''`.
+- `urls` (list[str]): Список URL-адресов страниц продуктов.
+- `price` (Optional[str]): Цена продукта. По умолчанию ''.
+- `mexiron_name` (Optional[str]): Пользовательское имя Mexiron. По умолчанию ''.
 
 **Возвращает**:
 - `bool`: `True`, если сценарий выполнен успешно, `False` в противном случае.
 
 **Как работает функция**:
-1. Определяет кортеж необходимых полей товара.
-2. Итерируется по списку URL-адресов.
-3. Получает грабер для каждого URL.
-4. Если грабер не найден, логирует ошибку и переходит к следующему URL.
-5. Запускает граб страницы.
-6. Конвертирует поля товара.
-7. Сохраняет данные о товаре.
+1. Определяет необходимые поля товара: `id_product`, `name`, `description_short`, `description`, `specification`, `local_image_path`.
+2. Итерируется по списку URL-адресов `urls`.
+3. Для каждого URL определяет граббер с помощью функции `get_graber_by_supplier_url`.
+4. Если граббер не найден, логирует сообщение об ошибке и переходит к следующему URL.
+5. Пытается получить данные о товаре с помощью граббера.
+6. Если получение данных не удалось, логирует сообщение об ошибке и переходит к следующему URL.
+7. Преобразует полученные данные о товаре с помощью метода `convert_product_fields`.
+8. Если преобразование данных не удалось, логирует сообщение об ошибке и переходит к следующему URL.
+9. Сохраняет преобразованные данные о товаре с помощью метода `save_product_data`.
+10. Если сохранение данных не удалось, логирует сообщение об ошибке и переходит к следующему URL.
+11. Добавляет данные о товаре в список `products_list`.
 
-```mermaid
-graph LR
-A[Начало: Получение списка URL] --> B{Наличие URL?};
-B -- Да --> C[Получение грабера для URL];
-C --> D{Грабер найден?};
-D -- Да --> E[Запуск граба страницы];
-D -- Нет --> F[Логирование ошибки];
-E --> G[Конвертация полей товара];
-G --> H[Сохранение данных о товаре];
-H --> I[Добавление товара в products_list];
-I --> B;
-B -- Нет --> K[Конец];
-F --> B;
+```
+A: Определение необходимых полей товара
+|
+B: Итерация по списку URL-адресов
+|
+C: Определение граббера для каждого URL
+|
+D: Получение данных о товаре с помощью граббера
+|
+E: Преобразование полученных данных о товаре
+|
+F: Сохранение преобразованных данных о товаре
+|
+G: Добавление данных о товаре в список products_list
 ```
 
-#### `save_product_data`
+### `SupplierToPrestashopProvider.save_product_data(product_data: dict)`
 
-```python
-    async def save_product_data(self, product_data: dict):\n        """
-        Saves individual product data to a file.
-
-        Args:
-            product_data (dict): Formatted product data.
-        """
-```
-
-**Назначение**: Сохраняет данные об отдельном товаре в файл.
+**Назначение**: Сохраняет данные об отдельном продукте в файл.
 
 **Параметры**:
-- `product_data` (dict): Отформатированные данные о товаре.
+- `product_data` (dict): Форматированные данные продукта.
 
 **Как работает функция**:
-1. Формирует путь к файлу для сохранения данных о товаре.
-2. Сохраняет данные в файл в формате JSON.
-3. Если происходит ошибка во время сохранения, логирует ошибку.
+1. Формирует путь к файлу для сохранения данных продукта: `self.export_path / 'products' / f"{product_data['product_id']}.json"`.
+2. Использует функцию `j_dumps` для сохранения данных продукта в файл.
+3. В случае ошибки сохранения данных, логирует сообщение об ошибке.
 
-#### `process_ai`
-
-```python
-    async def process_ai(self, products_list: List[str], lang:str,  attempts: int = 3) -> tuple | bool:\n        """
-        Processes the product list through the AI model.
-
-        Args:
-            products_list (str): List of product data dictionaries as a string.
-            attempts (int, optional): Number of attempts to retry in case of failure. Defaults to 3.
-
-        Returns:
-            tuple: Processed response in `ru` and `he` formats.
-            bool: False if unable to get a valid response after retries.
-
-        .. note::
-            Модель может возвращать невелидный результат.
-            В таком случае я переспрашиваю модель разумное количество раз.
-        """
+```
+A: Формирование пути к файлу
+|
+B: Сохранение данных продукта в файл с помощью j_dumps
+|
+C: Логирование ошибки в случае неудачи
 ```
 
-**Назначение**: Обрабатывает список продуктов с использованием AI модели.
+### `SupplierToPrestashopProvider.process_ai(products_list: List[str], lang: str, attempts: int = 3) -> tuple | bool`
+
+**Назначение**: Обрабатывает список продуктов через AI модель.
 
 **Параметры**:
-- `products_list` (List[str]): Список данных о продуктах в виде строки.
+- `products_list` (List[str]): Список данных продуктов в виде строки.
 - `lang` (str): Язык.
-- `attempts` (int): Количество попыток повторной отправки запроса в случае неудачи. По умолчанию 3.
+- `attempts` (int): Количество попыток повтора в случае неудачи. По умолчанию 3.
 
 **Возвращает**:
 - `tuple`: Обработанный ответ в форматах `ru` и `he`.
-- `bool`: `False`, если не удалось получить допустимый ответ после нескольких попыток.
+- `bool`: `False`, если не удалось получить валидный ответ после нескольких попыток.
 
 **Как работает функция**:
-1. Проверяет количество оставшихся попыток. Если их нет, возвращает пустой словарь.
-2. Формирует путь к файлу с командой для модели.
-3. Читает содержимое файла.
-4. Формирует запрос для модели.
-5. Отправляет запрос в модель.
-6. Пытается распарсить ответ модели.
-7. Если ответ не распарсился, логирует ошибку и повторяет запрос.
+1. Проверяет количество оставшихся попыток. Если попыток не осталось, возвращает пустой словарь.
+2. Формирует команду для AI модели, читая содержимое файла `command_instruction_mexiron_{lang}.md`.
+3. Отправляет запрос в AI модель.
+4. Если нет ответа от модели, логирует сообщение об ошибке и возвращает пустой словарь.
+5. Преобразует полученный ответ в словарь с помощью функции `j_loads`.
+6. Если преобразование ответа не удалось, логирует сообщение об ошибке и повторяет попытку, если остались еще попытки.
 
-```mermaid
-graph LR
-A[Начало: Получение списка продуктов] --> B{Остались попытки?};
-B -- Да --> C[Формирование запроса для модели];
-C --> D[Отправка запроса в модель];
-D --> E{Получен ответ?};
-E -- Да --> F[Парсинг ответа];
-F --> G{Успешный парсинг?};
-G -- Да --> H[Возврат результата];
-G -- Нет --> I[Логирование ошибки];
-I --> J[Уменьшение кол-ва попыток];
-J --> B;
-E -- Нет --> I;
-B -- Нет --> K[Возврат пустого словаря];
+```
+A: Проверка количества оставшихся попыток
+|
+B: Формирование команды для AI модели
+|
+C: Отправка запроса в AI модель
+|
+D: Преобразование полученного ответа в словарь
+|
+E: Обработка ошибки и повторная попытка, если необходимо
 ```
 
-#### `read_data_from_json`
+### `SupplierToPrestashopProvider.read_data_from_json()`
 
-```python
-    async def read_data_from_json(self):\n        """Загружаю JSON файлы и фотки, которые я сделал через телеграм"""
-```
-
-**Назначение**: Загружает JSON файлы и фотографии, полученные через телеграм.
+**Назначение**: Загружает JSON файлы и фотографии, полученные через Telegram.
 
 **Как работает функция**:
-1. Загружает JSON данные из файла, расположенного по пути `self.local_images_path`.
-2. Выводит загруженные данные в консоль.
+1. Загружает JSON файлы с помощью `j_loads_ns(self.local_images_path)`.
+2. Выводит полученные данные.
 
-#### `save_in_prestashop`
-
-```python
-    async def save_in_prestashop(self, products_list:ProductFields | list[ProductFields]) -> bool:\n        """Функция, которая сохраняет товары в Prestashop emil-design.com """
+```
+A: Загрузка JSON файлов
+|
+B: Вывод полученных данных
 ```
 
-**Назначение**: Сохраняет товары в PrestaShop.
+### `SupplierToPrestashopProvider.save_in_prestashop(products_list: ProductFields | list[ProductFields]) -> bool`
+
+**Назначение**: Сохраняет товары в Prestashop.
 
 **Параметры**:
-- `products_list` (ProductFields | list[ProductFields]): Список товаров для сохранения.
+- `products_list` (ProductFields | list[ProductFields]): Список объектов `ProductFields` или один объект `ProductFields`.
 
 **Как работает функция**:
 1. Преобразует входные данные в список, если они не являются списком.
-2. Инициализирует класс `PrestaProduct` с API ключом и URL PrestaShop.
-3. Итерируется по списку товаров и добавляет каждый товар в PrestaShop.
+2. Создает экземпляр класса `PrestaProduct` с использованием API ключа и URL Prestashop.
+3. Итерируется по списку продуктов и добавляет каждый продукт в Prestashop с помощью метода `add_new_product`.
 
-#### `post_facebook`
-
-```python
-    async def post_facebook(self, mexiron:SimpleNamespace) -> bool:\n        """Функция исполняет сценарий рекламного модуля `facvebook`."""
 ```
+A: Преобразование входных данных в список
+|
+B: Создание экземпляра класса PrestaProduct
+|
+C: Итерация по списку продуктов и добавление каждого продукта в Prestashop
+```
+
+### `SupplierToPrestashopProvider.post_facebook(mexiron: SimpleNamespace) -> bool`
 
 **Назначение**: Исполняет сценарий рекламного модуля `facebook`.
 
 **Параметры**:
-- `mexiron` (SimpleNamespace): Объект с данными для публикации в Facebook.
+- `mexiron` (SimpleNamespace): Объект, содержащий данные о мехироне.
 
 **Как работает функция**:
-1. Переходит на страницу Facebook.
-2. Формирует заголовок для публикации.
-3. Публикует заголовок.
-4. Загружает медиафайлы.
-5. Публикует сообщение.
+1. Открывает страницу Facebook.
+2. Формирует заголовок поста, содержащий название, описание и цену мехирона.
+3. Отправляет заголовок поста с помощью функции `post_message_title`.
+4. Загружает медиафайлы для поста с помощью функции `upload_post_media`.
+5. Публикует пост с помощью функции `message_publish`.
 
-#### `create_report`
-
-```python
-    async def create_report(self, data: dict, lang:str, html_file: Path, pdf_file: Path) -> bool:\n        """Функция отправляет задание на создание мехирона в формате `html` и `pdf`.\n        Если мехорон в pdf создался (`generator.create_report()` вернул True) - \n        отправить его боту
-        """
 ```
+A: Открытие страницы Facebook
+|
+B: Формирование заголовка поста
+|
+C: Отправка заголовка поста
+|
+D: Загрузка медиафайлов
+|
+E: Публикация поста
+```
+
+### `SupplierToPrestashopProvider.create_report(data: dict, lang: str, html_file: Path, pdf_file: Path) -> bool`
 
 **Назначение**: Отправляет задание на создание мехирона в формате `html` и `pdf`.
 
@@ -288,26 +255,61 @@ B -- Нет --> K[Возврат пустого словаря];
 - `html_file` (Path): Путь к HTML файлу.
 - `pdf_file` (Path): Путь к PDF файлу.
 
+**Возвращает**:
+- `bool`: `True`, если отчет успешно создан и отправлен боту, в противном случае - `None`.
+
 **Как работает функция**:
-1. Инициализирует класс `ReportGenerator`.
-2. Запускает создание отчета в форматах `html` и `pdf`.
-3. Если отчет создан успешно, отправляет PDF файл боту.
+1. Создает экземпляр класса `ReportGenerator`.
+2. Создает отчет в форматах `html` и `pdf` с помощью метода `create_report`.
+3. Если отчет успешно создан, проверяет существование PDF файла и является ли он файлом.
+4. Если файл существует и является файлом, отправляет PDF файл боту с помощью метода `update.message.reply_document`.
+
+```
+A: Создание экземпляра класса ReportGenerator
+|
+B: Создание отчета в форматах html и pdf
+|
+C: Проверка существования PDF файла
+|
+D: Отправка PDF файла боту
+```
 
 ## Функции
 
-### `main`
+### `main(suppier_to_presta)`
 
-```python
-async def main(suppier_to_presta):\n    """На данный момент функция читает JSON со списком фотографий , которые были получены от Эмиля"""
-```
-
-**Назначение**:  Функция читает JSON со списком фотографий, полученных от Эмиля, и сохраняет их в PrestaShop.
+**Назначение**: Функция для чтения JSON со списком фотографий, полученных от Эмиля, и сохранения в Prestashop.
 
 **Параметры**:
-- `suppier_to_presta`: Экземпляр класса `SupplierToPrestashopProvider`.
+- `suppier_to_presta`: Объект класса `SupplierToPrestashopProvider`.
 
 **Как работает функция**:
-1. Определяет язык.
-2. Загружает данные о товарах из JSON файла.
-3. Инициализирует класс `SupplierToPrestashopProvider`.
-4. Сохраняет товары в PrestaShop.
+1. Устанавливает язык на `he`.
+2. Загружает данные о продуктах из JSON файла.
+3. Создает экземпляр класса `SupplierToPrestashopProvider`.
+4. Преобразует загруженные данные в список.
+5. Сохраняет продукты в Prestashop с помощью метода `save_in_prestashop`.
+
+```
+A: Установка языка
+|
+B: Загрузка данных о продуктах из JSON файла
+|
+C: Создание экземпляра класса SupplierToPrestashopProvider
+|
+D: Преобразование загруженных данных в список
+|
+E: Сохранение продуктов в Prestashop
+```
+
+**Примеры**:
+
+Пример вызова функции:
+```python
+async def main():
+    lang = 'he'
+    products_ns = j_loads_ns(gs.path.external_storage / ENDPOINT / 'out_250108230345305_he.json')
+
+    suppier_to_presta = SupplierToPrestashopProvider(lang)
+    products_list: list = [f for f in products_ns]
+    await suppier_to_presta.save_in_prestashop(products_list)

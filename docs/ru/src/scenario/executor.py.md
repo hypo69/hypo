@@ -1,9 +1,16 @@
 # Модуль для выполнения сценариев
 ## Обзор
-Модуль `executor.py` предназначен для выполнения сценариев, загрузки их из файлов, а также обработки процесса извлечения информации о продуктах и вставки ее в PrestaShop. Он содержит функции для запуска сценариев, загрузки их из файлов и обработки процесса извлечения информации о продукте и вставки ее в PrestaShop.
+
+Модуль `executor.py` предназначен для выполнения сценариев, загрузки их из файлов и обработки процесса извлечения информации о продуктах и вставки их в PrestaShop.
 
 ## Подробнее
-Модуль предоставляет функциональность для автоматизации процесса сбора данных о товарах с веб-сайтов поставщиков и их добавления в интернет-магазин PrestaShop. Он включает в себя функции для чтения сценариев из файлов, навигации по страницам товаров, извлечения данных и вставки их в PrestaShop. Этот модуль является центральным компонентом системы, отвечающим за координацию действий по сбору и публикации данных о товарах.
+
+Этот модуль содержит функции для выполнения сценариев, загрузки их из файлов и обработки процесса извлечения информации о продуктах и вставки ее в PrestaShop. Он включает в себя функции для запуска сценариев из файлов, управления сеансами браузера и взаимодействия с PrestaShop API. Модуль использует глобальный журнал для отслеживания выполнения сценариев и включает обработку ошибок для обеспечения надежности процесса.
+
+## Классы
+
+В данном модуле классы отсутствуют
+
 ## Функции
 
 ### `dump_journal`
@@ -14,7 +21,7 @@ def dump_journal(s, journal: dict) -> None:
     Сохраняет данные журнала в файл JSON.
 
     Args:
-        s (object): Объект поставщика (Supplier instance).
+        s (object): Экземпляр поставщика.
         journal (dict): Словарь, содержащий данные журнала.
 
     Returns:
@@ -22,26 +29,38 @@ def dump_journal(s, journal: dict) -> None:
     """
 ```
 
-**Назначение**: Функция `dump_journal` предназначена для сохранения данных журнала выполнения сценариев в файл в формате JSON.
+**Назначение**: Функция сохраняет данные журнала (информацию о выполнении сценариев) в файл JSON.
 
 **Параметры**:
-- `s` (object): Объект поставщика, содержащий информацию о поставщике и путях к файлам.
-- `journal` (dict): Словарь, содержащий данные журнала, такие как информация о выполненных сценариях, времени выполнения и статусе.
+- `s` (object): Экземпляр класса поставщика, содержащий информацию о поставщике.
+- `journal` (dict): Словарь, содержащий данные журнала, которые нужно сохранить.
+
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
 
 **Как работает функция**:
-1. Формируется путь к файлу журнала, который включает в себя абсолютный путь к каталогу поставщика, подкаталог `_journal` и имя файла, сгенерированное на основе текущей временной метки.
-2. Данные из словаря `journal` записываются в файл JSON по указанному пути с помощью функции `j_dumps`.
+1.  Определяется путь к файлу журнала, используя атрибут `supplier_abs_path` экземпляра поставщика `s` и текущую дату и время.
+2.  Вызывается функция `j_dumps` для записи содержимого словаря `journal` в файл JSON по указанному пути.
+
+```ascii
+Получение пути к файлу журнала  -->  Запись данных журнала в файл JSON
+```
 
 **Примеры**:
+
+Предположим, у нас есть экземпляр поставщика `s` и словарь `journal` с данными:
+
 ```python
-from pathlib import Path
 class Supplier:
-    def __init__(self):
-        self.supplier_abs_path = Path('./')  # Укажите путь к директории поставщика
-supplier = Supplier()
-journal_data = {'scenario_files': {'scenario1.json': {'status': 'completed'}}, 'name': '2024-10-26_15-00-00'}
-dump_journal(supplier, journal_data)
+    def __init__(self, supplier_abs_path):
+        self.supplier_abs_path = supplier_abs_path
+
+s = Supplier('/path/to/supplier')
+journal = {'name': 'test_scenario', 'status': 'completed'}
+dump_journal(s, journal)
 ```
+
+В результате будет создан файл `/path/to/supplier/_journal/test_scenario.json`, содержащий данные из словаря `journal`.
 
 ### `run_scenario_files`
 
@@ -51,52 +70,58 @@ def run_scenario_files(s, scenario_files_list: List[Path] | Path) -> bool:
     Выполняет список файлов сценариев.
 
     Args:
-        s (object): Объект поставщика (Supplier instance).
-        scenario_files_list (List[Path] | Path): Список путей к файлам сценариев или один путь к файлу.
+        s (object): Экземпляр поставщика.
+        scenario_files_list (List[Path] | Path): Список путей к файлам сценариев или одиночный путь к файлу.
 
     Returns:
-        bool: True, если все сценарии выполнены успешно, иначе False.
+        bool: True, если все сценарии были выполнены успешно, False в противном случае.
 
     Raises:
         TypeError: Если scenario_files_list не является списком или объектом Path.
     """
 ```
 
-**Назначение**: Функция `run_scenario_files` предназначена для выполнения сценариев, загруженных из одного или нескольких файлов. Она принимает список файлов сценариев и последовательно выполняет каждый из них.
+**Назначение**: Функция выполняет сценарии, загружая их из указанных файлов.
 
 **Параметры**:
-- `s` (object): Объект поставщика, содержащий общую конфигурацию и методы, необходимые для выполнения сценариев.
-- `scenario_files_list` (List[Path] | Path): Список объектов `Path`, указывающих на файлы сценариев, или один объект `Path`, указывающий на файл сценария.
+- `s` (object): Экземпляр класса поставщика, содержащий общую конфигурацию и состояние.
+- `scenario_files_list` (List[Path] | Path): Список объектов `Path`, указывающих на файлы сценариев, или один объект `Path`.
+
+**Возвращает**:
+- `bool`: `True`, если все сценарии из всех файлов были выполнены успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `TypeError`: Если `scenario_files_list` не является экземпляром `Path` или списком.
 
 **Как работает функция**:
 
-1.  **Проверка типа аргумента**: Функция проверяет, является ли `scenario_files_list` экземпляром `Path` или списком. Если это экземпляр `Path`, он преобразуется в список, содержащий только этот путь. Если это не список и не `Path`, вызывается исключение `TypeError`.
-2.  **Инициализация журнала**: Инициализируется раздел `'scenario_files'` в глобальном журнале `_journal` для отслеживания выполнения сценариев.
-3.  **Цикл по файлам сценариев**: Функция проходит по каждому файлу сценария в списке `scenario_files_list`.
-4.  **Выполнение сценария**: Для каждого файла сценария вызывается функция `run_scenario_file`, которая выполняет сценарии, содержащиеся в файле.
-5.  **Обработка результатов**: В зависимости от результата выполнения сценария, в журнал добавляется сообщение об успехе или неудаче. Также логируется соответствующее сообщение с использованием `logger.success` или `logger.error`.
-6.  **Обработка исключений**: Если во время выполнения сценария возникает исключение, оно перехватывается, логируется как критическая ошибка, и в журнал добавляется сообщение об ошибке.
+1.  Проверяет тип `scenario_files_list`. Если это `Path`, преобразует его в список. Если это не список и не `Path`, вызывает исключение `TypeError`.
+2.  Инициализирует запись в глобальном журнале `_journal` для отслеживания выполнения сценариев.
+3.  Перебирает каждый файл сценария в `scenario_files_list`.
+4.  Для каждого файла вызывает функцию `run_scenario_file` для выполнения сценариев, содержащихся в файле.
+5.  Обновляет журнал `_journal` информацией об успехе или неудаче выполнения каждого сценария.
+6.  Логирует результаты выполнения сценариев, используя `logger`.
+7.  Возвращает `True`, если все сценарии выполнены успешно, в противном случае возвращает `False`.
+
+```ascii
+Проверка типа scenario_files_list --> Инициализация журнала  -->  Перебор файлов сценариев
+--> Вызов run_scenario_file для каждого файла  -->  Обновление журнала  -->  Логирование результатов
+```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 class Supplier:
-    def __init__(self):
-        self.supplier_abs_path = Path('./')  # Укажите путь к директории поставщика
-supplier = Supplier()
+    def __init__(self, scenario_files):
+        self.scenario_files = scenario_files
 
-# Пример вызова с одним файлом сценария
-scenario_file = Path('scenario1.json')
-run_scenario_files(supplier, scenario_file)
+# Пример с одним файлом сценария
+s = Supplier([Path('scenario1.json')])
+result = run_scenario_files(s, s.scenario_files)
 
-# Пример вызова со списком файлов сценариев
-scenario_files = [Path('scenario1.json'), Path('scenario2.json')]
-run_scenario_files(supplier, scenario_files)
-
-# Пример вызова без указания списка файлов (используется s.scenario_files)
-supplier.scenario_files = [Path('scenario1.json')]
-run_scenario_files(supplier, [])
+# Пример со списком файлов сценариев
+s = Supplier([Path('scenario1.json'), Path('scenario2.json')])
+result = run_scenario_files(s, s.scenario_files)
 ```
 
 ### `run_scenario_file`
@@ -107,43 +132,48 @@ def run_scenario_file(s, scenario_file: Path) -> bool:
     Загружает и выполняет сценарии из файла.
 
     Args:
-        s (object): Объект поставщика (Supplier instance).
+        s (object): Экземпляр поставщика.
         scenario_file (Path): Путь к файлу сценария.
 
     Returns:
-        bool: True, если сценарий выполнен успешно, иначе False.
+        bool: True, если сценарий был выполнен успешно, False в противном случае.
     """
 ```
 
-**Назначение**: Функция `run_scenario_file` загружает сценарии из указанного файла и выполняет их.
+**Назначение**: Функция загружает сценарии из указанного файла и выполняет их.
 
 **Параметры**:
-- `s` (object): Объект поставщика, содержащий необходимую информацию и методы для выполнения сценариев.
-- `scenario_file` (Path): Объект `Path`, представляющий путь к файлу сценария.
+- `s` (object): Экземпляр класса поставщика, содержащий общую конфигурацию и состояние.
+- `scenario_file` (Path): Объект `Path`, указывающий на файл сценария.
+
+**Возвращает**:
+- `bool`: `True`, если все сценарии в файле были выполнены успешно, `False` в противном случае.
 
 **Как работает функция**:
-1.  **Чтение файла сценария**: Сначала функция пытается загрузить содержимое файла сценария, используя функцию `j_loads`, и извлекает список сценариев из ключа `'scenarios'`.
-2.  **Перебор сценариев**: Затем функция перебирает все сценарии в списке.
-3.  **Выполнение сценария**: Для каждого сценария вызывается функция `run_scenario` для его выполнения.
-4.  **Логирование результатов**: В зависимости от результата выполнения сценария, в лог записывается сообщение об успехе или неудаче.
-5.  **Обработка ошибок**: Если во время загрузки или выполнения сценария возникает ошибка (например, файл не найден или содержит неверный JSON), функция перехватывает исключение, логирует критическую ошибку и возвращает `False`.
+
+1.  Пытается загрузить сценарии из файла, используя функцию `j_loads`, и извлекает словарь сценариев из ключа `scenarios`.
+2.  Перебирает сценарии в словаре.
+3.  Для каждого сценария присваивает его атрибуту `current_scenario` экземпляра поставщика `s`.
+4.  Вызывает функцию `run_scenario` для выполнения сценария.
+5.  Логирует результаты выполнения сценария, используя `logger`.
+6.  В случае возникновения исключений `FileNotFoundError` или `json.JSONDecodeError` логирует ошибку и возвращает `False`.
+7.  Возвращает `True`, если все сценарии выполнены успешно, в противном случае возвращает `False`.
+
+```ascii
+Загрузка сценариев из файла  -->  Перебор сценариев  -->  Присвоение current_scenario
+--> Вызов run_scenario для каждого сценария  -->  Логирование результатов
+```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 class Supplier:
     def __init__(self):
-        self.supplier_abs_path = Path('./')  # Укажите путь к директории поставщика
-supplier = Supplier()
+        self.current_scenario = None
 
-# Пример вызова с существующим файлом сценария
-scenario_file = Path('scenario1.json')
-run_scenario_file(supplier, scenario_file)
-
-# Пример вызова с несуществующим файлом сценария
-scenario_file = Path('non_existent_scenario.json')
-run_scenario_file(supplier, scenario_file)
+s = Supplier()
+scenario_file = Path('scenario.json')
+result = run_scenario_file(s, scenario_file)
 ```
 
 ### `run_scenarios`
@@ -154,50 +184,61 @@ def run_scenarios(s, scenarios: Optional[List[dict] | dict] = None, _journal=Non
     Выполняет список сценариев (НЕ ФАЙЛЫ).
 
     Args:
-        s (object): Объект поставщика (Supplier instance).
-        scenarios (Optional[List[dict] | dict], optional): Список сценариев или один сценарий в виде словаря. По умолчанию None.
+        s (object): Экземпляр поставщика.
+        scenarios (Optional[List[dict] | dict], optional): Принимает список сценариев или одиночный сценарий в виде словаря. По умолчанию None.
 
     Returns:
         List | dict | bool: Результат выполнения сценариев или False в случае ошибки.
 
     Todo:
-        Check the option when no scenarios are specified from all sides. For example, when s.current_scenario is not specified and scenarios are not specified.
+        Проверить вариант, когда сценарии не указаны со всех сторон. Например, когда s.current_scenario не указан и сценарии не указаны.
     """
 ```
 
-**Назначение**: Функция `run_scenarios` выполняет список сценариев, представленных в виде словарей.
+**Назначение**: Функция выполняет переданные сценарии, которые представлены в виде списка словарей или одного словаря.
 
 **Параметры**:
-- `s` (object): Объект поставщика, предоставляющий контекст и ресурсы для выполнения сценариев.
-- `scenarios` (Optional[List[dict] | dict], optional): Список словарей, представляющих сценарии, или один словарь, представляющий сценарий. Если не указан, используется `s.current_scenario`. По умолчанию `None`.
-- `_journal`: Переменная не используется внутри функции
+- `s` (object): Экземпляр класса поставщика, содержащий общую конфигурацию и состояние.
+- `scenarios` (Optional[List[dict] | dict], optional): Список словарей, представляющих сценарии, или один словарь. Если не указан, используется `s.current_scenario`. По умолчанию `None`.
+- `_journal`: Переменная, похоже, не используется
+
+**Возвращает**:
+- `List | dict | bool`: Результат выполнения сценариев. Возвращает список результатов, если передается список сценариев, результат одного сценария, если передан один сценарий, или `False` в случае ошибки.
 
 **Как работает функция**:
-1.  **Определение сценариев для выполнения**: Если аргумент `scenarios` не указан, функция использует сценарий, сохраненный в `s.current_scenario`.
-2.  **Преобразование в список**: Если `scenarios` является словарем, он преобразуется в список, содержащий только этот словарь.
-3.  **Выполнение сценариев**: Функция проходит по каждому сценарию в списке и вызывает функцию `run_scenario` для его выполнения. Результаты выполнения сохраняются в списке `res`.
-4.  **Запись в журнал**: После выполнения каждого сценария результат записывается в журнал `_journal`, а также вызывается функция `dump_journal` для сохранения журнала на диск.
+
+1.  Если `scenarios` не указаны, используется `s.current_scenario`.
+2.  Преобразует `scenarios` в список, если передан один сценарий в виде словаря.
+3.  Перебирает сценарии в списке.
+4.  Для каждого сценария вызывает функцию `run_scenario` для выполнения сценария.
+5.  Обновляет журнал `_journal` результатом выполнения сценария.
+6.  Сохраняет журнал с помощью функции `dump_journal`.
+7.  Возвращает список результатов выполнения сценариев.
+
+```ascii
+Проверка scenarios --> Преобразование в список --> Перебор сценариев  -->  Вызов run_scenario для каждого сценария
+--> Обновление журнала --> Сохранение журнала
+```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 class Supplier:
     def __init__(self):
-        self.supplier_abs_path = Path('./')  # Укажите путь к директории поставщика
-supplier = Supplier()
+        self.current_scenario = {'name': 'default_scenario'}
 
-# Пример вызова с одним сценарием
-scenario = {'name': 'scenario1', 'url': 'http://example.com'}
-result = run_scenarios(supplier, scenario)
+s = Supplier()
 
-# Пример вызова со списком сценариев
-scenarios = [{'name': 'scenario1', 'url': 'http://example.com'}, {'name': 'scenario2', 'url': 'http://example.com'}]
-result = run_scenarios(supplier, scenarios)
+# Пример с одним сценарием
+scenario = {'name': 'scenario1'}
+result = run_scenarios(s, scenario)
 
-# Пример вызова без указания сценариев (используется s.current_scenario)
-supplier.current_scenario = {'name': 'scenario1', 'url': 'http://example.com'}
-result = run_scenarios(supplier)
+# Пример со списком сценариев
+scenarios = [{'name': 'scenario1'}, {'name': 'scenario2'}]
+result = run_scenarios(s, scenarios)
+
+# Пример без указания scenarios (используется s.current_scenario)
+result = run_scenarios(s)
 ```
 
 ### `run_scenario`
@@ -208,7 +249,7 @@ def run_scenario(supplier, scenario: dict, scenario_name: str, _journal=None) ->
     Выполняет полученный сценарий.
 
     Args:
-        supplier (object): Объект поставщика (Supplier instance).
+        supplier (object): Экземпляр поставщика.
         scenario (dict): Словарь, содержащий детали сценария.
         scenario_name (str): Имя сценария.
 
@@ -220,63 +261,109 @@ def run_scenario(supplier, scenario: dict, scenario_name: str, _journal=None) ->
     """
 ```
 
-**Назначение**: Функция `run_scenario` выполняет один сценарий, который задан в виде словаря.
+**Назначение**: Функция выполняет сценарий, извлекая информацию о продуктах со страницы и подготавливая данные для вставки в PrestaShop.
 
 **Параметры**:
-- `supplier` (object): Объект поставщика, предоставляющий контекст и ресурсы для выполнения сценария.
-- `scenario` (dict): Словарь, содержащий детали сценария, такие как URL для открытия и локаторы для взаимодействия с веб-страницей.
-- `scenario_name` (str): Имя сценария, используемое для логирования и отслеживания.
-- `_journal`: Переменная не используется внутри функции
+
+-   `supplier` (object): Экземпляр класса поставщика, содержащий общую конфигурацию, состояние и инструменты, необходимые для выполнения сценария.
+-   `scenario` (dict): Словарь, содержащий детали сценария, такие как URL страницы, локаторы элементов и другие параметры.
+-   `scenario_name` (str): Имя сценария для логирования и отслеживания.
+-   `_journal`: Переменная, похоже, не используется
+
+**Возвращает**:
+
+-   `List | dict | bool`: Список URL продуктов в категории, если успешно, или `False` в случае неудачи.
 
 **Как работает функция**:
 
-1.  **Инициализация**:
-    *   Устанавливает объект поставщика `supplier` в локальную переменную `s`.
-    *   Записывает в лог информацию о начале выполнения сценария.
-    *   Сохраняет текущий сценарий в `s.current_scenario`.
-    *   Получает объект драйвера из `s.driver`.
-2.  **Навигация к URL**:
-    *   Открывает URL, указанный в сценарии, с помощью `d.get_url(scenario['url'])`.
-3.  **Получение списка товаров**:
-    *   Вызывает функцию `s.related_modules.get_list_products_in_category(s)` для получения списка товаров в категории.
-4.  **Обработка отсутствия товаров**:
-    *   Если список товаров пуст, функция логирует предупреждение и возвращает `False`.
-5.  **Перебор товаров**:
-    *   Для каждого URL товара в списке:
-        *   Открывает страницу товара с помощью `d.get_url(url)`. Если происходит ошибка навигации, логируется ошибка, и происходит переход к следующему URL.
-        *   Вызывает функцию `s.related_modules.grab_product_page(s)` для извлечения полей продукта.
-        *   Асинхронно вызывает функцию `s.related_modules.grab_page(s)` для извлечения дополнительных полей продукта. Если не удается извлечь поля, логируется ошибка, и происходит переход к следующему URL.
-        *   Извлекает словари `presta_fields_dict` и `assist_fields_dict` из объекта `f: ProductFields`.
-        *   Создает объект `Product` с использованием префикса поставщика и словаря полей PrestaShop.
-        *   Вызывает функцию `insert_grabbed_data(f)` для вставки извлеченных данных.
-        *   Обрабатывает исключения, которые могут возникнуть при сохранении продукта.
-6.  **Завершение**:
-    *   После перебора всех товаров функция возвращает список URL товаров.
+1.  Инициализирует выполнение сценария, логируя начало сценария с именем `scenario_name`.
+2.  Устанавливает `current_scenario` поставщика равным текущему сценарию.
+3.  Получает экземпляр драйвера из поставщика.
+4.  Открывает URL, указанный в сценарии, с помощью драйвера.
+5.  Извлекает список продуктов в категории, используя метод `get_list_products_in_category` связанного модуля поставщика.
+6.  Если список продуктов пуст, логирует предупреждение и возвращает `False`.
+7.  Перебирает URL каждого продукта в списке.
+8.  Для каждого URL открывает страницу продукта с помощью драйвера. Если происходит ошибка навигации, логирует ошибку и переходит к следующему URL.
+9.  Извлекает поля страницы продукта, используя метод `grab_product_page` связанного модуля поставщика.
+10. Асинхронно извлекает поля страницы, используя метод `grab_page` связанного модуля поставщика.
+11. Если не удалось извлечь поля, логирует ошибку и переходит к следующему URL.
+12. Разделяет извлеченные поля на `presta_fields_dict` и `assist_fields_dict`.
+13. Создает экземпляр класса `Product` с использованием `presta_fields_dict`.
+14. Вызывает функцию `insert_grabbed_data` для вставки извлеченных данных.
+15. Если происходит ошибка при сохранении продукта, логирует ошибку и переходит к следующему URL.
+16. Возвращает список URL продуктов в категории.
+
+```ascii
+Начало сценария --> Получение драйвера --> Открытие URL --> Извлечение списка продуктов
+|
+V
+Если список пуст: логирование и возврат False
+|
+V
+Перебор URL продуктов --> Открытие страницы продукта --> Извлечение полей страницы
+|
+V
+Если не удалось извлечь поля: логирование и переход к следующему URL
+|
+V
+Разделение полей --> Создание экземпляра Product --> Вставка данных
+|
+V
+Если произошла ошибка: логирование и переход к следующему URL
+|
+V
+Возврат списка URL продуктов
+```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 class Supplier:
-    def __init__(self):
-        self.supplier_abs_path = Path('./')  # Укажите путь к директории поставщика
-supplier = Supplier()
+    def __init__(self, driver, related_modules, supplier_prefix):
+        self.driver = driver
+        self.related_modules = related_modules
+        self.supplier_prefix = supplier_prefix
+        self.current_scenario = {}
 
-# Пример вызова с простым сценарием
-scenario = {'name': 'scenario1', 'url': 'http://example.com'}
-result = run_scenario(supplier, scenario, scenario['name'])
+    def get_url(self, url):
+        print(f"Navigating to {url}")
+        return True
 
-# Пример вызова с более сложным сценарием
-scenario = {
-    'name': 'scenario2',
-    'url': 'http://example.com/category',
-    'product_list_locator': {'by': 'css', 'selector': '.product-item a'},
-    'product_fields': {
-        'name': {'by': 'css', 'selector': '.product-title'},
-        'price': {'by': 'css', 'selector': '.product-price'}
-    }
-}
-result = run_scenario(supplier, scenario, scenario['name'])
+class Driver:
+    def get_url(self, url):
+        print(f"Driver navigating to {url}")
+        return True
+
+class RelatedModules:
+    def get_list_products_in_category(self, s):
+        return ["http://example.com/product1", "http://example.com/product2"]
+
+    def grab_product_page(self, s):
+        return {"name": "Product Name", "price": 100}
+    
+    async def grab_page(self, s):
+        class ProductFields:
+            def __init__(self):
+                self.presta_fields_dict = {"name": "Product Name", "price": 100}
+                self.assist_fields_dict = {"description": "Product Description"}
+        return ProductFields()
+
+class Product:
+    def __init__(self, supplier_prefix, presta_fields_dict):
+        self.fields = presta_fields_dict
+
+def insert_grabbed_data(f):
+    print(f"Inserting data: {f.presta_fields_dict}")
+
+
+# Создаем экземпляры классов
+driver = Driver()
+related_modules = RelatedModules()
+supplier = Supplier(driver, related_modules, "SUPPLIER")
+scenario = {"url": "http://example.com/category"}
+
+# Запускаем сценарий
+result = run_scenario(supplier, scenario, "Test Scenario")
 ```
 
 ### `insert_grabbed_data_to_prestashop`
@@ -290,32 +377,39 @@ async def insert_grabbed_data_to_prestashop(
 
     Args:
         f (ProductFields): Экземпляр ProductFields, содержащий информацию о продукте.
-        coupon_code (Optional[str], optional): Опциональный код купона. По умолчанию None.
-        start_date (Optional[str], optional): Опциональная дата начала акции. По умолчанию None.
-        end_date (Optional[str], optional): Опциональная дата окончания акции. По умолчанию None.
+        coupon_code (Optional[str], optional): Необязательный код купона. По умолчанию None.
+        start_date (Optional[str], optional): Необязательная дата начала акции. По умолчанию None.
+        end_date (Optional[str], optional): Необязательная дата окончания акции. По умолчанию None.
 
     Returns:
-        bool: True, если вставка прошла успешно, иначе False.
+        bool: True, если вставка прошла успешно, False в противном случае.
     """
 ```
 
-**Назначение**: Функция `insert_grabbed_data_to_prestashop` асинхронно вставляет данные о товаре в PrestaShop.
+**Назначение**: Функция отправляет данные о продукте в PrestaShop для создания или обновления информации о товаре.
 
 **Параметры**:
-- `f` (ProductFields): Экземпляр `ProductFields`, содержащий информацию о продукте, такую как ID, имя, категория, цена и описание.
-- `coupon_code` (Optional[str], optional): Опциональный код купона для товара. По умолчанию `None`.
-- `start_date` (Optional[str], optional): Опциональная дата начала действия купона. По умолчанию `None`.
-- `end_date` (Optional[str], optional): Опциональная дата окончания действия купона. По умолчанию `None`.
+- `f` (ProductFields): Экземпляр класса `ProductFields`, содержащий информацию о продукте.
+- `coupon_code` (Optional[str], optional): Код купона для продукта. По умолчанию `None`.
+- `start_date` (Optional[str], optional): Дата начала действия купона. По умолчанию `None`.
+- `end_date` (Optional[str], optional): Дата окончания действия купона. По умолчанию `None`.
+
+**Возвращает**:
+- `bool`: `True`, если данные успешно отправлены в PrestaShop, `False` в противном случае.
 
 **Как работает функция**:
-1.  **Создание экземпляра PrestaShop**: Создается экземпляр класса `PrestaShop`, который предоставляет методы для взаимодействия с API PrestaShop.
-2.  **Вставка данных о продукте**: Вызывается асинхронный метод `presta.post_product_data` для отправки данных о продукте в PrestaShop. Передаются параметры продукта, такие как ID, имя, категория, цена, описание, а также код купона и даты его действия (если они указаны).
-3.  **Обработка исключений**: Если во время вставки данных возникает исключение, оно перехватывается, логируется сообщение об ошибке, и функция возвращает `False`.
+
+1.  Создает экземпляр класса `PrestaShop`.
+2.  Вызывает асинхронный метод `post_product_data` для отправки данных о продукте в PrestaShop.
+3.  Обрабатывает возможные исключения, логирует ошибку и возвращает `False`, если произошла ошибка.
+
+```ascii
+Создание экземпляра PrestaShop  -->  Вызов post_product_data  -->  Обработка исключений
+```
 
 **Примеры**:
 
 ```python
-from pathlib import Path
 class ProductFields:
     def __init__(self):
         self.product_id = 123
@@ -323,14 +417,15 @@ class ProductFields:
         self.product_category = "Test Category"
         self.product_price = 99.99
         self.description = "Test Description"
-supplier = Supplier()
-# Пример вызова без указания параметров купона
-f = ProductFields()
-result = await insert_grabbed_data_to_prestashop(f)
 
-# Пример вызова с указанием параметров купона
+class PrestaShop:
+    async def post_product_data(self, product_id, product_name, product_category, product_price, description, coupon_code, start_date, end_date):
+        print("Sending data to PrestaShop...")
+        return True
+
 f = ProductFields()
-coupon_code = "SUMMER20"
-start_date = "2024-06-01"
-end_date = "2024-08-31"
-result = await insert_grabbed_data_to_prestashop(f, coupon_code, start_date, end_date)
+async def main():
+    result = await insert_grabbed_data_to_prestashop(f, coupon_code="COUPON123", start_date="2024-01-01", end_date="2024-01-31")
+    print(result)
+
+asyncio.run(main())

@@ -1,157 +1,224 @@
-# Модуль для парсинга HTML с использованием `BeautifulSoup` и XPath
-
+# Модуль для парсинга HTML с использованием BeautifulSoup и XPath
 ## Обзор
 
-Модуль `src.webdriver.bs` предоставляет класс `BS` для парсинга HTML-контента с использованием библиотек `BeautifulSoup` и `lxml` (для XPath). Он позволяет получать HTML с веб-страниц или из локальных файлов, а затем извлекать элементы, соответствующие заданным локаторам XPath.
+Модуль `src.webdriver.bs` предоставляет класс `BS` для парсинга HTML-контента с использованием библиотек `BeautifulSoup` и `lxml` (через XPath). Он позволяет загружать HTML как из локальных файлов, так и из URL-адресов, а также выполнять поиск элементов на странице с использованием XPath-локаторов. Этот модуль может быть полезен для извлечения данных из веб-страниц и автоматизации взаимодействия с веб-сайтами.
 
 ## Подробнее
 
-Этот модуль предоставляет удобный способ извлечения данных из HTML-документов, комбинируя простоту `BeautifulSoup` с мощностью XPath. Он может быть использован для автоматизации задач веб-скрейпинга, тестирования веб-приложений и других задач, требующих анализа HTML-контента.
+Модуль `src.webdriver.bs` предоставляет класс `BS`, который инкапсулирует функциональность парсинга HTML-контента с использованием `BeautifulSoup` и `lxml`.
 
-## Классы
+### Классы
 
 ### `BS`
+**Описание**: Класс предназначен для парсинга HTML-контента с использованием BeautifulSoup и XPath.
 
-**Описание**: Класс `BS` предназначен для парсинга HTML-контента с использованием `BeautifulSoup` и XPath.
+**Принцип работы**:
+1.  При инициализации класса можно передать URL, который будет сразу загружен и распарсен.
+2.  Метод `get_url` загружает HTML-контент из файла или URL. Поддерживаются как локальные файлы (с префиксом `file://`), так и веб-страницы (с префиксом `https://`).
+3.  Метод `execute_locator` выполняет XPath-запрос к загруженному HTML-контенту и возвращает список найденных элементов.
 
-**Атрибуты**:
+**Аттрибуты**:
 
--   `html_content` (str): HTML-контент, который необходимо распарсить. Изначально установлен в `None`.
+*   `html_content` (str): HTML-контент, который будет распарсен.
 
 **Методы**:
 
--   `__init__(self, url: Optional[str] = None)`: Инициализирует экземпляр класса `BS` с опциональным URL.
--   `get_url(self, url: str) -> bool`: Получает HTML-контент из файла или URL-адреса.
--   `execute_locator(self, locator: Union[SimpleNamespace, dict], url: Optional[str] = None) -> List[etree._Element]`: Выполняет XPath-локатор на HTML-контенте.
+*   `__init__(url: Optional[str] = None)`: Инициализирует парсер `BS` с необязательным URL.
+*   `get_url(url: str) -> bool`: Загружает HTML-контент из файла или URL.
+*   `execute_locator(locator: Union[SimpleNamespace, dict], url: Optional[str] = None) -> List[etree._Element]`: Выполняет XPath-локатор на HTML-контенте.
 
-### `__init__(self, url: Optional[str] = None)`
+### Функции
 
-**Описание**: Инициализирует класс `BS`.
+### `__init__`
+
+```python
+def __init__(self, url: Optional[str] = None):
+    """
+    Initializes the BS parser with an optional URL.
+
+    :param url: The URL or file path to fetch HTML content from.
+    :type url: Optional[str]
+    """
+    ...
+```
+
+**Назначение**: Инициализирует экземпляр класса `BS`. Если передан URL, то сразу пытается загрузить HTML-контент по этому URL.
 
 **Параметры**:
 
--   `url` (Optional[str], optional): URL-адрес или путь к файлу, из которого необходимо получить HTML-контент. По умолчанию `None`.
-
-**Как работает класс**:
-
-1.  Если `url` предоставлен, вызывается метод `get_url` для получения HTML-контента.
-
-### `get_url(self, url: str) -> bool`
-
-**Описание**: Получает HTML-контент из файла или URL-адреса.
-
-**Параметры**:
-
--   `url` (str): URL-адрес или путь к файлу.
-
-**Возвращает**:
-
--   `bool`: `True`, если контент был успешно получен, `False` в противном случае.
-
-**Вызывает исключения**:
-
--   `requests.RequestException`: Если возникает ошибка при выполнении HTTP-запроса.
--   `Exception`: Если возникает ошибка при чтении файла.
+*   `url` (Optional[str], optional): URL или путь к файлу, из которого нужно загрузить HTML-контент. По умолчанию `None`.
 
 **Как работает функция**:
 
-1.  Проверяет, начинается ли URL с `file://`.
-2.  Если да, то удаляет префикс `file://` и извлекает путь к файлу.
-3.  Если путь к файлу существует, пытается открыть файл и прочитать его содержимое в `self.html_content`.
-4.  Если URL начинается с `https://`, выполняет HTTP-запрос к URL-адресу и сохраняет полученный HTML-контент в `self.html_content`.
-5.  Если URL не начинается ни с `file://`, ни с `https://`, записывает сообщение об ошибке в лог.
+1.  Присваивает переданный URL атрибуту `url` экземпляра класса.
+2.  Если `url` не равен `None`, вызывает метод `get_url(url)` для загрузки и парсинга HTML-контента.
 
 ```mermaid
-graph TD
-    A[Проверка URL: file:// или https://]
-    B[Чтение файла]
-    C[HTTP-запрос]
-    D[Сохранение HTML-контента]
-    E[Логирование ошибки]
-    F[Возврат True]
-    G[Возврат False]
-
-    A -- file:// --> B
-    A -- https:// --> C
-    A -- Иное --> E
-
-    B -- Успех --> D
-    B -- Ошибка --> E
-
-    C -- Успех --> D
-    C -- Ошибка --> E
-
-    D --> F
-    E --> G
+graph LR
+    A[Начало] --> B{url is not None?};
+    B -- Yes --> C[self.get_url(url)];
+    B -- No --> D[Конец];
+    C --> D;
 ```
 
 **Примеры**:
 
 ```python
+# Инициализация без URL
 parser = BS()
-success = parser.get_url('file:///c:/path/to/file.html')
-print(success)  # Выведет True, если файл успешно прочитан
 
-success = parser.get_url('https://example.com')
-print(success)  # Выведет True, если HTML успешно получен
+# Инициализация с URL
+parser = BS('https://example.com')
 ```
 
-### `execute_locator(self, locator: Union[SimpleNamespace, dict], url: Optional[str] = None) -> List[etree._Element]`
+### `get_url`
 
-**Описание**: Выполняет XPath-локатор на HTML-контенте.
+```python
+def get_url(self, url: str) -> bool:
+    """
+    Fetch HTML content from a file or URL and parse it with BeautifulSoup and XPath.
+
+    :param url: The file path or URL to fetch HTML content from.
+    :type url: str
+    :return: True if the content was successfully fetched, False otherwise.
+    :rtype: bool
+    """
+    ...
+```
+
+**Назначение**: Загружает HTML-контент из указанного URL или файла и сохраняет его в атрибуте `html_content`.
 
 **Параметры**:
 
--   `locator` (Union[SimpleNamespace, dict]): Объект локатора, содержащий селектор и атрибут.
--   `url` (Optional[str], optional): URL-адрес или путь к файлу, из которого необходимо получить HTML-контент. По умолчанию `None`.
+*   `url` (str): URL или путь к файлу, из которого нужно загрузить HTML-контент.
 
 **Возвращает**:
 
--   `List[etree._Element]`: Список элементов, соответствующих локатору.
+*   `bool`: `True`, если контент успешно загружен, `False` в противном случае.
 
 **Как работает функция**:
 
-1.  Если передан `url`, вызывается метод `get_url` для получения HTML-контента.
-2.  Если `self.html_content` пуст, записывает сообщение об ошибке в лог и возвращает пустой список.
-3.  Использует `BeautifulSoup` для парсинга HTML-контента.
-4.  Преобразует объект `BeautifulSoup` в дерево `lxml` (etree).
-5.  Если `locator` является словарем, преобразует его в `SimpleNamespace`.
-6.  Извлекает атрибут, способ поиска (`by`) и селектор из объекта `locator`.
-7.  В зависимости от значения `by`, выполняет XPath-запрос к дереву `lxml` для поиска элементов.
-8.  Возвращает список найденных элементов.
+1.  Проверяет, начинается ли URL с префикса `file://`.
+    *   Если да, то пытается прочитать HTML-контент из локального файла.
+        *   Удаляет префикс `file:///` из URL.
+        *   Извлекает путь к файлу, используя регулярное выражение для поиска Windows-пути (например, `c:/...` или `C:/...`).
+        *   Проверяет существование файла.
+        *   Если файл существует, открывает его в кодировке `utf-8`, читает содержимое и сохраняет его в атрибуте `self.html_content`.
+        *   В случае ошибки чтения файла, логирует ошибку и возвращает `False`.
+        *   Если файл не найден или путь невалиден, логирует ошибку и возвращает `False`.
+    *   Если URL начинается с `https://`, то пытается загрузить HTML-контент из сети.
+        *   Выполняет GET-запрос к указанному URL.
+        *   Проверяет статус код ответа (должен быть 200).
+        *   Сохраняет HTML-контент в атрибуте `self.html_content`.
+        *   В случае ошибки запроса (например, сетевые проблемы или неверный URL), логирует ошибку и возвращает `False`.
+    *   Если URL не начинается ни с `file://`, ни с `https://`, логирует ошибку и возвращает `False`.
 
 ```mermaid
-graph TD
-    A[Проверка URL и получение HTML]
-    B[Проверка HTML-контента]
-    C[Парсинг HTML с BeautifulSoup]
-    D[Преобразование в lxml tree]
-    E[Извлечение параметров локатора]
-    F[Выполнение XPath-запроса]
-    G[Возврат элементов]
-    H[Логирование ошибки и возврат пустого списка]
-
-    A --> B
-    B -- HTML есть --> C
-    B -- HTML нет --> H
-
-    C --> D
-    D --> E
-    E --> F
-    F --> G
+graph LR
+    A[Начало] --> B{url.startswith('file://')?};
+    B -- Yes --> C[Удаление префикса 'file://' и извлечение пути к файлу];
+    C --> D{Проверка существования файла};
+    D -- Yes --> E[Чтение содержимого файла в self.html_content];
+    E --> F[Возврат True];
+    D -- No --> G[Логирование ошибки 'Local file not found:'];
+    G --> H[Возврат False];
+    B -- No --> I{url.startswith('https://')?};
+    I -- Yes --> J[Выполнение GET-запроса к URL];
+    J --> K{Проверка статуса ответа};
+    K -- OK --> L[Сохранение HTML-контента в self.html_content];
+    L --> F;
+    K -- Error --> M[Логирование ошибки запроса];
+    M --> H;
+    I -- No --> N[Логирование ошибки 'Invalid URL or file path:'];
+    N --> H;
 ```
 
 **Примеры**:
 
 ```python
-from types import SimpleNamespace
-parser = BS()
-parser.get_url('https://example.com')
+# Загрузка из URL
+result = parser.get_url('https://example.com')
+
+# Загрузка из локального файла
+result = parser.get_url('file:///c:/path/to/file.html')
+```
+
+### `execute_locator`
+
+```python
+def execute_locator(self, locator: Union[SimpleNamespace, dict], url: Optional[str] = None) -> List[etree._Element]:
+    """
+    Execute an XPath locator on the HTML content.
+
+    :param locator: The locator object containing the selector and attribute.
+    :type locator: Union[SimpleNamespace, dict]
+    :param url: Optional URL or file path to fetch HTML content from.
+    :type url: Optional[str]
+    :return: A list of elements matching the locator.
+    :rtype: List[etree._Element]
+    """
+    ...
+```
+
+**Назначение**: Выполняет XPath-локатор на HTML-контенте и возвращает список найденных элементов.
+
+**Параметры**:
+
+*   `locator` (Union[SimpleNamespace, dict]): Объект, содержащий информацию о локаторе (тип, атрибут, селектор). Может быть представлен как `SimpleNamespace` или `dict`.
+*   `url` (Optional[str], optional): URL или путь к файлу, из которого нужно загрузить HTML-контент. Если указан, то HTML-контент будет загружен из этого URL перед выполнением локатора. По умолчанию `None`.
+
+**Возвращает**:
+
+*   `List[etree._Element]`: Список элементов, соответствующих локатору.
+
+**Как работает функция**:
+
+1.  Если передан параметр `url`, вызывает метод `get_url(url)` для загрузки HTML-контента.
+2.  Проверяет, что атрибут `self.html_content` не пустой. Если пустой, логирует ошибку и возвращает пустой список.
+3.  Создает объект `BeautifulSoup` из HTML-контента, используя парсер `lxml`.
+4.  Преобразует объект `BeautifulSoup` в дерево `lxml.etree` для поддержки XPath.
+5.  Если `locator` является словарем, преобразует его в объект `SimpleNamespace`.
+6.  Извлекает значения атрибутов `attribute`, `by` и `selector` из объекта `locator`.
+7.  В зависимости от значения атрибута `by` (ID, CSS, TEXT или XPath), формирует XPath-запрос.
+8.  Выполняет XPath-запрос к дереву `lxml.etree` и возвращает список найденных элементов.
+
+```mermaid
+graph LR
+    A[Начало] --> B{url is not None?};
+    B -- Yes --> C[self.get_url(url)];
+    C --> D{self.html_content is not None?};
+    B -- No --> D;
+    D -- Yes --> E[Создание BeautifulSoup объекта];
+    E --> F[Преобразование BeautifulSoup в lxml.etree];
+    F --> G{locator is dict?};
+    G -- Yes --> H[Преобразование dict в SimpleNamespace];
+    H --> I[Извлечение attribute, by, selector из locator];
+    G -- No --> I;
+    I --> J{by == 'ID'?};
+    J -- Yes --> K[Формирование XPath-запроса для ID];
+    J -- No --> L{by == 'CSS'?};
+    L -- Yes --> M[Формирование XPath-запроса для CSS];
+    L -- No --> N{by == 'TEXT'?};
+    N -- Yes --> O[Формирование XPath-запроса для TEXT];
+    N -- No --> P[Использование selector как XPath];
+    K --> Q[Выполнение XPath-запроса];
+    M --> Q;
+    O --> Q;
+    P --> Q;
+    Q --> R[Возврат списка найденных элементов];
+    D -- No --> S[Логирование ошибки 'No HTML content available for parsing.'];
+    S --> T[Возврат []];
+```
+
+**Примеры**:
+
+```python
+# Создание объекта locator
 locator = SimpleNamespace(by='ID', attribute='element_id', selector='//*[@id="element_id"]')
+
+# Выполнение локатора
 elements = parser.execute_locator(locator)
-print(elements)  # Выведет список найденных элементов
+
+# Выполнение локатора с загрузкой HTML из URL
+elements = parser.execute_locator(locator, url='https://example.com')
 ```
-
-## Функции
-
-В данном модуле нет отдельных функций, кроме методов класса `BS`.

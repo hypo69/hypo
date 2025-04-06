@@ -1,32 +1,30 @@
-# Модуль `src.webdriver.edge.edge`
-
+# Модуль для работы с Edge WebDriver
 ## Обзор
 
-Модуль предназначен для создания и настройки экземпляра Edge WebDriver с упрощенной конфигурацией, использующей `fake_useragent` для генерации случайных `user-agent`.
+Модуль `src.webdriver.edge.edge` предоставляет класс `Edge`, который является пользовательским классом WebDriver для браузера Edge. Он упрощает настройку WebDriver, используя `fake_useragent` для генерации случайных User-Agent и предоставляет дополнительные методы для работы с элементами веб-страницы.
 
 ## Подробней
 
-Модуль предоставляет класс `Edge`, который наследуется от `selenium.webdriver.Edge` и предоставляет дополнительные возможности, такие как установка `user-agent`, различных опций и заголовков. Он также загружает исполнители локаторов и JavaScript-сценарии для расширения функциональности WebDriver.
+Этот модуль предназначен для автоматизации взаимодействия с браузером Edge. Он позволяет настраивать User-Agent, устанавливать различные параметры запуска браузера (например, kiosk, windowless, full_window) и управлять профилями пользователей. Класс `Edge` наследуется от `selenium.webdriver.Edge`, что позволяет использовать все стандартные функции WebDriver, а также добавляет новые, специфичные для данного проекта.
 
 ## Классы
 
 ### `Edge`
 
-**Описание**:
-Класс `Edge` представляет собой пользовательский класс WebDriver для браузера Edge, который расширяет стандартные возможности `selenium.webdriver.Edge`. Он позволяет упростить настройку и инициализацию драйвера, автоматически управляя `user-agent` и параметрами запуска.
+**Описание**: Пользовательский класс Edge WebDriver для расширенной функциональности.
 
-**Принцип работы**:
-Класс инициализируется с заданным или случайно сгенерированным `user-agent`, загружает настройки из JSON-файла конфигурации и применяет их к экземпляру `EdgeOptions`. Он также позволяет установить режим окна браузера (например, `windowless`, `kiosk` или `full_window`). После этого создается экземпляр `EdgeService` с указанным путем к исполняемому файлу Edge WebDriver и вызывается конструктор родительского класса `WebDriver` для завершения инициализации.
+**Наследует**:
+- `selenium.webdriver.Edge`: Наследует функциональность стандартного WebDriver для Edge.
 
-**Аттрибуты**:
-- `driver_name` (str): Имя используемого драйвера WebDriver, по умолчанию `edge`.
+**Атрибуты**:
+- `driver_name` (str): Имя используемого WebDriver, по умолчанию `'edge'`.
 
 **Методы**:
-- `__init__`: Инициализирует экземпляр класса `Edge` с заданными параметрами.
-- `_payload`: Загружает исполнителей для локаторов и JavaScript-сценариев.
+- `__init__`: Инициализирует Edge WebDriver с указанным User-Agent и опциями.
+- `_payload`: Загружает исполнителей для локаторов и JavaScript сценариев.
 - `set_options`: Создает и настраивает параметры запуска для Edge WebDriver.
 
-#### `__init__`
+### `Edge.__init__`
 
 ```python
 def __init__(self,  profile_name: Optional[str] = None,
@@ -46,112 +44,95 @@ def __init__(self,  profile_name: Optional[str] = None,
     """
 ```
 
-**Назначение**:
-Инициализирует Edge WebDriver с указанным user-agent и опциями.
+**Назначение**: Инициализация экземпляра класса `Edge`.
 
 **Параметры**:
-- `profile_name` (Optional[str], optional): Имя профиля пользователя. По умолчанию `None`.
-- `user_agent` (Optional[str], optional): Строка user-agent для использования. Если `None`, генерируется случайный user-agent.
-- `options` (Optional[List[str]], optional): Список опций Edge, передаваемых при инициализации.
-- `window_mode` (Optional[str], optional): Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.). По умолчанию `None`.
+- `profile_name` (Optional[str]): Имя профиля пользователя. По умолчанию `None`.
+- `user_agent` (Optional[str]): User-Agent, который будет использоваться. Если `None`, генерируется случайный User-Agent.
+- `options` (Optional[List[str]]): Список опций Edge, передаваемых при инициализации.
+- `window_mode` (Optional[str]): Режим окна браузера (`windowless`, `kiosk`, `full_window` и т.д.).
+- `*args`: Произвольные позиционные аргументы.
+- `**kwargs`: Произвольные именованные аргументы.
+
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. **Инициализация User-Agent**:
+   - Если `user_agent` не указан, генерируется случайный User-Agent с помощью `UserAgent().random`.
+   - Если `user_agent` указан - он используется для работы драйвера
 
-1.  **Инициализация User-Agent**:
-    - Если `user_agent` не предоставлен, генерируется случайный user-agent с использованием `UserAgent().random`.
+2. **Загрузка настроек**:
+   - Загружаются настройки из файла `edge.json`, расположенного в каталоге `src/webdriver/edge`.
+   - Используется `j_loads_ns` для загрузки настроек из JSON файла.
 
-2.  **Загрузка Настроек**:
-    - Загружаются настройки из JSON-файла (`edge.json`), расположенного в каталоге `src/webdriver/edge`.
+3. **Настройка опций Edge**:
+   - Создается объект `EdgeOptions`.
+   - Добавляется аргумент `user-agent` с указанным User-Agent.
 
-3.  **Инициализация Опций Edge**:
-    - Создается объект `EdgeOptions`.
-    - Добавляется аргумент для установки `user-agent`.
-    - `options_obj.add_argument(f'user-agent={self.user_agent}')`
+4. **Установка режима окна**:
+   - Если в настройках или параметрах указан режим окна (`window_mode`), добавляется соответствующий аргумент:
+     - `--kiosk` для режима киоска.
+     - `--headless` для "windowless" режима.
+     - `--start-maximized` для полноэкранного режима.
 
-4.  **Установка Режима Окна**:
-    - Если в конфигурации указан режим окна (`window_mode`), он используется.
-    - Если режим окна указан в параметрах, он имеет приоритет.
-    - В зависимости от выбранного режима окна, добавляются соответствующие аргументы:
-        - `--kiosk` для режима киоска.
-        - `--headless` для безголового режима.
-        - `--start-maximized` для полноэкранного режима.
+5. **Добавление дополнительных опций**:
+   - Добавляются пользовательские опции из параметра `options`.
+   - Добавляются опции из конфигурационного файла.
+   - Добавляются заголовки из конфигурационного файла.
 
-5.  **Добавление Пользовательских Опций**:
-    - Если предоставлены пользовательские опции (`options`), они добавляются в `EdgeOptions`.
+6. **Настройка директории профиля**:
+   - Определяется директория профиля пользователя на основе настроек и параметра `profile_name`.
+   - Если в пути профиля встречается `%LOCALAPPDATA%`, он заменяется на значение переменной окружения `LOCALAPPDATA`.
+   - Добавляется аргумент `--user-data-dir` с указанием директории профиля.
 
-6.  **Добавление Опций из Конфигурации**:
-    - Если в конфигурационном файле указаны опции, они также добавляются в `EdgeOptions`.
+7. **Запуск WebDriver**:
+   - Инициализируется Edge WebDriver с указанными опциями.
+   - Вызывается метод `_payload` для загрузки исполнителей локаторов и JavaScript.
 
-7.  **Добавление Заголовков из Конфигурации**:
-    - Если в конфигурационном файле указаны заголовки, они добавляются в `EdgeOptions`.
+8. **Обработка исключений**:
+   - Обрабатываются исключения `WebDriverException` и `Exception` при запуске WebDriver.
+   - В случае ошибки, в лог записывается критическое сообщение об ошибке.
 
-8.  **Настройка Директории Профиля**:
-    - Определяется директория профиля на основе настроек в конфигурационном файле.
-    - Если указано имя профиля (`profile_name`), используется подкаталог в директории профиля.
-    - Если в директории профиля присутствует `%LOCALAPPDATA%`, она заменяется на значение переменной окружения `LOCALAPPDATA`.
-    - Добавляется аргумент для указания директории профиля.
-
-9.  **Запуск Edge WebDriver**:
-    - Инициализируется `EdgeService` с путем к исполняемому файлу Edge WebDriver.
-    - Вызывается конструктор родительского класса `WebDriver` для инициализации драйвера с заданными опциями и сервисом.
-    - Вызывается метод `_payload` для загрузки исполнителей локаторов и JavaScript-сценариев.
-
-10. **Обработка Исключений**:
-    - Если происходит исключение `WebDriverException` при запуске драйвера, регистрируется критическая ошибка.
-    - Если происходит общее исключение, регистрируется критическая ошибка.
-
-**ASCII схема работы функции**:
+**ASII flowchart**:
 
 ```
-    Начало
-    │
-    ├───► Инициализация User-Agent
-    │
-    ├───► Загрузка Настроек из JSON
-    │
-    ├───► Инициализация EdgeOptions
-    │
-    ├───► Установка Режима Окна (kiosk/headless/full_window)
-    │
-    ├───► Добавление Пользовательских Опций
-    │
-    ├───► Добавление Опций из Конфигурации
-    │
-    ├───► Добавление Заголовков из Конфигурации
-    │
-    ├───► Настройка Директории Профиля
-    │
-    ├───► Инициализация EdgeService
-    │
-    ├───► super().__init__(options=options_obj, service=service)
-    │
-    ├───► _payload()
-    │
-    └───► Обработка исключений (WebDriverException, Exception)
-    │
-    Конец
+A[Загрузка User-Agent и настроек]
+  |
+  V
+B[Создание и настройка EdgeOptions]
+  |
+  V
+C[Установка режима окна]
+  |
+  V
+D[Добавление дополнительных опций и заголовков]
+  |
+  V
+E[Настройка директории профиля]
+  |
+  V
+F[Запуск Edge WebDriver и загрузка payload]
+  |
+  V
+G[Обработка исключений]
 ```
 
 **Примеры**:
 
 ```python
-# Пример 1: Инициализация Edge WebDriver с настройками по умолчанию
+from src.webdriver.edge.edge import Edge
+# Пример 1: Запуск Edge с случайным User-Agent
 driver = Edge()
 
-# Пример 2: Инициализация Edge WebDriver с указанием user-agent
-driver = Edge(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36')
+# Пример 2: Запуск Edge с указанным User-Agent и опциями
+driver = Edge(user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36', options=['--disable-gpu'])
 
-# Пример 3: Инициализация Edge WebDriver с указанием дополнительных опций
-driver = Edge(options=['--disable-gpu', '--disable-extensions'])
-
-# Пример 4: Инициализация Edge WebDriver в режиме kiosk
-driver = Edge(window_mode='kiosk')
-
-# Пример 5: Инициализация Edge WebDriver с указанием имени профиля
-driver = Edge(profile_name='MyProfile')
+# Пример 3: Запуск Edge в полноэкранном режиме
+driver = Edge(window_mode='full_window')
 ```
 
-#### `_payload`
+### `Edge._payload`
 
 ```python
 def _payload(self) -> None:
@@ -160,65 +141,64 @@ def _payload(self) -> None:
     """
 ```
 
-**Назначение**:
-Загружает исполнителей для локаторов и JavaScript-сценариев.
+**Назначение**: Загрузка исполнителей для локаторов и JavaScript сценариев.
+
+**Параметры**:
+- `self`: Экземпляр класса `Edge`.
+
+**Возвращает**:
+- `None`
 
 **Как работает функция**:
+1. **Инициализация JavaScript**:
+   - Создается экземпляр класса `JavaScript`, который принимает текущий экземпляр `Edge` в качестве аргумента.
 
-1.  **Инициализация JavaScript**:
-    - Создается экземпляр класса `JavaScript` и передается текущий экземпляр `self` (Edge WebDriver).
-    - `j = JavaScript(self)`
+2. **Загрузка JavaScript функций**:
+   - Загружаются JavaScript функции из экземпляра `JavaScript` и присваиваются атрибутам текущего экземпляра `Edge`:
+     - `get_page_lang`: Получение языка страницы.
+     - `ready_state`: Получение состояния готовности страницы.
+     - `get_referrer`: Получение реферера страницы.
+     - `unhide_DOM_element`: Отображение DOM элемента.
+     - `window_focus`: Установка фокуса на окно браузера.
 
-2.  **Присвоение JavaScript-функций**:
-    - Различные JavaScript-функции из экземпляра `j` присваиваются атрибутам текущего экземпляра `self`.
-        - `self.get_page_lang = j.get_page_lang`
-        - `self.ready_state = j.ready_state`
-        - `self.get_referrer = j.ready_state`
-        - `self.unhide_DOM_element = j.unhide_DOM_element`
-        - `self.window_focus = j.window_focus`
+3. **Инициализация ExecuteLocator**:
+   - Создается экземпляр класса `ExecuteLocator`, который принимает текущий экземпляр `Edge` в качестве аргумента.
 
-3.  **Инициализация ExecuteLocator**:
-    - Создается экземпляр класса `ExecuteLocator` и передается текущий экземпляр `self` (Edge WebDriver).
-    - `execute_locator = ExecuteLocator(self)`
+4. **Загрузка методов ExecuteLocator**:
+   - Загружаются методы из экземпляра `ExecuteLocator` и присваиваются атрибутам текущего экземпляра `Edge`:
+     - `execute_locator`: Выполнение локатора для поиска элемента на странице.
+     - `get_webelement_as_screenshot`: Получение скриншота веб-элемента.
+     - `get_webelement_by_locator`: Получение веб-элемента по локатору.
+     - `get_attribute_by_locator`: Получение атрибута веб-элемента по локатору.
+     - `send_message`: Отправка сообщения веб-элементу (синоним `send_key_to_webelement`).
 
-4.  **Присвоение методов ExecuteLocator**:
-    - Различные методы из экземпляра `execute_locator` присваиваются атрибутам текущего экземпляра `self`.
-        - `self.execute_locator = execute_locator.execute_locator`
-        - `self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot`
-        - `self.get_webelement_by_locator = execute_locator.get_webelement_by_locator`
-        - `self.get_attribute_by_locator = execute_locator.get_attribute_by_locator`
-        - `self.send_message = self.send_key_to_webelement = execute_locator.send_message`
-
-**ASCII схема работы функции**:
+**ASII flowchart**:
 
 ```
-    Начало
-    │
-    ├───► Инициализация JavaScript (j = JavaScript(self))
-    │
-    ├───► Присвоение JavaScript-функций (self.get_page_lang = j.get_page_lang, ...)
-    │
-    ├───► Инициализация ExecuteLocator (execute_locator = ExecuteLocator(self))
-    │
-    └───► Присвоение методов ExecuteLocator (self.execute_locator = execute_locator.execute_locator, ...)
-    │
-    Конец
+A[Инициализация JavaScript]
+  |
+  V
+B[Загрузка JavaScript функций]
+  |
+  V
+C[Инициализация ExecuteLocator]
+  |
+  V
+D[Загрузка методов ExecuteLocator]
 ```
 
 **Примеры**:
-
 ```python
-# Пример вызова после инициализации Edge WebDriver
+from src.webdriver.edge.edge import Edge
+# Пример: Инициализация Edge и загрузка payload
 driver = Edge()
 driver._payload()
 
-# Теперь можно использовать методы, присвоенные в _payload
-# Например:
-# page_lang = driver.get_page_lang()
+# Теперь можно использовать методы, загруженные из payload, например:
 # element = driver.execute_locator(locator)
 ```
 
-#### `set_options`
+### `Edge.set_options`
 
 ```python
 def set_options(self, opts: Optional[List[str]] = None) -> EdgeOptions:  
@@ -230,64 +210,48 @@ def set_options(self, opts: Optional[List[str]] = None) -> EdgeOptions:
     """
 ```
 
-**Назначение**:
-Создает и настраивает параметры запуска для Edge WebDriver.
+**Назначение**: Создание и настройка параметров запуска для Edge WebDriver.
 
 **Параметры**:
-- `opts` (Optional[List[str]], optional): Список опций для добавления в Edge WebDriver. По умолчанию `None`.
+- `opts` (Optional[List[str]]): Список опций для добавления в Edge WebDriver. По умолчанию `None`.
 
 **Возвращает**:
-- `EdgeOptions`: Настроенный объект `EdgeOptions`.
+- `EdgeOptions`: Сконфигурированный объект `EdgeOptions`.
 
 **Как работает функция**:
+1. **Создание объекта EdgeOptions**:
+   - Создается новый объект `EdgeOptions`.
 
-1.  **Инициализация EdgeOptions**:
-    - Создается новый объект `EdgeOptions`.
-    - `options = EdgeOptions()`
+2. **Добавление опций**:
+   - Если передан список опций `opts`, каждая опция добавляется в объект `EdgeOptions`.
 
-2.  **Добавление Опций**:
-    - Если предоставлен список опций `opts`, каждая опция добавляется в объект `EdgeOptions`.
-    - `if opts:`
-    - `for opt in opts:`
-    - `options.add_argument(opt)`
+3. **Возврат объекта EdgeOptions**:
+   - Возвращается сконфигурированный объект `EdgeOptions`.
 
-3.  **Возврат EdgeOptions**:
-    - Возвращается настроенный объект `EdgeOptions`.
-    - `return options`
-
-**ASCII схема работы функции**:
+**ASII flowchart**:
 
 ```
-    Начало
-    │
-    ├───► Инициализация EdgeOptions (options = EdgeOptions())
-    │
-    ├───► Проверка наличия опций (if opts)
-    │   └───► Добавление опций (options.add_argument(opt))
-    │
-    └───► Возврат EdgeOptions (return options)
-    │
-    Конец
+A[Создание EdgeOptions]
+  |
+  V
+B[Добавление опций (если есть)]
+  |
+  V
+C[Возврат EdgeOptions]
 ```
 
 **Примеры**:
 
 ```python
-# Пример 1: Создание EdgeOptions с дополнительными опциями
+from src.webdriver.edge.edge import Edge
+# Пример 1: Создание EdgeOptions без дополнительных опций
 driver = Edge()
-options = driver.set_options(opts=['--disable-gpu', '--disable-extensions'])
+options = driver.set_options()
 
-# Теперь можно использовать эти опции при инициализации драйвера
-# driver = Edge(options=options)
-
-# Пример 2: Создание EdgeOptions без дополнительных опций
+# Пример 2: Создание EdgeOptions с дополнительными опциями
 driver = Edge()
-options = driver.set_options()  # Возвращает пустой объект EdgeOptions
+options = driver.set_options(opts=['--disable-gpu', '--mute-audio'])
 ```
-
-## Функции
-
-В данном модуле функции отсутствуют.
 
 ## Примеры
 
@@ -295,3 +259,6 @@ options = driver.set_options()  # Возвращает пустой объект
 if __name__ == "__main__":
     driver = Edge(window_mode='full_window')
     driver.get("https://www.example.com")
+```
+
+В данном примере создается экземпляр класса `Edge` в полноэкранном режиме и открывается сайт "https://www.example.com".

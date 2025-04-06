@@ -1,76 +1,89 @@
-# Документация для модуля Google Drive Uploader Bot
+# Документация для Google Drive Uploader Bot
 
 ## Обзор
 
-Данный модуль представляет собой Telegram-бота, разработанного на Python, который позволяет загружать файлы по прямым и поддерживаемым ссылкам в Google Drive. Бот был вдохновлен проектом [CyberBoySumanjay](https://github.com/cyberboysumanjay) и предоставляет пользователям возможность авторизации, отмены авторизации и получения справки по командам.
+Этот документ содержит информацию о Telegram-боте, написанном на Python, который позволяет загружать файлы по прямым и поддерживаемым ссылкам в Google Drive. Бот был вдохновлен проектом [CyberBoySumanjay](https://github.com/cyberboysumanjay) [Google Drive Uploader](https://telegram.dog/driveuploadbot).
 
-## Подробнее
+## Подробней
 
-Этот Telegram-бот написан на Python и предназначен для загрузки файлов в Google Drive с использованием прямых ссылок и других поддерживаемых источников. Бот поддерживает авторизацию пользователей через Google Drive API, позволяя им сохранять файлы непосредственно в своем облачном хранилище.
+Этот бот может быть использован для загрузки файлов в Google Drive через Telegram. Он поддерживает прямые ссылки, ссылки Mega.nz, ссылки openload (больше не доступны) и ссылки Dropbox.
 
 ## Функциональность
 
-### Основные возможности:
+- Загрузка файлов в Google Drive по прямым и поддерживаемым ссылкам.
+- Поддержка TeamDrive (требуется хардкодинг).
+- Авторизация пользователя через команду `/auth`.
+- Удаление учетных данных пользователя через команду `/revoke`.
 
--   Загрузка файлов в Google Drive по прямым ссылкам.
--   Поддержка ссылок Mega.nz, Dropbox.
--   Авторизация пользователей через Google Drive API.
--   Удаление сохраненных учетных данных.
--   Получение справки по командам бота.
+## Установка
 
-### Команды бота:
+### Необходимые модули
 
--   `/start`: Отображает приветственное сообщение.
--   `/auth`: Запрашивает авторизацию пользователя.
--   `/revoke`: Удаляет сохраненные учетные данные пользователя.
--   `/help`: Отображает справочный текст.
-
-### Поддерживаемые ссылки:
-
--   Прямые ссылки.
--   Ссылки Mega.nz.
--   Ссылки Dropbox.
-
-## Настройка и установка
-
-### Требования:
-
--   [Google Drive API Credential](https://console.cloud.google.com/apis/credentials) (Others type)  `Required`
--   Telegram Bot Token (Using BotFather)  `Required`
-
-### Шаги по установке:
-
-1.  Создайте [Google Drive API Credential](https://console.cloud.google.com/apis/credentials) (other type) и скачайте его JSON-файл.
-2.  Поместите этот JSON-файл в корневую директорию бота и переименуйте его в "client\_secrets.json".
-3.  Замените Bot Token в файле [creds.py](./creds.py) на свой, полученный от BotFather.
-
-```bash
+```
 sudo pip3 install -r requirements.txt
+```
+
+### Запуск бота
+
+```
 python3 bot.py
 ```
 
-## Использование Teamdrive (Общие диски)
+## Использование
 
-### Настройка Teamdrive:
+1.  Авторизуйте бота с помощью команды `/auth`, сгенерируйте ключ и отправьте его боту.
+2.  Отправьте боту поддерживаемую ссылку.
 
-1.  Замените `TEAMDRIVE_FOLDER_ID` и `TEAMDRIVE_ID` в файле [creds.py](./creds.py) на соответствующие идентификаторы Teamdrive.
+## Доступные команды
 
-**Внимание:** Эта функция предназначена для опытных пользователей и требует хардкодинга параметров.
+-   `/start` - Начальное сообщение.
+-   `/auth` - Авторизация пользователя.
+-   `/revoke` - Удаление сохраненных учетных данных.
+-   `/help` - Текст справки.
 
-## Благодарности
+## Поддерживаемые ссылки
 
--   [CyberBoySumanjay](https://github.com/cyberboysumanjay)
--   [SpEcHiDe](https://github.com/SpEcHiDe)
--   [Atulkadian](https://github.com/atulkadian)
+-   Прямые ссылки
+-   Mega.nz ссылки
+-   openload ссылки (больше не доступны)
+-   Dropbox ссылки
 
-## Планы на будущее (TODO)
+## Требования
 
--   Переименование файлов при загрузке.
--   Добавление поддержки загрузки файлов из Telegram (медленная загрузка).
--   Добавление поддержки Youtube-dl.
--   Исправление поддержки Openload.
--   Добавление поддержки zippyshare, Mediafire, cloud mail, Yandex disk, Sourceforge.
--   Генератор прямых ссылок Google Drive.
+-   [Google Drive API Credential](https://console.cloud.google.com/apis/credentials) (другие типы) - `Обязательно`
+-   Telegram Bot Token (с использованием BotFather) - `Обязательно`
+-   Openload ftp логин и ключ - `опционально`
+-   Mega Email и Password - `Опционально`
+
+Изменить API Openload и пароль Mega можно по следующим путям:
+
+-   Mega => Plugins > TEXT.py
+-   Openload => Plugins > dlopenload.py
+
+## Настройка собственного бота
+
+```
+1. Создайте [Google Drive API Credential](https://console.cloud.google.com/apis/credentials) (другой тип) и скачайте его JSON.
+
+2. Поместите его в корневую директорию бота и переименуйте в "client_secrets.json".
+
+3. Замените Bot Token в [creds.py file](./creds.py).
+
+4. Ваш бот готов к размещению.
+```
+
+### Размещение на Heroku
+
+Убедитесь, что вы изменили свой Bot Token и Google Client API перед размещением.
+
+## TODO
+
+-   Переименование файла при загрузке.
+-   Добавление поддержки файлов Telegram [медленная загрузка :( ].
+-   Добавление youtube-dl.
+-   Исправление поддержки openload.
+-   Добавление zippyshare, Mediafire, cloud mail, Яндекс диск, Sourceforge {они уже написаны в PPE плагине, вы можете использовать их оттуда}.
+-   Google Drive Direct Link Generator.
 
 ## Лицензия
 

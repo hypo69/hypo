@@ -1,49 +1,83 @@
-# Модуль GlhfChat
+# Документация модуля `GlhfChat.py`
+
 ## Обзор
 
-Модуль `GlhfChat` предоставляет класс `GlhfChat`, который является частью проекта `hypotez`. Этот класс предназначен для взаимодействия с сервисом Glhf.chat через API OpenAI. Он наследует функциональность от класса `OpenaiTemplate` и предоставляет специфические настройки для аутентификации и работы с моделями, поддерживаемыми Glhf.chat.
+Модуль `GlhfChat.py` предназначен для интеграции с сервисом GlhfChat. Он определяет класс `GlhfChat`, который наследует `OpenaiTemplate` и предоставляет настройки для работы с API GlhfChat, включая URL, базовый URL API, информацию об аутентификации и список поддерживаемых моделей.
 
 ## Подробней
-Класс определяет URL, URL для логина, базовый URL API, флаг работоспособности, требование аутентификации, модель по умолчанию и список доступных моделей для сервиса Glhf.chat. Этот модуль позволяет использовать различные модели, предоставляемые сервисом Glhf.chat, такие как Llama и Qwen, облегчая интеграцию и взаимодействие с этими моделями через API OpenAI.
+
+Модуль содержит класс, который позволяет использовать различные модели для обмена сообщениями через API GlhfChat. Класс определяет атрибуты, необходимые для подключения и аутентификации, а также список доступных моделей.
+Он определяет URL-адреса, базовый URL API, флаги `working` и `needs_auth`, а также списки поддерживаемых моделей.
 
 ## Классы
 
 ### `GlhfChat`
 
-**Описание**: Класс `GlhfChat` предназначен для взаимодействия с сервисом Glhf.chat через API OpenAI. Он наследует функциональность от класса `OpenaiTemplate` и предоставляет специфические настройки для аутентификации и работы с моделями, поддерживаемыми Glhf.chat.
+**Описание**: Класс `GlhfChat` предназначен для взаимодействия с сервисом GlhfChat. Он наследует `OpenaiTemplate` и предоставляет настройки для работы с API GlhfChat, включая URL, базовый URL API, информацию об аутентификации и список поддерживаемых моделей.
 
 **Наследует**:
-- `OpenaiTemplate`: Этот класс предоставляет общую структуру и функциональность для взаимодействия с API OpenAI.
+- `OpenaiTemplate`: класс, определяющий базовый шаблон для взаимодействия с API OpenAI.
 
 **Атрибуты**:
-- `url` (str): URL сервиса Glhf.chat.
-- `login_url` (str): URL для аутентификации на сервисе Glhf.chat.
-- `api_base` (str): Базовый URL API OpenAI для Glhf.chat.
-- `working` (bool): Флаг, указывающий, работает ли сервис (в данном случае `True`).
-- `needs_auth` (bool): Флаг, указывающий, требуется ли аутентификация для использования сервиса (в данном случае `True`).
-- `default_model` (str): Модель, используемая по умолчанию (в данном случае `"hf:meta-llama/Llama-3.3-70B-Instruct"`).
-- `models` (list[str]): Список доступных моделей для использования с Glhf.chat.
+- `url` (str): URL для доступа к GlhfChat.
+- `login_url` (str): URL для аутентификации пользователя.
+- `api_base` (str): Базовый URL для API GlhfChat.
+- `working` (bool): Флаг, указывающий, работает ли провайдер.
+- `needs_auth` (bool): Флаг, указывающий, требуется ли аутентификация для использования провайдера.
+- `default_model` (str): Модель, используемая по умолчанию.
+- `models` (List[str]): Список поддерживаемых моделей.
 
 **Методы**:
-- Нет явно определенных методов в предоставленном коде, но класс наследует методы от `OpenaiTemplate`.
+- Отсутствуют явно определенные методы, поскольку класс наследует методы от `OpenaiTemplate`.
+
+### Как работает класс `GlhfChat`
+1. **Наследование**:
+   - Класс `GlhfChat` наследуется от `OpenaiTemplate`, что позволяет ему использовать функциональность базового класса для взаимодействия с API OpenAI.
+
+2. **Определение атрибутов**:
+   - Определяются статические атрибуты класса, такие как `url`, `login_url`, `api_base`, `working`, `needs_auth`, `default_model` и `models`. Эти атрибуты задают параметры для работы с GlhfChat.
+
+3. **Использование**:
+   - Класс `GlhfChat` может быть использован для создания экземпляров, которые позволяют взаимодействовать с API GlhfChat. Например, можно получить список доступных моделей или отправить запрос к API.
+
+```
+GlhfChat
+|
+-- url, login_url, api_base, working, needs_auth, default_model, models
+|
+OpenaiTemplate (наследование)
+|
+... (методы для взаимодействия с API)
+```
+
+**Примеры**:
+
+```python
+from g4f.Provider import GlhfChat
+
+# Создание экземпляра класса GlhfChat
+glhf_chat = GlhfChat()
+
+# Вывод URL для доступа к GlhfChat
+print(glhf_chat.url)
+
+# Вывод списка поддерживаемых моделей
+print(glhf_chat.models)
+```
+
+```python
+from g4f.Provider import GlhfChat
+
+# Получение базового URL API
+api_base_url = GlhfChat.api_base
+print(f"Base API URL: {api_base_url}")
+
+# Проверка, требуется ли аутентификация
+needs_auth = GlhfChat.needs_auth
+print(f"Authentication required: {needs_auth}")
+```
+```
 
 ## Функции
-В данном коде функции отсутствуют
 
-**Примеры**
-В данном коде функции отсутствуют
-```python
-from __future__ import annotations
-
-from ..template import OpenaiTemplate
-
-class GlhfChat(OpenaiTemplate):
-    url = "https://glhf.chat"
-    login_url = "https://glhf.chat/user-settings/api"
-    api_base = "https://glhf.chat/api/openai/v1"
-
-    working = True
-    needs_auth = True
-
-    default_model = "hf:meta-llama/Llama-3.3-70B-Instruct"
-    models = ["hf:meta-llama/Llama-3.1-405B-Instruct", default_model, "hf:deepseek-ai/DeepSeek-V3", "hf:Qwen/QwQ-32B-Preview", "hf:huihui-ai/Llama-3.3-70B-Instruct-abliterated", "hf:anthracite-org/magnum-v4-12b", "hf:meta-llama/Llama-3.1-70B-Instruct", "hf:meta-llama/Llama-3.1-8B-Instruct", "hf:meta-llama/Llama-3.2-3B-Instruct", "hf:meta-llama/Llama-3.2-11B-Vision-Instruct", "hf:meta-llama/Llama-3.2-90B-Vision-Instruct", "hf:Qwen/Qwen2.5-72B-Instruct", "hf:Qwen/Qwen2.5-Coder-32B-Instruct", "hf:google/gemma-2-9b-it", "hf:google/gemma-2-27b-it", "hf:mistralai/Mistral-7B-Instruct-v0.3", "hf:mistralai/Mixtral-8x7B-Instruct-v0.1", "hf:mistralai/Mixtral-8x22B-Instruct-v0.1", "hf:NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO", "hf:Qwen/Qwen2.5-7B-Instruct", "hf:upstage/SOLAR-10.7B-Instruct-v1.0", "hf:nvidia/Llama-3.1-Nemotron-70B-Instruct-HF"]
+В данном модуле функции отсутствуют.

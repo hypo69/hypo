@@ -1,202 +1,123 @@
-# Модуль для обработки диалогов с использованием g4f
+# Модуль для обработки диалогов
 
 ## Обзор
 
-Модуль содержит класс `ConversationHandler`, который упрощает взаимодействие с моделями GPT через библиотеку `g4f`. Он предоставляет функциональность для хранения истории диалогов и получения ответов от модели.
+Модуль предоставляет класс `ConversationHandler`, который упрощает взаимодействие с моделями GPT-4 через клиент `g4f.client.Client`. Он позволяет поддерживать историю диалога, добавлять сообщения пользователя и получать ответы от ассистента.
 
 ## Подробнее
 
-Этот модуль предоставляет простой способ ведения диалогов с AI-моделями, используя библиотеку `g4f`. Класс `ConversationHandler` инициализирует клиента `g4f`, хранит историю сообщений и предоставляет метод для получения ответа от модели на основе истории сообщений.
+Этот модуль предназначен для управления диалогами с использованием модели GPT-4. Он инициализирует клиент, сохраняет историю сообщений и предоставляет методы для добавления сообщений пользователя и получения ответов от модели. Он позволяет поддерживать контекст диалога.
 
 ## Классы
 
 ### `ConversationHandler`
 
-**Описание**: Класс для управления диалогом с AI-моделью.
+**Описание**: Класс для управления диалогом с использованием GPT-4.
 
 **Принцип работы**:
+Класс `ConversationHandler` инициализируется с указанием модели, используемой для диалога (по умолчанию "gpt-4"). Он поддерживает историю диалога в виде списка сообщений. Методы `add_user_message` добавляют сообщения пользователя в историю, а `get_response` отправляет историю сообщений в модель и возвращает ответ ассистента.
 
-1.  Инициализируется с указанием модели (по умолчанию "gpt-4").
-2.  Создает экземпляр клиента `g4f`.
-3.  Хранит историю диалога в списке `conversation_history`.
-4.  Метод `add_user_message` добавляет сообщение пользователя в историю.
-5.  Метод `get_response` отправляет историю диалога модели и возвращает ответ ассистента, а также добавляет ответ ассистента в историю.
+**Атрибуты**:
+- `client` (g4f.client.Client): Клиент для взаимодействия с API g4f.
+- `model` (str): Модель, используемая для генерации ответов (по умолчанию "gpt-4").
+- `conversation_history` (list): Список словарей, представляющих историю диалога.
 
 **Методы**:
+- `__init__(model)`: Инициализирует экземпляр класса `ConversationHandler`.
+- `add_user_message(content)`: Добавляет сообщение пользователя в историю диалога.
+- `get_response()`: Получает ответ от модели на основе истории диалога.
 
-*   `__init__(model="gpt-4")`: Инициализирует объект `ConversationHandler`.
-*   `add_user_message(content: str)`: Добавляет сообщение пользователя в историю диалога.
-*   `get_response() -> str`: Получает ответ от модели на основе истории диалога.
+## Функции
 
 ### `__init__`
 
 ```python
-    def __init__(self, model="gpt-4"):
-        self.client = Client()
-        self.model = model
-        self.conversation_history = []
+def __init__(self, model="gpt-4"):
+    """
+    Инициализирует экземпляр класса `ConversationHandler`.
+
+    Args:
+        model (str): Модель, используемая для генерации ответов (по умолчанию "gpt-4").
+
+    """
 ```
 
-**Назначение**: Инициализирует объект `ConversationHandler`.
+**Назначение**: Инициализация объекта `ConversationHandler`.
 
 **Параметры**:
-
-*   `model` (str): Название модели, используемой для диалога. По умолчанию `"gpt-4"`.
+- `model` (str): Модель, используемая для генерации ответов. По умолчанию `"gpt-4"`.
 
 **Как работает функция**:
 
-1.  Создает экземпляр класса `Client` из библиотеки `g4f`.
-2.  Инициализирует атрибут `model` значением переданного параметра `model`.
-3.  Создает пустой список `conversation_history` для хранения истории диалога.
-
-```
-Инициализация -> Создание клиента g4f ->  Инициализация атрибута model -> Создание списка истории
-```
+1. Инициализирует клиент `g4f.client.Client`.
+2. Устанавливает модель для диалога.
+3. Инициализирует пустой список `conversation_history` для хранения истории диалога.
 
 **Примеры**:
 
 ```python
-conversation = ConversationHandler()
-conversation = ConversationHandler(model="gpt-3.5-turbo")
+conversation = ConversationHandler(model="gpt-4")
 ```
 
 ### `add_user_message`
 
 ```python
-    def add_user_message(self, content: str):
-        self.conversation_history.append({
-            "role": "user",
-            "content": content
-        })
+def add_user_message(self, content):
+    """
+    Добавляет сообщение пользователя в историю диалога.
+
+    Args:
+        content (str): Сообщение пользователя.
+
+    """
 ```
 
-**Назначение**: Добавляет сообщение пользователя в историю диалога.
+**Назначение**: Добавление сообщения пользователя в историю диалога.
 
 **Параметры**:
-
-*   `content` (str): Текст сообщения пользователя.
+- `content` (str): Сообщение пользователя.
 
 **Как работает функция**:
 
-1.  Создает словарь, содержащий роль `"user"` и контент сообщения.
-2.  Добавляет этот словарь в список `conversation_history`.
-
-```
-Получение контента -> Создание словаря с ролью и контентом -> Добавление словаря в историю диалога
-```
+1. Создает словарь, представляющий сообщение пользователя, с ключами `"role"` (установлено в `"user"`) и `"content"` (содержимое сообщения).
+2. Добавляет этот словарь в список `conversation_history`.
 
 **Примеры**:
 
 ```python
 conversation = ConversationHandler()
 conversation.add_user_message("Hello!")
-conversation.add_user_message("How are you?")
 ```
 
 ### `get_response`
 
 ```python
-    def get_response(self) -> str:
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=self.conversation_history
-        )
-        assistant_message = {
-            "role": response.choices[0].message.role,
-            "content": response.choices[0].message.content
-        }
-        self.conversation_history.append(assistant_message)
-        return assistant_message["content"]
+def get_response(self):
+    """
+    Получает ответ от модели на основе истории диалога.
+
+    Returns:
+        str: Ответ ассистента.
+
+    """
 ```
 
-**Назначение**: Получает ответ от модели на основе истории диалога.
+**Назначение**: Получение ответа от модели на основе истории диалога.
 
 **Возвращает**:
-
-*   `str`: Текст ответа ассистента.
+- `str`: Ответ ассистента.
 
 **Как работает функция**:
 
-1.  Отправляет запрос к модели через `client.chat.completions.create`, передавая историю диалога.
-2.  Извлекает роль и контент сообщения ассистента из ответа.
-3.  Создает словарь с ролью и контентом ассистента.
-4.  Добавляет сообщение ассистента в историю диалога.
-5.  Возвращает контент сообщения ассистента.
-
-```
-Отправка запроса к модели -> Извлечение данных из ответа -> Создание словаря с сообщением ассистента -> Добавление сообщения ассистента в историю -> Возврат контента сообщения ассистента
-```
+1. Вызывает метод `create` у `self.client.chat.completions` с указанием модели и истории диалога.
+2. Извлекает роль и содержимое ответа из объекта `response`.
+3. Создает словарь, представляющий сообщение ассистента, с ключами `"role"` и `"content"`.
+4. Добавляет это сообщение в список `conversation_history`.
+5. Возвращает содержимое сообщения ассистента.
 
 **Примеры**:
 
 ```python
 conversation = ConversationHandler()
 conversation.add_user_message("Hello!")
-assistant_response = conversation.get_response()
-print("Assistant:", assistant_response)
-```
-```python
-from g4f.client import Client
-
-class ConversationHandler:
-    def __init__(self, model="gpt-4"):
-        """
-        Инициализирует обработчик диалогов.
-
-        Args:
-            model (str): Модель для использования в диалоге. По умолчанию "gpt-4".
-
-        Примеры:
-            >>> conversation = ConversationHandler(model="gpt-4")
-        """
-        self.client = Client()
-        self.model = model
-        self.conversation_history = []
-        
-    def add_user_message(self, content: str):
-        """
-        Добавляет сообщение пользователя в историю диалога.
-
-        Args:
-            content (str): Содержание сообщения пользователя.
-
-        Примеры:
-            >>> conversation = ConversationHandler()
-            >>> conversation.add_user_message("Hello!")
-        """
-        self.conversation_history.append({
-            "role": "user",
-            "content": content
-        })
-        
-    def get_response(self) -> str:
-        """
-        Получает ответ от модели на основе истории диалога.
-
-        Returns:
-            str: Ответ модели.
-
-        Примеры:
-            >>> conversation = ConversationHandler()
-            >>> conversation.add_user_message("Hello!")
-            >>> response = conversation.get_response()
-            >>> print(response)
-        """
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=self.conversation_history
-        )
-        assistant_message = {
-            "role": response.choices[0].message.role,
-            "content": response.choices[0].message.content
-        }
-        self.conversation_history.append(assistant_message)
-        return assistant_message["content"]
-
-# Примеры использования
-conversation = ConversationHandler()
-conversation.add_user_message("Hello!")
-print("Assistant:", conversation.get_response())
-
-conversation.add_user_message("How are you?")
 print("Assistant:", conversation.get_response())

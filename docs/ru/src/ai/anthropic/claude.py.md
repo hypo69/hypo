@@ -1,45 +1,39 @@
 # Модуль для работы с Claude API
-================================
-
-Модуль содержит класс `ClaudeClient`, который предоставляет интерфейс для взаимодействия с API Claude для генерации текста, анализа тональности и перевода текста.
-
-[Документация](https://github.com/hypo69/hypo/blob/master/docs/ru/src/ai/anthropic/claude.py.md)
-
-## Оглавление
-- [Обзор](#обзор)
-- [Подробнее](#подробнее)
-- [Классы](#классы)
-    - [ClaudeClient](#claudeclient)
-- [Примеры использования](#примеры-использования)
 
 ## Обзор
 
-Модуль `claude.py` предоставляет класс `ClaudeClient` для взаимодействия с API Claude. Он позволяет генерировать текст на основе запроса, анализировать тональность текста и переводить текст с одного языка на другой. Модуль использует библиотеку `anthropic` для взаимодействия с API Claude.
+Модуль `claude.py` предоставляет класс `ClaudeClient` для взаимодействия с API Claude от Anthropic.
+Он позволяет генерировать текст, анализировать тональность и переводить текст с одного языка на другой.
 
-## Подробнее
+## Подробней
 
-Этот модуль предназначен для упрощения работы с API Claude, предоставляя удобный интерфейс для выполнения основных задач, таких как генерация текста, анализ тональности и перевод. Класс `ClaudeClient` инкапсулирует логику взаимодействия с API Claude, что позволяет разработчикам легко интегрировать функциональность Claude в свои приложения.
+Этот модуль облегчает интеграцию с API Claude, предоставляя удобный интерфейс для выполнения различных задач обработки естественного языка. Он включает в себя методы для генерации текста на основе заданного запроса, анализа тональности текста и перевода текста между различными языками.
 
 ## Классы
 
 ### `ClaudeClient`
 
-**Описание**: Класс для взаимодействия с API Claude.
+**Описание**: Класс `ClaudeClient` является основным интерфейсом для работы с API Claude. Он инкапсулирует логику аутентификации и предоставляет методы для выполнения запросов к API.
 
 **Принцип работы**:
-1.  При инициализации класса создается клиент `anthropic.Client` с использованием переданного API-ключа.
-2.  Методы класса используют этот клиент для выполнения запросов к API Claude.
+1.  При инициализации класса создается клиент `anthropic.Client` с использованием предоставленного API-ключа.
+2.  Методы класса используют этот клиент для отправки запросов к API Claude и обработки ответов.
 
 **Атрибуты**:
-- `client` (anthropic.Client): Клиент для взаимодействия с API Claude.
+
+*   `client` (anthropic.Client): Объект клиента Anthropic для взаимодействия с API.
 
 **Методы**:
-- `__init__(self, api_key: str) -> None`: Инициализирует клиент Claude с предоставленным API-ключом.
-- `generate_text(self, prompt: str, max_tokens_to_sample: int = 100) -> str`: Генерирует текст на основе предоставленного запроса.
-- `analyze_sentiment(self, text: str) -> str`: Анализирует тональность предоставленного текста.
-- `translate_text(self, text: str, source_language: str, target_language: str) -> str`: Переводит предоставленный текст с исходного языка на целевой язык.
 
-#### `__init__`
+*   `__init__(api_key: str) -> None`: Инициализирует клиент Claude с предоставленным API-ключом.
+*   `generate_text(prompt: str, max_tokens_to_sample: int = 100) -> str`: Генерирует текст на основе предоставленного запроса.
+*   `analyze_sentiment(text: str) -> str`: Анализирует тональность предоставленного текста.
+*   `translate_text(text: str, source_language: str, target_language: str) -> str`: Переводит предоставленный текст с исходного языка на целевой язык.
+
+## Функции
+
+### `__init__`
+
 ```python
 def __init__(self, api_key: str) -> None:
     """
@@ -51,22 +45,37 @@ def __init__(self, api_key: str) -> None:
     Example:
         >>> claude_client = ClaudeClient('your_api_key')
     """
-    self.client = anthropic.Client(api_key)
+    ...
 ```
-**Назначение**: Инициализация экземпляра класса `ClaudeClient`.
+
+**Назначение**: Инициализирует экземпляр класса `ClaudeClient`.
 
 **Параметры**:
-- `api_key` (str): API-ключ для доступа к сервисам Claude.
+
+*   `api_key` (str): API-ключ, необходимый для аутентификации и доступа к API Claude.
+
+**Возвращает**:
+
+*   `None`: Функция ничего не возвращает.
 
 **Как работает функция**:
-1.  Принимает API-ключ в качестве аргумента.
-2.  Создает экземпляр класса `anthropic.Client` с использованием переданного API-ключа и присваивает его атрибуту `self.client`.
+
+1.  Функция принимает API-ключ в качестве аргумента.
+2.  Создает экземпляр класса `anthropic.Client`, используя предоставленный API-ключ.
+3.  Сохраняет созданный экземпляр `anthropic.Client` в атрибуте `self.client` класса `ClaudeClient`.
+
+```
+API-ключ --> Создание клиента anthropic.Client --> Сохранение клиента в self.client
+```
 
 **Примеры**:
+
 ```python
 claude_client = ClaudeClient('your_api_key')
 ```
-#### `generate_text`
+
+### `generate_text`
+
 ```python
 def generate_text(self, prompt: str, max_tokens_to_sample: int = 100) -> str:
     """
@@ -83,38 +92,38 @@ def generate_text(self, prompt: str, max_tokens_to_sample: int = 100) -> str:
         >>> claude_client.generate_text('Write a short story.')
         'A short story about...'
     """
-    response = self.client.completion(
-        prompt=prompt,
-        model='claude-v1',
-        max_tokens_to_sample=max_tokens_to_sample,
-        stop_sequences=['\n\nHuman:']
-    )
-    return response['completion']
+    ...
 ```
-**Назначение**: Генерация текста на основе предоставленного запроса с использованием API Claude.
+
+**Назначение**: Генерирует текст, используя API Claude, на основе предоставленного запроса.
 
 **Параметры**:
-- `prompt` (str): Запрос для генерации текста.
-- `max_tokens_to_sample` (int, optional): Максимальное количество токенов для генерации. По умолчанию 100.
+
+*   `prompt` (str): Запрос (prompt) для генерации текста.
+*   `max_tokens_to_sample` (int, optional): Максимальное количество токенов, которые следует сгенерировать. По умолчанию равен 100.
 
 **Возвращает**:
-- `str`: Сгенерированный текст.
+
+*   `str`: Сгенерированный текст.
 
 **Как работает функция**:
 
-1.  Принимает запрос (`prompt`) и максимальное количество токенов (`max_tokens_to_sample`) в качестве аргументов.
-2.  Вызывает метод `completion` клиента `anthropic.Client` для генерации текста на основе запроса.
-3.  Извлекает сгенерированный текст из ответа API Claude и возвращает его.
+1.  Функция принимает запрос `prompt` и максимальное количество токенов `max_tokens_to_sample`.
+2.  Вызывает метод `completion` объекта `self.client` (экземпляр `anthropic.Client`) для генерации текста на основе запроса.
+3.  Извлекает сгенерированный текст из ответа API и возвращает его.
 
 ```
-Запрос --> Вызов API Claude (completion) --> Получение ответа --> Извлечение текста
+Запрос и макс. кол-во токенов --> Вызов anthropic.Client.completion() --> Извлечение сгенерированного текста из ответа --> Возврат сгенерированного текста
 ```
 
 **Примеры**:
+
 ```python
 claude_client.generate_text('Write a short story.')
 ```
-#### `analyze_sentiment`
+
+### `analyze_sentiment`
+
 ```python
 def analyze_sentiment(self, text: str) -> str:
     """
@@ -130,38 +139,38 @@ def analyze_sentiment(self, text: str) -> str:
         >>> claude_client.analyze_sentiment('I am very happy!')
         'Positive'
     """
-    response = self.client.completion(
-        prompt=f'Analyze the sentiment of the following text: {text}',
-        model='claude-v1',
-        max_tokens_to_sample=50,
-        stop_sequences=['\n\nHuman:']
-    )
-    return response['completion']
+    ...
 ```
-**Назначение**: Анализ тональности предоставленного текста с использованием API Claude.
+
+**Назначение**: Анализирует тональность предоставленного текста, используя API Claude.
 
 **Параметры**:
-- `text` (str): Текст для анализа.
+
+*   `text` (str): Текст, который необходимо проанализировать на предмет тональности.
 
 **Возвращает**:
-- `str`: Результат анализа тональности.
+
+*   `str`: Результат анализа тональности (например, "Positive", "Negative", "Neutral").
 
 **Как работает функция**:
 
-1.  Принимает текст для анализа (`text`) в качестве аргумента.
-2.  Формирует запрос к API Claude с инструкцией проанализировать тональность текста.
-3.  Вызывает метод `completion` клиента `anthropic.Client` для выполнения запроса.
-4.  Извлекает результат анализа тональности из ответа API Claude и возвращает его.
+1.  Функция принимает текст `text` для анализа.
+2.  Формирует запрос к API Claude, включающий текст для анализа тональности.
+3.  Вызывает метод `completion` объекта `self.client` для анализа тональности текста.
+4.  Извлекает результат анализа тональности из ответа API и возвращает его.
 
 ```
-Текст --> Формирование запроса --> Вызов API Claude (completion) --> Получение ответа --> Извлечение результата
+Текст для анализа --> Формирование запроса к API --> Вызов anthropic.Client.completion() --> Извлечение результата анализа из ответа --> Возврат результата анализа
 ```
 
 **Примеры**:
+
 ```python
 claude_client.analyze_sentiment('I am very happy!')
 ```
-#### `translate_text`
+
+### `translate_text`
+
 ```python
 def translate_text(self, text: str, source_language: str, target_language: str) -> str:
     """
@@ -179,63 +188,33 @@ def translate_text(self, text: str, source_language: str, target_language: str) 
         >>> claude_client.translate_text('Hello', 'en', 'es')
         'Hola'
     """
-    response = self.client.completion(
-        prompt=f'Translate the following text from {source_language} to {target_language}: {text}',
-        model='claude-v1',
-        max_tokens_to_sample=100,
-        stop_sequences=['\n\nHuman:']
-    )
-    return response['completion']
+    ...
 ```
-**Назначение**: Перевод текста с одного языка на другой с использованием API Claude.
+
+**Назначение**: Переводит текст с одного языка на другой, используя API Claude.
 
 **Параметры**:
-- `text` (str): Текст для перевода.
-- `source_language` (str): Код исходного языка.
-- `target_language` (str): Код целевого языка.
+
+*   `text` (str): Текст, который необходимо перевести.
+*   `source_language` (str): Код исходного языка (например, "en" для английского).
+*   `target_language` (str): Код целевого языка (например, "es" для испанского).
 
 **Возвращает**:
-- `str`: Переведенный текст.
+
+*   `str`: Переведенный текст.
 
 **Как работает функция**:
 
-1.  Принимает текст для перевода (`text`), код исходного языка (`source_language`) и код целевого языка (`target_language`) в качестве аргументов.
-2.  Формирует запрос к API Claude с инструкцией перевести текст с исходного языка на целевой язык.
-3.  Вызывает метод `completion` клиента `anthropic.Client` для выполнения запроса.
-4.  Извлекает переведенный текст из ответа API Claude и возвращает его.
+1.  Функция принимает текст `text`, код исходного языка `source_language` и код целевого языка `target_language`.
+2.  Формирует запрос к API Claude, включающий текст для перевода, исходный язык и целевой язык.
+3.  Вызывает метод `completion` объекта `self.client` для перевода текста.
+4.  Извлекает переведенный текст из ответа API и возвращает его.
 
 ```
-Текст, исходный язык, целевой язык --> Формирование запроса --> Вызов API Claude (completion) --> Получение ответа --> Извлечение переведенного текста
+Текст, исходный язык, целевой язык --> Формирование запроса к API --> Вызов anthropic.Client.completion() --> Извлечение переведенного текста из ответа --> Возврат переведенного текста
 ```
 
 **Примеры**:
+
 ```python
 claude_client.translate_text('Hello', 'en', 'es')
-```
-## Примеры использования
-
-```python
-if __name__ == '__main__':
-    api_key = 'your-api-key'
-    claude_client = ClaudeClient(api_key)
-
-    # Пример генерации текста
-    prompt = 'Write a short story about a robot learning to love.'
-    generated_text = claude_client.generate_text(prompt)
-    print('Generated Text:', generated_text)
-
-    # Пример анализа тональности
-    text_to_analyze = 'I am very happy today!'
-    sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
-    print('Sentiment Analysis:', sentiment_analysis)
-
-    # Пример перевода текста
-    text_to_translate = 'Hello, how are you?'
-    source_language = 'en'
-    target_language = 'es'
-    translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
-    print('Translated Text:', translated_text)
-```
-
-**Описание**:
-В данном разделе представлен пример использования класса `ClaudeClient`. Вначале создается экземпляр класса `ClaudeClient` с использованием API-ключа. Затем демонстрируется использование методов `generate_text`, `analyze_sentiment` и `translate_text` для выполнения различных задач обработки текста. Результаты выполнения методов выводятся на экран.

@@ -1,12 +1,12 @@
-# Модуль cli.py
+# Модуль командной строки (CLI) для g4f
 
 ## Обзор
 
-Модуль `cli.py` предназначен для обработки аргументов командной строки и запуска различных режимов работы библиотеки `gpt4free` (g4f), таких как API и GUI. Он предоставляет интерфейс командной строки для настройки и запуска API и GUI, а также для управления различными параметрами, такими как провайдеры, модели, прокси и т.д.
+Этот модуль предоставляет интерфейс командной строки (CLI) для запуска `gpt4free` в различных режимах, таких как API и GUI. Он позволяет настраивать параметры запуска, такие как привязка, порт, модель, провайдер и другие.
 
 ## Подробней
 
-Модуль определяет функции для создания парсеров аргументов командной строки, запуска API и GUI с заданными аргументами. Он также содержит функцию `main`, которая является точкой входа для запуска g4f из командной строки.
+Модуль `cli.py` является отправной точкой для запуска приложения `gpt4free` из командной строки. Он определяет аргументы командной строки для настройки API и GUI, а также запускает выбранный режим с указанными параметрами.
 
 ## Функции
 
@@ -14,107 +14,77 @@
 
 ```python
 def get_api_parser() -> ArgumentParser:
-    """Создает парсер аргументов командной строки для API.
+    """
+    Создает парсер аргументов командной строки для API.
 
     Args:
-        Нет
+        None
 
     Returns:
         ArgumentParser: Парсер аргументов командной строки.
 
     Raises:
-        Нет
+        None
+
+    Как работает функция:
+    1. Создает экземпляр `ArgumentParser` с описанием "Run the API and GUI".
+    2. Добавляет аргументы, такие как `--bind`, `--port`, `--debug`, `--gui`, `--model`, `--provider`, `--image-provider`, `--proxy`, `--workers`, `--disable-colors`, `--ignore-cookie-files`, `--g4f-api-key`, `--ignored-providers`, `--cookie-browsers`, `--reload`, `--demo`, `--ssl-keyfile`, `--ssl-certfile`, `--log-config`.
+    3. Возвращает настроенный парсер аргументов.
+
+    ASCII flowchart:
+    Создание парсера -> Добавление аргументов -> Возврат парсера
+
+    Примеры:
+    >>> parser = get_api_parser()
+    >>> args = parser.parse_args(['--debug', '--gui'])
+    >>> args.debug
+    True
+    >>> args.gui
+    True
     """
-    ...
-```
-
-**Назначение**: Создает и возвращает парсер аргументов командной строки, специфичный для режима API. Этот парсер определяет различные параметры, которые можно использовать при запуске API, такие как адрес привязки, порт, режим отладки, провайдеры, модели и т.д.
-
-**Как работает функция**:
-
-1.  Создает экземпляр `ArgumentParser` с описанием "Run the API and GUI".
-2.  Добавляет аргументы, такие как `--bind`, `--port`, `--debug`, `--gui`, `--model`, `--provider`, `--image-provider`, `--proxy`, `--workers`, `--disable-colors`, `--ignore-cookie-files`, `--g4f-api-key`, `--ignored-providers`, `--cookie-browsers`, `--reload`, `--demo`, `--ssl-keyfile`, `--ssl-certfile`, `--log-config`.
-3.  Возвращает настроенный парсер `api_parser`.
-
-```ascii
-    Создание ArgumentParser
-    │
-    ├── Добавление аргументов: --bind, --port, --debug, --gui, --model, --provider, --image-provider, --proxy, --workers, --disable-colors
-    │
-    ├── Добавление аргументов: --ignore-cookie-files, --g4f-api-key, --ignored-providers, --cookie-browsers, --reload, --demo
-    │
-    └── Добавление аргументов: --ssl-keyfile, --ssl-certfile, --log-config
-    │
-    Возврат api_parser
-```
-
-**Примеры**:
-
-```python
-parser = get_api_parser()
-args = parser.parse_args(['--port', '8000', '--debug'])
-print(args.port)  # Вывод: 8000
-print(args.debug)  # Вывод: True
 ```
 
 ### `main`
 
 ```python
 def main() -> None:
-    """Точка входа для запуска gpt4free из командной строки.
+    """
+    Главная функция для запуска приложения gpt4free.
 
     Args:
-        Нет
+        None
 
     Returns:
         None
 
     Raises:
-        SystemExit: Если не указан режим работы.
+        SystemExit: Если не указан режим запуска.
+
+    Как работает функция:
+    1. Создает основной парсер аргументов с описанием "Run gpt4free".
+    2. Создает субпарсеры для режимов "api" и "gui", используя `get_api_parser` и `gui_parser` соответственно.
+    3. Разбирает аргументы командной строки.
+    4. В зависимости от выбранного режима запускает соответствующую функцию (`run_api_args` или `run_gui_args`).
+    5. Если режим не указан, выводит справку и завершает программу с кодом ошибки 1.
+
+    ASCII flowchart:
+    Создание парсера -> Создание субпарсеров -> Разбор аргументов -> Выбор режима -> Запуск функции или вывод справки -> Завершение
+
+    Примеры:
+    Запуск API:
+    >>> main(['api', '--debug'])
+
+    Запуск GUI:
+    >>> main(['gui'])
     """
-    ...
-```
-
-**Назначение**: Функция `main` является точкой входа для запуска g4f из командной строки. Она создает парсер аргументов командной строки, добавляет подпарсеры для режимов API и GUI, и запускает соответствующий режим в зависимости от переданных аргументов.
-
-**Как работает функция**:
-
-1.  Создает основной парсер аргументов `parser` с описанием "Run gpt4free".
-2.  Добавляет подпарсеры `subparsers` для режимов API и GUI, используя `get_api_parser` и `gui_parser` соответственно.
-3.  Обрабатывает аргументы командной строки с помощью `parser.parse_args()`.
-4.  В зависимости от выбранного режима (`args.mode`), запускает соответствующую функцию (`run_api_args` или `run_gui_args`).
-5.  Если режим не указан, выводит справку и завершает программу с кодом ошибки 1.
-
-```ascii
-    Создание основного парсера ArgumentParser
-    │
-    ├── Добавление подпарсеров для режимов API и GUI
-    │
-    ├── Обработка аргументов командной строки
-    │
-    ├── В зависимости от выбранного режима:
-    │   ├── Запуск run_api_args (если режим API)
-    │   ├── Запуск run_gui_args (если режим GUI)
-    │   └── Вывод справки и завершение (если режим не указан)
-    │
-    Завершение функции
-```
-
-**Примеры**:
-
-```python
-# Пример запуска API с указанием порта и режима отладки
-# python cli.py api --port 8000 --debug
-
-# Пример запуска GUI
-# python cli.py gui
 ```
 
 ### `run_api_args`
 
 ```python
 def run_api_args(args: argparse.Namespace) -> None:
-    """Запускает API с заданными аргументами.
+    """
+    Запускает API с указанными аргументами.
 
     Args:
         args (argparse.Namespace): Аргументы командной строки.
@@ -123,38 +93,18 @@ def run_api_args(args: argparse.Namespace) -> None:
         None
 
     Raises:
-        Нет
+        None
+
+    Как работает функция:
+    1. Импортирует `AppConfig` и `run_api` из модуля `g4f.api`.
+    2. Настраивает `AppConfig` с использованием аргументов командной строки, таких как `ignore_cookie_files`, `ignored_providers`, `g4f_api_key`, `provider`, `image_provider`, `proxy`, `model`, `gui`, `demo`.
+    3. Если указаны браузеры для cookie, обновляет список `g4f.cookies.browsers`.
+    4. Запускает API с использованием аргументов командной строки, таких как `bind`, `port`, `debug`, `workers`, `use_colors`, `reload`, `ssl_keyfile`, `ssl_certfile`, `log_config`.
+
+    ASCII flowchart:
+    Импорт -> Настройка AppConfig -> Обновление браузеров для cookie -> Запуск API
+
+    Примеры:
+    >>> args = argparse.Namespace(ignore_cookie_files=True, ignored_providers=[], g4f_api_key=None, provider=None, image_provider=None, proxy=None, model=None, gui=False, demo=False, cookie_browsers=[], bind=None, port=None, debug=True, workers=None, disable_colors=False, reload=False, ssl_keyfile=None, ssl_certfile=None, log_config=None)
+    >>> run_api_args(args)
     """
-    ...
-```
-
-**Назначение**: Функция `run_api_args` отвечает за запуск API с использованием параметров, переданных через аргументы командной строки. Она настраивает конфигурацию приложения и запускает API-сервер.
-
-**Как работает функция**:
-
-1.  Импортирует `AppConfig` и `run_api` из модуля `g4f.api`.
-2.  Устанавливает конфигурацию приложения `AppConfig` с использованием аргументов командной строки, таких как `ignore_cookie_files`, `ignored_providers`, `g4f_api_key`, `provider`, `image_provider`, `proxy`, `model`, `gui`, `demo`.
-3.  Если указаны браузеры для cookie (`args.cookie_browsers`), обновляет список браузеров в `g4f.cookies`.
-4.  Запускает API-сервер с использованием аргументов командной строки, таких как `bind`, `port`, `debug`, `workers`, `use_colors`, `reload`, `ssl_keyfile`, `ssl_certfile`, `log_config`.
-
-```ascii
-    Импорт AppConfig и run_api
-    │
-    ├── Установка конфигурации приложения AppConfig
-    │
-    ├── Обновление списка браузеров (если указаны args.cookie_browsers)
-    │
-    └── Запуск API-сервера с заданными аргументами
-    │
-    Завершение функции
-```
-
-**Примеры**:
-
-```python
-# Пример запуска API с указанием порта и режима отладки
-# python cli.py api --port 8000 --debug
-
-# В коде:
-# args = parser.parse_args(['api', '--port', '8000', '--debug'])
-# run_api_args(args)

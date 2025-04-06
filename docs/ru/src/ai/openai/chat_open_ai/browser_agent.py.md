@@ -1,64 +1,44 @@
 # Модуль для работы с ИИ-агентом, использующим браузер
-=========================================================
-
-Модуль `browser_agent` предоставляет класс `AIBrowserAgent`, который позволяет быстро настроить и запустить ИИ-агента, способного искать информацию в Google и анализировать веб-страницы.
-
-Пример использования
-----------------------
-
-```python
->>> from src.ai.openai.chat_openai.browser_agent import AIBrowserAgent
->>> agent = AIBrowserAgent(api_key='YOUR_API_KEY', model_name='gpt-4o-mini')
->>> asyncio.run(agent.ask_async('Какая сейчас погода в Москве?'))
-```
-
-## Оглавление
-
-- [Обзор](#обзор)
-- [Подробнее](#подробнее)
-- [Классы](#классы)
-    - [AIBrowserAgent](#aibrowseragent)
-- [Функции](#функции)
-    - [main](#main)
-
 ## Обзор
 
-Модуль `browser_agent` предоставляет класс `AIBrowserAgent`, который позволяет создавать агентов, использующих браузер для выполнения задач, таких как поиск информации и анализ веб-страниц. Он использует библиотеку `browser_use` и модель `ChatOpenAI` для обработки естественного языка и взаимодействия с поисковыми системами.
+Модуль `browser_agent.py` предоставляет класс `AIBrowserAgent`, предназначенный для создания и управления ИИ-агентами, которые могут использовать браузер для поиска информации и выполнения задач в интернете.
 
 ## Подробнее
 
-Этот модуль предназначен для упрощения процесса создания ИИ-агентов, способных взаимодействовать с веб-страницами. Он предоставляет удобный интерфейс для выполнения задач, таких как поиск аналогов продуктов или ответы на вопросы с использованием поиска в интернете. Модуль использует библиотеку `browser_use` для управления браузером и `ChatOpenAI` для обработки естественного языка.
+Этот модуль позволяет быстро настроить и запустить ИИ-агента, способного искать информацию в Google и анализировать веб-страницы. Он использует библиотеку `browser_use` для взаимодействия с браузером и `langchain_openai` для интеграции с моделями OpenAI.
+В коде реализована возможность работы как с драйвером по умолчанию, так и с пользовательским драйвером на основе Selenium или Playwright.
 
 ## Классы
 
 ### `AIBrowserAgent`
 
-**Описание**: Класс для создания агента, использующего браузер для выполнения задач.
+**Описание**: Класс `AIBrowserAgent` предназначен для создания агента, использующего браузер для выполнения задач, таких как поиск аналогов продуктов или ответы на вопросы.
 
 **Принцип работы**:
-Класс `AIBrowserAgent` инициализируется с ключом API OpenAI, названием языковой модели и поисковой системой. Он предоставляет методы для запуска агента для выполнения задач, поиска аналогов продуктов и ответов на вопросы с использованием поиска в интернете. Класс использует библиотеку `browser_use` для управления браузером и `ChatOpenAI` для обработки естественного языка.
+Класс инициализируется с ключом API OpenAI, названием модели, поисковой системой и опциональным пользовательским драйвером. Он использует `langchain_openai` для взаимодействия с моделями OpenAI и `browser_use` для управления браузером.
+Основной метод `run_task` запускает агента для выполнения заданной задачи, а методы `find_product_alternatives` и `ask_async` предоставляют удобные интерфейсы для поиска аналогов продуктов и ответов на вопросы соответственно.
 
-**Аттрибуты**:
+**Атрибуты**:
 - `api_key` (str): Ключ API OpenAI.
-- `model_name` (str): Название языковой модели OpenAI для использования (по умолчанию "gpt-4o-mini").
+- `model_name` (str): Название языковой модели OpenAI (по умолчанию "gpt-4o-mini").
 - `search_engine` (str): Поисковая система для использования (по умолчанию "google").
-- `llm`: Инстанс языковой модели OpenAI.
-- `custom_driver`: Инстанс веб-драйвера (опционально).
+- `llm` (ChatOpenAI): Объект языковой модели OpenAI.
+- `custom_driver` (Optional[object]): Пользовательский драйвер браузера.
 
 **Методы**:
 - `__init__`: Инициализирует класс `AIBrowserAgent`.
 - `run_task`: Запускает агента для выполнения заданной задачи.
 - `find_product_alternatives`: Ищет аналоги для продукта по заданному URL или SKU.
-- `ask`: Синхронная обертка для асинхронного метода `ask_async`. Не рекомендуется к использованию.
-- `ask_async`: Отвечает на заданный вопрос, используя поиск в интернете, если это необходимо.
+- `ask`: Синхронная обертка для асинхронного метода `ask_async`.
+- `ask_async`: Отвечает на заданный вопрос, используя поиск в интернете.
 
-### `AIBrowserAgent.__init__`
+### `__init__(self, api_key: str, model_name: str = "gpt-4o-mini", search_engine: str = "google", custom_driver: Optional[object] = None)`
 
 ```python
-    def __init__(self,
-                 api_key: str,
-                 model_name: str = "gpt-4o-mini",
-                 search_engine: str = "google",
+    def __init__(self,\
+                 api_key: str,\
+                 model_name: str = "gpt-4o-mini",\
+                 search_engine: str = "google",\
                  custom_driver: Optional[object] = None):
         """
         Инициализирует класс BrowserAgent.
@@ -69,53 +49,37 @@
             search_engine: Поисковая система для использования (по умолчанию "google").
             custom_driver: Optionally injected WebDriver instance, defaults to None (browser_use default).
         """
-        self.api_key = api_key
-        self.model_name = model_name
-        self.search_engine = search_engine
-        self.llm = ChatOpenAI(model=self.model_name, api_key=self.api_key)  # Initialize LLM here
-        self.custom_driver = custom_driver  # Save injected driver to local variable
 ```
-**Назначение**: Инициализация экземпляра класса `AIBrowserAgent`.
+
+**Назначение**: Инициализация экземпляра класса `AIBrowserAgent` с заданными параметрами.
 
 **Параметры**:
-- `api_key` (str): Ключ API OpenAI. Если не указан, будет использован ключ из переменных окружения.
-- `model_name` (str): Название языковой модели OpenAI для использования. По умолчанию "gpt-4o-mini".
-- `search_engine` (str): Поисковая система для использования. По умолчанию "google".
-- `custom_driver` (Optional[object], optional): Опционально внедренный экземпляр WebDriver. По умолчанию `None`.
+- `api_key` (str): Ключ API OpenAI.
+- `model_name` (str, optional): Название языковой модели OpenAI. По умолчанию "gpt-4o-mini".
+- `search_engine` (str, optional): Поисковая система для использования. По умолчанию "google".
+- `custom_driver` (Optional[object], optional): Пользовательский драйвер браузера. По умолчанию `None`.
 
 **Как работает функция**:
-
-1.  Присваивает переданные значения параметрам экземпляра класса.
-2.  Инициализирует языковую модель OpenAI (`llm`) с использованием `model_name` и `api_key`.
-3.  Сохраняет внедренный драйвер в локальной переменной `custom_driver`.
+1. Сохраняет переданные параметры `api_key`, `model_name`, `search_engine` и `custom_driver` в атрибуты экземпляра класса.
+2. Инициализирует атрибут `llm` как экземпляр класса `ChatOpenAI` с использованием переданных `model_name` и `api_key`.
 
 ```
-Инициализация класса AIBrowserAgent
-│
-├── api_key = api_key
-│
-├── model_name = model_name
-│
-├── search_engine = search_engine
-│
-├── Инициализация LLM (llm = ChatOpenAI(...))
-│
-└── custom_driver = custom_driver
+A (Прием параметров)
+|
+B (Сохранение параметров в атрибуты экземпляра класса)
+|
+C (Инициализация LLM)
 ```
 
 **Примеры**:
-
 ```python
-# Пример инициализации агента с ключом API и названием модели
-agent = AIBrowserAgent(api_key='YOUR_API_KEY', model_name='gpt-4o-mini')
-
-# Пример инициализации агента с пользовательским драйвером
-# from selenium import webdriver
-# custom_driver = webdriver.Firefox()
-# agent = AIBrowserAgent(api_key='YOUR_API_KEY', model_name='gpt-4o-mini', custom_driver=custom_driver)
+agent = AIBrowserAgent(api_key="your_api_key", model_name="gpt-4o-mini", search_engine="google")
+```
+```python
+agent = AIBrowserAgent(api_key="your_api_key", custom_driver=my_custom_driver)
 ```
 
-### `AIBrowserAgent.run_task`
+### `async run_task(self, task_prompt: str) -> Optional[str]`
 
 ```python
     async def run_task(self, task_prompt: str) -> Optional[str]:
@@ -128,36 +92,9 @@ agent = AIBrowserAgent(api_key='YOUR_API_KEY', model_name='gpt-4o-mini')
         Returns:
             Результат выполнения задачи в виде строки, или None в случае ошибки.
         """
-        try:
-            logger.info(f"Агент начал выполнение задачи: {task_prompt}")
-
-            # 1. Default:  browser_use managed Playwright driver (no driver needed)
-            driver = None  # By default let browser_use create its own driver.
-
-            # 2. CUSTOM:  Adapt Selenium-based driver
-            # if self.custom_driver:  # if injected instance of webdriver.FireFox
-            #      playwright_driver = PlaywrightFirefoxAdapter(self.custom_driver)  # Adapt.
-            #      driver = playwright_driver
-
-            # 3. Playwright driver already adapted (or pure Playwright)
-            if self.custom_driver:
-                driver = self.custom_driver
-
-            agent = Agent(task=task_prompt, llm=self.llm, driver=driver)  # Pass to agent
-            result = await agent.run()
-            logger.info("Агент завершил выполнение задачи.")
-
-            if hasattr(driver, 'close') and callable(getattr(driver, 'close')) :
-                driver.close()  # Try closing driver, if implemented
-
-            return result
-
-        except Exception as ex:
-            logger.error(f"Произошла ошибка во время выполнения задачи: ", ex, exc_info=True)
-            return None
 ```
 
-**Назначение**: Запускает агента для выполнения заданной задачи.
+**Назначение**: Запуск агента для выполнения заданной задачи, заданной в виде текстового запроса.
 
 **Параметры**:
 - `task_prompt` (str): Текст задачи для агента.
@@ -165,55 +102,43 @@ agent = AIBrowserAgent(api_key='YOUR_API_KEY', model_name='gpt-4o-mini')
 **Возвращает**:
 - `Optional[str]`: Результат выполнения задачи в виде строки, или `None` в случае ошибки.
 
-**Как работает функция**:
+**Вызывает исключения**:
+- `Exception`: Если возникает ошибка во время выполнения задачи.
 
-1.  Логирует начало выполнения задачи.
-2.  Определяет, какой драйвер использовать:
-    *   По умолчанию, `browser_use` создает свой собственный драйвер Playwright.
-    *   Если внедрен `custom_driver`, использует его.
-3.  Создает экземпляр класса `Agent` из библиотеки `browser_use`, передавая текст задачи, языковую модель и драйвер.
-4.  Запускает агента для выполнения задачи с помощью метода `run()`.
-5.  Логирует завершение выполнения задачи.
-6.  Пытается закрыть драйвер, если это возможно.
-7.  Возвращает результат выполнения задачи или `None` в случае ошибки.
+**Как работает функция**:
+1. Логирует начало выполнения задачи.
+2. Инициализирует переменную `driver` значением `None`, позволяя `browser_use` создать свой драйвер по умолчанию.
+3. Если предоставлен пользовательский драйвер (`self.custom_driver`), присваивает его переменной `driver`.
+4. Создает экземпляр класса `Agent` из библиотеки `browser_use`, передавая ему `task_prompt`, `llm` (языковую модель) и `driver`.
+5. Запускает агента для выполнения задачи с помощью `await agent.run()`.
+6. Логирует завершение выполнения задачи.
+7. Пытается закрыть драйвер, если у него есть метод `close`.
+8. Возвращает результат выполнения задачи.
+9. В случае возникновения исключения логирует ошибку и возвращает `None`.
 
 ```
-run_task
-│
-├── Логирование начала выполнения задачи
-│
-├── Определение драйвера
-│   ├── По умолчанию: driver = None
-│   └── Если внедрен custom_driver: driver = custom_driver
-│
-├── Создание экземпляра Agent (agent = Agent(...))
-│
-├── Запуск агента (result = await agent.run())
-│
-├── Логирование завершения выполнения задачи
-│
-├── Попытка закрытия драйвера (driver.close())
-│
-└── Возврат результата
+A (Прием task_prompt)
+|
+B (Инициализация драйвера)
+|
+C (Создание экземпляра Agent)
+|
+D (Запуск агента)
+|
+E (Закрытие драйвера)
+|
+F (Возврат результата)
 ```
 
 **Примеры**:
-
 ```python
-# Пример запуска агента для выполнения задачи
-task_prompt = "Найди информацию о последних новостях в мире."
-result = asyncio.run(agent.run_task(task_prompt))
-if result:
-    print("Результат выполнения задачи:")
-    print(result)
-else:
-    print("Не удалось выполнить задачу.")
+result = await agent.run_task("Найти информацию о последних новостях в мире.")
 ```
 
-### `AIBrowserAgent.find_product_alternatives`
+### `async find_product_alternatives(self, product_url: Optional[str] = None, sku: Optional[str] = None) -> Optional[str]`
 
 ```python
-    async def find_product_alternatives(self, product_url: Optional[str] = None,
+    async def find_product_alternatives(self, product_url: Optional[str] = None,\
                                         sku: Optional[str] = None) -> Optional[str]:
         """
         Ищет в сети аналоги для продукта по заданному URL или SKU.
@@ -225,30 +150,9 @@ else:
         Returns:
             Строку с описанием найденных аналогов, или None в случае ошибки.
         """
-
-        if product_url:
-            search_query = f"аналоги {product_url}"
-        elif sku:
-            search_query = f"аналоги товара с артикулом {sku}"
-        else:
-            logger.warning("Не указан ни product_url, ни sku.  Невозможно выполнить поиск аналогов.")
-            return None
-
-        encoded_search_query = urllib.parse.quote_plus(search_query)  # URL encode search query
-
-        if self.search_engine == "google":
-            search_url = f"https://www.google.com/search?q={encoded_search_query}"
-        else:  # DuckDuckGo
-            search_url = f"https://duckduckgo.com/?q={encoded_search_query}"
-
-        task_prompt = f"""Используя поисковую систему {self.search_engine}, перейди по адресу {search_url}.  
-        Найди и предоставь список из 3-5 аналогов продукта.  
-        Для каждого аналога укажи название и краткое описание."""
-
-        return await self.run_task(task_prompt)
 ```
 
-**Назначение**: Ищет в сети аналоги для продукта по заданному URL или SKU.
+**Назначение**: Поиск в сети аналогов для продукта по заданному URL или SKU.
 
 **Параметры**:
 - `product_url` (Optional[str], optional): URL продукта, для которого нужно найти аналоги. По умолчанию `None`.
@@ -258,66 +162,44 @@ else:
 - `Optional[str]`: Строку с описанием найденных аналогов, или `None` в случае ошибки.
 
 **Как работает функция**:
-
-1.  Формирует поисковый запрос на основе URL или SKU продукта.
-2.  Если не указан ни URL, ни SKU, логирует предупреждение и возвращает `None`.
-3.  Кодирует поисковый запрос для использования в URL.
-4.  Формирует URL поисковой системы (Google или DuckDuckGo) с закодированным запросом.
-5.  Формирует текст задачи для агента, указывая использовать поисковую систему и найти аналоги продукта.
-6.  Запускает агента для выполнения задачи с помощью метода `run_task()`.
-7.  Возвращает результат выполнения задачи или `None` в случае ошибки.
+1. Проверяет, передан ли `product_url` или `sku`.
+2. Если передан `product_url`, формирует поисковый запрос в формате "аналоги {product_url}".
+3. Если передан `sku`, формирует поисковый запрос в формате "аналоги товара с артикулом {sku}".
+4. Если не передан ни `product_url`, ни `sku`, логирует предупреждение и возвращает `None`.
+5. Кодирует поисковый запрос в URL-safe формат с помощью `urllib.parse.quote_plus`.
+6. Формирует URL поисковой системы (Google или DuckDuckGo) с закодированным поисковым запросом.
+7. Формирует `task_prompt` для агента, включающий инструкцию использовать указанную поисковую систему, перейти по сформированному URL и предоставить список из 3-5 аналогов продукта с названием и кратким описанием для каждого аналога.
+8. Вызывает метод `self.run_task` с сформированным `task_prompt` и возвращает результат.
 
 ```
-find_product_alternatives
-│
-├── Формирование поискового запроса
-│   ├── Если product_url: search_query = f"аналоги {product_url}"
-│   └── Если sku: search_query = f"аналоги товара с артикулом {sku}"
-│
-├── Если не указан ни URL, ни SKU: логирование и возврат None
-│
-├── Кодирование поискового запроса (encoded_search_query = urllib.parse.quote_plus(search_query))
-│
-├── Формирование URL поисковой системы
-│   ├── Если self.search_engine == "google": search_url = f"https://www.google.com/search?q={encoded_search_query}"
-│   └── Иначе: search_url = f"https://duckduckgo.com/?q={encoded_search_query}"
-│
-├── Формирование текста задачи (task_prompt)
-│
-└── Запуск агента (return await self.run_task(task_prompt))
+A (Прием product_url или sku)
+|
+B (Формирование поискового запроса)
+|
+C (Кодирование поискового запроса)
+|
+D (Формирование URL поисковой системы)
+|
+E (Формирование task_prompt)
+|
+F (Вызов run_task)
 ```
 
 **Примеры**:
-
 ```python
-# Пример поиска аналогов продукта по URL
-product_url = "https://www.apple.com/iphone-14/"
-alternatives = asyncio.run(agent.find_product_alternatives(product_url=product_url))
-if alternatives:
-    print("Найденные аналоги:")
-    print(alternatives)
-else:
-    print("Не удалось найти аналоги.")
-
-# Пример поиска аналогов продукта по SKU
-sku = "1493001"
-alternatives = asyncio.run(agent.find_product_alternatives(sku=sku))
-if alternatives:
-    print("Найденные аналоги:")
-    print(alternatives)
-else:
-    print("Не удалось найти аналоги.")
+alternatives = await agent.find_product_alternatives(product_url="https://www.apple.com/iphone-14/")
+```
+```python
+alternatives = await agent.find_product_alternatives(sku="1493001")
 ```
 
-### `AIBrowserAgent.ask`
+### `ask(self, q: str) -> Optional[str]`
 
 ```python
     def ask(self, q: str) -> Optional[str]:
         """
         Синхронная обертка для асинхронного метода ask_async.  Не рекомендуется к использованию.
         """
-        task_prompt = f"""Ответь на следующий вопрос, используя поиск в интернете, если это необходимо: {q}"""
-        return self.run_task(task_prompt)
 ```
 
 **Назначение**: Синхронная обертка для асинхронного метода `ask_async`. Не рекомендуется к использованию.
@@ -329,33 +211,23 @@ else:
 - `Optional[str]`: Ответ на вопрос в виде строки, или `None` в случае ошибки.
 
 **Как работает функция**:
-
-1.  Формирует текст задачи для агента, указывая ответить на вопрос с использованием поиска в интернете.
-2.  Запускает агента для выполнения задачи с помощью метода `run_task()`.
-3.  Возвращает результат выполнения задачи или `None` в случае ошибки.
+1. Формирует `task_prompt` для агента, включающий инструкцию ответить на заданный вопрос, используя поиск в интернете, если это необходимо.
+2. Вызывает метод `self.run_task` с сформированным `task_prompt` и возвращает результат.
 
 ```
-ask
-│
-├── Формирование текста задачи (task_prompt)
-│
-└── Запуск агента (return self.run_task(task_prompt))
+A (Прием вопроса)
+|
+B (Формирование task_prompt)
+|
+C (Вызов run_task)
 ```
 
 **Примеры**:
-
 ```python
-# Пример ответа на вопрос
-question = "Какая сейчас погода в Москве?"
-answer = agent.ask(question)  # Не рекомендуется к использованию
-if answer:
-    print("Ответ на вопрос:")
-    print(answer)
-else:
-    print("Не удалось получить ответ на вопрос.")
+answer = agent.ask("Какая сейчас погода в Москве?")
 ```
 
-### `AIBrowserAgent.ask_async`
+### `async ask_async(self, q: str) -> Optional[str]`
 
 ```python
     async def ask_async(self, q: str) -> Optional[str]:
@@ -368,11 +240,9 @@ else:
         Returns:
             Ответ на вопрос в виде строки, или None в случае ошибки.
         """
-        task_prompt = f"""Ответь на следующий вопрос, используя поиск в интернете, если это необходимо: {q}"""
-        return await self.run_task(task_prompt)
 ```
 
-**Назначение**: Отвечает на заданный вопрос, используя поиск в интернете, если это необходимо.
+**Назначение**: Ответ на заданный вопрос, используя поиск в интернете, если это необходимо.
 
 **Параметры**:
 - `q` (str): Вопрос, на который нужно ответить.
@@ -381,97 +251,59 @@ else:
 - `Optional[str]`: Ответ на вопрос в виде строки, или `None` в случае ошибки.
 
 **Как работает функция**:
-
-1.  Формирует текст задачи для агента, указывая ответить на вопрос с использованием поиска в интернете.
-2.  Запускает агента для выполнения задачи с помощью метода `run_task()`.
-3.  Возвращает результат выполнения задачи или `None` в случае ошибки.
+1. Формирует `task_prompt` для агента, включающий инструкцию ответить на заданный вопрос, используя поиск в интернете, если это необходимо.
+2. Вызывает метод `self.run_task` с сформированным `task_prompt` и возвращает результат.
 
 ```
-ask_async
-│
-├── Формирование текста задачи (task_prompt)
-│
-└── Запуск агента (return await self.run_task(task_prompt))
+A (Прием вопроса)
+|
+B (Формирование task_prompt)
+|
+C (Вызов run_task)
 ```
 
 **Примеры**:
-
 ```python
-# Пример ответа на вопрос
-question = "Какая сейчас погода в Москве?"
-answer = asyncio.run(agent.ask_async(question))  # Используем асинхронный метод напрямую
-if answer:
-    print("Ответ на вопрос:")
-    print(answer)
-else:
-    print("Не удалось получить ответ на вопрос.")
+answer = await agent.ask_async("Какая сейчас погода в Москве?")
 ```
 
 ## Функции
 
-### `main`
+### `async def main()`
 
 ```python
 async def main():
     """
     Пример использования класса BrowserAgent.
     """
-    # api_key: str = gs.credentials.openai.hypotez.api_key  # Replace with your actual method of obtaining the API key
-    api_key: str = None  # Replace with your actual method of obtaining the API key
-    model_name: str = 'gpt-4o-mini'  # gpt-4o-mini существует, если указан api_key
-
-    #########################################################################
-    # OPTIONAL:  Inject custom Chrome, Firefox, Edge driver
-    # selenium_driver = Firefox()  # (Or with args you use in Firefox class)
-    # playwright_driver = PlaywrightFirefoxAdapter(selenium_driver)
-    # agent = BrowserAgent(api_key=api_key, model_name=model_name, custom_driver = playwright_driver)
-    #########################################################################
-    agent = AIBrowserAgent(api_key=api_key, model_name=model_name) #  Default browser_use driver
-
-    # Пример поиска аналогов продукта
-    sku: str = '1493001'
-    product_url: str = None  # "https://www.apple.com/iphone-14/"  # Замените на URL интересующего вас продукта
-    alternatives = await agent.find_product_alternatives(product_url=product_url, sku=sku)
-    if alternatives:
-        print("Найденные аналоги:")
-        print(alternatives)
-    else:
-        print("Не удалось найти аналоги.")
-
-    # Пример ответа на вопрос
-    question = "Какая сейчас погода в Москве?"
-    answer = await agent.ask_async(question)  # Используем асинхронный метод напрямую
-    if answer:
-        print("Ответ на вопрос:")
-        print(answer)
-    else:
-        print("Не удалось получить ответ на вопрос.")
 ```
 
-**Назначение**: Пример использования класса `AIBrowserAgent`.
+**Назначение**: Функция `main` демонстрирует пример использования класса `AIBrowserAgent`.
 
 **Как работает функция**:
-
-1.  Определяет ключ API OpenAI и название языковой модели.
-2.  Создает экземпляр класса `AIBrowserAgent`.
-3.  Ищет аналоги продукта по SKU.
-4.  Отвечает на вопрос с использованием поиска в интернете.
+1. Определяет `api_key` и `model_name`.
+2. Создает экземпляр класса `AIBrowserAgent` с заданными параметрами.
+3. Запускает поиск аналогов продукта по SKU.
+4. Выводит найденные аналоги или сообщение об ошибке.
+5. Задает вопрос и получает ответ с помощью `ask_async`.
+6. Выводит ответ на вопрос или сообщение об ошибке.
 
 ```
-main
-│
-├── Определение ключа API и названия модели
-│
-├── Создание экземпляра AIBrowserAgent (agent = AIBrowserAgent(...))
-│
-├── Поиск аналогов продукта (alternatives = await agent.find_product_alternatives(...))
-│
-└── Ответ на вопрос (answer = await agent.ask_async(question))
+A (Определение параметров)
+|
+B (Создание экземпляра AIBrowserAgent)
+|
+C (Поиск аналогов продукта)
+|
+D (Вывод результатов поиска аналогов)
+|
+E (Задание вопроса)
+|
+F (Получение ответа на вопрос)
+|
+G (Вывод ответа на вопрос)
 ```
 
 **Примеры**:
-
-Запуск функции `main` приведет к выполнению поиска аналогов продукта и ответа на вопрос о погоде в Москве с использованием ИИ-агента.
 ```python
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())

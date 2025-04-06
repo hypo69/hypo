@@ -2,31 +2,31 @@
 
 ## Обзор
 
-Модуль `FastGpt` предоставляет класс `FastGpt`, который является провайдером для работы с сервисом `chat9.fastgpt.me`. Этот сервис предоставляет API для создания и обработки чат-комплишенов, аналогичных OpenAI. Модуль поддерживает потоковую передачу данных, а также модели `gpt-3.5-turbo`.
+Модуль `FastGpt` предоставляет класс `FastGpt`, который является провайдером для работы с API `chat9.fastgpt.me`. Этот модуль позволяет генерировать текст на основе предоставленных сообщений, используя модели, поддерживающие стриминг.
 
 ## Подробней
 
-Данный модуль используется для интеграции с сервисом FastGpt. Он позволяет отправлять запросы на генерацию текста и получать ответы в режиме реального времени благодаря поддержке потоковой передачи. Класс `FastGpt` наследуется от `AbstractProvider`, что позволяет единообразно использовать его в рамках общей архитектуры провайдеров.
+Этот модуль предназначен для интеграции с сервисом `chat9.fastgpt.me` и предоставляет интерфейс для отправки запросов на генерацию текста с использованием различных параметров, таких как модель, температура и штрафы. Он поддерживает стриминг ответов, что позволяет получать результаты по частям, а не ждать завершения всей генерации. В коде реализована логика выбора поддомена для запросов.
 
 ## Классы
 
-### `FastGpt(AbstractProvider)`
+### `FastGpt`
 
-**Описание**: Класс `FastGpt` является провайдером для работы с сервисом `chat9.fastgpt.me`.
+**Описание**: Класс `FastGpt` наследуется от `AbstractProvider` и представляет собой конкретную реализацию провайдера для работы с `chat9.fastgpt.me`.
 
 **Наследует**:
-- `AbstractProvider`: Абстрактный класс, определяющий интерфейс для всех провайдеров.
+- `AbstractProvider`: Абстрактный базовый класс для всех провайдеров.
 
-**Аттрибуты**:
-- `url` (str): URL сервиса `chat9.fastgpt.me`.
-- `working` (bool): Флаг, указывающий на работоспособность провайдера (по умолчанию `False`).
-- `needs_auth` (bool): Флаг, указывающий на необходимость аутентификации (по умолчанию `False`).
-- `supports_stream` (bool): Флаг, указывающий на поддержку потоковой передачи (по умолчанию `True`).
-- `supports_gpt_35_turbo` (bool): Флаг, указывающий на поддержку модели `gpt-3.5-turbo` (по умолчанию `True`).
-- `supports_gpt_4` (bool): Флаг, указывающий на поддержку модели `gpt-4` (по умолчанию `False`).
+**Атрибуты**:
+- `url` (str): URL-адрес сервиса `chat9.fastgpt.me`.
+- `working` (bool): Указывает, работает ли провайдер в данный момент (по умолчанию `False`).
+- `needs_auth` (bool): Указывает, требуется ли аутентификация для работы с провайдером (по умолчанию `False`).
+- `supports_stream` (bool): Указывает, поддерживает ли провайдер стриминг ответов (по умолчанию `True`).
+- `supports_gpt_35_turbo` (bool): Указывает, поддерживает ли провайдер модель `gpt-3.5-turbo` (по умолчанию `True`).
+- `supports_gpt_4` (bool): Указывает, поддерживает ли провайдер модель `gpt-4` (по умолчанию `False`).
 
 **Методы**:
-- `create_completion()`: Статический метод для создания комплишенов.
+- `create_completion`: Статический метод для создания запроса на генерацию текста.
 
 ## Функции
 
@@ -39,111 +39,117 @@ def create_completion(
     messages: list[dict[str, str]],
     stream: bool, **kwargs: Any) -> CreateResult:
     """
-    Функция создает комплишены, отправляя запросы к API `chat9.fastgpt.me`.
+    Создает запрос к API для генерации текста на основе предоставленных сообщений.
 
     Args:
-        model (str): Имя модели для использования.
-        messages (list[dict[str, str]]): Список сообщений в формате словарей.
-        stream (bool): Флаг, указывающий на необходимость потоковой передачи.
-        **kwargs (Any): Дополнительные параметры запроса.
+        model (str): Имя модели для генерации текста.
+        messages (list[dict[str, str]]): Список сообщений, используемых для генерации текста.
+        stream (bool): Флаг, указывающий, следует ли использовать потоковую передачу данных.
+        **kwargs (Any): Дополнительные параметры запроса, такие как температура, штрафы и т.д.
 
     Returns:
-        CreateResult: Результат создания комплишена. Является генератором токенов.
+        CreateResult: Генератор токенов, полученных от API.
 
-    Как работает функция:
-    1. Формирует заголовки запроса (`headers`) для отправки к API `chat9.fastgpt.me`.
-    2. Формирует JSON-данные (`json_data`) для запроса, включая сообщения, модель, параметры температуры, и т.д.
-    3. Выбирает случайный поддомен (`subdomain`) из списка `['jdaen979ew', 'chat9']`.
-    4. Отправляет POST-запрос к API с использованием `requests.post`.
-    5. Итерируется по строкам ответа, полученного от API.
-    6. Если строка содержит данные (`content`), пытается извлечь токен из JSON.
-    7. Если токен успешно извлечен, передает его через `yield`.
-    8. В случае возникновения исключения при обработке строки, пропускает её.
-
-    ASCII flowchart:
-    A [Формирование заголовков запроса]
-    ↓
-    B [Формирование JSON-данных]
-    ↓
-    C [Выбор случайного поддомена]
-    ↓
-    D [Отправка POST-запроса к API]
-    ↓
-    E [Итерация по строкам ответа]
-    ↓
-    F [Проверка наличия данных в строке]
-    ↓
-    G [Извлечение токена из JSON]
-    ↓
-    H [Передача токена через yield]
-
-    Примеры:
-    - Создание комплишена с использованием потоковой передачи:
-        >>> model = "gpt-3.5-turbo"
-        >>> messages = [{"role": "user", "content": "Hello, world!"}]
-        >>> stream = True
-        >>> result = FastGpt.create_completion(model, messages, stream)
-        >>> for token in result:
-        ...     print(token, end="")
-
-    - Создание комплишена без потоковой передачи:
-        >>> model = "gpt-3.5-turbo"
-        >>> messages = [{"role": "user", "content": "Hello, world!"}]
-        >>> stream = False
-        >>> result = FastGpt.create_completion(model, messages, stream)
-        >>> for token in result:
-        ...     print(token, end="")
-
+    Raises:
+        Exception: Если возникает ошибка при отправке запроса или обработке ответа.
     """
-    headers = {
-        'authority'         : 'chat9.fastgpt.me',
-        'accept'            : 'text/event-stream',
-        'accept-language'   : 'en,fr-FR;q=0.9,fr;q=0.8,es-ES;q=0.7,es;q=0.6,en-US;q=0.5,am;q=0.4,de;q=0.3',
-        'cache-control'     : 'no-cache',
-        'content-type'      : 'application/json',
-        'origin'            : 'https://chat9.fastgpt.me',
-        'plugins'           : '0',
-        'pragma'            : 'no-cache',
-        'referer'           : 'https://chat9.fastgpt.me/',
-        'sec-ch-ua'         : '"Not/A)Brand";v="99", "Google Chrome";v="115", "Chromium";v="115"',
-        'sec-ch-ua-mobile'  : '?0',
-        'sec-ch-ua-platform': '"macOS"',
-        'sec-fetch-dest'    : 'empty',
-        'sec-fetch-mode'    : 'cors',
-        'sec-fetch-site'    : 'same-origin',
-        'user-agent'        : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-        'usesearch'         : 'false',
-        'x-requested-with'  : 'XMLHttpRequest',
-    }
+```
 
-    json_data = {
-        'messages'          : messages,
-        'stream'            : stream,
-        'model'             : model,
-        'temperature'       : kwargs.get('temperature', 0.5),
-        'presence_penalty'  : kwargs.get('presence_penalty', 0),
-        'frequency_penalty' : kwargs.get('frequency_penalty', 0),
-        'top_p'             : kwargs.get('top_p', 1),
-    }
+**Назначение**:
+Функция `create_completion` отправляет запрос к API `chat9.fastgpt.me` для генерации текста на основе предоставленных сообщений. Она поддерживает потоковую передачу данных, что позволяет получать результаты по частям.
 
-    subdomain = random.choice([
-        'jdaen979ew',
-        'chat9'
-    ])
+**Параметры**:
+- `model` (str): Имя используемой модели (`gpt-3.5-turbo`).
+- `messages` (list[dict[str, str]]): Список сообщений, где каждое сообщение является словарем с ключами `role` и `content`.
+- `stream` (bool): Флаг, указывающий на использование потоковой передачи данных.
+- `**kwargs` (Any): Дополнительные параметры конфигурации, такие как `temperature`, `presence_penalty`, `frequency_penalty`, `top_p`.
 
-    response = requests.post(f'https://{subdomain}.fastgpt.me/api/openai/v1/chat/completions',
-                             headers=headers, json=json_data, stream=stream)
+**Возвращает**:
+- `CreateResult`: Генератор, выдающий токены (части сгенерированного текста) по мере их получения от API.
 
-    for line in response.iter_lines():
-        if line:
-            try:
-                if b'content' in line:
-                    line_json = json.loads(line.decode('utf-8').split('data: ')[1])
-                    token = line_json['choices'][0]['delta'].get(
-                        'content'
-                    )
-                    
-                    if token:
-                        yield token
-            except:
-                continue
+**Вызывает исключения**:
+- `requests.exceptions.RequestException`: В случае проблем с сетевым запросом.
+- `json.JSONDecodeError`: Если не удается декодировать JSON из ответа сервера.
+- `Exception`: В случае других ошибок при обработке ответа.
+
+**Как работает функция**:
+
+1. **Подготовка заголовков**:
+   - Формируются заголовки HTTP-запроса, необходимые для взаимодействия с API `chat9.fastgpt.me`. Устанавливаются параметры, такие как `authority`, `accept`, `content-type`, `origin`, `referer`, `user-agent` и другие.
+
+2. **Подготовка данных JSON**:
+   - Формируются данные JSON, которые будут отправлены в теле запроса. Включаются сообщения (`messages`), флаг стриминга (`stream`), имя модели (`model`) и дополнительные параметры из `kwargs`, такие как `temperature`, `presence_penalty`, `frequency_penalty` и `top_p`.
+
+3. **Выбор поддомена**:
+   - Случайным образом выбирается один из поддоменов (`jdaen979ew` или `chat9`) для отправки запроса. Это необходимо для балансировки нагрузки или обхода ограничений.
+
+4. **Отправка запроса**:
+   - Отправляется POST-запрос к API `chat9.fastgpt.me` с использованием библиотеки `requests`. Указывается URL с выбранным поддоменом, заголовки, данные JSON и флаг стриминга.
+
+5. **Обработка потока ответов**:
+   - Функция итерируется по строкам ответа, полученного от API. Каждая строка проверяется на наличие содержимого (`if line:`).
+   - Если строка содержит данные (`b'content' in line`), она декодируется из UTF-8, разделяется по строке `data: `, и извлекается JSON-объект.
+   - Из JSON-объекта извлекается токен (`token`) из поля `choices[0]['delta']['content']`. Если токен присутствует, он возвращается через `yield token`.
+   - В случае возникновения исключений при обработке строки (например, если строка не является корректным JSON), исключение игнорируется, и обработка продолжается со следующей строки.
+
+```
+Подготовка заголовков и данных JSON
+│
+Выбор поддомена (случайный выбор между 'jdaen979ew' и 'chat9')
+│
+Отправка POST-запроса к API chat9.fastgpt.me
+│
+Обработка потока ответов
+│
+Извлечение и возврат токенов (части сгенерированного текста)
+```
+
+**Примеры**:
+
+```python
+# Пример 1: Создание запроса с минимальными параметрами
+model = "gpt-3.5-turbo"
+messages = [{"role": "user", "content": "Напиши короткое приветствие."}]
+stream = True
+result = FastGpt.create_completion(model=model, messages=messages, stream=stream)
+for token in result:
+    print(token, end="")
+
+# Пример 2: Создание запроса с дополнительными параметрами
+model = "gpt-3.5-turbo"
+messages = [{"role": "user", "content": "Напиши короткий стих."}]
+stream = True
+kwargs = {"temperature": 0.7, "top_p": 0.9}
+result = FastGpt.create_completion(model=model, messages=messages, stream=stream, **kwargs)
+for token in result:
+    print(token, end="")
+
+# Пример 3: Пример обработки ошибки при декодировании JSON
+import json
+import requests
+
+class MockResponse:
+    def __init__(self, content, status_code=200):
+        self.content = content
+        self.status_code = status_code
+
+    def iter_lines(self):
+        yield self.content
+
+# Эмулируем ошибочный ответ от сервера
+error_response = MockResponse(content=b'data: {\"error\": \"Некорректный JSON\"}')
+
+# Мокируем requests.post, чтобы возвращать наш ошибочный ответ
+def mock_requests_post(*args, **kwargs):
+    return error_response
+
+# Заменяем requests.post нашей мокированной функцией
+requests.post = mock_requests_post
+
+model = "gpt-3.5-turbo"
+messages = [{"role": "user", "content": "Hello"}]
+stream = True
+
+result = FastGpt.create_completion(model=model, messages=messages, stream=stream)
+for token in result:
+    print(token)

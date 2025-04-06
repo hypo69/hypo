@@ -1,31 +1,32 @@
 # Модуль для создания изображений на основе текстовых запросов
 ## Обзор
 
-Модуль `create_images.py` предназначен для интеграции функциональности генерации изображений в систему обработки текстовых сообщений. Он содержит класс `CreateImagesProvider`, который расширяет возможности базового провайдера, позволяя обрабатывать запросы на создание изображений, встроенные в текстовые сообщения. Модуль использует регулярные выражения для поиска специальных тегов `<img data-prompt="...">`, содержащих текстовые подсказки для генерации изображений.
+Модуль `create_images.py` предназначен для создания изображений на основе текстовых запросов, используя функциональность DALL-E 3 или аналогичных генераторов изображений. Он предоставляет класс `CreateImagesProvider`, который обрабатывает запросы на создание изображений, встроенные в текстовые сообщения.
 
 ## Подробней
 
-Этот модуль позволяет динамически создавать изображения на основе текстовых запросов, извлеченных из сообщений. Он использует два подхода к созданию изображений: синхронный и асинхронный, что позволяет интегрировать его в различные типы приложений.
+Модуль позволяет интегрировать процесс генерации изображений непосредственно в текстовое взаимодействие с AI-моделями. Он использует специальные теги `<img data-prompt="keywords for the image">` для указания запросов на генерацию изображений. При обнаружении такого тега, модуль вызывает соответствующие функции для создания изображений (синхронные или асинхронные) и вставляет результаты в текст ответа.
 
-Класс `CreateImagesProvider` принимает базового провайдера и две функции для создания изображений (синхронную и асинхронную) в качестве аргументов. Это позволяет использовать различные API и модели для генерации изображений.
-
-Основная логика работы модуля заключается в поиске в сообщениях специальных тегов `<img data-prompt="...">`, извлечении текстовой подсказки из атрибута `data-prompt` и использовании предоставленных функций для создания изображений на основе этой подсказки.
+Расположение модуля `hypotez/src/endpoints/gpt4free/g4f/providers/create_images.py` указывает, что он является частью системы для работы с различными провайдерами AI-сервисов, в частности, для интеграции с GPT4Free.
 
 ## Классы
 
 ### `CreateImagesProvider`
 
-**Описание**: Провайдер для создания изображений на основе текстовых запросов.
+**Описание**: Класс `CreateImagesProvider` предназначен для обработки запросов на создание изображений на основе текстовых подсказок. Он использует предоставленные функции создания изображений и интегрирует их в процесс обработки сообщений.
+
+**Принцип работы**:
+Класс получает на вход другого провайдера, который отвечает за обработку текста, а также две функции: для синхронного и асинхронного создания изображений. Когда в тексте сообщения обнаруживается тег `<img data-prompt="...">`, класс вызывает соответствующую функцию создания изображений и вставляет результат в ответ.
 
 **Наследует**:
-- `BaseProvider`: Базовый класс для всех провайдеров.
+- `BaseProvider`: Базовый класс для провайдеров, предоставляющий общую функциональность.
 
 **Атрибуты**:
-- `provider` (ProviderType): Базовый провайдер, который обрабатывает задачи, не связанные с изображениями.
+- `provider` (ProviderType): Провайдер, обрабатывающий остальные задачи, не связанные с генерацией изображений.
 - `create_images` (callable): Функция для синхронного создания изображений.
 - `create_images_async` (callable): Функция для асинхронного создания изображений.
-- `system_message` (str): Системное сообщение, объясняющее возможности создания изображений.
-- `include_placeholder` (bool): Флаг, определяющий, следует ли включать заполнитель изображения в вывод.
+- `system_message` (str): Системное сообщение, объясняющее возможность генерации изображений.
+- `include_placeholder` (bool): Флаг, определяющий, нужно ли включать placeholder изображения в вывод.
 - `__name__` (str): Имя провайдера.
 - `url` (str): URL провайдера.
 - `working` (bool): Указывает, работает ли провайдер.
@@ -33,11 +34,10 @@
 
 **Методы**:
 - `__init__`: Инициализирует `CreateImagesProvider`.
-- `create_completion`: Создает результат завершения, обрабатывая любые запросы на создание изображений, найденные в сообщениях.
-- `create_async`: Асинхронно создает ответ, обрабатывая любые запросы на создание изображений, найденные в сообщениях.
+- `create_completion`: Создает результат завершения, обрабатывая подсказки для создания изображений в сообщениях.
+- `create_async`: Асинхронно создает ответ, обрабатывая подсказки для создания изображений в сообщениях.
 
 ### `__init__`
-
 ```python
 def __init__(
         self,
@@ -57,23 +57,90 @@ def __init__(
             system_message (str, optional): System message to be prefixed to messages. Defaults to a predefined message.
             include_placeholder (bool, optional): Whether to include image placeholders in the output. Defaults to True.
         """
-        ...
+        self.provider = provider
+        self.create_images = create_images
+        self.create_images_async = create_async
+        self.system_message = system_message
+        self.include_placeholder = include_placeholder
+        self.__name__ = provider.__name__
+        self.url = provider.url
+        self.working = provider.working
+        self.supports_stream = provider.supports_stream
 ```
 
 **Назначение**: Инициализирует экземпляр класса `CreateImagesProvider`.
 
 **Параметры**:
-- `provider` (ProviderType): Базовый провайдер, который будет использоваться для обработки не связанных с изображениями задач.
-- `create_images` (callable): Функция, используемая для синхронного создания изображений.
-- `create_async` (callable): Функция, используемая для асинхронного создания изображений.
-- `system_message` (str, optional): Системное сообщение, которое будет добавлено в начало сообщений. По умолчанию используется предопределенное сообщение `system_message`.
-- `include_placeholder` (bool, optional): Определяет, следует ли включать заполнитель изображения в вывод. По умолчанию `True`.
+- `provider` (ProviderType): Провайдер, который будет использоваться для обработки текста и других задач, не связанных с созданием изображений.
+- `create_images` (callable): Функция, вызываемая для создания изображений в синхронном режиме.
+- `create_async` (callable): Функция, вызываемая для создания изображений в асинхронном режиме.
+- `system_message` (str, optional): Системное сообщение, добавляемое в начало сообщений для указания возможности генерации изображений. По умолчанию используется значение `system_message`.
+- `include_placeholder` (bool, optional): Флаг, определяющий, следует ли включать placeholder (например, `<img data-prompt="...">`) в вывод. По умолчанию `True`.
 
 **Как работает функция**:
-1.  Сохраняет переданные аргументы в качестве атрибутов экземпляра класса.
 
+1.  **Присвоение значений параметрам**:
+    - Значения переданных параметров присваиваются атрибутам экземпляра класса:
+        - `self.provider = provider`
+        - `self.create_images = create_images`
+        - `self.create_images_async = create_async`
+        - `self.system_message = system_message`
+        - `self.include_placeholder = include_placeholder`
+        - `self.__name__ = provider.__name__`
+        - `self.url = provider.url`
+        - `self.working = provider.working`
+        - `self.supports_stream = provider.supports_stream`
+
+Схема работы функции:
+
+```
+Начало инициализации
+↓
+Присвоение provider
+↓
+Присвоение create_images
+↓
+Присвоение create_images_async
+↓
+Присвоение system_message
+↓
+Присвоение include_placeholder
+↓
+Присвоение __name__
+↓
+Присвоение url
+↓
+Присвоение working
+↓
+Присвоение supports_stream
+↓
+Конец инициализации
+```
+
+**Примеры**:
+```python
+# Пример инициализации CreateImagesProvider с использованием фиктивных функций и провайдера
+class MockProvider:
+    __name__ = "MockProvider"
+    url = "http://example.com"
+    working = True
+    supports_stream = False
+
+def mock_create_images(prompt: str):
+    return f"Image created synchronously with prompt: {prompt}"
+
+async def mock_create_async(prompt: str):
+    return f"Image created asynchronously with prompt: {prompt}"
+
+provider = CreateImagesProvider(
+    provider = MockProvider(),
+    create_images = mock_create_images,
+    create_async = mock_create_async,
+    system_message = "This is a test system message.",
+    include_placeholder = False
+)
+```
 ### `create_completion`
-
 ```python
 def create_completion(
         self,
@@ -96,68 +163,136 @@ def create_completion(
 
         Note:
             This method processes messages to detect image creation prompts. When such a prompt is found, 
+            it calls messages to detect image creation prompts. When such a prompt is found, 
             it calls the synchronous image creation function and includes the resulting image in the output.
         """
-        ...
+        messages.insert(0, {"role": "system", "content": self.system_message})
+        buffer = ""
+        for chunk in self.provider.create_completion(model, messages, stream, **kwargs):
+            if isinstance(chunk, ImageResponse):
+                yield chunk
+            elif isinstance(chunk, str) and buffer or "<" in chunk:
+                buffer += chunk
+                if ">" in buffer:
+                    match = re.search(r'<img data-prompt="(.*?)">', buffer)
+                    if match:
+                        placeholder, prompt = match.group(0), match.group(1)
+                        start, append = buffer.split(placeholder, 1)
+                        if start:
+                            yield start
+                        if self.include_placeholder:
+                            yield placeholder
+                        if debug.logging:
+                            print(f"Create images with prompt: {prompt}")
+                        yield from self.create_images(prompt)
+                        if append:
+                            yield append
+                    else:
+                        yield buffer
+                    buffer = ""
+            else:
+                yield chunk
 ```
 
 **Назначение**: Создает результат завершения, обрабатывая запросы на создание изображений, найденные в сообщениях.
 
 **Параметры**:
-- `model` (str): Модель, используемая для создания.
-- `messages` (Messages): Сообщения для обработки, которые могут содержать запросы на создание изображений.
-- `stream` (bool, optional): Указывает, следует ли передавать результаты потоком. По умолчанию `False`.
-- `**kwargs`: Дополнительные именованные аргументы для провайдера.
+- `model` (str): Модель, используемая для создания завершения.
+- `messages` (Messages): Список сообщений для обработки, которые могут содержать запросы на создание изображений.
+- `stream` (bool, optional): Указывает, следует ли использовать потоковый режим. По умолчанию `False`.
+- `**kwargs`: Дополнительные именованные аргументы, передаваемые провайдеру.
 
 **Возвращает**:
-- `CreateResult`: Части обработанных сообщений, включая данные изображения, если это применимо.
+- `CreateResult`: Куски обработанных сообщений, включая данные изображений, если применимо (yield).
 
 **Как работает функция**:
 
-1.  Добавляет системное сообщение в начало списка сообщений, чтобы объяснить возможности создания изображений.
-2.  Итерируется по частям результата, полученного от базового провайдера.
-3.  Если текущая часть является экземпляром `ImageResponse`, она передается дальше.
-4.  Если текущая часть является строкой и содержит `<img data-prompt="...">`, извлекается подсказка для создания изображения.
-5.  Вызывается синхронная функция создания изображения `self.create_images` с извлеченной подсказкой.
-6.  Результат создания изображения передается дальше.
+1.  **Добавление системного сообщения**:
+    - В начало списка сообщений добавляется системное сообщение, объясняющее возможность генерации изображений:
+      `messages.insert(0, {"role": "system", "content": self.system_message})`
+2.  **Инициализация буфера**:
+    - Инициализируется пустая строка `buffer` для накопления данных.
+3.  **Обработка чанков**:
+    - Цикл по чанкам, возвращаемым методом `create_completion` базового провайдера:
+      `for chunk in self.provider.create_completion(model, messages, stream, **kwargs):`
+        - Если чанк является экземпляром `ImageResponse`, он возвращается:
+          `if isinstance(chunk, ImageResponse): yield chunk`
+        - Если чанк является строкой и содержит `<` или `buffer` не пуст:
+            - Чанк добавляется в буфер: `buffer += chunk`
+            - Если в буфере есть `>`:
+                - Поиск тега `<img data-prompt="(.*?)">` в буфере: `match = re.search(r'<img data-prompt="(.*?)">', buffer)`
+                - Если тег найден:
+                    - Извлечение placeholder и prompt из найденного тега: `placeholder, prompt = match.group(0), match.group(1)`
+                    - Разделение буфера на части до и после placeholder: `start, append = buffer.split(placeholder, 1)`
+                    - Возврат части до placeholder, если она есть: `if start: yield start`
+                    - Возврат placeholder, если `self.include_placeholder` равен `True`: `if self.include_placeholder: yield placeholder`
+                    - Вывод сообщения в консоль (если включено логирование): `if debug.logging: print(f"Create images with prompt: {prompt}")`
+                    - Вызов функции `self.create_images` для создания изображений и возврат результатов: `yield from self.create_images(prompt)`
+                    - Возврат части после placeholder, если она есть: `if append: yield append`
+                    - Очистка буфера: `buffer = ""`
+                - Если тег не найден, возвращается весь буфер: `else: yield buffer`
+            - Иначе, чанк возвращается без изменений: `else: yield chunk`
+
+Схема работы функции:
 
 ```
-Сообщения -> Вставить системное сообщение
-     ↓
-     → Итерировать по частям результата от базового провайдера
-     ↓
-     Проверить тип части: ImageResponse или строка с "<"
-     ↓
-     Если ImageResponse:
-     |   ↓
-     |   Передать часть дальше
-     |
-     Если строка с "<":
-     ↓
-     Извлечь подсказку для создания изображения
-     ↓
-     Вызвать self.create_images(prompt)
-     ↓
-     Передать результат создания изображения дальше
+Начало create_completion
+↓
+Добавление системного сообщения
+↓
+Инициализация буфера
+↓
+Начало цикла обработки чанков
+│
+├───>  Чанк - ImageResponse?
+│     └───> Да: возврат чанка
+│     └───> Нет: Чанк - строка и содержит "<" или буфер не пуст?
+│           └───> Да: Добавление чанка в буфер
+│           │     └───> В буфере есть ">"?
+│           │           └───> Да: Поиск тега <img data-prompt="(.*?)">
+│           │           │     └───> Тег найден?
+│           │           │           └───> Да: Извлечение placeholder и prompt
+│           │           │           │     └───> Разделение буфера
+│           │           │           │     └───> Возврат части до placeholder (если есть)
+│           │           │           │     └───> Возврат placeholder (если нужно)
+│           │           │           │     └───> Вызов create_images и возврат результата
+│           │           │           │     └───> Возврат части после placeholder (если есть)
+│           │           │           │     └───> Очистка буфера
+│           │           │           └───> Нет: Возврат буфера
+│           │           └───> Нет: (продолжение цикла)
+│           └───> Нет: возврат чанка
+│
+└───> Конец цикла
 ```
 
 **Примеры**:
-
-Пример вызова функции `create_completion`:
-
 ```python
-provider = CreateImagesProvider(provider=..., create_images=..., create_async=...)
-model = "dall-e-3"
-messages = [{"role": "user", "content": "Создай изображение: <img data-prompt='красивый пейзаж'>"},
-            {"role": "assistant", "content": "Вот результат:"}]
-stream = False
-result = provider.create_completion(model=model, messages=messages, stream=stream)
+# Пример использования create_completion с мок-провайдером и мок-функциями
+class MockProvider:
+    def create_completion(self, model, messages, stream, **kwargs):
+        yield "This is a test message with <img data-prompt='test image prompt'> and some additional text."
+
+def mock_create_images(prompt: str):
+    yield f"Image created synchronously with prompt: {prompt}"
+
+async def mock_create_async(prompt: str):
+    return f"Image created asynchronously with prompt: {prompt}"
+
+provider = CreateImagesProvider(
+    provider = MockProvider(),
+    create_images = mock_create_images,
+    create_async = mock_create_async,
+    system_message = "This is a test system message.",
+    include_placeholder = True
+)
+
+result = provider.create_completion(model="test_model", messages=[{"role": "user", "content": "test"}])
+for item in result:
+    print(item)
 ```
-
 ### `create_async`
-
 ```python
-async def create_async(
+    async def create_async(
         self,
         model: str,
         messages: Messages,
@@ -178,51 +313,114 @@ async def create_async(
             This method processes messages to detect image creation prompts. When such a prompt is found, 
             it calls the asynchronous image creation function and includes the resulting image in the output.
         """
-        ...
+        messages.insert(0, {"role": "system", "content": self.system_message})
+        response = await self.provider.create_async(model, messages, **kwargs)
+        matches = re.findall(r'(<img data-prompt="(.*?)">)', response)
+        results = []
+        placeholders = []
+        for placeholder, prompt in matches:
+            if placeholder not in placeholders:
+                if debug.logging:
+                    print(f"Create images with prompt: {prompt}")
+                results.append(self.create_images_async(prompt))
+                placeholders.append(placeholder)
+        results = await asyncio.gather(*results)
+        for idx, result in enumerate(results):
+            placeholder = placeholder[idx]
+            if self.include_placeholder:
+                result = placeholder + result
+            response = response.replace(placeholder, result)
+        return response
 ```
 
 **Назначение**: Асинхронно создает ответ, обрабатывая запросы на создание изображений, найденные в сообщениях.
 
 **Параметры**:
-- `model` (str): Модель, используемая для создания.
-- `messages` (Messages): Сообщения для обработки, которые могут содержать запросы на создание изображений.
-- `**kwargs`: Дополнительные именованные аргументы для провайдера.
+- `model` (str): Модель, используемая для создания ответа.
+- `messages` (Messages): Список сообщений для обработки, которые могут содержать запросы на создание изображений.
+- `**kwargs`: Дополнительные именованные аргументы, передаваемые провайдеру.
 
 **Возвращает**:
-- `str`: Обработанная строка ответа, включающая асинхронно сгенерированные данные изображения, если это применимо.
+- `str`: Обработанная строка ответа, включающая данные сгенерированных изображений (если применимо).
 
 **Как работает функция**:
 
-1.  Добавляет системное сообщение в начало списка сообщений, чтобы объяснить возможности создания изображений.
-2.  Вызывает асинхронную функцию создания `self.provider.create_async` для получения ответа от базового провайдера.
-3.  Ищет в ответе теги `<img data-prompt="...">` с использованием регулярного выражения.
-4.  Извлекает подсказки для создания изображений из найденных тегов.
-5.  Вызывает асинхронную функцию создания изображения `self.create_images_async` для каждой подсказки.
-6.  Заменяет теги `<img data-prompt="...">` в ответе на результаты создания изображений.
+1.  **Добавление системного сообщения**:
+    - В начало списка сообщений добавляется системное сообщение, объясняющее возможность генерации изображений:
+      `messages.insert(0, {"role": "system", "content": self.system_message})`
+2.  **Получение ответа от базового провайдера**:
+    - Асинхронно вызывается метод `create_async` базового провайдера:
+      `response = await self.provider.create_async(model, messages, **kwargs)`
+3.  **Поиск тегов изображений**:
+    - Поиск всех тегов `<img data-prompt="(.*?)">` в ответе:
+      `matches = re.findall(r'(<img data-prompt="(.*?)">)', response)`
+4.  **Создание задач для генерации изображений**:
+    - Цикл по найденным тегам:
+      `for placeholder, prompt in matches:`
+        - Если placeholder еще не обрабатывался:
+          `if placeholder not in placeholders:`
+            - Вывод сообщения в консоль (если включено логирование):
+              `if debug.logging: print(f"Create images with prompt: {prompt}")`
+            - Добавление асинхронной задачи `self.create_images_async(prompt)` в список `results`.
+            - Добавление `placeholder` в список `placeholders`.
+5.  **Ожидание завершения всех задач**:
+    - Асинхронное ожидание завершения всех задач генерации изображений:
+      `results = await asyncio.gather(*results)`
+6.  **Замена placeholder'ов на результаты**:
+    - Цикл по результатам генерации изображений:
+      `for idx, result in enumerate(results):`
+        - Получение соответствующего `placeholder`: `placeholder = placeholder[idx]`
+        - Если нужно включать placeholder в результат: `if self.include_placeholder: result = placeholder + result`
+        - Замена `placeholder` на результат в строке `response`: `response = response.replace(placeholder, result)`
+7.  **Возврат обработанного ответа**:
+    - Возврат строки `response` с замененными placeholder'ами на сгенерированные изображения: `return response`
+
+Схема работы функции:
 
 ```
-Сообщения -> Вставить системное сообщение
-     ↓
-     → Вызвать асинхронную функцию создания self.provider.create_async
-     ↓
-     Найти теги <img data-prompt="...">
-     ↓
-     Извлечь подсказки для создания изображений
-     ↓
-     Вызвать асинхронную функцию создания изображения self.create_images_async для каждой подсказки
-     ↓
-     Заменить теги <img data-prompt="..."> на результаты создания изображений
-     ↓
-     Вернуть обработанную строку ответа
+Начало create_async
+↓
+Добавление системного сообщения
+↓
+Получение ответа от базового провайдера
+↓
+Поиск тегов изображений
+↓
+Создание задач для генерации изображений
+↓
+Ожидание завершения всех задач
+↓
+Замена placeholder'ов на результаты
+↓
+Возврат обработанного ответа
+↓
+Конец create_async
 ```
 
 **Примеры**:
-
-Пример вызова функции `create_async`:
-
 ```python
-provider = CreateImagesProvider(provider=..., create_images=..., create_async=...)
-model = "dall-e-3"
-messages = [{"role": "user", "content": "Создай изображение: <img data-prompt='красивый пейзаж'>"},
-            {"role": "assistant", "content": "Вот результат:"}]
-result = await provider.create_async(model=model, messages=messages)
+# Пример использования create_async с мок-провайдером и мок-функциями
+import asyncio
+
+class MockProvider:
+    async def create_async(self, model, messages, **kwargs):
+        return "This is a test message with <img data-prompt='test image prompt'> and some additional text."
+
+async def mock_create_async(prompt: str):
+    return f"Image created asynchronously with prompt: {prompt}"
+
+provider = CreateImagesProvider(
+    provider = MockProvider(),
+    create_images = lambda x: x,  # Mock для синхронной функции
+    create_async = mock_create_async,
+    system_message = "This is a test system message.",
+    include_placeholder = True
+)
+
+async def main():
+    result = await provider.create_async(model="test_model", messages=[{"role": "user", "content": "test"}])
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```

@@ -1,23 +1,12 @@
-# Модуль для работы с Google Bard через неофициальный API
-========================================================
-
-Модуль содержит функции для взаимодействия с Google Bard, используя неофициальный API. Он предоставляет возможность отправлять текстовые запросы к Bard и получать ответы.
-
-## Оглавление
-- [Обзор](#обзор)
-- [Подробнее](#подробнее)
-- [Функции](#функции)
-    - [`_create_completion`](#_create_completion)
+# Модуль для работы с Google Bard
 
 ## Обзор
 
-Этот модуль предоставляет способ взаимодействия с моделью Google Bard.
-Он использует `requests` для отправки запросов к API Bard и `browser_cookie3` для получения необходимых cookie для аутентификации.
+Модуль предоставляет функциональность для взаимодействия с Google Bard, используя cookies для аутентификации. Он включает в себя функцию для создания запросов к Bard и получения ответов.
 
 ## Подробнее
 
-Модуль предназначен для использования в проектах, требующих интеграции с Google Bard для генерации текста.
-Он обрабатывает установку прокси, формирование запросов и извлечение ответов от API Bard.
+Этот модуль предназначен для интеграции с Google Bard, позволяя отправлять текстовые запросы и получать ответы, используя API Bard. Модуль использует cookies для аутентификации, что позволяет обходить некоторые ограничения доступа. Важно отметить, что для работы модуля требуется действующий прокси-сервер, так как Google Bard может быть недоступен в некоторых странах.
 
 ## Функции
 
@@ -29,71 +18,143 @@ def _create_completion(model: str, messages: list, stream: bool, **kwargs):
     Создает запрос к Google Bard и возвращает ответ.
 
     Args:
-        model (str): Модель для использования (в данном случае всегда 'Palm2').
-        messages (list): Список сообщений для отправки в Bard, где каждое сообщение содержит роль ('user' или 'assistant') и контент.
-        stream (bool): Флаг, указывающий, использовать ли потоковую передачу данных. В данном коде всегда `False`.
-        **kwargs: Дополнительные аргументы, такие как прокси.
+        model (str): Название используемой модели.
+        messages (list): Список сообщений для отправки в Bard.
+        stream (bool): Флаг, указывающий, использовать ли потоковый режим.
+        **kwargs: Дополнительные аргументы, такие как proxy.
 
     Returns:
-        Generator[str, None, None]: Генератор, выдающий текст ответа от Bard.
+        Generator[str, None, None]: Генератор, выдающий части ответа от Bard.
 
     Raises:
-        Отсутствуют явные исключения, но функция может выдать исключение при сетевых проблемах или неверных данных.
+        Exception: Если возникает ошибка при выполнении запроса.
+
+    Как работает функция:
+    1. Извлекает cookie '__Secure-1PSID' из браузера Chrome для аутентификации.
+    2. Форматирует список сообщений в строку, пригодную для отправки в Bard.
+    3. Проверяет наличие прокси-сервера и выводит предупреждение, если он не указан.
+    4. Инициализирует параметры 'snlm0e', 'conversation_id', 'response_id', 'choice_id'.
+    5. Создает сессию requests и устанавливает прокси, если он предоставлен.
+    6. Устанавливает заголовки для запроса, включая cookie.
+    7. Получает значение 'SNlM0e' из главной страницы Bard.
+    8. Формирует параметры запроса.
+    9. Формирует данные запроса, включая отформатированный prompt.
+    10. Отправляет POST-запрос к Bard API.
+    11. Извлекает и генерирует ответ из полученных данных.
+    12. В случае ошибки возвращает 'error'.
+
+    ASCII flowchart:
+
+    Получение cookie  __Secure-1PSID
+        ↓
+    Форматирование сообщений
+        ↓
+    Проверка прокси
+        ↓
+    Инициализация параметров
+        ↓
+    Создание сессии requests
+        ↓
+    Установка заголовков
+        ↓
+    Получение SNlM0e
+        ↓
+    Формирование параметров запроса
+        ↓
+    Формирование данных запроса
+        ↓
+    Отправка POST-запроса
+        ↓
+    Извлечение и генерация ответа
+        ↓
+    Конец
+
+    Примеры:
+        >>> messages = [{'role': 'user', 'content': 'Hello, Bard!'}]
+        >>> for response in _create_completion(model='Palm2', messages=messages, stream=False):
+        ...     print(response)
+        Привет, как я могу помочь вам сегодня?
     """
+    psid = {cookie.name: cookie.value for cookie in browser_cookie3.chrome(
+        domain_name='.google.com')}['__Secure-1PSID']
+    
+    formatted = '\n'.join([
+        '%s: %s' % (message['role'], message['content']) for message in messages
+    ])
+    prompt = f'{formatted}\nAssistant:'
+
+    proxy = kwargs.get('proxy', False)
+    if proxy == False:
+        print('warning!, you did not give a proxy, a lot of countries are banned from Google Bard, so it may not work')
+    
+    snlm0e = None
+    conversation_id = None
+    response_id = None
+    choice_id = None
+
+    client = requests.Session()
+    client.proxies = {
+        'http': f'http://{proxy}',
+        'https': f'http://{proxy}'} if proxy else None
+
+    client.headers = {
+        'authority': 'bard.google.com',
+        'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        'origin': 'https://bard.google.com',
+        'referer': 'https://bard.google.com/',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+        'x-same-domain': '1',
+        'cookie': f'__Secure-1PSID={psid}'
+    }
+
+    snlm0e = re.search(r'SNlM0e\\":\\"(.*?)\\"',
+                    client.get('https://bard.google.com/').text).group(1) if not snlm0e else snlm0e
+
+    params = {
+        'bl': 'boq_assistant-bard-web-server_20230326.21_p0',
+        '_reqid': random.randint(1111, 9999),
+        'rt': 'c'
+    }
+
+    data = {
+        'at': snlm0e,
+        'f.req': json.dumps([None, json.dumps([[prompt], None, [conversation_id, response_id, choice_id]])])}
+
+    intents = '.'.join([
+        'assistant',
+        'lamda',
+        'BardFrontendService'
+    ])
+
+    response = client.post(f'https://bard.google.com/_/BardChatUi/data/{intents}/StreamGenerate',
+                        data=data, params=params)
+
+    chat_data = json.loads(response.content.splitlines()[3])[0][2]
+    if chat_data:
+        json_chat_data = json.loads(chat_data)
+
+        yield json_chat_data[0][0]
+        
+    else:
+        yield 'error'
 ```
+
+### `params`
+
+```python
+params = f'g4f.Providers.{os.path.basename(__file__)[:-3]} supports: ' + \
+    '(%s)' % ', '.join([f"{name}: {get_type_hints(_create_completion)[name].__name__}" for name in _create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]])
+```
+
+**Назначение**:
+Формирует строку с информацией о поддержке параметров функцией `_create_completion`.
 
 **Как работает функция**:
-
-1.  **Извлечение cookie**: Функция пытается извлечь cookie `__Secure-1PSID` из браузера Chrome, используя библиотеку `browser_cookie3`.
-
-2.  **Форматирование сообщений**: Входные сообщения форматируются в строку, где каждое сообщение объединяется с ролью и контентом.
-
-3.  **Настройка прокси**: Если указан прокси, он используется для всех запросов.
-
-4.  **Инициализация параметров**: Инициализируются параметры `snlm0e`, `conversation_id`, `response_id` и `choice_id`.
-
-5.  **Создание HTTP клиента**: Создается сессия `requests.Session()` и устанавливаются заголовки, включая cookie.
-
-6.  **Получение `SNlM0e`**: Если `snlm0e` не определен, он извлекается из HTML главной страницы Bard.
-
-7.  **Формирование параметров запроса**: Формируются параметры запроса, включая случайный `_reqid`.
-
-8.  **Формирование данных запроса**: Формируются данные запроса, включая отформатированный запрос (`prompt`).
-
-9.  **Определение intents**: Определяются intents для запроса.
-
-10. **Отправка запроса**: Отправляется POST-запрос к API Bard.
-
-11. **Обработка ответа**: Ответ разделяется на строки, извлекается JSON и возвращается текст ответа.
-
-12. **Обработка ошибок**: Если ответ пустой, возвращается строка `'error'`.
-
-```mermaid
-graph TD
-    A[Извлечение cookie] --> B{Форматирование сообщений}
-    B --> C{Настройка прокси}
-    C --> D{Инициализация параметров}
-    D --> E[Создание HTTP клиента]
-    E --> F{Получение SNlM0e}
-    F --> G{Формирование параметров запроса}
-    G --> H{Формирование данных запроса}
-    H --> I{Определение intents}
-    I --> J[Отправка POST-запроса]
-    J --> K{Обработка ответа}
-    K --> L{Вывод результата}
-    L --> M[Завершение]
-```
+1.  Извлекает имя текущего файла модуля без расширения `.py`.
+2.  Получает аннотации типов параметров функции `_create_completion`.
+3.  Формирует строку, содержащую информацию о поддерживаемых параметрах и их типах.
 
 **Примеры**:
 
 ```python
-# Пример вызова функции
-messages = [
-    {'role': 'user', 'content': 'Напиши короткое стихотворение о космосе.'}
-]
-#Предположим, что browser_cookie3 может получить cookie __Secure-1PSID из вашего браузера
-#psid_value = "ваш_psid_cookie_из_браузера"
-
-#with mock.patch("browser_cookie3.chrome", return_value=[Mock(name='__Secure-1PSID', value=psid_value)]):
-#    for response in _create_completion(model='Palm2', messages=messages, stream=False):
-#        print(response)
+print(params) # g4f.Providers.Bard supports: (model: str, messages: list, stream: bool, kwargs: dict)

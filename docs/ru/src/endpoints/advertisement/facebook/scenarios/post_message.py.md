@@ -2,19 +2,11 @@
 
 ## Обзор
 
-Модуль `post_message.py` предназначен для автоматизации процесса публикации сообщений в Facebook, включая добавление заголовка, описания и медиафайлов. Он использует Selenium WebDriver для взаимодействия с веб-интерфейсом Facebook.
+Модуль `post_message.py` предназначен для автоматизации процесса публикации сообщений в Facebook, включая ввод заголовка и описания, загрузку медиафайлов и обновление подписей к изображениям.
 
-## Подробнее
+## Подробней
 
-Этот модуль содержит функции для выполнения следующих действий:
-
-- Отправка заголовка и описания кампании в поле сообщения.
-- Загрузка медиафайлов (изображений и видео) в раздел изображений.
-- Обновление подписей для загруженных медиафайлов.
-- Публикация сообщения.
-- Управление процессом продвижения поста.
-
-Модуль использует локаторы, хранящиеся в JSON-файле, для определения элементов веб-страницы, с которыми необходимо взаимодействовать.
+Модуль предоставляет функции для взаимодействия с веб-интерфейсом Facebook с использованием Selenium WebDriver. Он автоматизирует шаги, необходимые для создания и публикации сообщений, такие как открытие формы добавления сообщения, ввод текста, загрузка изображений и видео, а также публикация самого сообщения.
 
 ## Классы
 
@@ -26,16 +18,16 @@
 
 ```python
 def post_title(d: Driver, message: SimpleNamespace | str) -> bool:
-    """ Отправляет заголовок и описание кампании в поле сообщения.
+    """ Sends the title and description of a campaign to the post message box.
 
     Args:
-        d (Driver): Инстанс драйвера, используемый для взаимодействия с веб-страницей.
-        message (SimpleNamespace | str): Объект, содержащий заголовок и описание для отправки.
+        d (Driver): The driver instance used for interacting with the webpage.
+        category (SimpleNamespace): The category containing the title and description to be sent.
 
     Returns:
-        bool: `True`, если заголовок и описание были успешно отправлены, иначе `None`.
+        bool: `True` if the title and description were sent successfully, otherwise `None`.
 
-    Example:
+    Examples:
         >>> driver = Driver(...)
         >>> category = SimpleNamespace(title="Campaign Title", description="Campaign Description")
         >>> post_title(driver, category)
@@ -43,72 +35,60 @@ def post_title(d: Driver, message: SimpleNamespace | str) -> bool:
     """
 ```
 
-**Назначение**: Отправляет заголовок и описание сообщения (или кампании) в соответствующее поле на странице Facebook.
+**Назначение**: Отправляет заголовок и описание кампании в поле сообщения.
 
 **Параметры**:
-
-- `d` (Driver): Инстанс драйвера веб-браузера Selenium для управления браузером.
-- `message` (SimpleNamespace | str): Объект, содержащий заголовок и описание сообщения. Если это `SimpleNamespace`, ожидается наличие атрибутов `title` и `description`. Если это `str`, то используется непосредственно как текст сообщения.
+- `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+- `message` (SimpleNamespace | str): Объект SimpleNamespace или строка, содержащая заголовок и описание для отправки.
 
 **Возвращает**:
-
-- `bool`: `True`, если отправка прошла успешно, иначе `None`.
+- `bool`: `True`, если заголовок и описание были успешно отправлены, иначе `None`.
 
 **Как работает функция**:
 
-1.  **Прокрутка страницы**: Прокручивает страницу вверх, чтобы убедиться, что поле сообщения видимо.
-2.  **Открытие поля добавления сообщения**: Кликает на локатор, который открывает поле для добавления нового сообщения.
-3.  **Формирование сообщения**: Если `message` это `SimpleNamespace`, формирует строку сообщения, объединяя заголовок и описание с новой строкой между ними. Если `message` это строка, то она используется как есть.
-4.  **Отправка сообщения**: Отправляет сформированное сообщение в поле ввода сообщения.
+1. Прокручивает страницу назад.
+2. Открывает окно добавления сообщения.
+3. Добавляет сообщение в поле сообщения, формируя его из заголовка и описания, если `message` - экземпляр `SimpleNamespace`, или используя `message` напрямую, если это строка.
 
-**ASII flowchart**:
+**ASCII flowchart**:
 
 ```
-A: Прокрутка страницы вверх
-↓
-B: Открытие поля добавления сообщения
-↓
-C: Формирование сообщения (заголовок + описание)
-↓
-D: Отправка сообщения в поле ввода
+A: Прокрутка страницы назад
+|
+B: Открытие окна добавления сообщения
+|
+C: Добавление сообщения в поле сообщения
 ```
 
 **Примеры**:
 
 ```python
-from types import SimpleNamespace
-from src.webdriver.driver import Driver
-
-# Пример с использованием SimpleNamespace
-driver = Driver(...)
+driver = Driver(Firefox)
 message = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-result = post_title(driver, message)
-print(result)  # Вывод: True или None
+post_title(driver, message)
 
-# Пример с использованием строки
-driver = Driver(...)
+driver = Driver(Firefox)
 message = "Текст сообщения"
-result = post_title(driver, message)
-print(result)  # Вывод: True или None
+post_title(driver, message)
 ```
 
 ### `upload_media`
 
 ```python
 def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str],   no_video: bool = False, without_captions:bool = False) -> bool:
-    """ Загружает медиафайлы в раздел изображений и обновляет подписи.
+    """ Uploads media files to the images section and updates captions.
 
     Args:
-        d (Driver): Инстанс драйвера, используемый для взаимодействия с веб-страницей.
-        products (List[SimpleNamespace]): Список продуктов, содержащих пути к медиафайлам.
+        d (Driver): The driver instance used for interacting with the webpage.
+        products (List[SimpleNamespace]): List of products containing media file paths.
 
     Returns:
-        bool: `True`, если медиафайлы были успешно загружены, иначе `None`.
+        bool: `True` if media files were uploaded successfully, otherwise `None`.
 
     Raises:
-        Exception: Если возникает ошибка во время загрузки медиа или обновления подписей.
+        Exception: If there is an error during media upload or caption update.
 
-    Example:
+    Examples:
         >>> driver = Driver(...)
         >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg', ...)]
         >>> upload_media(driver, products)
@@ -116,199 +96,132 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
     """
 ```
 
-**Назначение**: Загружает медиафайлы (изображения или видео) на страницу Facebook и при необходимости обновляет подписи к ним.
+**Назначение**: Загружает медиафайлы и обновляет подписи к изображениям.
 
 **Параметры**:
-
-- `d` (Driver): Инстанс драйвера веб-браузера Selenium для управления браузером.
-- `media` (SimpleNamespace | List[SimpleNamespace] | str | list[str]): Путь к медиафайлу или список путей. Может быть объектом `SimpleNamespace` с атрибутом `local_image_path` или `local_video_path`, строкой или списком строк.
-- `no_video` (bool, optional): Если `True`, то видео не будут загружены. По умолчанию `False`.
-- `without_captions` (bool, optional): Если `True`, то подписи к изображениям не будут обновлены. По умолчанию `False`.
+- `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+- `media` (SimpleNamespace | List[SimpleNamespace] | str | list[str]): Путь к медиафайлу или список путей к медиафайлам.
+- `no_video` (bool): Флаг, указывающий, нужно ли игнорировать видеофайлы. По умолчанию `False`.
+- `without_captions` (bool): Флаг, указывающий, нужно ли загружать подписи к изображениям. По умолчанию `False`.
 
 **Возвращает**:
-
-- `bool`: `True`, если загрузка прошла успешно, иначе `None`.
+- `bool`: `True`, если медиафайлы были успешно загружены, иначе `None`.
 
 **Как работает функция**:
 
-1.  **Проверка наличия медиафайлов**: Если список медиа пуст, функция завершается.
-2.  **Открытие формы добавления медиа**: Кликает на кнопку/локатор, который открывает форму для добавления фото/видео.
-3.  **Преобразование в список**: Преобразует входной параметр `media` в список, если он не является списком.
-4.  **Итерация по медиафайлам**: Перебирает элементы списка `media_list`.
-5.  **Определение пути к медиафайлу**: Определяет путь к файлу, проверяя атрибуты `local_video_path` и `local_image_path` (если `media` является `SimpleNamespace`).
-6.  **Загрузка медиафайла**: Загружает медиафайл, отправляя путь к файлу в поле загрузки.
-7.  **Обновление подписей**: Если `without_captions` равно `False`, пытается обновить подписи к загруженным изображениям, вызывая функцию `update_images_captions`.
+1. Открывает форму добавления медиа.
+2. Преобразует `media` в список, если это не список.
+3. Итерируется по списку медиафайлов и загружает каждый файл.
+4. Если `without_captions` равен `False`, обновляет подписи для загруженных медиафайлов, вызывая функцию `update_images_captions`.
 
-**ASII flowchart**:
+**ASCII flowchart**:
 
 ```
-A: Проверка наличия медиафайлов
-↓
-B: Открытие формы добавления медиа
-↓
-C: Преобразование media в список
-↓
-D: Итерация по медиафайлам
-│
-└──> E: Определение пути к медиафайлу
-│   ↓
-│   F: Загрузка медиафайла
-│   ↓
-│   G: Обновление подписей (если without_captions=False)
-↓
-H: Завершение
+A: Открытие формы добавления медиа
+|
+B: Преобразование media в список
+|
+C: Загрузка медиафайлов
+|
+D: Обновление подписей (если without_captions == False)
 ```
 
 **Примеры**:
 
 ```python
-from types import SimpleNamespace
-from src.webdriver.driver import Driver
+driver = Driver(Firefox)
+media = [SimpleNamespace(local_image_path='path/to/image1.jpg'), SimpleNamespace(local_image_path='path/to/image2.jpg')]
+upload_media(driver, media)
 
-# Пример с использованием списка SimpleNamespace
-driver = Driver(...)
-products = [
-    SimpleNamespace(local_image_path="path/to/image1.jpg", description="Описание 1"),
-    SimpleNamespace(local_image_path="path/to/image2.jpg", description="Описание 2"),
-]
-result = upload_media(driver, products)
-print(result)  # Вывод: True или None
-
-# Пример с использованием списка строк
-driver = Driver(...)
-images = ["path/to/image1.jpg", "path/to/image2.jpg"]
-result = upload_media(driver, images)
-print(result)  # Вывод: True или None
-
-# Пример с использованием SimpleNamespace и без обновления подписей
-driver = Driver(...)
-product = SimpleNamespace(local_image_path="path/to/image.jpg", description="Описание")
-result = upload_media(driver, product, without_captions=True)
-print(result)  # Вывод: True или None
+driver = Driver(Firefox)
+media = 'path/to/image.jpg'
+upload_media(driver, media)
 ```
 
 ### `update_images_captions`
 
 ```python
 def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
-    """ Добавляет описания к загруженным медиафайлам.
+    """ Adds descriptions to uploaded media files.
 
     Args:
-        d (Driver): Инстанс драйвера, используемый для взаимодействия с веб-страницей.
-        products (List[SimpleNamespace]): Список продуктов с деталями для обновления.
-        textarea_list (List[WebElement]): Список текстовых полей, куда добавляются подписи.
+        d (Driver): The driver instance used for interacting with the webpage.
+        products (List[SimpleNamespace]): List of products with details to update.
+        textarea_list (List[WebElement]): List of textareas where captions are added.
 
     Raises:
-        Exception: Если возникает ошибка при обновлении подписей медиафайлов.
+        Exception: If there\'s an error updating the media captions.
     """
 ```
 
-**Назначение**: Обновляет подписи (описания) для загруженных медиафайлов на странице Facebook.
+**Назначение**: Добавляет описания к загруженным медиафайлам.
 
 **Параметры**:
-
--   `d` (Driver): Инстанс драйвера веб-браузера Selenium для управления браузером.
--   `media` (List[SimpleNamespace]): Список объектов `SimpleNamespace`, содержащих информацию о медиафайлах и их описаниях.
--   `textarea_list` (List[WebElement]): Список элементов `WebElement` (текстовых полей), в которые будут введены подписи.
+- `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+- `media` (List[SimpleNamespace]): Список объектов SimpleNamespace с деталями для обновления.
+- `textarea_list` (List[WebElement]): Список элементов textarea, в которые добавляются подписи.
 
 **Как работает функция**:
 
-1.  **Загрузка локализованных строк**: Загружает JSON-файл с локализованными строками для разных языков.
-2.  **Определение внутренней функции `handle_product`**: Определяет внутреннюю функцию, которая обрабатывает обновление подписи для одного медиафайла.
-3.  **Итерация по медиафайлам**: Перебирает элементы списка `media`.
-4.  **Вызов `handle_product` для каждого медиафайла**: Для каждого медиафайла вызывает функцию `handle_product`, передавая ей информацию о продукте, список текстовых полей и индекс текущего медиафайла.
+1. Загружает локальные единицы из файла `translations.json`.
+2. Определяет внутреннюю функцию `handle_product`, которая обновляет подписи для одного продукта.
+3. Итерируется по списку `media` и вызывает `handle_product` для каждого продукта.
+
+**Внутренние функции**:
 
 #### `handle_product`
 
 ```python
 def handle_product(product: SimpleNamespace, textarea_list: List[WebElement], i: int) -> None:
-    """ Обрабатывает обновление подписей медиа для одного продукта.
+    """ Handles the update of media captions for a single product.
 
     Args:
-        product (SimpleNamespace): Продукт для обновления.
-        textarea_list (List[WebElement]): Список текстовых полей, куда добавляются подписи.
-        i (int): Индекс продукта в списке.
+        product (SimpleNamespace): The product to update.
+        textarea_list (List[WebElement]): List of textareas where captions are added.
+        i (int): Index of the product in the list.
     """
 ```
 
-**Назначение**: Обновляет подпись для одного медиафайла.
+**Назначение**: Обновляет подписи для одного продукта.
 
 **Параметры**:
-
--   `product` (SimpleNamespace): Объект `SimpleNamespace`, содержащий информацию о медиафайле и его описании.
--   `textarea_list` (List[WebElement]): Список элементов `WebElement` (текстовых полей), в которые будут введены подписи.
--   `i` (int): Индекс текстового поля, соответствующего текущему медиафайлу.
+- `product` (SimpleNamespace): Продукт для обновления.
+- `textarea_list` (List[WebElement]): Список элементов textarea, в которые добавляются подписи.
+- `i` (int): Индекс продукта в списке.
 
 **Как работает функция**:
 
-1.  **Определение направления текста**: Определяет направление текста (LTR или RTL) на основе языка продукта.
-2.  **Формирование сообщения**: Формирует строку сообщения, объединяя заголовок, описание, цену и другие детали продукта в зависимости от направления текста.
-3.  **Отправка сообщения в текстовое поле**: Отправляет сформированное сообщение в соответствующее текстовое поле.
+1. Определяет язык продукта и направление текста (LTR или RTL).
+2. Формирует сообщение, добавляя детали продукта (название, описание, цену и т.д.) в зависимости от направления текста.
+3. Отправляет сообщение в соответствующий textarea.
 
-**ASII flowchart для `update_images_captions`**:
-
-```
-A: Загрузка локализованных строк
-↓
-B: Определение внутренней функции handle_product
-↓
-C: Итерация по медиафайлам
-│
-└──> D: Вызов handle_product для каждого медиафайла
-↓
-E: Завершение
-```
-
-**ASII flowchart для `handle_product`**:
+**ASCII flowchart**:
 
 ```
-A: Определение направления текста
-↓
-B: Формирование сообщения (заголовок, описание, цена и т.д.)
-↓
-C: Отправка сообщения в текстовое поле
-↓
-D: Завершение
+A: Определение языка и направления текста
+|
+B: Формирование сообщения с деталями продукта
+|
+C: Отправка сообщения в textarea
+```
+
+**ASCII flowchart (update_images_captions)**:
+
+```
+A: Загрузка локальных единиц
+|
+B: Итерация по списку media
+|
+C: Вызов handle_product для каждого продукта
 ```
 
 **Примеры**:
 
 ```python
-from types import SimpleNamespace
-from selenium.webdriver.remote.webelement import WebElement
-from src.webdriver.driver import Driver
-
-# Пример использования
-driver = Driver(...)
-products = [
-    SimpleNamespace(
-        language="en",
-        product_title="Product Title 1",
-        description="Description 1",
-        original_price="100",
-        target_original_price_currency="$",
-        sale_price="80",
-        discount="20%",
-        evaluate_rate="4.5",
-        promotion_link="http://example.com/promo1",
-    ),
-    SimpleNamespace(
-        language="ru",
-        product_title="Название продукта 2",
-        description="Описание 2",
-        original_price="200",
-        target_original_price_currency="₽",
-        sale_price="160",
-        discount="20%",
-        evaluate_rate="4.8",
-        promotion_link="http://example.com/promo2",
-    ),
-]
-textarea_list = [
-    WebElement(...),  # Замените на реальные WebElement
-    WebElement(...),  # Замените на реальные WebElement
-]
-update_images_captions(driver, products, textarea_list)
+driver = Driver(Firefox)
+media = [SimpleNamespace(product_title='Product 1', description='Description 1', language='ru'), SimpleNamespace(product_title='Product 2', description='Description 2', language='en')]
+textarea_list = [driver.find_element(By.XPATH, '//textarea[1]'), driver.find_element(By.XPATH, '//textarea[2]')]
+update_images_captions(driver, media, textarea_list)
 ```
 
 ### `publish`
@@ -318,62 +231,49 @@ def publish(d:Driver, attempts = 5) -> bool:
     """"""
 ```
 
-**Назначение**: Опубликовывает сообщение на странице Facebook.
+**Назначение**: Публикует сообщение.
 
 **Параметры**:
-
--   `d` (Driver): Инстанс драйвера веб-браузера Selenium для управления браузером.
--   `attempts` (int, optional): Количество попыток для публикации. По умолчанию `5`.
+- `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+- `attempts` (int): Количество попыток публикации. По умолчанию 5.
 
 **Возвращает**:
-
--   `bool`: `True`, если публикация прошла успешно.
+- `bool`: `True`, если сообщение опубликовано успешно.
 
 **Как работает функция**:
 
-1.  **Проверка количества попыток**: Если количество попыток меньше `0`, функция завершается.
-2.  **Клик на кнопку завершения редактирования**: Кликает на кнопку, завершающую редактирование сообщения.
-3.  **Клик на кнопку публикации**: Пытается опубликовать сообщение.
-4.  **Обработка всплывающих окон**: Если появляется всплывающее окно, пытается закрыть его и повторить публикацию.
-5.  **Ожидание освобождения поля ввода**: Ожидает, пока поле ввода сообщения не освободится.
+Функция пытается опубликовать сообщение, используя заданные локаторы. Если публикация не удалась, она пробует закрыть всплывающие окна или нажать кнопку "Не сейчас" и повторяет попытку.
 
-**ASII flowchart**:
+**ASCII flowchart**:
 
 ```
-A: Проверка количества попыток
-↓
-B: Клик на кнопку завершения редактирования
-↓
-C: Клик на кнопку публикации
-↓
-D: Обработка всплывающих окон (если есть)
-↓
-E: Ожидание освобождения поля ввода
-↓
-F: Завершение
+A: Нажатие кнопки "Завершить редактирование"
+|
+B: Нажатие кнопки "Опубликовать"
+|
+C: Если не удалось опубликовать:
+    - Попытка закрыть всплывающее окно
+    - Попытка нажать кнопку "Не сейчас"
+    - Повторная попытка публикации
 ```
 
 **Примеры**:
 
 ```python
-from src.webdriver.driver import Driver
-
-# Пример использования
-driver = Driver(...)
-result = publish(driver)
-print(result)  # Вывод: True или None
+driver = Driver(Firefox)
+publish(driver)
 ```
 
 ### `promote_post`
 
 ```python
 def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool:
-    """ Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
+    """ Manages the process of promoting a post with a title, description, and media files.
 
     Args:
-        d (Driver): Инстанс драйвера, используемый для взаимодействия с веб-страницей.
-        category (SimpleNamespace): Детали категории, используемые для заголовка и описания поста.
-        products (List[SimpleNamespace]): Список продуктов, содержащих медиа и детали для публикации.
+        d (Driver): The driver instance used for interacting with the webpage.
+        category (SimpleNamespace): The category details used for the post title and description.
+        products (List[SimpleNamespace]): List of products containing media and details to be posted.
 
     Examples:
         >>> driver = Driver(...)
@@ -383,52 +283,43 @@ def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleName
     """
 ```
 
-**Назначение**: Управляет процессом продвижения поста в Facebook, включая добавление заголовка, описания и медиафайлов.
+**Назначение**: Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
 
 **Параметры**:
-
--   `d` (Driver): Инстанс драйвера веб-браузера Selenium для управления браузером.
--   `category` (SimpleNamespace): Объект `SimpleNamespace`, содержащий информацию о заголовке и описании поста.
--   `products` (List[SimpleNamespace]): Список объектов `SimpleNamespace`, содержащих информацию о медиафайлах и деталях продукта.
--   `no_video` (bool, optional): Если `True`, то видео не будут загружены. По умолчанию `False`.
+- `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+- `category` (SimpleNamespace): Детали категории, используемые для заголовка и описания поста.
+- `products` (List[SimpleNamespace]): Список продуктов, содержащих медиа и детали для публикации.
+- `no_video` (bool): Флаг, указывающий, нужно ли игнорировать видеофайлы. По умолчанию `False`.
 
 **Возвращает**:
-
--   `bool`: `True`, если продвижение поста прошло успешно.
+- `bool`: `True`, если сообщение опубликовано успешно.
 
 **Как работает функция**:
 
-1.  **Отправка заголовка и описания**: Вызывает функцию `post_title` для отправки заголовка и описания поста.
-2.  **Загрузка медиафайлов**: Вызывает функцию `upload_media` для загрузки медиафайлов.
-3.  **Клик на кнопку завершения редактирования**: Кликает на кнопку, завершающую редактирование сообщения.
-4.  **Публикация поста**: Пытается опубликовать пост.
+1. Отправляет заголовок и описание поста.
+2. Загружает медиафайлы.
+3. Нажимает кнопку "Завершить редактирование".
+4. Нажимает кнопку "Опубликовать".
 
-**ASII flowchart**:
+**ASCII flowchart**:
 
 ```
-A: Отправка заголовка и описания
-↓
+A: Отправка заголовка и описания поста
+|
 B: Загрузка медиафайлов
-↓
-C: Клик на кнопку завершения редактирования
-↓
-D: Публикация поста
-↓
-F: Завершение
+|
+C: Нажатие кнопки "Завершить редактирование"
+|
+D: Нажатие кнопки "Опубликовать"
 ```
 
 **Примеры**:
 
 ```python
-from types import SimpleNamespace
-from src.webdriver.driver import Driver
-
-# Пример использования
-driver = Driver(...)
-category = SimpleNamespace(title="Заголовок", description="Описание")
-products = [SimpleNamespace(local_image_path="path/to/image.jpg")]
-result = promote_post(driver, category, products)
-print(result)  # Вывод: True или None
+driver = Driver(Firefox)
+category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
+products = [SimpleNamespace(local_image_path='path/to/image1.jpg'), SimpleNamespace(local_image_path='path/to/image2.jpg')]
+promote_post(driver, category, products)
 ```
 
 ### `post_message`
@@ -450,60 +341,44 @@ def post_message(d: Driver, message: SimpleNamespace,  no_video: bool = False,  
     """
 ```
 
-**Назначение**: Управляет процессом создания и публикации сообщения в Facebook, включая добавление заголовка, описания и медиафайлов.
+**Назначение**: Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
 
 **Параметры**:
-
--   `d` (Driver): Инстанс драйвера веб-браузера Selenium для управления браузером.
--   `message` (SimpleNamespace): Объект `SimpleNamespace`, содержащий информацию о заголовке, описании и медиафайлах сообщения.
--   `no_video` (bool, optional): Если `True`, видео не будут загружены. По умолчанию `False`.
--   `images` (Optional[str | list[str]], optional): Путь к изображению или список путей. По умолчанию `None`.
--   `without_captions` (bool, optional): Если `True`, подписи к изображениям не будут обновлены. По умолчанию `False`.
+- `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+- `message` (SimpleNamespace): Детали сообщения, используемые для заголовка и описания поста.
+- `no_video` (bool): Флаг, указывающий, нужно ли игнорировать видеофайлы. По умолчанию `False`.
+- `images` (Optional[str | list[str]]): Список изображений для публикации.
+- `without_captions` (bool): Флаг, указывающий, нужно ли загружать подписи к изображениям. По умолчанию `False`.
 
 **Возвращает**:
-
--   `bool`: `True`, если публикация прошла успешно.
+- `bool`: `True`, если сообщение опубликовано успешно.
 
 **Как работает функция**:
 
-1.  **Отправка заголовка и описания**: Вызывает функцию `post_title` для отправки заголовка и описания сообщения.
-2.  **Загрузка медиафайлов**: Вызывает функцию `upload_media` для загрузки медиафайлов, используя `message.products`.
-3.  **Проверка наличия одного изображения**: Если загружено только одно изображение, кликает на кнопку отправки и завершает работу.
-4.  **Клик на кнопку завершения редактирования**: Кликает на кнопку, завершающую редактирование сообщения.
-5.  **Публикация сообщения**: Вызывает функцию `publish` для публикации сообщения.
+1. Отправляет заголовок и описание поста.
+2. Загружает медиафайлы.
+3. Если было только одно изображение, выходит.
+4. Нажимает кнопку "Завершить редактирование".
+5. Публикует сообщение.
 
-**ASII flowchart**:
+**ASCII flowchart**:
 
 ```
-A: Отправка заголовка и описания
-↓
+A: Отправка заголовка и описания поста
+|
 B: Загрузка медиафайлов
-↓
-C: Проверка наличия одного изображения
-│
-└──> D1: Клик на кнопку отправки (если одно изображение)
-│   ↓
-│   E1: Завершение
-↓
-D2: Клик на кнопку завершения редактирования
-↓
-E2: Публикация сообщения
-↓
-F: Завершение
+|
+C: Если было одно изображение:
+    - Выход
+|
+D: Нажатие кнопки "Завершить редактирование"
+|
+E: Публикация сообщения
 ```
 
 **Примеры**:
 
 ```python
-from types import SimpleNamespace
-from src.webdriver.driver import Driver
-
-# Пример использования
-driver = Driver(...)
-message = SimpleNamespace(
-    title="Заголовок сообщения",
-    description="Описание сообщения",
-    products=[SimpleNamespace(local_image_path="path/to/image.jpg")],
-)
-result = post_message(driver, message)
-print(result)  # Вывод: True или None
+driver = Driver(Firefox)
+message = SimpleNamespace(title="Заголовок сообщения", description="Описание сообщения", products=[SimpleNamespace(local_image_path='path/to/image1.jpg'), SimpleNamespace(local_image_path='path/to/image2.jpg')])
+post_message(driver, message)

@@ -1,77 +1,87 @@
-# Модуль CohereForAI_C4AI_Command
+# Модуль `CohereForAI_C4AI_Command.py`
+
 ## Обзор
 
-Модуль `CohereForAI_C4AI_Command` предназначен для взаимодействия с моделями CohereForAI C4AI Command через API. Он предоставляет асинхронный генератор для получения ответов от модели и поддерживает управление диалогом.
+Модуль `CohereForAI_C4AI_Command.py` предназначен для взаимодействия с моделью CohereForAI C4AI Command через API. Он предоставляет асинхронный генератор для получения ответов от модели, а также поддерживает управление историей разговоров.
 
-## Подробнее
+## Подробней
 
-Этот модуль обеспечивает интеграцию с моделями CohereForAI C4AI Command, позволяя отправлять запросы и получать ответы в асинхронном режиме. Он также поддерживает управление состоянием диалога через `JsonConversation` и предоставляет возможность генерации заголовков для ответов.
+Модуль позволяет отправлять запросы к модели CohereForAI C4AI Command и получать ответы в режиме реального времени. Он также поддерживает управление историей разговоров, что позволяет модели учитывать предыдущие сообщения при генерации ответа.
 
 ## Классы
 
 ### `CohereForAI_C4AI_Command`
 
-**Описание**: Класс `CohereForAI_C4AI_Command` предоставляет методы для взаимодействия с моделями CohereForAI C4AI Command.
+**Описание**: Класс `CohereForAI_C4AI_Command` предоставляет функциональность для взаимодействия с моделью CohereForAI C4AI Command. Он наследуется от `AsyncGeneratorProvider` и `ProviderModelMixin`.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность для асинхронных провайдеров генераторов.
-- `ProviderModelMixin`: Предоставляет функциональность для работы с моделями провайдера.
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию ответов.
+- `ProviderModelMixin`: Содержит общие методы для работы с моделями.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера ("CohereForAI C4AI Command").
-- `url` (str): URL API CohereForAI C4AI Command ("https://cohereforai-c4ai-command.hf.space").
-- `conversation_url` (str): URL для управления диалогами (`f"{url}/conversation"`).
-- `working` (bool): Указывает, что провайдер в рабочем состоянии (`True`).
-- `default_model` (str): Модель по умолчанию ("command-a-03-2025").
-- `model_aliases` (dict): Псевдонимы для моделей (например, `"command-a": default_model`).
+- `label` (str): Метка провайдера (по умолчанию `"CohereForAI C4AI Command"`).
+- `url` (str): URL API (по умолчанию `"https://cohereforai-c4ai-command.hf.space"`).
+- `conversation_url` (str): URL для ведения разговоров (формируется на основе `url`).
+- `working` (bool): Указывает, работает ли провайдер (по умолчанию `True`).
+- `default_model` (str): Модель, используемая по умолчанию (по умолчанию `"command-a-03-2025"`).
+- `model_aliases` (dict): Словарь псевдонимов моделей.
 - `models` (list): Список доступных моделей.
 
 **Методы**:
-- `get_model(model: str, **kwargs) -> str`: Возвращает имя модели на основе псевдонима или переданного значения.
+- `get_model(model: str, **kwargs) -> str`: Возвращает имя модели. Если модель есть в `model_aliases.values()`, то возвращается это значение, иначе вызывается `super().get_model(model, **kwargs)`.
 - `create_async_generator(model: str, messages: Messages, api_key: str = None, proxy: str = None, conversation: JsonConversation = None, return_conversation: bool = False, **kwargs) -> AsyncResult`: Создает асинхронный генератор для получения ответов от модели.
+
+## Функции
 
 ### `get_model`
 
 ```python
     @classmethod
     def get_model(cls, model: str, **kwargs) -> str:
-        if model in cls.model_aliases.values():
-            return model
-        return super().get_model(model, **kwargs)
+        """Возвращает имя модели.
+
+        Args:
+            model (str): Имя модели.
+            **kwargs: Дополнительные аргументы.
+
+        Returns:
+            str: Имя модели.
+        """
+        ...
 ```
 
-**Назначение**: Метод `get_model` определяет, использовать ли предоставленное имя модели или его псевдоним.
+**Назначение**: Возвращает имя модели, используемое для запроса.
 
 **Параметры**:
-- `model` (str): Имя модели или псевдоним.
-- `**kwargs`: Дополнительные параметры.
+- `model` (str): Имя модели.
+- `**kwargs`: Дополнительные аргументы.
 
 **Возвращает**:
 - `str`: Имя модели.
 
 **Как работает функция**:
 
-1. **Проверка на псевдоним**: Проверяет, является ли предоставленное имя модели псевдонимом из `cls.model_aliases.values()`.
-2. **Возврат модели**: Если имя модели является псевдонимом, возвращает его.
-3. **Вызов родительского метода**: Если имя модели не является псевдонимом, вызывает метод `get_model` родительского класса.
+1.  Функция `get_model` проверяет, является ли предоставленное имя модели (`model`) одним из известных значений в `cls.model_aliases.values()`.
+2.  Если `model` содержится в значениях `model_aliases`, функция возвращает это значение как допустимую модель.
+3.  В противном случае функция вызывает метод `get_model` из суперкласса (`super().get_model(model, **kwargs)`) для обработки имени модели.
 
 ```
-Проверка псевдонима
-    │
-    ├─── True: Возврат имени модели
-    │
-    └─── False: Вызов родительского метода get_model
+Проверка наличия model в aliases.values()  -> Возврат model : super().get_model(model, **kwargs)
 ```
 
 **Примеры**:
-
 ```python
+# Пример 1: Использование псевдонима модели
 model_name = CohereForAI_C4AI_Command.get_model("command-a")
-print(model_name)
-# Output: command-a-03-2025
+print(model_name)  # Вывод: command-a-03-2025
 
-model_name = CohereForAI_C4AI_Command.get_model("non_existent_model")
-# Output: non_existent_model (если родительский класс возвращает переданное значение)
+# Пример 2: Использование полного имени модели
+model_name = CohereForAI_C4AI_Command.get_model("command-r-plus-08-2024")
+print(model_name)  # Вывод: command-r-plus-08-2024
+
+# Пример 3: Использование неизвестного имени модели (предполагается, что суперкласс обработает его)
+# В данном случае поведение зависит от реализации get_model в суперклассе
+# model_name = CohereForAI_C4AI_Command.get_model("unknown-model")
 ```
 
 ### `create_async_generator`
@@ -86,124 +96,75 @@ model_name = CohereForAI_C4AI_Command.get_model("non_existent_model")
         return_conversation: bool = False,
         **kwargs
     ) -> AsyncResult:
-        model = cls.get_model(model)
-        headers = {
-            "Origin": cls.url,
-            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0",
-            "Accept": "*/*",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Referer": "https://cohereforai-c4ai-command.hf.space/",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin",
-            "Priority": "u=4",
-        }
-        if api_key is not None:
-            headers["Authorization"] = f"Bearer {api_key}"
-        async with ClientSession(
-            headers=headers,
-            cookies=None if conversation is None else conversation.cookies
-        ) as session:
-            system_prompt = "\\n".join([message["content"] for message in messages if message["role"] == "system"])
-            messages = [message for message in messages if message["role"] != "system"]
-            inputs = format_prompt(messages) if conversation is None else get_last_user_message(messages)
-            if conversation is None or conversation.model != model or conversation.preprompt != system_prompt:
-                data = {"model": model, "preprompt": system_prompt}
-                async with session.post(cls.conversation_url, json=data, proxy=proxy) as response:
-                    await raise_for_status(response)
-                    conversation = JsonConversation(
-                        **await response.json(),
-                        **data,
-                        cookies={n: c.value for n, c in response.cookies.items()}
-                    )
-                    if return_conversation:
-                        yield conversation
-            async with session.get(f"{cls.conversation_url}/{conversation.conversationId}/__data.json?x-sveltekit-invalidated=11", proxy=proxy) as response:
-                await raise_for_status(response)
-                node = json.loads((await response.text()).splitlines()[0])["nodes"][1]
-                if node["type"] == "error":
-                    raise RuntimeError(node["error"])
-                data = node["data"]
-                message_id = data[data[data[data[0]["messages"]][-1]]["id"]]
-            data = FormData()
-            data.add_field(
-                "data",
-                json.dumps({"inputs": inputs, "id": message_id, "is_retry": False, "is_continue": False, "web_search": False, "tools": []}),
-                content_type="application/json"
-            )
-            async with session.post(f"{cls.conversation_url}/{conversation.conversationId}", data=data, proxy=proxy) as response:
-                await raise_for_status(response)
-                async for chunk in response.content:
-                    try:
-                        data = json.loads(chunk)
-                    except (json.JSONDecodeError) as ex:
-                        raise RuntimeError(f"Failed to read response: {chunk.decode(errors='replace')}", ex)
-                    if data["type"] == "stream":
-                        yield data["token"].replace("\\u0000", "")
-                    elif data["type"] == "title":
-                        yield TitleGeneration(data["title"])
-                    elif data["type"] == "finalAnswer":
-                        break
+        """Создает асинхронный генератор для получения ответов от модели.
+
+        Args:
+            model (str): Имя модели.
+            messages (Messages): Список сообщений.
+            api_key (str, optional): API ключ. По умолчанию `None`.
+            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+            conversation (JsonConversation, optional): Объект разговора. По умолчанию `None`.
+            return_conversation (bool, optional): Возвращать ли объект разговора. По умолчанию `False`.
+            **kwargs: Дополнительные аргументы.
+
+        Returns:
+            AsyncResult: Асинхронный генератор.
+        """
+        ...
 ```
 
-**Назначение**: Метод `create_async_generator` создает асинхронный генератор для получения ответов от модели CohereForAI C4AI Command.
+**Назначение**: Создает асинхронный генератор для получения ответов от модели CohereForAI C4AI Command.
 
 **Параметры**:
 - `model` (str): Имя модели.
-- `messages` (Messages): Список сообщений для отправки модели.
+- `messages` (Messages): Список сообщений для отправки.
 - `api_key` (str, optional): API ключ. По умолчанию `None`.
 - `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
-- `conversation` (JsonConversation, optional): Объект диалога. По умолчанию `None`.
-- `return_conversation` (bool, optional): Флаг, указывающий, нужно ли возвращать объект диалога. По умолчанию `False`.
-- `**kwargs`: Дополнительные параметры.
+- `conversation` (JsonConversation, optional): Объект разговора. По умолчанию `None`.
+- `return_conversation` (bool, optional): Возвращать ли объект разговора. По умолчанию `False`.
+- `**kwargs`: Дополнительные аргументы.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор, возвращающий ответы от модели.
-
-**Вызывает исключения**:
-- `RuntimeError`: Если происходит ошибка при получении ответа от API.
+- `AsyncResult`: Асинхронный генератор.
 
 **Как работает функция**:
 
-1. **Получение имени модели**: Использует метод `get_model` для получения имени модели.
-2. **Подготовка заголовков**: Создает заголовки для HTTP-запросов, включая `Origin`, `User-Agent`, `Accept`, `Accept-Language`, `Referer`, `Sec-Fetch-Dest`, `Sec-Fetch-Mode`, `Sec-Fetch-Site` и `Priority`. Если предоставлен `api_key`, добавляет заголовок `Authorization`.
-3. **Создание сессии**: Создает асинхронную сессию `ClientSession` с подготовленными заголовками и куками из объекта `conversation`, если он предоставлен.
-4. **Обработка системных сообщений**: Извлекает системные сообщения из списка `messages` и объединяет их в строку `system_prompt`. Удаляет системные сообщения из списка `messages`.
-5. **Форматирование входных данных**: Форматирует входные данные `inputs` из списка `messages` с использованием `format_prompt` или `get_last_user_message` в зависимости от наличия объекта `conversation`.
-6. **Инициализация диалога**: Если объект `conversation` не предоставлен или параметры модели и системного запроса изменились, отправляет POST-запрос на URL `cls.conversation_url` для инициализации диалога.
-7. **Получение ID сообщения**: Отправляет GET-запрос для получения ID сообщения.
-8. **Подготовка данных для запроса**: Создает объект `FormData` с данными для отправки, включая `inputs`, `id` сообщения, флаги `is_retry`, `is_continue`, `web_search` и `tools`.
-9. **Отправка запроса и обработка ответа**: Отправляет POST-запрос на URL `f"{cls.conversation_url}/{conversation.conversationId}"` с данными и обрабатывает ответ, извлекая токены, заголовки или финальные ответы из JSON-данных.
-10. **Генерация результатов**: Генерирует токены, заголовки или завершает работу в зависимости от типа данных, полученных из ответа.
+1.  Функция `create_async_generator` принимает параметры, необходимые для настройки асинхронного взаимодействия с моделью CohereForAI C4AI Command.
+2.  Определяет заголовки (`headers`), которые будут использоваться при отправке запросов. В эти заголовки включаются Origin, User-Agent, Accept, Accept-Language, Referer, Sec-Fetch-Dest, Sec-Fetch-Mode, Sec-Fetch-Site и Priority. Если предоставлен `api_key`, он также добавляется в заголовок Authorization.
+3.  Использует `ClientSession` из библиотеки `aiohttp` для асинхронных HTTP-запросов.
+4.  Разделяет сообщения на системные и пользовательские, извлекая системные сообщения для создания `system_prompt`.
+5.  Форматирует входные данные (`inputs`) на основе наличия существующего разговора (`conversation`).
+6.  Если разговор отсутствует или модель разговора не совпадает с текущей моделью, отправляет POST-запрос для создания нового разговора. Если `return_conversation` имеет значение `True`, функция возвращает объект разговора.
+7.  Отправляет GET-запрос для получения `message_id`.
+8.  Формирует данные формы (`data`) с входными данными, `message_id` и параметрами запроса (например, `is_retry`, `is_continue`, `web_search`, `tools`).
+9.  Отправляет POST-запрос с данными формы для получения ответа от модели.
+10. Обрабатывает ответ модели, извлекая данные из JSON-фрагментов. Если тип данных (`data["type"]`) равен "stream", возвращает сгенерированный токен. Если тип данных равен "title", возвращает сгенерированный заголовок. Если тип данных равен "finalAnswer", завершает генерацию.
 
 ```
-Получение имени модели
-    │
-    └─── Подготовка заголовков
-         │
-         └─── Создание сессии
-              │
-              └─── Обработка системных сообщений
-                   │
-                   └─── Форматирование входных данных
-                        │
-                        └─── Инициализация диалога (если необходимо)
-                             │
-                             └─── Получение ID сообщения
-                                  │
-                                  └─── Подготовка данных для запроса
-                                       │
-                                       └─── Отправка запроса и обработка ответа
-                                            │
-                                            └─── Генерация результатов
+Получение аргументов -> Определение заголовков -> Создание ClientSession -> Разделение сообщений -> Форматирование входных данных -> 
+    Если нет conversation или conversation.model != model:
+        Создание нового conversation
+        Если return_conversation:
+            Возврат conversation
+    Получение message_id -> Формирование данных формы -> Отправка POST-запроса -> Обработка ответа модели
 ```
 
 **Примеры**:
 
 ```python
+# Пример 1: Создание асинхронного генератора с минимальными параметрами
 messages = [{"role": "user", "content": "Hello, how are you?"}]
-async def run_generator():
-    async for message in CohereForAI_C4AI_Command.create_async_generator(model="command-a", messages=messages):
-        print(message)
+async_generator = CohereForAI_C4AI_Command.create_async_generator(model="command-a", messages=messages)
 
-# asyncio.run(run_generator())
+# Пример 2: Создание асинхронного генератора с API-ключом и прокси
+messages = [{"role": "user", "content": "Translate 'hello' to French."}]
+async_generator = CohereForAI_C4AI_Command.create_async_generator(
+    model="command-r-plus", messages=messages, api_key="YOUR_API_KEY", proxy="http://your-proxy:8080"
+)
+
+# Пример 3: Создание асинхронного генератора с существующим conversation
+messages = [{"role": "user", "content": "And what about in Spanish?"}]
+conversation = JsonConversation(conversationId="123", model="command-a", preprompt="")
+async_generator = CohereForAI_C4AI_Command.create_async_generator(
+    model="command-a", messages=messages, conversation=conversation
+)

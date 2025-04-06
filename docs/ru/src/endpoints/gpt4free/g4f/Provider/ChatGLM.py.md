@@ -1,226 +1,152 @@
-# Модуль для работы с ChatGLM
-====================================
+# Модуль для работы с провайдером ChatGLM
+=========================================
 
-Модуль содержит класс `ChatGLM`, который используется для взаимодействия с моделью ChatGLM.
-Он поддерживает асинхронную генерацию текста и предоставляет возможность взаимодействия с API ChatGLM.
+Модуль предоставляет класс `ChatGLM`, который используется для взаимодействия с API ChatGLM для генерации текста.
 
 ## Обзор
 
-Этот модуль обеспечивает интеграцию с API ChatGLM для генерации текста. Он поддерживает потоковую передачу ответов, что позволяет получать результаты по частям в асинхронном режиме.
+Этот модуль является частью проекта `hypotez` и отвечает за интеграцию с провайдером ChatGLM, позволяя использовать его модели для генерации текста на основе предоставленных сообщений. Модуль асинхронный и использует `aiohttp` для выполнения HTTP-запросов.
 
-## Подробней
+## Подробнее
 
-Модуль `ChatGLM` является асинхронным провайдером, который использует `aiohttp` для выполнения HTTP-запросов к API ChatGLM. Он обрабатывает входящие сообщения, формирует запросы и возвращает результаты генерации текста. Модуль также обрабатывает ошибки декодирования JSON и обеспечивает потоковую передачу данных.
+Модуль содержит класс `ChatGLM`, который наследуется от `AsyncGeneratorProvider` и `ProviderModelMixin`. Он определяет параметры подключения к API ChatGLM, такие как URL, endpoint и заголовки.  `ChatGLM` поддерживает потоковую передачу данных и предоставляет асинхронный генератор для получения ответов от API ChatGLM.
 
 ## Классы
 
 ### `ChatGLM`
 
-**Описание**: Класс `ChatGLM` предоставляет функциональность для взаимодействия с API ChatGLM.
+**Описание**: Класс для взаимодействия с API ChatGLM.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию.
-- `ProviderModelMixin`: Предоставляет функциональность для работы с моделями.
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
+- `ProviderModelMixin`: Предоставляет общие методы для работы с моделями провайдеров.
 
 **Атрибуты**:
 - `url` (str): URL сервиса ChatGLM (`https://chatglm.cn`).
-- `api_endpoint` (str): URL API endpoint для stream (`https://chatglm.cn/chatglm/mainchat-api/guest/stream`).
+- `api_endpoint` (str): Endpoint API для обмена сообщениями (`https://chatglm.cn/chatglm/mainchat-api/guest/stream`).
 - `working` (bool): Флаг, указывающий, работает ли провайдер (по умолчанию `True`).
-- `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер потоковую передачу (по умолчанию `True`).
-- `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения (по умолчанию `False`).
-- `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений (по умолчанию `False`).
+- `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер потоковую передачу (`True`).
+- `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения (`False`).
+- `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений (`False`).
 - `default_model` (str): Модель, используемая по умолчанию (`glm-4`).
-- `models` (List[str]): Список поддерживаемых моделей (содержит только `default_model`).
+- `models` (List[str]): Список поддерживаемых моделей ([`glm-4`]).
 
 **Методы**:
-- `create_async_generator`: Создает асинхронный генератор для получения ответов от API ChatGLM.
+- `create_async_generator`: Создает асинхронный генератор для взаимодействия с API ChatGLM.
 
 ## Функции
 
 ### `create_async_generator`
 
 ```python
-    @classmethod
-    async def create_async_generator(
-        cls,
-        model: str,
-        messages: Messages,
-        proxy: str = None,
-        **kwargs
-    ) -> AsyncResult:
-        """
-        Создает асинхронный генератор для получения ответов от API ChatGLM.
+@classmethod
+async def create_async_generator(
+    cls,
+    model: str,
+    messages: Messages,
+    proxy: str = None,
+    **kwargs
+) -> AsyncResult:
+    """Создает асинхронный генератор для получения ответов от API ChatGLM.
 
-        Args:
-            model (str): Модель, используемая для генерации.
-            messages (Messages): Список сообщений для отправки в API.
-            proxy (str, optional): Прокси-сервер для использования. По умолчанию `None`.
-            **kwargs: Дополнительные параметры.
+    Args:
+        model (str): Имя модели для использования.
+        messages (Messages): Список сообщений для отправки в API.
+        proxy (str, optional): Прокси-сервер для использования. По умолчанию `None`.
+        **kwargs: Дополнительные параметры.
 
-        Returns:
-            AsyncResult: Асинхронный генератор, возвращающий ответы от API.
+    Returns:
+        AsyncResult: Асинхронный генератор, возвращающий текстовые фрагменты ответа.
 
-        Raises:
-            aiohttp.ClientResponseError: Если возникает ошибка при выполнении HTTP-запроса.
-            json.JSONDecodeError: Если не удается декодировать JSON из ответа API.
+    Raises:
+        Exception: В случае ошибки при взаимодействии с API.
 
-        Внутренние функции:
-            отсутствуют
+    """
+```
 
-        Как работает функция:
-        1.  Генерируется уникальный `device_id` для идентификации устройства.
-        2.  Формируются HTTP-заголовки, включая `device_id` и другие метаданные.
-        3.  Создается `ClientSession` с заданными заголовками.
-        4.  Формируется JSON-тело запроса с сообщениями, ролями и контентом.
-        5.  Выполняется POST-запрос к `api_endpoint` с использованием `ClientSession`.
-        6.  Обрабатывается каждый чанк (chunk) ответа:
-            - Декодируется чанк из `utf-8`.
-            - Если чанк начинается с `'data: '`, извлекается JSON.
-            - Извлекается `content` из `parts` JSON.
-            - Извлекается `text_content` из `content`.
-            - Извлекается и возвращается новый текст (`text`) из `text_content`.
-            - Если `status` в JSON равен `'finish'`, возвращается `FinishReason("stop")`.
-        7.  Обрабатываются исключения `json.JSONDecodeError` при декодировании JSON.
+**Назначение**: Функция создает асинхронный генератор для взаимодействия с API ChatGLM.
 
-        ASCII flowchart:
+**Параметры**:
+- `cls` (ChatGLM): Ссылка на класс `ChatGLM`.
+- `model` (str): Имя модели для использования.
+- `messages` (Messages): Список сообщений для отправки в API.
+- `proxy` (str, optional): Прокси-сервер для использования. По умолчанию `None`.
+- `**kwargs`: Дополнительные параметры.
 
-        Генерация Device ID
-        ↓
-        Формирование HTTP Headers
-        ↓
-        Создание ClientSession
-        ↓
-        Формирование JSON Data
-        ↓
-        POST Request to API Endpoint
-        ↓
-        Обработка Chunks ответа
-        |
-        JSON Decode Error? --> Игнорировать
-        |
-        Извлечение и возврат текста
-        |
-        Status == 'finish'? --> Return FinishReason("stop")
-        """
+**Возвращает**:
+- `AsyncResult`: Асинхронный генератор, возвращающий текстовые фрагменты ответа.
+
+**Вызывает исключения**:
+- `aiohttp.ClientResponseError`: Если HTTP-запрос завершается с ошибкой.
+- `json.JSONDecodeError`: Если не удается декодировать JSON-ответ от API.
+
+**Как работает функция**:
+
+1. **Генерация `device_id`**: Генерируется уникальный `device_id` для идентификации устройства.
+2. **Формирование заголовков**: Создаются необходимые HTTP-заголовки, включая `X-Device-Id` и `Content-Type`.
+3. **Создание `ClientSession`**: Создается асинхронная сессия `aiohttp.ClientSession` с установленными заголовками.
+4. **Формирование данных запроса**: Создается JSON-структура данных для отправки в API, включающая `assistant_id`, `conversation_id`, `meta_data` и `messages`.
+5. **Отправка POST-запроса**: Отправляется POST-запрос к `cls.api_endpoint` с использованием `session.post` с данными в формате JSON и прокси (если указан).
+6. **Обработка ответа**: Читаются данные из ответа по частям (chunks).
+7. **Декодирование чанков**: Каждый чанк декодируется из `utf-8`.
+8. **Извлечение JSON**: Извлекается JSON из чанка (если чанк начинается с `'data: '`).
+9. **Извлечение текста**: Извлекается текстовое содержимое из JSON и передается через `yield`.
+10. **Обработка статуса завершения**: Если в JSON присутствует статус `'finish'`, возвращается `FinishReason("stop")`.
+
+```
+Генерация device_id
+↓
+Формирование заголовков
+↓
+Создание ClientSession
+↓
+Формирование данных запроса
+↓
+Отправка POST-запроса
+↓
+Чтение данных из ответа по частям (chunks)
+│
+├──→  Декодирование чанков
+│   │
+│   └──→ Извлечение JSON
+│       │
+│       └──→ Извлечение текста и передача через yield
+│           │
+│           └──→ Обработка статуса завершения ("finish")
+│
+└──→  Завершение
 ```
 
 **Примеры**:
 
 ```python
-# Пример использования create_async_generator
 import asyncio
-from typing import AsyncGenerator, List, Dict
-
-from aiohttp import ClientSession
-
-# Определение типа Messages
-Messages = List[Dict[str, str]]
+from src.endpoints.gpt4free.g4f.Provider.ChatGLM import ChatGLM
 
 async def main():
-    model: str = "glm-4"
-    messages: Messages = [
-        {"role": "user", "content": "Привет, как дела?"},
-        {"role": "assistant", "content": "У меня все хорошо, спасибо!"}
+    messages = [
+        {"role": "user", "content": "Hello, how are you?"}
     ]
-    proxy: str = None
-
-    # Mock класс ChatGLM для примера
-    class ChatGLM:
-        url = "https://chatglm.cn"
-        api_endpoint = "https://chatglm.cn/chatglm/mainchat-api/guest/stream"
-
-        working = True
-        supports_stream = True
-        supports_system_message = False
-        supports_message_history = False
-
-        default_model = "glm-4"
-        models = [default_model]
-
-        @classmethod
-        async def create_async_generator(
-            cls,
-            model: str,
-            messages: Messages,
-            proxy: str = None,
-            **kwargs
-        ) -> AsyncGenerator[str, None]:
-            device_id = str(uuid.uuid4()).replace('-', '')
-
-            headers = {
-                'Accept-Language': 'en-US,en;q=0.9',
-                'App-Name': 'chatglm',
-                'Authorization': 'undefined',
-                'Content-Type': 'application/json',
-                'Origin': 'https://chatglm.cn',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-                'X-App-Platform': 'pc',
-                'X-App-Version': '0.0.1',
-                'X-Device-Id': device_id,
-                'Accept': 'text/event-stream'
-            }
-
-            async with ClientSession(headers=headers) as session:
-                data = {
-                    "assistant_id": "65940acff94777010aa6b796",
-                    "conversation_id": "",
-                    "meta_data": {
-                        "if_plus_model": False,
-                        "is_test": False,
-                        "input_question_type": "xxxx",
-                        "channel": "",
-                        "draft_id": "",
-                        "quote_log_id": "",
-                        "platform": "pc"
-                    },
-                    "messages": [
-                        {
-                            "role": message["role"],
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": message["content"]
-                                }
-                            ]
-                        }
-                        for message in messages
-                    ]
-                }
-
-                yield_text = 0
-                async with session.post(cls.api_endpoint, json=data, proxy=proxy) as response:
-                    # Mock raise_for_status
-                    if response.status >= 400:
-                        raise Exception(f"HTTP error {response.status}")
-
-                    async for chunk in response.content:
-                        if chunk:
-                            decoded_chunk = chunk.decode('utf-8')
-                            if decoded_chunk.startswith('data: '):
-                                try:
-                                    json_data = json.loads(decoded_chunk[6:])
-                                    parts = json_data.get('parts', [])
-                                    if parts:
-                                        content = parts[0].get('content', [])
-                                        if content:
-                                            text_content = content[0].get('text', '')
-                                            text = text_content[yield_text:]
-                                            if text:
-                                                yield text
-                                                yield_text += len(text)
-                                    if json_data.get('status') == 'finish':
-                                        yield "stop"  # Mock FinishReason
-                                except json.JSONDecodeError as ex:
-                                    print(f"JSONDecodeError: {ex}")
-                                    pass
-
-    # Использование mock класса
-    async def print_generator_content(generator: AsyncGenerator[str, None]):
-        async for item in generator:
-            print(item, end="")
-
-    generator = ChatGLM.create_async_generator(model, messages, proxy)
-    await print_generator_content(await generator)
+    async for response in ChatGLM.create_async_generator(model="glm-4", messages=messages):
+        print(response, end="")
 
 if __name__ == "__main__":
     asyncio.run(main())
+```
+Этот пример показывает, как использовать `create_async_generator` для получения ответа от API ChatGLM.
+```python
+import asyncio
+from src.endpoints.gpt4free.g4f.Provider.ChatGLM import ChatGLM
+
+async def main():
+    messages = [
+        {"role": "user", "content": "What is the capital of France?"}
+    ]
+    async for response in ChatGLM.create_async_generator(model="glm-4", messages=messages, proxy="http://your_proxy:8080"):
+        print(response, end="")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Этот пример показывает, как использовать `create_async_generator` с прокси-сервером.

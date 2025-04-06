@@ -2,11 +2,11 @@
 
 ## Обзор
 
-Модуль `src.utils.path` предназначен для определения корневого пути к проекту и предоставляет функцию `get_relative_path` для извлечения относительного пути из полного пути. Все импорты в проекте строятся относительно этого пути.
+Модуль `src.utils.path` определяет корневой путь к проекту. Все импорты строятся относительно этого пути. Содержит функцию для получения относительного пути из полного пути, начиная с указанного сегмента.
 
 ## Подробнее
 
-Модуль содержит функцию `get_relative_path`, которая позволяет получить часть пути, начиная с указанного сегмента. Это полезно для работы с путями в проекте, особенно когда необходимо получить путь относительно определенной директории.
+Модуль предоставляет функцию `get_relative_path`, которая позволяет извлекать часть пути начиная с определенного сегмента. Это полезно для работы с путями в проекте, когда необходимо получить путь относительно какой-то известной точки.
 
 ## Функции
 
@@ -26,7 +26,7 @@ def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
     """
 ```
 
-**Назначение**: Извлекает относительный путь из полного пути, начиная с указанного сегмента.
+**Назначение**: Функция `get_relative_path` извлекает относительный путь из полного пути, начиная с указанного сегмента. Если указанный сегмент не найден в полном пути, функция возвращает `None`.
 
 **Параметры**:
 
@@ -39,29 +39,25 @@ def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
 
 **Как работает функция**:
 
-1. **Преобразование в Path**: Преобразует входные строки `full_path` в объект `Path` для удобства работы с путями.
-2. **Разбиение пути на сегменты**: Разбивает полный путь на список отдельных сегментов (директорий).
-3. **Поиск индекса начального сегмента**: Ищет индекс сегмента `relative_from` в списке сегментов пути.
-4. **Формирование относительного пути**: Если сегмент `relative_from` найден, формирует новый путь, начиная с этого сегмента и до конца исходного пути.
-5. **Возврат относительного пути**: Преобразует полученный относительный путь в строку в формате POSIX и возвращает его. Если сегмент `relative_from` не найден, возвращает `None`.
+1. **Преобразование в `Path`**: Функция преобразует входные строки `full_path` и `relative_from` в объекты `Path` для удобства работы с путями.
+2. **Разбиение пути на части**: Полный путь разбивается на отдельные компоненты (сегменты) с помощью `path.parts`.
+3. **Поиск индекса**: Функция ищет индекс сегмента `relative_from` в списке компонентов пути.
+4. **Формирование относительного пути**: Если сегмент `relative_from` найден, формируется новый путь, начиная с этого сегмента и до конца пути.
+5. **Преобразование в строку**: Относительный путь преобразуется обратно в строку с помощью `as_posix()`.
+6. **Обработка отсутствия сегмента**: Если сегмент `relative_from` не найден в полном пути, функция возвращает `None`.
 
-```ascii
-    full_path, relative_from
-    |
-    Преобразование в Path
-    |
-    Разбиение пути на сегменты
-    |
-    Поиск индекса начального сегмента
-    |
-    Если relative_from найден:
-        |
-        Формирование относительного пути
-        |
-        Возврат относительного пути в формате POSIX
-    Иначе:
-        |
-        Возврат None
+**ASCII flowchart**:
+
+```
+full_path, relative_from
+     ↓
+Преобразование в Path
+     ↓
+Разбиение пути на части (parts)
+     ↓
+Поиск индекса relative_from
+     ├───> Найден: Формирование относительного пути → Преобразование в строку → Возврат относительного пути
+     └───> Не найден: Возврат None
 ```
 
 **Примеры**:
@@ -69,7 +65,6 @@ def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
 ```python
 from pathlib import Path
 from typing import Optional
-
 
 def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
     """
@@ -94,23 +89,26 @@ def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
         return relative_path.as_posix()
     else:
         return None
-```
+# Пример 1: Относительный путь существует
+full_path = "/home/user/project/src/utils/path.py"
+relative_from = "src"
+result = get_relative_path(full_path, relative_from)
+print(f"Пример 1: {result}")  # Вывод: src/utils/path.py
 
-```python
-# Пример 1: Извлечение относительного пути от 'src'
-full_path = '/path/to/my/project/src/utils/path.py'
-relative_from = 'src'
-relative_path = get_relative_path(full_path, relative_from)
-print(relative_path)  # Вывод: src/utils/path.py
+# Пример 2: Относительный путь не существует
+full_path = "/home/user/project/src/utils/path.py"
+relative_from = "nonexistent"
+result = get_relative_path(full_path, relative_from)
+print(f"Пример 2: {result}")  # Вывод: None
 
-# Пример 2: Извлечение относительного пути от 'utils'
-full_path = '/path/to/my/project/src/utils/path.py'
-relative_from = 'utils'
-relative_path = get_relative_path(full_path, relative_from)
-print(relative_path)  # Вывод: utils/path.py
+# Пример 3: relative_from - последний сегмент
+full_path = "/home/user/project/src/utils"
+relative_from = "utils"
+result = get_relative_path(full_path, relative_from)
+print(f"Пример 3: {result}")  # Вывод: utils
 
-# Пример 3: Сегмент не найден
-full_path = '/path/to/my/project/src/utils/path.py'
-relative_from = 'nonexistent'
-relative_path = get_relative_path(full_path, relative_from)
-print(relative_path)  # Вывод: None
+# Пример 4: Путь без начального слеша
+full_path = "home/user/project/src/utils/path.py"
+relative_from = "src"
+result = get_relative_path(full_path, relative_from)
+print(f"Пример 4: {result}")  # Вывод: src/utils/path.py

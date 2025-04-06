@@ -2,12 +2,11 @@
 
 ## Обзор
 
-Модуль `raise_for_status.py` предназначен для проверки статуса HTTP-ответа и, в случае ошибки,
-вызывает исключение `ResponseStatusError` с информативным сообщением об ошибке. Он обрабатывает как `StreamResponse`, так и `ClientResponse` объекты, проверяя, был ли запрос успешным. В случае неуспешного запроса, модуль пытается извлечь сообщение об ошибке из JSON-ответа, если таковой имеется, или возвращает содержимое ответа в виде текста.
+Модуль `raise_for_status` предназначен для проверки статуса HTTP-ответа и выброса исключения в случае, если ответ не успешен (не `200 OK`). Он обрабатывает различные типы контента, такие как JSON и HTML, чтобы предоставить более информативное сообщение об ошибке.
 
 ## Подробней
 
-Этот модуль играет важную роль в обработке ответов от API, позволяя централизованно обрабатывать ошибки и предоставлять детальную информацию о причинах сбоев. Он используется для обеспечения надежности и предсказуемости работы с внешними сервисами, логируя ошибки и уведомляя разработчиков о проблемах.
+Этот модуль используется для централизованной обработки ошибок, возникающих при выполнении HTTP-запросов. Он проверяет статус ответа и, если статус указывает на ошибку, извлекает детали ошибки из тела ответа (если это возможно, например, для JSON-ответов) или предоставляет общее описание ошибки. Это позволяет упростить обработку ошибок в других частях кодовой базы, где выполняются HTTP-запросы.
 
 ## Функции
 
@@ -15,115 +14,131 @@
 
 ```python
 async def raise_for_status(response: Union[StreamResponse, ClientResponse], message: str = None) -> None:
-    """Проверяет статус HTTP-ответа и вызывает исключение `ResponseStatusError` в случае ошибки.
+    """Проверяет статус HTTP-ответа и выбрасывает исключение, если ответ не успешен.
 
     Args:
-        response (Union[StreamResponse, ClientResponse]): Объект ответа, который может быть как `StreamResponse`, так и `ClientResponse`.
+        response (Union[StreamResponse, ClientResponse]): Объект ответа, который нужно проверить. Может быть `StreamResponse` или `ClientResponse` из `aiohttp`.
         message (str, optional): Пользовательское сообщение об ошибке. По умолчанию `None`.
 
     Returns:
-        None: Функция ничего не возвращает в случае успешного выполнения.
+        None: Функция ничего не возвращает, если ответ успешен.
 
     Raises:
-        ResponseStatusError: Если статус ответа не OK (не 2xx), вызывается исключение с сообщением об ошибке.
-
+        ResponseStatusError: Выбрасывается, если статус ответа не `200 OK`. Содержит сообщение об ошибке, извлеченное из ответа или предоставленное пользователем.
     """
 ```
 
-**Назначение**: Функция `raise_for_status` асинхронно проверяет, является ли HTTP-ответ успешным (код состояния 2xx). Если ответ не успешен, она пытается извлечь сообщение об ошибке из тела ответа (предпочтительно в формате JSON) и генерирует исключение `ResponseStatusError` с этим сообщением. Если извлечь сообщение об ошибке не удается, используется стандартное сообщение или содержимое ответа в виде текста.
-
-**Параметры**:
-
--   `response` (Union[StreamResponse, ClientResponse]): Объект ответа, который может быть как `StreamResponse`, так и `ClientResponse`.
--   `message` (str, optional): Пользовательское сообщение об ошибке. По умолчанию `None`.
-
-**Возвращает**:
-
--   `None`: Функция ничего не возвращает в случае успешного выполнения.
-
-**Вызывает исключения**:
-
--   `ResponseStatusError`: Если статус ответа не OK (не 2xx), вызывается исключение с сообщением об ошибке.
-
 **Как работает функция**:
 
-1.  **Проверка статуса**: Сначала проверяется, является ли статус ответа успешным (`response.ok`). Если это так, функция завершается, ничего не делая.
-2.  **Определение типа содержимого**: Если статус ответа не успешен, функция пытается определить тип содержимого ответа, чтобы извлечь сообщение об ошибке.
-3.  **Обработка JSON**: Если тип содержимого - `application/json`, функция пытается извлечь данные JSON из ответа и получить сообщение об ошибке из полей `error` или `message`.
-4.  **Обработка текста**: Если тип содержимого не `application/json` или извлечение JSON не удалось, функция пытается получить текст ответа и определить, является ли это HTML-контент.
-5.  **Генерация исключения**: В конце, функция генерирует исключение `ResponseStatusError` с сообщением об ошибке, включающим статус ответа и извлеченное или сгенерированное сообщение.
+1.  **Проверка статуса ответа**: Функция начинает с проверки, является ли ответ успешным (`response.ok`). Если ответ успешен, функция немедленно завершается, ничего не возвращая.
 
-```text
+2.  **Обработка JSON-ответов**: Если ответ не успешен, функция пытается определить тип контента ответа. Если тип контента – `application/json`, функция пытается извлечь сообщение об ошибке из JSON-тела ответа.
+
+3.  **Извлечение сообщения из JSON**: Если тип контента – `application/json`, функция пытается проанализировать JSON-тело ответа и извлечь сообщение об ошибке из полей `error` или `message`. Если извлечение удается, сообщение об ошибке обновляется.
+
+4.  **Обработка текстовых/HTML-ответов**: Если тип контента не `application/json` или не удалось извлечь сообщение из JSON, функция пытается получить текстовое содержимое ответа.  Если тип контента – `text/html` или текст начинается с `<!DOCTYPE`, сообщение устанавливается как `"HTML content"`; в противном случае, сообщение устанавливается как текст ответа.
+
+5.  **Выброс исключения**: Если ответ не успешен, функция создает исключение `ResponseStatusError` с сообщением об ошибке, которое было извлечено из тела ответа или предоставлено пользователем.
+
+```ascii
 Проверка статуса ответа (response.ok)
 │
-├─── True: Выход из функции
+├─── True: Завершение функции
 │
-└─── False:
-     │
-     Определение типа содержимого (content_type)
-     │
-     ├─── application/json: Попытка извлечения данных JSON и сообщения об ошибке
-     │   │
-     │   └─── Успешно: Извлечение сообщения об ошибке из JSON
-     │   │
-     │   └─── Ошибка: Обработка как обычный текст
-     │
-     └─── Другой тип: Получение текста ответа
-         │
-         └─── Определение HTML-контента
-             │
-             └─── True: Сообщение "HTML content"
-             │
-             └─── False: Использование текста ответа
-     │
-     Генерация исключения ResponseStatusError с сообщением об ошибке
-
+└─── False: Определение типа контента
+    │
+    ├─── content_type.startswith("application/json")
+    │   │
+    │   ├─── True: Попытка извлечения сообщения об ошибке из JSON
+    │   │   │
+    │   │   └─── Успешно: Обновление сообщения об ошибке
+    │   │   │
+    │   │   └─── Неуспешно: Пропуск обработки JSON
+    │   │
+    │   └─── False: Проверка на HTML или извлечение текста
+    │       │
+    │       ├─── content_type.startswith("text/html") или text.startswith("<!DOCTYPE")
+    │       │   │
+    │       │   ├─── True: Сообщение = "HTML content"
+    │       │   │
+    │       │   └─── False: Сообщение = text
+    │       │
+    │       └─── Выброс исключения ResponseStatusError с сообщением об ошибке
+    │
+    └─── Выброс исключения ResponseStatusError с сообщением об ошибке
 ```
 
 **Примеры**:
 
-1.  Успешный ответ:
-
 ```python
-from aiohttp import ClientResponse
-from unittest.mock import AsyncMock
-import pytest
+import aiohttp
 from src.endpoints.gpt4free.g4f.Provider.hf_space.raise_for_status import raise_for_status
-from ...errors import ResponseStatusError
 
-@pytest.mark.asyncio
 async def test_raise_for_status_ok():
-    response = AsyncMock(spec=ClientResponse)
-    response.ok = True
+    # Мокируем успешный ответ
+    class MockResponse:
+        def __init__(self):
+            self.ok = True
+            self.status = 200
+
+    response = MockResponse()
+    # Не должно быть исключения
     await raise_for_status(response)
-    # Функция не должна вызывать исключение
 
-```
-
-2.  Неуспешный ответ с JSON:
-
-```python
-
-@pytest.mark.asyncio
 async def test_raise_for_status_json_error():
-    response = AsyncMock(spec=ClientResponse)
-    response.ok = False
-    response.headers = {"content-type": "application/json"}
-    response.json.return_value = {"error": "Ошибка сервера"}
-    with pytest.raises(ResponseStatusError) as ex:
+    # Мокируем ошибочный ответ с JSON-сообщением об ошибке
+    class MockResponse:
+        def __init__(self):
+            self.ok = False
+            self.status = 400
+            self.headers = {"content-type": "application/json"}
+
+        async def json(self):
+            return {"error": "Тестовая ошибка"}
+
+    response = MockResponse()
+    try:
         await raise_for_status(response)
-    assert "Ошибка сервера" in str(ex.value)
-```
+    except ResponseStatusError as ex:
+        print(f"Исключение: {ex}")
 
-3.  Неуспешный ответ с HTML:
-
-```python
-@pytest.mark.asyncio
 async def test_raise_for_status_html_error():
-    response = AsyncMock(spec=ClientResponse)
-    response.ok = False
-    response.headers = {"content-type": "text/html"}
-    response.text.return_value = "<!DOCTYPE html><html><body><h1>Ошибка</h1></body></html>"
-    with pytest.raises(ResponseStatusError) as ex:
+    # Мокируем ошибочный ответ с HTML-сообщением об ошибке
+    class MockResponse:
+        def __init__(self):
+            self.ok = False
+            self.status = 404
+            self.headers = {"content-type": "text/html"}
+
+        async def text(self):
+            return "<!DOCTYPE html><html><body><h1>Страница не найдена</h1></body></html>"
+        
+        def get(self, param, param1):
+            return ''
+
+    response = MockResponse()
+    try:
         await raise_for_status(response)
-    assert "HTML content" in str(ex.value)
+    except ResponseStatusError as ex:
+        print(f"Исключение: {ex}")
+
+async def test_raise_for_status_text_error():
+    # Мокируем ошибочный ответ с текстовым сообщением об ошибке
+    class MockResponse:
+        def __init__(self):
+            self.ok = False
+            self.status = 500
+            self.headers = {"content-type": "text/plain"}
+
+        async def text(self):
+            return "Внутренняя ошибка сервера"
+        
+        def get(self, param, param1):
+            return ''
+            
+
+    response = MockResponse()
+    try:
+        await raise_for_status(response)
+    except ResponseStatusError as ex:
+        print(f"Исключение: {ex}")
