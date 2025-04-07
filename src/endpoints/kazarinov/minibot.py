@@ -284,6 +284,7 @@ def main(restarts:int = 5):
 
     try:
         logger.info(f"Starting bot in {Config.MODE} mode")
+        restarts = 5 # <- пусть будет бесконечный цикл
         bot.polling(none_stop=True)
         
     except Exception as ex:

@@ -1,57 +1,57 @@
-# Документация модуля `post_message_async`
+# Модуль: src.endpoints.advertisement.facebook.post_message_async
 
 ## Обзор
 
-Этот скрипт, расположенный в директории `hypotez/src/endpoints/advertisement/facebook/scenarios`, предназначен для автоматизации процесса публикации сообщений в Facebook. Скрипт взаимодействует со страницей Facebook, используя локаторы для выполнения различных действий, таких как отправка сообщений, загрузка медиафайлов и обновление подписей.
+Этот скрипт является частью директории `hypotez/src/endpoints/advertisement/facebook/scenarios` и предназначен для автоматизации процесса публикации сообщений в Facebook. Скрипт взаимодействует со страницей Facebook, используя локаторы для выполнения различных действий, таких как отправка сообщений, загрузка медиафайлов и обновление подписей.
 
-## Подробней
+## Подробнее
 
-Этот модуль автоматизирует процесс продвижения постов в Facebook, включая отправку заголовков и описаний, загрузку медиафайлов и обновление подписей. Он использует веб-драйвер для взаимодействия с интерфейсом Facebook и предназначен для работы в асинхронном режиме. Это позволяет эффективно управлять процессом продвижения постов, обеспечивая надежную обработку ошибок и динамическую адаптацию к изменениям на веб-странице.
+Этот модуль автоматизирует процесс публикации рекламных сообщений в Facebook, включая отправку заголовка и описания, загрузку медиафайлов и их продвижение. Он разработан для работы в асинхронном режиме и использует веб-драйвер для взаимодействия с Facebook.
 
 ## Структура модуля
 
-Представлена диаграмма Mermaid, отображающая структуру работы скрипта.
+Модуль состоит из нескольких функций, каждая из которых отвечает за определенный этап процесса публикации. Основные этапы включают отправку заголовка и описания, загрузку медиафайлов, обновление подписей и продвижение поста.
 
 ```mermaid
 graph TD
-    Start[Start] --> InitDriver[Инициализация драйвера]
-    InitDriver --> LoadCategoryAndProducts[Загрузка категории и продуктов]
-    LoadCategoryAndProducts --> SendTitle[Отправка заголовка]
-    SendTitle --> CheckTitleSuccess{Успешно?}
-    CheckTitleSuccess -->|Да| UploadMediaAndPromotePost[Загрузка медиа и продвижение поста]
-    CheckTitleSuccess -->|Нет| TitleError[Ошибка: Не удалось отправить заголовок]
-    UploadMediaAndPromotePost --> UploadMedia[Загрузка медиа]
-    UploadMedia --> CheckMediaSuccess{Успешно?}
-    CheckMediaSuccess -->|Да| UpdateCaptions[Обновление подписей изображений]
-    CheckMediaSuccess -->|Нет| MediaError[Ошибка: Не удалось загрузить медиа]
-    UpdateCaptions --> PromotePost[Продвижение поста]
-    PromotePost --> CheckPromoteSuccess{Успешно?}
-    CheckPromoteSuccess -->|Да| End[Конец]
-    CheckPromoteSuccess -->|Нет| PromoteError[Ошибка: Не удалось продвинуть пост]
+    Start[Start] --> InitDriver[Initialize Driver]
+    InitDriver --> LoadCategoryAndProducts[Load Category and Products]
+    LoadCategoryAndProducts --> SendTitle[Send Title]
+    SendTitle --> CheckTitleSuccess{Success?}
+    CheckTitleSuccess -->|Yes| UploadMediaAndPromotePost[Upload Media and Promote Post]
+    CheckTitleSuccess -->|No| TitleError[Error: Failed to Send Title]
+    UploadMediaAndPromotePost --> UploadMedia[Upload Media]
+    UploadMedia --> CheckMediaSuccess{Success?}
+    CheckMediaSuccess -->|Yes| UpdateCaptions[Update Image Captions]
+    CheckMediaSuccess -->|No| MediaError[Error: Failed to Upload Media]
+    UpdateCaptions --> PromotePost[Promote Post]
+    PromotePost --> CheckPromoteSuccess{Success?}
+    CheckPromoteSuccess -->|Yes| End[End]
+    CheckPromoteSuccess -->|No| PromoteError[Error: Failed to Promote Post]
 ```
 
 ### Легенда
 
 1.  **Start**: Начало выполнения скрипта.
 2.  **InitDriver**: Создание экземпляра класса `Driver`.
-3.  **LoadCategoryAndProducts**: Загрузка данных о категории и продуктах.
+3.  **LoadCategoryAndProducts**: Загрузка данных категории и продукта.
 4.  **SendTitle**: Вызов функции `post_title` для отправки заголовка.
-5.  **CheckTitleSuccess**: Проверка успешности отправки заголовка.
+5.  **CheckTitleSuccess**: Проверка успешной отправки заголовка.
 
-    *   **Да**: Переход к загрузке медиа и продвижению поста.
-    *   **Нет**: Вывод ошибки "Не удалось отправить заголовок".
+    *   **Yes**: Переход к загрузке медиа и продвижению поста.
+    *   **No**: Вывод ошибки "Failed to send title".
 6.  **UploadMediaAndPromotePost**: Вызов функции `promote_post`.
 7.  **UploadMedia**: Вызов функции `upload_media` для загрузки медиафайлов.
-8.  **CheckMediaSuccess**: Проверка успешности загрузки медиа.
+8.  **CheckMediaSuccess**: Проверка успешной загрузки медиафайлов.
 
-    *   **Да**: Переход к обновлению подписей изображений.
-    *   **Нет**: Вывод ошибки "Не удалось загрузить медиа".
+    *   **Yes**: Переход к обновлению подписей изображений.
+    *   **No**: Вывод ошибки "Failed to upload media".
 9.  **UpdateCaptions**: Вызов функции `update_images_captions` для обновления подписей.
 10. **PromotePost**: Завершение процесса продвижения поста.
-11. **CheckPromoteSuccess**: Проверка успешности продвижения поста.
+11. **CheckPromoteSuccess**: Проверка успешного продвижения поста.
 
-    *   **Да**: Завершение выполнения скрипта.
-    *   **Нет**: Вывод ошибки "Не удалось продвинуть пост".
+    *   **Yes**: Окончание выполнения скрипта.
+    *   **No**: Вывод ошибки "Failed to promote post".
 
 ## Функции
 
@@ -59,25 +59,42 @@ graph TD
 
 ```python
 def post_title(d: Driver, category: SimpleNamespace) -> bool:
-    """
-    Отправляет заголовок и описание кампании в поле сообщения Facebook.
+    """Отправляет заголовок и описание кампании в поле сообщения Facebook.
 
     Args:
-        d (Driver): Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+        d (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
         category (SimpleNamespace): Объект, содержащий заголовок и описание для отправки.
 
     Returns:
-        bool: `True`, если заголовок и описание успешно отправлены, иначе `None`.
+        bool: `True`, если заголовок и описание были успешно отправлены, иначе `None`.
 
+    Как работает функция:
+    1. Функция получает заголовок и описание из объекта `category`.
+    2. Использует драйвер для поиска и заполнения полей ввода заголовка и описания на странице Facebook.
+    3. Проверяет успешность отправки и возвращает соответствующее логическое значение.
+
+    A (Получение заголовка и описания)
+    ↓
+    B (Поиск и заполнение полей ввода)
+    ↓
+    C (Проверка успешности отправки)
+    ↓
+    D (Возврат результата)
+
+    Примеры:
+    >>> from types import SimpleNamespace
+    >>> category = SimpleNamespace(title="Заголовок", description="Описание")
+    >>> driver = Driver(Chrome)
+    >>> post_title(driver, category)
+    True
     """
+    ...
 ```
-
-**Назначение**: Отправка заголовка и описания кампании в поле сообщения Facebook.
 
 **Параметры**:
 
-*   `d` (Driver): Экземпляр класса `Driver`, используемый для взаимодействия с веб-страницей.
-*   `category` (SimpleNamespace): Категория, содержащая заголовок и описание для отправки.
+*   `d` (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
+*   `category` (SimpleNamespace): Объект, содержащий заголовок и описание для отправки.
 
 **Возвращает**:
 
@@ -85,33 +102,68 @@ def post_title(d: Driver, category: SimpleNamespace) -> bool:
 
 **Как работает функция**:
 
-1.  Извлекает заголовок и описание из объекта `category`.
-2.  Использует `driver.execute_locator` для поиска и заполнения поля заголовка.
-3.  Проверяет успешность отправки заголовка и описания.
+1.  Функция получает заголовок и описание из объекта `category`.
+2.  Использует драйвер для поиска и заполнения полей ввода заголовка и описания на странице Facebook.
+3.  Проверяет успешность отправки и возвращает соответствующее логическое значение.
+
+```text
+   A (Получение заголовка и описания)
+   ↓
+   B (Поиск и заполнение полей ввода)
+   ↓
+   C (Проверка успешности отправки)
+   ↓
+   D (Возврат результата)
+```
+
+**Примеры**:
+
+```python
+from types import SimpleNamespace
+category = SimpleNamespace(title="Заголовок", description="Описание")
+driver = Driver(Chrome)
+post_title(driver, category)
+True
+```
 
 ### `upload_media`
 
 ```python
 def upload_media(d: Driver, products: List[SimpleNamespace], no_video: bool = False) -> bool:
-    """
-    Загружает медиафайлы в пост Facebook и обновляет их подписи.
+    """Загружает медиафайлы в пост Facebook и обновляет их подписи.
 
     Args:
-        d (Driver): Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+        d (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
         products (List[SimpleNamespace]): Список продуктов, содержащих пути к медиафайлам.
         no_video (bool, optional): Флаг, указывающий, следует ли пропускать загрузку видео. По умолчанию `False`.
 
     Returns:
         bool: `True`, если медиафайлы были успешно загружены, иначе `None`.
 
-    """
-```
+    Как работает функция:
+    1. Функция перебирает список продуктов и загружает медиафайлы (изображения и видео) на страницу Facebook.
+    2. Если `no_video` установлен в `True`, загрузка видео пропускается.
+    3. Функция возвращает `True`, если все медиафайлы были успешно загружены, иначе `None`.
 
-**Назначение**: Загрузка медиафайлов в пост Facebook и обновление их подписей.
+    A (Перебор списка продуктов)
+    │
+    B (Загрузка медиафайлов) - C (Проверка флага no_video)
+    │
+    D (Возврат результата)
+
+    Примеры:
+    >>> from types import SimpleNamespace
+    >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg'), SimpleNamespace(local_video_path='path/to/video.mp4')]
+    >>> driver = Driver(Chrome)
+    >>> upload_media(driver, products)
+    True
+    """
+    ...
+```
 
 **Параметры**:
 
-*   `d` (Driver): Экземпляр класса `Driver`, используемый для взаимодействия с веб-страницей.
+*   `d` (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
 *   `products` (List[SimpleNamespace]): Список продуктов, содержащих пути к медиафайлам.
 *   `no_video` (bool, optional): Флаг, указывающий, следует ли пропускать загрузку видео. По умолчанию `False`.
 
@@ -121,47 +173,100 @@ def upload_media(d: Driver, products: List[SimpleNamespace], no_video: bool = Fa
 
 **Как работает функция**:
 
-1.  Перебирает список продуктов и загружает медиафайлы (изображения и видео) для каждого продукта.
-2.  Использует `driver.execute_locator` для поиска элементов загрузки и выполнения действий.
-3.  Проверяет успешность загрузки каждого медиафайла.
+1.  Функция перебирает список продуктов и загружает медиафайлы (изображения и видео) на страницу Facebook.
+2.  Если `no_video` установлен в `True`, загрузка видео пропускается.
+3.  Функция возвращает `True`, если все медиафайлы были успешно загружены, иначе `None`.
+
+```text
+   A (Перебор списка продуктов)
+   │
+   B (Загрузка медиафайлов) - C (Проверка флага no_video)
+   │
+   D (Возврат результата)
+```
+
+**Примеры**:
+
+```python
+from types import SimpleNamespace
+products = [SimpleNamespace(local_image_path='path/to/image.jpg'), SimpleNamespace(local_video_path='path/to/video.mp4')]
+driver = Driver(Chrome)
+upload_media(driver, products)
+True
+```
 
 ### `update_images_captions`
 
 ```python
 def update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
-    """
-    Асинхронно добавляет описания к загруженным медиафайлам.
+    """Асинхронно добавляет описания к загруженным медиафайлам.
 
     Args:
-        d (Driver): Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+        d (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
         products (List[SimpleNamespace]): Список продуктов с деталями для обновления.
-        textarea_list (List[WebElement]): Список текстовых областей, куда добавляются подписи.
+        textarea_list (List[WebElement]): Список текстовых полей, в которые добавляются подписи.
 
+    Как работает функция:
+    1. Функция асинхронно перебирает список продуктов и обновляет подписи для каждого медиафайла.
+    2. Использует `textarea_list` для поиска текстовых полей, соответствующих каждому медиафайлу.
+    3. Обновляет подписи, используя информацию из списка продуктов.
+
+    A (Перебор списка продуктов)
+    ↓
+    B (Поиск текстовых полей)
+    ↓
+    C (Обновление подписей)
+
+    Примеры:
+    >>> from types import SimpleNamespace
+    >>> from selenium.webdriver.remote.webelement import WebElement
+    >>> products = [SimpleNamespace(description='Описание 1'), SimpleNamespace(description='Описание 2')]
+    >>> textarea_list = [WebElement(), WebElement()]
+    >>> driver = Driver(Chrome)
+    >>> update_images_captions(driver, products, textarea_list)
     """
+    ...
 ```
-
-**Назначение**: Асинхронное добавление описаний к загруженным медиафайлам.
 
 **Параметры**:
 
-*   `d` (Driver): Экземпляр класса `Driver`, используемый для взаимодействия с веб-страницей.
+*   `d` (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
 *   `products` (List[SimpleNamespace]): Список продуктов с деталями для обновления.
-*   `textarea_list` (List[WebElement]): Список текстовых областей, куда добавляются подписи.
+*   `textarea_list` (List[WebElement]): Список текстовых полей, в которые добавляются подписи.
 
 **Как работает функция**:
 
-1.  Перебирает список продуктов и добавляет описания к соответствующим текстовым областям.
-2.  Использует `driver.execute_locator` для поиска и заполнения текстовых областей.
+1.  Функция асинхронно перебирает список продуктов и обновляет подписи для каждого медиафайла.
+2.  Использует `textarea_list` для поиска текстовых полей, соответствующих каждому медиафайлу.
+3.  Обновляет подписи, используя информацию из списка продуктов.
+
+```text
+   A (Перебор списка продуктов)
+   ↓
+   B (Поиск текстовых полей)
+   ↓
+   C (Обновление подписей)
+```
+
+**Примеры**:
+
+```python
+from types import SimpleNamespace
+from selenium.webdriver.remote.webelement import WebElement
+products = [SimpleNamespace(description='Описание 1'), SimpleNamespace(description='Описание 2')]
+textarea_list = [WebElement(), WebElement()]
+driver = Driver(Chrome)
+update_images_captions(driver, products, textarea_list)
+```
 
 ### `promote_post`
 
 ```python
 def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool:
-    """
-    Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
+    """Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
 
     Args:
-        d (Driver): Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+        d (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
         category (SimpleNamespace): Детали категории, используемые для заголовка и описания поста.
         products (List[SimpleNamespace]): Список продуктов, содержащих медиа и детали для публикации.
         no_video (bool, optional): Флаг, указывающий, следует ли пропускать загрузку видео. По умолчанию `False`.
@@ -169,14 +274,34 @@ def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleName
     Returns:
         bool: `True`, если пост был успешно продвинут, иначе `None`.
 
-    """
-```
+    Как работает функция:
+    1. Функция вызывает `post_title` для отправки заголовка и описания.
+    2. Вызывает `upload_media` для загрузки медиафайлов.
+    3. Вызывает `update_images_captions` для обновления подписей.
+    4. Завершает процесс продвижения поста.
 
-**Назначение**: Управление процессом продвижения поста с заголовком, описанием и медиафайлами.
+    A (Вызов post_title)
+    ↓
+    B (Вызов upload_media)
+    ↓
+    C (Вызов update_images_captions)
+    ↓
+    D (Завершение продвижения поста)
+
+    Примеры:
+    >>> from types import SimpleNamespace
+    >>> category = SimpleNamespace(title="Заголовок", description="Описание")
+    >>> products = [SimpleNamespace(local_image_path='path/to/image.jpg')]
+    >>> driver = Driver(Chrome)
+    >>> promote_post(driver, category, products)
+    True
+    """
+    ...
+```
 
 **Параметры**:
 
-*   `d` (Driver): Экземпляр класса `Driver`, используемый для взаимодействия с веб-страницей.
+*   `d` (Driver): Экземпляр `Driver`, используемый для взаимодействия с веб-страницей.
 *   `category` (SimpleNamespace): Детали категории, используемые для заголовка и описания поста.
 *   `products` (List[SimpleNamespace]): Список продуктов, содержащих медиа и детали для публикации.
 *   `no_video` (bool, optional): Флаг, указывающий, следует ли пропускать загрузку видео. По умолчанию `False`.
@@ -187,18 +312,41 @@ def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleName
 
 **Как работает функция**:
 
-1.  Вызывает функции `post_title`, `upload_media` и `update_images_captions` для выполнения соответствующих задач.
-2.  Управляет процессом продвижения поста, обрабатывая возможные ошибки.
+1.  Функция вызывает `post_title` для отправки заголовка и описания.
+2.  Вызывает `upload_media` для загрузки медиафайлов.
+3.  Вызывает `update_images_captions` для обновления подписей.
+4.  Завершает процесс продвижения поста.
 
-## Примеры
+```text
+   A (Вызов post_title)
+   ↓
+   B (Вызов upload_media)
+   ↓
+   C (Вызов update_images_captions)
+   ↓
+   D (Завершение продвижения поста)
+```
 
-Чтобы использовать этот скрипт, выполните следующие шаги:
+**Примеры**:
+
+```python
+from types import SimpleNamespace
+category = SimpleNamespace(title="Заголовок", description="Описание")
+products = [SimpleNamespace(local_image_path='path/to/image.jpg')]
+driver = Driver(Chrome)
+promote_post(driver, category, products)
+True
+```
+
+## Использование
+
+Для использования этого скрипта выполните следующие шаги:
 
 1.  **Инициализация драйвера**: Создайте экземпляр класса `Driver`.
 2.  **Загрузка локаторов**: Загрузите локаторы из JSON-файла.
 3.  **Вызов функций**: Используйте предоставленные функции для отправки заголовка, загрузки медиа и продвижения поста.
 
-#### Пример
+### Пример
 
 ```python
 from src.webdriver.driver import Driver
@@ -222,14 +370,18 @@ await promote_post(driver, category, products)
 
 *   `selenium`: Для автоматизации веб-интерфейса.
 *   `asyncio`: Для асинхронных операций.
-*   `pathlib`: Для работы с путями к файлам.
+*   `pathlib`: Для обработки путей к файлам.
 *   `types`: Для создания простых пространств имен.
 *   `typing`: Для аннотаций типов.
 
 ## Обработка ошибок
 
-Скрипт включает надежную обработку ошибок, чтобы обеспечить продолжение выполнения даже в случае, если определенные элементы не найдены или возникли проблемы с веб-страницей. Это особенно полезно для работы с динамическими или нестабильными веб-страницами.
+Скрипт включает надежную обработку ошибок для обеспечения продолжения выполнения даже в случае, если определенные элементы не найдены или возникли проблемы с веб-страницей. Это особенно полезно для обработки динамических или нестабильных веб-страниц.
+
+## Вклад
+
+Приветствуются вклады в этот скрипт. Убедитесь, что любые изменения хорошо документированы и включают соответствующие тесты.
 
 ## Лицензия
 
-Этот скрипт распространяется под лицензией MIT. Подробности см. в файле `LICENSE`.
+Этот скрипт лицензирован в соответствии с лицензией MIT. Подробности см. в файле `LICENSE`.

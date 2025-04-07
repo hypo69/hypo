@@ -2,23 +2,23 @@
 
 ## Обзор
 
-Этот файл содержит Кодекс поведения Microsoft для проектов с открытым исходным кодом.
+Этот документ содержит Кодекс поведения Open Source от Microsoft, который определяет стандарты поведения для участников проекта. Он предоставляет ссылки на ресурсы, такие как сам кодекс поведения и часто задаваемые вопросы, а также контактный адрес электронной почты для обращений.
 
 ## Подробнее
 
-Файл определяет стандарты поведения, которых следует придерживаться участникам проекта. Он предоставляет ссылки на полный текст Кодекса поведения Microsoft, часто задаваемые вопросы и контактный адрес электронной почты для вопросов и сообщений о нарушениях.
+Этот файл важен для установления четких правил и ожиданий относительно поведения в проекте. Он помогает создать уважительную и инклюзивную среду для всех участников, что способствует более продуктивному и приятному сотрудничеству. Кодекс поведения является важной частью любого open source проекта, так как он гарантирует, что все участники будут относиться друг к другу с уважением и достоинством.
 
 ## Содержание
 
-- [Microsoft Open Source Code of Conduct](#microsoft-open-source-code-of-conduct)
-- [Resources](#resources)
+1.  [Microsoft Open Source Code of Conduct](#microsoft-open-source-code-of-conduct)
+2.  [Resources](#resources)
 
 ## Microsoft Open Source Code of Conduct
 
-В данном проекте принят [Кодекс поведения Microsoft для проектов с открытым исходным кодом](https://opensource.microsoft.com/codeofconduct/).
+Этот проект принял [Кодекс поведения Open Source от Microsoft](https://opensource.microsoft.com/codeofconduct/).
 
 ## Resources
 
-- [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
-- [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
-- Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
+-   [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
+-   [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+-   Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns

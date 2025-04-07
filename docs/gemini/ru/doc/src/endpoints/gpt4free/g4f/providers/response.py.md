@@ -1,12 +1,12 @@
-# Модуль для работы с ответами от GPT4Free
+# Модуль для обработки ответов от GPT4Free
 
 ## Обзор
 
-Модуль `response.py` содержит классы и функции, предназначенные для форматирования и представления ответов, полученных от различных провайдеров в рамках проекта `GPT4Free`. Он включает в себя функции для обработки URL, заголовков, изображений и других типов данных, а также классы для представления различных типов ответов, таких как JSON, скрытые ответы, сообщения об окончании работы, инструменты, использование, источники и мультимедийные данные.
+Модуль `response.py` предназначен для обработки и форматирования ответов, полученных от различных провайдеров в рамках проекта `hypotez`. Он содержит классы и функции для преобразования URL-адресов, работы с изображениями, аудио и видео, а также для представления различных типов ответов, таких как JSON, текст, скрытые ответы и т.д. Модуль обеспечивает удобный интерфейс для работы с данными, возвращаемыми API, и их представления в нужном формате.
 
-## Подробнее
+## Подробней
 
-Этот модуль предоставляет инструменты для стандартизации и форматирования данных, возвращаемых различными поставщиками услуг GPT4Free, обеспечивая единообразное представление информации для пользователей. Функции модуля обеспечивают корректную обработку URL-адресов, нормализацию текста и создание markdown-ссылок и изображений. Классы модуля предназначены для представления различных типов ответов, от простых текстовых сообщений до сложных мультимедийных данных, и обеспечивают удобный доступ к этим данным.
+Этот модуль предоставляет инструменты для стандартизации и обработки ответов, что позволяет упростить интеграцию различных источников данных и представление информации пользователю. Функции модуля охватывают широкий спектр задач, от форматирования ссылок и изображений до обработки аудио- и видеоконтента. Также модуль включает классы для представления различных типов ответов, что позволяет гибко обрабатывать данные в зависимости от их типа и назначения.
 
 ## Функции
 
@@ -15,41 +15,37 @@
 ```python
 def quote_url(url: str) -> str:
     """
-    Преобразует части URL, сохраняя структуру домена.
+    Экранирует части URL, сохраняя структуру домена.
 
     Args:
-        url (str): URL-адрес для обработки.
+        url (str): URL для экранирования.
 
     Returns:
-        str: URL-адрес с корректно преобразованными частями.
+        str: Экранированный URL.
 
     Как работает функция:
-    1. Проверяет, содержит ли URL-адрес символы `%`. Если да, то выполняет unquote_plus для избежания двойного unquoting.
-    2. Разбивает URL-адрес на части, используя `//` в качестве разделителя (максимально один раз).
-    3. Если в URL-адресе нет `//`, то считает его относительным и преобразует его целиком.
-    4. Если `//` присутствует, то разделяет URL-адрес на протокол и остальную часть.
-    5. Разбивает оставшуюся часть на домен и путь, используя `/` в качестве разделителя (максимально один раз).
-    6. Если после домена нет `/`, то считает URL-адрес доменом и возвращает его.
-    7. Если `/` присутствует, то преобразует только путь, сохраняя протокол и домен.
-
-    ASCII flowchart:
-
-    URL --> Проверка на '%' --> Unquote (если нужно) --> Разделение на протокол и остальную часть -->
-    |
-    Нет '//' --> Преобразование URL
-    |
-    Есть '//' --> Разделение на домен и путь --> Нет '/' после домена --> Возврат протокола и домена -->
-    |
-    Есть '/' после домена --> Преобразование пути --> Возврат протокола, домена и преобразованного пути
-
-    Примеры:
-        >>> quote_url('https://example.com/path%20with%20spaces?query=value')
-        'https://example.com/path+with+spaces?query=value'
-        >>> quote_url('example.com/path with spaces')
-        'example.com%2Fpath+with+spaces'
+    1. Проверяет, содержит ли URL символы процента (`%`). Если да, то URL декодируется с помощью `unquote_plus`, чтобы избежать двойного декодирования.
+    2. Разбивает URL на части, используя `"//"` в качестве разделителя, чтобы отделить протокол от остальной части URL.
+    3. Если в URL нет `"//"` (т.е. это относительный URL), то экранирует весь URL с помощью `quote_plus`, разрешая символы `/?&=#`.
+    4. Если URL содержит протокол, то разбивает остальную часть URL на части, используя `"/"` в качестве разделителя, чтобы отделить домен от пути.
+    5. Если после домена нет `"/"` (т.е. это URL домена), то возвращает URL в формате `протокол//домен`.
+    6. Если после домена есть путь, то экранирует путь с помощью `quote_plus`, разрешая символы `/?&=#`, и возвращает URL в формате `протокол//домен/экранированный_путь`.
+    ```
+    ```
+    URL -> Проверка наличия '%' -> Декодирование URL (если нужно) -> Разделение на протокол и остальную часть ->
+    Относительный URL? -> Экранирование URL -> Конец
+    Да:                                                                                                |
+    Нет: -> Разделение на домен и путь -> URL домена? -> Возврат протокола и домена -> Конец
+    Да:                                                        |
+    Нет: -> Экранирование пути -> Возврат протокола, домена и экранированного пути -> Конец
+    ```
+    Example:
+        >>> quote_url("https://example.com/path?query=value")
+        'https://example.com/path%3Fquery%3Dvalue'
+        >>> quote_url("/relative/path?query=value")
+        '%2Frelative%2Fpath%3Fquery%3Dvalue'
     """
     ...
-```
 
 ### `quote_title`
 
@@ -66,87 +62,90 @@ def quote_title(title: str) -> str:
 
     Как работает функция:
     1. Проверяет, является ли заголовок непустой строкой.
-    2. Если заголовок существует, разбивает его на слова, удаляя лишние пробелы, и соединяет обратно с одним пробелом между словами.
+    2. Если заголовок непустой, разбивает его на слова, используя пробелы в качестве разделителя, и объединяет их обратно в строку с одним пробелом между словами.
+    3. Если заголовок пустой, возвращает пустую строку.
+    ```
+    ```
+    Заголовок -> Проверка на пустоту -> Разбиение на слова -> Объединение с одним пробелом -> Конец
+    Да:                                                                                                |
+    Нет: -> Возврат пустой строки -> Конец
+    ```
 
-    ASCII flowchart:
-
-    Заголовок --> Проверка на пустоту --> Разбиение на слова и соединение с одним пробелом --> Возврат нормализованного заголовка
-
-    Примеры:
-        >>> quote_title('  Пример   заголовка  ')
-        'Пример заголовка'
-        >>> quote_title('')
+    Example:
+        >>> quote_title("  Multiple   Spaces  ")
+        'Multiple Spaces'
+        >>> quote_title("")
         ''
     """
     ...
-```
 
 ### `format_link`
 
 ```python
 def format_link(url: str, title: Optional[str] = None) -> str:
     """
-    Форматирует URL-адрес и заголовок в виде markdown-ссылки.
+    Форматирует URL и заголовок в виде markdown-ссылки.
 
     Args:
-        url (str): URL-адрес для создания ссылки.
-        title (Optional[str], optional): Заголовок ссылки. Если `None`, извлекается из URL-адреса.
+        url (str): URL для ссылки.
+        title (Optional[str]): Заголовок для отображения. Если `None`, извлекается из URL.
 
     Returns:
-        str: Сформатированная markdown-ссылка.
+        str: Отформатированная markdown-ссылка.
 
     Как работает функция:
-    1. Проверяет, задан ли заголовок.
-    2. Если заголовок не задан, пытается извлечь его из URL-адреса, разделяя URL-адрес на части и удаляя "www.".
-    3. Если извлечь заголовок не удается, использует URL-адрес в качестве заголовка.
-    4. Форматирует URL-адрес и заголовок в виде markdown-ссылки, используя `quote_title` и `quote_url`.
-
-    ASCII flowchart:
-
-    URL, Заголовок --> Заголовок задан? --> Нет --> Извлечение заголовка из URL --> Не удалось извлечь --> URL в качестве заголовка -->
-    |
-    Да --> Использовать заданный заголовок --> Форматирование в markdown-ссылку --> Возврат markdown-ссылки
-
-    Примеры:
-        >>> format_link('https://example.com', 'Example')
+    1. Если заголовок не указан (`None`), пытается извлечь его из URL.
+    2. Если извлечь заголовок не удалось, использует сам URL в качестве заголовка.
+    3. Экранирует URL с помощью `quote_url` и заголовок с помощью `quote_title`.
+    4. Форматирует URL и заголовок в виде markdown-ссылки: `[экранированный_заголовок](экранированный_URL)`.
+    ```
+    ```
+    URL, Заголовок -> Заголовок указан? -> Экранирование URL и заголовка -> Форматирование в markdown-ссылку -> Конец
+    Да:                 |
+    Нет: -> Извлечение заголовка из URL -> Экранирование URL и заголовка -> Форматирование в markdown-ссылку -> Конец
+    ```
+    Example:
+        >>> format_link("https://example.com", "Example")
         '[Example](https://example.com)'
-        >>> format_link('https://example.com/path?query=value')
-        '[example.com/path?query=value](https://example.com/path?query=value)'
+        >>> format_link("https://example.com/path?query=value")
+        '[example.compath](https://example.com/path%3Fquery%3Dvalue)'
     """
     ...
-```
 
 ### `format_image`
 
 ```python
 def format_image(image: str, alt: str, preview: Optional[str] = None) -> str:
     """
-    Форматирует изображение в виде markdown-строки.
+    Форматирует данное изображение в виде markdown-строки.
 
     Args:
-        image (str): URL-адрес изображения.
+        image (str): Изображение для форматирования.
         alt (str): Альтернативный текст для изображения.
-        preview (Optional[str], optional): URL-адрес для предварительного просмотра изображения. Defaults to the original image.
+        preview (Optional[str]): URL превью изображения. Если не указан, используется оригинальное изображение.
 
     Returns:
-        str: Сформатированная markdown-строка.
+        str: Отформатированная markdown-строка.
 
     Как работает функция:
-    1. Если предоставлен URL-адрес для предварительного просмотра, заменяет `{image}` в URL-адресе на URL-адрес изображения.
-    2. Форматирует изображение в виде markdown-строки, используя альтернативный текст и URL-адреса изображения и предварительного просмотра.
+    1. Если указан URL превью изображения, заменяет `{image}` в URL превью на URL оригинального изображения.
+    2. Экранирует URL превью изображения и альтернативный текст с помощью `quote_url` и `quote_title` соответственно.
+    3. Форматирует изображение в виде markdown-строки: `[![экранированный_alt_text](экранированный_preview_url)](экранированный_image_url)`.
+    ```
+    ```
+    Изображение, Alt текст, Preview URL -> Preview URL указан? -> Замена '{image}' в Preview URL ->
+    Экранирование Preview URL, Alt текста и URL изображения -> Форматирование в markdown-строку -> Конец
+    Да:                                                                        |
+    Нет: -> Экранирование Preview URL, Alt текста и URL изображения -> Форматирование в markdown-строку -> Конец
+    ```
 
-    ASCII flowchart:
-
-    URL-адрес изображения, Альтернативный текст, URL-адрес для предпросмотра --> URL-адрес для предпросмотра предоставлен? --> Замена '{image}' в URL-адресе предпросмотра --> Форматирование в markdown-строку --> Возврат markdown-строки
-
-    Примеры:
-        >>> format_image('https://example.com/image.png', 'Example Image')
-        '[![Example Image](https://example.com/image.png)](https://example.com/image.png)'
-        >>> format_image('https://example.com/image.png', 'Example Image', 'https://example.com/preview/{image}')
-        '[![Example Image](https://example.com/preview/https://example.com/image.png)](https://example.com/image.png)'
+    Example:
+        >>> format_image("https://example.com/image.jpg", "Example Image")
+        '[![Example Image](https://example.com/image.jpg)](https://example.com/image.jpg)'
+        >>> format_image("https://example.com/image.jpg", "Example Image", "https://example.com/preview/{image}")
+        '[![Example Image](https://example.com/preview/https%3A//example.com/image.jpg)](https://example.com/image.jpg)'
     """
     ...
-```
 
 ### `format_images_markdown`
 
@@ -154,257 +153,151 @@ def format_image(image: str, alt: str, preview: Optional[str] = None) -> str:
 def format_images_markdown(images: Union[str, List[str]], alt: str,
                            preview: Union[str, List[str]] = None) -> str:
     """
-    Форматирует заданные изображения в виде markdown-строки.
+    Форматирует данные изображения в виде markdown-строки.
 
     Args:
         images (Union[str, List[str]]): Изображение или список изображений для форматирования.
         alt (str): Альтернативный текст для изображений.
-        preview (Union[str, List[str]], optional): URL-адрес предпросмотра или список URL-адресов предпросмотра. Если не предоставлен, используются исходные изображения.
+        preview (Union[str, List[str]]): URL превью или список URL превью. Если не указан, используются оригинальные изображения.
 
     Returns:
         str: Отформатированная markdown-строка.
 
     Как работает функция:
-    1. Проверяет, является ли `images` списком из одного элемента. Если да, то извлекает этот элемент.
-    2. Если `images` является строкой, форматирует ее как одно изображение.
-    3. Если `images` является списком, форматирует каждое изображение в списке, добавляя индекс к альтернативному тексту.
-    4. Оборачивает результат флагами начала и конца генерации изображений.
+    1. Если `images` - это список, состоящий из одного элемента, то он извлекается из списка.
+    2. Если `images` - это строка, то форматирует ее как одно изображение с помощью `format_image`.
+    3. Если `images` - это список, то проходит по списку и форматирует каждое изображение с помощью `format_image`.
+       Если `preview` - это список, то использует соответствующий URL превью для каждого изображения.
+       Если `preview` - это строка, то использует ее для всех изображений.
+    4. Добавляет флаги начала и конца сгенерированных изображений (`<!-- generated images start -->` и `<!-- generated images end -->`) вокруг отформатированных изображений.
 
-    ASCII flowchart:
-
-    Изображения, Альтернативный текст, Предпросмотр --> images - список? --> Да, один элемент? --> Извлечение элемента -->
-    |                                       Нет             Нет, более одного элемента
-    |                                                           Форматирование каждого изображения с индексом
-    |
-    images - строка? --> Форматирование как одно изображение
-    |
-    Оборачивание результата флагами начала и конца генерации изображений --> Возврат markdown-строки
-
-    Примеры:
-        >>> format_images_markdown('https://example.com/image.png', 'Example Image')
-        '\\n<!-- generated images start -->\\n[![Example Image](https://example.com/image.png)](https://example.com/image.png)\\n<!-- generated images end -->\\n\\n'
-        >>> format_images_markdown(['https://example.com/image1.png', 'https://example.com/image2.png'], 'Example Image')
-        '\\n<!-- generated images start -->\\n[![#1 Example Image](https://example.com/image1.png)](https://example.com/image1.png)\\n[![#2 Example Image](https://example.com/image2.png)](https://example.com/image2.png)\\n<!-- generated images end -->\\n\\n'
+    ```
+    Изображения, Alt текст, Preview URL -> Список изображений из одного элемента? -> Извлечение элемента ->
+    Изображения - строка? -> Форматирование одного изображения -> Добавление флагов -> Конец
+    Да:                                                            |
+    Нет: -> Изображения - список? -> Перебор изображений -> Preview URL - список? -> Использование соответствующего Preview URL ->
+    Форматирование изображения -> Добавление флагов -> Конец
+    Да:                                      |
+    Нет: -> Использование одного Preview URL -> Форматирование изображения -> Добавление флагов -> Конец
+    ```
+    Example:
+        >>> format_images_markdown("https://example.com/image.jpg", "Example Image")
+        '\\n<!-- generated images start -->\\n[![Example Image](https://example.com/image.jpg)](https://example.com/image.jpg)\\n<!-- generated images end -->\\n\\n'
+        >>> format_images_markdown(["https://example.com/image1.jpg", "https://example.com/image2.jpg"], "Example Image", "https://example.com/preview/{image}")
+        '\\n<!-- generated images start -->\\n[![#1 Example Image](https://example.com/preview/https%3A//example.com/image1.jpg)](https://example.com/image1.jpg)\\n[![#2 Example Image](https://example.com/preview/https%3A//example.com/image2.jpg)](https://example.com/image2.jpg)\\n<!-- generated images end -->\\n\\n'
     """
     ...
-```
 
 ## Классы
 
 ### `ResponseType`
 
-```python
-class ResponseType:
-    """
-    Базовый класс для всех типов ответов.
-    """
-    @abstractmethod
-    def __str__(self) -> str:
-        """
-        Преобразует ответ в строковое представление.
+**Описание**:
+Абстрактный базовый класс для всех типов ответов.
 
-        Raises:
-            NotImplementedError: Если метод не реализован в подклассе.
-        """
-        raise NotImplementedError
-```
+**Принцип работы**:
+Определяет интерфейс для преобразования ответа в строковое представление.
+
+**Методы**:
+- `__str__`: Преобразует ответ в строковое представление. Должен быть переопределен в подклассах. Вызывает исключение `NotImplementedError`, если не переопределен.
 
 ### `JsonMixin`
 
-```python
-class JsonMixin:
-    """
-    Миксин для классов, которые можно представить в виде JSON.
-    """
+**Описание**:
+Миксин для классов, которые могут быть представлены в формате JSON.
 
-    def __init__(self, **kwargs) -> None:
-        """
-        Инициализирует атрибуты объекта на основе переданных ключевых слов.
+**Принцип работы**:
+Предоставляет методы для работы с атрибутами класса как со словарем.
 
-        Args:
-            **kwargs: Ключевые слова и значения для инициализации атрибутов.
-        """
-        ...
-
-    def get_dict(self) -> Dict:
-        """
-        Возвращает словарь атрибутов объекта, исключая приватные атрибуты (начинающиеся с "__").
-
-        Returns:
-            Dict: Словарь атрибутов объекта.
-        """
-        ...
-
-    def reset(self) -> None:
-        """
-        Сбрасывает все атрибуты объекта.
-        """
-        ...
-```
+**Методы**:
+- `__init__`: Инициализирует атрибуты класса на основе переданных именованных аргументов.
+- `get_dict`: Возвращает словарь, содержащий все не приватные атрибуты класса (атрибуты, не начинающиеся с `__`).
+- `reset`: Сбрасывает все атрибуты класса, удаляя их из `__dict__`.
 
 ### `RawResponse`
 
-```python
-class RawResponse(ResponseType, JsonMixin):
-    """
-    Класс для представления "сырого" ответа.
+**Описание**:
+Класс для представления "сырого" ответа.
 
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-    """
-    pass
-```
+**Принцип работы**:
+Наследует `ResponseType` и `JsonMixin`, предоставляя возможность представления ответа в виде JSON.
 
 ### `HiddenResponse`
 
-```python
-class HiddenResponse(ResponseType):
-    """
-    Класс для представления скрытого ответа.
+**Описание**:
+Базовый класс для скрытых ответов.
 
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-    """
-    def __str__(self) -> str:
-        """
-        Возвращает пустую строку.
+**Принцип работы**:
+Наследует `ResponseType` и всегда возвращает пустую строку при преобразовании в строку.
 
-        Returns:
-            str: Пустая строка.
-        """
-        return ""
-```
+**Методы**:
+- `__str__`: Возвращает пустую строку.
 
 ### `FinishReason`
 
-```python
-class FinishReason(JsonMixin, HiddenResponse):
-    """
-    Класс для представления причины завершения.
+**Описание**:
+Класс для представления причины завершения.
 
-    Inherits:
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    def __init__(self, reason: str) -> None:
-        """
-        Инициализирует объект с указанием причины завершения.
+**Принцип работы**:
+Наследует `HiddenResponse` и `JsonMixin`, представляя причину завершения в виде JSON.
 
-        Args:
-            reason (str): Причина завершения.
-        """
-        self.reason = reason
-```
+**Методы**:
+- `__init__`: Инициализирует объект с указанной причиной.
 
 ### `ToolCalls`
 
-```python
-class ToolCalls(HiddenResponse):
-    """
-    Класс для представления вызовов инструментов.
+**Описание**:
+Класс для представления вызовов инструментов.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
+**Принцип работы**:
+Наследует `HiddenResponse`, хранит список вызовов инструментов и предоставляет метод для его получения.
 
-    def __init__(self, list: List) -> None:
-        """
-        Инициализирует объект списком вызовов инструментов.
-
-        Args:
-            list (List): Список вызовов инструментов.
-        """
-        self.list = list
-
-    def get_list(self) -> List:
-        """
-        Возвращает список вызовов инструментов.
-
-        Returns:
-            List: Список вызовов инструментов.
-        """
-        return self.list
-```
+**Методы**:
+- `__init__`: Инициализирует объект списком вызовов инструментов.
+- `get_list`: Возвращает список вызовов инструментов.
 
 ### `Usage`
 
-```python
-class Usage(JsonMixin, HiddenResponse):
-    """
-    Класс для представления информации об использовании ресурсов.
+**Описание**:
+Класс для представления информации об использовании.
 
-    Inherits:
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    pass
-```
+**Принцип работы**:
+Наследует `HiddenResponse` и `JsonMixin`, представляя информацию об использовании в виде JSON.
 
 ### `AuthResult`
 
-```python
-class AuthResult(JsonMixin, HiddenResponse):
-    """
-    Класс для представления результата аутентификации.
+**Описание**:
+Класс для представления результата аутентификации.
 
-    Inherits:
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    pass
-```
+**Принцип работы**:
+Наследует `HiddenResponse` и `JsonMixin`, представляя результат аутентификации в виде JSON.
 
 ### `TitleGeneration`
 
-```python
-class TitleGeneration(HiddenResponse):
-    """
-    Класс для представления сгенерированного заголовка.
+**Описание**:
+Класс для представления сгенерированного заголовка.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    def __init__(self, title: str) -> None:
-        """
-        Инициализирует объект с указанием заголовка.
+**Принцип работы**:
+Наследует `HiddenResponse` и хранит сгенерированный заголовок.
 
-        Args:
-            title (str): Сгенерированный заголовок.
-        """
-        self.title = title
-```
+**Методы**:
+- `__init__`: Инициализирует объект с указанным заголовком.
 
 ### `DebugResponse`
 
-```python
-class DebugResponse(HiddenResponse):
-    """
-    Класс для представления отладочного сообщения.
+**Описание**:
+Класс для представления отладочного сообщения.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    def __init__(self, log: str) -> None:
-        """
-        Инициализирует объект с указанием отладочного сообщения.
+**Принцип работы**:
+Наследует `HiddenResponse` и хранит отладочное сообщение.
 
-        Args:
-            log (str): Отладочное сообщение.
-        """
-        self.log = log
-```
+**Методы**:
+- `__init__`: Инициализирует объект с указанным отладочным сообщением.
 
 ### `Reasoning`
 
 ```python
 class Reasoning(ResponseType):
-    """
-    Класс для представления логических рассуждений.
-
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-    """
     def __init__(
             self,
             token: Optional[str] = None,
@@ -412,449 +305,291 @@ class Reasoning(ResponseType):
             status: Optional[str] = None,
             is_thinking: Optional[str] = None
         ) -> None:
-        """
-        Инициализирует объект с указанием токена, статуса и состояния обдумывания.
-
-        Args:
-            token (Optional[str], optional): Токен. Defaults to None.
-            status (Optional[str], optional): Статус. Defaults to None.
-            is_thinking (Optional[str], optional): Состояние обдумывания. Defaults to None.
-        """
+        """Initialize with token, status, and thinking state."""
         self.token = token
         self.label = label
         self.status = status
         self.is_thinking = is_thinking
 
     def __str__(self) -> str:
-        """
-        Возвращает строковое представление на основе доступных атрибутов.
-
-        Returns:
-            str: Строковое представление.
-        """
-        ...
+        """Return string representation based on available attributes."""
+        if self.is_thinking is not None:
+            return self.is_thinking
+        if self.token is not None:
+            return self.token
+        if self.status is not None:
+            if self.label is not None:
+                return f"{self.label}: {self.status}\\n"
+            return f"{self.status}\\n"
+        return ""
 
     def __eq__(self, other: Reasoning):
-        """
-        Сравнивает два объекта Reasoning на равенство.
-
-        Args:
-            other (Reasoning): Другой объект Reasoning для сравнения.
-
-        Returns:
-            bool: True, если объекты равны, иначе False.
-        """
         return (self.token == other.token and
                 self.status == other.status and
                 self.is_thinking == other.is_thinking)
 
     def get_dict(self) -> Dict:
-        """
-        Возвращает словарь атрибутов объекта.
+        """Return a dictionary representation of the reasoning."""
+        if self.label is not None:
+            return {"label": self.label, "status": self.status}
+        if self.is_thinking is None:
+            if self.status is None:
+                return {"token": self.token}
+            return {"token": self.token, "status": self.status}
+        return {"token": self.token, "status": self.status, "is_thinking": self.is_thinking}
+```
 
-        Returns:
-            Dict: Словарь атрибутов объекта.
-        """
-        ...
+**Описание**:
+Класс для представления этапа рассуждения.
+
+**Принцип работы**:
+Предоставляет атрибуты для хранения токена, статуса, метки и состояния "размышления" и метод для их строкового представления.
+
+**Методы**:
+- `__init__`: Инициализирует объект с указанными токеном, статусом, меткой и состоянием "размышления".
+- `__str__`: Возвращает строковое представление объекта в зависимости от доступных атрибутов.
+    - Если `is_thinking` не `None`, возвращает `is_thinking`.
+    - Иначе, если `token` не `None`, возвращает `token`.
+    - Иначе, если `status` не `None`, возвращает `label: status`, если `label` не `None`, иначе возвращает `status`.
+    - В противном случае возвращает пустую строку.
+- `__eq__`: Определяет, равны ли два объекта `Reasoning`.
+- `get_dict`: Возвращает словарь, представляющий состояние рассуждения.
+
+Как работает класс:
+1. Инициализация объекта `Reasoning` с атрибутами: `token`, `label`, `status`, `is_thinking`.
+2. Метод `__str__` определяет, какое строковое представление вернуть в зависимости от заполненности атрибутов.
+3. Метод `__eq__` сравнивает два объекта `Reasoning` на основе их атрибутов.
+4. Метод `get_dict` возвращает словарь, представляющий состояние рассуждения.
+
+```
+Reasoning -> Инициализация (token, label, status, is_thinking) -> __str__():
+                                                                  |
+                                                                  |-> is_thinking != None? -> return is_thinking
+                                                                  |
+                                                                  |-> token != None? -> return token
+                                                                  |
+                                                                  |-> status != None? -> label != None? -> return f"{label}: {status}\\n" : return f"{status}\\n"
+                                                                  |
+                                                                  |-> return ""
 ```
 
 ### `Sources`
 
 ```python
 class Sources(ResponseType):
-    """
-    Класс для представления источников информации.
-
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-    """
     def __init__(self, sources: List[Dict[str, str]]) -> None:
-        """
-        Инициализирует объект списком словарей, представляющих источники.
-
-        Args:
-            sources (List[Dict[str, str]]): Список словарей с информацией об источниках.
-        """
+        """Initialize with a list of source dictionaries."""
         self.list = []
         for source in sources:
             self.add_source(source)
 
     def add_source(self, source: Union[Dict[str, str], str]) -> None:
-        """
-        Добавляет источник в список, очищая URL-адрес при необходимости.
-
-        Args:
-            source (Union[Dict[str, str], str]): Источник в виде словаря или URL-адреса.
-        """
-        ...
+        """Add a source to the list, cleaning the URL if necessary."""
+        source = source if isinstance(source, dict) else {"url": source}
+        url = source.get("url", source.get("link", None))
+        if url is not None:
+            url = re.sub(r"[&?]utm_source=.+", "", url)
+            source["url"] = url
+            self.list.append(source)
 
     def __str__(self) -> str:
-        """
-        Возвращает отформатированные источники в виде строки.
+        """Return formatted sources as a string."""
+        if not self.list:
+            return ""
+        return "\\n\\n\\n\\n" + ("\\n>\\n".join([
+            f"> [{idx}] {format_link(link['url'], link.get('title', None))}"
+            for idx, link in enumerate(self.list)
+        ]))
+```
 
-        Returns:
-            str: Отформатированная строка с источниками.
-        """
-        ...
+**Описание**:
+Класс для представления источников информации.
+
+**Принцип работы**:
+Хранит список источников в виде словарей и предоставляет методы для добавления источников и форматирования их в строку.
+
+**Методы**:
+- `__init__`: Инициализирует объект списком источников.
+- `add_source`: Добавляет источник в список, очищая URL от параметров `utm_source`.
+- `__str__`: Возвращает отформатированный список источников в виде строки.
+
+**Как работает класс**:
+1. При инициализации класса `Sources` создается пустой список `self.list` для хранения источников.
+2. Затем происходит итерация по переданному списку источников, и каждый источник добавляется с помощью метода `self.add_source(source)`.
+3. В методе `add_source`:
+   - Если переданный `source` является строкой, он преобразуется в словарь `{"url": source}`.
+   - Извлекается URL из `source` (сначала ищется ключ "url", затем "link").
+   - Если URL существует, из него удаляются параметры `utm_source`.
+   - Очищенный `source` добавляется в список `self.list`.
+4. Метод `__str__` формирует строковое представление списка источников:
+   - Если список `self.list` пуст, возвращается пустая строка.
+   - Иначе формируется строка, в которой каждый источник представлен в формате `"> [{idx}] {format_link(link['url'], link.get('title', None))}"`, где `idx` - индекс источника, а `format_link` - функция для форматирования ссылки.
+
+```
+Sources -> Инициализация (sources) -> Для каждого source в sources: add_source(source)
+add_source -> source - строка? -> source = {"url": source} -> url = source.get("url", source.get("link", None))
+                                 |
+                                 Нет
+url != None? -> url = re.sub(r"[&?]utm_source=.+", "", url) -> self.list.append(source)
+Нет
+
+__str__ -> self.list пуст? -> return ""
+            Да
+            Нет -> Формирование строки с источниками в формате Markdown
 ```
 
 ### `YouTube`
 
-```python
-class YouTube(HiddenResponse):
-    """
-    Класс для представления идентификаторов YouTube.
+**Описание**:
+Класс для представления YouTube-видео.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    def __init__(self, ids: List[str]) -> None:
-        """
-        Инициализирует объект списком идентификаторов YouTube.
+**Принцип работы**:
+Наследует `HiddenResponse`, хранит список идентификаторов видео и предоставляет метод для их форматирования в виде HTML-вставок.
 
-        Args:
-            ids (List[str]): Список идентификаторов YouTube.
-        """
-        self.ids = ids
-
-    def to_string(self) -> str:
-        """
-        Возвращает встроенные элементы YouTube в виде строки.
-
-        Returns:
-            str: Строка с встроенными элементами YouTube.
-        """
-        ...
-```
+**Методы**:
+- `__init__`: Инициализирует объект списком идентификаторов видео.
+- `to_string`: Возвращает список HTML-вставок для каждого видео.
 
 ### `AudioResponse`
 
-```python
-class AudioResponse(ResponseType):
-    """
-    Класс для представления аудио-ответа.
+**Описание**:
+Класс для представления аудио-ответа.
 
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-    """
-    def __init__(self, data: Union[bytes, str]) -> None:
-        """
-        Инициализирует объект с аудио-данными в виде байтов.
+**Принцип работы**:
+Хранит аудиоданные в виде байтов или URI и предоставляет методы для их преобразования в URI данных и HTML-элемент.
 
-        Args:
-            data (Union[bytes, str]): Аудио-данные в виде байтов.
-        """
-        self.data = data
-
-    def to_uri(self) -> str:
-        """
-        Возвращает аудио-данные в виде URI, закодированного в base64.
-
-        Returns:
-            str: URI, закодированный в base64.
-        """
-        if isinstance(self.data, str):
-            return self.data
-        """Return audio data as a base64-encoded data URI."""
-        data_base64 = base64.b64encode(self.data).decode()
-        return f"data:audio/mpeg;base64,{data_base64}"
-
-    def __str__(self) -> str:
-        """
-        Возвращает аудио в виде html-элемента.
-
-        Returns:
-            str: html-элемент audio.
-        """
-        return f'<audio controls src="{self.to_uri()}"></audio>'
-```
+**Методы**:
+- `__init__`: Инициализирует объект аудиоданными.
+- `to_uri`: Возвращает аудиоданные в виде URI данных, закодированного в base64.
+- `__str__`: Возвращает аудиоданные в виде HTML-элемента `<audio>`.
 
 ### `BaseConversation`
 
-```python
-class BaseConversation(ResponseType):
-    """
-    Базовый класс для представлений бесед.
+**Описание**:
+Базовый класс для представлений бесед.
 
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-    """
-    def __str__(self) -> str:
-        """
-        Возвращает пустую строку по умолчанию.
+**Принцип работы**:
+Наследует `ResponseType` и возвращает пустую строку по умолчанию.
 
-        Returns:
-            str: Пустая строка.
-        """
-        return ""
-```
+**Методы**:
+- `__str__`: Возвращает пустую строку.
 
 ### `JsonConversation`
 
-```python
-class JsonConversation(BaseConversation, JsonMixin):
-    """
-    Класс для представления бесед в формате JSON.
+**Описание**:
+Класс для представления бесед в формате JSON.
 
-    Inherits:
-        BaseConversation: Базовый класс для представлений бесед.
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-    """
-    pass
-```
+**Принцип работы**:
+Наследует `BaseConversation` и `JsonMixin`, предоставляя возможность представления беседы в виде JSON.
 
 ### `SynthesizeData`
 
-```python
-class SynthesizeData(HiddenResponse, JsonMixin):
-    """
-    Класс для представления синтезированных данных.
+**Описание**:
+Класс для представления синтезированных данных.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-    """
-    def __init__(self, provider: str, data: Dict) -> None:
-        """
-        Инициализирует объект с указанием провайдера и данных.
+**Принцип работы**:
+Наследует `HiddenResponse` и `JsonMixin`, хранит провайдера и данные.
 
-        Args:
-            provider (str): Провайдер данных.
-            data (Dict): Данные.
-        """
-        self.provider = provider
-        self.data = data
-```
+**Методы**:
+- `__init__`: Инициализирует объект с указанным провайдером и данными.
 
 ### `SuggestedFollowups`
 
-```python
-class SuggestedFollowups(HiddenResponse):
-    """
-    Класс для представления предложенных последующих действий.
+**Описание**:
+Класс для представления предложенных вариантов продолжения беседы.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
+**Принцип работы**:
+Хранит список предложений для продолжения беседы.
 
-    def __init__(self, suggestions: list[str]):
-        """
-        Инициализирует объект списком предложений.
-        """
-        self.suggestions = suggestions
-```
+**Методы**:
+- `__init__`: Инициализирует объект списком предложений.
 
 ### `RequestLogin`
 
-```python
-class RequestLogin(HiddenResponse):
-    """
-    Класс для представления запроса на вход в систему.
+**Описание**:
+Класс для представления запроса на авторизацию.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    def __init__(self, label: str, login_url: str) -> None:
-        """
-        Инициализирует объект с указанием метки и URL-адреса для входа.
+**Принцип работы**:
+Наследует `HiddenResponse`, хранит метку и URL авторизации и предоставляет метод для их форматирования в виде markdown-ссылки.
 
-        Args:
-            label (str): Метка.
-            login_url (str): URL-адрес для входа.
-        """
-        self.label = label
-        self.login_url = login_url
-
-    def to_string(self) -> str:
-        """
-        Возвращает отформатированную ссылку для входа в виде строки.
-
-        Returns:
-            str: Отформатированная строка со ссылкой для входа.
-        """
-        ...
-```
+**Методы**:
+- `__init__`: Инициализирует объект с указанной меткой и URL авторизации.
+- `to_string`: Возвращает отформатированную markdown-ссылку для авторизации.
 
 ### `MediaResponse`
 
-```python
-class MediaResponse(ResponseType):
-    """
-    Класс для представления медиа-ответа.
+**Описание**:
+Базовый класс для ответов, содержащих медиафайлы (изображения, видео и т.д.).
 
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-    """
-    def __init__(
-        self,
-        urls: Union[str, List[str]],
-        alt: str,
-        options: Dict = {},
-        **kwargs
-    ) -> None:
-        """
-        Инициализирует объект с указанием изображений, альтернативного текста и опций.
+**Принцип работы**:
+Хранит URL-адреса медиафайлов, альтернативный текст и параметры и предоставляет методы для доступа к ним.
 
-        Args:
-            urls (Union[str, List[str]]): URL-адрес или список URL-адресов медиа.
-            alt (str): Альтернативный текст.
-            options (Dict, optional): Опции. Defaults to {}.
-            **kwargs: Дополнительные аргументы.
-        """
-        self.urls = kwargs.get("images", urls)
-        self.alt = alt
-        self.options = options
-
-    def get(self, key: str) -> any:
-        """
-        Возвращает значение опции по ключу.
-
-        Args:
-            key (str): Ключ опции.
-
-        Returns:
-            any: Значение опции.
-        """
-        return self.options.get(key)
-
-    def get_list(self) -> List[str]:
-        """
-        Возвращает изображения в виде списка.
-
-        Returns:
-            List[str]: Список URL-адресов изображений.
-        """
-        return [self.urls] if isinstance(self.urls, str) else self.urls
-```
+**Методы**:
+- `__init__`: Инициализирует объект URL-адресами медиафайлов, альтернативным текстом и параметрами.
+- `get`: Возвращает значение параметра по ключу.
+- `get_list`: Возвращает URL-адреса медиафайлов в виде списка.
 
 ### `ImageResponse`
 
-```python
-class ImageResponse(MediaResponse):
-    """
-    Класс для представления ответа с изображением.
+**Описание**:
+Класс для представления ответа с изображением.
 
-    Inherits:
-        MediaResponse: Базовый класс для медиа-ответов.
-    """
-    def __str__(self) -> str:
-        """
-        Возвращает изображения в формате markdown.
+**Принцип работы**:
+Наследует `MediaResponse` и предоставляет метод для форматирования изображений в виде markdown.
 
-        Returns:
-            str: Строка с изображениями в формате markdown.
-        """
-        return format_images_markdown(self.urls, self.alt, self.get("preview"))
-```
+**Методы**:
+- `__str__`: Возвращает изображения в виде markdown, используя функцию `format_images_markdown`.
 
 ### `VideoResponse`
 
-```python
-class VideoResponse(MediaResponse):
-    """
-    Класс для представления ответа с видео.
+**Описание**:
+Класс для представления видео-ответа.
 
-    Inherits:
-        MediaResponse: Базовый класс для медиа-ответов.
-    """
-    def __str__(self) -> str:
-        """
-        Возвращает видео в виде html-элементов.
+**Принцип работы**:
+Наследует `MediaResponse` и предоставляет метод для форматирования видео в виде HTML-элементов.
 
-        Returns:
-            str: Строка с видео в виде html-элементов.
-        """
-        return "\\n".join([f'<video controls src="{video}"></video>\' for video in self.get_list()])
-```
+**Методы**:
+- `__str__`: Возвращает видео в виде HTML-элементов `<video>`.
 
 ### `ImagePreview`
 
-```python
-class ImagePreview(ImageResponse):
-    """
-    Класс для представления предпросмотра изображения.
+**Описание**:
+Класс для представления превью изображения.
 
-    Inherits:
-        ImageResponse: Базовый класс для ответов с изображениями.
-    """
-    def __str__(self) -> str:
-        """
-        Возвращает пустую строку для предпросмотра.
+**Принцип работы**:
+Наследует `ImageResponse` и возвращает пустую строку при преобразовании в строку.
 
-        Returns:
-            str: Пустая строка.
-        """
-        return ""
-
-    def to_string(self) -> str:
-        """
-        Возвращает изображения в формате markdown.
-
-        Returns:
-            str: Строка с изображениями в формате markdown.
-        """
-        return super().__str__()
-```
+**Методы**:
+- `__str__`: Возвращает пустую строку.
+- `to_string`: Возвращает изображения в виде markdown, используя метод `__str__` базового класса `ImageResponse`.
 
 ### `PreviewResponse`
 
-```python
-class PreviewResponse(HiddenResponse):
-    """
-    Класс для представления ответа с предпросмотром.
+**Описание**:
+Класс для представления ответа с превью.
 
-    Inherits:
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    def __init__(self, data: str) -> None:
-        """
-        Инициализирует объект с указанием данных.
+**Принцип работы**:
+Наследует `HiddenResponse` и хранит данные превью.
 
-        Args:
-            data (str): Данные.
-        """
-        self.data = data
-
-    def to_string(self) -> str:
-        """
-        Возвращает данные в виде строки.
-
-        Returns:
-            str: Строка с данными.
-        """
-        return self.data
-```
+**Методы**:
+- `__init__`: Инициализирует объект данными превью.
+- `to_string`: Возвращает данные превью в виде строки.
 
 ### `Parameters`
 
-```python
-class Parameters(ResponseType, JsonMixin):
-    """
-    Класс для представления параметров.
+**Описание**:
+Класс для представления параметров.
 
-    Inherits:
-        ResponseType: Базовый класс для всех типов ответов.
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-    """
-    def __str__(self) -> str:
-        """
-        Возвращает пустую строку.
+**Принцип работы**:
+Наследует `ResponseType` и `JsonMixin` и возвращает пустую строку при преобразовании в строку.
 
-        Returns:
-            str: Пустая строка.
-        """
-        return ""
-```
+**Методы**:
+- `__str__`: Возвращает пустую строку.
 
 ### `ProviderInfo`
 
-```python
-class ProviderInfo(JsonMixin, HiddenResponse):
-    """
-    Класс для представления информации о провайдере.
+**Описание**:
+Класс для представления информации о провайдере.
 
-    Inherits:
-        JsonMixin: Миксин для классов, которые можно представить в виде JSON.
-        HiddenResponse: Базовый класс для скрытых ответов.
-    """
-    pass
+**Принцип работы**:
+Наследует `JsonMixin` и `HiddenResponse`.

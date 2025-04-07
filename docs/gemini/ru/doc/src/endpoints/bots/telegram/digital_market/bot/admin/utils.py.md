@@ -1,12 +1,15 @@
-# Модуль утилит для администраторов Telegram-бота (digital_market)
+# Модуль для обработки удаления текстовых сообщений в Telegram боте
+======================================================================
+
+Модуль содержит асинхронную функцию `process_dell_text_msg`, которая используется для удаления последнего сообщения пользователя и текущего сообщения с командой в Telegram боте.
 
 ## Обзор
 
-Модуль содержит функцию `process_dell_text_msg`, которая используется для удаления последнего сообщения пользователя и текущего сообщения в чате с ботом. Этот функционал предназначен для административных задач, таких как очистка чата от лишних сообщений.
+Этот модуль предназначен для обработки ситуаций, когда пользователь отправляет команду для удаления предыдущего сообщения. Функция `process_dell_text_msg` извлекает идентификатор последнего сообщения из FSMContext и пытается удалить как последнее сообщение, так и сообщение с командой.
 
 ## Подробней
 
-Данный модуль обеспечивает удобный способ для администраторов бота удалять сообщения, что позволяет поддерживать порядок в чате и улучшить взаимодействие с пользователем. Функция использует `FSMContext` для получения ID последнего сообщения и удаляет как последнее сообщение, так и текущее сообщение пользователя.
+Модуль обеспечивает механизм для удаления сообщений в чате с пользователем. Он использует данные, сохраненные в FSMContext, для определения идентификатора последнего сообщения и пытается удалить его, а также сообщение, содержащее команду удаления. Это полезно для очистки чата от ненужных сообщений и упрощения взаимодействия пользователя с ботом.
 
 ## Функции
 
@@ -14,11 +17,11 @@
 
 ```python
 async def process_dell_text_msg(message: Message, state: FSMContext):
-    """ Функция удаляет последнее сообщение пользователя и текущее сообщение в чате с ботом.
+    """ Функция выполняет удаление последнего сообщения пользователя и текущего сообщения с командой в Telegram боте.
 
     Args:
-        message (Message): Объект сообщения от Telegram.
-        state (FSMContext): Объект состояния FSM (Finite State Machine) от aiogram.
+        message (Message): Объект сообщения Telegram, содержащий информацию о сообщении, отправителе и чате.
+        state (FSMContext): Объект FSMContext, содержащий состояние конечного автомата для текущего пользователя.
 
     Returns:
         None
@@ -29,10 +32,12 @@ async def process_dell_text_msg(message: Message, state: FSMContext):
     """
 ```
 
+**Назначение**: Удаление последнего сообщения пользователя и текущего сообщения с командой в Telegram боте.
+
 **Параметры**:
 
-- `message` (Message): Объект сообщения от Telegram, содержащий информацию о сообщении, отправителе и чате.
-- `state` (FSMContext): Объект состояния FSM (Finite State Machine) от aiogram, используемый для хранения и получения данных о состоянии пользователя.
+- `message` (Message): Объект сообщения Telegram. Содержит информацию о сообщении, отправителе и чате.
+- `state` (FSMContext): Объект FSMContext. Хранит состояние конечного автомата для текущего пользователя.
 
 **Возвращает**:
 
@@ -40,69 +45,53 @@ async def process_dell_text_msg(message: Message, state: FSMContext):
 
 **Вызывает исключения**:
 
-- `Exception`: Если происходит ошибка при удалении сообщения, информация об ошибке логируется.
+- `Exception`: Возникает, если происходит ошибка при удалении сообщения.
 
 **Как работает функция**:
 
-1. **Получение данных из состояния**: Функция пытается получить `last_msg_id` из состояния пользователя (`FSMContext`).
-2. **Удаление последнего сообщения**: Если `last_msg_id` существует, функция пытается удалить сообщение с этим ID из чата пользователя.
-3. **Удаление текущего сообщения**: Независимо от успеха удаления последнего сообщения, функция пытается удалить текущее сообщение пользователя.
-4. **Обработка ошибок**: Если при удалении сообщения происходит ошибка, информация об ошибке логируется с использованием `logger.error`.
+1. **Извлечение данных из состояния**:
+   - Функция извлекает данные из состояния FSMContext, используя `await state.get_data()`.
+   - Получает идентификатор последнего сообщения (`last_msg_id`) извлекая его по ключу `last_msg_id` из полученных данных.
 
-**ASCII Flowchart**:
+2. **Удаление сообщений**:
+   - Проверяет, существует ли `last_msg_id`.
+   - Если `last_msg_id` существует, функция пытается удалить сообщение с этим идентификатором, используя `await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_id)`.
+   - Затем функция пытается удалить сообщение с командой, используя `await message.delete()`.
+
+3. **Обработка ошибок**:
+   - Если `last_msg_id` не найден, функция логирует предупреждение с помощью `logger.warning("Ошибка: Не удалось найти идентификатор последнего сообщения для удаления.")`.
+   - Если происходит исключение в процессе удаления сообщения, функция логирует ошибку с помощью `logger.error(f"Произошла ошибка при удалении сообщения: {str(e)}")`.
 
 ```
-A[Получение данных из FSMContext (last_msg_id)]
-|
-B[Проверка наличия last_msg_id]
-|
-C[Удаление сообщения по last_msg_id]
-|
-D[Удаление текущего сообщения]
-|
-E[Обработка исключений]
+    A: Получение данных из FSMContext
+    |
+    B: Проверка наличия last_msg_id
+    |
+    C: Удаление сообщения с last_msg_id
+    |
+    D: Удаление текущего сообщения
+    |
+    E: Обработка исключений
 ```
 
 **Примеры**:
 
-Предположим, что у пользователя в состоянии `state` сохранен `last_msg_id = 123`, и пользователь отправил сообщение с `message.message_id = 456`.
+Пример 1: Успешное удаление сообщений
 
 ```python
-from aiogram.types import Message, User, Chat
-from aiogram.fsm.context import FSMContext
-from unittest.mock import AsyncMock, patch
-import asyncio
+# Предположим, что у пользователя есть последнее сообщение с id 123, и текущее сообщение с командой имеет id 456
+message = Message(message_id=456, from_user=User(id=789))
+state = FSMContext(...)  # Предположим, что FSMContext уже инициализирован и содержит данные
+await state.update_data(last_msg_id=123)
+await process_dell_text_msg(message, state)
+# Ожидается, что сообщение с id 123 и 456 будут удалены
+```
 
-async def test_process_dell_text_msg():
-    # Создаем мок-объекты message и state
-    message_mock = Message(
-        message_id=456,
-        from_user=User(id=12345, is_bot=False, first_name="Test", last_name="User", username="testuser"),
-        chat=Chat(id=12345, type="private"),
-        date=None  # type: ignore
-    )
-    state_mock = AsyncMock(spec=FSMContext)
-    state_mock.get_data.return_value = {'last_msg_id': 123}
+Пример 2: Ошибка при удалении сообщения
 
-    # Мокируем bot.delete_message и message.delete
-    with patch("bot.config.bot.delete_message", new_callable=AsyncMock) as delete_message_mock, \
-            patch.object(message_mock, "delete", new_callable=AsyncMock) as message_delete_mock:
-
-        # Вызываем функцию
-        await process_dell_text_msg(message_mock, state_mock)
-
-        # Проверяем, что delete_message был вызван с правильными аргументами
-        delete_message_mock.assert_called_once_with(chat_id=12345, message_id=123)
-        # Проверяем, что message.delete был вызван
-        message_delete_mock.assert_called_once()
-
-    # Проверяем случай, когда last_msg_id отсутствует
-    state_mock.get_data.return_value = {}
-    with patch("bot.config.bot.delete_message", new_callable=AsyncMock) as delete_message_mock, \
-            patch.object(message_mock, "delete", new_callable=AsyncMock) as message_delete_mock:
-        await process_dell_text_msg(message_mock, state_mock)
-        assert delete_message_mock.call_count == 0
-        message_delete_mock.assert_called_once()
-
-# Для запуска теста асинхронной функции
-asyncio.run(test_process_dell_text_msg())
+```python
+# Предположим, что у пользователя нет последнего сообщения в FSMContext
+message = Message(message_id=456, from_user=User(id=789))
+state = FSMContext(...)  # Предположим, что FSMContext уже инициализирован, но не содержит данных о последнем сообщении
+await process_dell_text_msg(message, state)
+# Ожидается, что будет залогировано предупреждение об отсутствии last_msg_id и удалено только текущее сообщение

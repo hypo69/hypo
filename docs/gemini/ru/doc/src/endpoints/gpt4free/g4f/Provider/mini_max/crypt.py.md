@@ -2,56 +2,23 @@
 
 ## Обзор
 
-Модуль `crypt.py` предназначен для реализации криптографических функций, используемых в Provider mini_max. Он включает в себя функции для хеширования данных, генерации заголовков и подготовки тела запроса.
+Модуль `crypt.py` предназначен для реализации криптографических функций, используемых в контексте взаимодействия с API mini_max. Он содержит функции для генерации хешей, формирования заголовков и обработки данных, необходимых для безопасного обмена информацией.
 
 ## Подробней
 
-Модуль содержит функции для имитации хеш-функций MD5, генерации специальных заголовков `yy_header`, а также подготовки тела запроса в формате JSON для взаимодействия с API. Он также включает функции для получения данных из браузера, такие как токен авторизации и параметры устройства пользователя.
-Этот модуль важен для обеспечения безопасности и правильной аутентификации при взаимодействии с API mini_max.
+Этот модуль обеспечивает криптографическую защиту данных при взаимодействии с API mini_max. Он включает в себя функции хеширования, генерации заголовков и подготовки данных для отправки. Основные функции модуля включают имитацию хеш-функции MD5, генерацию YY-заголовка, получение тела запроса в формате YY и формирование JSON тела запроса. Также модуль содержит асинхронную функцию для получения callback-функции браузера, которая используется для авторизации и получения необходимых параметров для запросов к API.
 
 ## Классы
 
 ### `CallbackResults`
 
-**Описание**: Класс для хранения результатов обратного вызова из браузера, таких как токен, путь запроса и временная метка.
+**Описание**: Класс `CallbackResults` предназначен для хранения результатов обратного вызова (callback) браузера, необходимых для авторизации и выполнения запросов к API.
 
 **Атрибуты**:
 
-- `token` (str): Токен авторизации.
-- `path_and_query` (str): Путь и параметры запроса.
-- `timestamp` (int): Временная метка.
-
-### `__init__`
-
-```python
-    def __init__(self):
-        self.token: str = None
-        self.path_and_query: str = None
-        self.timestamp: int = None
-```
-
-**Назначение**: Инициализирует экземпляр класса `CallbackResults` с атрибутами `token`, `path_and_query` и `timestamp`, установленными в `None`.
-
-**Параметры**:
-
-- Отсутствуют.
-
-**Возвращает**:
-
-- Отсутствует.
-
-**Как работает функция**:
-
-1.  Инициализирует атрибут `token` значением `None`.
-2.  Инициализирует атрибут `path_and_query` значением `None`.
-3.  Инициализирует атрибут `timestamp` значением `None`.
-
-**Примеры**:
-
-```python
-results = CallbackResults()
-print(results.token)  # None
-```
+- `token` (str): Токен авторизации. Изначально установлен в `None`.
+- `path_and_query` (str): Путь и параметры запроса. Изначально установлен в `None`.
+- `timestamp` (int): Временная метка. Изначально установлен в `None`.
 
 ## Функции
 
@@ -61,11 +28,15 @@ print(results.token)  # None
 def hash_function(base_string: str) -> str:
     """
     Mimics the hashFunction using MD5.
+    Args:
+        base_string (str): The string to be hashed.
+
+    Returns:
+        str: The MD5 hash of the input string in hexadecimal format.
     """
-    return hashlib.md5(base_string.encode()).hexdigest()
 ```
 
-**Назначение**: Функция `hash_function` имитирует хеш-функцию с использованием алгоритма MD5. Она принимает строку в качестве аргумента, кодирует её в байты и вычисляет MD5 хеш, который затем возвращается в шестнадцатеричном формате.
+**Назначение**: Функция `hash_function` имитирует хеш-функцию, используя алгоритм MD5 для создания хеша из входной строки.
 
 **Параметры**:
 
@@ -73,34 +44,26 @@ def hash_function(base_string: str) -> str:
 
 **Возвращает**:
 
-- `str`: MD5 хеш строки в шестнадцатеричном формате.
+- `str`: MD5 хеш входной строки в шестнадцатеричном формате.
 
 **Как работает функция**:
 
-1.  Кодирует входную строку `base_string` в байты с использованием кодировки UTF-8.
-2.  Вычисляет MD5 хеш полученных байтов с помощью `hashlib.md5()`.
-3.  Преобразует полученный хеш в шестнадцатеричную строку с помощью `.hexdigest()`.
-4.  Возвращает полученную шестнадцатеричную строку.
-
-ASCII flowchart:
+1. Кодирует входную строку `base_string` в байты, используя кодировку UTF-8.
+2. Вычисляет MD5 хеш закодированной строки.
+3. Возвращает шестнадцатеричное представление вычисленного хеша.
 
 ```
-base_string (str)
-    ↓
-encode('utf-8')
-    ↓
-MD5 Hash (hashlib.md5)
-    ↓
-hexdigest()
-    ↓
-hex_string (str)
+base_string --> encode("utf-8") --> hashlib.md5() --> hexdigest()
 ```
 
 **Примеры**:
 
 ```python
-result = hash_function("test_string")
-print(result) # Output: 'd8e8fca2dc0f896fd7cb4cb0031ba249'
+result1 = hash_function("test_string")
+print(result1)  # Вывод: 8756312dd2ec430909981169568e94bc
+
+result2 = hash_function("another_string")
+print(result2)  # Вывод: 748c5a10b31c67f07ca66f9d9448990b
 ```
 
 ### `generate_yy_header`
@@ -109,252 +72,202 @@ print(result) # Output: 'd8e8fca2dc0f896fd7cb4cb0031ba249'
 def generate_yy_header(has_search_params_path: str, body_to_yy: dict, time: int) -> str:
     """
     Python equivalent of the generateYYHeader function.
+    Args:
+        has_search_params_path (str): The path with search parameters.
+        body_to_yy (dict): The body to be included in the header generation.
+        time (int): The timestamp.
+
+    Returns:
+        str: The generated YY header.
     """
-    encoded_path = quote(has_search_params_path, "")
-    time_hash = hash_function(str(time))
-    combined_string = f"{encoded_path}_{body_to_yy}{time_hash}ooui"
-    return hash_function(combined_string)
 ```
 
-**Назначение**: Функция `generate_yy_header` генерирует заголовок `yy_header`, используя предоставленные параметры и хеш-функцию. Этот заголовок используется для аутентификации запросов к API.
+**Назначение**: Функция `generate_yy_header` генерирует заголовок YY, который используется для аутентификации и защиты запросов к API.
 
 **Параметры**:
 
 - `has_search_params_path` (str): Путь с параметрами поиска.
-- `body_to_yy` (dict): Словарь с данными тела запроса.
-- `time` (int): Временная метка.
+- `body_to_yy` (dict): Тело запроса для включения в генерацию заголовка.
+- `time` (int): Временная метка (timestamp).
 
 **Возвращает**:
 
-- `str`: Сгенерированный заголовок `yy_header`.
+- `str`: Сгенерированный YY заголовок.
 
 **Как работает функция**:
 
-1.  Кодирует `has_search_params_path` с помощью `urllib.parse.quote`.
-2.  Вычисляет хеш от временной метки `time` с помощью `hash_function`.
-3.  Объединяет закодированный путь, тело запроса и хеш временной метки в одну строку.
-4.  Вычисляет хеш от объединенной строки с помощью `hash_function`.
-5.  Возвращает полученный хеш.
-
-ASCII flowchart:
+1. Кодирует `has_search_params_path` с помощью `urllib.parse.quote`.
+2. Вычисляет хеш от временной метки `time`.
+3. Объединяет закодированный путь, тело запроса и хеш временной метки в одну строку.
+4. Вычисляет хеш от объединенной строки и возвращает его.
 
 ```
-has_search_params_path (str), body_to_yy (dict), time (int)
-    ↓
-quote(has_search_params_path)
-    ↓
-hash_function(str(time))
-    ↓
-encoded_path + body_to_yy + time_hash + "ooui"
-    ↓
-hash_function(combined_string)
-    ↓
-yy_header (str)
+has_search_params_path --> quote()
+time --> hash_function()
+--> combined_string --> hash_function()
 ```
 
 **Примеры**:
 
 ```python
-header = generate_yy_header("/api/search", {"key": "value"}, 1678886400)
-print(header) # Output: 'some_hash'
+has_search_params_path = "/v4/api/chat/msg"
+body_to_yy = {"key": "value"}
+time = 1678886400
+
+result = generate_yy_header(has_search_params_path, body_to_yy, time)
+print(result)  # Вывод: 53c6588d25c387bb039899883b389578
 ```
 
 ### `get_body_to_yy`
 
 ```python
 def get_body_to_yy(l):
-    L = l["msgContent"].replace("\\r\\n", "").replace("\\n", "").replace("\\r", "")
-    M = hash_function(l["characterID"]) + hash_function(L) + hash_function(l["chatID"])
-    M += hash_function("")  # Mimics hashFunction(undefined) in JS
-    return M
+    """
+    Args:
+        l (dict): Input dictionary containing 'msgContent', 'characterID', and 'chatID'.
+
+    Returns:
+        str: A string generated by hashing specific elements from the input dictionary.
+    """
 ```
 
-**Назначение**: Функция `get_body_to_yy` подготавливает часть тела запроса для генерации `yy_header`. Она извлекает данные из входного словаря, выполняет необходимые преобразования и хеширует полученные значения.
+**Назначение**: Функция `get_body_to_yy` формирует строку, которая используется для создания тела запроса YY.
 
 **Параметры**:
 
-- `l` (dict): Словарь, содержащий данные для формирования тела запроса. Ожидается наличие ключей "msgContent", "characterID" и "chatID".
+- `l` (dict): Словарь, содержащий ключи `'msgContent'`, `'characterID'` и `'chatID'`.
 
 **Возвращает**:
 
-- `str`: Подготовленная строка для включения в тело запроса.
+- `str`: Строка, сгенерированная путем хеширования определенных элементов из входного словаря.
 
 **Как работает функция**:
 
-1.  Извлекает значение ключа `msgContent` из словаря `l` и удаляет символы переноса строки (`\r\n`, `\n`, `\r`).
-2.  Вычисляет хеш от значений `characterID`, очищенного `msgContent` и `chatID` с помощью функции `hash_function`.
-3.  Добавляет к полученной строке хеш от пустой строки, имитируя поведение JavaScript.
-4.  Возвращает полученную строку.
-
-ASCII flowchart:
+1. Извлекает и очищает значение `'msgContent'` от символов новой строки и возврата каретки.
+2. Вычисляет хеш от `'characterID'`, очищенного `'msgContent'` и `'chatID'`.
+3. Добавляет хеш пустой строки.
+4. Объединяет все хеши в одну строку и возвращает её.
 
 ```
-l (dict)
-    ↓
-l["msgContent"].replace("\\r\\n", "").replace("\\n", "").replace("\\r", "")
-    ↓
-hash_function(l["characterID"]) + hash_function(L) + hash_function(l["chatID"]) + hash_function("")
-    ↓
-body_to_yy (str)
+l["msgContent"] --> replace() --> hash_function()
+l["characterID"] --> hash_function()
+l["chatID"] --> hash_function()
+"" --> hash_function()
+--> combined_string
 ```
 
 **Примеры**:
 
 ```python
-body = get_body_to_yy({"msgContent": "test\nmessage", "characterID": "123", "chatID": "456"})
-print(body) # Output: 'some_hash'
+data = {"msgContent": "Hello\\nWorld", "characterID": "char123", "chatID": "chat456"}
+result = get_body_to_yy(data)
+print(result)  # Вывод: 37c22a94f9282e18c7a836e86121a963918b8d20316956f12a0495011838d452d4164f37003d39a5e0d04380ad7f06291d0c2005e098ecf8427e
+
 ```
 
 ### `get_body_json`
 
 ```python
 def get_body_json(s):
-    return json.dumps(s, ensure_ascii=True, sort_keys=True)
+    """
+    Args:
+        s (dict): Input dictionary to be converted to JSON.
+
+    Returns:
+        str: JSON string representation of the input dictionary, ensuring ASCII characters and sorted keys.
+    """
 ```
 
-**Назначение**: Функция `get_body_json` преобразует входной словарь в JSON-строку с обеспечением кодировки ASCII и сортировкой ключей.
+**Назначение**: Функция `get_body_json` преобразует словарь в JSON строку.
 
 **Параметры**:
 
-- `s` (dict): Словарь, который необходимо преобразовать в JSON.
+- `s` (dict): Словарь, который нужно преобразовать в JSON.
 
 **Возвращает**:
 
-- `str`: JSON-строка, представляющая входной словарь.
+- `str`: JSON строка, представляющая входной словарь, с обеспечением использования ASCII символов и сортировкой ключей.
 
 **Как работает функция**:
 
-1.  Использует `json.dumps` для преобразования словаря `s` в JSON-строку.
-2.  Устанавливает `ensure_ascii=True`, чтобы все не-ASCII символы были экранированы.
-3.  Устанавливает `sort_keys=True`, чтобы ключи в JSON были отсортированы.
-4.  Возвращает полученную JSON-строку.
-
-ASCII flowchart:
+1. Преобразует словарь `s` в JSON строку с использованием `json.dumps`.
+2. Обеспечивает, что все символы в JSON строке являются ASCII.
+3. Сортирует ключи в JSON строке.
 
 ```
-s (dict)
-    ↓
-json.dumps(s, ensure_ascii=True, sort_keys=True)
-    ↓
-json_string (str)
+s --> json.dumps(ensure_ascii=True, sort_keys=True)
 ```
 
 **Примеры**:
 
 ```python
-json_data = get_body_json({"key": "value", "another_key": 123})
-print(json_data) # Output: '{"another_key": 123, "key": "value"}'
+data = {"key1": "value1", "key2": "value2"}
+result = get_body_json(data)
+print(result)  # Вывод: {"key1": "value1", "key2": "value2"}
 ```
 
 ### `get_browser_callback`
 
 ```python
 async def get_browser_callback(auth_result: CallbackResults):
-    async def callback(page: Tab):
-        while not auth_result.token:
-            auth_result.token = await page.evaluate("localStorage.getItem(\'_token\')")
-            if not auth_result.token:
-                await asyncio.sleep(1)
-        (auth_result.path_and_query, auth_result.timestamp) = await page.evaluate("""
-            const device_id = localStorage.getItem("USER_HARD_WARE_INFO");
-            const uuid = localStorage.getItem("UNIQUE_USER_ID");
-            const os_name = navigator.userAgentData?.platform || navigator.platform || "Unknown";
-            const browser_name = (() => {
-                const userAgent = navigator.userAgent.toLowerCase();
-                if (userAgent.includes("chrome") && !userAgent.includes("edg")) return "chrome";
-                if (userAgent.includes("edg")) return "edge";
-                if (userAgent.includes("firefox")) return "firefox";
-                if (userAgent.includes("safari") && !userAgent.includes("chrome")) return "safari";
-                return "unknown";
-            })();
-            const cpu_core_num = navigator.hardwareConcurrency || 8;
-            const browser_language = navigator.language || "unknown";
-            const browser_platform = `${navigator.platform || "unknown"}`;\n            const screen_width = window.screen.width || "unknown";
-            const screen_height = window.screen.height || "unknown";
-            const unix = Date.now(); // Current Unix timestamp in milliseconds
-            const params = {\n                device_platform: "web",\n                biz_id: 2,\n                app_id: 3001,\n                version_code: 22201,\n                lang: "en",\n                uuid,\n                device_id,\n                os_name,\n                browser_name,\n                cpu_core_num,\n                browser_language,\n                browser_platform,\n                screen_width,\n                screen_height,\n                unix\n            };\n            [new URLSearchParams(params).toString(), unix]\n        """)
-        auth_result.path_and_query = f"{API_PATH}?{auth_result.path_and_query}"
-    return callback
+    """
+    Args:
+        auth_result (CallbackResults): An instance of CallbackResults to store authentication results.
+
+    Returns:
+        callable: An asynchronous callback function that retrieves authentication tokens and parameters from the browser page.
+    """
 ```
 
-**Назначение**: Функция `get_browser_callback` создает асинхронную функцию обратного вызова, которая используется для получения данных из браузера, таких как токен авторизации, параметры устройства и временная метка.
+**Назначение**: Функция `get_browser_callback` возвращает асинхронную callback-функцию, которая извлекает токены авторизации и параметры из браузера.
 
 **Параметры**:
 
-- `auth_result` (CallbackResults): Объект класса `CallbackResults`, в котором будут сохранены результаты обратного вызова.
+- `auth_result` (CallbackResults): Экземпляр класса `CallbackResults` для хранения результатов авторизации.
 
 **Возвращает**:
 
-- `callback` (async function): Асинхронная функция обратного вызова, которая принимает объект `page: Tab` и выполняет извлечение данных из браузера.
+- `callable`: Асинхронная callback-функция, которая получает токены авторизации и параметры из страницы браузера.
 
 **Внутренние функции**:
 
-### `callback`
-
+#### `callback`
 ```python
-        async def callback(page: Tab):
-            while not auth_result.token:
-                auth_result.token = await page.evaluate("localStorage.getItem(\'_token\')")
-                if not auth_result.token:
-                    await asyncio.sleep(1)
-            (auth_result.path_and_query, auth_result.timestamp) = await page.evaluate("""
-                const device_id = localStorage.getItem("USER_HARD_WARE_INFO");
-                const uuid = localStorage.getItem("UNIQUE_USER_ID");
-                const os_name = navigator.userAgentData?.platform || navigator.platform || "Unknown";
-                const browser_name = (() => {
-                    const userAgent = navigator.userAgent.toLowerCase();
-                    if (userAgent.includes("chrome") && !userAgent.includes("edg")) return "chrome";
-                    if (userAgent.includes("edg")) return "edge";
-                    if (userAgent.includes("firefox")) return "firefox";
-                    if (userAgent.includes("safari") && !userAgent.includes("chrome")) return "safari";
-                    return "unknown";
-                })();
-                const cpu_core_num = navigator.hardwareConcurrency || 8;
-                const browser_language = navigator.language || "unknown";
-                const browser_platform = `${navigator.platform || "unknown"}`;\n                const screen_width = window.screen.width || "unknown";
-                const screen_height = window.screen.height || "unknown";
-                const unix = Date.now(); // Current Unix timestamp in milliseconds
-                const params = {\n                    device_platform: "web",\n                    biz_id: 2,\n                    app_id: 3001,\n                    version_code: 22201,\n                    lang: "en",\n                    uuid,\n                    device_id,\n                    os_name,\n                    browser_name,\n                    cpu_core_num,\n                    browser_language,\n                    browser_platform,\n                    screen_width,\n                    screen_height,\n                    unix\n                };\n                [new URLSearchParams(params).toString(), unix]\n            """)
-            auth_result.path_and_query = f"{API_PATH}?{auth_result.path_and_query}"
+async def callback(page: Tab):
+    """
+    Args:
+        page (Tab): A tab object representing the browser page.
+    """
 ```
-
-**Назначение**: Асинхронная функция обратного вызова, которая извлекает токен авторизации, параметры запроса и временную метку из браузера.
-
 **Параметры**:
+- `page` (Tab): Объект вкладки, представляющий страницу браузера.
 
-- `page` (Tab): Объект, представляющий вкладку браузера, из которой необходимо извлечь данные.
-
-**Как работает функция**:
-
-1.  В цикле ожидает, пока не будет получен токен авторизации из `localStorage` браузера.
-2.  Извлекает параметры устройства, такие как ID устройства, UUID, имя ОС, имя браузера, количество ядер CPU, язык браузера, платформа браузера, ширина и высота экрана.
-3.  Формирует параметры запроса на основе извлеченных данных.
-4.  Получает временную метку Unix.
-5.  Сохраняет путь и параметры запроса в объекте `auth_result`.
-6.  Добавляет `API_PATH` к пути запроса.
-
-ASCII flowchart:
+**Как работает callback**:
+1. В цикле ожидает, пока токен авторизации (`auth_result.token`) не будет получен из `localStorage` страницы.
+2. После получения токена извлекает параметры запроса и временную метку из `localStorage` и `navigator` страницы.
+3. Формирует полный путь запроса, объединяя `API_PATH` с полученными параметрами запроса.
 
 ```
-auth_result (CallbackResults), page (Tab)
-    ↓
-while not auth_result.token:
-    ↓
-auth_result.token = await page.evaluate("localStorage.getItem('_token')")
-    ↓
-Extract device parameters from browser
-    ↓
-Create URLSearchParams from device parameters
-    ↓
-auth_result.path_and_query, auth_result.timestamp
-    ↓
-auth_result.path_and_query = f"{API_PATH}?{auth_result.path_and_query}"
+while not auth_result.token: --> localStorage.getItem('_token')
+--> localStorage.getItem("USER_HARD_WARE_INFO")
+--> localStorage.getItem("UNIQUE_USER_ID")
+--> navigator.userAgentData?.platform
+--> navigator.platform
+--> navigator.userAgent.toLowerCase()
+--> navigator.hardwareConcurrency
+--> navigator.language
+--> navigator.platform
+--> window.screen.width
+--> window.screen.height
+--> Date.now()
+--> API_PATH + path_and_query
 ```
 
 **Примеры**:
 
 ```python
 auth_result = CallbackResults()
-callback = get_browser_callback(auth_result)
-# Пример вызова callback функции (требуется интеграция с webdriver)
-# await callback(page)
+callback_func = await get_browser_callback(auth_result)
+# callback_func будет асинхронной функцией, которую можно передать в браузер для выполнения
+```
+```python

@@ -1,39 +1,47 @@
-# Модуль tiny_factory.py
+# Модуль `tiny_factory.py`
 
 ## Обзор
 
-Модуль `tiny_factory.py` определяет базовый класс `TinyFactory` для создания различных типов фабрик в проекте `hypotez`. Этот класс облегчает расширение системы, особенно в отношении кеширования транзакций. Фабрики используются для создания и управления объектами в симуляциях.
+Модуль содержит базовый класс `TinyFactory`, предназначенный для создания различных типов фабрик. Он обеспечивает механизм кэширования и управления фабриками, что особенно важно для расширения системы и управления транзакциями.
 
 ## Подробней
 
-Модуль содержит класс `TinyFactory`, который служит базовым классом для создания различных типов фабрик. Он предоставляет функциональность для управления фабриками, включая добавление, удаление и кеширование. Фабрики играют важную роль в создании объектов в симуляциях и управлении их состоянием. Класс также содержит методы для кодирования и декодирования состояния фабрики, что необходимо для кеширования транзакций.
+Этот модуль играет важную роль в управлении жизненным циклом фабрик, используемых для создания агентов в системе `tinytroupe`. Он предоставляет инструменты для регистрации, хранения и кэширования фабрик, а также обеспечивает возможность восстановления их состояния. Это особенно важно для обеспечения консистентности данных при работе с кэшированными агентами.
 
 ## Классы
 
 ### `TinyFactory`
 
-**Описание**: Базовый класс для создания различных типов фабрик.
+**Описание**: Базовый класс для создания различных типов фабрик. Обеспечивает механизм кэширования и управления фабриками.
 
-**Принцип работы**: Класс `TinyFactory` предоставляет базовую функциональность для управления фабриками. Он включает методы для добавления, удаления и кеширования фабрик. Класс также содержит методы для кодирования и декодирования состояния фабрики, что необходимо для кеширования транзакций.
+**Принцип работы**:
+Класс `TinyFactory` предназначен для упрощения расширения системы и управления кэшированием транзакций. Он предоставляет базовую функциональность для создания, хранения и восстановления состояния фабрик.
+1.  Инициализация: При создании экземпляра `TinyFactory` генерируется уникальное имя и регистрируется фабрика в глобальном списке.
+2.  Управление фабриками: Класс предоставляет статические методы для добавления, очистки и установки симуляции для фабрик.
+3.  Кэширование: `TinyFactory` предоставляет методы для кодирования и декодирования полного состояния фабрики, что позволяет кэшировать фабрики и восстанавливать их состояние при необходимости.
 
-**Аттрибуты**:
-- `all_factories (dict)`: Словарь всех созданных фабрик. Ключ - имя фабрики, значение - объект фабрики.
-- `name (str)`: Имя фабрики. Генерируется автоматически при создании экземпляра класса.
-- `simulation_id (str, optional)`: ID симуляции, к которой принадлежит фабрика. По умолчанию `None`.
+**Атрибуты**:
+
+*   `all_factories` (dict): Статический атрибут, представляющий собой словарь всех созданных фабрик. Ключ - имя фабрики, значение - экземпляр фабрики.
+*   `name` (str): Имя фабрики, генерируется автоматически при инициализации.
+*   `simulation_id` (str, optional): ID симуляции, к которой принадлежит фабрика. По умолчанию `None`.
 
 **Методы**:
-- `__init__(simulation_id: str = None) -> None`: Инициализирует экземпляр класса `TinyFactory`.
-- `__repr__() -> str`: Возвращает строковое представление объекта `TinyFactory`.
-- `set_simulation_for_free_factories(simulation)`: Устанавливает симуляцию для свободных фабрик (с `simulation_id=None`).
-- `add_factory(factory)`: Добавляет фабрику в глобальный список фабрик.
-- `clear_factories()`: Очищает глобальный список всех фабрик.
-- `encode_complete_state() -> dict`: Кодирует полное состояние фабрики в словарь.
-- `decode_complete_state(state: dict)`: Декодирует состояние фабрики из словаря.
+
+*   `__init__(simulation_id: str = None) -> None`: Инициализирует экземпляр `TinyFactory`, генерирует имя и добавляет фабрику в глобальный список.
+*   `__repr__() -> str`: Возвращает строковое представление объекта `TinyFactory`.
+*   `set_simulation_for_free_factories(simulation)`: Устанавливает симуляцию для фабрик, у которых `simulation_id` равен `None`.
+*   `add_factory(factory)`: Добавляет фабрику в глобальный список `all_factories`.
+*   `clear_factories()`: Очищает глобальный список `all_factories`.
+*   `encode_complete_state() -> dict`: Кодирует полное состояние фабрики в словарь.
+*   `decode_complete_state(state: dict)`: Декодирует состояние фабрики из словаря.
+
+## Функции
 
 ### `__init__`
 
 ```python
-def __init__(self, simulation_id: str = None) -> None:
+def __init__(self, simulation_id:str=None) -> None:
     """
     Initialize a TinyFactory instance.
 
@@ -43,34 +51,36 @@ def __init__(self, simulation_id: str = None) -> None:
     ...
 ```
 
-**Назначение**: Инициализирует новый экземпляр класса `TinyFactory`.
+**Назначение**: Инициализирует экземпляр класса `TinyFactory`.
 
 **Параметры**:
-- `simulation_id (str, optional)`: ID симуляции, к которой принадлежит фабрика. По умолчанию `None`.
+
+*   `simulation_id` (str, optional): Идентификатор симуляции, к которой принадлежит фабрика. По умолчанию `None`.
 
 **Возвращает**:
-- `None`
+    - `None`
 
 **Как работает функция**:
-1. Генерирует уникальное имя для фабрики с использованием `utils.fresh_id()` и устанавливает его в атрибут `self.name`.
-2. Устанавливает `simulation_id` фабрики.
-3. Добавляет фабрику в глобальный список фабрик, используя `TinyFactory.add_factory(self)`.
 
-```
-Создание уникального имени фабрики --> Установка simulation_id --> Добавление фабрики в глобальный список
-```
+1.  Генерирует уникальное имя для фабрики, используя функцию `fresh_id` из модуля `tinytroupe.utils`.
+2.  Присваивает переданный `simulation_id` атрибуту `simulation_id` экземпляра класса.
+3.  Добавляет созданный экземпляр фабрики в глобальный список фабрик, используя статический метод `add_factory`.
 
 **Примеры**:
 
 ```python
-factory = TinyFactory()
-print(factory.name)  # Пример: Factory 123
+factory1 = TinyFactory(simulation_id="sim_123")
+print(factory1.name)  # Вывод: Factory <ID>
+print(factory1.simulation_id)  # Вывод: sim_123
+
+factory2 = TinyFactory()
+print(factory2.simulation_id)  # Вывод: None
 ```
 
 ### `__repr__`
 
 ```python
-def __repr__(self) -> str:
+def __repr__(self):
     """
     """
     ...
@@ -79,19 +89,21 @@ def __repr__(self) -> str:
 **Назначение**: Возвращает строковое представление объекта `TinyFactory`.
 
 **Параметры**:
-- Нет
+    - None
 
 **Возвращает**:
-- `str`: Строковое представление объекта `TinyFactory`.
+
+*   `str`: Строковое представление объекта `TinyFactory`.
 
 **Как работает функция**:
-1. Формирует строку, представляющую объект `TinyFactory` с его именем.
+
+1.  Формирует строку, содержащую имя класса и имя фабрики.
 
 **Примеры**:
 
 ```python
-factory = TinyFactory()
-print(repr(factory))  # Пример: TinyFactory(name='Factory 123')
+factory = TinyFactory(simulation_id="sim_123")
+print(repr(factory))  # Вывод: TinyFactory(name='Factory <ID>')
 ```
 
 ### `set_simulation_for_free_factories`
@@ -106,31 +118,33 @@ def set_simulation_for_free_factories(simulation):
     ...
 ```
 
-**Назначение**: Устанавливает симуляцию для "свободных" фабрик, у которых `simulation_id` равен `None`.
+**Назначение**: Устанавливает симуляцию для фабрик, у которых не задан `simulation_id`.
 
 **Параметры**:
-- `simulation`: Объект симуляции, к которой нужно привязать фабрики.
+
+*   `simulation`: Объект симуляции, который необходимо установить для фабрик.
 
 **Возвращает**:
-- `None`
+    - None
 
 **Как работает функция**:
-1. Итерируется по всем фабрикам в `TinyFactory.all_factories`.
-2. Если у фабрики `simulation_id` равен `None`, добавляет фабрику в указанную симуляцию с помощью `simulation.add_factory(factory)`.
 
-```
-Итерация по фабрикам --> Проверка simulation_id --> Добавление фабрики в симуляцию
-```
+1.  Проходит по всем фабрикам в глобальном списке `TinyFactory.all_factories`.
+2.  Для каждой фабрики проверяет, является ли `simulation_id` равным `None`.
+3.  Если `simulation_id` равен `None`, вызывает метод `add_factory` объекта `simulation`, передавая текущую фабрику в качестве аргумента.
 
 **Примеры**:
 
 ```python
-from unittest.mock import Mock
-simulation = Mock()  # Создаем мок-объект симуляции
-factory1 = TinyFactory()  # simulation_id по умолчанию None
-factory2 = TinyFactory(simulation_id="sim1")
-TinyFactory.set_simulation_for_free_factories(simulation)
-simulation.add_factory.assert_called_once_with(factory1)  # Проверяем, что add_factory был вызван только для factory1
+class Simulation:
+    def add_factory(self, factory):
+        print(f"Factory {factory.name} added to simulation")
+
+simulation = Simulation()
+factory1 = TinyFactory(simulation_id="sim_123")
+factory2 = TinyFactory()
+
+TinyFactory.set_simulation_for_free_factories(simulation) # для factory2 будет выведено "Factory Factory <ID> added to simulation"
 ```
 
 ### `add_factory`
@@ -148,35 +162,34 @@ def add_factory(factory):
 **Назначение**: Добавляет фабрику в глобальный список `all_factories`.
 
 **Параметры**:
-- `factory`: Объект фабрики для добавления.
+
+*   `factory`: Объект фабрики, который необходимо добавить в список.
 
 **Возвращает**:
-- `None`
+    - None
 
 **Вызывает исключения**:
-- `ValueError`: Если фабрика с таким именем уже существует.
+
+*   `ValueError`: Если фабрика с таким именем уже существует.
 
 **Как работает функция**:
-1. Проверяет, существует ли уже фабрика с таким же именем в `TinyFactory.all_factories`.
-2. Если фабрика с таким именем уже существует, выбрасывает исключение `ValueError`.
-3. Если фабрики с таким именем не существует, добавляет фабрику в `TinyFactory.all_factories`.
 
-```
-Проверка имени фабрики --> Выброс исключения (если имя занято) --> Добавление фабрики в глобальный список
-```
+1.  Проверяет, существует ли фабрика с таким же именем в глобальном списке `TinyFactory.all_factories`.
+2.  Если фабрика с таким именем уже существует, выбрасывает исключение `ValueError`.
+3.  В противном случае добавляет фабрику в глобальный список `TinyFactory.all_factories`, где ключом является имя фабрики, а значением - объект фабрики.
 
 **Примеры**:
 
 ```python
-factory1 = TinyFactory()
-TinyFactory.add_factory(factory1)
+factory1 = TinyFactory(simulation_id="sim_123")
+# TinyFactory.add_factory(factory1)  # Фабрика уже добавлена при инициализации
 
 try:
-    factory2 = TinyFactory()  # Создаст фабрику с тем же именем, если id генерируется не уникально
+    factory2 = TinyFactory()
     factory2.name = factory1.name
     TinyFactory.add_factory(factory2)
 except ValueError as ex:
-    print(f"Ошибка: {ex}")
+    print(f"Error: {ex}")  # Вывод: Error: Factory names must be unique, but 'Factory <ID>' is already defined.
 ```
 
 ### `clear_factories`
@@ -190,24 +203,26 @@ def clear_factories():
     ...
 ```
 
-**Назначение**: Очищает глобальный список всех фабрик (`TinyFactory.all_factories`).
+**Назначение**: Очищает глобальный список `all_factories`.
 
 **Параметры**:
-- Нет
+    - None
 
 **Возвращает**:
-- `None`
+    - None
 
 **Как работает функция**:
-1. Присваивает `TinyFactory.all_factories` пустой словарь.
+
+1.  Присваивает глобальному списку `TinyFactory.all_factories` пустой словарь, тем самым удаляя все фабрики из списка.
 
 **Примеры**:
 
 ```python
-factory1 = TinyFactory()
-TinyFactory.add_factory(factory1)
+factory1 = TinyFactory(simulation_id="sim_123")
+print(len(TinyFactory.all_factories))  # Вывод: 1
+
 TinyFactory.clear_factories()
-print(TinyFactory.all_factories)  # {}
+print(len(TinyFactory.all_factories))  # Вывод: 0
 ```
 
 ### `encode_complete_state`
@@ -220,61 +235,59 @@ def encode_complete_state(self) -> dict:
     ...
 ```
 
-**Назначение**: Кодирует полное состояние фабрики в словарь для кеширования.
+**Назначение**: Кодирует полное состояние фабрики в словарь.
 
 **Параметры**:
-- Нет
+    - None
 
 **Возвращает**:
-- `dict`: Словарь, представляющий состояние фабрики.
+
+*   `dict`: Словарь, представляющий состояние фабрики.
 
 **Как работает функция**:
-1. Создает глубокую копию словаря `self.__dict__`, представляющего состояние объекта.
-2. Возвращает эту копию.
 
-```
-Создание глубокой копии состояния --> Возврат словаря состояния
-```
+1.  Создает глубокую копию словаря `__dict__` экземпляра класса, который содержит все атрибуты экземпляра.
+2.  Возвращает созданную копию.
 
 **Примеры**:
 
 ```python
-factory = TinyFactory()
+factory = TinyFactory(simulation_id="sim_123")
 state = factory.encode_complete_state()
-print(state)
+print(state.keys())  # Вывод: dict_keys(['name', 'simulation_id'])
 ```
 
 ### `decode_complete_state`
 
 ```python
-def decode_complete_state(self, state: dict):
+def decode_complete_state(self, state:dict):
     """
     Decodes the complete state of the factory. If subclasses have elmements that are not serializable, they should override this method.
     """
     ...
 ```
 
-**Назначение**: Декодирует состояние фабрики из словаря, восстанавливая её состояние.
+**Назначение**: Декодирует состояние фабрики из словаря.
 
 **Параметры**:
-- `state (dict)`: Словарь, содержащий состояние фабрики.
+
+*   `state` (dict): Словарь, содержащий состояние фабрики.
 
 **Возвращает**:
-- `self`: Объект `TinyFactory` с восстановленным состоянием.
+    - self
 
 **Как работает функция**:
-1. Создает глубокую копию словаря `state`.
-2. Обновляет словарь `self.__dict__` данными из скопированного словаря `state`.
-3. Возвращает `self`.
 
-```
-Создание глубокой копии состояния --> Обновление состояния объекта --> Возврат объекта
-```
+1.  Создает глубокую копию переданного словаря `state`.
+2.  Обновляет словарь `__dict__` экземпляра класса данными из копии словаря `state`.
+3.  Возвращает экземпляр класса.
 
 **Примеры**:
 
 ```python
-factory = TinyFactory()
-state = {'name': 'Factory123', 'simulation_id': 'sim1'}
+factory = TinyFactory(simulation_id="sim_123")
+state = {"name": "New Factory", "simulation_id": "sim_456"}
 factory.decode_complete_state(state)
-print(factory.name, factory.simulation_id)  # Factory123 sim1
+print(factory.name)  # Вывод: New Factory
+print(factory.simulation_id)  # Вывод: sim_456
+```

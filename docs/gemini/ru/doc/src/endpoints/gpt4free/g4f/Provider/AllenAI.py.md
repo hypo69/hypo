@@ -1,55 +1,64 @@
-# Модуль для работы с AllenAI Playground
+# Модуль AllenAI для взаимодействия с Ai2 Playground
 ## Обзор
 
-Модуль `AllenAI` предоставляет асинхронный интерфейс для взаимодействия с сервисом AllenAI Playground. Он позволяет генерировать текст на основе предоставленных сообщений, используя различные модели, поддерживаемые AllenAI. Модуль поддерживает потоковую передачу ответов и сохранение истории разговоров.
+Модуль `AllenAI` предоставляет асинхронный генератор для взаимодействия с Ai2 Playground, используя API AllenAI. Он поддерживает потоковую передачу данных и предназначен для работы с различными моделями, предоставляемыми Ai2 Playground.
 
 ## Подробнее
 
-Модуль предназначен для интеграции с другими частями проекта `hypotez`, где требуется использование AI-моделей для генерации текста. Он предоставляет удобный интерфейс для отправки запросов к AllenAI Playground и получения ответов в асинхронном режиме.
+Этот модуль позволяет интегрировать функциональность AI2 Playground в проект `hypotez`. Он включает в себя классы для управления диалогом (`Conversation`) и асинхронный провайдер (`AllenAI`), который обрабатывает запросы к API AllenAI. Модуль поддерживает выбор модели, передачу истории сообщений и обработку ответов в потоковом режиме.
 
 ## Классы
 
 ### `Conversation`
 
-**Описание**: Класс `Conversation` представляет собой структуру для хранения истории разговора с AI-моделью.
+**Описание**: Класс для хранения информации о текущем диалоге. Наследует `JsonConversation`.
 
 **Наследует**:
-- `JsonConversation`: Класс наследует функциональность для сериализации и десериализации истории разговора в формате JSON.
+- `JsonConversation`
 
 **Атрибуты**:
-- `parent` (str, optional): Идентификатор родительского сообщения в истории разговора. По умолчанию `None`.
-- `x_anonymous_user_id` (str, optional): Анонимный идентификатор пользователя. Генерируется случайным образом, если не задан.
-- `model` (str): Используемая модель AI.
-- `messages` (List[dict]): Список сообщений в истории разговора, где каждое сообщение представлено словарем с ключами "role" и "content".
+- `parent` (str | None): Идентификатор родительского сообщения в диалоге. По умолчанию `None`.
+- `x_anonymous_user_id` (str | None): Анонимный идентификатор пользователя. Генерируется случайным образом при создании экземпляра класса, если не задан.
+- `model` (str): Модель, используемая в текущем диалоге.
+- `messages` (list): Список сообщений в текущем диалоге.
 
 **Методы**:
 - `__init__(self, model: str)`: Инициализирует новый экземпляр класса `Conversation`.
 
+     **Параметры**:
+     - `model` (str): Модель, используемая в текущем диалоге.
+
+     **Как работает метод**:
+     1. Вызывает конструктор родительского класса `JsonConversation`.
+     2. Устанавливает атрибут `model` равным переданному значению.
+     3. Инициализирует пустой список `messages` для хранения сообщений диалога.
+     4. Если `x_anonymous_user_id` не установлен, генерирует новый UUID и присваивает его атрибуту `x_anonymous_user_id`.
+
 ### `AllenAI`
 
-**Описание**: Класс `AllenAI` предоставляет асинхронный интерфейс для взаимодействия с сервисом AllenAI Playground.
+**Описание**: Класс, предоставляющий асинхронный генератор для взаимодействия с API Ai2 Playground.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Класс наследует функциональность для асинхронной генерации данных.
-- `ProviderModelMixin`: Класс наследует функциональность для работы с моделями.
+- `AsyncGeneratorProvider`
+- `ProviderModelMixin`
 
 **Атрибуты**:
-- `label` (str): Метка провайдера, используемая для идентификации ("Ai2 Playground").
-- `url` (str): URL сервиса AllenAI Playground ("https://playground.allenai.org").
-- `login_url` (str): URL для входа в систему (в данном случае `None`, так как аутентификация не требуется).
-- `api_endpoint` (str): URL API для отправки запросов ("https://olmo-api.allen.ai/v4/message/stream").
-- `working` (bool): Указывает, работает ли провайдер (в данном случае `True`).
-- `needs_auth` (bool): Указывает, требуется ли аутентификация (в данном случае `False`).
-- `use_nodriver` (bool): Указывает, используется ли драйвер браузера (в данном случае `False`).
-- `supports_stream` (bool): Указывает, поддерживает ли провайдер потоковую передачу данных (в данном случае `True`).
-- `supports_system_message` (bool): Указывает, поддерживает ли провайдер системные сообщения (в данном случае `False`).
-- `supports_message_history` (bool): Указывает, поддерживает ли провайдер историю сообщений (в данном случае `True`).
-- `default_model` (str): Модель, используемая по умолчанию ("tulu3-405b").
-- `models` (List[str]): Список поддерживаемых моделей.
-- `model_aliases` (Dict[str, str]): Словарь псевдонимов моделей для удобства использования.
+- `label` (str): Метка провайдера ("Ai2 Playground").
+- `url` (str): URL Ai2 Playground ("https://playground.allenai.org").
+- `login_url` (str | None): URL для входа (в данном случае `None`, так как аутентификация не требуется).
+- `api_endpoint` (str): URL API для отправки сообщений ("https://olmo-api.allen.ai/v4/message/stream").
+- `working` (bool): Флаг, указывающий, работает ли провайдер (в данном случае `True`).
+- `needs_auth` (bool): Флаг, указывающий, требуется ли аутентификация (в данном случае `False`).
+- `use_nodriver` (bool): Флаг, указывающий, нужно ли использовать веб-драйвер (в данном случае `False`).
+- `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер потоковую передачу данных (в данном случае `True`).
+- `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения (в данном случае `False`).
+- `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений (в данном случае `True`).
+- `default_model` (str): Модель, используемая по умолчанию ('tulu3-405b').
+- `models` (list): Список поддерживаемых моделей.
+- `model_aliases` (dict): Словарь псевдонимов моделей для удобства использования.
 
 **Методы**:
-- `create_async_generator(cls, model: str, messages: Messages, proxy: str = None, host: str = "inferd", private: bool = True, top_p: float = None, temperature: float = None, conversation: Conversation = None, return_conversation: bool = False, **kwargs) -> AsyncResult`: Асинхронно генерирует текст на основе предоставленных сообщений, используя указанную модель AllenAI.
+- `create_async_generator(cls, model: str, messages: Messages, proxy: str = None, host: str = "inferd", private: bool = True, top_p: float = None, temperature: float = None, conversation: Conversation = None, return_conversation: bool = False, **kwargs) -> AsyncResult`
 
 ## Функции
 
@@ -70,134 +79,124 @@ async def create_async_generator(
     return_conversation: bool = False,
     **kwargs
 ) -> AsyncResult:
-    """
-    Асинхронно генерирует текст на основе предоставленных сообщений, используя указанную модель AllenAI.
+    """Создает асинхронный генератор для взаимодействия с API AllenAI.
 
     Args:
-        cls (AllenAI): Класс AllenAI.
         model (str): Модель для использования.
-        messages (Messages): Список сообщений для отправки в модель.
+        messages (Messages): Список сообщений для отправки.
         proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
-        host (str, optional): Хост для отправки запроса. По умолчанию "inferd".
-        private (bool, optional): Указывает, является ли разговор приватным. По умолчанию `True`.
-        top_p (float, optional): Параметр top_p для управления случайностью генерации. По умолчанию `None`.
-        temperature (float, optional): Параметр temperature для управления случайностью генерации. По умолчанию `None`.
-        conversation (Conversation, optional): Объект разговора для сохранения истории. По умолчанию `None`.
-        return_conversation (bool, optional): Указывает, следует ли возвращать объект разговора. По умолчанию `False`.
+        host (str, optional): Хост. По умолчанию "inferd".
+        private (bool, optional): Флаг, указывающий, является ли диалог приватным. По умолчанию `True`.
+        top_p (float, optional): Значение top_p. По умолчанию `None`.
+        temperature (float, optional): Значение temperature. По умолчанию `None`.
+        conversation (Conversation, optional): Объект диалога. По умолчанию `None`.
+        return_conversation (bool, optional): Флаг, указывающий, нужно ли возвращать объект диалога. По умолчанию `False`.
         **kwargs: Дополнительные параметры.
 
     Returns:
-        AsyncResult: Асинхронный генератор текста.
+        AsyncResult: Асинхронный генератор, возвращающий ответы от API AllenAI.
 
     Raises:
-        Exception: Если возникает ошибка при отправке запроса или обработке ответа.
+        Exception: В случае ошибки при взаимодействии с API.
     """
 ```
 
-**Назначение**: Генерация текста асинхронно на основе предоставленных сообщений с использованием указанной AI-модели AllenAI.
+**Назначение**:
+Создает асинхронный генератор для взаимодействия с API AllenAI. Этот генератор отправляет сообщения в API и возвращает ответы в потоковом режиме.
 
 **Параметры**:
-- `cls` (AllenAI): Класс AllenAI.
-- `model` (str): Модель для использования при генерации ответа.
-- `messages` (Messages): Список сообщений для отправки в модель.
-- `proxy` (str, optional): URL прокси-сервера для использования при отправке запроса. По умолчанию `None`.
-- `host` (str, optional): Хост для отправки запроса. По умолчанию "inferd".
-- `private` (bool, optional): Указывает, является ли разговор приватным. По умолчанию `True`.
-- `top_p` (float, optional): Параметр top_p для управления случайностью генерации. По умолчанию `None`.
-- `temperature` (float, optional): Параметр temperature для управления случайностью генерации. По умолчанию `None`.
-- `conversation` (Conversation, optional): Объект разговора для сохранения истории. По умолчанию `None`.
-- `return_conversation` (bool, optional): Указывает, следует ли возвращать объект разговора. По умолчанию `False`.
-- `**kwargs`: Дополнительные параметры, которые могут быть переданы в функцию.
+- `model` (str): Модель для использования.
+- `messages` (Messages): Список сообщений для отправки.
+- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
+- `host` (str, optional): Хост. По умолчанию "inferd".
+- `private` (bool, optional): Флаг, указывающий, является ли диалог приватным. По умолчанию `True`.
+- `top_p` (float, optional): Значение top_p. По умолчанию `None`.
+- `temperature` (float, optional): Значение temperature. По умолчанию `None`.
+- `conversation` (Conversation, optional): Объект диалога. По умолчанию `None`.
+- `return_conversation` (bool, optional): Флаг, указывающий, нужно ли возвращать объект диалога. По умолчанию `False`.
+- `**kwargs`: Дополнительные параметры.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор текста.
+- `AsyncResult`: Асинхронный генератор, возвращающий ответы от API AllenAI.
 
 **Вызывает исключения**:
-- `Exception`: Если возникает ошибка при отправке запроса или обработке ответа.
+- `Exception`: В случае ошибки при взаимодействии с API.
+
+**Внутренние функции**:
+Отсутствуют
 
 **Как работает функция**:
 
-1.  **Подготовка промпта**: Функция подготавливает промт для отправки в модель. Если объект `conversation` не передан, формируется полный промт из всех сообщений. В противном случае используется только последнее сообщение пользователя.
-2.  **Инициализация/обновление разговора**: Если объект `conversation` не передан, создается новый экземпляр класса `Conversation`.
-3.  **Генерация разделителя**: Генерируется уникальный разделитель для формирования multipart/form-data запроса.
-4.  **Формирование заголовков**: Формируются заголовки запроса, включая Content-Type с уникальным разделителем, User-Agent и идентификатор пользователя.
-5.  **Формирование тела запроса**: Формируется тело запроса в формате multipart/form-data, включающее модель, хост, контент (промт), флаг приватности и, при наличии, идентификатор родительского сообщения, параметры temperature и top_p.
-6.  **Отправка запроса**: Отправляется POST-запрос к API AllenAI с использованием `aiohttp.ClientSession`.
-7.  **Обработка потока ответов**: Полученный ответ обрабатывается по частям (chunks). Каждая часть декодируется, разделяется на строки, и каждая строка парсится как JSON.
-8.  **Извлечение контента**: Из JSON-ответа извлекается контент, сгенерированный ассистентом.
-9.  **Обработка завершения**: При получении финального сообщения или при достижении `finish_reason == "stop"`, извлекается идентификатор родительского сообщения, добавляется сообщение в историю разговора и, если требуется, возвращается объект разговора.
+ 1. Функция принимает параметры для настройки запроса к API AllenAI, включая модель, сообщения, прокси, хост, параметры приватности, значения `top_p` и `temperature`, а также объект диалога `conversation`.
+ 2. Форматирует промпт на основе переданных сообщений. Если объект диалога `conversation` не передан, используется функция `format_prompt` для форматирования всех сообщений, иначе используется функция `get_last_user_message` для извлечения последнего сообщения пользователя.
+ 3. Инициализирует или обновляет объект диалога `conversation`. Если `conversation` не передан, создается новый объект `Conversation` с указанной моделью.
+ 4. Генерирует уникальную границу (boundary) для multipart/form-data.
+ 5. Формирует заголовки запроса, включая `content-type`, `origin`, `referer`, `user-agent` и `x-anonymous-user-id` (из объекта `conversation`).
+ 6. Создает тело запроса в формате multipart/form-data, добавляя параметры, такие как модель, хост, контент (промпт) и флаг приватности.
+ 7. Если в объекте `conversation` присутствует `parent` (идентификатор родительского сообщения), он также добавляется в тело запроса.
+ 8. Опционально добавляются параметры `temperature` и `top_p`, если они переданы.
+ 9. Отправляет POST-запрос к API AllenAI с использованием `ClientSession` из библиотеки `aiohttp`.
+ 10. Обрабатывает ответ от API в асинхронном режиме, читая его по частям (chunks).
+ 11. Декодирует каждую часть ответа, извлекает данные в формате JSON из каждой строки и обрабатывает их.
+ 12. Обновляет `current_parent` (идентификатор текущего родительского сообщения) на основе данных, полученных от API.
+ 13. Извлекает контент из сообщений с ролью "assistant" и возвращает его через генератор.
+ 14. При получении финального ответа или при достижении `finish_reason` равного "stop", обновляет объект `conversation`, добавляет сообщения в историю и возвращает объект `conversation`, если `return_conversation` установлен в `True`.
+ 15. Завершает работу генератора, возвращая `FinishReason("stop")`.
+
+**ASCII flowchart**:
 
 ```
-    Начало
-    │
-    ├───> Форматирование промпта (format_prompt или get_last_user_message)
-    │
-    ├───> Создание/обновление объекта Conversation
-    │
-    ├───> Генерация уникального boundary
-    │
-    ├───> Формирование заголовков запроса
-    │
-    ├───> Формирование тела запроса (multipart/form-data)
-    │
-    ├───> Отправка POST-запроса к API AllenAI
-    │
-    ├───> Обработка потока ответов (chunks)
-    │   │
-    │   └───> Декодирование и разделение на строки
-    │   │
-    │   └───> Парсинг JSON
-    │   │
-    │   └───> Извлечение контента ассистента
-    │   │
-    │   └───> Обработка завершения (final или finish_reason == "stop")
-    │
-    └───> Конец
+    [Начало]
+       |
+    [Форматирование промпта]
+       |
+    [Инициализация/Обновление conversation]
+       |
+    [Генерация boundary]
+       |
+    [Формирование заголовков]
+       |
+    [Создание тела запроса (form-data)]
+       |
+    [Отправка POST-запроса к API]
+       |
+    [Обработка ответа по частям (chunks)]
+       |
+    [Декодирование и извлечение JSON]
+       |
+    [Обновление current_parent]
+       |
+    [Извлечение контента assistant]
+       |
+    [Получен final или finish_reason=stop?]
+    ----Нет----->[Вернуть контент]
+       |Да
+    [Обновление conversation]
+       |
+    [Возврат conversation (если return_conversation)]
+       |
+    [Возврат FinishReason("stop")]
+       |
+    [Конец]
 ```
 
 **Примеры**:
 
 ```python
-# Пример использования функции create_async_generator
-import asyncio
-from typing import AsyncGenerator, List, Dict
+# Пример 1: Создание асинхронного генератора с минимальными параметрами
+model = "tulu3-405b"
+messages = [{"role": "user", "content": "Hello, how are you?"}]
+async_generator = AllenAI.create_async_generator(model=model, messages=messages)
 
-async def main():
-    model = "tulu3-405b"
-    messages: List[Dict[str, str]] = [
-        {"role": "user", "content": "Hello, AllenAI!"}
-    ]
+# Пример 2: Создание асинхронного генератора с указанием прокси и температуры
+model = "tulu3-405b"
+messages = [{"role": "user", "content": "Tell me a joke."}]
+proxy = "http://your-proxy-url:8080"
+temperature = 0.7
+async_generator = AllenAI.create_async_generator(model=model, messages=messages, proxy=proxy, temperature=temperature)
 
-    async def print_response(generator: AsyncGenerator[str, None]):
-        async for chunk in generator:
-            print(chunk, end="")
-
-    response_generator = AllenAI.create_async_generator(model=model, messages=messages)
-    await print_response(await response_generator)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-```python
-# Пример использования с conversation
-import asyncio
-from typing import AsyncGenerator, List, Dict
-from src.endpoints.gpt4free.g4f.Provider.AllenAI import Conversation
-
-async def main():
-    model = "tulu3-405b"
-    messages: List[Dict[str, str]] = [
-        {"role": "user", "content": "Hello, AllenAI!"}
-    ]
-    conversation = Conversation(model=model)
-
-    async def print_response(generator: AsyncGenerator[str, None]):
-        async for chunk in generator:
-            print(chunk, end="")
-
-    response_generator = AllenAI.create_async_generator(model=model, messages=messages, conversation=conversation, return_conversation=True)
-    await print_response(await response_generator)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+# Пример 3: Создание асинхронного генератора с использованием существующего объекта conversation
+model = "tulu3-405b"
+messages = [{"role": "user", "content": "What is the capital of France?"}]
+conversation = Conversation(model=model)
+async_generator = AllenAI.create_async_generator(model=model, messages=messages, conversation=conversation, return_conversation=True)

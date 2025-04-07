@@ -1,34 +1,40 @@
-# Модуль ThebApi
+# Модуль `ThebApi`
 
 ## Обзор
 
-Модуль `ThebApi` представляет собой класс для взаимодействия с API TheB.AI, предоставляя возможность использовать различные модели для генерации текста. Он наследуется от класса `OpenaiTemplate` и адаптирован для работы с асинхронными генераторами.
+Модуль `ThebApi` представляет собой реализацию API для взаимодействия с сервисом TheB.AI. Он наследуется от класса `OpenaiTemplate` и предоставляет функциональность для создания асинхронных генераторов текста на основе моделей, поддерживаемых TheB.AI. Модуль предназначен для использования в проектах, требующих интеграции с TheB.AI для генерации текста.
 
 ## Подробнее
 
-Модуль предназначен для интеграции с платформой TheB.AI, которая предоставляет доступ к различным моделям, таким как GPT-3.5, GPT-4, Claude и Llama. Класс `ThebApi` содержит настройки для аутентификации, базовый URL API и список поддерживаемых моделей.
+Модуль содержит определения моделей, поддерживаемых TheB.AI, а также класс `ThebApi`, который реализует логику взаимодействия с API TheB.AI. Класс `ThebApi` определяет URL для логина и базовый URL API, а также предоставляет метод `create_async_generator` для создания асинхронных генераторов текста.
+
+## Переменные
+
+- `models (dict)`: Словарь, содержащий соответствия между идентификаторами моделей, используемыми в коде, и их отображаемыми именами на платформе TheB.AI. Например, `"theb-ai": "TheB.AI"`.
+- `login_url (str)`: URL-адрес страницы входа для аутентификации на платформе TheB.AI.
+- `api_base (str)`: Базовый URL-адрес API TheB.AI для выполнения запросов.
 
 ## Классы
 
 ### `ThebApi`
 
-**Описание**: Класс для взаимодействия с API TheB.AI.
+**Описание**: Класс `ThebApi` предоставляет интерфейс для взаимодействия с API TheB.AI. Он наследуется от класса `OpenaiTemplate` и переопределяет некоторые его методы для адаптации к особенностям API TheB.AI.
 
 **Наследует**:
-- `OpenaiTemplate`: Предоставляет базовую функциональность для работы с API, подобными OpenAI.
+- `OpenaiTemplate`: Класс, предоставляющий общую функциональность для работы с API, подобными OpenAI.
 
 **Атрибуты**:
-- `label` (str): Метка, идентифицирующая API ("TheB.AI API").
-- `url` (str): URL главной страницы TheB.AI ("https://theb.ai").
-- `login_url` (str): URL страницы для входа в TheB.AI ("https://beta.theb.ai/home").
-- `api_base` (str): Базовый URL API TheB.AI ("https://api.theb.ai/v1").
-- `working` (bool): Указывает, что API в настоящее время работает (True).
-- `needs_auth` (bool): Указывает, требуется ли аутентификация для доступа к API (True).
-- `default_model` (str): Модель, используемая по умолчанию ("theb-ai").
-- `fallback_models` (list): Список моделей для переключения в случае неудачи.
+- `label (str)`: Метка, идентифицирующая провайдера TheB.AI API.
+- `url (str)`: URL-адрес веб-сайта TheB.AI.
+- `login_url (str)`: URL-адрес страницы логина TheB.AI.
+- `api_base (str)`: Базовый URL-адрес API TheB.AI.
+- `working (bool)`: Флаг, указывающий на работоспособность API.
+- `needs_auth (bool)`: Флаг, указывающий на необходимость аутентификации для работы с API.
+- `default_model (str)`: Модель, используемая по умолчанию, если не указана другая.
+- `fallback_models (list)`: Список моделей, которые могут быть использованы в качестве запасных, если основная модель недоступна.
 
 **Методы**:
-- `create_async_generator`: Создает асинхронный генератор для выполнения запросов к API TheB.AI.
+- `create_async_generator()`: Создает асинхронный генератор текста на основе API TheB.AI.
 
 ## Функции
 
@@ -45,69 +51,100 @@ def create_async_generator(
     **kwargs
 ) -> CreateResult:
     """
-    Создает асинхронный генератор для выполнения запросов к API TheB.AI.
+    Создает асинхронный генератор текста на основе API TheB.AI.
 
     Args:
-        cls (ThebApi): Класс ThebApi.
-        model (str): Имя модели для использования.
-        messages (Messages): Список сообщений для отправки в API.
-        temperature (float, optional): Температура для управления случайностью генерации. По умолчанию None.
-        top_p (float, optional): Параметр top_p для управления разнообразием генерации. По умолчанию None.
-        **kwargs: Дополнительные аргументы, передаваемые в базовый метод.
+        model (str): Идентификатор модели, которую необходимо использовать.
+        messages (Messages): Список сообщений, которые необходимо передать модели.
+        temperature (float, optional): Параметр temperature, определяющий случайность генерации. По умолчанию `None`.
+        top_p (float, optional): Параметр top_p, определяющий ядро выборки. По умолчанию `None`.
+        **kwargs: Дополнительные аргументы, которые могут быть переданы в API.
 
     Returns:
         CreateResult: Результат создания асинхронного генератора.
 
     Как работает функция:
-    1. Извлекает системные сообщения из списка сообщений и объединяет их в одну строку.
-    2. Фильтрует сообщения, удаляя системные сообщения.
-    3. Формирует словарь `data` с параметрами модели, включая `system_prompt`, `temperature` и `top_p`.
-    4. Вызывает метод `create_async_generator` родительского класса `OpenaiTemplate`, передавая имя модели, сообщения и дополнительные данные.
+    1. Извлекает системные сообщения из списка сообщений.
+    2. Формирует словарь `data` с параметрами запроса, включая `system_prompt`, `temperature` и `top_p`.
+    3. Вызывает метод `create_async_generator` родительского класса `OpenaiTemplate` для создания генератора.
 
-    A -- Извлечение системных сообщений
-    |
-    B -- Фильтрация сообщений
-    |
-    C -- Формирование данных запроса
-    |
-    D -- Вызов метода create_async_generator родительского класса
-    |
-    E
+    Внутренние функции:
+    - Отсутствуют
 
-    Примеры:
-    >>> ThebApi.create_async_generator(model="theb-ai", messages=[{"role": "user", "content": "Hello"}])
-    <async_generator object OpenaiTemplate.create_async_generator at 0x...>
+    ASCII flowchart:
 
-    >>> ThebApi.create_async_generator(model="gpt-3.5-turbo", messages=[{"role": "system", "content": "You are a helpful assistant"}, {"role": "user", "content": "Hello"}], temperature=0.7)
-    <async_generator object OpenaiTemplate.create_async_generator at 0x...>
+    Сообщения ->  Извлечь системные сообщения (system_message)
+    |
+    Сообщения ->  Оставить только сообщения пользователя (messages)
+    |
+    system_message, temperature, top_p -> Сформировать словарь данных (data)
+    |
+    model, messages, data, kwargs -> Вызвать create_async_generator родительского класса
+
     """
-    system_message = "\n".join([message["content"] for message in messages if message["role"] == "system"])
-    messages = [message for message in messages if message["role"] != "system"]
-    data = {
-        "model_params": filter_none(
-            system_prompt=system_message,
-            temperature=temperature,
-            top_p=top_p,
-        )
-    }
-    return super().create_async_generator(model, messages, extra_data=data, **kwargs)
 ```
 
-## Переменные
+**Назначение**: Создает асинхронный генератор текста, используя API TheB.AI.
 
-- `models` (dict): Словарь, содержащий соответствия между именами моделей и их отображениями в TheB.AI.
-  ```python
-  models = {
-      "theb-ai": "TheB.AI",
-      "gpt-3.5-turbo": "GPT-3.5",
-      "gpt-4-turbo": "GPT-4 Turbo",
-      "gpt-4": "GPT-4",
-      "claude-3.5-sonnet": "Claude",
-      "llama-2-7b-chat": "Llama 2 7B",
-      "llama-2-13b-chat": "Llama 2 13B",
-      "llama-2-70b-chat": "Llama 2 70B",
-      "code-llama-7b": "Code Llama 7B",
-      "code-llama-13b": "Code Llama 13B",
-      "code-llama-34b": "Code Llama 34B",
-      "qwen-2-72b": "Qwen"
-  }
+**Параметры**:
+- `cls`: Ссылка на класс.
+- `model` (str): Идентификатор модели для использования.
+- `messages` (Messages): Список сообщений для отправки в API.
+- `temperature` (float, optional): Температура для контроля случайности вывода. По умолчанию `None`.
+- `top_p` (float, optional): Top P для контроля разнообразия вывода. По умолчанию `None`.
+- `**kwargs`: Дополнительные ключевые аргументы.
+
+**Возвращает**:
+- `CreateResult`: Результат создания асинхронного генератора.
+
+**Как работает функция**:
+
+1. **Извлечение системных сообщений**: Функция извлекает системные сообщения из входного списка сообщений, объединяя их в одну строку `system_message`.
+2. **Фильтрация сообщений**: Оставляет в списке `messages` только те сообщения, которые не являются системными (то есть сообщения пользователя).
+3. **Формирование данных запроса**: Создает словарь `data`, который содержит параметры запроса к API, такие как `system_prompt`, `temperature` и `top_p`.  `filter_none` удаляет параметры со значением `None`.
+4. **Вызов родительского метода**: Вызывает метод `create_async_generator` родительского класса `OpenaiTemplate`, передавая ему модель, сообщения и сформированные данные запроса.
+
+```
+Сообщения --1--> Извлечение системных сообщений (system_message)
+    |
+    ↓
+Сообщения --2--> Фильтрация сообщений (messages)
+    |
+    ↓
+system_message, temperature, top_p --3--> Формирование данных запроса (data)
+    |
+    ↓
+model, messages, data, kwargs --4--> Вызов create_async_generator родительского класса
+    |
+    ↓
+   CreateResult
+```
+
+**Примеры**:
+
+```python
+# Пример вызова функции create_async_generator
+messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is the capital of France?"}
+]
+result = ThebApi.create_async_generator(model="theb-ai", messages=messages, temperature=0.7)
+print(result)
+```
+```python
+# Пример вызова функции create_async_generator с указанием temperature и top_p
+messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is the capital of Germany?"}
+]
+result = ThebApi.create_async_generator(model="gpt-4", messages=messages, temperature=0.9, top_p=0.8)
+print(result)
+```
+```python
+# Пример вызова функции create_async_generator без системного сообщения
+messages = [
+    {"role": "user", "content": "Tell me a joke."}
+]
+result = ThebApi.create_async_generator(model="llama-2-7b-chat", messages=messages)
+print(result)
+```

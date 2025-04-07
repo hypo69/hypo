@@ -2,12 +2,11 @@
 
 ## Обзор
 
-Модуль предоставляет инструменты для преобразования данных между различными форматами, такими как словари, объекты `SimpleNamespace`, XML, CSV, JSON, XLS, HTML и PDF. Он содержит функции для рекурсивного преобразования словарей в объекты `SimpleNamespace` и обратно, а также для экспорта данных в различные форматы.
+Модуль предоставляет инструменты для преобразования данных между форматами `dict` (словарь) и `SimpleNamespace`, а также для экспорта данных в различные форматы, такие как `XML`, `CSV`, `JSON`, `XLS`, `HTML` и `PDF`.
 
 ## Подробней
 
-Модуль содержит набор функций для преобразования и сохранения данных в различных форматах. Это может быть полезно для работы с данными, полученными из разных источников или для экспорта данных в формат, который требуется для конкретной задачи.
-Например, функция `dict2ns` преобразует словарь в объект `SimpleNamespace`, что позволяет обращаться к элементам словаря как к атрибутам объекта. Функция `dict2xml` преобразует словарь в XML-строку, а функции `dict2csv`, `dict2json`, `dict2xls` сохраняют данные в соответствующие файлы.
+Этот модуль содержит набор функций для рекурсивного преобразования словарей в объекты `SimpleNamespace` и обратно. Кроме того, он предоставляет функции для экспорта данных в различные форматы файлов, облегчая интеграцию и обмен данными между различными системами и приложениями.
 
 ## Функции
 
@@ -16,15 +15,15 @@
 ```python
 def replace_key_in_dict(data, old_key, new_key) -> dict:
     """
-    Recursively replaces a key in a dictionary or list.
-    
+    Рекурсивно заменяет ключ в словаре или списке.
+
     Args:
-        data (dict | list): The dictionary or list where key replacement occurs.
-        old_key (str): The key to be replaced.
-        new_key (str): The new key.
-    
+        data (dict | list): Словарь или список, в котором происходит замена ключа.
+        old_key (str): Ключ, который нужно заменить.
+        new_key (str): Новый ключ.
+
     Returns:
-        dict: The updated dictionary with replaced keys.
+        dict: Обновленный словарь с замененными ключами.
 
     Example Usage:
 
@@ -51,64 +50,64 @@ def replace_key_in_dict(data, old_key, new_key) -> dict:
         # updated_data becomes {"outer": [{"inner": {"new_key": "value"}}]}
 
     """
-    ...
 ```
 
-**Назначение**: Рекурсивно заменяет ключ в словаре или списке.
+**Назначение**: Рекурсивно заменяет ключ `old_key` на `new_key` в словаре или списке.
 
 **Параметры**:
-- `data` (dict | list): Словарь или список, в котором производится замена ключа.
-- `old_key` (str): Ключ, который нужно заменить.
-- `new_key` (str): Новый ключ.
+- `data` (dict | list): Словарь или список, в котором будет произведена замена ключа.
+- `old_key` (str): Ключ, который требуется заменить.
+- `new_key` (str): Новый ключ, на который будет заменен `old_key`.
 
 **Возвращает**:
 - `dict`: Обновленный словарь с замененными ключами.
 
 **Как работает функция**:
+1. Функция проверяет, является ли входной параметр `data` словарем или списком.
+2. Если `data` является словарем, функция проходит по всем ключам словаря.
+3. Если текущий ключ совпадает с `old_key`, он заменяется на `new_key` с сохранением значения.
+4. Если значением текущего ключа является словарь или список, функция рекурсивно вызывает саму себя для этого значения.
+5. Если `data` является списком, функция проходит по всем элементам списка и рекурсивно вызывает саму себя для каждого элемента.
+6. В конце функция возвращает обновленный словарь.
 
-1.  **Проверка типа данных**: Функция проверяет, является ли входной параметр `data` словарем или списком.
-2.  **Обработка словаря**: Если `data` является словарем, функция итерируется по ключам словаря. Если ключ совпадает с `old_key`, он заменяется на `new_key`. Если значение по ключу является словарем или списком, функция рекурсивно вызывает саму себя для этого значения.
-3.  **Обработка списка**: Если `data` является списком, функция итерируется по элементам списка и рекурсивно вызывает саму себя для каждого элемента.
-4.  **Возврат результата**: Функция возвращает обновленный словарь.
-
-```mermaid
-graph LR
-    A[Проверка типа данных: словарь или список] --> B{Словарь?};
-    B -- Да --> C{Итерация по ключам};
-    C --> D{Ключ == old_key?};
-    D -- Да --> E[Замена ключа];
-    D -- Нет --> F{Значение - словарь или список?};
-    F -- Да --> G[Рекурсивный вызов replace_key_in_dict];
-    F -- Нет --> H[Переход к следующему ключу];
-    B -- Нет --> I{Список?};
-    I -- Да --> J{Итерация по элементам списка};
-    J --> K[Рекурсивный вызов replace_key_in_dict для элемента];
-    I -- Нет --> L[Возврат данных без изменений];
-    G --> H;
-    K --> H;
-    H --> C;
-    E --> F;    
+```
+  A (Проверка типа данных)
+  |
+  ├── B (Если словарь)
+  |   │
+  |   ├── C (Итерация по ключам)
+  |   |   │
+  |   |   ├── D (Совпадает ли ключ с old_key?)
+  |   |   |   │
+  |   |   |   └── E (Замена ключа)
+  |   |   │
+  |   |   └── F (Является ли значение словарем/списком?)
+  |   |       │
+  |   |       └── G (Рекурсивный вызов)
+  |   │
+  ├── H (Если список)
+  |   │
+  |   └── I (Итерация по элементам списка)
+  |       │
+  |       └── J (Рекурсивный вызов)
+  |
+  └── K (Возврат обновленных данных)
 ```
 
 **Примеры**:
-
 ```python
-# Пример 1: Простой словарь
 data = {"old_key": "value"}
 updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится {"new_key": "value"}
 
-# Пример 2: Вложенный словарь
 data = {"outer": {"old_key": "value"}}
 updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится {"outer": {"new_key": "value"}}
 
-# Пример 3: Список словарей
 data = [{"old_key": "value1"}, {"old_key": "value2"}]
 updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится [{"new_key": "value1"}, {"new_key": "value2"}]
 
-# Пример 4: Смешанная вложенная структура со списками и словарями
 data = {"outer": [{"inner": {"old_key": "value"}}]}
 updated_data = replace_key_in_dict(data, "old_key", "new_key")
 # updated_data становится {"outer": [{"inner": {"new_key": "value"}}]}
@@ -127,7 +126,6 @@ def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
     Returns:
         Any: Converted data as a SimpleNamespace or a list of SimpleNamespace.
     """
-    ...
 ```
 
 **Назначение**: Рекурсивно преобразует словари в объекты `SimpleNamespace`.
@@ -136,46 +134,48 @@ def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
 - `data` (Dict[str, Any] | List[Any]): Данные для преобразования.
 
 **Возвращает**:
-- `Any`: Преобразованные данные в виде объекта `SimpleNamespace` или списка объектов `SimpleNamespace`.
+- `Any`: Преобразованные данные в виде `SimpleNamespace` или списка `SimpleNamespace`.
 
 **Как работает функция**:
+1. Функция проверяет, является ли входной параметр `data` словарем или списком.
+2. Если `data` является словарем, функция проходит по всем элементам словаря.
+3. Если значением элемента является словарь, функция рекурсивно вызывает саму себя для этого значения.
+4. Если значением элемента является список, функция проходит по всем элементам списка и рекурсивно вызывает саму себя для каждого элемента, являющегося словарем.
+5. В конце функция возвращает объект `SimpleNamespace`, созданный на основе словаря, или список объектов `SimpleNamespace`.
 
-1.  **Проверка типа данных**: Функция проверяет, является ли входной параметр `data` словарем или списком.
-2.  **Обработка словаря**: Если `data` является словарем, функция итерируется по элементам словаря. Если значение является словарем, то вызывается рекурсивно `dict2ns` для этого значения. Если значение является списком, то для каждого элемента списка, являющегося словарем, вызывается рекурсивно `dict2ns`. После обработки всех элементов, функция возвращает объект `SimpleNamespace`, созданный на основе словаря.
-3.  **Обработка списка**: Если `data` является списком, функция итерируется по элементам списка. Если элемент является словарем, то вызывается рекурсивно `dict2ns` для этого элемента. После обработки всех элементов, функция возвращает список преобразованных элементов.
-4.  **Возврат результата**: Если `data` не является ни словарем, ни списком, функция возвращает данные без изменений.
-
-```mermaid
-graph LR
-    A[Проверка типа данных: словарь или список] --> B{Словарь?};
-    B -- Да --> C{Итерация по элементам словаря};
-    C --> D{Значение - словарь?};
-    D -- Да --> E[Рекурсивный вызов dict2ns для значения];
-    D -- Нет --> F{Значение - список?};
-    F -- Да --> G{Итерация по элементам списка};
-    G --> H{Элемент - словарь?};
-    H -- Да --> I[Рекурсивный вызов dict2ns для элемента];
-    H -- Нет --> J[Переход к следующему элементу списка];
-    J --> G;
-    E --> K[Создание SimpleNamespace на основе словаря];
-    B -- Нет --> L{Список?};
-    L -- Да --> M{Итерация по элементам списка};
-    M --> N{Элемент - словарь?};
-    N -- Да --> O[Рекурсивный вызов dict2ns для элемента];
-    N -- Нет --> P[Переход к следующему элементу списка];
-    P --> M;
-    L -- Нет --> Q[Возврат данных без изменений];
-    I --> K;
-    O --> K;
+```
+A (Проверка типа данных)
+|
+├── B (Если словарь)
+|   │
+|   ├── C (Итерация по элементам)
+|   |   │
+|   |   ├── D (Значение - словарь?)
+|   |   |   │
+|   |   |   └── E (Рекурсивный вызов)
+|   |   │
+|   |   └── F (Значение - список?)
+|   |       │
+|   |       └── G (Итерация по списку, рекурсивный вызов для словарей)
+|   │
+|   └── H (Создание SimpleNamespace)
+|
+└── I (Если список)
+    │
+    └── J (Итерация по списку, рекурсивный вызов для словарей)
 ```
 
 **Примеры**:
 
 ```python
-data = {"name": "John", "age": 30, "address": {"street": "Main", "number": 123}}
+data = {'a': 1, 'b': {'c': 2, 'd': 3}}
 ns = dict2ns(data)
-print(ns.name)  # John
-print(ns.address.street)  # Main
+print(ns.a) # Вывод: 1
+print(ns.b.c) # Вывод: 2
+
+data = [{'a': 1}, {'b': 2}]
+ns_list = dict2ns(data)
+print(ns_list[0].a) # Вывод: 1
 ```
 
 ### `dict2xml`
@@ -195,43 +195,149 @@ def dict2xml(data: Dict[str, Any], encoding: str = 'UTF-8') -> str:
     Raises:
         Exception: If more than one root node is provided.
     """
-    ...
 ```
 
 **Назначение**: Генерирует XML-строку из словаря.
 
 **Параметры**:
 - `data` (Dict[str, Any]): Данные для преобразования в XML.
-- `encoding` (str, optional): Кодировка данных. По умолчанию 'UTF-8'.
+- `encoding` (str, optional): Кодировка данных. По умолчанию `'UTF-8'`.
 
 **Возвращает**:
 - `str`: XML-строка, представляющая входной словарь.
 
 **Вызывает исключения**:
-- `Exception`: Если предоставлено больше одного корневого узла.
+- `Exception`: Если предоставлено более одного корневого узла.
 
 **Как работает функция**:
+1. Функция определяет внутренние функции `_process_simple`, `_process_attr`, `_process_complex` и `_process` для рекурсивной обработки словаря и создания XML-элементов.
+2. Функция `_process_simple` создает XML-узел для простых типов данных (int, str).
+3. Функция `_process_attr` создает атрибуты для XML-элемента.
+4. Функция `_process_complex` создает узлы для сложных типов данных, таких как списки или словари.
+5. Функция `_process` является основной функцией, которая определяет тип данных и вызывает соответствующие функции для их обработки.
+6. Функция создает XML-документ и вызывает функцию `_process_complex` для обработки корневого узла.
+7. Если в словаре больше одного корневого узла, выбрасывается исключение.
+8. В конце функция возвращает XML-строку.
 
-1.  **Внутренние функции**: Функция использует несколько внутренних функций для обработки различных типов данных и создания XML-элементов.
-    - `_process_simple`: Создает XML-узел для простых типов (int, str).
-    - `_process_attr`: Создает атрибуты для XML-элемента.
-    - `_process_complex`: Создает узлы для сложных типов, таких как списки или словари.
-    - `_process`: Генерирует XML DOM объект для тега и его значения.
-2.  **Создание XML-документа**: Функция создает XML-документ с использованием `getDOMImplementation().createDocument()`.
-3.  **Обработка данных**: Функция вызывает `_process_complex` для обработки входных данных и создания корневого узла XML-документа.
-4.  **Добавление корневого узла**: Функция добавляет корневой узел в XML-документ.
-5.  **Преобразование в XML-строку**: Функция преобразует XML-документ в XML-строку с указанной кодировкой.
-
-```mermaid
-graph LR
-    A[Проверка количества корневых узлов] --> B{Больше одного?};
-    B -- Да --> C[Выброс исключения];
-    B -- Нет --> D[Создание XML-документа];
-    D --> E[Обработка данных с помощью _process_complex];
-    E --> F[Добавление корневого узла в документ];
-    F --> G[Преобразование документа в XML-строку];
-    G --> H[Возврат XML-строки];
 ```
+A (Создание XML документа)
+|
+├── B (Проверка количества корневых узлов)
+|   │
+|   └── C (Если больше одного корневого узла - исключение)
+|
+└── D (Обработка корневого узла функцией _process_complex)
+    │
+    └── E (Рекурсивная обработка данных функциями _process, _process_simple, _process_attr)
+    │
+    └── F (Возврат XML строки)
+```
+
+**Внутренние функции**:
+
+#### `_process_simple`
+
+```python
+def _process_simple(doc, tag, tag_value):
+    """
+    Generate a node for simple types (int, str).
+
+    Args:
+        doc (xml.dom.minidom.Document): XML document object.
+        tag (str): Tag name for the XML element.
+        tag_value (Any): Value of the tag.
+
+    Returns:
+        xml.dom.minidom.Element: Node representing the tag and value.
+    """
+```
+
+**Назначение**: Создает узел для простых типов данных (int, str).
+
+**Параметры**:
+- `doc` (xml.dom.minidom.Document): Объект XML-документа.
+- `tag` (str): Имя тега для XML-элемента.
+- `tag_value` (Any): Значение тега.
+
+**Возвращает**:
+- `xml.dom.minidom.Element`: Узел, представляющий тег и значение.
+
+#### `_process_attr`
+
+```python
+def _process_attr(doc, attr_value: Dict[str, Any]):
+    """
+    Generate attributes for an XML element.
+
+    Args:
+        doc (xml.dom.minidom.Document): XML document object.
+        attr_value (Dict[str, Any]): Dictionary of attributes.
+
+    Returns:
+        List[xml.dom.minidom.Attr]: List of attributes for the XML element.
+    """
+```
+
+**Назначение**: Создает атрибуты для XML-элемента.
+
+**Параметры**:
+- `doc` (xml.dom.minidom.Document): Объект XML-документа.
+- `attr_value` (Dict[str, Any]): Словарь атрибутов.
+
+**Возвращает**:
+- `List[xml.dom.minidom.Attr]`: Список атрибутов для XML-элемента.
+
+#### `_process_complex`
+
+```python
+def _process_complex(doc, children):
+    """
+    Generate nodes for complex types like lists or dicts.
+
+    Args:
+        doc (xml.dom.minidom.Document): XML document object.
+        children (List[Tuple[str, Any]]): List of tag-value pairs.
+
+    Returns:
+        Tuple[List[xml.dom.minidom.Element], List[xml.dom.minidom.Attr]]: List of child nodes and attributes.
+    """
+```
+
+**Назначение**: Создает узлы для сложных типов данных, таких как списки или словари.
+
+**Параметры**:
+- `doc` (xml.dom.minidom.Document): Объект XML-документа.
+- `children` (List[Tuple[str, Any]]): Список пар тег-значение.
+
+**Возвращает**:
+- `Tuple[List[xml.dom.minidom.Element], List[xml.dom.minidom.Attr]]`: Список дочерних узлов и атрибутов.
+
+#### `_process`
+
+```python
+def _process(doc, tag, tag_value):
+    """
+    Generate XML DOM object for a tag and its value.
+
+    Args:
+        doc (xml.dom.minidom.Document): XML document object.
+        tag (str): Tag name for the XML element.
+        tag_value (Any): Value of the tag.
+
+    Returns:
+        xml.dom.minidom.Element | List[xml.dom.minidom.Element]: Node or list of nodes for the tag and value.
+    """
+```
+
+**Назначение**: Создает XML DOM объект для тега и его значения.
+
+**Параметры**:
+- `doc` (xml.dom.minidom.Document): Объект XML-документа.
+- `tag` (str): Имя тега для XML-элемента.
+- `tag_value` (Any): Значение тега.
+
+**Возвращает**:
+- `xml.dom.minidom.Element | List[xml.dom.minidom.Element]`: Узел или список узлов для тега и значения.
 
 **Примеры**:
 
@@ -264,147 +370,6 @@ xml_output = dict2xml(json_data)
 print(xml_output)
 ```
 
-#### `_process_simple`
-
-```python
-def _process_simple(doc, tag, tag_value):
-    """
-    Generate a node for simple types (int, str).
-
-    Args:
-        doc (xml.dom.minidom.Document): XML document object.
-        tag (str): Tag name for the XML element.
-        tag_value (Any): Value of the tag.
-
-    Returns:
-        xml.dom.minidom.Element: Node representing the tag and value.
-    """
-    ...
-```
-
-**Назначение**: Создает XML-узел для простых типов (int, str).
-
-**Параметры**:
-- `doc` (xml.dom.minidom.Document): XML document object.
-- `tag` (str): Tag name for the XML element.
-- `tag_value` (Any): Value of the tag.
-
-**Возвращает**:
-- `xml.dom.minidom.Element`: Node representing the tag and value.
-
-**Как работает функция**:
-
-1.  **Создание элемента**: Функция создает XML-элемент с указанным именем тега.
-2.  **Создание текстового узла**: Функция создает текстовый узел со значением тега.
-3.  **Добавление текстового узла**: Функция добавляет текстовый узел в XML-элемент.
-4.  **Возврат элемента**: Функция возвращает созданный XML-элемент.
-
-#### `_process_attr`
-
-```python
-def _process_attr(doc, attr_value: Dict[str, Any]):
-    """
-    Generate attributes for an XML element.
-
-    Args:
-        doc (xml.dom.minidom.Document): XML document object.
-        attr_value (Dict[str, Any]): Dictionary of attributes.
-
-    Returns:
-        List[xml.dom.minidom.Attr]: List of attributes for the XML element.
-    """
-    ...
-```
-
-**Назначение**: Создает атрибуты для XML-элемента.
-
-**Параметры**:
-- `doc` (xml.dom.minidom.Document): XML document object.
-- `attr_value` (Dict[str, Any]): Dictionary of attributes.
-
-**Возвращает**:
-- `List[xml.dom.minidom.Attr]`: List of attributes for the XML element.
-
-**Как работает функция**:
-
-1.  **Инициализация списка атрибутов**: Функция инициализирует пустой список для хранения атрибутов.
-2.  **Итерация по атрибутам**: Функция итерируется по элементам словаря атрибутов.
-3.  **Создание атрибута**: Для каждого атрибута функция создает XML-атрибут с указанным именем.
-4.  **Установка значения атрибута**: Функция устанавливает значение атрибута. Если значение является словарем, то используется значение ключа 'value', иначе используется само значение.
-5.  **Добавление атрибута в список**: Функция добавляет созданный атрибут в список атрибутов.
-6.  **Возврат списка атрибутов**: Функция возвращает список атрибутов.
-
-#### `_process_complex`
-
-```python
-def _process_complex(doc, children):
-    """
-    Generate nodes for complex types like lists or dicts.
-
-    Args:
-        doc (xml.dom.minidom.Document): XML document object.
-        children (List[Tuple[str, Any]]): List of tag-value pairs.
-
-    Returns:
-        Tuple[List[xml.dom.minidom.Element], List[xml.dom.minidom.Attr]]: List of child nodes and attributes.
-    """
-    ...
-```
-
-**Назначение**: Создает узлы для сложных типов, таких как списки или словари.
-
-**Параметры**:
-- `doc` (xml.dom.minidom.Document): XML document object.
-- `children` (List[Tuple[str, Any]]): List of tag-value pairs.
-
-**Возвращает**:
-- `Tuple[List[xml.dom.minidom.Element], List[xml.dom.minidom.Attr]]`: List of child nodes and attributes.
-
-**Как работает функция**:
-
-1.  **Инициализация списков**: Функция инициализирует два пустых списка: `nodelist` для хранения дочерних узлов и `attrs` для хранения атрибутов.
-2.  **Итерация по дочерним элементам**: Функция итерируется по списку пар тег-значение.
-3.  **Обработка атрибутов**: Если тег равен 'attrs', функция вызывает `_process_attr` для обработки атрибутов.
-4.  **Обработка других тегов**: Если тег не равен 'attrs', функция вызывает `_process` для обработки тега и значения. Результат добавляется в список `nodelist`.
-5.  **Возврат списков**: Функция возвращает кортеж, содержащий списки `nodelist` и `attrs`.
-
-#### `_process`
-
-```python
-def _process(doc, tag, tag_value):
-    """
-    Generate XML DOM object for a tag and its value.
-
-    Args:
-        doc (xml.dom.minidom.Document): XML document object.
-        tag (str): Tag name for the XML element.
-        tag_value (Any): Value of the tag.
-
-    Returns:
-        xml.dom.minidom.Element | List[xml.dom.minidom.Element]: Node or list of nodes for the tag and value.
-    """
-    ...
-```
-
-**Назначение**: Генерирует XML DOM объект для тега и его значения.
-
-**Параметры**:
-- `doc` (xml.dom.minidom.Document): XML document object.
-- `tag` (str): Tag name for the XML element.
-- `tag_value` (Any): Value of the tag.
-
-**Возвращает**:
-- `xml.dom.minidom.Element | List[xml.dom.minidom.Element]`: Node or list of nodes for the tag and value.
-
-**Как работает функция**:
-
-1.  **Обработка значения 'value'**: Если значение является словарем и содержит только ключ 'value', то значение этого ключа присваивается `tag_value`.
-2.  **Обработка None**: Если значение равно None, то `tag_value` присваивается пустая строка.
-3.  **Обработка простых типов**: Если значение является простым типом (float, int, str), то вызывается `_process_simple` для создания XML-узла.
-4.  **Обработка списков**: Если значение является списком, то вызывается `_process_complex` для обработки списка.
-5.  **Обработка словарей**: Если значение является словарем, то создается XML-элемент с указанным тегом, вызывается `_process_complex` для обработки словаря, и добавляются дочерние узлы и атрибуты в XML-элемент.
-6.  **Возврат результата**: Функция возвращает созданный XML-элемент или список XML-элементов.
-
 ### `dict2csv`
 
 ```python
@@ -419,21 +384,34 @@ def dict2csv(data: dict | SimpleNamespace, file_path: str | Path) -> bool:
     Returns:
         bool: True if the file was saved successfully, False otherwise.
     """
-    ...
 ```
 
-**Назначение**: Сохраняет данные словаря или `SimpleNamespace` в CSV-файл.
+**Назначение**: Сохраняет данные из словаря или `SimpleNamespace` в CSV-файл.
 
 **Параметры**:
 - `data` (dict | SimpleNamespace): Данные для сохранения в CSV-файл.
 - `file_path` (str | Path): Путь к CSV-файлу.
 
 **Возвращает**:
-- `bool`: `True`, если файл был успешно сохранен, `False` в противном случае.
+- `bool`: `True`, если файл успешно сохранен, `False` в противном случае.
 
 **Как работает функция**:
+1. Функция вызывает функцию `save_csv_file` из модуля `src.utils.csv` для сохранения данных в CSV-файл.
+2. Функция возвращает результат вызова `save_csv_file`.
 
-Функция вызывает функцию `save_csv_file` из модуля `src.utils.csv` для сохранения данных в CSV-файл.
+```
+A (Вызов функции save_csv_file)
+|
+└── B (Возврат результата)
+```
+
+**Примеры**:
+```python
+data = {'a': 1, 'b': 2, 'c': 3}
+file_path = 'data.csv'
+result = dict2csv(data, file_path)
+print(result)  # Вывод: True или False в зависимости от успеха сохранения
+```
 
 ### `dict2xls`
 
@@ -449,21 +427,34 @@ def dict2xls(data: dict | SimpleNamespace, file_path: str | Path) -> bool:
     Returns:
         bool: True if the file was saved successfully, False otherwise.
     """
-    ...
 ```
 
-**Назначение**: Сохраняет данные словаря или `SimpleNamespace` в XLS-файл.
+**Назначение**: Сохраняет данные из словаря или `SimpleNamespace` в XLS-файл.
 
 **Параметры**:
 - `data` (dict | SimpleNamespace): Данные для сохранения в XLS-файл.
 - `file_path` (str | Path): Путь к XLS-файлу.
 
 **Возвращает**:
-- `bool`: `True`, если файл был успешно сохранен, `False` в противном случае.
+- `bool`: `True`, если файл успешно сохранен, `False` в противном случае.
 
 **Как работает функция**:
+1. Функция вызывает функцию `save_xls_file` из модуля `src.utils.xls` для сохранения данных в XLS-файл.
+2. Функция возвращает результат вызова `save_xls_file`.
 
-Функция вызывает функцию `save_xls_file` из модуля `src.utils.xls` для сохранения данных в XLS-файл.
+```
+A (Вызов функции save_xls_file)
+|
+└── B (Возврат результата)
+```
+
+**Примеры**:
+```python
+data = {'a': 1, 'b': 2, 'c': 3}
+file_path = 'data.xls'
+result = dict2xls(data, file_path)
+print(result)  # Вывод: True или False в зависимости от успеха сохранения
+```
 
 ### `dict2html`
 
@@ -479,32 +470,33 @@ def dict2html(data: dict | SimpleNamespace, encoding: str = 'UTF-8') -> str:
     Returns:
         str: The HTML string representing the input dictionary.
     """
-    ...
 ```
 
 **Назначение**: Генерирует HTML-строку таблицы из словаря или объекта `SimpleNamespace`.
 
 **Параметры**:
 - `data` (dict | SimpleNamespace): Данные для преобразования в HTML.
-- `encoding` (str, optional): Кодировка данных. По умолчанию 'UTF-8'.
+- `encoding` (str, optional): Кодировка данных. По умолчанию `'UTF-8'`.
 
 **Возвращает**:
 - `str`: HTML-строка, представляющая входной словарь.
 
 **Как работает функция**:
+1. Функция определяет внутреннюю функцию `dict_to_html_table` для рекурсивного преобразования словаря в HTML-таблицу.
+2. Если входные данные являются объектом `SimpleNamespace`, они преобразуются в словарь.
+3. Функция вызывает `dict_to_html_table` для преобразования данных в HTML-таблицу.
+4. Функция создает HTML-документ, содержащий HTML-таблицу, и возвращает его в виде строки.
 
-1.  **Внутренняя функция `dict_to_html_table`**: Рекурсивно преобразует словарь в HTML-таблицу.
-    - Если `data` является словарем, для каждого элемента словаря создается строка таблицы (`<tr>`). Ключ становится заголовком ячейки (`<td><strong>{key}</strong></td>`). Если значение является словарем, вызывается рекурсивно `dict_to_html_table` для этого значения. Если значение является списком, создается неупорядоченный список (`<ul>`) с элементами списка в виде элементов списка (`<li>`).
-    - Если `data` не является словарем, создается строка таблицы с данными, охватывающими две колонки.
-2.  **Преобразование в словарь**: Если входные данные являются `SimpleNamespace`, они преобразуются в словарь.
-3.  **Создание HTML-контента**: HTML-контент создается путем вызова `dict_to_html_table` с данными.
-4.  **Формирование HTML-строки**: Функция формирует полную HTML-строку, включая `<!DOCTYPE html>`, `<html>`, `<head>` с указанием кодировки и `<title>`, и `<body>` с HTML-контентом таблицы.
-
-```mermaid
-graph LR
-    A[Преобразование SimpleNamespace в словарь (если необходимо)] --> B[Вызов dict_to_html_table];
-    B --> C[Формирование HTML-строки];
-    C --> D[Возврат HTML-строки];
+```
+A (Проверка типа данных)
+|
+└── B (Если SimpleNamespace, преобразование в словарь)
+    │
+    └── C (Вызов функции dict_to_html_table)
+    │
+    └── D (Создание HTML-документа)
+    │
+    └── E (Возврат HTML-строки)
 ```
 
 **Внутренние функции**:
@@ -523,84 +515,163 @@ def dict_to_html_table(data: dict, depth: int = 0) -> str:
     Returns:
         str: The HTML table as a string.
     """
-    ...
 ```
 
 **Назначение**: Рекурсивно преобразует словарь в HTML-таблицу.
 
 **Параметры**:
 - `data` (dict): Данные словаря для преобразования.
-- `depth` (int, optional): Глубина рекурсии, используется для вложенных таблиц. По умолчанию 0.
+- `depth` (int, optional): Глубина рекурсии, используется для вложенных таблиц. По умолчанию `0`.
 
 **Возвращает**:
 - `str`: HTML-таблица в виде строки.
 
+**Примеры**:
+
+```python
+data = {'a': 1, 'b': {'c': 2, 'd': 3}, 'e': [4, 5, 6]}
+html_output = dict2html(data)
+print(html_output)
+```
+```
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dictionary to HTML</title>
+</head>
+<body>
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<td><strong>a</strong></td>
+<td>1</td>
+</tr>
+<tr>
+<td><strong>b</strong></td>
+<td><table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<td><strong>c</strong></td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>d</strong></td>
+<td>3</td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td><strong>e</strong></td>
+<td><ul>
+<li>4</li>
+<li>5</li>
+<li>6</li>
+</ul></td>
+</tr>
+</table>
+</body>
+</html>
+```
+### `dict2pdf`
+
+```python
+    """
+    Save dictionary data to a PDF file.
+
+    Args:
+        data (dict | SimpleNamespace): The dictionary to convert to PDF.
+        file_path (str | Path): Path to the output PDF file.
+    """
+```
+
+**Назначение**: Сохраняет данные из словаря в PDF-файл.
+
+**Параметры**:
+- `data` (dict | SimpleNamespace): Словарь, который нужно преобразовать в PDF.
+- `file_path` (str | Path): Путь к выходному PDF-файлу.
+
 **Как работает функция**:
 
-1.  **Инициализация HTML**: Функция инициализирует список `html`, который будет содержать HTML-код таблицы.
-2.  **Обработка словаря**: Если `data` является словарем, функция итерируется по элементам словаря.
-    - Для каждого элемента словаря создается строка таблицы (`<tr>`).
-    - Ключ становится заголовком ячейки (`<td><strong>{key}</strong></td>`).
-    - Если значение является словарем, вызывается рекурсивно `dict_to_html_table` для этого значения.
-    - Если значение является списком, создается неупорядоченный список (`<ul>`) с элементами списка в виде элементов списка (`<li>`).
-    - Если значение не является словарем или списком, создается ячейка таблицы с значением.
-3.  **Обработка не-словаря**: Если `data` не является словарем, создается строка таблицы с данными, охватывающими две колонки.
-4.  **Формирование HTML-строки**: Функция объединяет элементы списка `html` в одну строку с переносами строк.
+1.  Если входные данные являются объектом `SimpleNamespace`, они преобразуются в словарь.
+2.  Создается объект `canvas.Canvas` из библиотеки `reportlab` для работы с PDF.
+3.  Устанавливается шрифт "Helvetica" размером 12.
+4.  Происходит итерация по элементам словаря, где для каждого элемента создается строка вида `"ключ: значение"`.
+5.  Строка добавляется на PDF-страницу с помощью метода `drawString`.
+6.  Координата `y` уменьшается на 20 для следующей строки.
+7.  Если места на странице недостаточно, создается новая страница.
+8.  PDF-файл сохраняется.
+
+```
+A (Проверка типа данных)
+|
+└── B (Преобразование SimpleNamespace в словарь, если необходимо)
+    │
+    └── C (Создание PDF-документа)
+    │
+    └── D (Установка шрифта)
+    │
+    └── E (Итерация по элементам словаря)
+    │
+    └── F (Добавление строк на страницу)
+    │
+    └── G (Проверка наличия места на странице)
+    │
+    └── H (Создание новой страницы, если необходимо)
+    │
+    └── I (Сохранение PDF-файла)
+```
+
+**Примеры**:
+
+```python
+data = {'a': 1, 'b': 2, 'c': 3}
+file_path = 'data.pdf'
+dict2pdf(data, file_path)
+```
 
 ### `example_json2xml`
 
 ```python
 def example_json2xml():
-    """
+    # Example usage
+    json_data = {
+        "product": {
+            "name": {
+                "language": [
+                    {
+                        "@id": "1",
+                        "#text": "Test Product"
+                    },
+                    {
+                        "@id": "2",
+                        "#text": "Test Product"
+                    },
+                    {
+                        "@id": "3",
+                        "#text": "Test Product"
+                    }
+                ]
+            },
+            "price": "10.00",
+            "id_tax_rules_group": "13",
+            "id_category_default": "2"
+        }
+    }
 
-    """
-    ...
+    xml_output = dict2xml(json_data)
+    print(xml_output)
 ```
 
-**Назначение**: Функция представляет пример использования функции `json2xml`.
+**Назначение**: Пример использования функции `json2xml`.
+В коде указано, что функция `json2xml` вызывается, но сама она не определена. В примере демонстрируется, как можно преобразовать JSON-данные в XML, используя функцию `dict2xml`.
 
 **Как работает функция**:
+1. Определяются JSON-данные в виде словаря.
+2. Вызывается функция `dict2xml` с JSON-данными в качестве аргумента.
+3. Результат (XML-строка) выводится на экран.
 
-Функция создает пример JSON-данных, затем вызывает функцию `json2xml` для преобразования JSON-данных в XML-формат и выводит результат в консоль.
-
-## Примеры
-
-```python
-# Пример использования dict2ns
-data = {"name": "John", "age": 30, "address": {"street": "Main", "number": 123}}
-ns = dict2ns(data)
-print(ns.name)  # John
-print(ns.address.street)  # Main
-
-# Пример использования dict2xml
-json_data = {
-    "product": {
-        "name": {
-            "language": [
-                {
-                    "@id": "1",
-                    "#text": "Test Product"
-                },
-                {
-                    "@id": "2",
-                    "#text": "Test Product"
-                },
-                {
-                    "@id": "3",
-                    "#text": "Test Product"
-                }
-            ]
-        },
-        "price": "10.00",
-        "id_tax_rules_group": "13",
-        "id_category_default": "2"
-    }
-}
-
-xml_output = dict2xml(json_data)
-print(xml_output)
-
-# Пример использования dict2html
-data = {"name": "John", "age": 30, "address": {"street": "Main", "number": 123}}
-html_output = dict2html(data)
-print(html_output)
+```
+A (Определение JSON-данных)
+|
+└── B (Вызов функции json2xml)
+    │
+    └── C (Вывод XML-строки на экран)

@@ -1,20 +1,20 @@
-# Модуль для конвертации JSON данных в различные форматы
-=================================================================
+# Модуль для преобразования JSON данных в различные форматы
+=============================================================
 
-Модуль `src.utils.convertors.json` предоставляет функции для преобразования данных в формате JSON в различные форматы, такие как CSV, SimpleNamespace, XML и XLS.
+Модуль `src.utils.convertors.json` предназначен для преобразования JSON данных в различные форматы, такие как CSV, SimpleNamespace, XML и XLS.
 
 ## Обзор
 
-Модуль содержит функции:
-
+Модуль предоставляет функции для преобразования JSON данных или JSON файлов в различные форматы. Это может быть полезно для экспорта данных из JSON в другие форматы для дальнейшей обработки или анализа.
+Модуль содержит следующие функции:
 - `json2csv`: Преобразует JSON данные в формат CSV.
 - `json2ns`: Преобразует JSON данные в объект SimpleNamespace.
 - `json2xml`: Преобразует JSON данные в формат XML.
 - `json2xls`: Преобразует JSON данные в формат XLS.
 
-## Подробней
+## Подробнее
 
-Этот модуль предоставляет удобные инструменты для работы с JSON данными и их преобразования в другие форматы, что может быть полезно для интеграции с различными системами и приложениями.
+Модуль содержит функции, которые позволяют преобразовывать JSON данные в другие форматы. Каждая функция принимает JSON данные в виде строки, словаря, списка или пути к файлу, а также путь к файлу, в который будет сохранен результат преобразования.
 
 ## Функции
 
@@ -38,61 +38,68 @@ def json2csv(json_data: str | list | dict | Path, csv_file_path: str | Path) -> 
     """
 ```
 
-**Назначение**: Преобразует JSON данные (строку, список, словарь или путь к файлу) в формат CSV и сохраняет их в указанный CSV файл.
+**Назначение**: Преобразует JSON данные или JSON файл в формат CSV с использованием запятой в качестве разделителя.
 
 **Параметры**:
-
-- `json_data` (str | list | dict | Path): JSON данные для преобразования. Это может быть строка с JSON, список словарей, словарь или путь к JSON файлу.
-- `csv_file_path` (str | Path): Путь к CSV файлу, в который будут записаны преобразованные данные.
+- `json_data` (str | list | dict | Path): JSON данные в виде строки, списка словарей или пути к JSON файлу.
+- `csv_file_path` (str | Path): Путь к CSV файлу, в который будут записаны данные.
 
 **Возвращает**:
-
-- `bool`: `True`, если преобразование и запись в файл прошли успешно, иначе `False`.
+- `bool`: `True`, если преобразование прошло успешно, `False` в противном случае.
 
 **Вызывает исключения**:
-
 - `ValueError`: Если тип `json_data` не поддерживается.
-- `Exception`: Если не удалось распарсить JSON данные или записать их в CSV файл.
+- `Exception`: Если не удается распарсить JSON или записать CSV.
 
 **Как работает функция**:
 
-1.  Функция `json2csv` принимает JSON данные и путь к CSV файлу.
-2.  Определяет тип входных данных `json_data` (словарь, строка, список или путь к файлу).
-3.  Загружает JSON данные в зависимости от их типа.
-4.  Вызывает функцию `save_csv_file` из модуля `src.utils.csv` для сохранения данных в CSV файл.
-5.  В случае успеха возвращает `True`, при возникновении ошибки логирует её и возвращает `False`.
+1.  **Определение типа входных данных**: Функция определяет, какой тип данных был передан в качестве `json_data` (словарь, строка, список или путь к файлу).
+2.  **Чтение JSON данных**: В зависимости от типа входных данных, функция загружает JSON данные. Если `json_data` это строка, она парсится с использованием `json.loads()`. Если это путь к файлу, файл открывается, и JSON данные загружаются из него.
+3.  **Преобразование в CSV**: Функция вызывает `save_csv_file` для сохранения полученных данных в CSV файл.
+4.  **Обработка ошибок**: Если в процессе преобразования возникают ошибки, они логируются с использованием `logger.error`, и функция возвращает `False`.
 
 ```
-JSON Data --> [Проверка типа данных]
-    |
-    -- dict --> [Преобразование в список] --> [save_csv_file] --> CSV File
-    |
-    -- str  --> [json.loads] --> [save_csv_file] --> CSV File
-    |
-    -- list --> [save_csv_file] --> CSV File
-    |
-    -- Path --> [Чтение файла] --> [json.load] --> [save_csv_file] --> CSV File
-    |
-    -- Другое --> ValueError
+    json_data (str | list | dict | Path) --> [isinstance(json_data, dict)?] --> data = [json_data]
+                                           |   [isinstance(json_data, str)?]  --> data = json.loads(json_data)
+                                           |   [isinstance(json_data, list)?] --> data = json_data
+                                           |   [isinstance(json_data, Path)?] --> open(json_data) --> data = json.load(json_file)
+                                           |   [else]                        --> raise ValueError("Unsupported type for json_data")
+                                           ↓
+    save_csv_file(data, csv_file_path)
+    ↓
+    return True
 ```
 
 **Примеры**:
 
 ```python
 from pathlib import Path
-
+import json
 # Пример 1: Преобразование JSON строки в CSV файл
-json_string = '[{"name": "Иван", "age": 30}, {"name": "Мария", "age": 25}]'
-csv_file = 'data.csv'
+json_string = '[{"name": "Иван", "age": 30}, {"name": "Петр", "age": 25}]'
+csv_file = 'output.csv'
 result = json2csv(json_string, csv_file)
-print(f"Результат преобразования JSON строки в CSV: {result}")  # Вывод: Результат преобразования JSON строки в CSV: True
+print(f"Результат преобразования: {result}")  # Вывод: Результат преобразования: True
 
 # Пример 2: Преобразование JSON файла в CSV файл
-json_file = Path('data.json')
-#  Предположим, что data.json содержит: [{"name": "Иван", "age": 30}, {"name": "Мария", "age": 25}]
-csv_file = 'data_from_file.csv'
-result = json2csv(json_file, csv_file)
-print(f"Результат преобразования JSON файла в CSV: {result}")  # Вывод: Результат преобразования JSON файла в CSV: True
+json_file_path = Path('data.json')
+with open(json_file_path, 'w', encoding='utf-8') as f:
+    json.dump([{"name": "Иван", "age": 30}, {"name": "Петр", "age": 25}], f)
+csv_file_path = 'output.csv'
+result = json2csv(json_file_path, csv_file_path)
+print(f"Результат преобразования: {result}")  # Вывод: Результат преобразования: True
+
+# Пример 3: Преобразование списка словарей в CSV файл
+json_list = [{"name": "Иван", "age": 30}, {"name": "Петр", "age": 25}]
+csv_file_path = 'output.csv'
+result = json2csv(json_list, csv_file_path)
+print(f"Результат преобразования: {result}")  # Вывод: Результат преобразования: True
+
+# Пример 4: Преобразование словаря в CSV файл
+json_dict = {"name": "Иван", "age": 30}
+csv_file_path = 'output.csv'
+result = json2csv(json_dict, csv_file_path)
+print(f"Результат преобразования: {result}")  # Вывод: Результат преобразования: True
 ```
 
 ### `json2ns`
@@ -114,56 +121,55 @@ def json2ns(json_data: str | dict | Path) -> SimpleNamespace:
     """
 ```
 
-**Назначение**: Преобразует JSON данные (строку, словарь или путь к файлу) в объект `SimpleNamespace`, что позволяет обращаться к элементам JSON как к атрибутам объекта.
+**Назначение**: Преобразует JSON данные или JSON файл в объект `SimpleNamespace`.
 
 **Параметры**:
-
-- `json_data` (str | dict | Path): JSON данные для преобразования. Это может быть строка с JSON, словарь или путь к JSON файлу.
+- `json_data` (str | dict | Path): JSON данные в виде строки, словаря или пути к JSON файлу.
 
 **Возвращает**:
-
 - `SimpleNamespace`: Объект `SimpleNamespace`, представляющий JSON данные.
 
 **Вызывает исключения**:
-
 - `ValueError`: Если тип `json_data` не поддерживается.
-- `Exception`: Если не удалось распарсить JSON данные.
+- `Exception`: Если не удается распарсить JSON.
 
 **Как работает функция**:
 
-1.  Функция `json2ns` принимает JSON данные и путь к файлу.
-2.  Определяет тип входных данных `json_data` (словарь, строка или путь к файлу).
-3.  Загружает JSON данные в зависимости от их типа.
-4.  Создает объект `SimpleNamespace` на основе загруженных данных и возвращает его.
-5.  В случае успеха возвращает объект `SimpleNamespace`, при возникновении ошибки логирует её.
+1.  **Определение типа входных данных**: Функция определяет, какой тип данных был передан в качестве `json_data` (словарь, строка или путь к файлу).
+2.  **Чтение JSON данных**: В зависимости от типа входных данных, функция загружает JSON данные. Если `json_data` это строка, она парсится с использованием `json.loads()`. Если это путь к файлу, файл открывается, и JSON данные загружаются из него.
+3.  **Преобразование в SimpleNamespace**: Функция преобразует JSON данные в объект `SimpleNamespace` с использованием оператора `**`.
+4.  **Обработка ошибок**: Если в процессе преобразования возникают ошибки, они логируются с использованием `logger.error`.
 
 ```
-JSON Data --> [Проверка типа данных]
-    |
-    -- dict --> [Создание SimpleNamespace] --> SimpleNamespace object
-    |
-    -- str  --> [json.loads] --> [Создание SimpleNamespace] --> SimpleNamespace object
-    |
-    -- Path --> [Чтение файла] --> [json.load] --> [Создание SimpleNamespace] --> SimpleNamespace object
-    |
-    -- Другое --> ValueError
+    json_data (str | dict | Path) --> [isinstance(json_data, dict)?] --> data = json_data
+                                           |   [isinstance(json_data, str)?]  --> data = json.loads(json_data)
+                                           |   [isinstance(json_data, Path)?] --> open(json_data) --> data = json.load(json_file)
+                                           |   [else]                        --> raise ValueError("Unsupported type for json_data")
+                                           ↓
+    return SimpleNamespace(**data)
 ```
 
 **Примеры**:
 
 ```python
 from pathlib import Path
-
+import json
 # Пример 1: Преобразование JSON строки в SimpleNamespace
 json_string = '{"name": "Иван", "age": 30}'
-ns_object = json2ns(json_string)
-print(f"Имя: {ns_object.name}, Возраст: {ns_object.age}")  # Вывод: Имя: Иван, Возраст: 30
+result = json2ns(json_string)
+print(f"Имя: {result.name}, Возраст: {result.age}")  # Вывод: Имя: Иван, Возраст: 30
 
 # Пример 2: Преобразование JSON файла в SimpleNamespace
-json_file = Path('data.json')
-# Предположим, что data.json содержит: {"name": "Иван", "age": 30}
-ns_object = json2ns(json_file)
-print(f"Имя: {ns_object.name}, Возраст: {ns_object.age}")  # Вывод: Имя: Иван, Возраст: 30
+json_file_path = Path('data.json')
+with open(json_file_path, 'w', encoding='utf-8') as f:
+    json.dump({"name": "Иван", "age": 30}, f)
+result = json2ns(json_file_path)
+print(f"Имя: {result.name}, Возраст: {result.age}")  # Вывод: Имя: Иван, Возраст: 30
+
+# Пример 3: Преобразование словаря в SimpleNamespace
+json_dict = {"name": "Иван", "age": 30}
+result = json2ns(json_dict)
+print(f"Имя: {result.name}, Возраст: {result.age}")  # Вывод: Имя: Иван, Возраст: 30
 ```
 
 ### `json2xml`
@@ -186,51 +192,51 @@ def json2xml(json_data: str | dict | Path, root_tag: str = "root") -> str:
     """
 ```
 
-**Назначение**: Преобразует JSON данные (строку, словарь или путь к файлу) в формат XML.
+**Назначение**: Преобразует JSON данные или JSON файл в формат XML.
 
 **Параметры**:
-
-- `json_data` (str | dict | Path): JSON данные для преобразования. Это может быть строка с JSON, словарь или путь к JSON файлу.
-- `root_tag` (str): Корневой тег для XML. По умолчанию "root".
+- `json_data` (str | dict | Path): JSON данные в виде строки, словаря или пути к JSON файлу.
+- `root_tag` (str): Корневой элемент для XML. По умолчанию "root".
 
 **Возвращает**:
-
-- `str`: XML строка, представляющая JSON данные.
+- `str`: Строка, представляющая XML.
 
 **Вызывает исключения**:
-
 - `ValueError`: Если тип `json_data` не поддерживается.
-- `Exception`: Если не удалось распарсить JSON данные или преобразовать их в XML.
+- `Exception`: Если не удается распарсить JSON или преобразовать в XML.
 
 **Как работает функция**:
 
-1.  Функция `json2xml` принимает JSON данные, корневой тег для XML.
-2.  Вызывает функцию `dict2xml` из модуля `src.utils.convertors.dict` для преобразования данных в XML.
-3.  Возвращает XML строку.
+Функция вызывает `dict2xml` для преобразования JSON данных в XML.
 
 ```
-JSON Data --> [dict2xml] --> XML String
+    json_data (str | dict | Path), root_tag (str) --> dict2xml(json_data, root_tag)
+    ↓
+    return xml_string
 ```
 
 **Примеры**:
 
 ```python
 from pathlib import Path
+import json
 
 # Пример 1: Преобразование JSON строки в XML
 json_string = '{"name": "Иван", "age": 30}'
-xml_string = json2xml(json_string, root_tag="person")
-print(f"XML: {xml_string}")
-# Вывод: XML: <?xml version="1.0" encoding="utf-8"?>
-# <person><name>Иван</name><age>30</age></person>
+result = json2xml(json_string)
+print(f"XML: {result}")
 
 # Пример 2: Преобразование JSON файла в XML
-json_file = Path('data.json')
-# Предположим, что data.json содержит: {"name": "Иван", "age": 30}
-xml_string = json2xml(json_file, root_tag="person")
-print(f"XML: {xml_string}")
-# Вывод: XML: <?xml version="1.0" encoding="utf-8"?>
-# <person><name>Иван</name><age>30</age></person>
+json_file_path = Path('data.json')
+with open(json_file_path, 'w', encoding='utf-8') as f:
+    json.dump({"name": "Иван", "age": 30}, f)
+result = json2xml(json_file_path)
+print(f"XML: {result}")
+
+# Пример 3: Преобразование словаря в XML
+json_dict = {"name": "Иван", "age": 30}
+result = json2xml(json_dict)
+print(f"XML: {result}")
 ```
 
 ### `json2xls`
@@ -253,46 +259,56 @@ def json2xls(json_data: str | list | dict | Path, xls_file_path: str | Path) -> 
     """
 ```
 
-**Назначение**: Преобразует JSON данные (строку, список, словарь или путь к файлу) в формат XLS и сохраняет их в указанный файл.
+**Назначение**: Преобразует JSON данные или JSON файл в формат XLS.
 
 **Параметры**:
-
-- `json_data` (str | list | dict | Path): JSON данные для преобразования. Это может быть строка с JSON, список словарей, словарь или путь к JSON файлу.
-- `xls_file_path` (str | Path): Путь к XLS файлу, в который будут записаны преобразованные данные.
+- `json_data` (str | list | dict | Path): JSON данные в виде строки, списка словарей или пути к JSON файлу.
+- `xls_file_path` (str | Path): Путь к XLS файлу, в который будут записаны данные.
 
 **Возвращает**:
-
-- `bool`: `True`, если преобразование и запись в файл прошли успешно, иначе `False`.
+- `bool`: `True`, если преобразование прошло успешно, `False` в противном случае.
 
 **Вызывает исключения**:
-
 - `ValueError`: Если тип `json_data` не поддерживается.
-- `Exception`: Если не удалось распарсить JSON данные или записать их в XLS файл.
+- `Exception`: Если не удается распарсить JSON или записать XLS.
 
 **Как работает функция**:
 
-1.  Функция `json2xls` принимает JSON данные и путь к XLS файлу.
-2.  Вызывает функцию `save_xls_file` из модуля `src.utils.xls` для сохранения данных в XLS файл.
-3.  Возвращает результат выполнения функции `save_xls_file`.
+Функция вызывает `save_xls_file` для сохранения JSON данных в XLS файл.
 
 ```
-JSON Data --> [save_xls_file] --> XLS File
+    json_data (str | list | dict | Path), xls_file_path (str | Path) --> save_xls_file(json_data, xls_file_path)
+    ↓
+    return True/False
 ```
 
 **Примеры**:
 
 ```python
 from pathlib import Path
-
+import json
 # Пример 1: Преобразование JSON строки в XLS файл
-json_string = '[{"name": "Иван", "age": 30}, {"name": "Мария", "age": 25}]'
-xls_file = 'data.xls'
+json_string = '[{"name": "Иван", "age": 30}, {"name": "Петр", "age": 25}]'
+xls_file = 'output.xls'
 result = json2xls(json_string, xls_file)
-print(f"Результат преобразования JSON строки в XLS: {result}")  # Вывод: Результат преобразования JSON строки в XLS: True
+print(f"Результат преобразования: {result}")
 
 # Пример 2: Преобразование JSON файла в XLS файл
-json_file = Path('data.json')
-# Предположим, что data.json содержит: [{"name": "Иван", "age": 30}, {"name": "Мария", "age": 25}]
-xls_file = 'data_from_file.xls'
-result = json2xls(json_file, xls_file)
-print(f"Результат преобразования JSON файла в XLS: {result}")  # Вывод: Результат преобразования JSON файла в XLS: True
+json_file_path = Path('data.json')
+with open(json_file_path, 'w', encoding='utf-8') as f:
+    json.dump([{"name": "Иван", "age": 30}, {"name": "Петр", "age": 25}], f)
+xls_file_path = 'output.xls'
+result = json2xls(json_file_path, xls_file_path)
+print(f"Результат преобразования: {result}")
+
+# Пример 3: Преобразование списка словарей в XLS файл
+json_list = [{"name": "Иван", "age": 30}, {"name": "Петр", "age": 25}]
+xls_file_path = 'output.xls'
+result = json2xls(json_list, xls_file_path)
+print(f"Результат преобразования: {result}")
+
+# Пример 4: Преобразование словаря в XLS файл
+json_dict = {"name": "Иван", "age": 30}
+xls_file_path = 'output.xls'
+result = json2xls(json_dict, xls_file_path)
+print(f"Результат преобразования: {result}")

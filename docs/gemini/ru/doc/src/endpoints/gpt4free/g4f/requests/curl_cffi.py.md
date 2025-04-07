@@ -1,72 +1,95 @@
-# Модуль для обработки асинхронных запросов с использованием curl_cffi
+# Модуль для работы с асинхронными запросами и потоковыми ответами с использованием curl_cffi
+=========================================================================================
+
+Модуль предоставляет классы для выполнения асинхронных HTTP-запросов с поддержкой потоковых ответов, WebSocket и FormData.
+Он использует библиотеку `curl_cffi` для эффективной работы с HTTP-запросами.
 
 ## Обзор
 
-Модуль предоставляет классы для выполнения асинхронных HTTP-запросов с поддержкой потоковой передачи данных, WebSocket-соединений и работы с формами FormData. Он использует библиотеку `curl_cffi` для обеспечения высокой производительности и гибкости при взаимодействии с HTTP-серверами.
+Модуль содержит классы `StreamResponse`, `StreamSession`, `FormData` и `WebSocket`, которые позволяют выполнять асинхронные HTTP-запросы и обрабатывать потоковые ответы.
+Класс `StreamSession` наследуется от `AsyncSession` и предоставляет методы для выполнения HTTP-запросов с потоковой передачей данных.
+Класс `FormData` используется для создания multipart/form-data запросов.
+Класс `WebSocket` обеспечивает поддержку WebSocket соединений.
 
-## Подробней
+## Подробнее
 
-Этот модуль предоставляет инструменты для асинхронной работы с HTTP-запросами, включая поддержку потоковой передачи данных, WebSocket-соединений и форм FormData. Он предназначен для использования в проектах, требующих эффективного взаимодействия с веб-серверами.
+Этот модуль предназначен для упрощения работы с асинхронными HTTP-запросами, особенно при необходимости обрабатывать большие объемы данных потоково.
+Он предоставляет удобные интерфейсы для выполнения запросов, обработки ответов и работы с WebSocket соединениями.
+Модуль использует библиотеку `curl_cffi`, которая обеспечивает высокую производительность и гибкость при выполнении HTTP-запросов.
 
 ## Классы
 
 ### `StreamResponse`
 
-**Описание**: Обертка для обработки асинхронных потоковых ответов.
+**Описание**: Класс-обертка для обработки асинхронных потоковых ответов.
 
-**Принцип работы**: Класс `StreamResponse` оборачивает объект `Response` из библиотеки `curl_cffi` и предоставляет асинхронные методы для работы с потоковым содержимым ответа. Это позволяет эффективно обрабатывать большие объемы данных, не загружая их все в память сразу.
+**Принцип работы**:
+Класс `StreamResponse` оборачивает объект `Response` из библиотеки `curl_cffi` и предоставляет методы для асинхронного чтения текста, JSON-данных, итерации по строкам и содержимому ответа.
+Он также поддерживает асинхронный контекстный менеджер для автоматического закрытия соединения.
 
-**Аттрибуты**:
+**Атрибуты**:
 - `inner` (Response): Оригинальный объект `Response`.
 
 **Методы**:
-- `text()`: Асинхронно возвращает текстовое представление ответа.
-- `raise_for_status()`: Вызывает исключение `HTTPError`, если произошла ошибка.
-- `json(**kwargs)`: Асинхронно разбирает JSON-содержимое ответа.
-- `iter_lines()`: Асинхронно итерируется по строкам ответа.
-- `iter_content()`: Асинхронно итерируется по содержимому ответа.
-- `sse()`: Асинхронно итерируется по Server-Sent Events ответа.
-- `__aenter__()`: Асинхронно входит в контекст выполнения для объекта ответа.
-- `__aexit__(*args)`: Асинхронно выходит из контекста выполнения для объекта ответа.
+- `__init__(self, inner: Response) -> None`: Инициализирует `StreamResponse` с предоставленным объектом `Response`.
+- `text(self) -> str`: Асинхронно получает текст ответа.
+- `raise_for_status(self) -> None`: Вызывает исключение `HTTPError`, если произошла ошибка.
+- `json(self, **kwargs) -> Any`: Асинхронно разбирает содержимое JSON-ответа.
+- `iter_lines(self) -> AsyncGenerator[bytes, None]`: Асинхронно итерируется по строкам ответа.
+- `iter_content(self) -> AsyncGenerator[bytes, None]`: Асинхронно итерируется по содержимому ответа.
+- `sse(self) -> AsyncGenerator[dict, None]`: Асинхронно итерируется по Server-Sent Events (SSE) ответа.
+- `__aenter__(self)`: Асинхронно входит в контекст выполнения для объекта ответа.
+- `__aexit__(self, *args)`: Асинхронно выходит из контекста выполнения для объекта ответа и закрывает соединение.
 
 ### `StreamSession`
 
 **Описание**: Асинхронный класс сессии для обработки HTTP-запросов с потоковой передачей.
 
-**Принцип работы**: Класс `StreamSession` наследуется от `AsyncSession` и предоставляет методы для выполнения HTTP-запросов с поддержкой потоковой передачи данных. Он также включает поддержку WebSocket-соединений и форм FormData.
+**Наследует**:
+- `AsyncSession`: Наследует от класса `AsyncSession` из библиотеки `curl_cffi`.
+
+**Принцип работы**:
+Класс `StreamSession` наследуется от `AsyncSession` и переопределяет метод `request` для возврата объекта `StreamResponse`.
+Он также предоставляет методы для выполнения HTTP-запросов с использованием различных HTTP-методов (GET, POST, PUT, DELETE и т.д.).
 
 **Методы**:
-- `request(method: str, url: str, ssl = None, **kwargs) -> StreamResponse`: Создает и возвращает объект `StreamResponse` для заданного HTTP-запроса.
-- `ws_connect(url, *args, **kwargs)`: Устанавливает WebSocket-соединение.
-- `_ws_connect(url, **kwargs)`: Внутренний метод для установки WebSocket-соединения.
-- `head = partialmethod(request, "HEAD")`: Отправляет HEAD-запрос.
-- `get = partialmethod(request, "GET")`: Отправляет GET-запрос.
-- `post = partialmethod(request, "POST")`: Отправляет POST-запрос.
-- `put = partialmethod(request, "PUT")`: Отправляет PUT-запрос.
-- `patch = partialmethod(request, "PATCH")`: Отправляет PATCH-запрос.
-- `delete = partialmethod(request, "DELETE")`: Отправляет DELETE-запрос.
-- `options = partialmethod(request, "OPTIONS")`: Отправляет OPTIONS-запрос.
+- `request(self, method: str, url: str, ssl = None, **kwargs) -> StreamResponse`: Создает и возвращает объект `StreamResponse` для заданного HTTP-запроса.
+- `ws_connect(self, url, *args, **kwargs)`: Устанавливает WebSocket-соединение.
+- `_ws_connect(self, url, **kwargs)`: Внутренний метод для установки WebSocket-соединения.
+- `head = partialmethod(request, "HEAD")`: Определяет метод `head` как partialmethod для выполнения HTTP-запроса с методом HEAD.
+- `get = partialmethod(request, "GET")`: Определяет метод `get` как partialmethod для выполнения HTTP-запроса с методом GET.
+- `post = partialmethod(request, "POST")`: Определяет метод `post` как partialmethod для выполнения HTTP-запроса с методом POST.
+- `put = partialmethod(request, "PUT")`: Определяет метод `put` как partialmethod для выполнения HTTP-запроса с методом PUT.
+- `patch = partialmethod(request, "PATCH")`: Определяет метод `patch` как partialmethod для выполнения HTTP-запроса с методом PATCH.
+- `delete = partialmethod(request, "DELETE")`: Определяет метод `delete` как partialmethod для выполнения HTTP-запроса с методом DELETE.
+- `options = partialmethod(request, "OPTIONS")`: Определяет метод `options` как partialmethod для выполнения HTTP-запроса с методом OPTIONS.
 
 ### `FormData`
 
-**Описание**: Класс для создания и управления формами FormData.
+**Описание**: Класс для создания multipart/form-data запросов.
 
-**Принцип работы**: Класс `FormData` предоставляет методы для добавления полей в форму FormData, включая возможность указания имени поля, данных, типа контента и имени файла.
+**Принцип работы**:
+Класс `FormData` предоставляет интерфейс для создания multipart/form-data запросов.
+Если библиотека `curl_cffi` имеет поддержку `CurlMime`, то `FormData` наследуется от `CurlMime` и использует его методы для добавления полей.
+В противном случае, `FormData` выбрасывает исключение `RuntimeError`.
 
 **Методы**:
-- `add_field(self, name, data=None, content_type: str = None, filename: str = None) -> None`: Добавляет поле в форму FormData.
+- `add_field(self, name, data=None, content_type: str = None, filename: str = None) -> None`: Добавляет поле в multipart/form-data запрос.
 
 ### `WebSocket`
 
-**Описание**: Класс для работы с WebSocket-соединениями.
+**Описание**: Класс для работы с WebSocket соединениями.
 
-**Принцип работы**: Класс `WebSocket` предоставляет методы для установки и управления WebSocket-соединениями. Он позволяет отправлять и получать данные через WebSocket, а также закрывать соединение.
+**Принцип работы**:
+Класс `WebSocket` предоставляет интерфейс для установления и управления WebSocket соединениями.
+Он использует методы `curl_cffi` для отправки и получения данных через WebSocket.
 
 **Методы**:
-- `__aenter__()`: Асинхронно входит в контекст выполнения для объекта WebSocket.
-- `__aexit__(*args)`: Асинхронно выходит из контекста выполнения для объекта WebSocket.
-- `receive_str(**kwargs) -> str`: Асинхронно получает строковое сообщение из WebSocket.
-- `send_str(data: str)`: Асинхронно отправляет строковое сообщение через WebSocket.
+- `__init__(self, session, url, **kwargs) -> None`: Инициализирует объект `WebSocket`.
+- `__aenter__(self)`: Асинхронно входит в контекст выполнения для объекта WebSocket.
+- `__aexit__(self, *args)`: Асинхронно выходит из контекста выполнения для объекта WebSocket и закрывает соединение.
+- `receive_str(self, **kwargs) -> str`: Асинхронно получает строковые данные из WebSocket соединения.
+- `send_str(self, data: str)`: Асинхронно отправляет строковые данные через WebSocket соединение.
 
 ## Функции
 
@@ -75,27 +98,27 @@
 ```python
 async def text(self) -> str:
     """Asynchronously get the response text."""
-    return await self.inner.atext()
+    ...
 ```
 
-**Назначение**: Асинхронно получает текстовое представление ответа.
+**Назначение**: Асинхронно получает текст ответа.
 
 **Параметры**:
-- Нет
+- Отсутствуют.
 
 **Возвращает**:
-- `str`: Текстовое представление ответа.
+- `str`: Текст ответа.
 
 **Как работает функция**:
-1. Функция вызывает метод `atext()` объекта `inner` (типа `Response`), который асинхронно получает текстовое представление ответа.
-2. Возвращает полученное текстовое представление.
+1. Функция `text` вызывает метод `atext()` объекта `self.inner` (типа `Response`), который асинхронно получает текст ответа.
+2. Возвращает полученный текст.
 
-```
-A: Вызов atext()
-|
-B: Получение текстового представления ответа
-|
-C: Возврат текстового представления
+**Примеры**:
+
+```python
+async with session.get('https://example.com') as response:
+    text = await response.text()
+    print(text)
 ```
 
 ### `StreamResponse.raise_for_status`
@@ -103,29 +126,29 @@ C: Возврат текстового представления
 ```python
 def raise_for_status(self) -> None:
     """Raise an HTTPError if one occurred."""
-    self.inner.raise_for_status()
+    ...
 ```
 
 **Назначение**: Вызывает исключение `HTTPError`, если произошла ошибка.
 
 **Параметры**:
-- Нет
+- Отсутствуют.
 
 **Возвращает**:
 - `None`
 
-**Вызывает исключения**:
-- `HTTPError`: Если произошла HTTP-ошибка.
-
 **Как работает функция**:
-1. Функция вызывает метод `raise_for_status()` объекта `inner` (типа `Response`), который проверяет статус ответа и вызывает исключение `HTTPError`, если статус указывает на ошибку.
+1.  Функция `raise_for_status` вызывает метод `raise_for_status()` объекта `self.inner` (типа `Response`), который проверяет статус код ответа и вызывает исключение `HTTPError`, если статус код указывает на ошибку (например, 404, 500).
+2.  Если статус код не указывает на ошибку, функция ничего не делает.
 
-```
-A: Вызов raise_for_status()
-|
-B: Проверка статуса ответа
-|
-C: Вызов исключения HTTPError (если необходимо)
+**Примеры**:
+
+```python
+async with session.get('https://example.com/nonexistent') as response:
+    try:
+        response.raise_for_status()
+    except HTTPError as ex:
+        print(f"HTTP error occurred: {ex}")
 ```
 
 ### `StreamResponse.json`
@@ -133,33 +156,28 @@ C: Вызов исключения HTTPError (если необходимо)
 ```python
 async def json(self, **kwargs) -> Any:
     """Asynchronously parse the JSON response content."""
-    return json.loads(await self.inner.acontent(), **kwargs)
+    ...
 ```
 
-**Назначение**: Асинхронно разбирает JSON-содержимое ответа.
+**Назначение**: Асинхронно разбирает содержимое JSON-ответа.
 
 **Параметры**:
-- `**kwargs`: Дополнительные аргументы, которые передаются в функцию `json.loads()`.
+- `**kwargs`: Дополнительные аргументы, которые передаются в функцию `json.loads`.
 
 **Возвращает**:
-- `Any`: Разобранное JSON-содержимое ответа.
-
-**Вызывает исключения**:
-- `json.JSONDecodeError`: Если не удалось разобрать JSON-содержимое.
+- `Any`: Разобранное содержимое JSON-ответа.
 
 **Как работает функция**:
-1. Функция вызывает метод `acontent()` объекта `inner` (типа `Response`), который асинхронно получает содержимое ответа.
-2. Использует функцию `json.loads()` для разбора JSON-содержимого.
-3. Возвращает разобранное JSON-содержимое.
+1.  Функция `json` вызывает метод `acontent()` объекта `self.inner` (типа `Response`), который асинхронно получает содержимое ответа в виде байтов.
+2.  Затем функция вызывает `json.loads` для разбора содержимого JSON.
+3.  Возвращает разобранное содержимое JSON.
 
-```
-A: Вызов acontent()
-|
-B: Получение содержимого ответа
-|
-C: Разбор JSON-содержимого с помощью json.loads()
-|
-D: Возврат разобранного JSON-содержимого
+**Примеры**:
+
+```python
+async with session.get('https://example.com/api/data') as response:
+    data = await response.json()
+    print(data)
 ```
 
 ### `StreamResponse.iter_lines`
@@ -167,27 +185,27 @@ D: Возврат разобранного JSON-содержимого
 ```python
 def iter_lines(self) -> AsyncGenerator[bytes, None]:
     """Asynchronously iterate over the lines of the response."""
-    return  self.inner.aiter_lines()
+    ...
 ```
 
 **Назначение**: Асинхронно итерируется по строкам ответа.
 
 **Параметры**:
-- Нет
+- Отсутствуют.
 
 **Возвращает**:
-- `AsyncGenerator[bytes, None]`: Асинхронный генератор строк ответа.
+- `AsyncGenerator[bytes, None]`: Асинхронный генератор, который выдает строки ответа в виде байтов.
 
 **Как работает функция**:
-1. Функция вызывает метод `aiter_lines()` объекта `inner` (типа `Response`), который возвращает асинхронный генератор строк ответа.
-2. Возвращает полученный асинхронный генератор.
+1. Функция `iter_lines` вызывает метод `aiter_lines()` объекта `self.inner` (типа `Response`), который возвращает асинхронный генератор строк ответа.
+2. Функция возвращает полученный генератор.
 
-```
-A: Вызов aiter_lines()
-|
-B: Получение асинхронного генератора строк
-|
-C: Возврат асинхронного генератора
+**Примеры**:
+
+```python
+async with session.get('https://example.com/large_text_file') as response:
+    async for line in response.iter_lines():
+        print(line)
 ```
 
 ### `StreamResponse.iter_content`
@@ -195,27 +213,28 @@ C: Возврат асинхронного генератора
 ```python
 def iter_content(self) -> AsyncGenerator[bytes, None]:
     """Asynchronously iterate over the response content."""
-    return self.inner.aiter_content()
+    ...
 ```
 
 **Назначение**: Асинхронно итерируется по содержимому ответа.
 
 **Параметры**:
-- Нет
+- Отсутствуют.
 
 **Возвращает**:
-- `AsyncGenerator[bytes, None]`: Асинхронный генератор содержимого ответа.
+- `AsyncGenerator[bytes, None]`: Асинхронный генератор, который выдает содержимое ответа в виде байтов.
 
 **Как работает функция**:
-1. Функция вызывает метод `aiter_content()` объекта `inner` (типа `Response`), который возвращает асинхронный генератор содержимого ответа.
-2. Возвращает полученный асинхронный генератор.
+1. Функция `iter_content` вызывает метод `aiter_content()` объекта `self.inner` (типа `Response`), который возвращает асинхронный генератор содержимого ответа.
+2. Функция возвращает полученный генератор.
 
-```
-A: Вызов aiter_content()
-|
-B: Получение асинхронного генератора содержимого
-|
-C: Возврат асинхронного генератора
+**Примеры**:
+
+```python
+async with session.get('https://example.com/large_image.jpg') as response:
+    async for chunk in response.iter_content():
+        # Обработка чанков изображения
+        pass
 ```
 
 ### `StreamResponse.sse`
@@ -223,48 +242,30 @@ C: Возврат асинхронного генератора
 ```python
 async def sse(self) -> AsyncGenerator[dict, None]:
     """Asynchronously iterate over the Server-Sent Events of the response."""
-    async for line in self.iter_lines():
-        if line.startswith(b"data: "):
-            chunk = line[6:]
-            if chunk == b"[DONE]":
-                break
-            try:
-                yield json.loads(chunk)
-            except json.JSONDecodeError:
-                continue
+    ...
 ```
 
 **Назначение**: Асинхронно итерируется по Server-Sent Events (SSE) ответа.
 
 **Параметры**:
-- Нет
+- Отсутствуют.
 
 **Возвращает**:
-- `AsyncGenerator[dict, None]`: Асинхронный генератор словарей, представляющих SSE.
+- `AsyncGenerator[dict, None]`: Асинхронный генератор, который выдает события SSE в виде словарей.
 
 **Как работает функция**:
-1. Функция асинхронно итерируется по строкам ответа с помощью `self.iter_lines()`.
-2. Для каждой строки проверяется, начинается ли она с `b"data: "`.
-3. Если строка начинается с `b"data: "`, извлекается содержимое после префикса (chunk).
-4. Если chunk равен `b"[DONE]"`, итерация прекращается.
-5. Попытка разбора chunk как JSON с помощью `json.loads()`.
-6. Если разбор JSON успешен, словарь возвращается через `yield`.
-7. Если происходит ошибка `json.JSONDecodeError`, итерация продолжается.
+1.  Функция `sse` вызывает метод `iter_lines()` для получения асинхронного генератора строк ответа.
+2.  Затем функция итерируется по строкам ответа и проверяет, начинается ли строка с `b"data: "`.
+3.  Если строка начинается с `b"data: "`, функция извлекает данные события и пытается разобрать их как JSON.
+4.  Если разбор JSON успешен, функция выдает событие в виде словаря.
+5.  Если встречается строка `b"[DONE]"`, функция завершает итерацию.
 
-```
-A: Итерация по строкам ответа с помощью iter_lines()
-|
-B: Проверка, начинается ли строка с "data: "
-|
-C: Извлечение содержимого после "data: " (chunk)
-|
-D: Проверка, равен ли chunk "[DONE]"
-|
-E: Попытка разбора chunk как JSON с помощью json.loads()
-|
-F: Возврат словаря через yield (если разбор JSON успешен)
-|
-G: Продолжение итерации (если произошла ошибка JSONDecodeError)
+**Примеры**:
+
+```python
+async with session.get('https://example.com/sse_stream') as response:
+    async for event in response.sse():
+        print(event)
 ```
 
 ### `StreamResponse.__aenter__`
@@ -272,41 +273,28 @@ G: Продолжение итерации (если произошла ошиб
 ```python
 async def __aenter__(self):
     """Asynchronously enter the runtime context for the response object."""
-    inner: Response = await self.inner
-    self.inner = inner
-    self.url = inner.url
-    self.method = inner.request.method
-    self.request = inner.request
-    self.status: int = inner.status_code
-    self.reason: str = inner.reason
-    self.ok: bool = inner.ok
-    self.headers = inner.headers
-    self.cookies = inner.cookies
-    return self
+    ...
 ```
 
 **Назначение**: Асинхронно входит в контекст выполнения для объекта ответа.
 
 **Параметры**:
-- Нет
+- Отсутствуют.
 
 **Возвращает**:
 - `self`: Объект `StreamResponse`.
 
 **Как работает функция**:
-1. Функция асинхронно ожидает завершения `self.inner` (объекта `Response`).
-2. Обновляет `self.inner` полученным результатом.
-3. Извлекает и сохраняет атрибуты из `inner`, такие как `url`, `method`, `request`, `status`, `reason`, `ok`, `headers` и `cookies`.
-4. Возвращает `self`.
+1.  Функция `__aenter__` ожидает завершения асинхронной операции `self.inner`.
+2.  После завершения асинхронной операции функция обновляет атрибут `self.inner` результатом этой операции (объектом `Response`).
+3.  Функция устанавливает атрибуты `url`, `method`, `request`, `status`, `reason`, `ok`, `headers` и `cookies` объекта `StreamResponse` на значения соответствующих атрибутов объекта `self.inner`.
+4.  Возвращает объект `self`.
 
-```
-A: Ожидание завершения self.inner
-|
-B: Обновление self.inner
-|
-C: Извлечение и сохранение атрибутов из inner
-|
-D: Возврат self
+**Примеры**:
+
+```python
+async with session.get('https://example.com') as response:
+    print(response.status)
 ```
 
 ### `StreamResponse.__aexit__`
@@ -314,22 +302,27 @@ D: Возврат self
 ```python
 async def __aexit__(self, *args):
     """Asynchronously exit the runtime context for the response object."""
-    await self.inner.aclose()
+    ...
 ```
 
-**Назначение**: Асинхронно выходит из контекста выполнения для объекта ответа.
+**Назначение**: Асинхронно выходит из контекста выполнения для объекта ответа и закрывает соединение.
 
 **Параметры**:
-- `*args`: Произвольные аргументы.
+- `*args`: Аргументы исключения, переданные из блока `with`.
 
 **Возвращает**:
-- Нет
+- `None`
 
 **Как работает функция**:
-1. Функция асинхронно закрывает соединение, вызывая метод `aclose()` объекта `self.inner`.
+1. Функция `__aexit__` вызывает метод `aclose()` объекта `self.inner`, который асинхронно закрывает соединение.
 
-```
-A: Закрытие соединения с помощью aclose()
+**Примеры**:
+
+```python
+async with session.get('https://example.com') as response:
+    # Обработка ответа
+    pass
+# Соединение будет автоматически закрыто после выхода из блока with
 ```
 
 ### `StreamSession.request`
@@ -341,34 +334,31 @@ def request(
     if kwargs.get("data") and isinstance(kwargs.get("data"), CurlMime):
         kwargs["multipart"] = kwargs.pop("data")
     """Create and return a StreamResponse object for the given HTTP request."""
-    return StreamResponse(super().request(method, url, stream=True, verify=ssl, **kwargs))
+    ...
 ```
 
 **Назначение**: Создает и возвращает объект `StreamResponse` для заданного HTTP-запроса.
 
 **Параметры**:
-- `method` (str): HTTP-метод (например, "GET", "POST").
+- `method` (str): HTTP-метод (GET, POST, PUT, DELETE и т.д.).
 - `url` (str): URL-адрес запроса.
-- `ssl`: Параметры SSL.
-- `**kwargs`: Дополнительные аргументы для запроса.
+- `ssl`: Параметры SSL. По умолчанию `None`.
+- `**kwargs`: Дополнительные аргументы, которые передаются в функцию `super().request`.
 
 **Возвращает**:
-- `StreamResponse`: Объект `StreamResponse`, представляющий HTTP-ответ.
+- `StreamResponse`: Объект `StreamResponse`.
 
 **Как работает функция**:
-1. Проверяет, содержит ли `kwargs` ключ "data" и является ли его значение экземпляром `CurlMime`.
-2. Если да, то заменяет "data" на "multipart" в `kwargs`.
-3. Вызывает метод `request` родительского класса (`AsyncSession`) с параметром `stream=True`.
-4. Создает и возвращает объект `StreamResponse`, оборачивающий результат вызова `super().request()`.
+1.  Функция `request` проверяет, передан ли параметр `data` и является ли он экземпляром класса `CurlMime`. Если это так, то параметр `data` переименовывается в `multipart`.
+2.  Функция вызывает метод `super().request` с параметрами `method`, `url`, `stream=True`, `verify=ssl` и `**kwargs`.
+    Метод `super().request` выполняет HTTP-запрос и возвращает объект `Response`.
+3.  Функция создает объект `StreamResponse` с полученным объектом `Response`.
+4.  Функция возвращает объект `StreamResponse`.
 
-```
-A: Проверка наличия "data" в kwargs и его типа
-|
-B: Замена "data" на "multipart" в kwargs (если необходимо)
-|
-C: Вызов super().request() с stream=True
-|
-D: Создание и возврат объекта StreamResponse
+**Примеры**:
+
+```python
+response = session.get('https://example.com')
 ```
 
 ### `StreamSession.ws_connect`
@@ -381,20 +371,22 @@ def ws_connect(self, url, *args, **kwargs):
 **Назначение**: Устанавливает WebSocket-соединение.
 
 **Параметры**:
-- `url`: URL-адрес WebSocket-сервера.
-- `*args`: Произвольные позиционные аргументы.
-- `**kwargs`: Произвольные именованные аргументы.
+- `url`: URL-адрес WebSocket-соединения.
+- `*args`: Дополнительные позиционные аргументы.
+- `**kwargs`: Дополнительные именованные аргументы.
 
 **Возвращает**:
-- `WebSocket`: Объект `WebSocket`, представляющий WebSocket-соединение.
+- `WebSocket`: Объект `WebSocket`.
 
 **Как работает функция**:
-1. Создает и возвращает объект `WebSocket` с использованием переданных аргументов.
+1.  Функция `ws_connect` создает объект `WebSocket` с параметрами `self`, `url` и `**kwargs`.
+2.  Возвращает объект `WebSocket`.
 
-```
-A: Создание объекта WebSocket
-|
-B: Возврат объекта WebSocket
+**Примеры**:
+
+```python
+async with session.ws_connect('wss://example.com') as ws:
+    await ws.send_str('Hello, WebSocket!')
 ```
 
 ### `StreamSession._ws_connect`
@@ -407,19 +399,44 @@ def _ws_connect(self, url, **kwargs):
 **Назначение**: Внутренний метод для установки WebSocket-соединения.
 
 **Параметры**:
-- `url`: URL-адрес WebSocket-сервера.
-- `**kwargs`: Произвольные именованные аргументы.
+- `url`: URL-адрес WebSocket-соединения.
+- `**kwargs`: Дополнительные именованные аргументы.
 
 **Возвращает**:
-- Результат вызова `super().ws_connect()`.
+- Результат вызова `super().ws_connect(url, **kwargs)`.
 
 **Как работает функция**:
-1. Вызывает метод `ws_connect` родительского класса (`AsyncSession`) с переданными аргументами и возвращает результат.
+1.  Функция `_ws_connect` вызывает метод `super().ws_connect` с параметрами `url` и `**kwargs`.
+2.  Возвращает результат вызова `super().ws_connect(url, **kwargs)`.
 
+### `FormData.add_field`
+
+```python
+def add_field(self, name, data=None, content_type: str = None, filename: str = None) -> None:
+    self.addpart(name, content_type=content_type, filename=filename, data=data)
 ```
-A: Вызов super().ws_connect()
-|
-B: Возврат результата
+
+**Назначение**: Добавляет поле в multipart/form-data запрос.
+
+**Параметры**:
+- `name`: Имя поля.
+- `data`: Данные поля. По умолчанию `None`.
+- `content_type`: Тип содержимого поля. По умолчанию `None`.
+- `filename`: Имя файла поля. По умолчанию `None`.
+
+**Возвращает**:
+- `None`
+
+**Как работает функция**:
+1.  Функция `add_field` вызывает метод `addpart` объекта `self` (типа `CurlMime`) с параметрами `name`, `content_type`, `filename` и `data`.
+    Метод `addpart` добавляет поле в multipart/form-data запрос.
+
+**Примеры**:
+
+```python
+form = FormData()
+form.add_field('name', 'John Doe')
+form.add_field('file', data=b'file content', filename='example.txt', content_type='text/plain')
 ```
 
 ### `WebSocket.__aenter__`
@@ -433,23 +450,16 @@ async def __aenter__(self):
 **Назначение**: Асинхронно входит в контекст выполнения для объекта WebSocket.
 
 **Параметры**:
-- Нет
+- Отсутствуют.
 
 **Возвращает**:
 - `self`: Объект `WebSocket`.
 
 **Как работает функция**:
-1. Асинхронно устанавливает WebSocket-соединение с использованием `self.session._ws_connect()`.
-2. Сохраняет результат в `self.inner`.
-3. Возвращает `self`.
-
-```
-A: Асинхронная установка WebSocket-соединения
-|
-B: Сохранение результата в self.inner
-|
-C: Возврат self
-```
+1. Функция `__aenter__` вызывает метод `_ws_connect` объекта `self.session` с параметрами `self.url` и `**self.options`.
+2. Функция ожидает завершения асинхронной операции `self.session._ws_connect`.
+3. Функция устанавливает атрибут `self.inner` результатом этой операции.
+4. Возвращает объект `self`.
 
 ### `WebSocket.__aexit__`
 
@@ -458,23 +468,18 @@ async def __aexit__(self, *args):
     await self.inner.aclose() if hasattr(self.inner, "aclose") else await self.inner.close()
 ```
 
-**Назначение**: Асинхронно выходит из контекста выполнения для объекта WebSocket.
+**Назначение**: Асинхронно выходит из контекста выполнения для объекта WebSocket и закрывает соединение.
 
 **Параметры**:
-- `*args`: Произвольные аргументы.
+- `*args`: Аргументы исключения, переданные из блока `with`.
 
 **Возвращает**:
-- Нет
+- `None`
 
 **Как работает функция**:
-1. Асинхронно закрывает WebSocket-соединение.
-2. Если у `self.inner` есть метод `aclose()`, то вызывается он, иначе вызывается метод `close()`.
-
-```
-A: Проверка наличия метода aclose() у self.inner
-|
-B: Вызов aclose() или close() в зависимости от результата проверки
-```
+1.  Функция `__aexit__` проверяет, есть ли у объекта `self.inner` метод `aclose`.
+2.  Если метод `aclose` есть, функция вызывает его асинхронно.
+3.  Если метода `aclose` нет, функция вызывает метод `close` асинхронно.
 
 ### `WebSocket.receive_str`
 
@@ -485,29 +490,21 @@ async def receive_str(self, **kwargs) -> str:
     return bytes.decode(errors="ignore")
 ```
 
-**Назначение**: Асинхронно получает строковое сообщение из WebSocket.
+**Назначение**: Асинхронно получает строковые данные из WebSocket соединения.
 
 **Параметры**:
-- `**kwargs`: Произвольные именованные аргументы.
+- `**kwargs`: Дополнительные именованные аргументы.
 
 **Возвращает**:
-- `str`: Строковое сообщение, полученное из WebSocket.
+- `str`: Строковые данные, полученные из WebSocket соединения.
 
 **Как работает функция**:
-1. Определяет метод для получения данных из WebSocket. Если у `self.inner` есть метод `arecv`, то используется он, иначе используется метод `recv`.
-2. Асинхронно получает данные из WebSocket с помощью выбранного метода.
-3. Декодирует полученные байты в строку с использованием кодировки UTF-8 и обработкой ошибок.
-4. Возвращает полученную строку.
-
-```
-A: Определение метода для получения данных (arecv или recv)
-|
-B: Асинхронное получение данных из WebSocket
-|
-C: Декодирование байтов в строку
-|
-D: Возврат полученной строки
-```
+1.  Функция `receive_str` проверяет, есть ли у объекта `self.inner` метод `arecv`.
+2.  Если метод `arecv` есть, функция присваивает его переменной `method`.
+3.  Если метода `arecv` нет, функция присваивает переменной `method` метод `recv`.
+4.  Функция вызывает метод `method` асинхронно и получает байты и флаги.
+5.  Функция декодирует полученные байты в строку, игнорируя ошибки декодирования.
+6.  Возвращает полученную строку.
 
 ### `WebSocket.send_str`
 
@@ -517,22 +514,17 @@ async def send_str(self, data: str):
     await method(data.encode(), CurlWsFlag.TEXT)
 ```
 
-**Назначение**: Асинхронно отправляет строковое сообщение через WebSocket.
+**Назначение**: Асинхронно отправляет строковые данные через WebSocket соединение.
 
 **Параметры**:
-- `data` (str): Строковое сообщение для отправки.
+- `data` (str): Строковые данные для отправки.
 
 **Возвращает**:
-- Нет
+- `None`
 
 **Как работает функция**:
-1. Определяет метод для отправки данных через WebSocket. Если у `self.inner` есть метод `asend`, то используется он, иначе используется метод `send`.
-2. Кодирует строку `data` в байты с использованием кодировки UTF-8.
-3. Асинхронно отправляет закодированные данные через WebSocket с использованием выбранного метода и флага `CurlWsFlag.TEXT`.
-
-```
-A: Определение метода для отправки данных (asend или send)
-|
-B: Кодирование строки в байты
-|
-C: Асинхронная отправка данных через WebSocket
+1.  Функция `send_str` проверяет, есть ли у объекта `self.inner` метод `asend`.
+2.  Если метод `asend` есть, функция присваивает его переменной `method`.
+3.  Если метода `asend` нет, функция присваивает переменной `method` метод `send`.
+4.  Функция кодирует строку `data` в байты.
+5.  Функция вызывает метод `method` асинхронно с параметрами `data.encode()` и `CurlWsFlag.TEXT`.

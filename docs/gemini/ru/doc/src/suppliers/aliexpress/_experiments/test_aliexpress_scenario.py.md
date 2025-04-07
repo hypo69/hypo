@@ -1,12 +1,12 @@
-# Документация модуля `test_aliexpress_scenario.py`
+# Модуль для тестирования сценариев Aliexpress
 
 ## Обзор
 
-Модуль `test_aliexpress_scenario.py` предназначен для проведения экспериментов и тестов, связанных с поставщиком Aliexpress. Он содержит функции для инициализации поставщика, настройки тестового сценария и работы с продуктами.
+Модуль `test_aliexpress_scenario.py` предназначен для тестирования сценариев работы с поставщиком Aliexpress. Он содержит функции для инициализации поставщика, продукта и выполнения различных действий, связанных с добавлением товаров в PrestaShop.
 
 ## Подробней
 
-Этот модуль используется для тестирования логики работы с Aliexpress, включая получение данных о продуктах, их категоризацию и добавление в базу данных PrestaShop. Он включает в себя настройку тестового сценария, инициализацию класса `Supplier` и `Product`, а также выполнение действий через веб-драйвер.
+Этот модуль предоставляет инструменты для автоматизации тестирования взаимодействия с Aliexpress, включая создание экземпляров поставщика и продукта, получение информации о товарах и добавление их в базу данных PrestaShop. Он использует классы `Supplier` и `Product` из проекта `hypotez`, а также модуль `logger` для логирования.
 
 ## Функции
 
@@ -15,40 +15,41 @@
 ```python
 def start_supplier(supplier_prefix: str) -> Supplier:
     """
-    Инициализирует и возвращает объект класса `Supplier` с указанным префиксом поставщика.
+    Инициализирует и возвращает объект поставщика (Supplier) с заданным префиксом.
 
     Args:
-        supplier_prefix (str): Префикс поставщика.
+        supplier_prefix (str): Префикс поставщика, используемый для инициализации.
 
     Returns:
-        Supplier: Объект класса `Supplier`.
+        Supplier: Объект поставщика (Supplier) с заданными параметрами.
 
-    Example:
-        >>> supplier = start_supplier('aliexpress')
-        >>> print(supplier.supplier_prefix)
-        aliexpress
+    Как работает функция:
+    1. Создается словарь `params` с префиксом поставщика.
+    2. Возвращается экземпляр класса `Supplier`, инициализированный с использованием словаря `params`.
+
+    ASCII flowchart:
+    params = {'supplier_prefix': supplier_prefix}
+    ↓
+    return Supplier(**params)
     """
-    ...
+    params: dict = {
+        'supplier_prefix': supplier_prefix
+    }
+    return Supplier(**params)
 ```
 
-**Назначение**:
-Функция `start_supplier` создает и возвращает экземпляр класса `Supplier`.
+**Параметры:**
 
-**Параметры**:
-- `supplier_prefix` (str): Префикс поставщика, который будет использоваться для инициализации объекта `Supplier`.
+-   `supplier_prefix` (str): Префикс поставщика.
 
-**Возвращает**:
-- `Supplier`: Объект класса `Supplier`, инициализированный с переданным префиксом.
+**Возвращает:**
 
-**Как работает функция**:
-1. Функция принимает `supplier_prefix`.
-2. Создает словарь `params` с ключом `'supplier_prefix'` и переданным значением.
-3. Инициализирует и возвращает объект `Supplier` с параметрами из словаря `params`.
+-   `Supplier`: Объект поставщика (Supplier).
 
-**Примеры**:
+**Примеры:**
+
 ```python
 supplier = start_supplier('aliexpress')
-print(supplier.supplier_prefix)
 ```
 
 ### `start_product`
@@ -56,86 +57,141 @@ print(supplier.supplier_prefix)
 ```python
 def start_product() -> Product:
     """
-    Инициализирует и возвращает объект класса `Product` с параметрами,
-    необходимыми для работы с продуктами.
+    Создает и возвращает экземпляр класса `Product`, используя параметры, необходимые для тестов.
 
     Args:
-        supplier (Supplier): Объект класса `Supplier`.
-        webelements_locators (dict): Локаторы веб-элементов.
-        product_categories (dict): Категории продукта.
+        Нет
 
     Returns:
-        Product: Объект класса `Product`.
+        Product: Объект `Product`, инициализированный с параметрами поставщика, локаторами веб-элементов и категориями продукта.
+
+    Как работает функция:
+    1. Получает локаторы веб-элементов и категории продукта из тестового сценария.
+    2. Создает словарь `params` с параметрами поставщика, локаторами и категориями.
+    3. Возвращает экземпляр класса `Product`, инициализированный с использованием словаря `params`.
+
+    ASCII flowchart:
+    Получение локаторов и категорий из test_scenario
+    ↓
+    params = {'supplier': s, 'webelements_locators': s.locators.get('product'), 'product_categories': test_scenario['iPhone 13 & 13 MINI']['presta_categories']}
+    ↓
+    return Product(**params)
     """
-    ...
+    params: dict = {
+        'supplier': s,
+        'webelements_locators': s.locators.get('product'),
+        'product_categories': test_scenario['iPhone 13 & 13 MINI']['presta_categories'],
+        #'product_fields':product_fields,
+    }
+    return Product(**params)
 ```
 
-**Назначение**:
-Функция `start_product` создает и возвращает экземпляр класса `Product`.
+**Параметры:**
 
-**Параметры**:
-Функция не принимает параметров напрямую, но использует глобальные переменные `s` и `test_scenario` для создания параметров для инициализации объекта `Product`.
+-   Нет
 
-**Возвращает**:
-- `Product`: Объект класса `Product`, инициализированный с параметрами, созданными на основе глобальных переменных.
+**Возвращает:**
 
-**Как работает функция**:
-1. Функция использует глобальные переменные `s` (объект `Supplier`) и `test_scenario` для получения необходимых данных.
-2. Создает словарь `params` с ключами:
-   - `'supplier'`: Значение `s`.
-   - `'webelements_locators'`: Локаторы веб-элементов, полученные из `s.locators.get('product')`.
-   - `'product_categories'`: Категории продукта, полученные из `test_scenario['iPhone 13 & 13 MINI']['presta_categories']`.
-3. Инициализирует и возвращает объект `Product` с параметрами из словаря `params`.
+-   `Product`: Объект `Product`.
 
-**Примеры**:
+**Примеры:**
+
 ```python
 product = start_product()
-print(product.supplier.supplier_prefix)
-```
-
-```mermaid
-graph TD
-    A[Подготовка параметров] --> B(Создание объекта Product);
-    B --> C(Возврат объекта Product);
 ```
 
 ## Переменные
 
-- `supplier_prefix`: Префикс поставщика (строка), используемый для инициализации объекта `Supplier`.
-- `s`: Объект класса `Supplier`, созданный на основе `supplier_prefix`.
-- `test_scenario`: Словарь, содержащий информацию о тестовом сценарии, включая ID категории на сайте, бренд, URL, статус активности и категории PrestaShop.
-- `test_products_list`: Список URL-адресов продуктов для тестирования.
-- `p`: Объект класса `Product`, созданный на основе `s` и `test_scenario`.
-- `d`: Объект веб-драйвера, полученный из `s.driver`.
-- `_`: Сокращение для вызова `d.execute_locator`.
-- `f`: Ссылка на `p.fields`.
-- `l`: Ссылка на `p.webelements_locators`.
+### `supplier_prefix`
 
-## Описание работы модуля
+```python
+supplier_prefix = 'aliexpress'
+```
 
-1.  **Инициализация поставщика**:
-    *   Инициализируется объект `Supplier` с префиксом `'aliexpress'`.
+-   **Описание**: Префикс поставщика, используемый в данном сценарии. В данном случае - 'aliexpress'.
 
-2.  **Настройка тестового сценария**:
+### `s`
 
-    *   Определяется словарь `test_scenario`, содержащий данные о тестовом сценарии для iPhone 13.
+```python
+s = start_supplier(supplier_prefix)
+""" s - на протяжении всего кода означает класс `Supplier` """
+```
 
-3.  **Инициализация продукта**:
+-   **Описание**: Экземпляр класса `Supplier`, инициализированный с префиксом 'aliexpress'.
 
-    *   Создается объект `Product` с использованием данных из `test_scenario` и локаторов из объекта `Supplier`.
+### `test_scenario`
 
-4.  **Работа с веб-драйвером**:
+```python
+test_scenario: dict = {
+    "iPhone 13 & 13 MINI": {
+        "category ID on site": 40000002781737,
+        "brand": "APPLE",
+        "url": "https://hi5group.aliexpress.com/store/group/iPhone-13-13-mini/1053035_40000002781737.html",
+        "active": True,
+        "condition": "new",
+        "presta_categories": {
+            "template": {
+                "apple": "iPhone 13"
+            }
+        },
+        "product combinations": [
+            "bundle",
+            "color"
+        ]
+    }
+}
+```
 
-    *   Получается объект веб-драйвера из `s.driver`.
-    *   Определяются сокращения для часто используемых функций и атрибутов.
+-   **Описание**: Словарь, содержащий информацию о тестовом сценарии для iPhone 13 & 13 MINI, включая ID категории на сайте, бренд, URL, активность, состояние, категории PrestaShop и комбинации продуктов.
 
-5.  **Получение данных о продукте**:
+### `test_products_list`
 
-    *   Открывается URL первого продукта из списка `test_products_list`.
-    *   Извлекается reference (артикул) продукта из URL.
-    *   Извлекается цена продукта с использованием локатора `'price'`.
+```python
+test_products_list: list = ['https://s.click.aliexpress.com/e/_oFLpkfz',
+                            'https://s.click.aliexpress.com/e/_oE5V3d9',
+                            'https://s.click.aliexpress.com/e/_oDnvttN',
+                            'https://s.click.aliexpress.com/e/_olWWQCP',
+                            'https://s.click.aliexpress.com/e/_ok0xeMn']
+```
 
-6.  **Проверка и добавление в PrestaShop**:
+-   **Описание**: Список URL-адресов тестовых продуктов.
 
-    *   Проверяется, есть ли продукт с данным reference в базе данных PrestaShop.
-    *   Если продукта нет в базе данных, он добавляется.
+### `p`
+
+```python
+p = start_product()
+```
+
+-   **Описание**: Экземпляр класса `Product`, инициализированный с использованием функции `start_product()`.
+
+### `d`
+
+```python
+d = s.driver
+```
+
+-   **Описание**: Драйвер веб-браузера, полученный из экземпляра класса `Supplier`.
+
+### `_`
+
+```python
+_ = d.execute_locator
+```
+
+-   **Описание**: Функция для выполнения локаторов веб-элементов с использованием драйвера.
+
+### `f`
+
+```python
+f = p.fields
+```
+
+-   **Описание**: Поля продукта, полученные из экземпляра класса `Product`.
+
+### `l`
+
+```python
+l = p.webelements_locators
+```
+
+-   **Описание**: Локаторы веб-элементов продукта, полученные из экземпляра класса `Product`.

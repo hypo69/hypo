@@ -1,104 +1,139 @@
-# Модуль `MicrosoftDesigner.py`
+# Модуль MicrosoftDesigner
 
 ## Обзор
 
-Модуль `MicrosoftDesigner.py` предназначен для работы с Microsoft Designer для генерации изображений на основе текстовых запросов. Он использует асинхронные запросы и предоставляет функциональность для получения изображений через API Microsoft Designer. Модуль поддерживает различные размеры изображений и использует HAR-файлы или nodriver для получения токена доступа и user-agent.
+Модуль `MicrosoftDesigner` предоставляет асинхронный интерфейс для взаимодействия с Microsoft Designer API для генерации изображений на основе текстовых запросов. Он включает в себя функциональность для получения токена доступа, отправки запросов на создание изображений и обработки ответов.
 
-## Подробней
+## Подробнее
 
-Модуль интегрируется с Microsoft Designer для генерации изображений, используя предоставленный текстовый запрос. Он поддерживает различные модели и размеры изображений, а также использует HAR-файлы или nodriver для получения необходимых учетных данных.
+Этот модуль является частью проекта `hypotez` и предназначен для интеграции с другими компонентами, требующими генерации изображений через Microsoft Designer. Он использует `aiohttp` для асинхронных HTTP-запросов и включает механизмы для повторных попыток и обработки ошибок. Модуль также поддерживает использование прокси-серверов и предоставляет возможность указания размера изображений.
 
 ## Классы
 
 ### `MicrosoftDesigner`
 
-**Описание**: Класс `MicrosoftDesigner` является асинхронным генератором изображений, использующим API Microsoft Designer.
+**Описание**: Класс `MicrosoftDesigner` является асинхронным провайдером для генерации изображений через Microsoft Designer API.
 
-**Принцип работы**:
-Класс наследует `AsyncGeneratorProvider` и `ProviderModelMixin`, что позволяет ему асинхронно генерировать изображения на основе текстовых запросов. Он использует HAR-файлы или nodriver для получения токена доступа и user-agent.
+**Наследует**:
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
+- `ProviderModelMixin`: Предоставляет общие методы и атрибуты для моделей провайдеров.
 
-**Аттрибуты**:
-- `label` (str): Метка провайдера, `"Microsoft Designer"`.
-- `url` (str): URL Microsoft Designer, `"https://designer.microsoft.com"`.
-- `working` (bool): Флаг, указывающий, работает ли провайдер, `True`.
-- `use_nodriver` (bool): Флаг, указывающий, используется ли nodriver, `True`.
-- `needs_auth` (bool): Флаг, указывающий, требуется ли аутентификация, `True`.
-- `default_image_model` (str): Модель изображения по умолчанию, `"dall-e-3"`.
-- `image_models` (List[str]): Список поддерживаемых моделей изображений.
-- `models` (List[str]): Псевдоним для `image_models`.
+**Атрибуты**:
+- `label` (str): Метка провайдера ("Microsoft Designer").
+- `url` (str): URL Microsoft Designer ("https://designer.microsoft.com").
+- `working` (bool): Указывает, что провайдер в рабочем состоянии (`True`).
+- `use_nodriver` (bool): Указывает на использование без драйвера (`True`).
+- `needs_auth` (bool): Указывает на необходимость аутентификации (`True`).
+- `default_image_model` (str): Модель изображения по умолчанию ("dall-e-3").
+- `image_models` (list[str]): Список поддерживаемых моделей изображений, включая размеры ("dall-e-3", "1024x1024", "1024x1792", "1792x1024").
+- `models` (list[str]): Псевдоним `image_models`.
 
 **Методы**:
-- `create_async_generator`: Создает асинхронный генератор для генерации изображений.
-- `generate`: Генерирует изображение на основе текстового запроса.
 
-#### `create_async_generator`
+- `create_async_generator(model: str, messages: Messages, prompt: str = None, proxy: str = None, **kwargs) -> AsyncResult`
+- `generate(prompt: str, image_size: str, proxy: str = None) -> ImageResponse`
+
+### `create_async_generator`
 
 ```python
-@classmethod
-async def create_async_generator(
-    cls,
-    model: str,
-    messages: Messages,
-    prompt: str = None,
-    proxy: str = None,
-    **kwargs
-) -> AsyncResult:
-    """Создает асинхронный генератор для генерации изображений.
+    @classmethod
+    async def create_async_generator(
+        cls,
+        model: str,
+        messages: Messages,
+        prompt: str = None,
+        proxy: str = None,
+        **kwargs
+    ) -> AsyncResult:
+        """Создает асинхронный генератор для генерации изображений.
 
-    Args:
-        cls (type): Ссылка на класс.
-        model (str): Модель изображения для использования.
-        messages (Messages): Список сообщений для формирования запроса.
-        prompt (str, optional): Текстовый запрос. По умолчанию `None`.
-        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
-        **kwargs: Дополнительные аргументы.
+        Args:
+            model (str): Модель для генерации изображений.
+            messages (Messages): Сообщения для генерации изображения.
+            prompt (str, optional): Дополнительный запрос. По умолчанию `None`.
+            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
 
-    Returns:
-        AsyncResult: Асинхронный генератор изображений.
+        Returns:
+            AsyncResult: Асинхронный генератор изображений.
 
-    Как работает функция:
-    1. Определяется размер изображения на основе выбранной модели. Если модель не является моделью по умолчанию и находится в списке поддерживаемых моделей, устанавливается соответствующий размер изображения.
-    2. Вызывается метод `generate` с отформатированным запросом изображения, размером изображения и прокси-сервером (если указан).
-    3. Возвращается асинхронный генератор, который генерирует изображения на основе текстового запроса.
+        Как работает функция:
+        1. Определяется размер изображения на основе выбранной модели.
+        2. Вызывается метод `generate` для генерации изображения.
+        3. Результат возвращается как асинхронный генератор.
 
-    ascii
-    Определение размера изображения -> Вызов метода generate -> Возврат асинхронного генератора
+        Схема работы функции:
 
-    """
-    ...
+        Определение размера изображения
+        │
+        ├───>  Вызов метода generate для генерации изображения
+        │
+        └───>  Возврат результата в виде асинхронного генератора
+
+        """
+        image_size = "1024x1024"
+        if model != cls.default_image_model and model in cls.image_models:
+            image_size = model
+        yield await cls.generate(format_image_prompt(messages, prompt), image_size, proxy)
+```
+**Примеры**:
+```python
+# Пример вызова функции
+async for image in MicrosoftDesigner.create_async_generator(model="dall-e-3", messages=[{"role": "user", "content": "a cat"}], prompt="high quality"):
+    print(image)
 ```
 
-#### `generate`
+### `generate`
 
 ```python
-@classmethod
-async def generate(cls, prompt: str, image_size: str, proxy: str = None) -> ImageResponse:
-    """Генерирует изображение на основе текстового запроса.
+    @classmethod
+    async def generate(cls, prompt: str, image_size: str, proxy: str = None) -> ImageResponse:
+        """Генерирует изображение на основе заданного запроса.
 
-    Args:
-        cls (type): Ссылка на класс.
-        prompt (str): Текстовый запрос.
-        image_size (str): Размер изображения.
-        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        Args:
+            prompt (str): Текстовый запрос для генерации изображения.
+            image_size (str): Размер изображения.
+            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
 
-    Returns:
-        ImageResponse: Объект `ImageResponse`, содержащий URL сгенерированных изображений.
+        Returns:
+            ImageResponse: Ответ, содержащий сгенерированные изображения.
 
-    Raises:
-        NoValidHarFileError: Если не удалось найти access_token в HAR файле.
+        Raises:
+            NoValidHarFileError: Если не найден валидный HAR-файл.
 
-    Как работает функция:
-    1. Пытается прочитать access_token и user_agent из HAR-файла с помощью функции `readHAR`. Если возникает исключение `NoValidHarFileError`, то переходит к следующему шагу.
-    2. Если чтение из HAR-файла не удалось, пытается получить access_token и user_agent с помощью функции `get_access_token_and_user_agent`. Если возникает исключение `MissingRequirementsError`, то генерируется исключение `NoValidHarFileError`.
-    3. Вызывает функцию `create_images` с полученными access_token, user_agent, размером изображения и прокси-сервером (если указан) для создания изображений.
-    4. Возвращает объект `ImageResponse`, содержащий URL сгенерированных изображений.
+        Как работает функция:
+        1. Пытается прочитать токен доступа и User-Agent из HAR-файла.
+        2. Если HAR-файл не найден или не содержит токен доступа, пытается получить их через `get_access_token_and_user_agent`.
+        3. Вызывает `create_images` для генерации изображений.
+        4. Возвращает `ImageResponse` с сгенерированными изображениями.
 
-    ascii
+        Схема работы функции:
 
-    Попытка чтения из HAR-файла -> (Если неуспешно) Попытка получения access_token и user_agent -> Вызов create_images -> Возврат ImageResponse
+        Попытка чтения токена доступа и User-Agent из HAR-файла
+        │
+        ├───> Если HAR-файл не найден ИЛИ не содержит токен доступа
+        │       └───> Попытка получения токена доступа и User-Agent через get_access_token_and_user_agent
+        │
+        └───> Вызов create_images для генерации изображений
+        │
+        └───> Возврат ImageResponse с сгенерированными изображениями
 
-    """
-    ...
+        """
+        try:
+            access_token, user_agent = readHAR("https://designerapp.officeapps.live.com")
+        except NoValidHarFileError as h:
+            debug.log(f"{cls.__name__}: {h}")
+            try:
+                access_token, user_agent = await get_access_token_and_user_agent(cls.url, proxy)
+            except MissingRequirementsError:
+                raise h
+        images = await create_images(prompt, access_token, user_agent, image_size, proxy)
+        return ImageResponse(images, prompt)
+```
+**Примеры**:
+```python
+# Пример вызова функции
+image_response = await MicrosoftDesigner.generate(prompt="a cat", image_size="1024x1024")
+print(image_response)
 ```
 
 ## Функции
@@ -107,10 +142,10 @@ async def generate(cls, prompt: str, image_size: str, proxy: str = None) -> Imag
 
 ```python
 async def create_images(prompt: str, access_token: str, user_agent: str, image_size: str, proxy: str = None, seed: int = None):
-    """Создает изображения на основе текстового запроса, используя API Microsoft Designer.
+    """Создает изображения на основе заданного запроса, используя Microsoft Designer API.
 
     Args:
-        prompt (str): Текстовый запрос.
+        prompt (str): Текстовый запрос для генерации изображения.
         access_token (str): Токен доступа для аутентификации.
         user_agent (str): User-Agent для HTTP-запросов.
         image_size (str): Размер изображения.
@@ -121,80 +156,118 @@ async def create_images(prompt: str, access_token: str, user_agent: str, image_s
         list[str]: Список URL сгенерированных изображений.
 
     Как работает функция:
-    1. Определяет URL для запроса к API Microsoft Designer.
-    2. Если seed не указан, генерируется случайное целое число в диапазоне от 0 до 10000.
-    3. Определяются заголовки HTTP-запроса, включая User-Agent, Authorization и другие необходимые параметры.
-    4. Формируются данные формы (form_data) для отправки в запросе, включая текстовый запрос, размер изображения и другие параметры.
-    5. Создается асинхронная сессия клиента с использованием `aiohttp.ClientSession`.
-    6. Отправляется POST-запрос к API Microsoft Designer с заголовками и данными формы.
-    7. Обрабатывается ответ от API, проверяется статус и извлекается информация о polling_response.
-    8. В цикле выполняется опрос API до тех пор, пока не будут получены URL сгенерированных изображений.
-    9. Извлекаются URL изображений из ответа API и возвращаются в виде списка.
+    1. Формирует URL для запроса к Microsoft Designer API.
+    2. Если `seed` не задан, генерирует случайное число.
+    3. Формирует заголовки запроса, включая `User-Agent`, токен доступа и другие необходимые параметры.
+    4. Создает `FormData` с данными запроса, включая запрос, размер изображения и seed.
+    5. Отправляет POST-запрос к API и получает ответ.
+    6. Извлекает URL изображений из ответа и возвращает их.
 
-    ascii
-
-    Определение URL -> Определение заголовков -> Формирование данных формы -> Отправка POST-запроса -> Обработка ответа -> Цикл опроса API -> Извлечение URL изображений -> Возврат списка URL
-
+    Схема работы функции:
+    Формирование URL запроса
+    │
+    ├───>  Генерация случайного числа, если seed не задан
+    │
+    ├───>  Формирование заголовков запроса
+    │
+    ├───>  Создание FormData с данными запроса
+    │
+    ├───>  Отправка POST-запроса к API
+    │
+    └───>  Извлечение URL изображений из ответа и возврат их
     """
-    ...
+```
+**Примеры**:
+```python
+# Пример вызова функции
+images = await create_images(prompt="a cat", access_token="token", user_agent="agent", image_size="1024x1024")
+print(images)
 ```
 
 ### `readHAR`
 
 ```python
 def readHAR(url: str) -> tuple[str, str]:
-    """Читает HAR-файлы для извлечения токена доступа и user-agent.
+    """Читает HAR-файлы для извлечения токена доступа и User-Agent.
 
     Args:
         url (str): URL для поиска в HAR-файлах.
 
     Returns:
-        tuple[str, str]: Токен доступа и user-agent.
+        tuple[str, str]: Токен доступа и User-Agent.
 
     Raises:
-        NoValidHarFileError: Если не удалось найти токен доступа в HAR-файлах.
+        NoValidHarFileError: Если не найден валидный HAR-файл с токеном доступа.
 
     Как работает функция:
-    1. Проходит по списку HAR-файлов, полученных из `get_har_files()`.
-    2. Для каждого файла пытается загрузить содержимое как JSON. Если файл не является JSON, переходит к следующему файлу.
-    3. Проходит по записям в HAR-файле и ищет запись, URL которой начинается с заданного URL.
-    4. Извлекает заголовки из записи и проверяет наличие токена авторизации и user-agent.
-    5. Если токен авторизации и user-agent найдены, возвращает их.
-    6. Если ни в одном HAR-файле не удалось найти токен доступа, вызывает исключение `NoValidHarFileError`.
+    1. Получает список HAR-файлов.
+    2. Перебирает HAR-файлы и пытается загрузить каждый как JSON.
+    3. Ищет записи, URL которых начинается с заданного.
+    4. Извлекает токен доступа и User-Agent из заголовков запроса.
+    5. Если токен доступа не найден, вызывает исключение `NoValidHarFileError`.
 
-    ascii
+    Схема работы функции:
 
-    Перебор HAR-файлов -> Загрузка содержимого JSON -> Поиск записи с URL -> Извлечение заголовков -> Возврат токена и user-agent -> (Если не найдено) Вызов исключения
-
+    Получение списка HAR-файлов
+    │
+    ├───>  Перебор HAR-файлов
+    │       └───>  Загрузка HAR-файла как JSON
+    │       └───>  Поиск записей, URL которых начинается с заданного
+    │       └───>  Извлечение токена доступа и User-Agent из заголовков запроса
+    │
+    └───>  Если токен доступа не найден, вызов исключения NoValidHarFileError
     """
-    ...
+```
+**Примеры**:
+```python
+# Пример вызова функции
+try:
+    access_token, user_agent = readHAR("https://designerapp.officeapps.live.com")
+    print(f"Access Token: {access_token}")
+    print(f"User Agent: {user_agent}")
+except NoValidHarFileError as ex:
+    print(f"Error: {ex}")
 ```
 
 ### `get_access_token_and_user_agent`
 
 ```python
 async def get_access_token_and_user_agent(url: str, proxy: str = None):
-    """Получает токен доступа и user-agent с использованием nodriver.
+    """Получает токен доступа и User-Agent, используя playwright.
 
     Args:
-        url (str): URL для открытия в браузере.
+        url (str): URL для получения токена доступа и User-Agent.
         proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
 
     Returns:
-        tuple[str, str]: Токен доступа и user-agent.
+        tuple[str, str]: Токен доступа и User-Agent.
 
     Как работает функция:
-    1. Запускает браузер с использованием `get_nodriver()`, указывая прокси-сервер (если указан) и каталог пользовательских данных.
-    2. Открывает заданный URL в браузере.
-    3. Извлекает user-agent из браузера.
-    4. В цикле пытается извлечь токен доступа из локального хранилища браузера.
-    5. Если токен доступа не найден, ожидает 1 секунду и повторяет попытку.
-    6. После извлечения токена доступа закрывает страницу и останавливает браузер.
-    7. Возвращает токен доступа и user-agent.
+    1. Запускает браузер с помощью `get_nodriver`.
+    2. Открывает страницу по заданному URL.
+    3. Получает User-Agent из браузера.
+    4. Ожидает появления токена доступа в localStorage.
+    5. Извлекает токен доступа из localStorage.
+    6. Закрывает страницу и останавливает браузер.
 
-    ascii
-
-    Запуск браузера -> Открытие URL -> Извлечение user-agent -> Цикл извлечения токена -> Закрытие страницы -> Остановка браузера -> Возврат токена и user-agent
-
+    Схема работы функции:
+    Запуск браузера
+    │
+    ├───>  Открытие страницы по заданному URL
+    │
+    ├───>  Получение User-Agent из браузера
+    │
+    ├───>  Ожидание появления токена доступа в localStorage
+    │
+    ├───>  Извлечение токена доступа из localStorage
+    │
+    └───>  Закрытие страницы и остановка браузера
     """
-    ...
+```
+
+**Примеры**:
+```python
+# Пример вызова функции
+access_token, user_agent = await get_access_token_and_user_agent(url="https://designer.microsoft.com")
+print(f"Access Token: {access_token}")
+print(f"User Agent: {user_agent}")

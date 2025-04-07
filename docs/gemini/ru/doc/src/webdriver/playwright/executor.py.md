@@ -1,61 +1,103 @@
-# Модуль `executor.py`
+# Модуль для взаимодействия с веб-элементами с использованием Playwright
+=====================================================================
+
+Модуль `src.webdriver.playwright.executor` предоставляет функциональные возможности для взаимодействия с веб-элементами, используя Playwright, на основе предоставленных локаторов.
+Он обрабатывает разбор локаторов, взаимодействие с элементами и обработку ошибок.
+
+Пример использования
+----------------------
+
+```python
+from src.webdriver.playwright.executor import PlaywrightExecutor
+import asyncio
+
+async def main():
+    executor = PlaywrightExecutor()
+    await executor.start()
+    # <Здесь примеры вызовов функций executor.execute_locator>
+    await executor.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
 
 ## Обзор
 
-Модуль `executor.py` предоставляет функциональность для взаимодействия с веб-элементами с использованием Playwright на основе предоставленных локаторов. Он обрабатывает разбор локаторов, взаимодействие с элементами и обработку ошибок.
+Этот модуль содержит класс `PlaywrightExecutor`, который используется для выполнения команд на основе локаторов в стиле executor, используя Playwright. Он обеспечивает методы для запуска и остановки браузера, выполнения локаторов, получения атрибутов веб-элементов, выполнения событий и навигации по URL-адресам.
 
-## Подробней
+## Подробнее
 
-Этот модуль является частью проекта `hypotez` и предназначен для автоматизации взаимодействия с веб-страницами с использованием библиотеки Playwright. Он предоставляет класс `PlaywrightExecutor`, который инициализирует Playwright, запускает браузер, выполняет действия с веб-элементами на основе локаторов и обрабатывает ошибки. Модуль использует асинхронный подход для обеспечения высокой производительности и эффективного использования ресурсов.
+Этот модуль является частью системы автоматизации тестирования и веб-скрейпинга, где требуется взаимодействие с веб-страницами с использованием Playwright. Он предоставляет удобный интерфейс для выполнения различных действий с веб-элементами на основе их локаторов.
 
 ## Классы
 
 ### `PlaywrightExecutor`
 
-**Описание**: Класс `PlaywrightExecutor` предназначен для выполнения команд на основе локаторов в стиле executor с использованием Playwright.
+**Описание**:
+Класс `PlaywrightExecutor` предназначен для выполнения команд на основе executor-style locator commands с использованием Playwright.
 
 **Принцип работы**:
-Класс инициализируется с указанием типа браузера (например, 'chromium', 'firefox', 'webkit'). Он предоставляет методы для запуска и остановки Playwright, выполнения действий с веб-элементами на основе предоставленных локаторов, получения атрибутов элементов, выполнения событий (например, кликов, ввода текста) и навигации по URL.
+Класс инициализирует Playwright и запускает экземпляр браузера. Он предоставляет методы для выполнения действий с веб-элементами, получения атрибутов, выполнения событий и навигации по URL-адресам.
 
 **Методы**:
 
-- `__init__`: Инициализирует экземпляр класса `PlaywrightExecutor`.
-- `start`: Запускает Playwright и браузер.
-- `stop`: Закрывает браузер и останавливает Playwright.
-- `execute_locator`: Выполняет действия с веб-элементом на основе предоставленного локатора.
-- `evaluate_locator`: Оценивает и обрабатывает атрибуты локатора.
-- `get_attribute_by_locator`: Получает указанный атрибут веб-элемента.
-- `get_webelement_by_locator`: Получает веб-элемент, используя локатор.
-- `get_webelement_as_screenshot`: Делает скриншот найденного веб-элемента.
-- `execute_event`: Выполняет событие, связанное с локатором.
-- `send_message`: Отправляет сообщение веб-элементу.
-- `goto`: Переходит по указанному URL.
+- `__init__(self, browser_type: str = 'chromium', **kwargs)`: Инициализирует экземпляр класса `PlaywrightExecutor`.
+- `start(self) -> None`: Запускает Playwright и запускает экземпляр браузера.
+- `stop(self) -> None`: Закрывает браузер Playwright и останавливает его экземпляр.
+- `execute_locator(self, locator: Union[dict, SimpleNamespace], message: Optional[str] = None, typing_speed: float = 0, timeout: Optional[float] = 0, timeout_for_event: Optional[str] = 'presence_of_element_located') -> Union[str, list, dict, Locator, bool, None]`: Выполняет действия с веб-элементом на основе предоставленного локатора.
+- `evaluate_locator(self, attribute: str | List[str] | dict) -> Optional[str | List[str] | dict]`: Вычисляет и обрабатывает атрибуты локатора.
+- `get_attribute_by_locator(self, locator: dict | SimpleNamespace) -> Optional[str | List[str] | dict]`: Получает указанный атрибут из веб-элемента.
+- `get_webelement_by_locator(self, locator: dict | SimpleNamespace) -> Optional[Locator | List[Locator]]`: Получает веб-элемент, используя локатор.
+- `get_webelement_as_screenshot(self, locator: dict | SimpleNamespace, webelement: Optional[Locator] = None) -> Optional[bytes]`: Делает снимок экрана найденного веб-элемента.
+- `execute_event(self, locator: dict | SimpleNamespace, message: Optional[str] = None, typing_speed: float = 0) -> Union[str, List[str], bytes, List[bytes], bool]`: Выполняет событие, связанное с локатором.
+- `send_message(self, locator: dict | SimpleNamespace, message: str = None, typing_speed: float = 0) -> bool`: Отправляет сообщение веб-элементу.
+- `goto(self, url: str) -> None`: Переходит по указанному URL-адресу.
+
+## Функции
 
 ### `__init__`
 
 ```python
-    def __init__(self, browser_type: str = 'chromium', **kwargs):
-        """
-        Initializes the Playwright executor.
+def __init__(self, browser_type: str = 'chromium', **kwargs):
+    """
+    Initializes the Playwright executor.
 
-        Args:
-            browser_type: Type of browser to launch (e.g., 'chromium', 'firefox', 'webkit').
-        """
+    Args:
+        browser_type: Type of browser to launch (e.g., 'chromium', 'firefox', 'webkit').
+    """
+    self.driver = None
+    self.browser_type = browser_type
+    self.page: Optional[Page] = None
+    self.config: SimpleNamespace = j_loads_ns(
+        Path(gs.path.src / 'webdriver' / 'playwright' / 'playwrid.json')
+    )
 ```
 
-**Назначение**: Инициализирует экземпляр класса `PlaywrightExecutor`.
+**Назначение**:
+Инициализирует экземпляр класса `PlaywrightExecutor`.
 
 **Параметры**:
 - `browser_type` (str): Тип браузера для запуска (например, 'chromium', 'firefox', 'webkit'). По умолчанию 'chromium'.
-- `**kwargs`: Дополнительные именованные аргументы.
+- `**kwargs`: Дополнительные аргументы.
 
 **Как работает функция**:
-1. Инициализирует драйвер в `None`.
-2. Устанавливает тип браузера `browser_type`.
-3. Инициализирует страницу в `None`.
-4. Загружает конфигурацию из файла `playwrid.json` и сохраняет ее в атрибуте `config`.
+1. Инициализирует драйвер `self.driver` значением `None`.
+2. Устанавливает тип браузера `self.browser_type` в соответствии с переданным параметром `browser_type`.
+3. Инициализирует `self.page` значением `None`.
+4. Загружает конфигурацию из файла `playwrid.json` и сохраняет ее в `self.config`.
+
+```
+Инициализация PlaywrightExecutor
+│
+├── Установка типа браузера
+│
+├── Загрузка конфигурации
+│
+└── Конец
+```
 
 **Примеры**:
+
 ```python
 executor = PlaywrightExecutor(browser_type='firefox')
 ```
@@ -63,246 +105,425 @@ executor = PlaywrightExecutor(browser_type='firefox')
 ### `start`
 
 ```python
-    async def start(self) -> None:
-        """
-        Initializes Playwright and launches a browser instance.
-        """
+async def start(self) -> None:
+    """
+    Initializes Playwright and launches a browser instance.
+    """
+    try:
+        self.driver = await async_playwright().start()
+        browser = await getattr(self.driver, self.browser_type).launch(headless=True, args=self.config.options)
+        self.page = await browser.new_page()
+    except Exception as ex:
+        logger.critical('Playwright failed to start browser', ex)
 ```
 
-**Назначение**: Инициализирует Playwright и запускает экземпляр браузера.
+**Назначение**:
+Запускает Playwright и запускает экземпляр браузера.
 
 **Как работает функция**:
-1. Запускает Playwright с использованием `async_playwright().start()`.
-2. Запускает браузер указанного типа (например, chromium, firefox) в режиме headless.
-3. Создает новую страницу в браузере.
-4. Обрабатывает исключения, возникающие при запуске Playwright и браузера, и логирует их с использованием `logger.critical`.
+1. Пытается запустить Playwright и получить драйвер.
+2. Запускает браузер указанного типа (из `self.browser_type`) в режиме headless с использованием опций из конфигурации (`self.config.options`).
+3. Создает новую страницу в браузере и сохраняет ее в `self.page`.
+4. В случае возникновения ошибки логирует критическую ошибку.
 
 ```
-A: Запуск Playwright
-|
--- B: Запуск браузера
-|
-C: Создание страницы
+Запуск Playwright
+│
+├── Запуск Playwright
+│
+├── Запуск браузера
+│
+├── Создание новой страницы
+│
+└── Обработка ошибок
 ```
-
-Где:
-- `A`: Инициализация Playwright с использованием `async_playwright().start()`.
-- `B`: Запуск браузера указанного типа (например, chromium, firefox) в режиме headless.
-- `C`: Создание новой страницы в браузере.
 
 **Примеры**:
+
 ```python
-await executor.start()
+async def main():
+    executor = PlaywrightExecutor()
+    await executor.start()
+    await executor.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 ### `stop`
 
 ```python
-    async def stop(self) -> None:
-        """
-        Closes Playwright browser and stops its instance.
-        """
+async def stop(self) -> None:
+    """
+    Closes Playwright browser and stops its instance.
+    """
+    try:
+        if self.page:
+            await self.page.close()
+        if self.driver:
+            await self.driver.stop()
+            self.driver = None
+        logger.info('Playwright stopped')
+    except Exception as ex:
+        logger.error(f'Playwright failed to close browser: {ex}')
 ```
 
-**Назначение**: Закрывает браузер Playwright и останавливает его экземпляр.
+**Назначение**:
+Закрывает браузер Playwright и останавливает его экземпляр.
 
 **Как работает функция**:
-1. Закрывает текущую страницу, если она существует.
-2. Останавливает драйвер Playwright, если он существует.
-3. Устанавливает драйвер в `None`.
-4. Логирует информацию об остановке Playwright с использованием `logger.info`.
-5. Обрабатывает исключения, возникающие при закрытии браузера, и логирует их с использованием `logger.error`.
+1. Проверяет, существует ли страница (`self.page`) и закрывает ее, если она существует.
+2. Проверяет, существует ли драйвер (`self.driver`) и останавливает его, если он существует.
+3. Устанавливает `self.driver` в `None`.
+4. Логирует информационное сообщение об остановке Playwright.
+5. В случае возникновения ошибки логирует ошибку.
 
 ```
-A: Проверка наличия страницы
-|
--- B: Закрытие страницы
-|
-C: Проверка наличия драйвера
-|
--- D: Остановка драйвера
-|
-E: Установка драйвера в None
+Остановка Playwright
+│
+├── Закрытие страницы
+│
+├── Остановка драйвера
+│
+├── Сброс драйвера
+│
+├── Логирование информации
+│
+└── Обработка ошибок
 ```
-
-Где:
-- `A`: Проверяет, существует ли текущая страница (`self.page`).
-- `B`: Закрывает страницу, если она существует (`await self.page.close()`).
-- `C`: Проверяет, существует ли драйвер (`self.driver`).
-- `D`: Останавливает драйвер, если он существует (`await self.driver.stop()`).
-- `E`: Устанавливает драйвер в `None`.
 
 **Примеры**:
+
 ```python
-await executor.stop()
+async def main():
+    executor = PlaywrightExecutor()
+    await executor.start()
+    await executor.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 ### `execute_locator`
 
 ```python
-    async def execute_locator(
-            self,
-            locator: Union[dict, SimpleNamespace],
-            message: Optional[str] = None,
-            typing_speed: float = 0,
-            timeout: Optional[float] = 0,
-            timeout_for_event: Optional[str] = 'presence_of_element_located',
+async def execute_locator(
+        self,
+        locator: Union[dict, SimpleNamespace],
+        message: Optional[str] = None,
+        typing_speed: float = 0,
+        timeout: Optional[float] = 0,
+        timeout_for_event: Optional[str] = 'presence_of_element_located',
+) -> Union[str, list, dict, Locator, bool, None]:
+    """
+    Executes actions on a web element based on the provided locator.
+
+    Args:
+        locator: Locator data (dict or SimpleNamespace).
+        message: Optional message for events.
+        typing_speed: Optional typing speed for events.
+        timeout: Timeout for locating the element (seconds).
+        timeout_for_event: Wait condition ('presence_of_element_located', 'visibility_of_all_elements_located').
+
+    Returns:
+         The result of the operation, which can be a string, list, dict, Locator, bool, or None.
+    """
+    if isinstance(locator, dict):
+        locator = SimpleNamespace(**locator)
+
+    if not getattr(locator, "attribute", None) and not getattr(locator, "selector", None):
+        logger.debug("Empty locator provided.")
+        return None
+
+    async def _parse_locator(
+            locator: SimpleNamespace, message: Optional[str]
     ) -> Union[str, list, dict, Locator, bool, None]:
-        """
-        Executes actions on a web element based on the provided locator.
+        """Parses and executes locator instructions."""
+        if locator.event and locator.attribute and locator.mandatory is None:
+            logger.debug("Locator with event and attribute but missing mandatory flag. Skipping.")
+            return None
 
-        Args:
-            locator: Locator data (dict or SimpleNamespace).
-            message: Optional message for events.
-            typing_speed: Optional typing speed for events.
-            timeout: Timeout for locating the element (seconds).
-            timeout_for_event: Wait condition ('presence_of_element_located', 'visibility_of_all_elements_located').
+        if isinstance(locator.attribute, str) and isinstance(locator.by, str):
+            try:
+                if locator.attribute:
+                    locator.attribute = await self.evaluate_locator(locator.attribute)
+                    if locator.by == "VALUE":
+                        return locator.attribute
+            except Exception as ex:
+                logger.debug(f"Error getting attribute by \'VALUE\': {locator}, error: {ex}")
+                return None
 
-        Returns:
-             The result of the operation, which can be a string, list, dict, Locator, bool, or None.
-        """
+            if locator.event:
+                return await self.execute_event(locator, message, typing_speed)
+
+            if locator.attribute:
+                return await self.get_attribute_by_locator(locator)
+
+            return await self.get_webelement_by_locator(locator)
+
+        elif isinstance(locator.selector, list) and isinstance(locator.by, list):
+            if locator.sorted == "pairs":
+                elements_pairs = []
+
+                for attribute, by, selector, event, timeout, timeout_for_event, locator_description in zip(
+                    locator.attribute,
+                    locator.by,
+                    locator.selector,
+                    locator.event,
+                    locator.timeout,
+                    locator.timeout_for_event,
+                    locator.locator_description,
+                ):
+                    l = SimpleNamespace(
+                        **{\
+                            "attribute": attribute,
+                            "by": by,
+                            "selector": selector,
+                            "event": event,
+                            "timeout": timeout,
+                            "timeout_for_event": timeout_for_event,
+                            "locator_description": locator_description,
+                        }\
+                    )
+                    elements_pairs.append(await _parse_locator(l, message))
+
+                from itertools import zip_longest
+                zipped_pairs = list(zip_longest(*elements_pairs, fillvalue=None))
+                return zipped_pairs
+
+        else:
+            logger.warning("Locator does not contain \'selector\' and \'by\' lists or invalid \'sorted\' value.")
+
+    return await _parse_locator(locator, message)
 ```
 
-**Назначение**: Выполняет действия с веб-элементом на основе предоставленного локатора.
+**Назначение**:
+Выполняет действия с веб-элементом на основе предоставленного локатора.
 
 **Параметры**:
 - `locator` (Union[dict, SimpleNamespace]): Данные локатора (словарь или SimpleNamespace).
 - `message` (Optional[str]): Необязательное сообщение для событий.
-- `typing_speed` (float): Необязательная скорость ввода текста для событий.
-- `timeout` (float): Время ожидания для поиска элемента (в секундах).
-- `timeout_for_event` (str): Условие ожидания ('presence_of_element_located', 'visibility_of_all_elements_located').
+- `typing_speed` (float): Необязательная скорость набора текста для событий.
+- `timeout` (Optional[float]): Время ожидания для поиска элемента (в секундах).
+- `timeout_for_event` (Optional[str]): Условие ожидания ('presence_of_element_located', 'visibility_of_all_elements_located'). По умолчанию 'presence_of_element_located'.
 
 **Возвращает**:
-- `Union[str, list, dict, Locator, bool, None]`: Результат операции, который может быть строкой, списком, словарем, локатором, булевым значением или None.
+- `Union[str, list, dict, Locator, bool, None]`: Результат операции, который может быть строкой, списком, словарем, Locator, булевым значением или None.
 
 **Как работает функция**:
-1. Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-2. Проверяет, что локатор не пустой, и содержит атрибут и селектор.
+1. Преобразует локатор в `SimpleNamespace`, если он является словарем.
+2. Проверяет, что локатор не пустой (содержит `attribute` или `selector`).
 3. Определяет внутреннюю асинхронную функцию `_parse_locator`, которая выполняет разбор и выполнение инструкций локатора.
-4. Если `locator.event` и `locator.attribute` определены, но отсутствует флаг `locator.mandatory`, пропускает локатор.
-5. В зависимости от типов `locator.attribute`, `locator.by` и значения `locator.sorted` вызывает соответствующие методы для выполнения действий с элементом.
-6. Возвращает результат выполнения.
+4. В `_parse_locator` проверяется наличие атрибутов `event`, `attribute` и `mandatory` и, в зависимости от их значений, выполняет различные действия:
+    - Если `locator.attribute` и `locator.by` являются строками, пытается получить атрибут элемента.
+    - Если `locator.by` равен "VALUE", возвращает значение атрибута.
+    - Если есть событие (`locator.event`), выполняет его с помощью `self.execute_event`.
+    - Если есть атрибут (`locator.attribute`), получает его с помощью `self.get_attribute_by_locator`.
+    - В противном случае получает веб-элемент с помощью `self.get_webelement_by_locator`.
+5. Если `locator.selector` и `locator.by` являются списками, обрабатывает их как пары и выполняет рекурсивный вызов `_parse_locator` для каждой пары.
+6. Если локатор не содержит списков `selector` и `by` или значение `sorted` неверно, выводит предупреждение.
+7. Возвращает результат выполнения `_parse_locator`.
 
 **Внутренние функции**:
 
-#### `_parse_locator`
+- `_parse_locator(locator: SimpleNamespace, message: Optional[str]) -> Union[str, list, dict, Locator, bool, None]`:
+    **Назначение**: Разбирает и выполняет инструкции локатора.
 
-```python
-        async def _parse_locator(
-                locator: SimpleNamespace, message: Optional[str]
-        ) -> Union[str, list, dict, Locator, bool, None]:
-            """Parses and executes locator instructions."""
-```
+    **Параметры**:
+    - `locator` (SimpleNamespace): Данные локатора.
+    - `message` (Optional[str]): Необязательное сообщение для событий.
 
-**Назначение**: Разбирает и выполняет инструкции локатора.
+    **Возвращает**:
+    - `Union[str, list, dict, Locator, bool, None]`: Результат операции.
 
-**Параметры**:
-- `locator` (SimpleNamespace): Данные локатора.
-- `message` (Optional[str]): Необязательное сообщение для событий.
-
-**Возвращает**:
-- `Union[str, list, dict, Locator, bool, None]`: Результат операции, который может быть строкой, списком, словарем, локатором, булевым значением или None.
-
-**Как работает функция**:
-1. Проверяет наличие атрибутов `event`, `attribute` и `mandatory` в локаторе.
-2. Если `locator.attribute` и `locator.by` являются строками, пытается получить атрибут элемента с помощью `evaluate_locator`.
-3. В зависимости от наличия `locator.event` выполняет событие или получает атрибут элемента.
-4. Если `locator.selector` и `locator.by` являются списками, обрабатывает их как пары элементов и выполняет действия для каждой пары.
-5. Возвращает результат выполнения.
+    **Как работает функция**:
+    1. Проверяет наличие атрибутов `event`, `attribute` и `mandatory` и, в зависимости от их значений, выполняет различные действия.
+    2. Если `locator.attribute` и `locator.by` являются строками, пытается получить атрибут элемента.
+    3. Если есть событие (`locator.event`), выполняет его с помощью `self.execute_event`.
+    4. Если есть атрибут (`locator.attribute`), получает его с помощью `self.get_attribute_by_locator`.
+    5. В противном случае получает веб-элемент с помощью `self.get_webelement_by_locator`.
+    6. Если `locator.selector` и `locator.by` являются списками, обрабатывает их как пары и выполняет рекурсивный вызов `_parse_locator` для каждой пары.
+    7. Если локатор не содержит списков `selector` и `by` или значение `sorted` неверно, выводит предупреждение.
 
 ```
-A: Проверка наличия атрибутов event, attribute и mandatory
-|
--- B: Проверка типов locator.attribute и locator.by
-|
--- C: Получение атрибута элемента с помощью evaluate_locator
-|
--- D: Выполнение события или получение атрибута элемента
-|
--- E: Обработка списков locator.selector и locator.by как пар элементов
+Выполнение локатора
+│
+├── Преобразование локатора в SimpleNamespace (если это словарь)
+│
+├── Проверка на пустой локатор
+│
+├── _parse_locator (Внутренняя функция)
+│   │
+│   ├── Проверка атрибутов event, attribute и mandatory
+│   │
+│   ├── Если locator.attribute и locator.by - строки
+│   │   ├── Получение атрибута элемента
+│   │   ├── Если locator.by == "VALUE"
+│   │   │   └── Возврат значения атрибута
+│   │   ├── Если есть событие
+│   │   │   └── Выполнение события
+│   │   ├── Если есть атрибут
+│   │   │   └── Получение атрибута
+│   │   └── Получение веб-элемента
+│   │
+│   ├── Если locator.selector и locator.by - списки
+│   │   └── Обработка как пары и рекурсивный вызов _parse_locator
+│   │
+│   └── Если локатор не содержит списков selector и by или значение sorted неверно
+│       └── Вывод предупреждения
+│
+└── Возврат результата выполнения _parse_locator
 ```
-
-Где:
-- `A`: Проверяет наличие атрибутов `event`, `attribute` и `mandatory` в локаторе.
-- `B`: Проверяет, являются ли `locator.attribute` и `locator.by` строками.
-- `C`: Получает атрибут элемента с помощью `evaluate_locator`.
-- `D`: В зависимости от наличия `locator.event` выполняет событие или получает атрибут элемента.
-- `E`: Если `locator.selector` и `locator.by` являются списками, обрабатывает их как пары элементов и выполняет действия для каждой пары.
 
 **Примеры**:
+
 ```python
-result = await executor.execute_locator(locator_data, message="Some message")
+locator_data = {
+    "by": "XPATH",
+    "selector": "//button[@id='myButton']",
+    "event": "click()"
+}
+result = await executor.execute_locator(locator_data)
+
+locator_data = {
+    "by": "XPATH",
+    "selector": "//input[@id='myInput']",
+    "attribute": "value"
+}
+result = await executor.execute_locator(locator_data)
 ```
 
 ### `evaluate_locator`
 
 ```python
-    async def evaluate_locator(self, attribute: str | List[str] | dict) -> Optional[str | List[str] | dict]:
-        """
-        Evaluates and processes locator attributes.
+async def evaluate_locator(self, attribute: str | List[str] | dict) -> Optional[str | List[str] | dict]:
+    """
+    Evaluates and processes locator attributes.
 
-        Args:
-            attribute: Attribute to evaluate (can be a string, list of strings, or a dictionary).
+    Args:
+        attribute: Attribute to evaluate (can be a string, list of strings, or a dictionary).
 
-        Returns:
-            The evaluated attribute, which can be a string, list of strings, or dictionary.
-        """
+    Returns:
+        The evaluated attribute, which can be a string, list of strings, or dictionary.
+    """
+
+    async def _evaluate(attr: str) -> Optional[str]:
+        return attr
+
+    if isinstance(attribute, list):
+        return await asyncio.gather(*[_evaluate(attr) for attr in attribute])
+    return await _evaluate(str(attribute))
 ```
 
-**Назначение**: Оценивает и обрабатывает атрибуты локатора.
+**Назначение**:
+Вычисляет и обрабатывает атрибуты локатора.
 
 **Параметры**:
-- `attribute` (str | List[str] | dict): Атрибут для оценки (может быть строкой, списком строк или словарем).
+- `attribute` (str | List[str] | dict): Атрибут для вычисления (может быть строкой, списком строк или словарем).
 
 **Возвращает**:
-- `Optional[str | List[str] | dict]`: Оцененный атрибут, который может быть строкой, списком строк или словарем.
+- `Optional[str | List[str] | dict]`: Вычисленный атрибут, который может быть строкой, списком строк или словарем.
 
 **Как работает функция**:
-1. Определяет внутреннюю асинхронную функцию `_evaluate`, которая возвращает атрибут без изменений.
-2. Если атрибут является списком, вызывает `_evaluate` для каждого элемента списка и возвращает результаты в виде списка.
-3. Если атрибут является строкой, вызывает `_evaluate` для атрибута и возвращает результат.
+1. Определяет внутреннюю асинхронную функцию `_evaluate`, которая возвращает переданный атрибут.
+2. Если атрибут является списком, применяет функцию `_evaluate` к каждому элементу списка и возвращает список результатов.
+3. Если атрибут не является списком, преобразует его в строку и возвращает результат `_evaluate`.
 
 **Внутренние функции**:
 
-#### `_evaluate`
+- `_evaluate(attr: str) -> Optional[str]`:
+    **Назначение**: Возвращает переданный атрибут.
 
-```python
-        async def _evaluate(attr: str) -> Optional[str]:
-            return attr
+    **Параметры**:
+    - `attr` (str): Атрибут.
+
+    **Возвращает**:
+    - `Optional[str]`: Атрибут.
+
+```
+Вычисление атрибута локатора
+│
+├── Определение внутренней функции _evaluate
+│
+├── Если атрибут - список
+│   └── Применение _evaluate к каждому элементу списка
+│
+└── Если атрибут не список
+    └── Преобразование атрибута в строку и применение _evaluate
 ```
 
-**Назначение**: Возвращает атрибут без изменений.
-
-**Параметры**:
-- `attr` (str): Атрибут для возврата.
-
-**Возвращает**:
-- `Optional[str]`: Атрибут.
-
-**Как работает функция**:
-1. Возвращает переданный атрибут.
-
 **Примеры**:
+
 ```python
-evaluated_attribute = await executor.evaluate_locator("some_attribute")
+attribute = "id"
+result = await executor.evaluate_locator(attribute)
+
+attribute = ["id", "name"]
+result = await executor.evaluate_locator(attribute)
 ```
 
 ### `get_attribute_by_locator`
 
 ```python
-    async def get_attribute_by_locator(self, locator: dict | SimpleNamespace) -> Optional[str | List[str] | dict]:
-        """
-        Gets the specified attribute from the web element.
+async def get_attribute_by_locator(self, locator: dict | SimpleNamespace) -> Optional[str | List[str] | dict]:
+    """
+    Gets the specified attribute from the web element.
 
-        Args:
-            locator: Locator data (dict or SimpleNamespace).
+    Args:
+        locator: Locator data (dict or SimpleNamespace).
 
-        Returns:
-            Attribute or None.
-        """
+    Returns:
+        Attribute or None.
+    """
+    locator = (
+        locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator, dict) else None
+    )
+    element = await self.get_webelement_by_locator(locator)
+
+    if not element:
+        logger.debug(f"Element not found: {locator=}")
+        return None
+
+    def _parse_dict_string(attr_string: str) -> dict | None:
+        """Parses a string like '{attr1:attr2}' into a dictionary."""
+        try:
+            return {k.strip(): v.strip() for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))}\
+        except ValueError as ex:
+            logger.debug(f"Invalid attribute string format: {attr_string}", ex)
+            return None
+
+    async def _get_attribute(el: Locator, attr: str) -> Optional[str]:
+        """Retrieves a single attribute from a Locator."""
+        try:
+            return await el.get_attribute(attr)
+        except Exception as ex:
+            logger.debug(f"Error getting attribute '{attr}' from element: {ex}")
+            return None
+
+    async def _get_attributes_from_dict(element: Locator, attr_dict: dict) -> dict:
+        """Retrieves multiple attributes based on a dictionary."""
+        result = {}
+        for key, value in attr_dict.items():
+            result[key] = await _get_attribute(element, key)
+            result[value] = await _get_attribute(element, value)
+
+        return result
+
+    if isinstance(locator.attribute, str) and locator.attribute.startswith("{"):
+        attr_dict = _parse_dict_string(locator.attribute)
+        if attr_dict:
+            if isinstance(element, list):
+                return await asyncio.gather(*[_get_attributes_from_dict(el, attr_dict) for el in element])
+            return await _get_attributes_from_dict(element, attr_dict)
+
+    if isinstance(element, list):
+         return await asyncio.gather(*[_get_attribute(el, locator.attribute) for el in element])
+
+    return await _get_attribute(element, locator.attribute)
 ```
 
-**Назначение**: Получает указанный атрибут веб-элемента.
+**Назначение**:
+Получает указанный атрибут из веб-элемента.
 
 **Параметры**:
 - `locator` (dict | SimpleNamespace): Данные локатора (словарь или SimpleNamespace).
@@ -311,119 +532,158 @@ evaluated_attribute = await executor.evaluate_locator("some_attribute")
 - `Optional[str | List[str] | dict]`: Атрибут или None.
 
 **Как работает функция**:
-1. Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-2. Получает веб-элемент с помощью `get_webelement_by_locator`.
-3. Если элемент не найден, возвращает None.
-4. Определяет внутреннюю функцию `_parse_dict_string` для разбора строки в формате словаря.
-5. Определяет внутреннюю асинхронную функцию `_get_attribute` для получения одного атрибута из элемента.
-6. Определяет внутреннюю асинхронную функцию `_get_attributes_from_dict` для получения нескольких атрибутов на основе словаря.
-7. Если `locator.attribute` является строкой и начинается с '{', пытается разобрать ее как словарь и получить соответствующие атрибуты.
+1. Преобразует локатор в `SimpleNamespace`, если он является словарем.
+2. Получает веб-элемент с помощью `self.get_webelement_by_locator`.
+3. Если элемент не найден, логирует отладочное сообщение и возвращает None.
+4. Определяет внутреннюю функцию `_parse_dict_string`, которая преобразует строку типа '{attr1:attr2}' в словарь.
+5. Определяет внутреннюю асинхронную функцию `_get_attribute`, которая получает значение атрибута из элемента.
+6. Определяет внутреннюю асинхронную функцию `_get_attributes_from_dict`, которая получает несколько атрибутов на основе словаря.
+7. Если `locator.attribute` является строкой и начинается с "{", преобразует строку в словарь и получает атрибуты на основе этого словаря.
 8. Если элемент является списком, получает атрибуты для каждого элемента списка.
-9. Возвращает атрибут или None.
+9. В противном случае получает атрибут из элемента.
 
 **Внутренние функции**:
 
-#### `_parse_dict_string`
+- `_parse_dict_string(attr_string: str) -> dict | None`:
+    **Назначение**: Преобразует строку типа '{attr1:attr2}' в словарь.
 
-```python
-        def _parse_dict_string(attr_string: str) -> dict | None:
-            """Parses a string like '{attr1:attr2}' into a dictionary."""
-```
+    **Параметры**:
+    - `attr_string` (str): Строка для преобразования.
 
-**Назначение**: Разбирает строку типа '{attr1:attr2}' в словарь.
+    **Возвращает**:
+    - `dict | None`: Словарь или None в случае ошибки.
 
-**Параметры**:
-- `attr_string` (str): Строка для разбора.
+    **Как работает функция**:
+    1. Пытается преобразовать строку в словарь, разделяя ее по символам ":" и ",".
+    2. В случае ошибки логирует отладочное сообщение и возвращает None.
 
-**Возвращает**:
-- `dict | None`: Словарь или None в случае ошибки.
+- `_get_attribute(el: Locator, attr: str) -> Optional[str]`:
+    **Назначение**: Получает значение атрибута из элемента.
 
-**Как работает функция**:
-1. Пытается разобрать строку в формат словаря, разделяя пары ключ-значение по ':' и элементы по ','.
-2. Возвращает словарь, если разбор успешен, или None в случае ошибки.
+    **Параметры**:
+    - `el` (Locator): Элемент.
+    - `attr` (str): Атрибут.
 
-#### `_get_attribute`
+    **Возвращает**:
+    - `Optional[str]`: Значение атрибута или None в случае ошибки.
 
-```python
-        async def _get_attribute(el: Locator, attr: str) -> Optional[str]:
-            """Retrieves a single attribute from a Locator."""
-```
+    **Как работает функция**:
+    1. Пытается получить значение атрибута из элемента.
+    2. В случае ошибки логирует отладочное сообщение и возвращает None.
 
-**Назначение**: Получает один атрибут из Locator.
+- `_get_attributes_from_dict(element: Locator, attr_dict: dict) -> dict`:
+    **Назначение**: Получает несколько атрибутов на основе словаря.
 
-**Параметры**:
-- `el` (Locator): Locator элемента.
-- `attr` (str): Имя атрибута для получения.
+    **Параметры**:
+    - `element` (Locator): Элемент.
+    - `attr_dict` (dict): Словарь атрибутов.
 
-**Возвращает**:
-- `Optional[str]`: Значение атрибута или None в случае ошибки.
+    **Возвращает**:
+    - `dict`: Словарь значений атрибутов.
 
-**Как работает функция**:
-1. Пытается получить атрибут элемента с использованием `el.get_attribute(attr)`.
-2. Возвращает значение атрибута, если получение успешно, или None в случае ошибки.
-
-#### `_get_attributes_from_dict`
-
-```python
-        async def _get_attributes_from_dict(element: Locator, attr_dict: dict) -> dict:
-            """Retrieves multiple attributes based on a dictionary."""
-```
-
-**Назначение**: Получает несколько атрибутов на основе словаря.
-
-**Параметры**:
-- `element` (Locator): Locator элемента.
-- `attr_dict` (dict): Словарь атрибутов для получения.
-
-**Возвращает**:
-- `dict`: Словарь с полученными атрибутами.
-
-**Как работает функция**:
-1. Итерируется по словарю атрибутов.
-2. Для каждого ключа и значения в словаре пытается получить атрибут элемента с использованием `_get_attribute`.
-3. Сохраняет полученные атрибуты в результирующем словаре.
-4. Возвращает результирующий словарь.
+    **Как работает функция**:
+    1. Получает значение каждого атрибута из словаря и сохраняет его в результирующем словаре.
 
 ```
-A: Преобразование локатора в SimpleNamespace
-|
--- B: Получение веб-элемента с помощью get_webelement_by_locator
-|
--- C: Проверка наличия элемента
-|
--- D: Разбор строки в формате словаря (если необходимо)
-|
--- E: Получение атрибутов элемента
+Получение атрибута по локатору
+│
+├── Преобразование локатора в SimpleNamespace (если это словарь)
+│
+├── Получение веб-элемента
+│
+├── Если элемент не найден
+│   └── Логирование отладочного сообщения и возврат None
+│
+├── _parse_dict_string (Внутренняя функция)
+│   └── Преобразование строки типа '{attr1:attr2}' в словарь
+│
+├── _get_attribute (Внутренняя функция)
+│   └── Получение значения атрибута из элемента
+│
+├── _get_attributes_from_dict (Внутренняя функция)
+│   └── Получение нескольких атрибутов на основе словаря
+│
+├── Если locator.attribute является строкой и начинается с "{"
+│   └── Преобразование строки в словарь и получение атрибутов на основе этого словаря
+│
+├── Если элемент является списком
+│   └── Получение атрибутов для каждого элемента списка
+│
+└── Получение атрибута из элемента
 ```
-
-Где:
-- `A`: Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-- `B`: Получает веб-элемент с помощью `get_webelement_by_locator`.
-- `C`: Проверяет, найден ли элемент.
-- `D`: Если `locator.attribute` является строкой и начинается с '{', пытается разобрать ее как словарь.
-- `E`: Получает атрибуты элемента с использованием `_get_attribute` или `_get_attributes_from_dict`.
 
 **Примеры**:
+
 ```python
-attribute = await executor.get_attribute_by_locator(locator_data)
+locator_data = {
+    "by": "XPATH",
+    "selector": "//input[@id='myInput']",
+    "attribute": "value"
+}
+result = await executor.get_attribute_by_locator(locator_data)
+
+locator_data = {
+    "by": "XPATH",
+    "selector": "//div[@class='myDiv']",
+    "attribute": "{title:aria-label}"
+}
+result = await executor.get_attribute_by_locator(locator_data)
 ```
 
 ### `get_webelement_by_locator`
 
 ```python
-    async def get_webelement_by_locator(self, locator: dict | SimpleNamespace) -> Optional[Locator | List[Locator]]:
-        """
-        Gets a web element using the locator.
+async def get_webelement_by_locator(self, locator: dict | SimpleNamespace) -> Optional[Locator | List[Locator]]:
+    """
+    Gets a web element using the locator.
 
-        Args:
-            locator: Locator data (dict or SimpleNamespace).
+    Args:
+        locator: Locator data (dict or SimpleNamespace).
 
-        Returns:
-            Playwright Locator
-        """
+    Returns:
+        Playwright Locator
+    """
+    locator = (
+        SimpleNamespace(**locator)\
+        if isinstance(locator, dict)\
+        else locator
+    )
+    if not locator:
+        logger.error("Invalid locator provided.")
+        return None
+    try:
+         if locator.by.upper() == "XPATH":
+            elements = self.page.locator(f'xpath={locator.selector}')
+         else:
+             elements = self.page.locator(locator.selector)
+
+         if locator.if_list == 'all':
+            return await elements.all()
+         elif locator.if_list == 'first':
+             return elements.first
+         elif locator.if_list == 'last':
+            return elements.last
+         elif locator.if_list == 'even':
+            list_elements = await elements.all()
+            return [list_elements[i] for i in range(0, len(list_elements), 2)]
+         elif locator.if_list == 'odd':
+            list_elements = await elements.all()
+            return [list_elements[i] for i in range(1, len(list_elements), 2)]
+         elif isinstance(locator.if_list, list):
+             list_elements = await elements.all()
+             return [list_elements[i] for i in locator.if_list]
+         elif isinstance(locator.if_list, int):
+             list_elements = await elements.all()
+             return list_elements[locator.if_list - 1]
+         else:
+             return elements
+    except Exception as ex:
+        logger.error(f'Ошибка поиска элемента: {locator=}', ex)
+        return None
 ```
 
-**Назначение**: Получает веб-элемент, используя локатор.
+**Назначение**:
+Получает веб-элемент, используя локатор.
 
 **Параметры**:
 - `locator` (dict | SimpleNamespace): Данные локатора (словарь или SimpleNamespace).
@@ -432,231 +692,146 @@ attribute = await executor.get_attribute_by_locator(locator_data)
 - `Optional[Locator | List[Locator]]`: Playwright Locator.
 
 **Как работает функция**:
-1. Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
+1. Преобразует локатор в `SimpleNamespace`, если он является словарем.
 2. Проверяет, что локатор не пустой.
-3. В зависимости от значения `locator.by` создает локатор с использованием `self.page.locator`.
-4. В зависимости от значения `locator.if_list` возвращает один элемент или список элементов.
-5. Обрабатывает исключения, возникающие при поиске элемента, и логирует их с использованием `logger.error`.
+3. В зависимости от значения `locator.by` ищет элементы на странице:
+    - Если `locator.by` равен "XPATH", использует XPath для поиска элементов.
+    - В противном случае использует CSS-селектор для поиска элементов.
+4. В зависимости от значения `locator.if_list` возвращает:
+    - Все элементы, если `locator.if_list` равен "all".
+    - Первый элемент, если `locator.if_list` равен "first".
+    - Последний элемент, если `locator.if_list` равен "last".
+    - Четные элементы, если `locator.if_list` равен "even".
+    - Нечетные элементы, если `locator.if_list` равен "odd".
+    - Элементы по индексам из списка, если `locator.if_list` является списком.
+    - Элемент по индексу, если `locator.if_list` является целым числом.
+    - Все найденные элементы, если `locator.if_list` не указан.
+5. В случае ошибки логирует ошибку и возвращает None.
 
 ```
-A: Преобразование локатора в SimpleNamespace
-|
--- B: Проверка наличия локатора
-|
--- C: Создание локатора с использованием self.page.locator
-|
--- D: Возврат элемента или списка элементов в зависимости от locator.if_list
+Получение веб-элемента по локатору
+│
+├── Преобразование локатора в SimpleNamespace (если это словарь)
+│
+├── Проверка на пустой локатор
+│
+├── В зависимости от значения locator.by
+│   ├── Если locator.by == "XPATH"
+│   │   └── Поиск элементов с использованием XPath
+│   └── Поиск элементов с использованием CSS-селектора
+│
+├── В зависимости от значения locator.if_list
+│   ├── Если locator.if_list == "all"
+│   │   └── Возврат всех элементов
+│   ├── Если locator.if_list == "first"
+│   │   └── Возврат первого элемента
+│   ├── Если locator.if_list == "last"
+│   │   └── Возврат последнего элемента
+│   ├── Если locator.if_list == "even"
+│   │   └── Возврат четных элементов
+│   ├── Если locator.if_list == "odd"
+│   │   └── Возврат нечетных элементов
+│   ├── Если locator.if_list - список
+│   │   └── Возврат элементов по индексам из списка
+│   ├── Если locator.if_list - целое число
+│   │   └── Возврат элемента по индексу
+│   └── Возврат всех найденных элементов
+│
+└── Обработка ошибок
 ```
-
-Где:
-- `A`: Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-- `B`: Проверяет, что локатор не пустой.
-- `C`: Создает локатор с использованием `self.page.locator`.
-- `D`: В зависимости от значения `locator.if_list` возвращает один элемент или список элементов.
 
 **Примеры**:
+
 ```python
+locator_data = {
+    "by": "XPATH",
+    "selector": "//button[@id='myButton']"
+}
 element = await executor.get_webelement_by_locator(locator_data)
+
+locator_data = {
+    "by": "CSS",
+    "selector": ".myClass",
+    "if_list": "all"
+}
+elements = await executor.get_webelement_by_locator(locator_data)
 ```
 
 ### `get_webelement_as_screenshot`
 
 ```python
-    async def get_webelement_as_screenshot(self, locator: dict | SimpleNamespace, webelement: Optional[Locator] = None) -> Optional[bytes]:
-        """
-        Takes a screenshot of the located web element.
+async def get_webelement_as_screenshot(self, locator: dict | SimpleNamespace, webelement: Optional[Locator] = None) -> Optional[bytes]:
+    """
+    Takes a screenshot of the located web element.
 
-        Args:
-            locator: Locator data (dict or SimpleNamespace).
-            webelement: The web element Locator.
+    Args:
+        locator: Locator data (dict or SimpleNamespace).
+        webelement: The web element Locator.
 
-        Returns:
-             Screenshot in bytes or None.
-        """
+    Returns:
+         Screenshot in bytes or None.
+    """
+    locator = (
+        locator if isinstance(locator, SimpleNamespace) else SimpleNamespace(**locator) if isinstance(locator, dict) else None
+    )
+
+    if not webelement:
+        webelement = await self.get_webelement_by_locator(locator)
+
+    if not webelement:
+        logger.debug(f"Element not found for screenshot: {locator=}")
+        return None
+    try:
+         return await webelement.screenshot()
+    except Exception as ex:
+        logger.error(f"Failed to take screenshot: {locator=}", ex)
+        return None
 ```
 
-**Назначение**: Делает скриншот найденного веб-элемента.
+**Назначение**:
+Делает снимок экрана найденного веб-элемента.
 
 **Параметры**:
 - `locator` (dict | SimpleNamespace): Данные локатора (словарь или SimpleNamespace).
 - `webelement` (Optional[Locator]): Веб-элемент Locator.
 
 **Возвращает**:
-- `Optional[bytes]`: Скриншот в байтах или None.
+- `Optional[bytes]`: Снимок экрана в байтах или None.
 
 **Как работает функция**:
-1. Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-2. Если `webelement` не передан, получает веб-элемент с помощью `get_webelement_by_locator`.
-3. Если элемент не найден, возвращает None.
-4. Делает скриншот элемента с использованием `webelement.screenshot()`.
-5. Обрабатывает исключения, возникающие при создании скриншота, и логирует их с использованием `logger.error`.
+1. Преобразует локатор в `SimpleNamespace`, если он является словарем.
+2. Если `webelement` не передан, получает его с помощью `self.get_webelement_by_locator`.
+3. Если элемент не найден, логирует отладочное сообщение и возвращает None.
+4. Пытается сделать снимок экрана элемента и возвращает его в байтах.
+5. В случае ошибки логирует ошибку и возвращает None.
 
 ```
-A: Преобразование локатора в SimpleNamespace
-|
--- B: Получение веб-элемента с помощью get_webelement_by_locator (если webelement не передан)
-|
--- C: Проверка наличия элемента
-|
--- D: Создание скриншота элемента
+Получение снимка экрана веб-элемента
+│
+├── Преобразование локатора в SimpleNamespace (если это словарь)
+│
+├── Если webelement не передан
+│   └── Получение веб-элемента
+│
+├── Если элемент не найден
+│   └── Логирование отладочного сообщения и возврат None
+│
+├── Попытка сделать снимок экрана элемента
+│
+└── Обработка ошибок
 ```
-
-Где:
-- `A`: Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-- `B`: Если `webelement` не передан, получает веб-элемент с помощью `get_webelement_by_locator`.
-- `C`: Проверяет, найден ли элемент.
-- `D`: Делает скриншот элемента с использованием `webelement.screenshot()`.
 
 **Примеры**:
+
 ```python
+locator_data = {
+    "by": "XPATH",
+    "selector": "//div[@id='myDiv']"
+}
 screenshot = await executor.get_webelement_as_screenshot(locator_data)
 ```
 
 ### `execute_event`
 
 ```python
-    async def execute_event(self, locator: dict | SimpleNamespace, message: Optional[str] = None, typing_speed: float = 0) -> Union[str, List[str], bytes, List[bytes], bool]:
-        """
-        Executes the event associated with the locator.
-
-         Args:
-            locator: Locator data (dict or SimpleNamespace).
-            message: Optional message for events.
-            typing_speed: Optional typing speed for events.
-
-        Returns:
-           Execution status.
-        """
-```
-
-**Назначение**: Выполняет событие, связанное с локатором.
-
-**Параметры**:
-- `locator` (dict | SimpleNamespace): Данные локатора (словарь или SimpleNamespace).
-- `message` (Optional[str]): Необязательное сообщение для событий.
-- `typing_speed` (float): Необязательная скорость ввода текста для событий.
-
-**Возвращает**:
-- `Union[str, List[str], bytes, List[bytes], bool]`: Статус выполнения.
-
-**Как работает функция**:
-1. Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-2. Получает список событий из `locator.event`, разделяя строку по ';'.
-3. Получает веб-элемент с помощью `get_webelement_by_locator`.
-4. Если элемент не найден, возвращает False.
-5. Итерируется по списку событий и выполняет соответствующие действия.
-6. Поддерживаемые события: "click()", "pause(duration)", "upload_media()", "screenshot()", "clear()", "send_keys(keys)", "type(message)".
-7. Обрабатывает исключения, возникающие при выполнении событий, и логирует их с использованием `logger.error`.
-
-```
-A: Преобразование локатора в SimpleNamespace
-|
--- B: Получение списка событий из locator.event
-|
--- C: Получение веб-элемента с помощью get_webelement_by_locator
-|
--- D: Итерация по списку событий и выполнение соответствующих действий
-```
-
-Где:
-- `A`: Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-- `B`: Получает список событий из `locator.event`, разделяя строку по ';'.
-- `C`: Получает веб-элемент с помощью `get_webelement_by_locator`.
-- `D`: Итерируется по списку событий и выполняет соответствующие действия.
-
-**Примеры**:
-```python
-status = await executor.execute_event(locator_data, message="file_path", typing_speed=0.1)
-```
-
-### `send_message`
-
-```python
-    async def send_message(self, locator: dict | SimpleNamespace, message: str = None, typing_speed: float = 0) -> bool:
-        """Sends a message to a web element.
-
-        Args:
-             locator: Information about the element's location on the page.
-             message: The message to be sent to the web element.
-             typing_speed: Speed of typing the message in seconds.
-
-        Returns:
-            Returns `True` if the message was sent successfully, `False` otherwise.
-        """
-```
-
-**Назначение**: Отправляет сообщение веб-элементу.
-
-**Параметры**:
-- `locator` (dict | SimpleNamespace): Информация о местоположении элемента на странице.
-- `message` (str): Сообщение для отправки веб-элементу.
-- `typing_speed` (float): Скорость ввода сообщения в секундах.
-
-**Возвращает**:
-- `bool`: Возвращает `True`, если сообщение было отправлено успешно, `False` в противном случае.
-
-**Как работает функция**:
-1. Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-2. Получает веб-элемент с помощью `get_webelement_by_locator`.
-3. Если элемент не найден, возвращает False.
-4. Если `typing_speed` указана, вводит сообщение посимвольно с указанной скоростью.
-5. В противном случае вводит сообщение целиком.
-6. Возвращает True, если сообщение было отправлено успешно.
-
-```
-A: Преобразование локатора в SimpleNamespace
-|
--- B: Получение веб-элемента с помощью get_webelement_by_locator
-|
--- C: Проверка наличия элемента
-|
--- D: Ввод сообщения посимвольно или целиком в зависимости от typing_speed
-```
-
-Где:
-- `A`: Преобразует локатор из словаря в SimpleNamespace, если это необходимо.
-- `B`: Получает веб-элемент с помощью `get_webelement_by_locator`.
-- `C`: Проверяет, найден ли элемент.
-- `D`: Вводит сообщение посимвольно или целиком в зависимости от `typing_speed`.
-
-**Примеры**:
-```python
-success = await executor.send_message(locator_data, message="Hello, world!", typing_speed=0.1)
-```
-
-### `goto`
-
-```python
-    async def goto(self, url: str) -> None:
-        """
-        Navigates to a specified URL.
-
-        Args:
-            url: URL to navigate to.
-        """
-```
-
-**Назначение**: Переходит по указанному URL.
-
-**Параметры**:
-- `url` (str): URL для перехода.
-
-**Как работает функция**:
-1. Проверяет, что страница существует.
-2. Переходит по указанному URL с помощью `self.page.goto(url)`.
-3. Обрабатывает исключения, возникающие при переходе по URL, и логирует их с использованием `logger.error`.
-
-```
-A: Проверка наличия страницы
-|
--- B: Переход по указанному URL
-```
-
-Где:
-- `A`: Проверяет, что страница существует (`self.page`).
-- `B`: Переходит по указанному URL с помощью `self.page.goto(url)`.
-
-**Примеры**:
-```python
-await executor.goto("https://example.com")
-```
+async def execute_event(self, locator: dict | SimpleNamespace, message: Optional[str] = None, typing_speed: float = 0) -> Union[str, List[str], bytes, List[bytes], bool]:

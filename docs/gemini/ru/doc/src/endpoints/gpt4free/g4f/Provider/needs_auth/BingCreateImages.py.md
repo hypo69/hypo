@@ -2,219 +2,187 @@
 
 ## Обзор
 
-Модуль `BingCreateImages` предназначен для создания изображений с использованием Microsoft Designer в Bing. Он предоставляет асинхронный генератор для получения изображений на основе текстового запроса. Модуль требует аутентификации через cookie `_U`.
+Модуль `BingCreateImages.py` предназначен для создания изображений с использованием Microsoft Designer через Bing. Он предоставляет асинхронный генератор изображений на основе текстового запроса. Этот модуль входит в подсистему `gpt4free` проекта `hypotez` и интегрируется с другими компонентами для обеспечения функциональности генерации изображений. Расположен в `hypotez/src/endpoints/gpt4free/g4f/Provider/needs_auth/BingCreateImages.py`. Для работы требуется авторизация через cookies.
 
 ## Подробнее
 
-Модуль является частью проекта `hypotez` и интегрируется с другими компонентами для обеспечения функциональности генерации изображений. Он использует асинхронные операции для эффективной работы и предоставляет возможность указания прокси-сервера.
-Расположен в `hypotez/src/endpoints/gpt4free/g4f/Provider/needs_auth/BingCreateImages.py` и служит для создания изображений через API Bing.
-Модуль `BingCreateImages` отвечает за генерацию изображений через сервис Microsoft Designer в Bing, требующий аутентификации. 
-Он использует cookies для аутентификации и предоставляет асинхронные методы для генерации изображений на основе заданного запроса.
+Модуль использует асинхронный подход для генерации изображений, что позволяет эффективно использовать ресурсы и обеспечивать неблокирующую работу. Он интегрируется с другими частями проекта, такими как `get_cookies` для получения cookies, `ImageResponse` для формирования ответа и `create_images` для фактического создания изображений.
 
 ## Классы
 
 ### `BingCreateImages`
 
-**Описание**: Класс для создания изображений с использованием Microsoft Designer в Bing.
+**Описание**: Класс `BingCreateImages` является асинхронным генератором изображений, использующим Microsoft Designer в Bing. Он требует авторизации и предоставляет методы для генерации изображений на основе текстового запроса.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
+- `AsyncGeneratorProvider`: Обеспечивает функциональность асинхронного генератора.
 - `ProviderModelMixin`: Предоставляет общие методы для работы с моделями.
 
 **Аттрибуты**:
 - `label` (str): Метка провайдера ("Microsoft Designer in Bing").
-- `url` (str): URL для Bing Image Creator ("https://www.bing.com/images/create").
-- `working` (bool): Указывает, работает ли провайдер (True).
-- `needs_auth` (bool): Указывает, требуется ли аутентификация (True).
+- `url` (str): URL для создания изображений ("https://www.bing.com/images/create").
+- `working` (bool): Указывает, что провайдер работает (True).
+- `needs_auth` (bool): Указывает, что требуется авторизация (True).
 - `image_models` (List[str]): Список поддерживаемых моделей изображений (["dall-e-3"]).
 - `models` (List[str]): Псевдоним для `image_models`.
-- `cookies` (Optional[Cookies]): Cookie для аутентификации.
-- `proxy` (Optional[str]): Адрес прокси-сервера.
+- `cookies` (Cookies): Cookies для авторизации.
+- `proxy` (str): Прокси-сервер для выполнения запросов.
 
 **Методы**:
-- `__init__(cookies: Cookies = None, proxy: str = None, api_key: str = None) -> None`: Инициализирует экземпляр класса.
-- `create_async_generator(model: str, messages: Messages, prompt: str = None, api_key: str = None, cookies: Cookies = None, proxy: str = None, **kwargs) -> AsyncResult`: Создает асинхронный генератор для получения изображений.
-- `generate(prompt: str) -> ImageResponse`: Асинхронно генерирует изображения на основе запроса.
+- `__init__(self, cookies: Cookies = None, proxy: str = None, api_key: str = None) -> None`: Инициализирует экземпляр класса `BingCreateImages`.
+- `create_async_generator(cls, model: str, messages: Messages, prompt: str = None, api_key: str = None, cookies: Cookies = None, proxy: str = None, **kwargs) -> AsyncResult`: Создает асинхронный генератор изображений.
+- `generate(self, prompt: str) -> ImageResponse`: Асинхронно создает markdown-форматированную строку с изображениями на основе запроса.
 
 ### `__init__`
 
 ```python
-def __init__(self, cookies: Cookies = None, proxy: str = None, api_key: str = None) -> None:
-    """
-    Инициализирует экземпляр класса BingCreateImages.
-
-    Args:
-        cookies (Optional[Cookies]): Cookie для аутентификации.
-        proxy (Optional[str]): Адрес прокси-сервера.
-        api_key (Optional[str]): API ключ для аутентификации.
-    """
+    def __init__(self, cookies: Cookies = None, proxy: str = None, api_key: str = None) -> None:
+        """
+        Инициализирует экземпляр класса `BingCreateImages`.
+        
+        Args:
+            cookies (Cookies, optional): Cookies для авторизации. По умолчанию `None`.
+            proxy (str, optional): Прокси-сервер для выполнения запросов. По умолчанию `None`.
+            api_key (str, optional): API ключ для авторизации через cookie "_U". По умолчанию `None`.
+        """
+        ...
 ```
 
-**Параметры**:
-- `cookies` (Optional[Cookies]): Cookie для аутентификации. Если не указан, будет использован `api_key`.
-- `proxy` (Optional[str]): Адрес прокси-сервера.
-- `api_key` (Optional[str]): API ключ для аутентификации через cookie `_U`.
+**Назначение**:
+Инициализирует экземпляр класса `BingCreateImages`, устанавливая cookies, прокси и API ключ для дальнейшей работы с Bing Designer.
 
-**Как работает**:
-1. Если передан `api_key`, он используется для установки cookie `_U`.
-2. Сохраняет переданные `cookies` и `proxy` в атрибуты экземпляра класса.
+**Параметры**:
+- `cookies` (Cookies, optional): Cookies для авторизации. По умолчанию `None`.
+- `proxy` (str, optional): Прокси-сервер для выполнения запросов. По умолчанию `None`.
+- `api_key` (str, optional): API ключ для авторизации через cookie "_U". По умолчанию `None`.
+
+**Как работает функция**:
+1. Проверяет наличие `api_key`. Если он предоставлен, то создает или обновляет словарь `cookies`, добавляя в него `api_key` под ключом "_U".
+2. Сохраняет переданные значения `cookies` и `proxy` в атрибуты экземпляра класса для дальнейшего использования.
+
+**Примеры**:
+
+```python
+# Пример 1: Инициализация без параметров
+bing_images = BingCreateImages()
+
+# Пример 2: Инициализация с cookies
+cookies = {"_U": "some_api_key"}
+bing_images = BingCreateImages(cookies=cookies)
+
+# Пример 3: Инициализация с прокси и API ключом
+bing_images = BingCreateImages(proxy="http://proxy.example.com", api_key="some_api_key")
+```
 
 ### `create_async_generator`
 
 ```python
-@classmethod
-async def create_async_generator(
-    cls,
-    model: str,
-    messages: Messages,
-    prompt: str = None,
-    api_key: str = None,
-    cookies: Cookies = None,
-    proxy: str = None,
-    **kwargs
-) -> AsyncResult:
-    """
-    Создает асинхронный генератор для получения изображений.
-
-    Args:
-        model (str): Модель для генерации изображений.
-        messages (Messages): Сообщения для формирования запроса.
-        prompt (Optional[str]): Текст запроса.
-        api_key (Optional[str]): API ключ для аутентификации.
-        cookies (Optional[Cookies]): Cookie для аутентификации.
-        proxy (Optional[str]): Адрес прокси-сервера.
-
-    Returns:
-        AsyncResult: Асинхронный генератор, возвращающий изображения.
-    """
+    @classmethod
+    async def create_async_generator(
+        cls,
+        model: str,
+        messages: Messages,
+        prompt: str = None,
+        api_key: str = None,
+        cookies: Cookies = None,
+        proxy: str = None,
+        **kwargs
+    ) -> AsyncResult:
+        """
+        Создает асинхронный генератор изображений.
+        
+        Args:
+            model (str): Модель для генерации изображений.
+            messages (Messages): Список сообщений для формирования запроса.
+            prompt (str, optional): Дополнительный запрос. По умолчанию `None`.
+            api_key (str, optional): API ключ для авторизации. По умолчанию `None`.
+            cookies (Cookies, optional): Cookies для авторизации. По умолчанию `None`.
+            proxy (str, optional): Прокси-сервер для выполнения запросов. По умолчанию `None`.
+            **kwargs: Дополнительные аргументы.
+            
+        Returns:
+            AsyncResult: Асинхронный генератор изображений.
+        """
+        ...
 ```
+
+**Назначение**:
+Создает асинхронный генератор изображений на основе предоставленных параметров, таких как модель, сообщения, API-ключ, cookies и прокси.
 
 **Параметры**:
+- `cls`: Ссылка на класс.
 - `model` (str): Модель для генерации изображений.
 - `messages` (Messages): Список сообщений для формирования запроса.
-- `prompt` (Optional[str]): Текст запроса.
-- `api_key` (Optional[str]): API ключ для аутентификации.
-- `cookies` (Optional[Cookies]): Cookie для аутентификации.
-- `proxy` (Optional[str]): Адрес прокси-сервера.
-- `**kwargs`: Дополнительные параметры.
+- `prompt` (str, optional): Дополнительный запрос. По умолчанию `None`.
+- `api_key` (str, optional): API ключ для авторизации. По умолчанию `None`.
+- `cookies` (Cookies, optional): Cookies для авторизации. По умолчанию `None`.
+- `proxy` (str, optional): Прокси-сервер для выполнения запросов. По умолчанию `None`.
+- `**kwargs`: Дополнительные аргументы.
 
-**Как работает**:
-1. Создает экземпляр класса `BingCreateImages`, передавая `cookies`, `proxy` и `api_key`.
-2. Форматирует запрос изображения с использованием `format_image_prompt`.
-3. Возвращает асинхронный генератор, который при итерации вызывает метод `generate` для получения изображений.
+**Возвращает**:
+- `AsyncResult`: Асинхронный генератор изображений.
 
-**ASCII схема работы функции**:
+**Как работает функция**:
+1. Создает экземпляр класса `BingCreateImages`, передавая cookies, proxy и api_key.
+2. Генерирует изображение, используя метод `generate`, форматируя запрос с помощью `format_image_prompt`.
+3. Возвращает асинхронный генератор, который выдает результат генерации изображения.
 
-```
-Начало
-  ↓
-Создание экземпляра BingCreateImages
-  ↓
-Форматирование запроса format_image_prompt
-  ↓
-Вызов session.generate
-  ↓
-Конец (AsyncResult)
+**Примеры**:
+
+```python
+# Пример создания асинхронного генератора
+model = "dall-e-3"
+messages = [{"role": "user", "content": "Generate an image of a cat"}]
+async_generator = BingCreateImages.create_async_generator(model=model, messages=messages)
 ```
 
 ### `generate`
 
 ```python
-async def generate(self, prompt: str) -> ImageResponse:
-    """
-    Асинхронно создает markdown-форматированную строку с изображениями на основе запроса.
+    async def generate(self, prompt: str) -> ImageResponse:
+        """
+        Асинхронно создает markdown-форматированную строку с изображениями на основе запроса.
 
-    Args:
-        prompt (str): Prompt для генерации изображений.
+        Args:
+            prompt (str): Prompt to generate images.
 
-    Returns:
-        ImageResponse: Объект ImageResponse с изображениями.
+        Returns:
+            ImageResponse: Объект `ImageResponse` с информацией об изображениях.
 
-    Raises:
-        MissingAuthError: Если отсутствует cookie "_U".
-    """
+        Raises:
+            MissingAuthError: Если отсутствует cookie "_U".
+        """
+        ...
 ```
+
+**Назначение**:
+Асинхронно создает markdown-форматированную строку с изображениями на основе предоставленного запроса.
 
 **Параметры**:
-- `prompt` (str): Текст запроса для генерации изображений.
+- `prompt` (str): Запрос для генерации изображений.
 
 **Возвращает**:
-- `ImageResponse`: Объект `ImageResponse`, содержащий сгенерированные изображения и метаданные.
+- `ImageResponse`: Объект `ImageResponse` с информацией об изображениях.
 
 **Вызывает исключения**:
-- `MissingAuthError`: Если отсутствует cookie `_U`, необходимый для аутентификации.
+- `MissingAuthError`: Если отсутствует cookie "_U".
 
-**Как работает**:
-1. Проверяет наличие cookie `_U` в cookies. Если cookie отсутствует, вызывает исключение `MissingAuthError`.
-2. Открывает асинхронную сессию с использованием `create_session`.
-3. Генерирует изображения с использованием `create_images`.
-4. Возвращает объект `ImageResponse`, содержащий сгенерированные изображения и URL для предпросмотра.
+**Как работает функция**:
+1. Пытается получить cookies из домена ".bing.com", если они не были переданы при инициализации класса.
+2. Проверяет наличие cookie "_U", необходимого для авторизации. Если cookie отсутствует, выбрасывается исключение `MissingAuthError`.
+3. Создает асинхронную сессию с использованием `create_session`, передавая cookies и proxy.
+4. Генерирует изображения с помощью `create_images`, передавая асинхронную сессию и запрос.
+5. Формирует объект `ImageResponse` с информацией об изображениях и возвращает его. `ImageResponse` включает в себя URL-ы сгенерированных изображений и запрос, на основе которого они были созданы. Кроме того, в `ImageResponse` добавляется словарь, который определяет параметры предварительного просмотра изображений (ширина и высота).
 
-**ASCII схема работы функции**:
+**Примеры**:
 
-```
-Начало
-  ↓
-Проверка наличия cookie "_U"
-  ↓
-Создание асинхронной сессии create_session
-  ↓
-Генерация изображений create_images
-  ↓
-Создание ImageResponse
-  ↓
-Конец (ImageResponse)
+```python
+# Пример генерации изображения
+prompt = "A futuristic cityscape"
+bing_images = BingCreateImages(cookies={"_U": "some_api_key"})
+image_response = await bing_images.generate(prompt)
 ```
 
 ## Функции
 
 В данном модуле функции отсутствуют.
-
-## Примеры
-
-### Инициализация класса
-
-```python
-from typing import Dict, Optional
-
-# Пример использования с указанием cookies
-cookies: Dict[str, str] = {"_U": "some_cookie_value"}
-bing_images = BingCreateImages(cookies=cookies)
-
-# Пример использования с указанием API ключа
-bing_images = BingCreateImages(api_key="some_api_key")
-
-# Пример использования с указанием прокси
-bing_images = BingCreateImages(proxy="http://proxy_address:port")
-```
-
-### Создание асинхронного генератора
-
-```python
-import asyncio
-from typing import List, Dict
-
-# messages: List[Dict[str, str]]
-# async def main():
-#     generator = await BingCreateImages.create_async_generator(
-#         model="dall-e-3",
-#         messages=[{"role": "user", "content": "Generate an image of a cat."}],
-#         api_key="some_api_key"
-#     )
-#     async for image_response in generator:
-#         print(image_response)
-
-# asyncio.run(main())
-```
-
-### Генерация изображений
-
-```python
-import asyncio
-
-# async def main():
-#     bing_images = BingCreateImages(api_key="some_api_key")
-#     image_response = await bing_images.generate("Generate an image of a futuristic city.")
-#     print(image_response)
-
-# asyncio.run(main())

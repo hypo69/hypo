@@ -1,39 +1,37 @@
-# Модуль Qwen_Qwen_2_5_Max
+# Модуль для работы с Qwen Qwen-2.5-Max
 
 ## Обзор
 
-Модуль `Qwen_Qwen_2_5_Max` предоставляет асинхронный генератор для взаимодействия с моделью Qwen Qwen-2.5-Max через API.
-Он реализует функциональность для стриминговой передачи данных, поддержки системных сообщений и работы с историей сообщений.
+Модуль предоставляет асинхронный генератор для взаимодействия с моделью Qwen Qwen-2.5-Max через API. Он включает в себя функциональность для подготовки запросов, отправки их к API и обработки потоковых ответов.
 
-## Подробней
+## Подробнее
 
-Модуль предназначен для интеграции с API Qwen Qwen-2.5-Max, обеспечивая асинхронный режим генерации текста. Он использует `aiohttp` для выполнения HTTP-запросов и `json` для обработки данных в формате JSON.
-Модуль поддерживает потоковую передачу данных, что позволяет получать ответы по частям, а также поддерживает использование системных сообщений для задания контекста.
+Этот модуль позволяет взаимодействовать с моделью Qwen Qwen-2.5-Max, предоставляя асинхронный генератор для обработки запросов и получения потоковых ответов. Он поддерживает настройку прокси и форматирование запросов.
 
 ## Классы
 
 ### `Qwen_Qwen_2_5_Max`
 
-**Описание**: Класс `Qwen_Qwen_2_5_Max` реализует функциональность для взаимодействия с моделью Qwen Qwen-2.5-Max через API.
+**Описание**: Класс для взаимодействия с моделью Qwen Qwen-2.5-Max.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
-- `ProviderModelMixin`: Предоставляет общие методы для работы с моделями.
+- `AsyncGeneratorProvider`: Предоставляет базовую функциональность для асинхронных генераторов.
+- `ProviderModelMixin`: Предоставляет функциональность для работы с моделями.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера, отображаемая пользователю.
-- `url` (str): URL базового домена API.
-- `api_endpoint` (str): URL API для присоединения к очереди запросов.
-- `working` (bool): Флаг, указывающий на работоспособность провайдера.
-- `supports_stream` (bool): Флаг, указывающий на поддержку стриминговой передачи данных.
-- `supports_system_message` (bool): Флаг, указывающий на поддержку системных сообщений.
-- `supports_message_history` (bool): Флаг, указывающий на поддержку истории сообщений.
-- `default_model` (str): Модель, используемая по умолчанию.
-- `model_aliases` (dict): Словарь псевдонимов моделей.
-- `models` (list): Список поддерживаемых моделей.
+- `label` (str): Метка провайдера ("Qwen Qwen-2.5-Max").
+- `url` (str): URL для API ("https://qwen-qwen2-5-max-demo.hf.space").
+- `api_endpoint` (str): Конечная точка API для отправки запросов ("https://qwen-qwen2-5-max-demo.hf.space/gradio_api/queue/join?").
+- `working` (bool): Указывает, работает ли провайдер (True).
+- `supports_stream` (bool): Указывает, поддерживает ли провайдер потоковую передачу данных (True).
+- `supports_system_message` (bool): Указывает, поддерживает ли провайдер системные сообщения (True).
+- `supports_message_history` (bool): Указывает, поддерживает ли провайдер историю сообщений (False).
+- `default_model` (str): Модель по умолчанию ("qwen-qwen2-5-max").
+- `model_aliases` (dict): Псевдонимы моделей ({"qwen-2-5-max": default_model}).
+- `models` (list): Список моделей (ключи из model_aliases).
 
 **Методы**:
-- `create_async_generator()`: Создает асинхронный генератор для получения ответов от модели.
+- `create_async_generator`: Создает асинхронный генератор для получения ответов от модели.
 
 ## Функции
 
@@ -52,187 +50,448 @@ async def create_async_generator(
     Создает асинхронный генератор для получения ответов от модели Qwen Qwen-2.5-Max.
 
     Args:
-        model (str): Имя используемой модели.
-        messages (Messages): Список сообщений для отправки в модель.
-        proxy (str, optional): Прокси-сервер для использования при подключении. По умолчанию `None`.
+        model (str): Модель для использования.
+        messages (Messages): Список сообщений для отправки.
+        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
         **kwargs: Дополнительные аргументы.
 
     Returns:
-        AsyncResult: Асинхронный генератор, возвращающий текстовые фрагменты от модели.
+        AsyncResult: Асинхронный генератор, возвращающий ответы от модели.
+    """
+    def generate_session_hash() -> str:
+        """
+        Генерирует уникальный hash сессии.
+
+        Returns:
+            str: Уникальный hash сессии.
+        """
+        ...
+
+    # Генерация уникального session hash
+    session_hash = generate_session_hash()
+
+    headers_join = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Referer': f'{cls.url}/?__theme=system',
+        'content-type': 'application/json',
+        'Origin': cls.url,
+        'Connection': 'keep-alive',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+    }
+
+    # Подготовка prompt
+    system_prompt = "\n".join([message["content"] for message in messages if message["role"] == "system"])
+    if not system_prompt:
+        system_prompt = "You are a helpful assistant."
+    messages = [message for message in messages if message["role"] != "system"]
+    prompt = format_prompt(messages)
+
+    payload_join = {
+        "data": [prompt, [], system_prompt],
+        "event_data": None,
+        "fn_index": 0,
+        "trigger_id": 11,
+        "session_hash": session_hash
+    }
+
+    async with aiohttp.ClientSession() as session:
+        # Отправка join request
+        async with session.post(cls.api_endpoint, headers=headers_join, json=payload_join) as response:
+            event_id = (await response.json())['event_id']
+
+        # Подготовка data stream request
+        url_data = f'{cls.url}/gradio_api/queue/data'
+
+        headers_data = {
+            'Accept': 'text/event-stream',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Referer': f'{cls.url}/?__theme=system',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0',
+        }
+
+        params_data = {
+            'session_hash': session_hash
+        }
+
+        # Отправка data stream request
+        async with session.get(url_data, headers=headers_data, params=params_data) as response:
+            full_response = ""
+            final_full_response = ""
+            async for line in response.content:
+                decoded_line = line.decode('utf-8')
+                if decoded_line.startswith('data: '):
+                    try:
+                        json_data = json.loads(decoded_line[6:])
+
+                        # Поиск generation stages
+                        if json_data.get('msg') == 'process_generating':
+                            if 'output' in json_data and 'data' in json_data['output']:
+                                output_data = json_data['output']['data']
+                                if len(output_data) > 1 and len(output_data[1]) > 0:
+                                    for item in output_data[1]:
+                                        if isinstance(item, list) and len(item) > 1:
+                                            fragment = str(item[1])
+                                            # Игнорировать [0, 1] type fragments и дубликаты
+                                            if not re.match(r'^\\[.*\\]$', fragment) and not full_response.endswith(fragment):
+                                                full_response += fragment
+                                                yield fragment
+
+                        # Проверка completion
+                        if json_data.get('msg') == 'process_completed':
+                            # Финальная проверка для получения полного ответа
+                            if 'output' in json_data and 'data' in json_data['output']:
+                                output_data = json_data['output']['data']
+                                if len(output_data) > 1 and len(output_data[1]) > 0:
+                                    final_full_response = output_data[1][0][1]
+                                    
+                                    # Очистка final response
+                                    if final_full_response.startswith(full_response):
+                                        final_full_response = final_full_response[len(full_response):]
+                                    
+                                    # Возврат оставшейся части final response
+                                    if final_full_response:
+                                        yield final_full_response
+                            break
+
+                    except json.JSONDecodeError as ex:
+                        debug.log("Could not parse JSON:", decoded_line)
+
+    """Генерирует асинхронный генератор для получения ответов от модели.
+
+    Args:
+        model (str): Модель для использования.
+        messages (Messages): Список сообщений для отправки.
+        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        **kwargs: Дополнительные аргументы.
+
+    Returns:
+        AsyncResult: Асинхронный генератор, возвращающий ответы от модели.
+    """
+
+    def generate_session_hash() -> str:
+        """Генерирует уникальный hash сессии.
+
+        Returns:
+            str: Уникальный hash сессии.
+        """
+        return str(uuid.uuid4()).replace('-', '')[:8] + str(uuid.uuid4()).replace('-', '')[:4]
+
+    # 1. Генерация уникального session hash
+    session_hash = generate_session_hash()
+
+    headers_join = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Referer': f'{cls.url}/?__theme=system',
+        'content-type': 'application/json',
+        'Origin': cls.url,
+        'Connection': 'keep-alive',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+    }
+
+    # 2. Подготовка prompt
+    system_prompt = "\n".join([message["content"] for message in messages if message["role"] == "system"])
+    if not system_prompt:
+        system_prompt = "You are a helpful assistant."
+    messages = [message for message in messages if message["role"] != "system"]
+    prompt = format_prompt(messages)
+
+    payload_join = {
+        "data": [prompt, [], system_prompt],
+        "event_data": None,
+        "fn_index": 0,
+        "trigger_id": 11,
+        "session_hash": session_hash
+    }
+
+    async with aiohttp.ClientSession() as session:
+        # 3. Отправка join request
+        async with session.post(cls.api_endpoint, headers=headers_join, json=payload_join) as response:
+            event_id = (await response.json())['event_id']
+
+        # 4. Подготовка data stream request
+        url_data = f'{cls.url}/gradio_api/queue/data'
+
+        headers_data = {
+            'Accept': 'text/event-stream',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Referer': f'{cls.url}/?__theme=system',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0',
+        }
+
+        params_data = {
+            'session_hash': session_hash
+        }
+
+        # 5. Отправка data stream request
+        async with session.get(url_data, headers=headers_data, params=params_data) as response:
+            full_response = ""
+            final_full_response = ""
+            async for line in response.content:
+                decoded_line = line.decode('utf-8')
+                if decoded_line.startswith('data: '):
+                    try:
+                        json_data = json.loads(decoded_line[6:])
+
+                        # 6. Поиск generation stages
+                        if json_data.get('msg') == 'process_generating':
+                            if 'output' in json_data and 'data' in json_data['output']:
+                                output_data = json_data['output']['data']
+                                if len(output_data) > 1 and len(output_data[1]) > 0:
+                                    for item in output_data[1]:
+                                        if isinstance(item, list) and len(item) > 1:
+                                            fragment = str(item[1])
+                                            # Игнорировать [0, 1] type fragments и дубликаты
+                                            if not re.match(r'^\\[.*\\]$', fragment) and not full_response.endswith(fragment):
+                                                full_response += fragment
+                                                yield fragment
+
+                        # 7. Проверка completion
+                        if json_data.get('msg') == 'process_completed':
+                            # Финальная проверка для получения полного ответа
+                            if 'output' in json_data and 'data' in json_data['output']:
+                                output_data = json_data['output']['data']
+                                if len(output_data) > 1 and len(output_data[1]) > 0:
+                                    final_full_response = output_data[1][0][1]
+                                    
+                                    # Очистка final response
+                                    if final_full_response.startswith(full_response):
+                                        final_full_response = final_full_response[len(full_response):]
+                                    
+                                    # Возврат оставшейся части final response
+                                    if final_full_response:
+                                        yield final_full_response
+                            break
+
+                    except json.JSONDecodeError as ex:
+                        debug.log("Could not parse JSON:", decoded_line)
+    """
+    Функция `create_async_generator` создает асинхронный генератор для взаимодействия с моделью Qwen Qwen-2.5-Max.
+    Она выполняет несколько шагов, чтобы отправить запрос к API и получить потоковые ответы.
+
+    Args:
+        cls (type): Класс, для которого вызывается метод.
+        model (str): Модель для использования.
+        messages (Messages): Список сообщений для отправки.
+        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        **kwargs: Дополнительные аргументы.
+
+    Returns:
+        AsyncResult: Асинхронный генератор, возвращающий ответы от модели.
 
     Raises:
-        aiohttp.ClientError: При ошибках HTTP-запросов.
-        json.JSONDecodeError: При ошибках декодирования JSON.
+        JSONDecodeError: Если не удается распарсить JSON из ответа API.
+    """
+
+    def generate_session_hash() -> str:
+        """
+        Внутренняя функция `generate_session_hash` генерирует уникальный hash сессии.
+
+        Returns:
+            str: Уникальный hash сессии.
+        """
+        return str(uuid.uuid4()).replace('-', '')[:8] + str(uuid.uuid4()).replace('-', '')[:4]
+
+    # 1. Генерация уникального session hash
+    session_hash = generate_session_hash()
+
+    headers_join = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Referer': f'{cls.url}/?__theme=system',
+        'content-type': 'application/json',
+        'Origin': cls.url,
+        'Connection': 'keep-alive',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+    }
+
+    # 2. Подготовка prompt
+    system_prompt = "\n".join([message["content"] for message in messages if message["role"] == "system"])
+    if not system_prompt:
+        system_prompt = "You are a helpful assistant."
+    messages = [message for message in messages if message["role"] != "system"]
+    prompt = format_prompt(messages)
+
+    payload_join = {
+        "data": [prompt, [], system_prompt],
+        "event_data": None,
+        "fn_index": 0,
+        "trigger_id": 11,
+        "session_hash": session_hash
+    }
+
+    async with aiohttp.ClientSession() as session:
+        # 3. Отправка join request
+        async with session.post(cls.api_endpoint, headers=headers_join, json=payload_join) as response:
+            event_id = (await response.json())['event_id']
+
+        # 4. Подготовка data stream request
+        url_data = f'{cls.url}/gradio_api/queue/data'
+
+        headers_data = {
+            'Accept': 'text/event-stream',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Referer': f'{cls.url}/?__theme=system',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0',
+        }
+
+        params_data = {
+            'session_hash': session_hash
+        }
+
+        # 5. Отправка data stream request
+        async with session.get(url_data, headers=headers_data, params=params_data) as response:
+            full_response = ""
+            final_full_response = ""
+            async for line in response.content:
+                decoded_line = line.decode('utf-8')
+                if decoded_line.startswith('data: '):
+                    try:
+                        json_data = json.loads(decoded_line[6:])
+
+                        # 6. Поиск generation stages
+                        if json_data.get('msg') == 'process_generating':
+                            if 'output' in json_data and 'data' in json_data['output']:
+                                output_data = json_data['output']['data']
+                                if len(output_data) > 1 and len(output_data[1]) > 0:
+                                    for item in output_data[1]:
+                                        if isinstance(item, list) and len(item) > 1:
+                                            fragment = str(item[1])
+                                            # Игнорировать [0, 1] type fragments и дубликаты
+                                            if not re.match(r'^\\[.*\\]$', fragment) and not full_response.endswith(fragment):
+                                                full_response += fragment
+                                                yield fragment
+
+                        # 7. Проверка completion
+                        if json_data.get('msg') == 'process_completed':
+                            # Финальная проверка для получения полного ответа
+                            if 'output' in json_data and 'data' in json_data['output']:
+                                output_data = json_data['output']['data']
+                                if len(output_data) > 1 and len(output_data[1]) > 0:
+                                    final_full_response = output_data[1][0][1]
+                                    
+                                    # Очистка final response
+                                    if final_full_response.startswith(full_response):
+                                        final_full_response = final_full_response[len(full_response):]
+                                    
+                                    # Возврат оставшейся части final response
+                                    if final_full_response:
+                                        yield final_full_response
+                            break
+
+                    except json.JSONDecodeError as ex:
+                        debug.log("Could not parse JSON:", decoded_line)
 
     """
-```
+    Функция `create_async_generator` создает асинхронный генератор для взаимодействия с моделью Qwen Qwen-2.5-Max.
+    Она выполняет несколько шагов, чтобы отправить запрос к API и получить потоковые ответы.
 
-**Назначение**: Функция `create_async_generator` создает асинхронный генератор, который взаимодействует с API Qwen Qwen-2.5-Max для получения ответов от модели.
+    **Как работает функция**:
 
-**Параметры**:
-- `cls` (type): Ссылка на класс `Qwen_Qwen_2_5_Max`.
-- `model` (str): Имя используемой модели.
-- `messages` (Messages): Список сообщений для отправки в модель. Сообщения должны быть в формате, ожидаемом API Qwen.
-- `proxy` (str, optional): Прокси-сервер для использования при подключении. По умолчанию `None`.
-- `**kwargs`: Дополнительные аргументы, которые могут потребоваться для настройки запроса.
+    1.  **Генерация уникального идентификатора сессии**:
+        -   Вызывается внутренняя функция `generate_session_hash` для создания уникального идентификатора сессии (session_hash), который используется для дальнейшего взаимодействия с API.
 
-**Возвращает**:
-- `AsyncResult`: Асинхронный генератор, возвращающий текстовые фрагменты от модели. Генератор выдает части ответа по мере их поступления, что позволяет реализовать потоковую передачу данных.
+    2.  **Подготовка заголовков для запроса на присоединение**:
+        -   Определяются заголовки (`headers_join`), которые будут отправлены с запросом на присоединение к очереди API. Эти заголовки включают информацию о User-Agent, типах принимаемого контента, языке и другие метаданные.
 
-**Вызывает исключения**:
-- `aiohttp.ClientError`: Возникает при ошибках, связанных с HTTP-запросами, например, при недоступности сервера или проблемах с сетью.
-- `json.JSONDecodeError`: Возникает при невозможности декодировать JSON-ответ от сервера, что может указывать на проблемы с форматом данных.
+    3.  **Подготовка данных запроса (payload) на присоединение**:
+        -   Формируется полезная нагрузка (`payload_join`) для запроса на присоединение к API. Она включает в себя:
+            -   `prompt`: Отформатированный запрос, содержащий сообщения от пользователя и системные инструкции.
+            -   `system_prompt`: Системные инструкции, если они есть. Если системные инструкции отсутствуют, устанавливается значение по умолчанию "You are a helpful assistant.".
+            -   `session_hash`: Уникальный идентификатор сессии, сгенерированный ранее.
 
-**Как работает функция**:
+    4.  **Отправка запроса на присоединение и получение идентификатора события**:
+        -   Используется асинхронная сессия `aiohttp.ClientSession` для отправки POST-запроса к API (`cls.api_endpoint`) с заголовками `headers_join` и полезной нагрузкой `payload_join`.
+        -   Полученный ответ преобразуется в JSON, и из него извлекается идентификатор события (`event_id`), который будет использоваться для дальнейших запросов.
 
-1.  **Генерация уникального идентификатора сессии**:
-    -   Функция вызывает внутреннюю функцию `generate_session_hash()`, чтобы сгенерировать уникальный идентификатор сессии. Этот идентификатор используется для связывания всех запросов в рамках одной сессии.
+    5.  **Подготовка заголовков и параметров для запроса потока данных**:
+        -   Определяются URL (`url_data`), заголовки (`headers_data`) и параметры (`params_data`) для запроса потока данных.
+        -   Заголовки включают информацию о типе принимаемого контента (text/event-stream), языке и User-Agent.
+        -   Параметры включают идентификатор сессии (`session_hash`).
 
-2.  **Подготовка заголовков и полезной нагрузки для запроса**:
-    -   Формируются заголовки (`headers_join`) для HTTP-запроса, включая User-Agent, Accept, Referer и другие необходимые параметры. Эти заголовки сообщают серверу информацию о клиенте и типе запроса.
-    -   Из списка сообщений извлекается системное сообщение (`system_prompt`), которое используется для задания контекста модели. Если системное сообщение отсутствует, устанавливается сообщение по умолчанию "You are a helpful assistant.".
-    -   Формируется полезная нагрузка (`payload_join`) для запроса, включающая промпт, системное сообщение, индекс функции и идентификатор сессии. Эта полезная нагрузка содержит данные, которые будут отправлены на сервер для генерации ответа.
+    6.  **Отправка запроса потока данных и обработка ответов**:
+        -   Отправляется GET-запрос к API (`url_data`) с заголовками `headers_data` и параметрами `params_data`.
+        -   Полученный ответ обрабатывается построчно в асинхронном режиме. Каждая строка декодируется из UTF-8.
+        -   Если строка начинается с "data: ", она считается содержащей JSON-данные.
 
-3.  **Отправка запроса на присоединение к очереди**:
-    -   Используется `aiohttp.ClientSession` для выполнения асинхронного HTTP-запроса типа POST к API-endpoint (`cls.api_endpoint`). Запрос отправляется с заголовками (`headers_join`) и полезной нагрузкой (`payload_join`).
-    -   Полученный ответ от сервера преобразуется в JSON, и из него извлекается идентификатор события (`event_id`). Этот идентификатор используется для дальнейшего отслеживания процесса генерации.
+    7.  **Обработка JSON-данных**:
+        -   JSON-данные извлекаются из строки и десериализуются.
+        -   Если сообщение (`msg`) равно "process_generating", извлекаются данные о генерации (`output_data`).
+        -   Извлекаются фрагменты текста из `output_data` и возвращаются как часть асинхронного генератора.
 
-4.  **Подготовка к стриминговой передаче данных**:
-    -   Формируется URL (`url_data`) для запроса на получение данных в режиме реального времени.
-    -   Формируются заголовки (`headers_data`) для запроса на получение данных, включая Accept и User-Agent.
-    -   Формируются параметры (`params_data`) для запроса на получение данных, включающие идентификатор сессии.
+    8.  **Проверка завершения процесса**:
+        -   Если сообщение (`msg`) равно "process_completed", извлекаются финальные данные (`output_data`).
+        -   Извлекается полный текст ответа, очищается от предыдущих фрагментов и возвращается как финальная часть асинхронного генератора.
 
-5.  **Получение данных в режиме реального времени и генерация фрагментов ответа**:
-    -   Выполняется асинхронный HTTP-запрос типа GET к URL (`url_data`) с заголовками (`headers_data`) и параметрами (`params_data`).
-    -   Полученные данные обрабатываются построчно. Каждая строка декодируется из UTF-8.
-    -   Если строка начинается с "data: ", то она содержит JSON-данные, которые пытаются быть декодированы.
-    -   Из JSON-данных извлекаются фрагменты текста, которые соответствуют стадиям генерации ("process_generating").
-    -   Фрагменты текста фильтруются для удаления дубликатов и игнорирования специальных символов.
-    -   Полученные фрагменты текста передаются в генератор (`yield fragment`), что позволяет получать ответ от модели по частям.
+    9.  **Обработка ошибок**:
+        -   Если происходит ошибка при десериализации JSON, она логируется с использованием `debug.log`.
 
-6.  **Обработка завершения генерации**:
-    -   Когда приходит сообщение о завершении процесса ("process_completed"), из JSON-данных извлекается полный ответ.
-    -   Полный ответ очищается от начальных фрагментов, которые уже были переданы ранее.
-    -   Оставшаяся часть полного ответа передается в генератор (`yield final_full_response`).
+    **Внутренние функции**:
+        -   `generate_session_hash()`:
+            -   **Назначение**: Генерация уникального идентификатора сессии.
+            -   **Как работает функция**:
+                -   Генерирует UUID, удаляет дефисы и берет первые 8 и 4 символа.
+                -   Конкатенирует полученные строки и возвращает результат.
 
-7.  **Обработка ошибок**:
-    -   Если при декодировании JSON-данных возникает ошибка (`json.JSONDecodeError`), она логируется с использованием модуля `debug`.
+    **ASCII схема работы функции**:
 
-```
-A: generate_session_hash()
-|
-B: Подготовка HTTP заголовков и Payload
-|
-C: Отправка POST запроса для присоединения к очереди
-|
-D: Получение event_id из ответа
-|
-E: Подготовка URL, HTTP заголовков и параметров для стриминга
-|
-F: Отправка GET запроса для получения стриминговых данных
-|
-G: Обработка каждой строки ответа
-|   |
-|   H: Проверка на начало с "data: "
-|   |
-|   I: Декодирование JSON данных
-|   |
-|   J: Извлечение фрагментов текста при "process_generating"
-|   |
-|   K: Фильтрация и удаление дубликатов
-|   |
-|   L: Выдача фрагмента текста (yield fragment)
-|   |
-|   M: Проверка на сообщение о завершении "process_completed"
-|   |
-|   N: Извлечение полного ответа
-|   |
-|   O: Очистка полного ответа от уже переданных фрагментов
-|   |
-|   P: Выдача оставшейся части полного ответа (yield final_full_response)
-|
-Q: Обработка ошибок JSONDecodeError
-```
+    ```
+    generate_session_hash
+    ↓
+    HeadersJoinPreparation
+    ↓
+    PromptPreparation
+    ↓
+    SendJoinRequest -→ GetEventId
+    ↓
+    HeadersDataPreparation
+    ↓
+    SendDataStreamRequest
+    ↓
+    ProcessGenerating? -→ ExtractFragment -→ ReturnFragment
+    ↓
+    ProcessCompleted?  -→ ExtractFullResponse -→ ReturnFullResponse
+    ↓
+    End
+    ```
 
-**Примеры**:
+    **Примеры**:
 
-Пример 1: Базовый вызов функции с минимальным набором параметров.
+    ```python
+    # Пример 1: Создание асинхронного генератора с минимальными параметрами
+    model = "qwen-2-5-max"
+    messages = [{"role": "user", "content": "Hello, how are you?"}]
+    generator = await Qwen_Qwen_2_5_Max.create_async_generator(model=model, messages=messages)
 
-```python
-model = "qwen-2-5-max"
-messages = [{"role": "user", "content": "Hello, Qwen!"}]
-async def main():
-    async for fragment in Qwen_Qwen_2_5_Max.create_async_generator(model=model, messages=messages):
+    # Пример 2: Создание асинхронного генератора с указанием прокси
+    model = "qwen-2-5-max"
+    messages = [{"role": "user", "content": "Translate 'hello' to French."}]
+    proxy = "http://your_proxy:8080"
+    generator = await Qwen_Qwen_2_5_Max.create_async_generator(model=model, messages=messages, proxy=proxy)
+
+    # Пример 3: Использование асинхронного генератора для получения ответа
+    model = "qwen-2-5-max"
+    messages = [{"role": "user", "content": "Tell me a joke."}]
+    generator = await Qwen_Qwen_2_5_Max.create_async_generator(model=model, messages=messages)
+    async for fragment in generator:
         print(fragment, end="")
-
-import asyncio
-asyncio.run(main())
-```
-
-Пример 2: Вызов функции с использованием прокси-сервера.
-
-```python
-model = "qwen-2-5-max"
-messages = [{"role": "user", "content": "Tell me a joke."}]
-proxy = "http://your_proxy_address:your_proxy_port"
-
-async def main():
-    async for fragment in Qwen_Qwen_2_5_Max.create_async_generator(model=model, messages=messages, proxy=proxy):
-        print(fragment, end="")
-
-import asyncio
-asyncio.run(main())
-```
-
-Пример 3: Вызов функции с системным сообщением для задания контекста.
-
-```python
-model = "qwen-2-5-max"
-messages = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "What is the capital of France?"}
-]
-
-async def main():
-    async for fragment in Qwen_Qwen_2_5_Max.create_async_generator(model=model, messages=messages):
-        print(fragment, end="")
-
-import asyncio
-asyncio.run(main())
-```
-
-### `generate_session_hash`
-
-```python
-def generate_session_hash():
-    """Generate a unique session hash."""
-    return str(uuid.uuid4()).replace('-', '')[:8] + str(uuid.uuid4()).replace('-', '')[:4]
-```
-
-**Назначение**: Функция `generate_session_hash` генерирует уникальный идентификатор сессии.
-
-**Параметры**:
--   Отсутствуют.
-
-**Возвращает**:
--   `str`: Уникальный идентификатор сессии, сгенерированный на основе UUID.
-
-**Вызывает исключения**:
--   Отсутствуют.
-
-**Как работает функция**:
-
-1.  **Генерация UUID**:
-    -   Функция использует модуль `uuid` для генерации UUID (Universally Unique Identifier). UUID - это 128-битный идентификатор, который гарантированно является уникальным в пределах пространства и времени.
-
-2.  **Удаление дефисов**:
-    -   Из сгенерированного UUID удаляются все дефисы (`-`) с использованием метода `replace('-', '')`. Это делается для упрощения идентификатора и соответствия требованиям API.
-
-3.  **Получение подстроки**:
-    -   Из полученной строки берутся первые 8 символов и добавляются к первым 4 символам, генерируя уникальный идентификатор сессии.
-
-**Примеры**:
-
-```python
-session_hash = generate_session_hash()
-print(session_hash)  # Пример вывода: 1a2b3c4d5e6f
+    ```

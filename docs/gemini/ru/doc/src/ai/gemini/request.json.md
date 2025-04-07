@@ -2,91 +2,253 @@
 
 ## Обзор
 
-Файл `request.json` содержит структуру JSON, описывающую формат запроса к AI-модели Gemini. Он определяет различные параметры и настройки, которые могут быть использованы при взаимодействии с моделью, включая содержимое запроса, системные инструкции, инструменты, настройки безопасности, конфигурацию генерации и метки.
+Этот файл (`request.json`) содержит структуру JSON, описывающую формат запроса к API Google Gemini. Он определяет схему для отправки контента, инструкций, инструментов, настроек безопасности, конфигураций генерации и меток. Этот файл служит справочным руководством для разработчиков, чтобы понимать, как формировать запросы к API Gemini.
 
 ## Подробней
 
-Этот файл предоставляет разработчикам подробную информацию о структуре запроса, необходимой для отправки запросов к AI-модели Gemini. Он определяет типы данных и форматы, которые должны быть использованы для каждого параметра, обеспечивая правильное взаимодействие с моделью.
+`request.json` определяет структуру запроса, который отправляется в API Gemini.
+Он включает в себя различные параметры, которые позволяют настраивать поведение модели,
+включая параметры безопасности, конфигурацию генерации и инструменты.
+Правильное понимание структуры JSON необходимо для успешной интеграции с API Gemini.
 
 ## Структура JSON
 
 ### `cachedContent`
 
-- **Описание**: Кэшированное содержимое.
+- **Описание**: Кэшированный контент.
 - **Тип**: `string`
 
 ### `contents`
 
-- **Описание**: Массив объектов, содержащих информацию о содержимом запроса.
+- **Описание**: Массив объектов, содержащих информацию о контенте. Каждый объект включает роль и части контента.
 - **Тип**: `array`
-- **Элементы массива**:
-  - `role` (string): Роль содержимого.
-  - `parts` (array): Массив частей содержимого.
-    - `text` (string): Текстовая часть содержимого.
-    - `inlineData` (object): Встроенные данные.
-      - `mimeType` (string): MIME-тип данных.
-      - `data` (string): Данные в формате строки.
-    - `fileData` (object): Данные файла.
-      - `mimeType` (string): MIME-тип файла.
-      - `fileUri` (string): URI файла.
-    - `videoMetadata` (object): Метаданные видео.
-      - `startOffset` (object): Начальное смещение.
-        - `seconds` (integer): Секунды.
-        - `nanos` (integer): Наносекунды.
-      - `endOffset` (object): Конечное смещение.
-        - `seconds` (integer): Секунды.
-        - `nanos` (integer): Наносекунды.
+
+#### `contents[].role`
+
+- **Описание**: Роль контента (например, `user` или `model`).
+- **Тип**: `string`
+
+#### `contents[].parts`
+
+- **Описание**: Массив частей контента, составляющих сообщение.
+- **Тип**: `array`
+
+##### `contents[].parts[].text`
+
+- **Описание**: Текстовая часть контента.
+- **Тип**: `string`
+
+##### `contents[].parts[].inlineData`
+
+- **Описание**: Встроенные данные (например, изображение).
+- **Тип**: `object`
+
+###### `contents[].parts[].inlineData.mimeType`
+
+- **Описание**: MIME-тип встроенных данных.
+- **Тип**: `string`
+
+###### `contents[].parts[].inlineData.data`
+
+- **Описание**: Данные, закодированные в base64.
+- **Тип**: `string`
+
+##### `contents[].parts[].fileData`
+
+- **Описание**: Данные файла.
+- **Тип**: `object`
+
+###### `contents[].parts[].fileData.mimeType`
+
+- **Описание**: MIME-тип файла.
+- **Тип**: `string`
+
+###### `contents[].parts[].fileData.fileUri`
+
+- **Описание**: URI файла.
+- **Тип**: `string`
+
+##### `contents[].parts[].videoMetadata`
+
+- **Описание**: Метаданные видео.
+- **Тип**: `object`
+
+###### `contents[].parts[].videoMetadata.startOffset`
+
+- **Описание**: Начальное смещение видео.
+- **Тип**: `object`
+
+####### `contents[].parts[].videoMetadata.startOffset.seconds`
+
+- **Описание**: Секунды начального смещения.
+- **Тип**: `integer`
+
+####### `contents[].parts[].videoMetadata.startOffset.nanos`
+
+- **Описание**: Наносекунды начального смещения.
+- **Тип**: `integer`
+
+###### `contents[].parts[].videoMetadata.endOffset`
+
+- **Описание**: Конечное смещение видео.
+- **Тип**: `object`
+
+####### `contents[].parts[].videoMetadata.endOffset.seconds`
+
+- **Описание**: Секунды конечного смещения.
+- **Тип**: `integer`
+
+####### `contents[].parts[].videoMetadata.endOffset.nanos`
+
+- **Описание**: Наносекунды конечного смещения.
+- **Тип**: `integer`
 
 ### `systemInstruction`
 
-- **Описание**: Системные инструкции.
+- **Описание**: Системные инструкции для модели.
 - **Тип**: `object`
-  - `role` (string): Роль инструкции.
-  - `parts` (array): Массив частей инструкции.
-    - `text` (string): Текст инструкции.
+
+#### `systemInstruction.role`
+
+- **Описание**: Роль системных инструкций.
+- **Тип**: `string`
+
+#### `systemInstruction.parts`
+
+- **Описание**: Массив частей системных инструкций.
+- **Тип**: `array`
+
+##### `systemInstruction.parts[].text`
+
+- **Описание**: Текст системных инструкций.
+- **Тип**: `string`
 
 ### `tools`
 
-- **Описание**: Инструменты.
+- **Описание**: Инструменты, которые можно использовать в запросе.
 - **Тип**: `array`
-- **Элементы массива**:
-  - `functionDeclarations` (array): Массив объявлений функций.
-    - `name` (string): Имя функции.
-    - `description` (string): Описание функции.
-    - `parameters` (object): Параметры функции.
+
+#### `tools[].functionDeclarations`
+
+- **Описание**: Объявления функций.
+- **Тип**: `array`
+
+##### `tools[].functionDeclarations[].name`
+
+- **Описание**: Имя функции.
+- **Тип**: `string`
+
+##### `tools[].functionDeclarations[].description`
+
+- **Описание**: Описание функции.
+- **Тип**: `string`
+
+##### `tools[].functionDeclarations[].parameters`
+
+- **Описание**: Параметры функции.
+- **Тип**: `object`
 
 ### `safetySettings`
 
 - **Описание**: Настройки безопасности.
 - **Тип**: `array`
-- **Элементы массива**:
-  - `category` (enum): Категория вреда (`HarmCategory`).
-  - `threshold` (enum): Порог блокировки (`HarmBlockThreshold`).
+
+#### `safetySettings[].category`
+
+- **Описание**: Категория безопасности.
+- **Тип**: `enum` (`HarmCategory`)
+
+#### `safetySettings[].threshold`
+
+- **Описание**: Порог блокировки.
+- **Тип**: `enum` (`HarmBlockThreshold`)
 
 ### `generationConfig`
 
 - **Описание**: Конфигурация генерации.
 - **Тип**: `object`
-  - `temperature` (number): Температура.
-  - `topP` (number): Top P.
-  - `topK` (number): Top K.
-  - `candidateCount` (integer): Количество кандидатов.
-  - `maxOutputTokens` (integer): Максимальное количество выходных токенов.
-  - `presencePenalty` (float): Штраф за присутствие.
-  - `frequencyPenalty` (float): Штраф за частоту.
-  - `stopSequences` (array): Последовательности остановки.
-  - `responseMimeType` (string): MIME-тип ответа.
-  - `responseSchema` (schema): Схема ответа.
-  - `seed` (integer): Зерно.
-  - `responseLogprobs` (boolean): Лог-вероятности ответа.
-  - `logprobs` (integer): Лог-вероятности.
-  - `audioTimestamp` (boolean): Временная метка аудио.
+
+#### `generationConfig.temperature`
+
+- **Описание**: Температура (случайность) генерации.
+- **Тип**: `number`
+
+#### `generationConfig.topP`
+
+- **Описание**: Top-p sampling.
+- **Тип**: `number`
+
+#### `generationConfig.topK`
+
+- **Описание**: Top-k sampling.
+- **Тип**: `number`
+
+#### `generationConfig.candidateCount`
+
+- **Описание**: Количество кандидатов для генерации.
+- **Тип**: `integer`
+
+#### `generationConfig.maxOutputTokens`
+
+- **Описание**: Максимальное количество выходных токенов.
+- **Тип**: `integer`
+
+#### `generationConfig.presencePenalty`
+
+- **Описание**: Штраф за присутствие токена.
+- **Тип**: `float`
+
+#### `generationConfig.frequencyPenalty`
+
+- **Описание**: Штраф за частоту токена.
+- **Тип**: `float`
+
+#### `generationConfig.stopSequences`
+
+- **Описание**: Список стоп-последовательностей.
+- **Тип**: `array`
+
+##### `generationConfig.stopSequences[]`
+
+- **Описание**: Стоп-последовательность.
+- **Тип**: `string`
+
+#### `generationConfig.responseMimeType`
+
+- **Описание**: MIME-тип ответа.
+- **Тип**: `string`
+
+#### `generationConfig.responseSchema`
+
+- **Описание**: Схема ответа.
+- **Тип**: `schema`
+
+#### `generationConfig.seed`
+
+- **Описание**: Зерно для случайной генерации.
+- **Тип**: `integer`
+
+#### `generationConfig.responseLogprobs`
+
+- **Описание**: Включить логи вероятностей ответа.
+- **Тип**: `boolean`
+
+#### `generationConfig.logprobs`
+
+- **Описание**: Количество токенов для логирования вероятностей.
+- **Тип**: `integer`
+
+#### `generationConfig.audioTimestamp`
+
+- **Описание**: Добавлять ли временные метки к аудио.
+- **Тип**: `boolean`
 
 ### `labels`
 
-- **Описание**: Метки.
+- **Описание**: Метки для запроса.
 - **Тип**: `object`
-- **Ключи**: `string`
-- **Значения**: `string`
 
-```
+#### `labels[].string`
+
+- **Описание**: Значение метки.
+- **Тип**: `string`

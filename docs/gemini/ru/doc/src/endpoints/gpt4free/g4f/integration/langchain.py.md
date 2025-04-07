@@ -1,12 +1,12 @@
-# Модуль интеграции g4f с Langchain
+# Модуль интеграции G4F с Langchain
 
 ## Обзор
 
-Модуль предоставляет интеграцию между библиотекой `g4f` (для работы с различными моделями чат-ботов) и фреймворком `Langchain`. Он включает в себя переопределение функции преобразования сообщений и класс `ChatAI`, расширяющий возможности `ChatOpenAI` для использования с `g4f`.
+Модуль предназначен для интеграции библиотеки `g4f` (GPT4Free) с фреймворком `Langchain`. Он содержит класс `ChatAI`, который расширяет возможности `ChatOpenAI` из `langchain_community` для использования моделей, предоставляемых через `g4f`.
 
 ## Подробней
 
-Этот модуль позволяет использовать модели, доступные через `g4f`, в приложениях, построенных на базе `Langchain`. Он содержит функции для преобразования сообщений в формат, совместимый с `g4f`, и класс `ChatAI`, который упрощает использование моделей `g4f` как альтернативы моделям OpenAI в `Langchain`.
+Этот модуль позволяет использовать модели, доступные через `g4f`, в приложениях `Langchain`. Он переопределяет функцию `convert_message_to_dict` для корректной обработки сообщений с вызовами инструментов (tool calls) и предоставляет класс `ChatAI` для удобной интеграции.
 
 ## Функции
 
@@ -14,126 +14,116 @@
 
 ```python
 def new_convert_message_to_dict(message: BaseMessage) -> dict:
-    """
-    Преобразует объект сообщения `BaseMessage` в словарь.
+    """Преобразует объект сообщения `BaseMessage` в словарь для использования в `OpenAI API`.
 
     Args:
-        message (BaseMessage): Объект сообщения для преобразования.
+        message (BaseMessage): Объект сообщения, который необходимо преобразовать.
 
     Returns:
-        dict: Словарь, представляющий сообщение.
+        dict: Словарь, представляющий сообщение в формате, совместимом с `OpenAI API`.
 
-    Как работает функция:
-    1. Проверяет, является ли сообщение экземпляром класса `ChatCompletionMessage`.
-    2. Если сообщение является экземпляром `ChatCompletionMessage`, то извлекает информацию о роли, содержании и вызовах инструментов (`tool_calls`) из сообщения и формирует словарь.
-    3. Если `tool_calls` не `None`, преобразует информацию о каждом вызове инструмента в формат словаря и добавляет в результирующий словарь.
-    4. Если `content` сообщения пустое, устанавливает значение `None` для ключа `content` в словаре.
-    5. Если сообщение не является экземпляром `ChatCompletionMessage`, использует стандартную функцию `convert_message_to_dict` для преобразования сообщения в словарь.
-    6. Возвращает полученный словарь.
+    **Как работает функция**:
 
-    Внутренние функции:
-    - Отсутствуют.
+    1. **Проверка типа сообщения**: Определяет, является ли сообщение экземпляром `ChatCompletionMessage`.
+    2. **Обработка `ChatCompletionMessage`**:
+       - Если сообщение является `ChatCompletionMessage`, создает словарь с ключами `role` и `content` из атрибутов сообщения.
+       - Обрабатывает `tool_calls`, если они присутствуют, преобразуя их в список словарей.
+       - Если `content` пустой, устанавливает его в `None`.
+    3. **Обработка других типов сообщений**: Если сообщение не является `ChatCompletionMessage`, использует стандартную функцию `convert_message_to_dict` из `langchain_community`.
+    4. **Возврат результата**: Возвращает полученный словарь.
 
-    ASCII flowchart:
-    Проверка типа сообщения --> Извлечение информации из сообщения --> Преобразование tool_calls (если есть) --> Возврат словаря
-
+    ```
+    A: Проверка типа сообщения
+    |
+    -- B: Обработка ChatCompletionMessage
+    |  |
+    |  -- C: Преобразование tool_calls
+    |  |
+    |  -- D: Установка content в None, если пустой
+    |
+    -- E: Обработка других типов сообщений (через convert_message_to_dict)
+    |
+    F: Возврат словаря
+    ```
     Примеры:
-    >>> from langchain_core.messages import BaseMessage
-    >>> from g4f.client.stubs import ChatCompletionMessage, ToolCall
-    >>> message = ChatCompletionMessage(role='assistant', content='Привет', tool_calls=[ToolCall(id='123', type='function', function={'name': 'test', 'arguments': 'args'})])
-    >>> new_convert_message_to_dict(message)
-    {'role': 'assistant', 'content': 'Привет', 'tool_calls': [{'id': '123', 'type': 'function', 'function': {'name': 'test', 'arguments': 'args'}}]}
+
+    ```python
+    from langchain_core.messages import BaseMessage, HumanMessage
+    from g4f.client.stubs import ChatCompletionMessage
+    from typing import List
+    class ToolCall:
+        def __init__(self, id: str, type: str, function: dict):
+            self.id = id
+            self.type = type
+            self.function = function
+
+    # Пример с ChatCompletionMessage и tool_calls
+    tool_calls = [ToolCall(id='123', type='function', function={'name': 'test', 'arguments': 'args'})]
+    message = ChatCompletionMessage(role='assistant', content='test content', tool_calls=tool_calls)
+    result = new_convert_message_to_dict(message)
+    assert result == {'role': 'assistant', 'content': 'test content', 'tool_calls': [{'id': '123', 'type': 'function', 'function': {'name': 'test', 'arguments': 'args'}}]}
+    
+    # Пример с HumanMessage
+    message = HumanMessage(content='test content')
+    result = new_convert_message_to_dict(message)
+    assert result == {'content': 'test content', 'role': 'human'}
     """
-    ...
 ```
-
-### Внутренние функции:
- Отсутствуют.
-
-#### `openai.convert_message_to_dict = new_convert_message_to_dict`
-
-Заменяет стандартную функцию `convert_message_to_dict` в модуле `openai` на новую функцию `new_convert_message_to_dict`.
 
 ## Классы
 
 ### `ChatAI`
 
-```python
-class ChatAI(ChatOpenAI):
-    """
-    Класс для взаимодействия с моделями чат-ботов через g4f.
-
-    Inherits:
-        ChatOpenAI: Наследует от класса ChatOpenAI из langchain_community.
-
-    Attributes:
-        model_name (str): Название модели, по умолчанию "gpt-4o".
-
-    Methods:
-        validate_environment(cls, values: dict) -> dict: Проверяет и подготавливает окружение для работы с g4f.
-    """
-    ...
-```
-
 **Описание**:
-Класс `ChatAI` расширяет класс `ChatOpenAI` из библиотеки `langchain_community` для обеспечения совместимости с моделями, предоставляемыми через `g4f`.
+Класс `ChatAI` расширяет `ChatOpenAI` из `langchain_community` для интеграции с моделями, предоставляемыми через `g4f`.
 
-**Принцип работы**:
-Класс `ChatAI` позволяет использовать модели, доступные через `g4f`, в качестве альтернативы моделям OpenAI в приложениях, построенных на базе `Langchain`. Он включает метод `validate_environment`, который устанавливает параметры клиента `g4f` для выполнения запросов к моделям.
+**Наследует**:
+- `ChatOpenAI`
 
-#### Методы:
+**Атрибуты**:
+- `model_name` (str): Имя модели, используемой для чата. По умолчанию "gpt-4o".
 
-- `validate_environment`
+**Методы**:
+- `validate_environment(cls, values: dict) -> dict`: Проверяет и настраивает окружение для использования `g4f` клиента.
 
-```python
-@classmethod
-def validate_environment(cls, values: dict) -> dict:
-    """
-    Проверяет и подготавливает окружение для работы с g4f.
-
-    Args:
-        values (dict): Словарь с параметрами конфигурации.
-
-    Returns:
-        dict: Обновленный словарь с параметрами конфигурации.
-
-    Как работает функция:
-    1. Извлекает параметры `api_key` и `provider` из словаря `values`.
-    2. Создает экземпляры `Client` и `AsyncClient` из библиотеки `g4f` с переданными параметрами.
-    3. Устанавливает атрибуты `client` и `async_client` в словаре `values`, используя созданные экземпляры `Client` и `AsyncClient`.
-    4. Возвращает обновленный словарь `values`.
-
-    Внутренние функции:
-    - Отсутствуют.
-
-    ASCII flowchart:
-    Извлечение параметров --> Создание экземпляров Client и AsyncClient --> Установка атрибутов в словаре --> Возврат словаря
-
-    Примеры:
-    >>> values = {'api_key': 'test_key', 'model_kwargs': {'provider': 'test_provider'}}
-    >>> ChatAI.validate_environment(values)
-    {'api_key': 'test_key', 'model_kwargs': {'provider': 'test_provider'}, 'client': <g4f.client.chat.completions object at ...>, 'async_client': <g4f.client.chat.completions object at ...>}
-    """
-    ...
-```
-
-- `model_name`
+### `validate_environment`
 
 ```python
-model_name: str = Field(default="gpt-4o", alias="model")
-```
+    @classmethod
+    def validate_environment(cls, values: dict) -> dict:
+        """Проверяет и настраивает окружение для использования `g4f` клиента.
 
-**Параметры**:
-- `values` (dict): Словарь, содержащий параметры конфигурации.
+        Args:
+            values (dict): Словарь с параметрами для настройки окружения.
 
-**Как работает функция**:
-1. Извлекает `api_key` и `provider` из входного словаря `values`.
-2. Создает экземпляры `Client` и `AsyncClient` из библиотеки `g4f` с использованием извлеченных параметров.
-3. Устанавливает атрибуты `client` и `async_client` в словаре `values`, присваивая им созданные экземпляры `Client` и `AsyncClient`.
-4. Возвращает обновленный словарь `values`.
+        Returns:
+            dict: Обновленный словарь с настроенным `g4f` клиентом.
 
-**Примеры**:
-```python
-values = {"api_key": "test_key", "model_kwargs": {"provider": "test_provider"}}
-result = ChatAI.validate_environment(values)
-print(result)
+        **Как работает функция**:
+
+        1. **Извлечение параметров клиента**: Извлекает параметры `api_key` и `provider` из входного словаря `values`.
+        2. **Создание экземпляров клиентов**: Создает синхронный и асинхронный экземпляры `g4f` клиента с использованием извлеченных параметров.
+        3. **Обновление словаря значений**: Добавляет созданные клиенты в словарь `values` под ключами `client` и `async_client`.
+        4. **Возврат результата**: Возвращает обновленный словарь `values`.
+
+        ```
+        A: Извлечение параметров клиента (api_key, provider)
+        |
+        -- B: Создание синхронного клиента
+        |
+        -- C: Создание асинхронного клиента
+        |
+        D: Обновление словаря values (добавление client и async_client)
+        |
+        E: Возврат обновленного словаря
+        ```
+
+        **Примеры**:
+
+        ```python
+        values = {"api_key": "test_key", "model_kwargs": {"provider": "test_provider"}}
+        updated_values = ChatAI.validate_environment(values)
+        assert "client" in updated_values
+        assert "async_client" in updated_values
+        ```
+        """

@@ -2,29 +2,11 @@
 
 ## Обзор
 
-Модуль предоставляет класс `DDG`, который является асинхронным провайдером для взаимодействия с DuckDuckGo AI Chat. Он поддерживает потоковую передачу сообщений, системные сообщения и историю сообщений. Модуль включает в себя механизмы для обработки ошибок, таких как ограничение скорости запросов и тайм-ауты.
+Модуль `DDG.py` предоставляет асинхронный интерфейс для взаимодействия с DuckDuckGo AI Chat. Он включает в себя функциональность для получения ответов от различных AI-моделей, таких как `gpt-4o-mini`, `meta-llama/Llama-3.3-70B-Instruct-Turbo`, `claude-3-haiku-20240307`, `o3-mini`, `mistralai/Mistral-Small-24B-Instruct-2501`. Модуль обеспечивает поддержку стриминга ответов, управление cookies, обработку ошибок и лимитов запросов.
 
-## Подробней
+## Подробнее
 
-Модуль `DDG.py` предназначен для интеграции с DuckDuckGo AI Chat через асинхронные запросы. Он обеспечивает функциональность для получения ответов от AI-моделей DuckDuckGo, обрабатывает куки, заголовки и параметры запросов. Модуль также реализует логику повторных попыток при сбоях и ограничениях скорости, обеспечивая надежное взаимодействие с сервисом.
-
-## Содержание
-
-1.  [Классы](#Классы)
-    *   [DuckDuckGoSearchException](#DuckDuckGoSearchException)
-    *   [Conversation](#Conversation)
-    *   [DDG](#DDG)
-2.  [Функции](#Функции)
-    *   [sha256_base64](#sha256_base64)
-    *   [parse_dom_fingerprint](#parse_dom_fingerprint)
-    *   [parse_server_hashes](#parse_server_hashes)
-    *   [build_x_vqd_hash_1](#build_x_vqd_hash_1)
-    *   [validate_model](#validate_model)
-    *   [sleep](#sleep)
-    *   [get_default_cookies](#get_default_cookies)
-    *   [fetch_fe_version](#fetch_fe_version)
-    *   [fetch_vqd_and_hash](#fetch_vqd_and_hash)
-    *   [create_async_generator](#create_async_generator)
+Модуль предназначен для интеграции с проектами, требующими взаимодействия с AI-моделями через DuckDuckGo AI Chat. Он обрабатывает установление соединения, аутентификацию, отправку запросов и получение ответов в асинхронном режиме. Модуль также содержит механизмы для обработки ошибок, таких как превышение лимита запросов и тайм-ауты, а также для повторных попыток отправки запросов.
 
 ## Классы
 
@@ -32,79 +14,62 @@
 
 **Описание**: Базовый класс исключений для модуля `duckduckgo_search`.
 
-**Наследует**:
-*   `Exception`
-
-**Атрибуты**:
-*   отсутствуют
-
-**Методы**:
-*   отсутствуют
-
 ### `Conversation`
 
-**Описание**: Класс для хранения состояния разговора с DuckDuckGo AI Chat.
-
-**Наследует**:
-*   `JsonConversation`
+**Описание**: Класс для хранения состояния разговора с AI-моделью.
+**Inherits**:
+- `JsonConversation` - предоставляет функциональность для сериализации и десериализации состояния разговора в JSON.
 
 **Атрибуты**:
 
-*   `vqd` (str): VQD токен для сессии.
-*   `vqd_hash_1` (str): Хэш VQD токена.
-*   `message_history` (Messages): История сообщений в формате списка словарей.
-*   `cookies` (dict): Куки для сессии.
-*   `fe_version` (str): Версия FE.
+- `vqd` (str): Токен VQD (Visitor Query Data), необходимый для аутентификации запросов.
+- `vqd_hash_1` (str): Хэш VQD, используемый для проверки подлинности запросов.
+- `message_history` (Messages): Список сообщений в истории разговора.
+- `cookies` (dict): Словарь cookies, используемых для аутентификации запросов.
+- `fe_version` (str): Версия front-end, используемая для запросов.
+- `model` (str): Модель, используемая в разговоре.
 
 **Методы**:
 
-*   `__init__(self, model: str)`:
-    *   **Назначение**: Инициализирует объект разговора с указанной моделью.
-    *   **Параметры**:
-        *   `model` (str): Название модели для разговора.
-    *   **Возвращает**:
-        *   None
-    *   **Вызывает исключения**:
-        *   отсутствуют
+- `__init__(self, model: str)`: Инициализирует объект `Conversation` с указанной моделью.
 
 ### `DDG`
 
-**Описание**: Класс, предоставляющий асинхронный интерфейс для взаимодействия с DuckDuckGo AI Chat.
-
-**Наследует**:
-
-*   `AsyncGeneratorProvider`, `ProviderModelMixin`
+**Описание**: Класс, предоставляющий функциональность для взаимодействия с DuckDuckGo AI Chat.
+**Inherits**:
+- `AsyncGeneratorProvider` - обеспечивает асинхронную генерацию ответов.
+- `ProviderModelMixin` - предоставляет методы для работы с моделями.
 
 **Атрибуты**:
 
-*   `label` (str): Метка провайдера ("DuckDuckGo AI Chat").
-*   `url` (str): URL главной страницы DuckDuckGo AI Chat ("https://duckduckgo.com/aichat").
-*   `api_endpoint` (str): URL API для чата ("https://duckduckgo.com/duckchat/v1/chat").
-*   `status_url` (str): URL для получения статуса сессии ("https://duckduckgo.com/duckchat/v1/status").
-*   `working` (bool): Флаг, указывающий, работает ли провайдер (True).
-*   `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер потоковую передачу (True).
-*   `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения (True).
-*   `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений (True).
-*   `default_model` (str): Модель по умолчанию ("gpt-4o-mini").
-*   `models` (list[str]): Список поддерживаемых моделей.
-*   `model_aliases` (dict[str, str]): Словарь псевдонимов моделей.
-*   `last_request_time` (float): Время последнего запроса.
-*   `max_retries` (int): Максимальное количество повторных попыток при сбое запроса.
-*   `base_delay` (int): Базовая задержка между повторными попытками (в секундах).
-*   `_chat_xfe` (str):  версия `x-fe-version` для запроса
+- `label` (str): Метка провайдера ("DuckDuckGo AI Chat").
+- `url` (str): URL главной страницы DuckDuckGo AI Chat ("https://duckduckgo.com/aichat").
+- `api_endpoint` (str): URL API для отправки запросов ("https://duckduckgo.com/duckchat/v1/chat").
+- `status_url` (str): URL для получения статуса ("https://duckduckgo.com/duckchat/v1/status").
+- `working` (bool): Флаг, указывающий, работает ли провайдер (True).
+- `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер стриминг ответов (True).
+- `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения (True).
+- `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений (True).
+- `default_model` (str): Модель, используемая по умолчанию ("gpt-4o-mini").
+- `models` (list): Список поддерживаемых моделей.
+- `model_aliases` (dict): Словарь псевдонимов моделей.
+- `last_request_time` (float): Время последнего запроса.
+- `max_retries` (int): Максимальное количество повторных попыток.
+- `base_delay` (int): Базовая задержка между повторными попытками.
+- `_chat_xfe` (str): Классовая переменная для хранения версии front-end.
 
 **Методы**:
 
-*   `sha256_base64(text: str) -> str`
-*   `parse_dom_fingerprint(js_text: str) -> str`
-*   `parse_server_hashes(js_text: str) -> list`
-*   `build_x_vqd_hash_1(vqd_hash_1: str, headers: dict) -> str`
-*   `validate_model(cls, model: str) -> str`
-*   `sleep(multiplier=1.0)`
-*   `get_default_cookies(session: ClientSession) -> dict`
-*   `fetch_fe_version(session: ClientSession) -> str`
-*   `fetch_vqd_and_hash(session: ClientSession, retry_count: int = 0) -> tuple[str, str]`
-*   `create_async_generator(...) -> AsyncResult`
+- `sha256_base64(text: str) -> str`: Возвращает base64-encoded SHA256 хэш переданного текста.
+- `parse_dom_fingerprint(js_text: str) -> str`: Извлекает и возвращает DOM fingerprint из JavaScript текста.
+- `parse_server_hashes(js_text: str) -> list`: Извлекает и возвращает список server hashes из JavaScript текста.
+- `build_x_vqd_hash_1(vqd_hash_1: str, headers: dict) -> str`: Строит значение заголовка `x-vqd-hash-1` на основе переданных параметров.
+- `validate_model(model: str) -> str`: Проверяет и возвращает корректное имя модели.
+- `sleep(multiplier=1.0)`: Реализует ограничение скорости между запросами.
+- `get_default_cookies(session: ClientSession) -> dict`: Получает cookies по умолчанию, необходимые для API запросов.
+- `fetch_fe_version(session: ClientSession) -> str`: Получает версию front-end из начальной загрузки страницы.
+- `fetch_vqd_and_hash(session: ClientSession, retry_count: int = 0) -> tuple[str, str]`: Получает VQD токен и хэш для чат-сессии с повторными попытками.
+- `create_async_generator(...) -> AsyncResult`: Создает асинхронный генератор для взаимодействия с DuckDuckGo AI Chat.
 
 ## Функции
 
@@ -118,33 +83,30 @@ def sha256_base64(text: str) -> str:
     return base64.b64encode(sha256_hash).decode()
 ```
 
-**Назначение**: Вычисляет SHA256-хеш заданной строки и возвращает его base64-представление.
+**Назначение**: Вычисляет SHA256 хэш переданного текста и возвращает его base64 представление.
 
 **Параметры**:
-
-*   `text` (str): Строка для хеширования.
+- `text` (str): Текст для вычисления хэша.
 
 **Возвращает**:
-
-*   `str`: Base64-представление SHA256-хеша строки.
+- `str`: Base64 представление SHA256 хэша текста.
 
 **Как работает функция**:
-
-1.  Кодирует входную строку `text` в UTF-8.
-2.  Вычисляет SHA256-хеш закодированной строки.
-3.  Кодирует полученный хеш в base64.
-4.  Декодирует base64-представление в строку UTF-8 и возвращает ее.
+1. Кодирует входной текст `text` в байты, используя кодировку UTF-8.
+2. Вычисляет SHA256 хэш полученных байтов.
+3. Кодирует полученный хэш в формат base64.
+4. Декодирует base64 представление в строку UTF-8 и возвращает результат.
 
 ```
-Текст -> SHA256 -> Base64 -> Строка
+Текст -> Кодирование в UTF-8 -> Вычисление SHA256 хэша -> Кодирование в base64 -> Декодирование в UTF-8 -> Результат
 ```
 
 **Примеры**:
 
 ```python
-text = "example"
+text = "example text"
 result = DDG.sha256_base64(text)
-print(result)  # Вывод: rnuZwdQjNlOn84YpjWQv+D9sGg4wJ848Gq2zbRfKtJs=
+print(result)  # Вывод: некоторая строка base64
 ```
 
 ### `parse_dom_fingerprint`
@@ -152,43 +114,50 @@ print(result)  # Вывод: rnuZwdQjNlOn84YpjWQv+D9sGg4wJ848Gq2zbRfKtJs=
 ```python
 @staticmethod
 def parse_dom_fingerprint(js_text: str) -> str:
-    """Parse the dom fingerprint from the js text."""
-    ...
+    """ """
+    if not has_bs4:
+        # Fallback if BeautifulSoup is not available
+        return "1000"
+    
+    try:
+        html_snippet = js_text.split("e.innerHTML = \'")[1].split("\';")[0]
+        offset_value = js_text.split("return String(")[1].split(" ")[0]
+        soup = BeautifulSoup(html_snippet, "html.parser")
+        corrected_inner_html = soup.body.decode_contents()
+        inner_html_length = len(corrected_inner_html)
+        fingerprint = int(offset_value) + inner_html_length
+        return str(fingerprint)
+    except Exception:
+        # Return a fallback value if parsing fails
+        return "1000"
 ```
 
-**Назначение**: Извлекает значение fingerprint из JavaScript кода.
+**Назначение**: Извлекает DOM fingerprint из JavaScript текста.
 
 **Параметры**:
-
-*   `js_text` (str): JavaScript код, содержащий fingerprint.
+- `js_text` (str): JavaScript текст, содержащий DOM fingerprint.
 
 **Возвращает**:
-
-*   `str`: Значение fingerprint в виде строки. Если `BeautifulSoup` недоступен, возвращает `"1000"`. Если парсинг не удался, возвращает `"1000"`.
+- `str`: DOM fingerprint в виде строки.
 
 **Как работает функция**:
-
-1.  Проверяет, установлен ли `BeautifulSoup`. Если нет, возвращает `"1000"`.
-2.  Извлекает HTML-фрагмент из `js_text`, используя разделители `e.innerHTML = '` и `';`.
-3.  Извлекает значение offset из `js_text`, используя разделители `return String(` и ` `.
-4.  Использует `BeautifulSoup` для парсинга HTML-фрагмента.
-5.  Извлекает содержимое тега `body`.
-6.  Вычисляет длину содержимого тега `body`.
-7.  Суммирует значение offset и длину содержимого `body`.
-8.  Возвращает сумму в виде строки.
-9.  Если любой из шагов завершился ошибкой, возвращает `"1000"`.
+1. Проверяет, установлен ли `BeautifulSoup`. Если нет, возвращает "1000".
+2. Извлекает HTML сниппет и значение смещения из JavaScript текста.
+3. Использует `BeautifulSoup` для парсинга HTML сниппета.
+4. Вычисляет длину содержимого `body` в HTML сниппете.
+5. Вычисляет DOM fingerprint как сумму значения смещения и длины содержимого `body`.
+6. Возвращает DOM fingerprint в виде строки.
 
 ```
-JavaScript код -> Извлечение HTML-фрагмента -> Извлечение offset -> BeautifulSoup парсинг -> Извлечение длины содержимого body -> Вычисление fingerprint -> Строка
+js_text -> Проверка BeautifulSoup -> Извлечение HTML сниппета и значения смещения -> Парсинг HTML с BeautifulSoup -> Вычисление длины содержимого body -> Вычисление DOM fingerprint -> Результат
 ```
 
 **Примеры**:
 
 ```python
-js_text = "e.innerHTML = '<body id=\"fingerprint\">Test</body>';" \
-          "return String(10) "
+js_text = "example javascript text with e.innerHTML = '<p>test</p>'; and return String(100)"
 result = DDG.parse_dom_fingerprint(js_text)
-print(result) # 14
+print(result)  # Вывод: строка с DOM fingerprint
 ```
 
 ### `parse_server_hashes`
@@ -196,37 +165,36 @@ print(result) # 14
 ```python
 @staticmethod
 def parse_server_hashes(js_text: str) -> list:
-    """Parse the server hashes from the js text."""
-    ...
+    try:
+        return js_text.split('server_hashes: ["', maxsplit=1)[1].split('"]', maxsplit=1)[0].split('","')
+    except Exception:
+        # Return a fallback value if parsing fails
+        return ["1", "2"]
 ```
 
-**Назначение**: Извлекает список хешей сервера из JavaScript кода.
+**Назначение**: Извлекает список server hashes из JavaScript текста.
 
 **Параметры**:
-
-*   `js_text` (str): JavaScript код, содержащий хеши сервера.
+- `js_text` (str): JavaScript текст, содержащий server hashes.
 
 **Возвращает**:
-
-*   `list[str]`: Список хешей сервера. Если парсинг не удался, возвращает `["1", "2"]`.
+- `list`: Список server hashes.
 
 **Как работает функция**:
-
-1.  Извлекает подстроку, содержащую хеши сервера, используя разделители `server_hashes: ["` и `"]`.
-2.  Разделяет подстроку на отдельные хеши, используя разделитель `","`.
-3.  Возвращает список хешей.
-4.  Если любой из шагов завершился ошибкой, возвращает `["1", "2"]`.
+1. Пытается извлечь список server hashes из JavaScript текста, разделяя строку по определенным разделителям.
+2. Возвращает список server hashes.
+3. Если извлечение не удалось, возвращает `["1", "2"]`.
 
 ```
-JavaScript код -> Извлечение подстроки с хешами -> Разделение на отдельные хеши -> Список хешей
+js_text -> Извлечение server hashes -> Результат
 ```
 
 **Примеры**:
 
 ```python
-js_text = 'server_hashes: ["hash1","hash2"]'
+js_text = 'example javascript text with server_hashes: ["hash1","hash2"]'
 result = DDG.parse_server_hashes(js_text)
-print(result)  # ['hash1', 'hash2']
+print(result)  # Вывод: ['hash1', 'hash2']
 ```
 
 ### `build_x_vqd_hash_1`
@@ -235,43 +203,57 @@ print(result)  # ['hash1', 'hash2']
 @classmethod
 def build_x_vqd_hash_1(cls, vqd_hash_1: str, headers: dict) -> str:
     """Build the x-vqd-hash-1 header value."""
-    ...
+    try:
+        decoded = base64.b64decode(vqd_hash_1).decode()
+        server_hashes = cls.parse_server_hashes(decoded)
+        dom_fingerprint = cls.parse_dom_fingerprint(decoded)
+
+        ua_fingerprint = headers.get("User-Agent", "") + headers.get("sec-ch-ua", "")
+        ua_hash = cls.sha256_base64(ua_fingerprint)
+        dom_hash = cls.sha256_base64(dom_fingerprint)
+
+        final_result = {
+            "server_hashes": server_hashes,
+            "client_hashes": [ua_hash, dom_hash],
+            "signals": {},
+        }
+        base64_final_result = base64.b64encode(json.dumps(final_result).encode()).decode()
+        return base64_final_result
+    except Exception as e:
+        # If anything fails, return an empty string
+        return ""
 ```
 
-**Назначение**: Формирует значение заголовка `x-vqd-hash-1` на основе переданных данных.
+**Назначение**: Создает значение заголовка `x-vqd-hash-1` на основе предоставленных параметров.
 
 **Параметры**:
-
-*   `vqd_hash_1` (str): Base64-encoded строка, содержащая данные для формирования хеша.
-*   `headers` (dict): Словарь HTTP-заголовков запроса.
+- `vqd_hash_1` (str): Хэш VQD в формате base64.
+- `headers` (dict): Словарь заголовков запроса.
 
 **Возвращает**:
-
-*   `str`: Base64-encoded строка, представляющая собой значение заголовка `x-vqd-hash-1`. Если во время выполнения возникла ошибка, возвращает пустую строку `""`.
+- `str`: Значение заголовка `x-vqd-hash-1`.
 
 **Как работает функция**:
-
-1.  Декодирует строку `vqd_hash_1` из Base64 в UTF-8.
-2.  Извлекает хеши сервера из декодированной строки с помощью метода `parse_server_hashes`.
-3.  Извлекает fingerprint DOM из декодированной строки с помощью метода `parse_dom_fingerprint`.
-4.  Формирует строку `ua_fingerprint` путем конкатенации значений заголовков "User-Agent" и "sec-ch-ua" из словаря `headers`.
-5.  Вычисляет SHA256-хеш строки `ua_fingerprint` и кодирует его в Base64.
-6.  Вычисляет SHA256-хеш fingerprint DOM и кодирует его в Base64.
-7.  Формирует словарь `final_result`, содержащий хеши сервера, хеши User-Agent и fingerprint DOM, а также пустой словарь `signals`.
-8.  Кодирует словарь `final_result` в JSON и затем в Base64.
-9.  Возвращает полученную Base64-encoded строку.
+1. Декодирует `vqd_hash_1` из base64 в строку.
+2. Извлекает server hashes из декодированной строки с помощью `parse_server_hashes`.
+3. Извлекает DOM fingerprint из декодированной строки с помощью `parse_dom_fingerprint`.
+4. Формирует строку `ua_fingerprint` из User-Agent и `sec-ch-ua` заголовков.
+5. Вычисляет SHA256 хэш `ua_fingerprint` и DOM fingerprint с помощью `sha256_base64`.
+6. Формирует словарь `final_result`, содержащий server hashes, client hashes (ua_hash и dom_hash) и пустой словарь signals.
+7. Кодирует словарь `final_result` в JSON и затем в base64.
+8. Возвращает закодированную строку.
 
 ```
-vqd_hash_1 (Base64) -> Декодирование Base64 -> Извлечение хешей сервера -> Извлечение fingerprint DOM -> Формирование ua_fingerprint -> Вычисление хеша User-Agent -> Вычисление хеша DOM -> Формирование final_result (JSON) -> Кодирование Base64 -> x-vqd-hash-1 (Base64)
+vqd_hash_1, headers -> Декодирование vqd_hash_1 из base64 -> Извлечение server hashes -> Извлечение DOM fingerprint -> Формирование ua_fingerprint -> Вычисление SHA256 хэшей ua_fingerprint и DOM fingerprint -> Формирование словаря final_result -> Кодирование словаря в JSON и base64 -> Результат
 ```
 
 **Примеры**:
 
 ```python
-vqd_hash_1 = "SGVsbG8gV29ybGQh"  # Пример Base64-encoded строки
-headers = {"User-Agent": "Test Agent", "sec-ch-ua": '"Test Brand";v="100"'}
+vqd_hash_1 = "some_base64_vqd_hash"
+headers = {"User-Agent": "Mozilla/5.0", "sec-ch-ua": "Chromium"}
 result = DDG.build_x_vqd_hash_1(vqd_hash_1, headers)
-print(result)
+print(result)  # Вывод: строка x-vqd-hash-1
 ```
 
 ### `validate_model`
@@ -280,32 +262,34 @@ print(result)
 @classmethod
 def validate_model(cls, model: str) -> str:
     """Validates and returns the correct model name"""
-    ...
+    if not model:
+        return cls.default_model
+    if model in cls.model_aliases:
+        model = cls.model_aliases[model]
+    if model not in cls.models:
+        raise ModelNotSupportedError(f"Model {model} not supported. Available models: {cls.models}")
+    return model
 ```
 
 **Назначение**: Проверяет и возвращает корректное имя модели.
 
 **Параметры**:
-
-*   `model` (str): Имя модели для проверки.
+- `model` (str): Имя модели для проверки.
 
 **Возвращает**:
-
-*   `str`: Корректное имя модели.
+- `str`: Корректное имя модели.
 
 **Вызывает исключения**:
-
-*   `ModelNotSupportedError`: Если указанная модель не поддерживается.
+- `ModelNotSupportedError`: Если указанная модель не поддерживается.
 
 **Как работает функция**:
-
-1.  Если `model` не указана, возвращает `default_model`.
-2.  Если `model` есть в `model_aliases`, заменяет ее на соответствующее значение.
-3.  Если `model` нет в `models`, вызывает исключение `ModelNotSupportedError`.
-4.  Возвращает `model`.
+1. Если `model` не указана, возвращает `default_model`.
+2. Если `model` есть в `model_aliases`, заменяет `model` на соответствующий псевдоним.
+3. Если `model` нет в `models`, вызывает исключение `ModelNotSupportedError`.
+4. Возвращает `model`.
 
 ```
-Model -> Проверка на None -> Замена alias -> Проверка на поддержку -> Возврат Model
+model -> Проверка на None -> Проверка в model_aliases -> Проверка в models -> Результат
 ```
 
 **Примеры**:
@@ -313,7 +297,13 @@ Model -> Проверка на None -> Замена alias -> Проверка н
 ```python
 model = "gpt-4"
 result = DDG.validate_model(model)
-print(result)  # gpt-4o-mini
+print(result)  # Вывод: "gpt-4o-mini"
+
+model = "unsupported_model"
+try:
+    result = DDG.validate_model(model)
+except ModelNotSupportedError as ex:
+    print(f"Error: {ex}")  # Вывод: "Error: Model unsupported_model not supported. Available models: ..."
 ```
 
 ### `sleep`
@@ -322,34 +312,33 @@ print(result)  # gpt-4o-mini
 @classmethod
 async def sleep(cls, multiplier=1.0):
     """Implements rate limiting between requests"""
-    ...
+    now = time.time()
+    if cls.last_request_time > 0:
+        delay = max(0.0, 1.5 - (now - cls.last_request_time)) * multiplier
+        if delay > 0:
+            await asyncio.sleep(delay)
+    cls.last_request_time = time.time()
 ```
 
 **Назначение**: Реализует ограничение скорости между запросами.
 
 **Параметры**:
-
-*   `multiplier` (float, optional): Множитель задержки. По умолчанию 1.0.
-
-**Возвращает**:
-
-*   `None`
+- `multiplier` (float, optional): Множитель задержки. По умолчанию `1.0`.
 
 **Как работает функция**:
-
-1.  Получает текущее время.
-2.  Если `last_request_time` больше 0, вычисляет задержку на основе разницы между текущим временем и `last_request_time`.
-3.  Если задержка больше 0, ждет указанное время.
-4.  Обновляет `last_request_time` текущим временем.
+1. Получает текущее время.
+2. Если `last_request_time` больше 0, вычисляет задержку на основе разницы между текущим временем и `last_request_time`, умноженной на `multiplier`.
+3. Если задержка больше 0, ожидает в течение вычисленного времени.
+4. Обновляет `last_request_time` текущим временем.
 
 ```
-Получение текущего времени -> Вычисление задержки -> Ожидание -> Обновление last_request_time
+multiplier -> Вычисление задержки -> Ожидание -> Обновление last_request_time
 ```
 
 **Примеры**:
 
 ```python
-await DDG.sleep()
+await DDG.sleep(multiplier=2.0)
 ```
 
 ### `get_default_cookies`
@@ -358,27 +347,41 @@ await DDG.sleep()
 @classmethod
 async def get_default_cookies(cls, session: ClientSession) -> dict:
     """Obtains default cookies needed for API requests"""
-    ...
+    try:
+        await cls.sleep()
+        # Make initial request to get cookies
+        async with session.get(cls.url) as response:
+            # We also manually set required cookies
+            cookies = {}
+            cookies_dict = {'dcs': '1', 'dcm': '3'}
+            
+            for name, value in cookies_dict.items():
+                cookies[name] = value
+                url_obj = URL(cls.url)
+                session.cookie_jar.update_cookies({name: value}, url_obj)
+            
+            return cookies
+    except Exception as ex:
+        return {}
 ```
 
-**Назначение**: Получает куки по умолчанию, необходимые для API-запросов.
+**Назначение**: Получает cookies по умолчанию, необходимые для API запросов.
 
 **Параметры**:
-
-*   `session` (ClientSession): Асинхронная HTTP-сессия.
+- `session` (ClientSession): Асинхронная клиентская сессия.
 
 **Возвращает**:
-
-*   `dict`: Словарь с куками или пустой словарь в случае ошибки.
+- `dict`: Словарь cookies.
 
 **Как работает функция**:
-
-1.  Выполняет асинхронный GET-запрос к `cls.url` для получения куки.
-2.  Вручную устанавливает необходимые куки (`dcs` и `dcm`) в сессию.
-3.  Возвращает словарь с куками.
+1. Ожидает с помощью `sleep`.
+2. Отправляет GET запрос к `cls.url` для получения cookies.
+3. Устанавливает необходимые cookies вручную (`dcs` и `dcm`).
+4. Обновляет `session.cookie_jar` с установленными cookies.
+5. Возвращает словарь cookies.
 
 ```
-Создание сессии -> GET-запрос к cls.url -> Установка куки -> Возврат словаря с куками
+session -> Ожидание -> GET запрос к cls.url -> Установка cookies -> Обновление session.cookie_jar -> Результат
 ```
 
 **Примеры**:
@@ -386,7 +389,7 @@ async def get_default_cookies(cls, session: ClientSession) -> dict:
 ```python
 async with ClientSession() as session:
     cookies = await DDG.get_default_cookies(session)
-    print(cookies)
+    print(cookies)  # Вывод: словарь cookies
 ```
 
 ### `fetch_fe_version`
@@ -395,30 +398,46 @@ async with ClientSession() as session:
 @classmethod
 async def fetch_fe_version(cls, session: ClientSession) -> str:
     """Fetches the fe-version from the initial page load."""
-    ...
+    if cls._chat_xfe:
+        return cls._chat_xfe
+        
+    try:
+        url = "https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1"
+        await cls.sleep()
+        async with session.get(url) as response:
+            await raise_for_status(response)
+            content = await response.text()
+            
+            # Extract x-fe-version components
+            try:
+                xfe1 = content.split('__DDG_BE_VERSION__="', 1)[1].split('"', 1)[0]
+                xfe2 = content.split('__DDG_FE_CHAT_HASH__="', 1)[1].split('"', 1)[0]
+                cls._chat_xfe = f"{xfe1}-{xfe2}"
+                return cls._chat_xfe
+            except Exception:
+                # If extraction fails, return an empty string
+                return ""
+    except Exception as ex:
+        return ""
 ```
 
-**Назначение**: Извлекает версию FE из исходного кода страницы.
+**Назначение**: Получает версию front-end из начальной загрузки страницы.
 
 **Параметры**:
-
-*   `session` (ClientSession): Асинхронная HTTP-сессия.
+- `session` (ClientSession): Асинхронная клиентская сессия.
 
 **Возвращает**:
-
-*   `str`: Версия FE. Если извлечение не удалось, возвращает пустую строку `""`.
+- `str`: Версия front-end.
 
 **Как работает функция**:
-
-1.  Если `cls._chat_xfe` уже определена, возвращает её.
-2.  Выполняет GET-запрос к URL.
-3.  Извлекает компоненты версии FE из содержимого ответа, используя разделители `__DDG_BE_VERSION__="` и `"` для `xfe1` и `__DDG_FE_CHAT_HASH__="` и `"` для `xfe2`.
-4.  Формирует версию FE как `f"{xfe1}-{xfe2}"`.
-5.  Сохраняет версию FE в `cls._chat_xfe`.
-6.  Если извлечение не удалось, возвращает пустую строку `""`.
+1. Если `cls._chat_xfe` уже установлена, возвращает её.
+2. Отправляет GET запрос к URL для получения версии front-end.
+3. Извлекает компоненты версии front-end из содержимого ответа.
+4. Формирует версию front-end и сохраняет её в `cls._chat_xfe`.
+5. Возвращает версию front-end.
 
 ```
-Проверка cls._chat_xfe -> Создание сессии -> GET-запрос -> Извлечение версии FE -> Возврат версии FE
+session -> Проверка cls._chat_xfe -> GET запрос к URL -> Извлечение компонентов версии front-end -> Формирование и сохранение версии front-end -> Результат
 ```
 
 **Примеры**:
@@ -426,44 +445,77 @@ async def fetch_fe_version(cls, session: ClientSession) -> str:
 ```python
 async with ClientSession() as session:
     fe_version = await DDG.fetch_fe_version(session)
-    print(fe_version)
+    print(fe_version)  # Вывод: версия front-end
 ```
 
 ### `fetch_vqd_and_hash`
 
 ```python
- @classmethod
-    async def fetch_vqd_and_hash(cls, session: ClientSession, retry_count: int = 0) -> tuple[str, str]:
-        """Fetches the required VQD token and hash for the chat session with retries."""
-        ...
+@classmethod
+async def fetch_vqd_and_hash(cls, session: ClientSession, retry_count: int = 0) -> tuple[str, str]:
+    """Fetches the required VQD token and hash for the chat session with retries."""
+    headers = {
+        "accept": "text/event-stream",
+        "accept-language": "en-US,en;q=0.9",
+        "cache-control": "no-cache",
+        "content-type": "application/json", 
+        "pragma": "no-cache",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+        "origin": "https://duckduckgo.com",
+        "referer": "https://duckduckgo.com/",
+        "x-vqd-accept": "1",
+    }
+
+    # Make sure we have cookies first
+    if len(session.cookie_jar) == 0:
+        await cls.get_default_cookies(session)
+
+    try:
+        await cls.sleep(multiplier=1.0 + retry_count * 0.5)
+        async with session.get(cls.status_url, headers=headers) as response:
+            await raise_for_status(response)
+            
+            vqd = response.headers.get("x-vqd-4", "")
+            vqd_hash_1 = response.headers.get("x-vqd-hash-1", "")
+            
+            if vqd:
+                # Return the fetched vqd and vqd_hash_1
+                return vqd, vqd_hash_1
+            
+            response_text = await response.text()
+            raise RuntimeError(f"Failed to fetch VQD token and hash: {response.status} {response_text}")
+            
+    except Exception as ex:
+        if retry_count < cls.max_retries:
+            wait_time = cls.base_delay * (2 ** retry_count) * (1 + random.random())
+            await asyncio.sleep(wait_time)
+            return await cls.fetch_vqd_and_hash(session, retry_count + 1)
+        else:
+            raise RuntimeError(f"Failed to fetch VQD token and hash after {cls.max_retries} attempts: {str(ex)}")
 ```
 
-**Назначение**: Получает VQD токен и хеш, необходимые для чат-сессии, с повторными попытками.
+**Назначение**: Получает VQD токен и хэш для чат-сессии с повторными попытками.
 
 **Параметры**:
-
-*   `session` (ClientSession): Асинхронная HTTP-сессия.
-*   `retry_count` (int, optional): Количество выполненных повторных попыток. По умолчанию 0.
+- `session` (ClientSession): Асинхронная клиентская сессия.
+- `retry_count` (int, optional): Количество повторных попыток. По умолчанию `0`.
 
 **Возвращает**:
-
-*   `tuple[str, str]`: Кортеж, содержащий VQD токен и хеш.
+- `tuple[str, str]`: Кортеж, содержащий VQD токен и хэш.
 
 **Вызывает исключения**:
-
-*   `RuntimeError`: Если не удалось получить VQD токен и хеш после максимального количества попыток.
+- `RuntimeError`: Если не удалось получить VQD токен и хэш после `cls.max_retries` попыток.
 
 **Как работает функция**:
-
-1.  Формирует заголовки запроса, включая User-Agent, origin и referer.
-2.  Выполняет GET-запрос к `cls.status_url`.
-3.  Извлекает VQD токен и хеш из заголовков ответа (`x-vqd-4` и `x-vqd-hash-1`).
-4.  Если VQD токен найден, возвращает его вместе с хешем.
-5.  Если VQD токен не найден, вызывает исключение `RuntimeError`.
-6.  В случае ошибки увеличивает счетчик `retry_count` и повторяет попытку, если `retry_count` меньше `cls.max_retries`.
+1. Проверяет наличие cookies в сессии и, если их нет, получает их с помощью `get_default_cookies`.
+2. Отправляет GET запрос к `cls.status_url` с заданными заголовками.
+3. Извлекает VQD токен и хэш из заголовков ответа.
+4. Если VQD токен получен, возвращает его вместе с хэшем.
+5. Если VQD токен не получен, вызывает исключение `RuntimeError`.
+6. В случае ошибки увеличивает счетчик повторных попыток и повторяет запрос, если количество попыток не превышает `cls.max_retries`.
 
 ```
-Формирование заголовков -> GET-запрос -> Извлечение VQD токена и хеша -> Возврат токена и хеша
+session, retry_count -> Проверка наличия cookies -> GET запрос к cls.status_url -> Извлечение VQD токена и хэша -> Результат
 ```
 
 **Примеры**:
@@ -471,7 +523,7 @@ async with ClientSession() as session:
 ```python
 async with ClientSession() as session:
     vqd, vqd_hash = await DDG.fetch_vqd_and_hash(session)
-    print(f"VQD: {vqd}, Hash: {vqd_hash}")
+    print(vqd, vqd_hash)  # Вывод: VQD токен и хэш
 ```
 
 ### `create_async_generator`
@@ -489,53 +541,179 @@ async def create_async_generator(
     return_conversation: bool = False,
     **kwargs
 ) -> AsyncResult:
-    """Creates an async generator for chat completion."""
-    ...
+    model = cls.validate_model(model)
+    retry_count = 0
+
+    while retry_count <= cls.max_retries:
+        try:
+            session_timeout = ClientTimeout(total=timeout)
+            async with ClientSession(timeout=session_timeout, cookies=cookies) as session:
+                # Step 1: Ensure we have the fe_version
+                if not cls._chat_xfe:
+                    cls._chat_xfe = await cls.fetch_fe_version(session)
+                
+                # Step 2: Initialize or update conversation
+                if conversation is None:
+                    # Get initial cookies if not provided
+                    if not cookies:
+                        await cls.get_default_cookies(session)
+                    
+                    # Create a new conversation
+                    conversation = Conversation(model)
+                    conversation.fe_version = cls._chat_xfe
+                    
+                    # Step 3: Get VQD tokens
+                    vqd, vqd_hash_1 = await cls.fetch_vqd_and_hash(session)
+                    conversation.vqd = vqd
+                    conversation.vqd_hash_1 = vqd_hash_1
+                    conversation.message_history = [{"role": "user", "content": format_prompt(messages)}]
+                else:
+                    # Update existing conversation with new message
+                    last_message = get_last_user_message(messages.copy())
+                    conversation.message_history.append({"role": "user", "content": last_message})
+                
+                # Step 4: Prepare headers - IMPORTANT: send empty x-vqd-hash-1 for the first request
+                headers = {
+                    "accept": "text/event-stream",
+                    "accept-language": "en-US,en;q=0.9",
+                    "content-type": "application/json",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+                    "origin": "https://duckduckgo.com",
+                    "referer": "https://duckduckgo.com/",
+                    "sec-ch-ua": '"Chromium";v="133", "Not_A Brand";v="8"',
+                    "x-fe-version": conversation.fe_version or cls._chat_xfe,
+                    "x-vqd-4": conversation.vqd,
+                    "x-vqd-hash-1": "",  # Send empty string initially
+                }
+
+                # Step 5: Prepare the request data
+                data = {
+                    "model": model,
+                    "messages": conversation.message_history,
+                }
+
+                # Step 6: Send the request
+                await cls.sleep(multiplier=1.0 + retry_count * 0.5)
+                async with session.post(cls.api_endpoint, json=data, headers=headers, proxy=proxy) as response:
+                    # Handle 429 errors specifically
+                    if response.status == 429:
+                        response_text = await response.text()
+                        
+                        if retry_count < cls.max_retries:
+                            retry_count += 1
+                            wait_time = cls.base_delay * (2 ** retry_count) * (1 + random.random())
+                            await asyncio.sleep(wait_time)
+                            
+                            # Get fresh tokens and cookies
+                            cookies = await cls.get_default_cookies(session)
+                            continue
+                        else:
+                            raise RateLimitError(f"Rate limited after {cls.max_retries} retries")
+                    
+                    await raise_for_status(response)
+                    reason = None
+                    full_message = ""
+
+                    # Step 7: Process the streaming response
+                    async for line in response.content:
+                        line = line.decode("utf-8").strip()
+
+                        if line.startswith("data:"):
+                            try:
+                                message = json.loads(line[5:].strip())
+                            except json.JSONDecodeError:
+                                continue
+
+                            if "action" in message and message["action"] == "error":
+                                error_type = message.get("type", "")
+                                if message.get("status") == 429:
+                                    if error_type == "ERR_CONVERSATION_LIMIT":
+                                        raise ConversationLimitError(error_type)
+                                    raise RateLimitError(error_type)
+                                raise DuckDuckGoSearchException(error_type)
+
+                            if "message" in message:
+                                if message["message"]:
+                                    yield message["message"]
+                                    full_message += message["message"]
+                                    reason = "length"
+                                else:
+                                    reason = "stop"
+
+                    # Step 8: Update conversation with response information
+                    if return_conversation:
+                        conversation.message_history.append({"role": "assistant", "content": full_message})
+                        # Update tokens from response headers
+                        conversation.vqd = response.headers.get("x-vqd-4", conversation.vqd)
+                        conversation.vqd_hash_1 = response.headers.get("x-vqd-hash-1", conversation.vqd_hash_1)
+                        conversation.cookies = {
+                            n: c.value 
+                            for n, c in session.cookie_jar.filter_cookies(URL(cls.url)).items()
+                        }
+                        yield conversation
+
+                    if reason is not None:
+                        yield FinishReason(reason)
+                    
+                    # If we got here, the request was successful
+                    break
+
+        except (RateLimitError, ResponseStatusError) as ex:
+            if "429" in str(ex) and retry_count < cls.max_retries:
+                retry_count += 1
+                wait_time = cls.base_delay * (2 ** retry_count) * (1 + random.random())
+                await asyncio.sleep(wait_time)
+            else:
+                raise
+        except asyncio.TimeoutError as ex:
+            raise TimeoutError(f"Request timed out: {str(ex)}")
+        except Exception as ex:
+            raise
 ```
 
-**Назначение**: Создает асинхронный генератор для завершения чата.
+**Назначение**: Создает асинхронный генератор для взаимодействия с DuckDuckGo AI Chat.
 
 **Параметры**:
-
-*   `model` (str): Имя модели для использования.
-*   `messages` (Messages): Список сообщений для отправки.
-*   `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
-*   `timeout` (int, optional): Время ожидания запроса в секундах. По умолчанию 60.
-*   `cookies` (Cookies, optional): Куки для использования в запросе. По умолчанию `None`.
-*   `conversation` (Conversation, optional): Объект разговора для продолжения существующей сессии. По умолчанию `None`.
-*   `return_conversation` (bool, optional): Флаг, указывающий, нужно ли возвращать объект разговора. По умолчанию `False`.
-*   `**kwargs`: Дополнительные аргументы.
+- `model` (str): Имя модели для использования.
+- `messages` (Messages): Список сообщений для отправки.
+- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
+- `timeout` (int, optional): Время ожидания запроса в секундах. По умолчанию `60`.
+- `cookies` (Cookies, optional): Словарь cookies. По умолчанию `None`.
+- `conversation` (Conversation, optional): Объект `Conversation` для продолжения существующего разговора. По умолчанию `None`.
+- `return_conversation` (bool, optional): Флаг, указывающий, нужно ли возвращать объект `Conversation` после каждого ответа. По умолчанию `False`.
 
 **Возвращает**:
-
-*   `AsyncResult`: Асинхронный генератор, выдающий ответы от модели.
+- `AsyncResult`: Асинхронный генератор, возвращающий ответы от AI-модели.
 
 **Вызывает исключения**:
-
-*   `ModelNotSupportedError`: Если указанная модель не поддерживается.
-*   `RateLimitError`: Если достигнуто ограничение скорости запросов.
-*   `TimeoutError`: Если запрос превысил время ожидания.
-*   `Exception`: В случае других ошибок.
+- `ModelNotSupportedError`: Если указанная модель не поддерживается.
+- `RateLimitError`: Если превышен лимит запросов.
+- `TimeoutError`: Если время ожидания запроса истекло.
+- `DuckDuckGoSearchException`: Если произошла ошибка при взаимодействии с DuckDuckGo AI Chat.
+- `ConversationLimitError`: Если превышен лимит на количество разговоров.
 
 **Как работает функция**:
 
-1.  Проверяет и получает имя модели.
-2.  Инициализирует или обновляет объект разговора.
-3.  Получает VQD токен и хеш, если это новый разговор.
-4.  Формирует заголовки запроса, включая User-Agent, origin и referer.
-5.  Формирует данные запроса, включая модель и историю сообщений.
-6.  Отправляет POST-запрос к API-endpoint.
-7.  Обрабатывает потоковый ответ, извлекая сообщения и возвращая их через генератор.
-8.  Обновляет объект разговора с информацией об ответе, если `return_conversation` установлен в `True`.
-9.  Обрабатывает ошибки, такие как ограничение скорости и тайм-ауты, и выполняет повторные попытки, если необходимо.
+1. **Шаг 1: Валидация модели**:
+   - Проверяет и приводит имя модели к корректному виду с помощью `validate_model`.
 
-```
-Проверка модели -> Инициализация/обновление разговора -> Получение VQD токена и хеша -> Формирование заголовков -> Формирование данных -> POST-запрос -> Обработка потокового ответа -> Обновление разговора -> Возврат генератора
-```
+2. **Шаг 2: Цикл повторных попыток**:
+   - Организует цикл `while`, который позволяет повторить запрос в случае ошибки (например, при лимите запросов).
+   - Максимальное количество попыток определяется параметром `cls.max_retries`.
 
-**Примеры**:
+3. **Шаг 3: Создание асинхронной сессии**:
+   - Создает асинхронную сессию `ClientSession` с заданным таймаутом и cookies.
 
-```python
-messages = [{"role": "user", "content": "Hello, world!"}]
-async for message in DDG.create_async_generator(model="gpt-4o-mini", messages=messages):
-    print(message)
+4. **Шаг 4: Получение версии Front-End**:
+   - Если версия Front-End (`cls._chat_xfe`) еще не известна, запрашивает её с помощью `fetch_fe_version`.
+
+5. **Шаг 5: Инициализация или обновление разговора**:
+   - Если объект `conversation` не передан, создается новый объект `Conversation`:
+     - Запрашиваются начальные cookies, если они не были переданы.
+     - Получаются VQD-токены с помощью `fetch_vqd_and_hash`.
+     - Формируется начальное сообщение пользователя на основе переданных сообщений `messages`.
+   - Если объект `conversation` передан, он обновляется новым сообщением пользователя.
+
+6. **Шаг 6: Подготовка заголовков запроса**:
+   - Формируются заголовки запроса, включая версию Front-End, VQD-токены и User-Agent.
+   - Важно: при первом запросе `x-vqd-hash-1` переда

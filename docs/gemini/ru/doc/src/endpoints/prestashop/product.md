@@ -1,146 +1,23 @@
-# Документация для работы с продуктами в PrestaShop (product.md)
+# Документация для работы с данными о продуктах в PrestaShop (product.md)
 
 ## Обзор
 
-Данный документ содержит подробное описание структуры JSON-данных, необходимых для создания и обновления товаров в PrestaShop посредством API. Он также предоставляет разъяснения по каждому полю, включая обязательные и необязательные параметры, а также примеры использования на языке Python. Документ предназначен для разработчиков, интегрирующих свои приложения с PrestaShop и нуждающихся в четком понимании формата данных для управления продуктами.
+Этот документ предназначен для разработчиков, работающих с данными о продуктах в PrestaShop. Здесь представлено описание структуры JSON, используемой для создания и обновления информации о продуктах через API PrestaShop. Описаны ключевые поля, их назначение и требования к формату данных.
 
 ## Подробней
 
-Этот документ предоставляет детальную информацию о структуре JSON, используемой для взаимодействия с API PrestaShop при создании и обновлении товаров. Он описывает каждое поле JSON, указывая его назначение, тип данных и возможные значения. Также документ содержит важные моменты, которые следует учитывать при работе с API, такие как необходимость предварительного создания связанных сущностей (категорий, изображений и т.д.), соблюдение формата данных и кодировки UTF-8. В конце документа приведен пример кода на Python, демонстрирующий, как отправить JSON-данные на API PrestaShop для создания нового продукта.  Этот документ поможет разработчикам корректно формировать запросы к API PrestaShop, избегать ошибок и успешно управлять продуктами в магазине.
+В этом файле описывается структура данных в формате JSON, которая используется для обмена информацией о продуктах с PrestaShop. Он содержит спецификации для различных полей продукта, включая идентификаторы, цены, описания, метаданные и связи с другими сущностями, такими как категории и изображения. Этот файл служит руководством для понимания структуры запросов API, необходимых для работы с продуктами в PrestaShop. Также приводятся примеры использования API для создания продуктов.
 
-## Структура JSON для продукта
-
-```json
-{
-  "product": {
-    "id_default_combination": null,
-    "id_tax_rules_group": "1",
-    "id_manufacturer": "0",
-    "id_supplier": "0",
-    "reference": "REF-001",
-    "ean13": "1234567890123",
-    "upc": "987654321098",
-    "ecotax": "0.000000",
-    "quantity": "100",
-    "minimal_quantity": "1",
-    "price": "10.000000",
-    "wholesale_price": "5.000000",
-    "on_sale": "0",
-    "online_only": "0",
-    "unity": null,
-    "unit_price": "0.000000",
-    "reduction_price": "0.000000",
-    "reduction_percent": "0.000000",
-    "reduction_from": "0000-00-00",
-    "reduction_to": "0000-00-00",
-    "cache_is_pack": "0",
-    "cache_has_attachments": "0",
-    "cache_default_attribute": "0",
-    "advanced_stock_management": "0",
-    "pack_stock_type": "3",
-    "state": "1",
-    "available_for_order": "1",
-    "show_price": "1",
-    "visibility": "both",
-    "id_category_default": "2",
-    "associations": {
-      "categories": [
-        {
-          "id": "2"
-        }
-      ],
-      "images": [
-        {
-          "id": "1"
-        }
-      ]
-    },
-    "name": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "Новый продукт"
-      }
-    ],
-    "description": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "<p>Описание нового продукта.</p>"
-      }
-    ],
-    "description_short": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "<p>Краткое описание нового продукта.</p>"
-      }
-    ],
-    "meta_title": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "Мета заголовок продукта"
-      }
-    ],
-    "meta_description": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "Мета описание продукта"
-      }
-    ],
-    "meta_keywords": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "ключевые слова, продукта"
-      }
-    ],
-    "link_rewrite": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "novyj-produkt"
-      }
-    ],
-    "available_now": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "В наличии"
-      }
-    ],
-    "available_later": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "Скоро в продаже"
-      }
-    ]
-  }
-}
-```
-
-## Разъяснения по полям
+## Структура JSON для данных о продукте
 
 ### `product`
 
-Корневой элемент, содержащий все данные продукта.
+Корневой элемент, содержащий все данные о продукте.
 
-### Общие поля
+#### Общие поля
 
-*   `id_default_combination`: ID комбинации по умолчанию (если есть комбинации). `null`, если нет комбинаций.
-*   `id_tax_rules_group`: ID группы налогов. **Важно!** Должно существовать в PrestaShop.
+*   `id_default_combination`: ID комбинации по умолчанию (если есть комбинации).  `null`, если нет комбинаций.
+*   `id_tax_rules_group`: ID группы налогов. Важно! Должно существовать в Prestashop.
 *   `id_manufacturer`: ID производителя.
 *   `id_supplier`: ID поставщика.
 *   `reference`: Артикул.
@@ -149,7 +26,7 @@
 *   `ecotax`: Экологический налог.
 *   `quantity`: Количество на складе.
 *   `minimal_quantity`: Минимальное количество для заказа.
-*   `price`: Цена (без налога). Обратите внимание на формат (дробное число).
+*   `price`: Цена (без налога).  Обратите внимание на формат (дробное число).
 *   `wholesale_price`: Оптовая цена.
 *   `on_sale`: Показывать значок "Распродажа" (0 или 1).
 *   `online_only`: Доступен только онлайн (0 или 1).
@@ -168,16 +45,16 @@
 *   `available_for_order`: Доступен для заказа (0 или 1).
 *   `show_price`: Показывать цену (0 или 1).
 *   `visibility`: Видимость (`both`, `catalog`, `search`, `none`).
-*   `id_category_default`: ID категории по умолчанию. **Важно!** Должна существовать в PrestaShop.
+*   `id_category_default`: ID категории по умолчанию. Важно! Должна существовать в Prestashop.
 
-### `associations`
+#### `associations`
 
 Ассоциации с другими сущностями.
 
 *   `categories`: Массив категорий, к которым принадлежит продукт. `id` категорий должны существовать.
 *   `images`: Массив ID изображений, связанных с продуктом. `id` изображений должны существовать (обычно сначала загружаются изображения, а потом привязываются к продукту).
 
-### Многоязычные поля
+#### Многоязычные поля
 
 *   `name`: Название продукта (для каждого языка).
 *   `description`: Полное описание продукта (для каждого языка).
@@ -189,24 +66,14 @@
 *   `available_now`: Текст, отображаемый, когда товар в наличии.
 *   `available_later`: Текст, отображаемый, когда товара нет в наличии.
 
-## Важные моменты
-
-*   **`id` значений:** Все ID (категорий, изображений, налоговых групп, производителей, поставщиков) должны существовать в вашей PrestaShop. Сначала нужно создать эти сущности через API или вручную через административную панель.
-*   **Языки:** Необходимо указать значения для каждого языка, поддерживаемого вашим магазином. В примере только один язык (id=1).
-*   **Формат данных:** Строго соблюдайте формат данных (числа, строки, булевы значения).
-*   **Кодировка:** Используйте кодировку UTF-8 для JSON.
-*   **Ошибки:** API PrestaShop возвращает подробные сообщения об ошибках. Внимательно их читайте и исправляйте проблемы в вашем JSON.
-*   **Версия PrestaShop:** API может немного отличаться в разных версиях PrestaShop. Проверяйте документацию для вашей версии.
-*   **Комбинации:** Если вы работаете с комбинациями, вам понадобится гораздо более сложный JSON. Посмотрите примеры в документации PrestaShop API для работы с комбинациями.
-
 ## Пример использования (Python)
 
 ```python
 import requests
 import json
 
-API_URL = "http://your-prestashop-domain/api/products" # Замените
-API_KEY = "YOUR_API_KEY" # Замените
+API_URL = "http://your-prestashop-domain/api/products"  # Замените
+API_KEY = "YOUR_API_KEY"  # Замените
 
 headers = {
     "Content-Type": "application/json",
@@ -214,48 +81,51 @@ headers = {
 }
 
 data = {
-  "product": {
-    "id_default_combination": None,
-    "id_tax_rules_group": "1",
-    "reference": "REF-001",
-    "quantity": "100",
-    "price": "10.000000",
-    "state": "1",
-    "available_for_order": "1",
-    "show_price": "1",
-    "visibility": "both",
-    "id_category_default": "2",
-    "name": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "Новый продукт"
-      }
-    ],
-    "description_short": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "<p>Краткое описание нового продукта.</p>"
-      }
-    ],
-    "link_rewrite": [
-      {
-        "language": {
-          "id": "1"
-        },
-        "value": "novyj-produkt"
-      }
-    ]
-  }
+    "product": {
+        "id_default_combination": None,
+        "id_tax_rules_group": "1",
+        "reference": "REF-001",
+        "quantity": "100",
+        "price": "10.000000",
+        "state": "1",
+        "available_for_order": "1",
+        "show_price": "1",
+        "visibility": "both",
+        "id_category_default": "2",
+        "name": [
+            {
+                "language": {
+                    "id": "1"
+                },
+                "value": "Новый продукт"
+            }
+        ],
+        "description_short": [
+            {
+                "language": {
+                    "id": "1"
+                },
+                "value": "<p>Краткое описание нового продукта.</p>"
+            }
+        ],
+        "link_rewrite": [
+            {
+                "language": {
+                    "id": "1"
+                },
+                "value": "novyj-produkt"
+            }
+        ]
+    }
 }
 
 try:
     response = requests.post(API_URL, headers=headers, data=json.dumps(data))
-    response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+    response.raise_for_status()  # Raises HTTPError for bad responses (4xx, 5xx)
     print("Product created successfully!")
-    print(response.json())
-except requests.exceptions.RequestException as ex:
-    print(f"Error creating product: {ex}")
+    print(response.json()) # Print the JSON response
+except requests.exceptions.RequestException as e:
+    print(f"Error creating product: {e}")
+    if response is not None:
+        print(f"Response status code: {response.status_code}")
+        print(f"Response content: {response.text}") # Print the response content for debugging

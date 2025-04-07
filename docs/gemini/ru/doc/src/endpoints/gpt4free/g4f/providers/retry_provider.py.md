@@ -1,49 +1,33 @@
-# Модуль retry_provider
+# Модуль `retry_provider`
 
 ## Обзор
 
-Модуль `retry_provider` предоставляет классы `IterListProvider` и `RetryProvider` для организации отказоустойчивой работы с несколькими провайдерами, выполняющими задачи completion (например, генерацию текста). Он позволяет перебирать список провайдеров, повторно выполнять запросы в случае ошибок и обрабатывать потоковые ответы.
+Модуль `retry_provider` предоставляет классы для реализации стратегий повторных попыток при использовании различных поставщиков (providers) для генерации текста или других данных. Он содержит два основных класса: `IterListProvider` и `RetryProvider`. `IterListProvider` перебирает список поставщиков, пока один из них успешно не сгенерирует результат. `RetryProvider` добавляет функциональность повторных попыток для одного поставщика или списка поставщиков.
 
 ## Подробнее
 
-Этот модуль предназначен для использования в системах, требующих высокой надежности при работе с внешними сервисами, такими как AI-модели. Он позволяет автоматически переключаться на резервные провайдеры в случае недоступности основных, а также повторять запросы при временных сбоях.
+Этот модуль полезен в сценариях, когда необходимо обеспечить отказоустойчивость и надежность при работе с внешними сервисами или API, которые могут быть временно недоступны или возвращать ошибки. Он позволяет автоматически повторять запросы к поставщикам, пока не будет получен успешный результат или не будет достигнуто максимальное количество попыток.
 
 ## Классы
 
 ### `IterListProvider`
 
-**Описание**: Класс `IterListProvider` предназначен для последовательного перебора списка провайдеров и выполнения запросов completion с использованием первого доступного и работоспособного провайдера.
+**Описание**:
+Класс `IterListProvider` является базовым классом для перебора списка поставщиков и использования первого успешного поставщика для генерации результата.
 
 **Принцип работы**:
-1.  При инициализации класс принимает список провайдеров, флаг для перемешивания списка и устанавливает начальные значения.
-2.  Метод `create_completion` перебирает провайдеров из списка.
-3.  Для каждого провайдера вызывается функция `get_create_function`, которая выполняет запрос completion.
-4.  Если провайдер возвращает результат, он передается вызывающей стороне.
-5.  Если провайдер вызывает исключение, оно обрабатывается, и происходит переход к следующему провайдеру.
+Класс принимает список поставщиков (`providers`) и флаг (`shuffle`), указывающий, нужно ли перемешивать список поставщиков перед использованием. Метод `create_completion` перебирает поставщиков и пытается сгенерировать результат с помощью каждого из них. Если поставщик возвращает ошибку, метод переходит к следующему поставщику.
 
-**Аттрибуты**:
-- `providers` (List[Type[BaseProvider]]): Список провайдеров для использования.
-- `shuffle` (bool): Флаг, указывающий, нужно ли перемешивать список провайдеров.
+**Атрибуты**:
+- `providers` (List[Type[BaseProvider]]): Список поставщиков для использования.
+- `shuffle` (bool): Флаг, указывающий, нужно ли перемешивать список поставщиков.
 - `working` (bool): Флаг, указывающий, работает ли провайдер.
 - `last_provider` (Type[BaseProvider]): Последний использованный провайдер.
 
 **Методы**:
 
-- `__init__(providers: List[Type[BaseProvider]], shuffle: bool = True) -> None`:
-    Инициализирует `IterListProvider` с заданным списком провайдеров и параметрами.
-- `create_completion(model: str, messages: Messages, stream: bool = False, ignore_stream: bool = False, ignored: list[str] = [], **kwargs) -> CreateResult`:
-    Создает completion, используя доступных провайдеров, с возможностью потоковой передачи ответа.
-- `create_async_generator(model: str, messages: Messages, stream: bool = True, ignore_stream: bool = False, ignored: list[str] = [], **kwargs) -> AsyncResult`:
-    Асинхронно создает completion, используя доступных провайдеров, с возможностью потоковой передачи ответа.
-- `get_create_function() -> callable`:
-    Возвращает функцию для создания completion (`create_completion`).
-- `get_async_create_function() -> callable`:
-    Возвращает асинхронную функцию для создания completion (`create_async_generator`).
-- `get_providers(stream: bool, ignored: list[str]) -> list[ProviderType]`:
-    Возвращает список провайдеров, поддерживающих потоковую передачу, исключая игнорируемые.
-
-#### `__init__`
-```python
+- `__init__(providers: List[Type[BaseProvider]], shuffle: bool = True) -> None:`
+    ```python
     def __init__(
         self,
         providers: List[Type[BaseProvider]],
@@ -53,14 +37,12 @@
         Инициализирует BaseRetryProvider.
         Args:
             providers (List[Type[BaseProvider]]): Список провайдеров для использования.
-            shuffle (bool): Определяет, следует ли перемешивать список провайдеров.
-            single_provider_retry (bool): Определяет, следует ли повторять попытки для одного провайдера в случае сбоя.
-            max_retries (int): Максимальное количество повторных попыток для одного провайдера.
+            shuffle (bool): Флаг, указывающий, нужно ли перемешивать список провайдеров.
         """
-```
+    ```
 
-#### `create_completion`
-```python
+- `create_completion(model: str, messages: Messages, stream: bool = False, ignore_stream: bool = False, ignored: list[str] = [], **kwargs) -> CreateResult:`
+    ```python
     def create_completion(
         self,
         model: str,
@@ -71,20 +53,50 @@
         **kwargs,
     ) -> CreateResult:
         """
-        Создает completion, используя доступных провайдеров, с возможностью потоковой передачи ответа.
+        Создает завершение, используя доступных провайдеров, с возможностью потоковой передачи ответа.
         Args:
-            model (str): Модель для использования для completion.
-            messages (Messages): Сообщения для использования при генерации completion.
+            model (str): Модель, используемая для завершения.
+            messages (Messages): Сообщения, используемые для генерации завершения.
             stream (bool, optional): Флаг, указывающий, следует ли передавать ответ потоком. По умолчанию False.
         Yields:
-            CreateResult: Токены или результаты из completion.
+            CreateResult: Токены или результаты от завершения.
         Raises:
-            Exception: Любое исключение, возникшее во время процесса completion.
+            Exception: Любое исключение, возникшее во время процесса завершения.
         """
-```
+    ```
+    **Как работает функция**:
+    1. Инициализирует словарь `exceptions` для хранения исключений, возникших при использовании разных провайдеров, и переменную `started` для отслеживания, был ли успешно начат процесс генерации результата.
+    2. Получает список провайдеров из метода `get_providers`, учитывая поддержку потоковой передачи и список игнорируемых провайдеров.
+    3. В цикле перебирает провайдеров из полученного списка. Для каждого провайдера:
+        - Устанавливает `self.last_provider` равным текущему провайдеру.
+        - Выводит в лог информацию об используемом провайдере.
+        - Передает информацию о провайдере в yield, включая его параметры и модель.
+        - Пытается получить функцию создания результата (`provider.get_create_function()`) и вызывает её с параметрами `model`, `messages` и `stream`.
+        - В цикле перебирает чанки (части) результата, полученные от провайдера.
+            - Если чанк не пустой, передает его в yield.
+            - Если чанк является строкой или экземпляром `MediaResponse`, устанавливает `started = True`.
+        - Если `started == True`, то есть был получен хотя бы один чанк, возвращает управление.
+        - Если при работе с провайдером возникло исключение, добавляет его в словарь `exceptions` и выводит информацию об ошибке в лог.
+        - Если `started == True`, то есть был получен хотя бы один чанк, но затем возникла ошибка, вызывает исключение.
+        - Передает информацию об ошибке в yield.
+    4. После перебора всех провайдеров, если ни один из них не вернул результат, вызывает функцию `raise_exceptions`, которая генерирует исключение на основе собранных исключений.
+    ```
+    Например:
+    A - Инициализация
+    |
+    B - Получение списка провайдеров
+    |
+    C - Цикл по провайдерам
+    |
+    D - Попытка получения и обработки результата от провайдера
+    |
+    E - Обработка исключений
+    |
+    F - Вызов исключения, если ни один провайдер не вернул результат
+    ```
 
-#### `create_async_generator`
-```python
+- `create_async_generator(model: str, messages: Messages, stream: bool = True, ignore_stream: bool = False, ignored: list[str] = [], **kwargs) -> AsyncResult:`
+    ```python
     async def create_async_generator(
         self,
         model: str,
@@ -95,82 +107,89 @@
         **kwargs
     ) -> AsyncResult:
         """
-        Асинхронно создает генератор completion, используя доступных провайдеров, с возможностью потоковой передачи ответа.
+        Асинхронно создает генератор, используя доступных провайдеров, с возможностью потоковой передачи ответа.
         Args:
-            model (str): Модель для использования для completion.
-            messages (Messages): Сообщения для использования при генерации completion.
+            model (str): Модель, используемая для завершения.
+            messages (Messages): Сообщения, используемые для генерации завершения.
             stream (bool, optional): Флаг, указывающий, следует ли передавать ответ потоком. По умолчанию True.
         Yields:
-            AsyncResult: Асинхронные токены или результаты из completion.
+            AsyncResult: Токены или результаты от завершения.
         Raises:
-            Exception: Любое исключение, возникшее во время процесса completion.
+            Exception: Любое исключение, возникшее во время процесса завершения.
         """
-```
+    ```
 
-#### `get_create_function`
-```python
+- `get_create_function() -> callable:`
+    ```python
     def get_create_function(self) -> callable:
         """
-        Возвращает функцию для создания completion.
+        Возвращает функцию для создания завершения.
         Returns:
-            callable: Функция для создания completion (self.create_completion).
+            callable: Функция для создания завершения.
         """
-```
+    ```
 
-#### `get_async_create_function`
-```python
+- `get_async_create_function() -> callable:`
+    ```python
     def get_async_create_function(self) -> callable:
         """
-        Возвращает асинхронную функцию для создания completion.
+        Возвращает асинхронную функцию для создания генератора.
         Returns:
-            callable: Асинхронная функция для создания completion (self.create_async_generator).
+            callable: Асинхронная функция для создания генератора.
         """
-```
+    ```
 
-#### `get_providers`
-```python
+- `get_providers(stream: bool, ignored: list[str]) -> list[ProviderType]:`
+    ```python
     def get_providers(self, stream: bool, ignored: list[str]) -> list[ProviderType]:
         """
-        Возвращает список провайдеров, поддерживающих потоковую передачу, исключая игнорируемые.
+        Возвращает список провайдеров, поддерживающих потоковую передачу или не игнорируемых.
         Args:
-            stream (bool): Флаг, указывающий, нужна ли поддержка потоковой передачи.
+            stream (bool): Флаг, указывающий, требуется ли потоковая передача.
             ignored (list[str]): Список имен провайдеров, которые следует игнорировать.
         Returns:
-            list[ProviderType]: Список провайдеров, соответствующих критериям.
+            list[ProviderType]: Список провайдеров.
         """
+    ```
+
+**Примеры**:
+
+```python
+from typing import List, Type
+from g4f.providers import BaseProvider, RetryProvider
+
+# Пример использования IterListProvider с двумя поставщиками
+# Предположим, что BaseProvider1 и BaseProvider2 - это классы, наследующие BaseProvider
+# providers: List[Type[BaseProvider]] = [BaseProvider1, BaseProvider2] # <инструкция для модели gemini:Здесь должны быть классы поставщиков>
+
+# Создание инстанса IterListProvider
+# iter_list_provider = IterListProvider(providers=providers, shuffle=True) # <инструкция для модели gemini:Раскомментируй код>
+
+# Использование iter_list_provider для создания завершения
+# model = "gpt-3.5-turbo" # <инструкция для модели gemini:Укажи название модели>
+# messages = [{"role": "user", "content": "Hello"}] # <инструкция для модели gemini:Задай роль и сообщение>
+# for chunk in iter_list_provider.create_completion(model=model, messages=messages, stream=True): # <инструкция для модели gemini:Раскомментируй код>
+#     print(chunk, end="") # <инструкция для модели gemini:Раскомментируй код>
 ```
 
 ### `RetryProvider`
 
-**Описание**: Класс `RetryProvider` наследуется от `IterListProvider` и добавляет функциональность повторных попыток выполнения запросов completion при возникновении ошибок.
+**Описание**:
+Класс `RetryProvider` является подклассом `IterListProvider` и добавляет функциональность повторных попыток для одного или нескольких поставщиков.
 
 **Принцип работы**:
-1.  При инициализации класс принимает список провайдеров, флаг для перемешивания списка, флаг для повторных попыток для одного провайдера и максимальное количество повторных попыток.
-2.  Метод `create_completion` проверяет, нужно ли выполнять повторные попытки для одного провайдера.
-3.  Если флаг установлен, выполняется заданное количество попыток с использованием первого провайдера из списка.
-4.  Если провайдер возвращает результат, он передается вызывающей стороне.
-5.  Если провайдер вызывает исключение, оно обрабатывается, и выполняется следующая попытка.
-6.  Если после всех попыток не удалось получить результат, вызывается исключение.
-7.  Если флаг не установлен, вызывается метод `create_completion` родительского класса `IterListProvider`, который перебирает всех провайдеров из списка.
+Класс принимает список поставщиков (`providers`), флаг (`shuffle`), указывающий, нужно ли перемешивать список поставщиков, флаг (`single_provider_retry`), указывающий, нужно ли повторять попытки только для одного поставщика, и максимальное количество попыток (`max_retries`). Если `single_provider_retry` установлен в `True`, класс будет повторять попытки только для первого поставщика в списке, пока не будет получен успешный результат или не будет достигнуто максимальное количество попыток. Если `single_provider_retry` установлен в `False`, класс будет перебирать список поставщиков, как это делает `IterListProvider`, но с возможностью повторных попыток для каждого поставщика.
 
-**Наследует**:
-- `IterListProvider`: Наследует функциональность последовательного перебора провайдеров.
-
-**Аттрибуты**:
-- `single_provider_retry` (bool): Флаг, указывающий, нужно ли выполнять повторные попытки только для одного провайдера.
-- `max_retries` (int): Максимальное количество повторных попыток.
+**Атрибуты**:
+- `providers` (List[Type[BaseProvider]]): Список поставщиков для использования.
+- `shuffle` (bool): Флаг, указывающий, нужно ли перемешивать список поставщиков.
+- `single_provider_retry` (bool): Флаг, указывающий, нужно ли повторять попытки только для одного поставщика.
+- `max_retries` (int): Максимальное количество попыток для одного поставщика.
 
 **Методы**:
 
-- `__init__(providers: List[Type[BaseProvider]], shuffle: bool = True, single_provider_retry: bool = False, max_retries: int = 3) -> None`:
-    Инициализирует `RetryProvider` с заданным списком провайдеров и параметрами повторных попыток.
-- `create_completion(model: str, messages: Messages, stream: bool = False, **kwargs) -> CreateResult`:
-    Создает completion, используя доступных провайдеров, с возможностью повторных попыток и потоковой передачи ответа.
-- `create_async_generator(model: str, messages: Messages, stream: bool = True, **kwargs) -> AsyncResult`:
-    Асинхронно создает completion, используя доступных провайдеров, с возможностью повторных попыток и потоковой передачи ответа.
-
-#### `__init__`
-```python
+- `__init__(providers: List[Type[BaseProvider]], shuffle: bool = True, single_provider_retry: bool = False, max_retries: int = 3) -> None:`
+    ```python
     def __init__(
         self,
         providers: List[Type[BaseProvider]],
@@ -182,14 +201,14 @@
         Инициализирует BaseRetryProvider.
         Args:
             providers (List[Type[BaseProvider]]): Список провайдеров для использования.
-            shuffle (bool): Определяет, следует ли перемешивать список провайдеров.
-            single_provider_retry (bool): Определяет, следует ли повторять попытки для одного провайдера в случае сбоя.
+            shuffle (bool): Флаг, указывающий, нужно ли перемешивать список провайдеров.
+            single_provider_retry (bool): Флаг, указывающий, следует ли повторять попытки для одного провайдера, если он не удался.
             max_retries (int): Максимальное количество повторных попыток для одного провайдера.
         """
-```
+    ```
 
-#### `create_completion`
-```python
+- `create_completion(model: str, messages: Messages, stream: bool = False, **kwargs) -> CreateResult:`
+    ```python
     def create_completion(
         self,
         model: str,
@@ -198,20 +217,20 @@
         **kwargs,
     ) -> CreateResult:
         """
-        Создает completion, используя доступных провайдеров, с возможностью потоковой передачи ответа.
+        Создает завершение, используя доступных провайдеров, с возможностью потоковой передачи ответа.
         Args:
-            model (str): Модель для использования для completion.
-            messages (Messages): Сообщения для использования при генерации completion.
+            model (str): Модель, используемая для завершения.
+            messages (Messages): Сообщения, используемые для генерации завершения.
             stream (bool, optional): Флаг, указывающий, следует ли передавать ответ потоком. По умолчанию False.
         Yields:
-            CreateResult: Токены или результаты из completion.
+            CreateResult: Токены или результаты от завершения.
         Raises:
-            Exception: Любое исключение, возникшее во время процесса completion.
+            Exception: Любое исключение, возникшее во время процесса завершения.
         """
-```
+    ```
 
-#### `create_async_generator`
-```python
+- `create_async_generator(model: str, messages: Messages, stream: bool = True, **kwargs) -> AsyncResult:`
+    ```python
     async def create_async_generator(
         self,
         model: str,
@@ -220,82 +239,86 @@
         **kwargs
     ) -> AsyncResult:
         """
-        Асинхронно создает completion, используя доступных провайдеров, с возможностью потоковой передачи ответа.
+        Асинхронно создает генератор, используя доступных провайдеров, с возможностью потоковой передачи ответа.
         Args:
-            model (str): Модель для использования для completion.
-            messages (Messages): Сообщения для использования при генерации completion.
+            model (str): Модель, используемая для завершения.
+            messages (Messages): Сообщения, используемые для генерации завершения.
             stream (bool, optional): Флаг, указывающий, следует ли передавать ответ потоком. По умолчанию True.
         Yields:
-            AsyncResult: Асинхронные токены или результаты из completion.
+            AsyncResult: Токены или результаты от завершения.
         Raises:
-            Exception: Любое исключение, возникшее во время процесса completion.
+            Exception: Любое исключение, возникшее во время процесса завершения.
         """
+    ```
+
+**Примеры**:
+
+```python
+from typing import List, Type
+from g4f.providers import BaseProvider, RetryProvider
+
+# Пример использования RetryProvider с двумя поставщиками и повторными попытками для каждого поставщика
+# Предположим, что BaseProvider1 и BaseProvider2 - это классы, наследующие BaseProvider
+# providers: List[Type[BaseProvider]] = [BaseProvider1, BaseProvider2] # <инструкция для модели gemini:Укажи классы поставщиков>
+
+# Создание инстанса RetryProvider
+# retry_provider = RetryProvider(providers=providers, shuffle=True, single_provider_retry=False, max_retries=3) # <инструкция для модели gemini:Раскомментируй код>
+
+# Использование retry_provider для создания завершения
+# model = "gpt-3.5-turbo" # <инструкция для модели gemini:Укажи название модели>
+# messages = [{"role": "user", "content": "Hello"}] # <инструкция для модели gemini:Укажи роль и сообщение>
+# for chunk in retry_provider.create_completion(model=model, messages=messages, stream=True): # <инструкция для модели gemini:Раскомментируй код>
+#     print(chunk, end="") # <инструкция для модели gemini:Раскомментируй код>
 ```
 
 ## Функции
 
-### `raise_exceptions`
+### `raise_exceptions(exceptions: dict) -> None`
 
 ```python
 def raise_exceptions(exceptions: dict) -> None:
     """
-    Raise a combined exception if any occurred during retries.
+    Вызывает объединенное исключение, если какие-либо произошли во время повторных попыток.
 
     Raises:
-        RetryProviderError: If any provider encountered an exception.
-        RetryNoProviderError: If no provider is found.
+        RetryProviderError: Если какой-либо провайдер столкнулся с исключением.
+        RetryNoProviderError: Если ни один провайдер не найден.
     """
 ```
 
-**Назначение**: Функция `raise_exceptions` предназначена для генерации исключений, если во время повторных попыток произошли какие-либо ошибки.
+**Назначение**:
+Функция `raise_exceptions` предназначена для обработки исключений, которые могут возникнуть при использовании нескольких поставщиков (providers) в стратегиях повторных попыток. Она анализирует словарь исключений и вызывает соответствующее исключение в зависимости от ситуации.
 
 **Как работает функция**:
-
-1.  Функция принимает словарь `exceptions`, содержащий информацию об исключениях, возникших у разных провайдеров.
-2.  Если словарь `exceptions` не пуст, функция генерирует исключение `RetryProviderError`, которое содержит объединенное сообщение об ошибках от всех провайдеров.
-3.  Если словарь `exceptions` пуст, функция генерирует исключение `RetryNoProviderError`, указывающее, что ни один провайдер не был найден.
-
+1. Проверяет, является ли словарь `exceptions` пустым.
+2. Если словарь `exceptions` не пуст, это означает, что во время повторных попыток возникли исключения. В этом случае функция вызывает исключение `RetryProviderError`, которое содержит информацию обо всех произошедших исключениях.
+3. Если словарь `exceptions` пуст, это означает, что ни один из поставщиков не был найден. В этом случае функция вызывает исключение `RetryNoProviderError`.
 ```
-    A (Проверка наличия исключений)
+ASCII flowchart:
+
+    A - Проверка, есть ли исключения
     |
-    -- B (Если исключения есть: создание сообщения об ошибке)
-    |  |
-    |  -- C (Генерация RetryProviderError)
+    B - Если есть исключения, вызывается RetryProviderError с информацией о каждом исключении
     |
-    -- D (Если исключений нет: генерация RetryNoProviderError)
+    C - Если нет исключений, вызывается RetryNoProviderError
 ```
-
-**Параметры**:
-- `exceptions` (dict): Словарь, содержащий исключения, возникшие у разных провайдеров.
-
-**Возвращает**:
-- None
-
-**Вызывает исключения**:
-- `RetryProviderError`: Если какой-либо провайдер столкнулся с исключением.
-- `RetryNoProviderError`: Если ни один провайдер не найден.
 
 **Примеры**:
 
-Пример 1: Возникли исключения у провайдеров.
-
 ```python
-exceptions = {
-    "Provider1": ValueError("Invalid value"),
-    "Provider2": TimeoutError("Request timed out")
-}
-try:
-    raise_exceptions(exceptions)
-except RetryProviderError as ex:
-    print(ex)
-```
+from g4f.errors import RetryProviderError, RetryNoProviderError
+from g4f.providers.retry_provider import raise_exceptions
 
-Пример 2: Ни один провайдер не найден.
+# Пример 1: Вызов RetryProviderError
+# exceptions = {"Provider1": ValueError("Invalid value"), "Provider2": TypeError("Invalid type")} # <инструкция для модели gemini:Определить словарь исключений>
+# try: # <инструкция для модели gemini:Раскомментируй код>
+#     raise_exceptions(exceptions) # <инструкция для модели gemini:Раскомментируй код>
+# except RetryProviderError as e: # <инструкция для модели gemini:Раскомментируй код>
+#     print(e) # <инструкция для модели gemini:Раскомментируй код>
 
-```python
-exceptions = {}
-try:
-    raise_exceptions(exceptions)
-except RetryNoProviderError as ex:
-    print(ex)
-```
+# Пример 2: Вызов RetryNoProviderError
+# exceptions = {} # <инструкция для модели gemini:Определить пустой словарь исключений>
+# try: # <инструкция для модели gemini:Раскомментируй код>
+#     raise_exceptions(exceptions) # <инструкция для модели gemini:Раскомментируй код>
+# except RetryNoProviderError as e: # <инструкция для модели gemini:Раскомментируй код>
+#     print(e) # <инструкция для модели gemini:Раскомментируй код>

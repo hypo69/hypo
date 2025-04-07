@@ -1,174 +1,159 @@
 # Модуль конфигурации Telegram-бота для цифрового рынка
-========================================================
+=========================================================
 
-Модуль содержит настройки для Telegram-бота цифрового рынка, включая параметры подключения к Telegram API, администраторов, URL сайта, параметры базы данных и прочие необходимые конфигурации.
+Модуль содержит настройки для Telegram-бота, используемого в цифровом рынке.
+Он включает в себя классы и переменные для управления конфигурацией бота,
+такие как токен бота, идентификаторы администраторов, URL сайта и другие параметры.
 
 ## Обзор
 
-Этот модуль предназначен для централизованного хранения и управления конфигурационными параметрами, необходимыми для работы Telegram-бота. Он использует `pydantic_settings` для загрузки настроек из переменных окружения и обеспечивает удобный доступ к ним через класс `Settings`.
+Этот модуль содержит класс `Settings`, который использует `pydantic_settings` для загрузки настроек из переменных окружения и файла `.env`. Он также инициализирует объекты `Bot` и `Dispatcher` из библиотеки `aiogram` и настраивает логирование с помощью `loguru`.
 
-## Подробнее
+## Подробней
 
-Модуль определяет класс `Settings`, который наследуется от `BaseSettings` из библиотеки `pydantic_settings`. Это позволяет автоматически загружать значения настроек из переменных окружения, указанных в файле `.env`. Также модуль инициализирует объекты `Bot` и `Dispatcher` из библиотеки `aiogram`, необходимые для работы с Telegram API.
+Этот модуль предназначен для централизованного управления конфигурацией Telegram-бота. Он использует библиотеку `pydantic-settings` для автоматической загрузки настроек из переменных окружения и файла `.env`. Класс `Settings` определяет все необходимые параметры конфигурации, такие как токен бота, список идентификаторов администраторов, токен провайдера платежей, URL сайта и параметры доступа к базе данных.
+
+Модуль также инициализирует объекты `Bot` и `Dispatcher` из библиотеки `aiogram`, которые используются для управления ботом и обработки входящих сообщений. Настройка логирования осуществляется с помощью библиотеки `loguru`, что позволяет записывать информацию о работе бота в файл.
 
 ## Классы
 
 ### `Settings`
 
-**Описание**: Класс, представляющий настройки приложения, загружаемые из переменных окружения.
+**Описание**: Класс для хранения и управления настройками бота.
 
-**Наследует**: `BaseSettings` (из `pydantic_settings`).
+**Принцип работы**:
+Класс `Settings` наследуется от `BaseSettings` и использует `SettingsConfigDict` для указания файла `.env`, из которого загружаются переменные окружения. Он определяет атрибуты для хранения различных параметров конфигурации, таких как токен бота, идентификаторы администраторов и URL сайта. Также класс содержит методы для динамического формирования URL-адресов для вебхуков.
 
-**Атрибуты**:
-- `BOT_TOKEN` (str): Токен Telegram-бота, полученный от BotFather.
-- `ADMIN_IDS` (List[int]): Список ID администраторов бота.
-- `PROVIDER_TOKEN` (str): Токен провайдера платежей (например, Robokassa).
+**Аттрибуты**:
+- `BOT_TOKEN` (str): Токен Telegram-бота.
+- `ADMIN_IDS` (List[int]): Список идентификаторов администраторов бота.
+- `PROVIDER_TOKEN` (str): Токен провайдера платежей.
 - `FORMAT_LOG` (str): Формат записи логов (по умолчанию: "{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}").
 - `LOG_ROTATION` (str): Размер ротации логов (по умолчанию: "10 MB").
-- `DB_URL` (str): URL для подключения к базе данных (по умолчанию: 'sqlite+aiosqlite:///data/db.sqlite3').
-- `SITE_URL` (str): URL сайта, на котором размещен бот.
+- `DB_URL` (str): URL базы данных (по умолчанию: 'sqlite+aiosqlite:///data/db.sqlite3').
+- `SITE_URL` (str): URL сайта.
 - `SITE_HOST` (str): Хост сайта.
 - `SITE_PORT` (int): Порт сайта.
-- `MRH_LOGIN` (str): Логин для MRH (предположительно, Merchant ID в Robokassa).
-- `MRH_PASS_1` (str): Первый пароль для MRH (предположительно, пароль Robokassa).
-- `MRH_PASS_2` (str): Второй пароль для MRH (предположительно, пароль Robokassa).
-- `IN_TEST` (int): Флаг, указывающий на тестовый режим (1 - тестовый, 0 - продакшн).
-- `model_config` (SettingsConfigDict): Конфигурация для `pydantic_settings`, указывающая на файл `.env`.
+- `MRH_LOGIN` (str): Логин MRH.
+- `MRH_PASS_1` (str): Пароль MRH (часть 1).
+- `MRH_PASS_2` (str): Пароль MRH (часть 2).
+- `IN_TEST` (int): Флаг, указывающий на тестовую среду.
+- `model_config` (SettingsConfigDict): Конфигурация для `pydantic-settings`.
 
 **Методы**:
-- `get_webhook_url`(): Формирует URL для вебхука на основе токена и URL сайта.
-- `get_provider_hook_url`(): Формирует URL для вебхука провайдера платежей (Robokassa).
+- `get_webhook_url()`: Динамически формирует URL для вебхука на основе токена и URL сайта.
+- `get_provider_hook_url()`: Динамически формирует URL для вебхука провайдера платежей на основе токена и URL сайта.
+
+### `Settings.get_webhook_url`
 
 ```python
-    @property
-    def get_webhook_url(self) -> str:
-        """Динамически формирует путь для вебхука на основе токена и URL сайта."""
-        return f"{self.SITE_URL}/{self.BOT_TOKEN}"
+def get_webhook_url(self) -> str:
+    """Динамически формирует путь для вебхука на основе токена и URL сайта."""
+    return f"{self.SITE_URL}/{self.BOT_TOKEN}"
 ```
-     **Назначение**: Формирует URL для вебхука на основе токена и URL сайта.
 
-     **Параметры**: Нет
+**Назначение**: Формирует URL для вебхука Telegram-бота.
 
-     **Возвращает**:
-     - `str`: URL вебхука, сформированный из `SITE_URL` и `BOT_TOKEN`.
+**Параметры**:
+- `self`: Ссылка на экземпляр класса `Settings`.
 
-     **Как работает функция**:
-     1. Формирование URL: Функция возвращает строку, представляющую URL для вебхука, объединяя `self.SITE_URL` и `self.BOT_TOKEN`.
-     
-     **Примеры**:
-     ```python
-     settings.SITE_URL = "https://example.com"
-     settings.BOT_TOKEN = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
-     webhook_url = settings.get_webhook_url
-     print(webhook_url)  # Вывод: https://example.com/123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
-     ```
-     
-     **ASCII flowchart**:
-    ```
-    SITE_URL + BOT_TOKEN --> Webhook URL
-    ```
+**Возвращает**:
+- `str`: URL для вебхука, сформированный как `f"{self.SITE_URL}/{self.BOT_TOKEN}"`.
+
+**Как работает функция**:
+
+1. **Формирование URL**:
+   - Функция объединяет `SITE_URL` и `BOT_TOKEN` для создания полного URL-адреса вебхука.
+
+```
+SITE_URL + BOT_TOKEN --> Webhook URL
+```
+
+**Примеры**:
 
 ```python
-    @property
-    def get_provider_hook_url(self) -> str:
-        """Динамически формирует путь для вебхука на основе токена и URL сайта."""
-        return f"{self.SITE_URL}/robokassa"
+settings = Settings(BOT_TOKEN='test_token', SITE_URL='https://example.com')
+webhook_url = settings.get_webhook_url()
+print(webhook_url)  # Вывод: https://example.com/test_token
 ```
-     **Назначение**: Формирует URL для вебхука провайдера платежей (Robokassa).
 
-     **Параметры**: Нет
+### `Settings.get_provider_hook_url`
 
-     **Возвращает**:
-     - `str`: URL вебхука провайдера платежей, сформированный из `SITE_URL` и "/robokassa".
+```python
+def get_provider_hook_url(self) -> str:
+    """Динамически формирует путь для вебхука на основе токена и URL сайта."""
+    return f"{self.SITE_URL}/robokassa"
+```
 
-     **Как работает функция**:
-     1. Формирование URL: Функция возвращает строку, представляющую URL для вебхука провайдера, объединяя `self.SITE_URL` и "/robokassa".
+**Назначение**: Формирует URL для вебхука провайдера платежей.
 
-     **Примеры**:
-     ```python
-     settings.SITE_URL = "https://example.com"
-     provider_hook_url = settings.get_provider_hook_url
-     print(provider_hook_url)  # Вывод: https://example.com/robokassa
-     ```
+**Параметры**:
+- `self`: Ссылка на экземпляр класса `Settings`.
 
-     **ASCII flowchart**:
-    ```
-    SITE_URL + "/robokassa" --> Provider Webhook URL
-    ```
+**Возвращает**:
+- `str`: URL для вебхука провайдера платежей, сформированный как `f"{self.SITE_URL}/robokassa"`.
+
+**Как работает функция**:
+
+1. **Формирование URL**:
+   - Функция объединяет `SITE_URL` и строку `/robokassa` для создания полного URL-адреса вебхука провайдера платежей.
+
+```
+SITE_URL + "/robokassa" --> Provider Webhook URL
+```
+
+**Примеры**:
+
+```python
+settings = Settings(SITE_URL='https://example.com')
+provider_webhook_url = settings.get_provider_hook_url()
+print(provider_webhook_url)  # Вывод: https://example.com/robokassa
+```
 
 ## Функции
 
-В данном модуле функции отсутствуют. Здесь происходит инициализация объектов и определение класса настроек.
+### Нет функций, определенных в явном виде, кроме методов класса `Settings`.
 
-### Инициализация объектов `Bot` и `Dispatcher`
+## Переменные
 
-```python
-bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-dp = Dispatcher(storage=MemoryStorage())
-```
+### `settings`
 
-**Назначение**: Инициализация объектов `Bot` и `Dispatcher` из библиотеки `aiogram` для работы с Telegram API.
+**Описание**: Экземпляр класса `Settings` с загруженными настройками.
 
-**Параметры**:
-- `settings.BOT_TOKEN` (str): Токен Telegram-бота.
-- `default=DefaultBotProperties(parse_mode=ParseMode.HTML)`: Установка режима парсинга HTML по умолчанию для бота.
-- `storage=MemoryStorage()`: Использование `MemoryStorage` для хранения данных в оперативной памяти.
+**Назначение**: Используется для доступа к параметрам конфигурации бота.
 
-**Как работает**:
+### `bot`
 
-1. **Инициализация бота**: Создается экземпляр класса `Bot` с использованием токена, полученного из настроек, и устанавливается режим парсинга HTML.
-2. **Инициализация диспетчера**: Создается экземпляр класса `Dispatcher` с использованием `MemoryStorage` для хранения данных.
+**Описание**: Экземпляр класса `Bot` из библиотеки `aiogram`.
 
-**Примеры**:
+**Назначение**: Используется для взаимодействия с Telegram API.
 
-```python
-from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
-from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.client.default import DefaultBotProperties
+### `dp`
 
-# Предположим, что settings.BOT_TOKEN уже определен
-# settings.BOT_TOKEN = "some_bot_token"
+**Описание**: Экземпляр класса `Dispatcher` из библиотеки `aiogram`.
 
-# Инициализация бота
-bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+**Назначение**: Используется для регистрации обработчиков сообщений и управления состоянием бота.
 
-# Инициализация диспетчера
-dp = Dispatcher(storage=MemoryStorage())
-```
+### `admins`
 
-### Инициализация логгера
+**Описание**: Список идентификаторов администраторов бота.
 
-```python
-log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "log.txt")
-logger.add(log_file_path, format=settings.FORMAT_LOG, level="INFO", rotation=settings.LOG_ROTATION)
-```
+**Назначение**: Используется для определения администраторов, имеющих особые права.
 
-**Назначение**: Настройка и инициализация логгера для записи событий и ошибок.
+### `log_file_path`
 
-**Параметры**:
-- `log_file_path` (str): Путь к файлу лога.
-- `format=settings.FORMAT_LOG` (str): Формат записи логов.
-- `level="INFO"` (str): Уровень логирования (INFO и выше).
-- `rotation=settings.LOG_ROTATION` (str): Правила ротации логов.
+**Описание**: Путь к файлу логов.
 
-**Как работает**:
+**Назначение**: Используется для указания места хранения логов.
 
-1. **Определение пути к файлу лога**: Путь к файлу лога формируется на основе текущей директории модуля.
-2. **Настройка логгера**: Логгер настраивается для записи в указанный файл с заданным форматом, уровнем логирования и правилами ротации.
+### `logger`
 
-**Примеры**:
+**Описание**: Объект логгера из библиотеки `loguru`.
 
-```python
-import os
-from loguru import logger
+**Назначение**: Используется для записи информации о работе бота в файл.
 
-# Предположим, что settings.FORMAT_LOG и settings.LOG_ROTATION уже определены
-# settings.FORMAT_LOG = "{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}"
-# settings.LOG_ROTATION = "10 MB"
+### `database_url`
 
-# Определение пути к файлу лога
-log_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "log.txt")
+**Описание**: URL базы данных.
 
-# Настройка логгера
-logger.add(log_file_path, format=settings.FORMAT_LOG, level="INFO", rotation=settings.LOG_ROTATION)
+**Назначение**: Используется для подключения к базе данных.

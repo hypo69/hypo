@@ -2,90 +2,107 @@
 
 ## Обзор
 
-Модуль `BlackForestLabs_Flux1Dev` предоставляет асинхронный генератор для взаимодействия с моделью Flux-1-Dev от Black Forest Labs, размещенной на платформе Hugging Face Spaces. Он позволяет генерировать изображения на основе текстовых запросов, используя API Gradio. Модуль поддерживает настройку параметров генерации изображений, таких как размеры, соотношение сторон, seed и guidance scale.
+Модуль `BlackForestLabs_Flux1Dev` предоставляет асинхронный генератор для взаимодействия с моделью BlackForestLabs Flux-1-Dev через Hugging Face Space. Он позволяет генерировать изображения на основе текстовых запросов, используя API BlackForestLabs.
 
 ## Подробней
 
-Этот модуль предназначен для интеграции с другими частями проекта `hypotez`, предоставляя возможность генерации изображений с использованием модели Flux-1-Dev. Он использует асинхронный подход для обеспечения неблокирующего взаимодействия с API, что позволяет эффективно обрабатывать запросы. Модуль также включает обработку ошибок и логирование для обеспечения стабильной работы.
+Модуль предназначен для создания изображений с использованием модели BlackForestLabs Flux-1-Dev. Он включает в себя функции для отправки запросов к API, обработки ответов и извлечения сгенерированных изображений.
 
 ## Классы
 
 ### `BlackForestLabs_Flux1Dev`
 
-**Описание**: Класс `BlackForestLabs_Flux1Dev` является асинхронным генератором и предоставляет методы для взаимодействия с моделью Flux-1-Dev от Black Forest Labs.
+**Описание**: Класс для взаимодействия с моделью BlackForestLabs Flux-1-Dev.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность асинхронного генератора.
-- `ProviderModelMixin`: Предоставляет методы для работы с моделями.
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
+- `ProviderModelMixin`: Предоставляет общие методы для работы с моделями.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера "BlackForestLabs Flux-1-Dev".
-- `url` (str): URL пространства Hugging Face Spaces, где размещена модель.
-- `space` (str): Имя пространства Hugging Face Spaces.
-- `referer` (str): Referer для HTTP-запросов.
-- `working` (bool): Указывает, что провайдер в рабочем состоянии.
-- `default_model` (str): Модель по умолчанию 'black-forest-labs-flux-1-dev'.
-- `default_image_model` (str): Модель изображения по умолчанию.
-- `model_aliases` (dict): Алиасы моделей.
+- `label` (str): Название провайдера - "BlackForestLabs Flux-1-Dev".
+- `url` (str): URL Hugging Face Space - "https://black-forest-labs-flux-1-dev.hf.space".
+- `space` (str): Имя Space - "black-forest-labs/FLUX.1-dev".
+- `referer` (str): Referer для запросов - f"{url}/?__theme=light".
+- `working` (bool): Указывает, что провайдер работает - `True`.
+- `default_model` (str): Модель по умолчанию - 'black-forest-labs-flux-1-dev'.
+- `default_image_model` (str): Модель изображений по умолчанию - совпадает с `default_model`.
+- `model_aliases` (dict): Псевдонимы моделей, такие как {"flux-dev": default_image_model, "flux": default_image_model}.
 - `image_models` (list): Список моделей изображений.
-- `models` (list): Список моделей.
+- `models` (list): Список всех моделей.
 
 **Методы**:
-- `run`: Выполняет HTTP-запрос к API Gradio.
+- `run`: Отправляет HTTP-запросы к API.
 - `create_async_generator`: Создает асинхронный генератор для генерации изображений.
+
+## Функции
 
 ### `run`
 
 ```python
     @classmethod
     def run(cls, method: str, session: StreamSession, conversation: JsonConversation, data: list = None):
-        """Выполняет HTTP-запрос к API Gradio.
+        """
+        Отправляет HTTP-запросы к API.
 
         Args:
             method (str): HTTP-метод ("post" или "get").
-            session (StreamSession): Асинхровая сессия для выполнения запросов.
-            conversation (JsonConversation): Объект, содержащий данные для разговора, такие как токены и UUID.
-            data (list, optional): Данные для отправки в запросе. По умолчанию `None`.
+            session (StreamSession): Сессия для отправки запросов.
+            conversation (JsonConversation): Объект, содержащий информацию о сессии.
+            data (list, optional): Данные для отправки в теле запроса. По умолчанию `None`.
 
         Returns:
-            StreamSession: Объект асинхронной сессии с выполненным запросом.
+            StreamSession: Объект ответа от API.
 
         Raises:
-            ResponseError: В случае ошибки при выполнении запроса.
+            ResponseError: Если возникает ошибка при выполнении запроса.
 
-        Как работает функция:
-         1. Функция `run` выполняет HTTP-запросы к API Gradio, используя предоставленные параметры.
-         2. Заголовки запроса формируются на основе данных разговора и включают токен, UUID и referer.
-         3. В зависимости от HTTP-метода, выполняется POST-запрос для присоединения к очереди или GET-запрос для получения данных.
-
-         ASCII flowchart:
-
-         Начало
-         ↓
-         Заголовки запроса (headers)
-         ↓
-         Проверка HTTP-метода (method)
-         │
-         ├─ POST: Выполнение POST-запроса к API Gradio
-         │   ↓
-         └─ GET: Выполнение GET-запроса к API Gradio
-         ↓
-         Возврат объекта асинхронной сессии
         """
         ...
 ```
 
+**Назначение**: Отправляет HTTP-запросы к API BlackForestLabs Flux-1-Dev.
+
 **Параметры**:
 - `method` (str): HTTP-метод ("post" или "get").
-- `session` (StreamSession): Асинхровая сессия для выполнения запросов.
-- `conversation` (JsonConversation): Объект, содержащий данные для разговора, такие как токены и UUID.
-- `data` (list, optional): Данные для отправки в запросе. По умолчанию `None`.
+- `session` (StreamSession): Сессия для отправки запросов.
+- `conversation` (JsonConversation): Объект, содержащий информацию о сессии (zerogpu_token, zerogpu_uuid, session_hash).
+- `data` (list, optional): Данные для отправки в теле запроса. По умолчанию `None`.
 
 **Возвращает**:
-- `StreamSession`: Объект асинхронной сессии с выполненным запросом.
+- `StreamSession`: Объект ответа от API.
 
 **Вызывает исключения**:
-- `ResponseError`: В случае ошибки при выполнении запроса.
+- `ResponseError`: Если возникает ошибка при выполнении запроса.
+
+**Как работает функция**:
+1. **Формирование заголовков**: Создаются заголовки запроса, включающие `accept`, `content-type`, `x-zerogpu-token`, `x-zerogpu-uuid` и `referer`.
+2. **Выбор метода запроса**: В зависимости от значения параметра `method` выполняется либо POST-запрос для присоединения к очереди, либо GET-запрос для получения данных.
+3. **Отправка запроса**: Используется объект `session` для отправки запроса с указанными заголовками и данными.
+
+**ASCII flowchart**:
+```
+    Начало
+    │
+    ├── Заголовки (accept, content-type, x-zerogpu-token, x-zerogpu-uuid, referer)
+    │
+    ├── Проверка method == "post"
+    │   ├── True: POST-запрос к /gradio_api/queue/join
+    │   │   └── Отправка данных: data, event_data, fn_index, trigger_id, session_hash
+    │   │
+    │   └── False: GET-запрос к /gradio_api/queue/data
+    │       └── Отправка session_hash
+    │
+    └── Возврат response
+```
+
+**Примеры**:
+```python
+# Пример POST-запроса
+# response = BlackForestLabs_Flux1Dev.run("post", session, conversation, data=[prompt, seed, randomize_seed, width, height, guidance_scale, num_inference_steps])
+
+# Пример GET-запроса
+# response = BlackForestLabs_Flux1Dev.run("get", session, conversation)
+```
 
 ### `create_async_generator`
 
@@ -109,94 +126,115 @@
         zerogpu_uuid: str = "[object Object]",
         **kwargs
     ) -> AsyncResult:
-        """Создает асинхронный генератор для генерации изображений.
+        """
+        Создает асинхронный генератор для генерации изображений.
 
         Args:
-            model (str): Имя модели.
+            model (str): Модель для генерации изображений.
             messages (Messages): Список сообщений для формирования запроса.
             prompt (str, optional): Текстовый запрос. По умолчанию `None`.
-            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+            proxy (str, optional): Прокси-сервер. По умолчанию `None`.
             aspect_ratio (str, optional): Соотношение сторон изображения. По умолчанию "1:1".
             width (int, optional): Ширина изображения. По умолчанию `None`.
             height (int, optional): Высота изображения. По умолчанию `None`.
-            guidance_scale (float, optional): Guidance scale. По умолчанию 3.5.
-            num_inference_steps (int, optional): Количество шагов inference. По умолчанию 28.
-            seed (int, optional): Seed для генерации. По умолчанию 0.
-            randomize_seed (bool, optional): Флаг для рандомизации seed. По умолчанию `True`.
-            cookies (dict, optional): Cookies для HTTP-запросов. По умолчанию `None`.
+            guidance_scale (float, optional): Масштаб соответствия запросу. По умолчанию 3.5.
+            num_inference_steps (int, optional): Количество шагов для генерации. По умолчанию 28.
+            seed (int, optional): Зерно для генерации. По умолчанию 0.
+            randomize_seed (bool, optional): Флаг для рандомизации зерна. По умолчанию `True`.
+            cookies (dict, optional): Куки для запросов. По умолчанию `None`.
             api_key (str, optional): API ключ. По умолчанию `None`.
             zerogpu_uuid (str, optional): UUID для ZeroGPU. По умолчанию "[object Object]".
             **kwargs: Дополнительные параметры.
 
         Returns:
-            AsyncResult: Асинхронный генератор, возвращающий объекты `ImagePreview`, `ImageResponse` и `Reasoning`.
+            AsyncResult: Асинхронный генератор, возвращающий изображения.
 
         Raises:
-            RuntimeError: В случае ошибки при парсинге сообщения.
-            ResponseError: В случае ошибки ответа от сервера.
+            RuntimeError: Если не удается распарсить сообщение от API.
+            ResponseError: Если API возвращает ошибку.
 
-        Как работает функция:
-          1. Функция `create_async_generator` создает асинхронный генератор для генерации изображений на основе текстового запроса.
-          2. Формируется запрос к API Gradio с использованием параметров, таких как модель, текстовый запрос, размеры изображения и другие параметры генерации.
-          3. Функция отправляет POST-запрос для присоединения к очереди и GET-запрос для получения данных о процессе генерации.
-          4. В процессе генерации возвращаются объекты `ImagePreview` с предварительным просмотром изображения и `Reasoning` с информацией о статусе.
-          5. По завершении генерации возвращается объект `ImageResponse` с URL готового изображения.
-          6. Функция обрабатывает ошибки, возникающие в процессе генерации, и выбрасывает исключение `RuntimeError` или `ResponseError` в случае необходимости.
-
-        ASCII flowchart:
-
-         Начало
-         ↓
-         Формирование данных запроса (data)
-         ↓
-         Создание объекта JsonConversation
-         ↓
-         Получение ZeroGPU токена (при необходимости)
-         ↓
-         Выполнение POST-запроса для присоединения к очереди
-         ↓
-         Выполнение GET-запроса для получения данных о процессе генерации
-         │
-         ├─ Обработка каждого чанка данных
-         │  │
-         │  ├─ Обработка сообщений типа 'log' -> Reasoning
-         │  │
-         │  ├─ Обработка сообщений типа 'progress' -> Reasoning
-         │  │
-         │  ├─ Обработка сообщений типа 'process_generating' -> ImagePreview
-         │  │
-         │  └─ Обработка сообщений типа 'process_completed' -> ImageResponse
-         │
-         ↓
-         Конец
         """
         ...
 ```
 
+**Назначение**: Создает асинхронный генератор для генерации изображений с использованием API BlackForestLabs Flux-1-Dev.
+
 **Параметры**:
-- `model` (str): Имя модели.
+- `model` (str): Модель для генерации изображений.
 - `messages` (Messages): Список сообщений для формирования запроса.
 - `prompt` (str, optional): Текстовый запрос. По умолчанию `None`.
-- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
+- `proxy` (str, optional): Прокси-сервер. По умолчанию `None`.
 - `aspect_ratio` (str, optional): Соотношение сторон изображения. По умолчанию "1:1".
 - `width` (int, optional): Ширина изображения. По умолчанию `None`.
 - `height` (int, optional): Высота изображения. По умолчанию `None`.
-- `guidance_scale` (float, optional): Guidance scale. По умолчанию 3.5.
-- `num_inference_steps` (int, optional): Количество шагов inference. По умолчанию 28.
-- `seed` (int, optional): Seed для генерации. По умолчанию 0.
-- `randomize_seed` (bool, optional): Флаг для рандомизации seed. По умолчанию `True`.
-- `cookies` (dict, optional): Cookies для HTTP-запросов. По умолчанию `None`.
+- `guidance_scale` (float, optional): Масштаб соответствия запросу. По умолчанию 3.5.
+- `num_inference_steps` (int, optional): Количество шагов для генерации. По умолчанию 28.
+- `seed` (int, optional): Зерно для генерации. По умолчанию 0.
+- `randomize_seed` (bool, optional): Флаг для рандомизации зерна. По умолчанию `True`.
+- `cookies` (dict, optional): Куки для запросов. По умолчанию `None`.
 - `api_key` (str, optional): API ключ. По умолчанию `None`.
 - `zerogpu_uuid` (str, optional): UUID для ZeroGPU. По умолчанию "[object Object]".
 - `**kwargs`: Дополнительные параметры.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор, возвращающий объекты `ImagePreview`, `ImageResponse` и `Reasoning`.
+- `AsyncResult`: Асинхронный генератор, возвращающий изображения.
 
 **Вызывает исключения**:
-- `RuntimeError`: В случае ошибки при парсинге сообщения.
-- `ResponseError`: В случае ошибки ответа от сервера.
+- `RuntimeError`: Если не удается распарсить сообщение от API.
+- `ResponseError`: Если API возвращает ошибку.
 
-## Функции
+**Как работает функция**:
+1. **Инициализация сессии**: Создается асинхронная сессия с использованием `StreamSession`.
+2. **Форматирование запроса**: Формируется текстовый запрос на основе сообщений и `prompt`.
+3. **Подготовка данных**: Подготавливаются данные для запроса, включая размеры изображения, масштаб соответствия и количество шагов.
+4. **Создание объекта conversation**: Создается объект `JsonConversation`, содержащий информацию о сессии (zerogpu_token, zerogpu_uuid, session_hash).
+5. **Получение zerogpu_token**: Если `conversation.zerogpu_token` отсутствует, он получается с помощью `get_zerogpu_token`.
+6. **Отправка POST-запроса**: Отправляется POST-запрос к API для присоединения к очереди.
+7. **Отправка GET-запроса и обработка ответов**: Отправляется GET-запрос для получения данных и обрабатываются чанки ответа.
+8. **Обработка сообщений**: В зависимости от типа сообщения (log, progress, process_generating, process_completed) генерируются соответствующие объекты (`Reasoning`, `ImagePreview`, `ImageResponse`).
+9. **Обработка ошибок**: Обрабатываются ошибки парсинга JSON и ошибки, возвращаемые API.
 
-В данном модуле нет отдельных функций, не связанных с классами.
+**Внутренние функции**:
+
+Внутри `create_async_generator` нет явно определенных внутренних функций, но используется асинхронный контекстный менеджер `StreamSession` и `cls.run`. Также вызывается `get_zerogpu_token`, которая не определена в данном коде, но импортируется из другого модуля.
+
+**ASCII flowchart**:
+```
+    Начало
+    │
+    ├── Инициализация StreamSession
+    │
+    ├── Форматирование prompt
+    │
+    ├── Подготовка data (размеры, guidance_scale, num_inference_steps)
+    │
+    ├── Создание JsonConversation (zerogpu_token, zerogpu_uuid, session_hash)
+    │
+    ├── Проверка наличия zerogpu_token
+    │   ├── Отсутствует: Получение zerogpu_token с помощью get_zerogpu_token
+    │   │
+    │   └── Присутствует: Продолжение
+    │
+    ├── POST-запрос к /gradio_api/queue/join
+    │
+    ├── GET-запрос к /gradio_api/queue/data
+    │
+    ├── Обработка чанков ответа
+    │   ├── Проверка chunk.startswith(b"data: ")
+    │   │   ├── True: Обработка JSON
+    │   │   │   ├── msg == 'log': yield Reasoning
+    │   │   │   ├── msg == 'progress': yield Reasoning
+    │   │   │   ├── msg == 'process_generating': yield ImagePreview
+    │   │   │   ├── msg == 'process_completed': yield ImageResponse
+    │   │   │   └── Обработка ошибок парсинга JSON и ошибок API
+    │   │   └── False: Пропуск
+    │
+    └── Конец
+```
+
+**Примеры**:
+```python
+# Пример использования async-генератора для генерации изображения
+# async for item in BlackForestLabs_Flux1Dev.create_async_generator(model="flux-dev", messages=[{"role": "user", "content": "a cat"}], prompt="a cat"):
+#     if isinstance(item, ImageResponse):
+#         print(f"Image URL: {item.image_url}")

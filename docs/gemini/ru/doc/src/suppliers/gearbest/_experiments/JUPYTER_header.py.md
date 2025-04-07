@@ -2,74 +2,52 @@
 
 ## Обзор
 
-Модуль содержит экспериментальный код, связанный с поставщиком Gearbest. Включает в себя импорты различных модулей и классов, необходимых для работы с веб-драйвером, поставщиками, продуктами, категориями и утилитами.
-
-## Подробнее
-
-Данный код является частью проекта `hypotez` и содержит эксперименты, связанные с поставщиком Gearbest. В нем импортируются необходимые модули и классы для работы с веб-драйвером, поставщиками, продуктами, категориями и утилитами. Также модуль содержит функцию `start_supplier`, предназначенную для запуска поставщика с заданными параметрами.
+Модуль содержит экспериментальный код для работы с поставщиком Gearbest. Включает в себя импорты необходимых библиотек, настройки путей и функцию для запуска поставщика.
+## Подробней
+Данный модуль, расположенный в `src/suppliers/gearbest/_experiments/JUPYTER_header.py`, предназначен для экспериментов и отладки кода, связанного с поставщиком Gearbest. Модуль содержит настройки путей для импорта других модулей проекта, импортирует необходимые классы и функции, а также предоставляет функцию `start_supplier` для запуска поставщика с заданными параметрами.
 
 ## Функции
 
 ### `start_supplier`
 
 ```python
-def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en' ):
+def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en'):
     """ Старт поставщика """
-    ...
 ```
 
-**Назначение**: Функция для запуска поставщика с заданными параметрами.
+**Назначение**: Запускает поставщика с заданными параметрами.
 
 **Параметры**:
+
 - `supplier_prefix` (str): Префикс поставщика. По умолчанию 'aliexpress'.
-- `locale` (str): Локаль. По умолчанию 'en'.
+- `locale` (str): Локаль поставщика. По умолчанию 'en'.
 
 **Возвращает**:
-- `Supplier`: Объект поставщика, созданный с указанными параметрами.
+
+- `Supplier`: Объект поставщика, созданный с заданными параметрами.
 
 **Как работает функция**:
 
-1.  Определяет параметры в виде словаря, содержащего префикс и локаль поставщика.
-2.  Создает и возвращает экземпляр класса `Supplier` с переданными параметрами.
+1.  Функция принимает префикс поставщика (`supplier_prefix`) и локаль (`locale`) в качестве аргументов.
+2.  Создает словарь `params` с переданными значениями.
+3.  Инициализирует объект класса `Supplier` с использованием параметров из словаря `params`.
+4.  Возвращает созданный объект `Supplier`.
 
-```mermaid
-graph LR
-    A[Определение параметров] --> B(Создание экземпляра Supplier);
-    B --> C(Возврат экземпляра Supplier);
+```
+start_supplier
+|
+-- Создание словаря параметров params
+|
+-- Инициализация объекта Supplier с параметрами из params
+|
+Возврат объекта Supplier
 ```
 
 **Примеры**:
 
 ```python
-# Пример запуска поставщика с префиксом 'gearbest' и локалью 'ru'
-supplier = start_supplier(supplier_prefix='gearbest', locale='ru')
+# Запуск поставщика AliExpress с английской локалью
+supplier = start_supplier(supplier_prefix='aliexpress', locale='en')
 
-# Пример запуска поставщика с параметрами по умолчанию
-supplier = start_supplier()
-```
-```python
-from pathlib import Path
-import json
-import re
-
-
-#from settings import gs
-from src.webdriver.driver import Driver
-from src.suppliers import Supplier
-from src.product import Product, ProductFields
-from src.category import Category
-from src.utils import StringFormatter, StringNormalizer
-from src.utils.printer import  pprint
-from src.endpoints.PrestaShop import Product as PrestaProduct
-, save_text_file
-# ----------------
-
-def start_supplier(supplier_prefix: str = 'aliexpress', locale: str = 'en' ):
-    """ Старт поставщика """
-    params: dict = \
-    {
-        'supplier_prefix': supplier_prefix,
-        'locale': locale
-    }
-    
-    return Supplier(**params))
+# Запуск поставщика с русской локалью
+supplier = start_supplier(supplier_prefix='aliexpress', locale='ru')

@@ -2,32 +2,38 @@
 
 ## Обзор
 
-Модуль `profiling.py` предназначен для анализа и понимания характеристик популяций агентов в симуляции Tiny Troupe. Он предоставляет механизмы для определения таких параметров, как распределение возраста, типичные интересы и другие атрибуты агентов.
+Модуль `profiling.py` предоставляет механизмы для понимания характеристик популяций агентов, таких как их возрастное распределение, типичные интересы и так далее. Он содержит класс `Profiler`, который используется для анализа и визуализации данных об агентах.
 
-## Подробней
+## Подробнее
 
-Данный модуль содержит класс `Profiler`, который позволяет вычислять и визуализировать распределения атрибутов агентов. Это полезно для понимания демографических и поведенческих особенностей моделируемой популяции.
+Этот модуль позволяет профилировать агентов на основе заданных атрибутов, вычислять распределения этих атрибутов и визуализировать их в виде графиков. Это полезно для понимания структуры и характеристик популяции агентов в симуляциях или других приложениях.
 
 ## Классы
 
 ### `Profiler`
 
-**Описание**: Класс для профилирования агентов. Позволяет вычислять и отображать распределения атрибутов агентов, таких как возраст, профессия и национальность.
+**Описание**: Класс `Profiler` предназначен для профилирования агентов на основе заданных атрибутов. Он позволяет вычислять распределения атрибутов и визуализировать их.
+
+**Принцип работы**:
+
+1.  При инициализации класса задаются атрибуты для профилирования.
+2.  Метод `profile` вычисляет распределения атрибутов для заданных агентов.
+3.  Метод `render` визуализирует распределения атрибутов в виде графиков.
 
 **Атрибуты**:
 
-- `attributes` (List[str]): Список атрибутов для анализа распределения. По умолчанию `["age", "occupation", "nationality"]`.
-- `attributes_distributions` (dict): Словарь, содержащий распределения атрибутов в виде DataFrame. Ключ - название атрибута, значение - DataFrame с распределением.
+*   `attributes` (List[str]): Список атрибутов для профилирования. По умолчанию `["age", "occupation", "nationality"]`.
+*   `attributes_distributions` (dict): Словарь, содержащий распределения атрибутов. Ключ - атрибут, значение - DataFrame с распределением.
 
 **Методы**:
 
-- `__init__(attributes: List[str]=["age", "occupation", "nationality"]) -> None`: Инициализирует объект `Profiler` с заданным списком атрибутов.
-- `profile(agents: List[dict]) -> dict`: Профилирует переданных агентов, вычисляя распределения атрибутов.
-- `render() -> None`: Отображает профиль агентов, визуализируя распределения атрибутов.
-- `_compute_attributes_distributions(agents: list) -> dict`: Вычисляет распределения для всех указанных атрибутов агентов.
-- `_compute_attribute_distribution(agents: list, attribute: str) -> pd.DataFrame`: Вычисляет распределение заданного атрибута для агентов.
-- `_plot_attributes_distributions() -> None`: Отображает распределения всех атрибутов.
-- `_plot_attribute_distribution(attribute: str) -> pd.DataFrame`: Отображает распределение заданного атрибута.
+*   `__init__(attributes: List[str] = ["age", "occupation", "nationality"]) -> None`: Инициализирует класс `Profiler` с заданными атрибутами.
+*   `profile(agents: List[dict]) -> dict`: Профилирует заданных агентов.
+*   `render() -> None`: Визуализирует профиль агентов.
+*   `_compute_attributes_distributions(agents: list) -> dict`: Вычисляет распределения атрибутов для заданных агентов.
+*   `_compute_attribute_distribution(agents: list, attribute: str) -> pd.DataFrame`: Вычисляет распределение заданного атрибута для агентов.
+*   `_plot_attributes_distributions() -> None`: Строит графики распределений атрибутов для агентов.
+*   `_plot_attribute_distribution(attribute: str) -> pd.DataFrame`: Строит график распределения заданного атрибута для агентов.
 
 ## Функции
 
@@ -36,41 +42,39 @@
 ```python
 def __init__(self, attributes: List[str]=["age", "occupation", "nationality"]) -> None:
     """
-    Инициализирует объект Profiler с заданным списком атрибутов.
-
     Args:
-        attributes (List[str], optional): Список атрибутов для анализа распределения. По умолчанию `["age", "occupation", "nationality"]`.
-
+        attributes (List[str], optional): Атрибуты для профилирования. По умолчанию `["age", "occupation", "nationality"]`.
+    
     Returns:
         None
     """
     ...
 ```
 
-**Назначение**: Инициализирует объект `Profiler`, устанавливая атрибуты, которые будут анализироваться.
+**Назначение**: Инициализирует экземпляр класса `Profiler`.
 
 **Параметры**:
 
-- `attributes` (List[str], optional): Список атрибутов для анализа распределения. По умолчанию `["age", "occupation", "nationality"]`.
+*   `attributes` (List[str], optional): Список атрибутов, которые будут использоваться для профилирования агентов. По умолчанию `["age", "occupation", "nationality"]`.
+
+**Возвращает**:
+
+*   `None`
 
 **Как работает функция**:
 
-1.  Сохраняет переданный список атрибутов в атрибуте экземпляра `self.attributes`.
-2.  Инициализирует пустой словарь `self.attributes_distributions` для хранения вычисленных распределений атрибутов.
-
-```ascii
-A[Установка атрибутов и инициализация словаря распределений]
-↓
-B[Сохранение атрибутов в self.attributes]
-↓
-C[Инициализация self.attributes_distributions как пустого словаря]
-```
+1.  Функция принимает список атрибутов для профилирования агентов. Если атрибуты не указаны, используются значения по умолчанию: `"age"`, `"occupation"` и `"nationality"`.
+2.  Сохраняет список атрибутов в атрибуте `self.attributes`.
+3.  Инициализирует пустой словарь `self.attributes_distributions` для хранения распределений атрибутов.
 
 **Примеры**:
 
 ```python
-profiler = Profiler()  # Использует атрибуты по умолчанию
-profiler = Profiler(attributes=["age", "gender"])  # Задает кастомные атрибуты
+# Пример 1: Инициализация Profiler с атрибутами по умолчанию
+profiler = Profiler()
+
+# Пример 2: Инициализация Profiler с пользовательскими атрибутами
+profiler = Profiler(attributes=["age", "gender", "income"])
 ```
 
 ### `profile`
@@ -78,50 +82,44 @@ profiler = Profiler(attributes=["age", "gender"])  # Задает кастомн
 ```python
 def profile(self, agents: List[dict]) -> dict:
     """
-    Профилирует переданных агентов, вычисляя распределения атрибутов.
-
     Args:
-        agents (List[dict]): Список агентов для профилирования.
-
+        agents (List[dict]): Агенты для профилирования.
+    
     Returns:
-        dict: Словарь с распределениями атрибутов.
+        dict: Распределения атрибутов.
     """
     ...
 ```
 
-**Назначение**: Выполняет профилирование переданного списка агентов, вычисляя распределения их атрибутов.
+**Назначение**: Профилирует заданных агентов.
 
 **Параметры**:
 
-- `agents` (List[dict]): Список агентов для профилирования. Каждый агент представлен в виде словаря.
+*   `agents` (List[dict]): Список агентов для профилирования. Каждый агент представлен в виде словаря.
 
 **Возвращает**:
 
-- `dict`: Словарь, где ключи - это атрибуты, а значения - DataFrame с распределениями этих атрибутов.
+*   `dict`: Словарь, содержащий распределения атрибутов для заданных агентов.
 
 **Как работает функция**:
 
-1.  Вызывает метод `_compute_attributes_distributions` для вычисления распределений атрибутов переданных агентов.
-2.  Сохраняет вычисленные распределения в атрибуте экземпляра `self.attributes_distributions`.
-3.  Возвращает словарь `self.attributes_distributions`.
-
-```ascii
-A[Прием списка агентов]
-↓
-B[Вызов _compute_attributes_distributions для вычисления распределений]
-↓
-C[Сохранение распределений в self.attributes_distributions]
-↓
-D[Возврат словаря self.attributes_distributions]
-```
+1.  Функция принимает список агентов, которых необходимо профилировать.
+2.  Вызывает метод `_compute_attributes_distributions` для вычисления распределений атрибутов для заданных агентов.
+3.  Сохраняет вычисленные распределения атрибутов в атрибуте `self.attributes_distributions`.
+4.  Возвращает словарь распределений атрибутов.
 
 **Примеры**:
 
 ```python
-agents = [{"age": 25, "occupation": "teacher"}, {"age": 30, "occupation": "doctor"}]
+# Пример: Профилирование списка агентов
+agents = [
+    {"age": 25, "occupation": "engineer", "nationality": "US"},
+    {"age": 30, "occupation": "doctor", "nationality": "UK"},
+    {"age": 25, "occupation": "teacher", "nationality": "CA"},
+]
 profiler = Profiler()
-distributions = profiler.profile(agents)
-print(distributions)
+attribute_distributions = profiler.profile(agents)
+print(attribute_distributions)
 ```
 
 ### `render`
@@ -129,32 +127,38 @@ print(distributions)
 ```python
 def render(self) -> None:
     """
-    Отображает профиль агентов, визуализируя распределения атрибутов.
+    Args:
+        
+    
+    Returns:
+        None
     """
     ...
 ```
 
-**Назначение**: Визуализирует профиль агентов, отображая графики распределения атрибутов.
+**Назначение**: Визуализирует профиль агентов.
 
 **Параметры**:
-   - Отсутствуют
+
+*   Нет
 
 **Возвращает**:
-   - None
+
+*   `None`
 
 **Как работает функция**:
-1. Вызывает метод `_plot_attributes_distributions` для отображения графиков распределения атрибутов агентов.
 
-```ascii
-A[Вызов метода _plot_attributes_distributions]
-↓
-B[Отображение графиков распределения атрибутов]
-```
+1.  Вызывает метод `_plot_attributes_distributions` для построения графиков распределений атрибутов.
 
 **Примеры**:
 
 ```python
-agents = [{"age": 25, "occupation": "teacher"}, {"age": 30, "occupation": "doctor"}]
+# Пример: Визуализация профиля агентов
+agents = [
+    {"age": 25, "occupation": "engineer", "nationality": "US"},
+    {"age": 30, "occupation": "doctor", "nationality": "UK"},
+    {"age": 25, "occupation": "teacher", "nationality": "CA"},
+]
 profiler = Profiler()
 profiler.profile(agents)
 profiler.render()
@@ -165,56 +169,44 @@ profiler.render()
 ```python
 def _compute_attributes_distributions(self, agents: list) -> dict:
     """
-    Вычисляет распределения для всех указанных атрибутов агентов.
-
     Args:
-        agents (list): Список агентов, для которых нужно вычислить распределения атрибутов.
-
+        agents (list): Агенты, для которых вычисляются распределения атрибутов.
+    
     Returns:
-        dict: Словарь, содержащий распределения атрибутов.
+        dict: Распределения атрибутов.
     """
     ...
 ```
 
-**Назначение**: Вычисляет распределения для всех атрибутов, указанных в `self.attributes`, на основе данных переданных агентов.
+**Назначение**: Вычисляет распределения атрибутов для заданных агентов.
 
 **Параметры**:
 
-- `agents` (list): Список агентов, для которых нужно вычислить распределения атрибутов.
+*   `agents` (list): Список агентов, для которых необходимо вычислить распределения атрибутов.
 
 **Возвращает**:
 
-- `dict`: Словарь, где ключи - это атрибуты, а значения - DataFrame с распределениями этих атрибутов.
+*   `dict`: Словарь, содержащий распределения атрибутов. Ключ - атрибут, значение - DataFrame с распределением.
 
 **Как работает функция**:
 
-1.  Инициализирует пустой словарь `distributions` для хранения вычисленных распределений.
-2.  Перебирает каждый атрибут в списке `self.attributes`.
-3.  Для каждого атрибута вызывает метод `_compute_attribute_distribution` для вычисления распределения.
-4.  Сохраняет вычисленное распределение в словаре `distributions`.
-5.  Возвращает словарь `distributions`.
-
-```ascii
-A[Прием списка агентов]
-↓
-B[Инициализация словаря distributions]
-↓
-C[Перебор атрибутов в self.attributes]
-    ↓
-    D[Вызов _compute_attribute_distribution для текущего атрибута]
-    ↓
-    E[Сохранение распределения в словаре distributions]
-↓
-F[Возврат словаря distributions]
-```
+1.  Инициализирует пустой словарь `distributions` для хранения распределений атрибутов.
+2.  Для каждого атрибута в списке `self.attributes` вызывает метод `_compute_attribute_distribution` для вычисления распределения атрибута.
+3.  Сохраняет вычисленное распределение атрибута в словаре `distributions`.
+4.  Возвращает словарь распределений атрибутов.
 
 **Примеры**:
 
 ```python
-agents = [{"age": 25, "occupation": "teacher"}, {"age": 30, "occupation": "doctor"}]
-profiler = Profiler(attributes=["age", "occupation"])
-distributions = profiler._compute_attributes_distributions(agents)
-print(distributions)
+# Пример: Вычисление распределений атрибутов для списка агентов
+agents = [
+    {"age": 25, "occupation": "engineer", "nationality": "US"},
+    {"age": 30, "occupation": "doctor", "nationality": "UK"},
+    {"age": 25, "occupation": "teacher", "nationality": "CA"},
+]
+profiler = Profiler()
+attribute_distributions = profiler._compute_attributes_distributions(agents)
+print(attribute_distributions)
 ```
 
 ### `_compute_attribute_distribution`
@@ -222,59 +214,47 @@ print(distributions)
 ```python
 def _compute_attribute_distribution(self, agents: list, attribute: str) -> pd.DataFrame:
     """
-    Вычисляет распределение заданного атрибута для агентов.
-
     Args:
-        agents (list): Список агентов, для которых нужно вычислить распределение атрибута.
-        attribute (str): Атрибут, для которого нужно вычислить распределение.
-
+        agents (list): Агенты, для которых вычисляется распределение атрибута.
+        attribute (str): Атрибут, распределение которого необходимо вычислить.
+    
     Returns:
-        pd.DataFrame: DataFrame с распределением атрибута.
+        pd.DataFrame: Данные, используемые для построения графика.
     """
     ...
 ```
 
-**Назначение**: Вычисляет распределение значений заданного атрибута среди переданных агентов и возвращает его в виде DataFrame.
+**Назначение**: Вычисляет распределение заданного атрибута для агентов.
 
 **Параметры**:
 
-- `agents` (list): Список агентов, представленных в виде словарей.
-- `attribute` (str): Название атрибута, для которого вычисляется распределение.
+*   `agents` (list): Список агентов, для которых необходимо вычислить распределение атрибута.
+*   `attribute` (str): Атрибут, распределение которого необходимо вычислить.
 
 **Возвращает**:
 
-- `pd.DataFrame`: DataFrame, содержащий распределение значений атрибута. Индекс DataFrame - это уникальные значения атрибута, а столбец - количество агентов с соответствующим значением. DataFrame отсортирован по индексу (значениям атрибута).
+*   `pd.DataFrame`: DataFrame, содержащий распределение атрибута.
 
 **Как работает функция**:
 
-1.  Извлекает значения указанного атрибута для каждого агента в списке.
-2.  Создает DataFrame из списка значений атрибута.
-3.  Вычисляет количество вхождений каждого значения атрибута с помощью `value_counts()`.
-4.  Сортирует DataFrame по индексу (значениям атрибута) с помощью `sort_index()`.
-5.  Возвращает полученный DataFrame.
-
-```ascii
-A[Получение списка агентов и атрибута]
-↓
-B[Извлечение значений атрибута для каждого агента]
-↓
-C[Создание DataFrame из списка значений]
-↓
-D[Вычисление количества вхождений каждого значения]
-↓
-E[Сортировка DataFrame по индексу (значениям атрибута)]
-↓
-F[Возврат DataFrame]
-```
+1.  Извлекает значения заданного атрибута для каждого агента в списке `agents`.
+2.  Создает DataFrame из извлеченных значений.
+3.  Вычисляет количество каждого значения атрибута с помощью метода `value_counts`.
+4.  Сортирует DataFrame по индексу (значению атрибута) с помощью метода `sort_index`.
+5.  Возвращает DataFrame с распределением атрибута.
 
 **Примеры**:
 
 ```python
-import pandas as pd
-agents = [{"age": 25}, {"age": 30}, {"age": 25}]
+# Пример: Вычисление распределения атрибута "age" для списка агентов
+agents = [
+    {"age": 25, "occupation": "engineer", "nationality": "US"},
+    {"age": 30, "occupation": "doctor", "nationality": "UK"},
+    {"age": 25, "occupation": "teacher", "nationality": "CA"},
+]
 profiler = Profiler()
-df = profiler._compute_attribute_distribution(agents, "age")
-print(df)
+age_distribution = profiler._compute_attribute_distribution(agents, "age")
+print(age_distribution)
 ```
 
 ### `_plot_attributes_distributions`
@@ -282,35 +262,39 @@ print(df)
 ```python
 def _plot_attributes_distributions(self) -> None:
     """
-    Отображает распределения всех атрибутов.
+    Args:
+        
+    
+    Returns:
+        None
     """
     ...
 ```
 
-**Назначение**: Отображает графики распределения для каждого атрибута, указанного в списке `self.attributes`.
+**Назначение**: Строит графики распределений атрибутов для агентов.
 
 **Параметры**:
-    - Отсутствуют
+
+*   Нет
 
 **Возвращает**:
-    - None
+
+*   `None`
 
 **Как работает функция**:
 
-1.  Перебирает все атрибуты в списке `self.attributes`.
-2.  Для каждого атрибута вызывает метод `_plot_attribute_distribution`, который отвечает за построение графика распределения.
-
-```ascii
-A[Перебор атрибутов в self.attributes]
-    ↓
-    B[Вызов _plot_attribute_distribution для текущего атрибута]
-```
+1.  Для каждого атрибута в списке `self.attributes` вызывает метод `_plot_attribute_distribution` для построения графика распределения атрибута.
 
 **Примеры**:
 
 ```python
-agents = [{"age": 25, "occupation": "teacher"}, {"age": 30, "occupation": "doctor"}]
-profiler = Profiler(attributes=["age", "occupation"])
+# Пример: Построение графиков распределений атрибутов для списка агентов
+agents = [
+    {"age": 25, "occupation": "engineer", "nationality": "US"},
+    {"age": 30, "occupation": "doctor", "nationality": "UK"},
+    {"age": 25, "occupation": "teacher", "nationality": "CA"},
+]
+profiler = Profiler()
 profiler.profile(agents)
 profiler._plot_attributes_distributions()
 ```
@@ -320,57 +304,41 @@ profiler._plot_attributes_distributions()
 ```python
 def _plot_attribute_distribution(self, attribute: str) -> pd.DataFrame:
     """
-    Отображает распределение заданного атрибута.
-
     Args:
-        attribute (str): Атрибут, распределение которого нужно отобразить.
-
+        attribute (str): Атрибут, распределение которого необходимо построить.
+    
     Returns:
-        pd.DataFrame: DataFrame с данными, использованными для построения графика.
+        pd.DataFrame: Данные, используемые для построения графика.
     """
     ...
 ```
 
-**Назначение**: Отображает график распределения для заданного атрибута.
+**Назначение**: Строит график распределения заданного атрибута для агентов.
 
 **Параметры**:
 
-- `attribute` (str): Атрибут, распределение которого нужно отобразить.
+*   `attribute` (str): Атрибут, распределение которого необходимо построить.
 
 **Возвращает**:
 
-- `pd.DataFrame`: DataFrame, содержащий данные, использованные для построения графика.
+*   `pd.DataFrame`: DataFrame, содержащий данные, используемые для построения графика.
 
 **Как работает функция**:
 
 1.  Извлекает DataFrame с распределением атрибута из словаря `self.attributes_distributions`.
-2.  Строит столбчатую диаграмму (bar plot) на основе DataFrame.
+2.  Строит столбчатый график распределения атрибута с помощью метода `plot(kind='bar')`.
 3.  Добавляет заголовок к графику, содержащий название атрибута.
-4.  Отображает график с помощью `plt.show()`.
-5.  Возвращает DataFrame, использованный для построения графика.
-
-```ascii
-A[Получение атрибута]
-↓
-B[Извлечение DataFrame с распределением атрибута из self.attributes_distributions]
-↓
-C[Построение столбчатой диаграммы на основе DataFrame]
-↓
-D[Добавление заголовка к графику]
-↓
-E[Отображение графика с помощью plt.show()]
-↓
-F[Возврат DataFrame]
-```
+4.  Отображает график с помощью функции `plt.show()`.
 
 **Примеры**:
 
 ```python
-import pandas as pd
-import matplotlib.pyplot as plt
-agents = [{"age": 25}, {"age": 30}, {"age": 25}]
+# Пример: Построение графика распределения атрибута "age" для списка агентов
+agents = [
+    {"age": 25, "occupation": "engineer", "nationality": "US"},
+    {"age": 30, "occupation": "doctor", "nationality": "UK"},
+    {"age": 25, "occupation": "teacher", "nationality": "CA"},
+]
 profiler = Profiler()
 profiler.profile(agents)
-df = profiler._plot_attribute_distribution("age")
-plt.close() # Закрываем график после создания
-print(df)
+profiler._plot_attribute_distribution("age")

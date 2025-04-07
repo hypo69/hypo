@@ -1,12 +1,12 @@
-# Документация модуля `src.endpoints.bots.telegram`
+# Документация для модуля `src.endpoints.bots.telegram`
 
 ## Обзор
 
-Этот модуль содержит реализацию Telegram-бота, предназначенного для взаимодействия с пользователями через Telegram. Бот способен обрабатывать текстовые и голосовые сообщения, а также файлы документов. Он предоставляет базовые команды, такие как `/start` и `/help`, и имеет возможность отправлять PDF-файлы.
+Этот модуль содержит реализацию Telegram-бота, предназначенного для обработки различных команд, голосовых сообщений и файлов документов. Он обеспечивает интерактивное взаимодействие с пользователями Telegram.
 
 ## Подробнее
 
-Данный модуль является частью проекта `hypotez` и предназначен для обеспечения интерактивного взаимодействия с пользователями через Telegram. Бот использует библиотеку `python-telegram-bot` для работы с Telegram API и может быть расширен для реализации дополнительных функций, таких как транскрибирование голосовых сообщений и обработка различных типов документов. Расположение модуля в структуре проекта: `src/endpoints/bots/telegram`.
+Модуль интегрируется с Telegram API с использованием библиотеки `python-telegram-bot`. Он включает функции для приема и обработки команд, текстовых сообщений, голосовых сообщений и файлов документов.
 
 ## Классы
 
@@ -14,146 +14,23 @@
 
 **Описание**: Класс, представляющий Telegram-бота.
 
-**Принцип работы**: Класс инициализируется с токеном, полученным от Telegram API, и регистрирует обработчики для различных типов сообщений и команд. Он предоставляет методы для обработки команд `/start`, `/help`, голосовых сообщений, документов и текстовых сообщений.
+**Принцип работы**:
+Класс инициализируется с использованием токена, полученного от Telegram API. Он содержит методы для регистрации обработчиков команд и сообщений, а также методы для обработки различных типов входящих данных (команд, текста, голосовых сообщений, документов).
+
+**Атрибуты**:
+- `token` (str): Токен для аутентификации бота в Telegram API.
+- `application` (telegram.ext.Application): Объект приложения Telegram Bot.
 
 **Методы**:
-
-- `__init__(self, token: str)`: Инициализирует бота с токеном и регистрирует обработчики.
-- `register_handlers(self)`: Регистрирует обработчики команд и сообщений.
-- `start(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/start`.
-- `help_command(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/help`.
-- `send_pdf(self, pdf_file: str | Path)`: Обрабатывает команду `/sendpdf` для отправки PDF-файла.
-- `handle_voice(self, update: Update, context: CallbackContext)`: Обрабатывает голосовые сообщения и транскрибирует аудио.
-- `transcribe_voice(self, file_path: Path) -> str`: Транскрибирует голосовые сообщения (заглушка).
-- `handle_document(self, update: Update, context: CallbackContext) -> str`: Обрабатывает файлы документов и читает их содержимое.
-- `handle_message(self, update: Update, context: CallbackContext) -> str`: Обрабатывает текстовые сообщения и возвращает полученный текст.
-
-### `__init__`
-```python
-def __init__(self, token: str):
-    """
-    Инициализирует бота с токеном и регистрирует обработчики.
-
-    Args:
-        token (str): Токен бота, полученный от Telegram API.
-
-    """
-    ...
-```
-
-### `register_handlers`
-```python
-def register_handlers(self):
-    """
-    Регистрирует обработчики команд и сообщений.
-    """
-    ...
-```
-
-### `start`
-```python
-def start(self, update: Update, context: CallbackContext):
-    """
-    Обрабатывает команду `/start`.
-
-    Args:
-        update (Update): Объект обновления от Telegram API.
-        context (CallbackContext): Объект контекста от Telegram API.
-
-    """
-    ...
-```
-
-### `help_command`
-```python
-def help_command(self, update: Update, context: CallbackContext):
-    """
-    Обрабатывает команду `/help`.
-
-    Args:
-        update (Update): Объект обновления от Telegram API.
-        context (CallbackContext): Объект контекста от Telegram API.
-
-    """
-    ...
-```
-
-### `send_pdf`
-```python
-def send_pdf(self, pdf_file: str | Path):
-    """
-    Обрабатывает команду `/sendpdf` для отправки PDF-файла.
-
-    Args:
-        pdf_file (str | Path): Путь к PDF-файлу.
-
-    """
-    ...
-```
-
-### `handle_voice`
-```python
-def handle_voice(self, update: Update, context: CallbackContext):
-    """
-    Обрабатывает голосовые сообщения и транскрибирует аудио.
-
-    Args:
-        update (Update): Объект обновления от Telegram API.
-        context (CallbackContext): Объект контекста от Telegram API.
-
-    """
-    ...
-```
-
-Внутренняя функция `transcribe_voice`:
-```python
-def transcribe_voice(self, file_path: Path) -> str:
-    """
-    Транскрибирует голосовые сообщения (заглушка).
-
-    Args:
-        file_path (Path): Путь к файлу голосового сообщения.
-
-    Returns:
-        str: Транскрибированный текст (в настоящее время заглушка).
-
-    """
-    ...
-```
-
-### `handle_document`
-```python
-def handle_document(self, update: Update, context: CallbackContext) -> str:
-    """
-    Обрабатывает файлы документов и читает их содержимое.
-
-    Args:
-        update (Update): Объект обновления от Telegram API.
-        context (CallbackContext): Объект контекста от Telegram API.
-
-    Returns:
-        str: Содержимое текстового документа.
-
-    """
-    ...
-```
-
-### `handle_message`
-```python
-def handle_message(self, update: Update, context: CallbackContext) -> str:
-    """
-    Обрабатывает текстовые сообщения и возвращает полученный текст.
-
-    Args:
-        update (Update): Объект обновления от Telegram API.
-        context (CallbackContext): Объект контекста от Telegram API.
-
-    Returns:
-        str: Текст сообщения.
-
-    """
-    ...
-```
+- `__init__(self, token: str)`: Инициализирует бота с заданным токеном и регистрирует обработчики.
+- `register_handlers(self)`: Регистрирует обработчики для различных команд и типов сообщений.
+- `start(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/start`, отправляя приветственное сообщение пользователю.
+- `help_command(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/help`, предоставляя список доступных команд.
+- `send_pdf(self, pdf_file: str | Path)`: Обрабатывает команду `/sendpdf`, отправляя PDF-файл пользователю.
+- `handle_voice(self, update: Update, context: CallbackContext)`: Обрабатывает голосовые сообщения, загружает файл и пытается транскрибировать аудио.
+- `transcribe_voice(self, file_path: Path) -> str`: Транскрибирует голосовые сообщения (в текущей версии - заглушка).
+- `handle_document(self, update: Update, context: CallbackContext) -> str`: Обрабатывает файлы документов, загружает файл и читает содержимое текстового документа.
+- `handle_message(self, update: Update, context: CallbackContext) -> str`: Обрабатывает текстовые сообщения, возвращая полученный текст.
 
 ## Функции
 
@@ -162,36 +39,26 @@ def handle_message(self, update: Update, context: CallbackContext) -> str:
 ```python
 def main():
     """
-    Инициализирует бота, регистрирует обработчики команд и сообщений,
-    и запускает бота с помощью `run_polling()`.
+    Инициализирует и запускает Telegram-бота.
     """
-    ...
 ```
 
-**Назначение**: Инициализирует и запускает Telegram-бота.
+**Назначение**: Инициализация и запуск Telegram-бота.
 
 **Как работает функция**:
 
-1.  **Инициализация бота**: Создается экземпляр класса `TelegramBot` с использованием токена, полученного из переменной окружения.
-2.  **Регистрация обработчиков**: Вызывается метод `register_handlers` для регистрации обработчиков команд и сообщений.
-3.  **Запуск бота**: Бот запускается с помощью метода `run_polling()`, который начинает прослушивание входящих сообщений от Telegram API.
+1.  **Загрузка токена бота**: Функция сначала пытается получить токен бота из переменной окружения `TELEGRAM_TOKEN`. Если токен не найден, выводится сообщение об ошибке, и программа завершается.
+2.  **Инициализация бота**: Создается экземпляр класса `TelegramBot` с использованием полученного токена.
+3.  **Запуск бота**: Запускается процесс поллинга (опроса) обновлений от Telegram, что позволяет боту активно реагировать на входящие сообщения и команды.
+
+```
+    Получение токена из TELEGRAM_TOKEN  --→ Инициализация TelegramBot --→  Запуск процесса поллинга
+```
 
 **Примеры**:
-
-Пример запуска бота:
+- Запуск бота с установленным токеном:
 
 ```python
-if __name__ == '__main__':
-    main()
-```
-```
- A: Получение токена из переменных окружения
- |
- V
- B: Инициализация экземпляра TelegramBot с полученным токеном
- |
- V
- C: Регистрация обработчиков сообщений
- |
- V
- D: Запуск бота в режиме polling, ожидание входящих сообщений из Telegram
+import os
+os.environ['TELEGRAM_TOKEN'] = 'YOUR_TELEGRAM_TOKEN'  # Установите токен в переменной окружения
+main()

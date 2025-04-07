@@ -2,28 +2,26 @@
 
 ## Обзор
 
-Модуль `pricelist` предназначен для работы с запросами списка цен в PrestaShop. Он предоставляет класс `PriceListRequester`, который позволяет запрашивать цены для указанных товаров, обновлять источник данных для запроса цен и модифицировать цены товаров.
+Модуль `pricelist` предназначен для работы с запросами списка цен PrestaShop. Он включает в себя класс `PriceListRequester`, который позволяет запрашивать и обновлять цены товаров через API PrestaShop.
 
 ## Подробнее
 
-Модуль `pricelist` является частью системы для взаимодействия с API PrestaShop. Он использует класс `PrestaShop` из модуля `src.endpoints.prestashop.api` для выполнения запросов к API.
-
-Модуль позволяет получать актуальные цены товаров из PrestaShop, что важно для поддержания актуальности информации о ценах в системе.
+Этот модуль предоставляет функциональность для интеграции с PrestaShop API, позволяя автоматизировать процесс получения и обновления цен товаров. Он использует класс `PrestaShop` из модуля `src.endpoints.prestashop.api` для взаимодействия с API PrestaShop. Модуль предназначен для работы как в Windows, так и в Unix-подобных операционных системах.
 
 ## Классы
 
 ### `PriceListRequester`
 
-**Описание**: Класс для запроса списка цен в PrestaShop.
+**Описание**: Класс `PriceListRequester` используется для запроса списка цен товаров из PrestaShop.
 
 **Наследует**:
-- `PrestaShop`: Базовый класс для работы с API PrestaShop.
+- `PrestaShop`: Наследует базовый класс для работы с API PrestaShop.
 
 **Методы**:
-- `__init__`: Инициализирует объект класса `PriceListRequester`.
-- `request_prices`: Запрашивает список цен для указанных товаров.
-- `update_source`: Обновляет источник данных для запроса цен.
-- `modify_product_price`: Модифицирует цену указанного товара.
+- `__init__(self, api_credentials: Dict[str, str]) -> None`: Инициализирует объект класса `PriceListRequester`.
+- `request_prices(self, products: List[str]) -> Dict[str, float]`: Запрашивает список цен для указанных товаров.
+- `update_source(self, new_source: str) -> None`: Обновляет источник данных для запроса цен.
+- `modify_product_price(self, product: str, new_price: float) -> None`: Модифицирует цену указанного товара.
 
 #### `__init__`
 
@@ -42,30 +40,14 @@ def __init__(self, api_credentials: Dict[str, str]) -> None:
     ...
 ```
 
-**Назначение**: Инициализация объекта класса `PriceListRequester`.
+**Назначение**: Инициализирует объект класса `PriceListRequester`, принимая учетные данные API.
 
 **Параметры**:
-- `api_credentials` (Dict[str, str]): Словарь с учетными данными для API, включая `api_domain` и `api_key`.
-
-**Возвращает**:
-- `None`
+- `api_credentials` (Dict[str, str]): Словарь, содержащий учетные данные для API PrestaShop, включая `api_domain` и `api_key`.
 
 **Как работает функция**:
-1. Функция принимает словарь `api_credentials`, содержащий учетные данные для доступа к API PrestaShop.
-2. Вызывает конструктор базового класса `PrestaShop`, передавая ему домен API (`api_domain`) и ключ API (`api_key`) из переданного словаря.
-
-```mermaid
-graph LR
-    A[Начало] --> B{Получение api_credentials};
-    B --> C{Вызов super().__init__(api_credentials['api_domain'], api_credentials['api_key'])};
-    C --> D[Конец];
-```
-
-**Примеры**:
-```python
-api_credentials = {'api_domain': 'example.com', 'api_key': '12345'}
-requester = PriceListRequester(api_credentials)
-```
+1. Функция `__init__` принимает словарь `api_credentials`, содержащий домен API и ключ API.
+2. Вызывает конструктор родительского класса `PrestaShop`, передавая ему `api_domain` и `api_key` для инициализации соединения с API PrestaShop.
 
 #### `request_prices`
 
@@ -81,41 +63,22 @@ def request_prices(self, products: List[str]) -> Dict[str, float]:
         Dict[str, float]: Словарь, где ключами являются товары, а значениями - их цены.
             Например: {'product1': 10.99, 'product2': 5.99}
     """
-    # Здесь код для отправки запроса на получение цен из источника данных
     ...
-    return {}
 ```
 
-**Назначение**: Запрос списка цен для указанных товаров.
+**Назначение**: Запрашивает цены для списка товаров.
 
 **Параметры**:
-- `products` (List[str]): Список товаров, для которых требуется получить цены.
+- `products` (List[str]): Список товаров, для которых необходимо получить цены.
 
 **Возвращает**:
-- `Dict[str, float]`: Словарь, где ключами являются товары, а значениями - их цены. Возвращает пустой словарь `{}`.
+- `Dict[str, float]`: Словарь, где ключи - это названия товаров, а значения - их соответствующие цены.
 
 **Как работает функция**:
-1. Функция принимает список названий товаров `products`.
-2. <логика получения цен из источника данных>.
-3. Возвращает словарь, где ключами являются названия товаров, а значениями - их цены.
-
-```mermaid
-graph LR
-    A[Начало] --> B{Получение списка товаров products};
-    B --> C{Запрос цен для каждого товара из products};
-    C --> D{Создание словаря цен};
-    D --> E[Возврат словаря цен];
-    E --> F[Конец];
-```
-
-**Примеры**:
-```python
-api_credentials = {'api_domain': 'example.com', 'api_key': '12345'}
-requester = PriceListRequester(api_credentials)
-products = ['product1', 'product2', 'product3']
-prices = requester.request_prices(products)
-print(prices)  # {}
-```
+1. Функция `request_prices` принимает список названий товаров `products`.
+2. Отправляет запрос в источник данных для получения цен на указанные товары.
+3. Формирует словарь, где ключами являются названия товаров, а значениями - их цены.
+4. Возвращает полученный словарь.
 
 #### `update_source`
 
@@ -130,35 +93,17 @@ def update_source(self, new_source: str) -> None:
     Returns:
         None
     """
-    self.source = new_source
+    ...
 ```
 
-**Назначение**: Обновление источника данных для запроса цен.
+**Назначение**: Обновляет источник данных для запроса цен.
 
 **Параметры**:
 - `new_source` (str): Новый источник данных.
 
-**Возвращает**:
-- `None`
-
 **Как работает функция**:
-1. Функция принимает новый источник данных `new_source` в виде строки.
-2. Присваивает значение `new_source` атрибуту `source` экземпляра класса.
-
-```mermaid
-graph LR
-    A[Начало] --> B{Получение new_source};
-    B --> C{Присвоение self.source = new_source};
-    C --> D[Конец];
-```
-
-**Примеры**:
-```python
-api_credentials = {'api_domain': 'example.com', 'api_key': '12345'}
-requester = PriceListRequester(api_credentials)
-new_source = 'new_data_source'
-requester.update_source(new_source)
-```
+1. Функция `update_source` принимает новый источник данных `new_source`.
+2. Обновляет атрибут `source` объекта класса `PriceListRequester` новым значением.
 
 #### `modify_product_price`
 
@@ -174,35 +119,19 @@ def modify_product_price(self, product: str, new_price: float) -> None:
     Returns:
         None
     """
-    # Здесь код для изменения цены товара в источнике данных
     ...
 ```
 
-**Назначение**: Модификация цены указанного товара.
+**Назначение**: Изменяет цену указанного товара в источнике данных.
 
 **Параметры**:
-- `product` (str): Название товара.
+- `product` (str): Название товара, цену которого необходимо изменить.
 - `new_price` (float): Новая цена товара.
 
-**Возвращает**:
-- `None`
-
 **Как работает функция**:
-1. Функция принимает название товара `product` и новую цену `new_price`.
-2. <Логика обновления цены товара в источнике данных>.
+1. Функция `modify_product_price` принимает название товара `product` и новую цену `new_price`.
+2. Выполняет операцию изменения цены товара в источнике данных (код не показан, обозначен как `...`).
 
-```mermaid
-graph LR
-    A[Начало] --> B{Получение product и new_price};
-    B --> C{Обновление цены товара в источнике данных};
-    C --> D[Конец];
-```
+## Функции
 
-**Примеры**:
-```python
-api_credentials = {'api_domain': 'example.com', 'api_key': '12345'}
-requester = PriceListRequester(api_credentials)
-product = 'test_product'
-new_price = 19.99
-requester.modify_product_price(product, new_price)
-```
+В данном модуле нет отдельных функций, не относящихся к классам.

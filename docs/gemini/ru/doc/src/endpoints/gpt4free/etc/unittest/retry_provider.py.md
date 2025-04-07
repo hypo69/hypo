@@ -1,335 +1,272 @@
-# Модуль для тестирования провайдера с повторными попытками
-=====================================================
-
-Модуль содержит набор тестов для проверки функциональности `IterListProvider`, который позволяет последовательно перебирать список провайдеров, пока один из них не вернет успешный результат.
+# Модуль `retry_provider.py`
 
 ## Обзор
 
-Этот модуль предназначен для тестирования класса `IterListProvider`, который используется для повторных попыток с разными провайдерами в случае неудачи. Он включает в себя тесты для проверки корректной работы `IterListProvider` при различных сценариях, таких как пропуск провайдеров, возвращающих исключения или `None`, а также для проверки потоковой передачи данных.
+Модуль содержит тесты для проверки функциональности провайдера `IterListProvider`, который позволяет перебирать список провайдеров, пока один из них не вернет успешный результат. В тестах используются моки провайдеров, имитирующие различные сценарии, такие как генерация исключений, возвращение `None` и успешное возвращение результата. Модуль предназначен для проверки устойчивости и корректности работы `IterListProvider` в различных ситуациях.
 
 ## Подробней
 
-Модуль использует библиотеку `unittest` для создания и запуска тестов. В тестах используются моки провайдеров (`YieldProviderMock`, `RaiseExceptionProviderMock`, `AsyncRaiseExceptionProviderMock`, `YieldNoneProviderMock`) для имитации различных сценариев поведения провайдеров. Это позволяет проверить, что `IterListProvider` правильно обрабатывает ошибки и переходит к следующему провайдеру в списке.
+Модуль `retry_provider.py` расположен в директории `hypotez/src/endpoints/gpt4free/etc/unittest/`. Это указывает на то, что он является частью набора модульных тестов для проекта `hypotez`. В частности, он тестирует функциональность, связанную с обработкой нескольких провайдеров, где при неудаче одного провайдера происходит переключение на другой. Это важно для обеспечения отказоустойчивости и надежности системы.
 
 ## Классы
 
 ### `TestIterListProvider`
 
-**Описание**: Класс, содержащий набор асинхронных тестов для проверки `IterListProvider`.
+**Описание**: Класс `TestIterListProvider` содержит набор асинхронных тестов, предназначенных для проверки поведения `IterListProvider`.
 
 **Наследует**:
 
-- `unittest.IsolatedAsyncioTestCase`: Класс для создания асинхронных тестов.
+- `unittest.IsolatedAsyncioTestCase`: Этот класс обеспечивает основу для написания асинхронных тестов, гарантируя, что каждый тест выполняется в изолированной среде.
+
+**Атрибуты**:
+
+- `DEFAULT_MESSAGES (List[Dict[str, str]])`: Список сообщений по умолчанию, используемый в тестах. Содержит одно сообщение с ролью `user` и содержанием `Hello`.
 
 **Методы**:
 
-- `test_skip_provider`: Проверяет, что `IterListProvider` пропускает провайдера, выбрасывающего исключение, и использует следующего провайдера в списке.
-- `test_only_one_result`: Проверяет, что `IterListProvider` использует только один результат от первого успешного провайдера.
-- `test_stream_skip_provider`: Проверяет, что `IterListProvider` пропускает асинхронного провайдера, выбрасывающего исключение при потоковой передаче, и использует следующего провайдера в списке.
-- `test_stream_only_one_result`: Проверяет, что при потоковой передаче `IterListProvider` использует только один результат от первого успешного провайдера.
-- `test_skip_none`: Проверяет, что `IterListProvider` пропускает провайдера, возвращающего `None`, и использует следующего провайдера в списке.
-- `test_stream_skip_none`: Проверяет, что при потоковой передаче `IterListProvider` пропускает провайдера, возвращающего `None`, и использует следующего провайдера в списке.
+- `test_skip_provider()`: Тестирует случай, когда первый провайдер генерирует исключение, и `IterListProvider` переходит ко второму провайдеру, который успешно возвращает результат.
+- `test_only_one_result()`: Тестирует случай, когда `IterListProvider` использует только первый провайдер из списка, даже если в списке есть другие провайдеры.
+- `test_stream_skip_provider()`: Тестирует случай с потоковой передачей данных, когда первый провайдер генерирует исключение, и `IterListProvider` переходит ко второму провайдеру, который успешно возвращает результат.
+- `test_stream_only_one_result()`: Тестирует случай с потоковой передачей данных, когда `IterListProvider` использует только первый провайдер из списка, даже если в списке есть другие провайдеры.
+- `test_skip_none()`: Тестирует случай, когда первый провайдер возвращает `None`, и `IterListProvider` переходит ко второму провайдеру, который успешно возвращает результат.
+- `test_stream_skip_none()`: Тестирует случай с потоковой передачей данных, когда первый провайдер возвращает `None`, и `IterListProvider` переходит ко второму провайдеру, который успешно возвращает результат.
 
 ## Функции
 
 ### `test_skip_provider`
 
 ```python
-async def test_skip_provider(self):
-    """Проверяет, что IterListProvider пропускает провайдера, выбрасывающего исключение, и использует следующего провайдера в списке."""
-    ...
+    async def test_skip_provider(self):
+        """
+        Тестирует случай, когда первый провайдер генерирует исключение, и IterListProvider переходит ко второму провайдеру,
+        который успешно возвращает результат.
+        """
 ```
 
-**Назначение**: Проверка, что `IterListProvider` корректно обрабатывает ситуацию, когда один из провайдеров в списке выбрасывает исключение, и переходит к следующему провайдеру.
+**Назначение**:
+
+Проверяет, что `IterListProvider` корректно обрабатывает ситуацию, когда первый провайдер в списке вызывает исключение, и переключается на следующего провайдера, который возвращает успешный результат.
 
 **Параметры**:
 
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+- Отсутствуют
 
 **Возвращает**:
 
-- `None`
+- Отсутствует
+
+**Вызывает исключения**:
+
+- Не вызывает
 
 **Как работает функция**:
 
-1. Создается экземпляр `AsyncClient` с `IterListProvider`, который содержит список из `RaiseExceptionProviderMock` (который выбрасывает исключение) и `YieldProviderMock` (который возвращает успешный результат).
-2. Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой.
-3. Проверяется, что возвращенный результат является экземпляром `ChatCompletion`.
-4. Проверяется, что содержимое сообщения в возвращенном результате равно "Hello", что указывает на то, что был использован `YieldProviderMock`.
-
-```
-Создание AsyncClient с IterListProvider
-↓
-Вызов client.chat.completions.create
-↓
-Проверка, что возвращенный результат - ChatCompletion
-↓
-Проверка содержимого сообщения ("Hello")
-```
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, который настроен на использование `RaiseExceptionProviderMock` (генерирует исключение) и `YieldProviderMock` (возвращает успешный результат).
+2.  Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой.
+3.  Проверяется, что возвращенный объект является экземпляром `ChatCompletion`.
+4.  Проверяется, что содержимое сообщения в возвращенном объекте соответствует ожидаемому значению "Hello", что указывает на то, что был использован второй провайдер (`YieldProviderMock`).
 
 **Примеры**:
 
 ```python
-# Пример использования в асинхронном тесте
-async def test_skip_provider(self):
-    client = AsyncClient(provider=IterListProvider([RaiseExceptionProviderMock, YieldProviderMock], False))
-    response = await client.chat.completions.create(DEFAULT_MESSAGES, "")
-    self.assertIsInstance(response, ChatCompletion)
-    self.assertEqual("Hello", response.choices[0].message.content)
+await TestIterListProvider().test_skip_provider()
 ```
 
 ### `test_only_one_result`
 
 ```python
-async def test_only_one_result(self):
-    """Проверяет, что IterListProvider использует только один результат от первого успешного провайдера."""
-    ...
+    async def test_only_one_result(self):
+        """
+        Тестирует случай, когда IterListProvider использует только первый провайдер из списка,
+        даже если в списке есть другие провайдеры.
+        """
 ```
 
-**Назначение**: Проверка, что `IterListProvider` использует результат только от первого успешного провайдера и не пытается использовать результаты от последующих провайдеров.
+**Назначение**:
+
+Проверяет, что `IterListProvider` использует только первый доступный провайдер и не пытается использовать другие провайдеры в списке, если первый провайдер успешно вернул результат.
 
 **Параметры**:
 
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+- Отсутствуют
 
 **Возвращает**:
 
-- `None`
+- Отсутствует
+
+**Вызывает исключения**:
+
+- Не вызывает
 
 **Как работает функция**:
 
-1. Создается экземпляр `AsyncClient` с `IterListProvider`, который содержит список из двух `YieldProviderMock`.
-2. Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой.
-3. Проверяется, что возвращенный результат является экземпляром `ChatCompletion`.
-4. Проверяется, что содержимое сообщения в возвращенном результате равно "Hello", что указывает на то, что был использован только первый `YieldProviderMock`.
-
-```
-Создание AsyncClient с IterListProvider
-↓
-Вызов client.chat.completions.create
-↓
-Проверка, что возвращенный результат - ChatCompletion
-↓
-Проверка содержимого сообщения ("Hello")
-```
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, который настроен на использование двух экземпляров `YieldProviderMock` (оба возвращают успешный результат).
+2.  Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой.
+3.  Проверяется, что возвращенный объект является экземпляром `ChatCompletion`.
+4.  Проверяется, что содержимое сообщения в возвращенном объекте соответствует ожидаемому значению "Hello", что указывает на то, что был использован первый провайдер (`YieldProviderMock`).
 
 **Примеры**:
 
 ```python
-# Пример использования в асинхронном тесте
-async def test_only_one_result(self):
-    client = AsyncClient(provider=IterListProvider([YieldProviderMock, YieldProviderMock]))
-    response = await client.chat.completions.create(DEFAULT_MESSAGES, "")
-    self.assertIsInstance(response, ChatCompletion)
-    self.assertEqual("Hello", response.choices[0].message.content)
+await TestIterListProvider().test_only_one_result()
 ```
 
 ### `test_stream_skip_provider`
 
 ```python
-async def test_stream_skip_provider(self):
-    """Проверяет, что IterListProvider пропускает асинхронного провайдера, выбрасывающего исключение при потоковой передаче, и использует следующего провайдера в списке."""
-    ...
+    async def test_stream_skip_provider(self):
+        """
+        Тестирует случай с потоковой передачей данных, когда первый провайдер генерирует исключение,
+        и IterListProvider переходит ко второму провайдеру, который успешно возвращает результат.
+        """
 ```
 
-**Назначение**: Проверка, что при потоковой передаче `IterListProvider` корректно обрабатывает ситуацию, когда один из асинхронных провайдеров выбрасывает исключение, и переходит к следующему провайдеру.
+**Назначение**:
+
+Проверяет, что `IterListProvider` корректно обрабатывает ситуацию потоковой передачи данных, когда первый провайдер в списке вызывает исключение, и переключается на следующего провайдера, который возвращает успешный результат.
 
 **Параметры**:
 
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+- Отсутствуют
 
 **Возвращает**:
 
-- `None`
+- Отсутствует
+
+**Вызывает исключения**:
+
+- Не вызывает
 
 **Как работает функция**:
 
-1. Создается экземпляр `AsyncClient` с `IterListProvider`, который содержит список из `AsyncRaiseExceptionProviderMock` (который выбрасывает исключение) и `YieldProviderMock` (который возвращает успешный результат).
-2. Формируются сообщения для запроса, где каждое слово является отдельным сообщением.
-3. Вызывается метод `client.chat.completions.create` с потоковой передачей (`stream=True`).
-4. В асинхронном цикле перебираются чанки ответа и проверяется, что каждый чанк является экземпляром `ChatCompletionChunk`.
-5. Проверяется, что содержимое каждого чанка является строкой.
-
-```
-Создание AsyncClient с IterListProvider
-↓
-Формирование сообщений для запроса
-↓
-Вызов client.chat.completions.create с stream=True
-↓
-Асинхронный перебор чанков ответа
-↓
-Проверка, что каждый чанк - ChatCompletionChunk
-↓
-Проверка, что содержимое чанка - строка
-```
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, который настроен на использование `AsyncRaiseExceptionProviderMock` (генерирует исключение асинхронно) и `YieldProviderMock` (возвращает успешный результат).
+2.  Создается список сообщений для потоковой передачи, где каждое сообщение содержит часть текста.
+3.  Вызывается метод `client.chat.completions.create` с потоковой передачей (`stream=True`).
+4.  Асинхронно перебираются чанки ответа и проверяется, что каждый чанк является экземпляром `ChatCompletionChunk`.
+5.  Проверяется, что содержимое каждого чанка (если оно не `None`) является строкой.
 
 **Примеры**:
 
 ```python
-# Пример использования в асинхронном тесте
-async def test_stream_skip_provider(self):
-    client = AsyncClient(provider=IterListProvider([AsyncRaiseExceptionProviderMock, YieldProviderMock], False))
-    messages = [{'role': 'user', 'content': chunk} for chunk in ["How ", "are ", "you", "?"]]
-    response = client.chat.completions.create(messages, "Hello", stream=True)
-    async for chunk in response:
-        chunk: ChatCompletionChunk = chunk
-        self.assertIsInstance(chunk, ChatCompletionChunk)
-        if chunk.choices[0].delta.content is not None:
-            self.assertIsInstance(chunk.choices[0].delta.content, str)
+await TestIterListProvider().test_stream_skip_provider()
 ```
 
 ### `test_stream_only_one_result`
 
 ```python
-async def test_stream_only_one_result(self):
-    """Проверяет, что при потоковой передаче IterListProvider использует только один результат от первого успешного провайдера."""
-    ...
+    async def test_stream_only_one_result(self):
+        """
+        Тестирует случай с потоковой передачей данных, когда IterListProvider использует только первый провайдер из списка,
+        даже если в списке есть другие провайдеры.
+        """
 ```
 
-**Назначение**: Проверка, что при потоковой передаче `IterListProvider` использует результат только от первого успешного провайдера и не пытается использовать результаты от последующих провайдеров.
+**Назначение**:
+
+Проверяет, что при потоковой передаче данных `IterListProvider` использует только первый доступный провайдер и не пытается использовать другие провайдеры в списке, если первый провайдер успешно вернул результат.
 
 **Параметры**:
 
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+- Отсутствуют
 
 **Возвращает**:
 
-- `None`
+- Отсутствует
+
+**Вызывает исключения**:
+
+- Не вызывает
 
 **Как работает функция**:
 
-1. Создается экземпляр `AsyncClient` с `IterListProvider`, который содержит список из двух `YieldProviderMock`.
-2. Формируются сообщения для запроса, где каждое слово является отдельным сообщением.
-3. Вызывается метод `client.chat.completions.create` с потоковой передачей (`stream=True`) и ограничением на максимальное количество токенов (`max_tokens=2`).
-4. В асинхронном цикле перебираются чанки ответа и добавляются в список `response_list`.
-5. Проверяется, что длина списка `response_list` равна 3.
-6. Проверяется, что содержимое каждого чанка равно "You ", что указывает на то, что был использован только первый `YieldProviderMock`.
-
-```
-Создание AsyncClient с IterListProvider
-↓
-Формирование сообщений для запроса
-↓
-Вызов client.chat.completions.create с stream=True и max_tokens=2
-↓
-Асинхронный перебор чанков ответа
-↓
-Проверка длины списка ответов (3)
-↓
-Проверка содержимого каждого чанка ("You ")
-```
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, который настроен на использование двух экземпляров `YieldProviderMock` (оба возвращают успешный результат).
+2.  Создается список сообщений для потоковой передачи, где каждое сообщение содержит часть текста.
+3.  Вызывается метод `client.chat.completions.create` с потоковой передачей (`stream=True`) и ограничением на максимальное количество токенов (`max_tokens=2`).
+4.  Асинхронно перебираются чанки ответа и добавляются в список `response_list`.
+5.  Проверяется, что количество чанков в `response_list` равно 3.
+6.  Проверяется, что содержимое каждого чанка (если оно не `None`) соответствует ожидаемому значению "You ".
 
 **Примеры**:
 
 ```python
-# Пример использования в асинхронном тесте
-async def test_stream_only_one_result(self):
-    client = AsyncClient(provider=IterListProvider([YieldProviderMock, YieldProviderMock], False))
-    messages = [{'role': 'user', 'content': chunk} for chunk in ["You ", "You "]]
-    response = client.chat.completions.create(messages, "Hello", stream=True, max_tokens=2)
-    response_list = []
-    async for chunk in response:
-        response_list.append(chunk)
-    self.assertEqual(len(response_list), 3)
-    for chunk in response_list:
-        if chunk.choices[0].delta.content is not None:
-            self.assertEqual(chunk.choices[0].delta.content, "You ")
+await TestIterListProvider().test_stream_only_one_result()
 ```
 
 ### `test_skip_none`
 
 ```python
-async def test_skip_none(self):
-    """Проверяет, что IterListProvider пропускает провайдера, возвращающего None, и использует следующего провайдера в списке."""
-    ...
+    async def test_skip_none(self):
+        """
+        Тестирует случай, когда первый провайдер возвращает None, и IterListProvider переходит ко второму провайдеру,
+        который успешно возвращает результат.
+        """
 ```
 
-**Назначение**: Проверка, что `IterListProvider` корректно обрабатывает ситуацию, когда один из провайдеров в списке возвращает `None`, и переходит к следующему провайдеру.
+**Назначение**:
+
+Проверяет, что `IterListProvider` корректно обрабатывает ситуацию, когда первый провайдер в списке возвращает `None`, и переключается на следующего провайдера, который возвращает успешный результат.
 
 **Параметры**:
 
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+- Отсутствуют
 
 **Возвращает**:
 
-- `None`
+- Отсутствует
+
+**Вызывает исключения**:
+
+- Не вызывает
 
 **Как работает функция**:
 
-1. Создается экземпляр `AsyncClient` с `IterListProvider`, который содержит список из `YieldNoneProviderMock` (который возвращает `None`) и `YieldProviderMock` (который возвращает успешный результат).
-2. Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой.
-3. Проверяется, что возвращенный результат является экземпляром `ChatCompletion`.
-4. Проверяется, что содержимое сообщения в возвращенном результате равно "Hello", что указывает на то, что был использован `YieldProviderMock`.
-
-```
-Создание AsyncClient с IterListProvider
-↓
-Вызов client.chat.completions.create
-↓
-Проверка, что возвращенный результат - ChatCompletion
-↓
-Проверка содержимого сообщения ("Hello")
-```
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, который настроен на использование `YieldNoneProviderMock` (возвращает `None`) и `YieldProviderMock` (возвращает успешный результат).
+2.  Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой.
+3.  Проверяется, что возвращенный объект является экземпляром `ChatCompletion`.
+4.  Проверяется, что содержимое сообщения в возвращенном объекте соответствует ожидаемому значению "Hello", что указывает на то, что был использован второй провайдер (`YieldProviderMock`).
 
 **Примеры**:
 
 ```python
-# Пример использования в асинхронном тесте
-async def test_skip_none(self):
-    client = AsyncClient(provider=IterListProvider([YieldNoneProviderMock, YieldProviderMock], False))
-    response = await client.chat.completions.create(DEFAULT_MESSAGES, "")
-    self.assertIsInstance(response, ChatCompletion)
-    self.assertEqual("Hello", response.choices[0].message.content)
+await TestIterListProvider().test_skip_none()
 ```
 
 ### `test_stream_skip_none`
 
 ```python
-async def test_stream_skip_none(self):
-    """Проверяет, что при потоковой передаче IterListProvider пропускает провайдера, возвращающего None, и использует следующего провайдера в списке."""
-    ...
+    async def test_stream_skip_none(self):
+        """
+        Тестирует случай с потоковой передачей данных, когда первый провайдер возвращает None, и IterListProvider переходит ко второму провайдеру,
+        который успешно возвращает результат.
+        """
 ```
 
-**Назначение**: Проверка, что при потоковой передаче `IterListProvider` корректно обрабатывает ситуацию, когда один из провайдеров возвращает `None`, и переходит к следующему провайдеру.
+**Назначение**:
+
+Проверяет, что `IterListProvider` корректно обрабатывает ситуацию потоковой передачи данных, когда первый провайдер в списке возвращает `None`, и переключается на следующего провайдера, который возвращает успешный результат.
 
 **Параметры**:
 
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+- Отсутствуют
 
 **Возвращает**:
 
-- `None`
+- Отсутствует
+
+**Вызывает исключения**:
+
+- Не вызывает
 
 **Как работает функция**:
 
-1. Создается экземпляр `AsyncClient` с `IterListProvider`, который содержит список из `YieldNoneProviderMock` (который возвращает `None`) и `YieldProviderMock` (который возвращает успешный результат).
-2. Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой, с включенной потоковой передачей (`stream=True`).
-3. В асинхронном цикле перебираются чанки ответа и добавляются в список `response_list`.
-4. Проверяется, что длина списка `response_list` равна 2.
-5. Проверяется, что содержимое каждого чанка равно "Hello", что указывает на то, что был использован `YieldProviderMock`.
-
-```
-Создание AsyncClient с IterListProvider
-↓
-Вызов client.chat.completions.create с stream=True
-↓
-Асинхронный перебор чанков ответа
-↓
-Проверка длины списка ответов (2)
-↓
-Проверка содержимого каждого чанка ("Hello")
-```
+1.  Создается экземпляр `AsyncClient` с `IterListProvider`, который настроен на использование `YieldNoneProviderMock` (возвращает `None`) и `YieldProviderMock` (возвращает успешный результат).
+2.  Вызывается метод `client.chat.completions.create` с предопределенными сообщениями и пустой строкой и потоковой передачей (`stream=True`).
+3.  Асинхронно перебираются чанки ответа и добавляются в список `response_list`.
+4.  Проверяется, что количество чанков в `response_list` равно 2.
+5.  Проверяется, что содержимое каждого чанка (если оно не `None`) соответствует ожидаемому значению "Hello".
 
 **Примеры**:
 
 ```python
-# Пример использования в асинхронном тесте
-async def test_stream_skip_none(self):
-    client = AsyncClient(provider=IterListProvider([YieldNoneProviderMock, YieldProviderMock], False))
-    response = client.chat.completions.create(DEFAULT_MESSAGES, "", stream=True)
-    response_list = [chunk async for chunk in response]
-    self.assertEqual(len(response_list), 2)
-    for chunk in response_list:
-        if chunk.choices[0].delta.content is not None:
-            self.assertEqual(chunk.choices[0].delta.content, "Hello")
+await TestIterListProvider().test_stream_skip_none()
+```

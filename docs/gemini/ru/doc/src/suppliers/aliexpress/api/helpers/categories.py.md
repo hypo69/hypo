@@ -2,11 +2,11 @@
 
 ## Обзор
 
-Модуль `categories.py` содержит функции для фильтрации категорий и подкатегорий, полученных из API Aliexpress. Он предоставляет инструменты для разделения категорий на родительские (не имеющие родительской категории) и дочерние (принадлежащие определенной родительской категории).
+Модуль `categories.py` содержит функции для фильтрации категорий и подкатегорий, полученных из API Aliexpress. Он предоставляет инструменты для разделения категорий на родительские и дочерние, облегчая работу с иерархической структурой категорий товаров.
 
 ## Подробней
 
-Этот модуль используется для обработки данных категорий, полученных из API Aliexpress. Он помогает организовать категории в древовидную структуру, что упрощает навигацию и фильтрацию товаров. Функции модуля позволяют выделить основные категории и их подкатегории, что важно для структурирования данных о товарах.
+Модуль предназначен для обработки данных, полученных из API Aliexpress, и содержит функции для фильтрации категорий на основе наличия `parent_category_id`. Это позволяет отделить категории верхнего уровня (родительские) от подкатегорий (дочерних), принадлежащих к определенным родительским категориям.
 
 ## Функции
 
@@ -15,72 +15,69 @@
 ```python
 def filter_parent_categories(categories: List[models.Category | models.ChildCategory]) -> List[models.Category]:
     """
-    Filters and returns a list of categories that do not have a parent category.
+    Фильтрует и возвращает список категорий, у которых нет родительской категории.
 
-    @param categories: List of category or child category objects.
-    @return: List of category objects without a parent category.
+    Args:
+        categories (List[models.Category | models.ChildCategory]): Список объектов категорий или дочерних категорий.
+
+    Returns:
+        List[models.Category]: Список объектов категорий без родительской категории.
     """
 ```
 
-**Назначение**: Фильтрует и возвращает список категорий, у которых нет родительской категории.
+**Назначение**: Функция `filter_parent_categories` принимает список категорий (или дочерних категорий) и возвращает список категорий, которые не имеют родительской категории (`parent_category_id`).
 
 **Параметры**:
-- `categories` (List[models.Category | models.ChildCategory]): Список объектов категорий или дочерних категорий.
+- `categories` (List[models.Category | models.ChildCategory]): Список объектов, представляющих категории или дочерние категории.
 
 **Возвращает**:
-- `List[models.Category]`: Список объектов категорий без родительской категории.
+- `List[models.Category]`: Список категорий, у которых отсутствует `parent_category_id`.
 
 **Как работает функция**:
 
-1.  **Инициализация**: Создается пустой список `filtered_categories` для хранения отфильтрованных категорий.
-2.  **Обработка входных данных**: Если входной параметр `categories` является строкой, целым числом или числом с плавающей точкой, он преобразуется в список, чтобы обеспечить корректную обработку.
-3.  **Фильтрация категорий**: Перебирает все элементы в списке `categories`. Для каждого элемента проверяется, есть ли у него атрибут `parent_category_id`. Если атрибута нет, категория считается родительской и добавляется в список `filtered_categories`.
-4.  **Возврат результата**: Функция возвращает список `filtered_categories`, содержащий только родительские категории.
-
-**ASCII flowchart**:
+1. Инициализируется пустой список `filtered_categories`.
+2. Проверяется, является ли входной параметр `categories` строкой, числом или числом с плавающей запятой. Если да, он преобразуется в список, чтобы обеспечить итерацию.
+3. Перебирается каждый элемент `category` в списке `categories`.
+4. Для каждого элемента проверяется, отсутствует ли атрибут `parent_category_id`.
+5. Если атрибут `parent_category_id` отсутствует, элемент добавляется в список `filtered_categories`.
+6. Возвращается список `filtered_categories`.
 
 ```
-A: Инициализация filtered_categories = []
-|
-B: Проверка типа categories: categories - строка, число, float?
-|
-C: Если да, преобразование categories в список: categories = [categories]
-|
-D: Перебор category в categories
-|
-E: Проверка наличия атрибута parent_category_id у category
-|
-F: Если атрибута нет, добавление category в filtered_categories
-|
-G: Возврат filtered_categories
+Начало
+   │
+   │ categories: List[Category | ChildCategory]
+   │
+   │ Проверка типа categories (str, int, float) -> Преобразование в list [categories]
+   │
+   │ Инициализация filtered_categories = []
+   │
+   │ for category in categories:
+   │   │
+   │   └── Проверка наличия атрибута 'parent_category_id'
+   │       │
+   │       └── Если атрибут отсутствует:
+   │           │   Добавление category в filtered_categories
+   │           │
+   │       └── Конец проверки
+   │
+   │ Конец цикла for
+   │
+   │ Возврат filtered_categories
+   │
+Конец
 ```
 
 **Примеры**:
 
 ```python
 from src.suppliers.aliexpress.api import models
+# Пример использования
+category1 = models.Category(id=1, name='Category 1')
+category2 = models.ChildCategory(id=2, name='Category 2', parent_category_id=1)
 
-# Пример 1: Список категорий и дочерних категорий
-categories = [
-    models.Category(id=1, name='Electronics'),
-    models.ChildCategory(id=2, name='Smartphones', parent_category_id=1),
-    models.Category(id=3, name='Fashion')
-]
+categories = [category1, category2]
 parent_categories = filter_parent_categories(categories)
-# parent_categories будет содержать [Category(id=1, name='Electronics'), Category(id=3, name='Fashion')]
-
-# Пример 2: Список только дочерних категорий
-child_categories = [
-    models.ChildCategory(id=2, name='Smartphones', parent_category_id=1),
-    models.ChildCategory(id=4, name='T-Shirts', parent_category_id=3)
-]
-parent_categories = filter_parent_categories(child_categories)
-# parent_categories будет содержать []
-
-# Пример 3: Передана строка вместо списка
-category_name = "Home Appliances"
-parent_categories = filter_parent_categories(category_name)
-# parent_categories будет содержать []
+print(parent_categories)  # Вывод: [<src.suppliers.aliexpress.api.models.Category object at 0x...>]
 ```
 
 ### `filter_child_categories`
@@ -89,46 +86,58 @@ parent_categories = filter_parent_categories(category_name)
 def filter_child_categories(categories: List[models.Category | models.ChildCategory],
                             parent_category_id: int) -> List[models.ChildCategory]:
     """
-    Filters and returns a list of child categories that belong to the specified parent category.
+    Фильтрует и возвращает список дочерних категорий, принадлежащих к указанной родительской категории.
 
-    @param categories: List of category or child category objects.
-    @param parent_category_id: The ID of the parent category to filter child categories by.
-    @return: List of child category objects with the specified parent category ID.
+    Args:
+        categories (List[models.Category | models.ChildCategory]): Список объектов категорий или дочерних категорий.
+        parent_category_id (int): ID родительской категории для фильтрации дочерних категорий.
+
+    Returns:
+        List[models.ChildCategory]: Список объектов дочерних категорий с указанным ID родительской категории.
     """
 ```
 
-**Назначение**: Фильтрует и возвращает список дочерних категорий, принадлежащих указанной родительской категории.
+**Назначение**: Функция `filter_child_categories` принимает список категорий (или дочерних категорий) и `parent_category_id` и возвращает список дочерних категорий, принадлежащих к указанной родительской категории.
 
 **Параметры**:
-- `categories` (List[models.Category | models.ChildCategory]): Список объектов категорий или дочерних категорий.
-- `parent_category_id` (int): ID родительской категории, по которой нужно фильтровать дочерние категории.
+- `categories` (List[models.Category | models.ChildCategory]): Список объектов, представляющих категории или дочерние категории.
+- `parent_category_id` (int): ID родительской категории, по которому выполняется фильтрация дочерних категорий.
 
 **Возвращает**:
-- `List[models.ChildCategory]`: Список объектов дочерних категорий с указанным ID родительской категории.
+- `List[models.ChildCategory]`: Список дочерних категорий, у которых `parent_category_id` соответствует указанному значению.
 
 **Как работает функция**:
 
-1.  **Инициализация**: Создается пустой список `filtered_categories` для хранения отфильтрованных дочерних категорий.
-2.  **Обработка входных данных**: Если входной параметр `categories` является строкой, целым числом или числом с плавающей точкой, он преобразуется в список для обеспечения корректной обработки.
-3.  **Фильтрация категорий**: Перебирает все элементы в списке `categories`. Для каждого элемента проверяется наличие атрибута `parent_category_id` и соответствие значения этого атрибута значению `parent_category_id`, переданному в функцию. Если оба условия выполняются, категория добавляется в список `filtered_categories`.
-4.  **Возврат результата**: Функция возвращает список `filtered_categories`, содержащий только дочерние категории, принадлежащие указанной родительской категории.
-
-**ASCII flowchart**:
+1. Инициализируется пустой список `filtered_categories`.
+2. Проверяется, является ли входной параметр `categories` строкой, числом или числом с плавающей запятой. Если да, он преобразуется в список, чтобы обеспечить итерацию.
+3. Перебирается каждый элемент `category` в списке `categories`.
+4. Для каждого элемента проверяется наличие атрибута `parent_category_id` и соответствие значения этого атрибута значению `parent_category_id`, переданному в функцию.
+5. Если оба условия выполняются, элемент добавляется в список `filtered_categories`.
+6. Возвращается список `filtered_categories`.
 
 ```
-A: Инициализация filtered_categories = []
-|
-B: Проверка типа categories: categories - строка, число, float?
-|
-C: Если да, преобразование categories в список: categories = [categories]
-|
-D: Перебор category в categories
-|
-E: Проверка наличия атрибута parent_category_id у category И category.parent_category_id == parent_category_id
-|
-F: Если условия выполнены, добавление category в filtered_categories
-|
-G: Возврат filtered_categories
+Начало
+   │
+   │ categories: List[Category | ChildCategory], parent_category_id: int
+   │
+   │ Проверка типа categories (str, int, float) -> Преобразование в list [categories]
+   │
+   │ Инициализация filtered_categories = []
+   │
+   │ for category in categories:
+   │   │
+   │   └── Проверка наличия атрибута 'parent_category_id' и соответствия category.parent_category_id == parent_category_id
+   │       │
+   │       └── Если оба условия истинны:
+   │           │   Добавление category в filtered_categories
+   │           │
+   │       └── Конец проверки
+   │
+   │ Конец цикла for
+   │
+   │ Возврат filtered_categories
+   │
+Конец
 ```
 
 **Примеры**:
@@ -136,25 +145,10 @@ G: Возврат filtered_categories
 ```python
 from src.suppliers.aliexpress.api import models
 
-# Пример 1: Список категорий и дочерних категорий
-categories = [
-    models.Category(id=1, name='Electronics'),
-    models.ChildCategory(id=2, name='Smartphones', parent_category_id=1),
-    models.Category(id=3, name='Fashion'),
-    models.ChildCategory(id=4, name='T-Shirts', parent_category_id=3)
-]
-child_categories = filter_child_categories(categories, 1)
-# child_categories будет содержать [ChildCategory(id=2, name='Smartphones', parent_category_id=1)]
+# Пример использования
+category1 = models.Category(id=1, name='Category 1')
+category2 = models.ChildCategory(id=2, name='Category 2', parent_category_id=1)
 
-# Пример 2: Список только родительских категорий
-parent_categories = [
-    models.Category(id=1, name='Electronics'),
-    models.Category(id=3, name='Fashion')
-]
-child_categories = filter_child_categories(parent_categories, 1)
-# child_categories будет содержать []
-
-# Пример 3: Передана строка вместо списка
-category_name = "Smartphones"
-child_categories = filter_child_categories(category_name, 1)
-# child_categories будет содержать []
+categories = [category1, category2]
+child_categories = filter_child_categories(categories, parent_category_id=1)
+print(child_categories)  # Вывод: [<src.suppliers.aliexpress.api.models.ChildCategory object at 0x...>]

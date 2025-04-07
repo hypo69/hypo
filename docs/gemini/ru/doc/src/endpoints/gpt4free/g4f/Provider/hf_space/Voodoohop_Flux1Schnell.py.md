@@ -2,111 +2,178 @@
 
 ## Обзор
 
-Модуль `Voodoohop_Flux1Schnell` предоставляет асинхронный генератор изображений, использующий API Voodoohop Flux-1-Schnell. Он позволяет генерировать изображения на основе текстовых подсказок (prompt) с возможностью настройки различных параметров, таких как ширина, высота, количество шагов обработки и зерно (seed).
+Модуль `Voodoohop_Flux1Schnell` предоставляет асинхронный генератор для создания изображений с использованием API Voodoohop Flux-1-Schnell. Он позволяет генерировать изображения на основе текстовых запросов, используя Hugging Face Space.
 
 ## Подробней
 
-Этот модуль является частью проекта `hypotez` и предназначен для интеграции с другими компонентами, требующими генерации изображений на основе текстовых описаний. Он использует асинхронные запросы для взаимодействия с API Voodoohop Flux-1-Schnell, что позволяет эффективно обрабатывать запросы и генерировать изображения.
+Этот модуль предназначен для интеграции с другими частями проекта `hypotez`, где требуется генерация изображений на основе текстовых описаний. Он использует асинхронные запросы для взаимодействия с API Voodoohop Flux-1-Schnell и предоставляет возможность настройки параметров генерации изображений, таких как размеры, количество шагов и начальное зерно.
 
 ## Классы
 
 ### `Voodoohop_Flux1Schnell`
 
-**Описание**: Класс `Voodoohop_Flux1Schnell` предоставляет методы для асинхронной генерации изображений с использованием API Voodoohop Flux-1-Schnell.
+**Описание**: Класс `Voodoohop_Flux1Schnell` является поставщиком (provider) для генерации изображений через API Voodoohop Flux-1-Schnell. Он наследуется от `AsyncGeneratorProvider` и `ProviderModelMixin`, что позволяет ему асинхронно генерировать изображения и предоставлять информацию о поддерживаемых моделях.
 
-**Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность для асинхронных генераторов.
-- `ProviderModelMixin`: Предоставляет общие методы для работы с моделями.
+**Принцип работы**:
+Класс определяет URL API, рабочее состояние, модель по умолчанию и псевдонимы моделей. Основная функциональность заключается в методе `create_async_generator`, который принимает параметры генерации изображения, формирует запрос к API и возвращает асинхронный генератор, выдающий URL сгенерированных изображений.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера, используемая для идентификации.
-- `url` (str): URL главной страницы Voodoohop Flux-1-Schnell.
-- `api_endpoint` (str): URL API для отправки запросов на генерацию изображений.
-- `working` (bool): Флаг, указывающий, работает ли провайдер в данный момент.
-- `default_model` (str): Модель, используемая по умолчанию.
-- `default_image_model` (str): Модель изображения, используемая по умолчанию.
-- `model_aliases` (dict): Псевдонимы моделей для удобства использования.
-- `image_models` (list): Список моделей изображений.
-- `models` (list): Список моделей.
+- `label` (str): Метка провайдера ("Voodoohop Flux-1-Schnell").
+- `url` (str): URL Hugging Face Space ("https://voodoohop-flux-1-schnell.hf.space").
+- `api_endpoint` (str): URL API ("https://voodoohop-flux-1-schnell.hf.space/call/infer").
+- `working` (bool): Флаг, указывающий, работает ли провайдер (True).
+- `default_model` (str): Модель по умолчанию ("voodoohop-flux-1-schnell").
+- `default_image_model` (str): Модель изображения по умолчанию, соответствует `default_model`.
+- `model_aliases` (dict): Псевдонимы моделей ({"flux-schnell": default_model, "flux": default_model}).
+- `image_models` (list): Список моделей изображений, полученный из ключей `model_aliases`.
+- `models` (list): Список моделей, соответствует `image_models`.
+
+**Методы**:
+- `create_async_generator`: Асинхронно генерирует изображения на основе заданных параметров.
+
+## Функции
 
 ### `create_async_generator`
 
 ```python
+@classmethod
+async def create_async_generator(
+    cls,
+    model: str,
+    messages: Messages,
+    proxy: str = None,
+    prompt: str = None,
+    width: int = 768,
+    height: int = 768,
+    num_inference_steps: int = 2,
+    seed: int = 0,
+    randomize_seed: bool = True,
+    **kwargs
+) -> AsyncResult:
+    """
+    Асинхронно генерирует изображения на основе заданных параметров, используя API Voodoohop Flux-1-Schnell.
+
+    Args:
+        cls: Класс, к которому принадлежит метод.
+        model (str): Используемая модель.
+        messages (Messages): Список сообщений для формирования запроса.
+        proxy (str, optional): Прокси-сервер для использования. По умолчанию `None`.
+        prompt (str, optional): Текстовый запрос для генерации изображения. По умолчанию `None`.
+        width (int, optional): Ширина изображения. По умолчанию 768.
+        height (int, optional): Высота изображения. По умолчанию 768.
+        num_inference_steps (int, optional): Количество шагов для генерации изображения. По умолчанию 2.
+        seed (int, optional): Начальное зерно для генерации. По умолчанию 0.
+        randomize_seed (bool, optional): Флаг, указывающий, нужно ли рандомизировать зерно. По умолчанию `True`.
+        **kwargs: Дополнительные параметры.
+
+    Returns:
+        AsyncResult: Асинхронный генератор, выдающий URL сгенерированных изображений.
+
+    Raises:
+        ResponseError: Если при генерации изображения произошла ошибка.
+
+    """
+    ...
+```
+
+**Назначение**: Метод `create_async_generator` создает и возвращает асинхронный генератор, который взаимодействует с API Voodoohop Flux-1-Schnell для генерации изображений на основе заданных параметров.
+
+**Параметры**:
+- `cls`: Ссылка на класс.
+- `model` (str): Модель для генерации изображения.
+- `messages` (Messages): Список сообщений, используемых для формирования запроса.
+- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
+- `prompt` (str, optional): Текстовый запрос для генерации изображения. По умолчанию `None`.
+- `width` (int, optional): Ширина изображения. По умолчанию 768.
+- `height` (int, optional): Высота изображения. По умолчанию 768.
+- `num_inference_steps` (int, optional): Количество шагов для генерации изображения. По умолчанию 2.
+- `seed` (int, optional): Зерно для генерации изображения. По умолчанию 0.
+- `randomize_seed` (bool, optional): Флаг рандомизации зерна. По умолчанию `True`.
+- `**kwargs`: Дополнительные параметры.
+
+**Возвращает**:
+- `AsyncResult`: Асинхронный генератор, выдающий URL сгенерированных изображений.
+
+**Вызывает исключения**:
+- `ResponseError`: Если при генерации изображения произошла ошибка.
+
+**Как работает функция**:
+
+1.  **Подготовка параметров**: Функция принимает параметры, необходимые для генерации изображения, и форматирует их.
+2.  **Формирование полезной нагрузки (payload)**: Создается словарь `payload` с данными, необходимыми для запроса к API.
+3.  **Асинхронный запрос к API**: Используется `ClientSession` для отправки POST-запроса к API Voodoohop Flux-1-Schnell с сформированной полезной нагрузкой.
+4.  **Обработка ответа**: После успешного запроса извлекается `event_id` из ответа.
+5.  **Цикл ожидания завершения генерации**: В цикле отправляются GET-запросы к API для получения статуса генерации изображения.
+6.  **Обработка событий**: Полученные события обрабатываются. Если приходит событие `error`, выбрасывается исключение `ResponseError`. Если приходит событие `complete`, извлекается URL изображения и возвращается в виде `ImageResponse`.
+7.  **Возврат результата**: Асинхронный генератор выдает URL сгенерированного изображения.
+
+```
+   Начало
+     ↓
+   Подготовка параметров (ширина, высота, запрос)
+     ↓
+   Формирование payload
+     ↓
+   Отправка POST-запроса к API
+     ↓
+   Получение event_id
+     ↓
+   Начало цикла ожидания
+     ↓
+   Отправка GET-запроса для получения статуса
+     ↓
+   Обработка события
+     ├── event == error? -> Выброс ResponseError
+     └── event == complete? -> Извлечение URL изображения, возврат ImageResponse
+     ↓
+   Конец цикла ожидания / Завершение
+```
+
+**Примеры**:
+
+```python
+# Пример использования create_async_generator
+import asyncio
+from typing import AsyncGenerator, Optional, List, Dict
+
+from aiohttp import ClientSession
+
+from ...typing import Messages
+from ...providers.response import ImageResponse
+from ...errors import ResponseError
+from ...requests.raise_for_status import raise_for_status
+from ..helper import format_image_prompt
+from ..base_provider import AsyncGeneratorProvider, ProviderModelMixin
+
+
+class Voodoohop_Flux1Schnell(AsyncGeneratorProvider, ProviderModelMixin):
+    label: str = "Voodoohop Flux-1-Schnell"
+    url: str = "https://voodoohop-flux-1-schnell.hf.space"
+    api_endpoint: str = "https://voodoohop-flux-1-schnell.hf.space/call/infer"
+
+    working: bool = True
+
+    default_model: str = "voodoohop-flux-1-schnell"
+    default_image_model: str = default_model
+    model_aliases: Dict[str, str] = {"flux-schnell": default_model, "flux": default_model}
+    image_models: List[str] = list(model_aliases.keys())
+    models: List[str] = image_models
+
+
     @classmethod
     async def create_async_generator(
         cls,
         model: str,
         messages: Messages,
-        proxy: str = None,
-        prompt: str = None,
+        proxy: Optional[str] = None,
+        prompt: Optional[str] = None,
         width: int = 768,
         height: int = 768,
         num_inference_steps: int = 2,
         seed: int = 0,
         randomize_seed: bool = True,
         **kwargs
-    ) -> AsyncResult:
-        """Создает асинхронный генератор изображений на основе API Voodoohop Flux-1-Schnell.
-
-        Args:
-            model (str): Модель для генерации изображений.
-            messages (Messages): Список сообщений, используемых для формирования подсказки.
-            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
-            prompt (str, optional): Текстовая подсказка для генерации изображения. По умолчанию `None`.
-            width (int, optional): Ширина генерируемого изображения. По умолчанию 768.
-            height (int, optional): Высота генерируемого изображения. По умолчанию 768.
-            num_inference_steps (int, optional): Количество шагов обработки для генерации изображения. По умолчанию 2.
-            seed (int, optional): Зерно для генерации случайных чисел. По умолчанию 0.
-            randomize_seed (bool, optional): Флаг, указывающий, нужно ли рандомизировать зерно. По умолчанию `True`.
-            **kwargs: Дополнительные параметры.
-
-        Returns:
-            AsyncResult: Асинхронный генератор, возвращающий изображения в формате `ImageResponse`.
-
-        Raises:
-            ResponseError: Если возникает ошибка при генерации изображения.
-
-        Как работает функция:
-         1. **Подготовка параметров изображения**: Функция принимает различные параметры, такие как модель, сообщения, прокси, текстовый запрос, ширину, высоту, количество шагов обработки, зерно и флаг рандомизации зерна, для настройки процесса генерации изображения.
-         2. **Корректировка размеров изображения**: Функция корректирует ширину и высоту изображения, чтобы они были кратны 8, обеспечивая совместимость с требованиями API.
-         3. **Форматирование текстового запроса**: Функция форматирует текстовый запрос на основе предоставленных сообщений и запроса, подготавливая его для отправки в API.
-         4. **Создание полезной нагрузки**: Функция создает полезную нагрузку (payload) с данными, необходимыми для запроса к API, включая текстовый запрос, зерно, флаг рандомизации зерна, ширину, высоту и количество шагов обработки.
-         5. **Отправка запроса и обработка ответа**: Функция отправляет асинхронный POST-запрос к API с полезной нагрузкой и обрабатывает ответ, получая идентификатор события (event_id) для отслеживания статуса генерации изображения.
-         6. **Цикл ожидания и получения статуса**: Функция входит в бесконечный цикл, в котором она отправляет GET-запросы к API для получения статуса генерации изображения по идентификатору события.
-         7. **Обработка событий**: Функция читает события из ответа, разделяя их по типу (ошибка, завершение) и обрабатывая соответствующие данные.
-         8. **Генерация изображения и возврат результата**: При получении события `complete` функция извлекает URL изображения из данных, создает объект `ImageResponse` с URL и текстовым запросом, и возвращает его через генератор.
-         9. **Обработка ошибок**: Если возникает ошибка при генерации изображения, функция вызывает исключение `ResponseError` с сообщением об ошибке.
-         10. **Завершение работы**: После успешной генерации и возврата изображения функция завершает свою работу.
-
-        ```
-        Подготовка параметров изображения
-             │
-             ▼
-        Корректировка размеров изображения
-             │
-             ▼
-        Форматирование текстового запроса
-             │
-             ▼
-        Создание полезной нагрузки
-             │
-             ▼
-        Отправка запроса и обработка ответа
-             │
-             ▼
-        Цикл ожидания и получения статуса
-             │
-             ▼
-        Обработка событий ──► Ошибка: ResponseError
-             │
-             ▼
-        Генерация изображения и возврат результата
-             │
-             ▼
-        Завершение работы
-        ```
-
-        """
+    ) -> AsyncGenerator[ImageResponse, None]:
         width = max(32, width - (width % 8))
         height = max(32, height - (height % 8))
         prompt = format_image_prompt(messages, prompt)
@@ -144,39 +211,17 @@
                                     yield ImageResponse(images=[image_url], alt=prompt)
                                     return
 
-```
-
-## Функции
-
-### `format_image_prompt`
-
-Функция `format_image_prompt` используется для форматирования текстовых подсказок для генерации изображений. Описание этой функции отсутствует в предоставленном коде.
-
-## Примеры
-
-Пример использования класса `Voodoohop_Flux1Schnell` для создания асинхронного генератора изображений:
-
-```python
-import asyncio
-from src.endpoints.gpt4free.g4f.Provider.hf_space.Voodoohop_Flux1Schnell import Voodoohop_Flux1Schnell
-from src.endpoints.gpt4free.g4f.typing import Messages
-
-async def generate_image(prompt: str):
-    """Генерирует изображение на основе текстовой подсказки."""
-    messages: Messages = [{"role": "user", "content": prompt}]
+# Пример вызова функции
+async def main():
+    messages: Messages = [{"role": "user", "content": "A cat wearing a hat"}]
     generator = Voodoohop_Flux1Schnell.create_async_generator(
         model="voodoohop-flux-1-schnell",
-        messages=messages
+        messages=messages,
+        width=512,
+        height=512
     )
     async for image_response in await generator:
         print(f"Image URL: {image_response.images[0]}")
 
-async def main():
-    """Главная функция для запуска генерации изображения."""
-    await generate_image("A cat sitting on a couch")
-
 if __name__ == "__main__":
     asyncio.run(main())
-```
-
-Этот пример показывает, как создать асинхронный генератор изображений с использованием класса `Voodoohop_Flux1Schnell` и получить URL сгенерированного изображения.

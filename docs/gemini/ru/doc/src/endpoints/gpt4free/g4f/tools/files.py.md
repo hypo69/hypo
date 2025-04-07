@@ -1,19 +1,12 @@
-# Модуль для работы с файлами
+# Модуль files
+
 ## Обзор
 
-Модуль предоставляет набор функций для обработки различных типов файлов, включая текстовые файлы, PDF, DOCX, ODT, EPUB, XLSX, HTML и ZIP архивы. Он также включает функции для скачивания файлов из интернета, кэширования содержимого и извлечения информации. Модуль предназначен для использования в проектах, требующих обработки и анализа больших объемов текстовых данных, извлеченных из различных источников.
-Расположение файла в проекте `hypotez` указывает на то, что он является частью подсистемы, отвечающей за взаимодействие с внешними файлами и данными, возможно, для последующего анализа или обработки другими компонентами системы.
+Модуль предоставляет инструменты для работы с файлами различных форматов, такими как PDF, DOCX, ODT, EPUB, XLSX, HTML, ZIP и другие текстовые файлы. Он включает функции для безопасной обработки имен файлов, чтения содержимого файлов, кэширования, разделения на части, загрузки файлов из URL и извлечения ссылок из HTML.
 
-## Подробнее
+## Подробней
 
-Этот модуль играет важную роль в обработке и анализе файлов различных форматов, предоставляя функциональность для чтения, извлечения текста, кэширования и скачивания. Он позволяет системе `hypotez` эффективно работать с данными, поступающими из разнообразных источников.
-Он включает в себя следующие возможности:
-
-- Чтение и извлечение текста из различных форматов файлов (txt, xml, json, pdf, docx, odt, epub, xlsx, html, zip).
-- Скачивание файлов по URL-адресам.
-- Кэширование содержимого файлов для повышения производительности.
-- Разбиение файлов на части для обработки большими объемами данных.
-- Использование библиотеки `spacy` для улучшения качества извлеченного текста.
+Модуль предназначен для обработки и извлечения текста из различных типов файлов, которые могут быть загружены или доступны по URL. Он использует различные библиотеки для работы с каждым типом файлов, такие как PyPDF2, pdfplumber, pdfminer, docx, docx2txt, odfpy, ebooklib, pandas и BeautifulSoup4. Модуль также предоставляет функции для кэширования и разделения файлов на части для оптимизации обработки больших файлов.
 
 ## Функции
 
@@ -29,25 +22,28 @@ def secure_filename(filename: str) -> str:
 
     Returns:
         str: Очищенное имя файла.
-
-    Как работает функция:
-    1. Если `filename` равно `None`, функция возвращает `None`.
-    2. Использует регулярное выражение для замены всех символов, кроме букв, цифр, точек, запятых, подчеркиваний, плюсов и минусов, на символ подчеркивания `_`.
-    3. Удаляет все URL-кодированные символы с помощью `urllib.parse.unquote`.
-    4. Ограничивает длину имени файла до 100 символов и удаляет символы ".,_+" с начала и конца строки.
-
-    Flowchart:
-    Имя файла --> Проверка на None --> Замена небезопасных символов --> URL-декодирование --> Обрезка длины --> Удаление лишних символов --> Возврат очищенного имени файла
-
-    Примеры:
-        >>> secure_filename("безпечне_ім'я_файлу.txt")
-        'безпечне_ім_я_файлу.txt'
-        >>> secure_filename("config.json")
-        'config.json'
-        >>> secure_filename("file_with_spaces.txt")
-        'file_with_spaces.txt'
     """
-    ...
+```
+
+**Назначение**: Обеспечивает безопасность имени файла путем удаления или замены небезопасных символов.
+
+**Параметры**:
+- `filename` (str): Имя файла, которое необходимо очистить.
+
+**Возвращает**:
+- `str`: Очищенное имя файла, в котором все небезопасные символы заменены на безопасные.
+
+**Как работает функция**:
+1. Функция принимает имя файла в качестве входных данных.
+2. Использует регулярное выражение для удаления всех символов, кроме букв, цифр, `.,_-+`.
+3. Удаляет пробелы в начале и конце строки, заменяет несколько пробелов одним пробелом.
+4. Обрезает строку до 100 символов и удаляет символы `.,_-+` в начале и конце строки.
+
+**Примеры**:
+```python
+secure_filename("безпечне ім'я.txt") # 'txt'
+secure_filename("文件名.txt") # 'txt'
+secure_filename("test!@#$%^&*().txt") # 'test.txt'
 ```
 
 ### `supports_filename`
@@ -61,34 +57,35 @@ def supports_filename(filename: str):
         filename (str): Имя файла для проверки.
 
     Returns:
-        bool: `True`, если файл поддерживается, `False` в противном случае.
+        bool: True, если файл поддерживается, иначе False.
 
     Raises:
-        MissingRequirementsError: Если отсутствуют необходимые зависимости для обработки определенного типа файла.
-
-    Как работает функция:
-    1. Проверяет расширение файла и наличие необходимых библиотек для обработки.
-    2. Если файл PDF, проверяет наличие `pypdf2`, `pdfplumber` или `pdfminer`.
-    3. Если файл DOCX, проверяет наличие `docx` или `docx2txt`.
-    4. Если файл ODT, проверяет наличие `odfpy`.
-    5. Если файл EPUB, проверяет наличие `ebooklib`.
-    6. Если файл XLSX, проверяет наличие `openpyxl`.
-    7. Если файл HTML, проверяет наличие `beautifulsoup4`.
-    8. Если файл ZIP, возвращает `True`.
-    9. Для остальных файлов проверяет, входит ли расширение в список `PLAIN_FILE_EXTENSIONS`.
-
-    Flowchart:
-    Имя файла --> Проверка расширения --> Проверка зависимостей --> Возврат True/False или вызов исключения
-
-    Примеры:
-        >>> supports_filename("example.pdf")
-        True  # если установлены pypdf2, pdfplumber или pdfminer
-        >>> supports_filename("example.docx")
-        True  # если установлены docx или docx2txt
-        >>> supports_filename("example.txt")
-        True
+        MissingRequirementsError: Если отсутствуют необходимые библиотеки для обработки файла.
     """
-    ...
+```
+
+**Назначение**: Проверяет, может ли модуль обрабатывать файлы определенного типа на основе доступных библиотек.
+
+**Параметры**:
+- `filename` (str): Имя файла, тип которого необходимо проверить.
+
+**Возвращает**:
+- `bool`: `True`, если файл поддерживается для обработки, и `False` в противном случае.
+
+**Вызывает исключения**:
+- `MissingRequirementsError`: Если отсутствуют необходимые библиотеки для обработки определенного типа файла.
+
+**Как работает функция**:
+1. Проверяет расширение файла.
+2. В зависимости от расширения файла, проверяет наличие необходимых библиотек (например, `PyPDF2` для `.pdf`, `docx` для `.docx`).
+3. Если необходимые библиотеки отсутствуют, вызывает исключение `MissingRequirementsError`.
+4. Если файл относится к plain text, проверяет, что имя файла не `FILE_LIST`, и возвращает `True`.
+
+**Примеры**:
+```python
+supports_filename("example.pdf") # True, если установлен PyPDF2
+supports_filename("document.docx") # True, если установлен python-docx
+supports_filename("file.txt") # True
 ```
 
 ### `get_bucket_dir`
@@ -99,25 +96,28 @@ def get_bucket_dir(*parts):
     Формирует путь к каталогу bucket на основе переданных частей.
 
     Args:
-        *parts: Переменное количество частей пути к каталогу.
+        *parts: Переменное количество частей пути для формирования каталога bucket.
 
     Returns:
         str: Полный путь к каталогу bucket.
-
-    Как работает функция:
-    1. Получает базовый путь к каталогу cookies.
-    2. Добавляет к нему подкаталог "buckets".
-    3. Добавляет остальные части пути, очищая их с помощью `secure_filename`.
-    4. Объединяет все части пути с помощью `os.path.join`.
-
-    Flowchart:
-    Части пути --> Очистка частей пути --> Объединение частей пути --> Возврат полного пути
-
-    Примеры:
-        >>> get_bucket_dir("my_bucket", "file1.txt")
-        '/path/to/cookies/buckets/my_bucket/file1.txt'
     """
-    ...
+```
+
+**Назначение**: Создает путь к каталогу, используемому для хранения файлов bucket.
+
+**Параметры**:
+- `*parts`: Переменное количество аргументов, представляющих части пути к каталогу bucket.
+
+**Возвращает**:
+- `str`: Полный путь к каталогу bucket, сформированный из переданных частей.
+
+**Как работает функция**:
+1. Объединяет части пути, используя функцию `os.path.join`.
+2. Для каждой части пути применяет функцию `secure_filename` для обеспечения безопасности имени файла.
+
+**Примеры**:
+```python
+get_bucket_dir("my_bucket", "file.txt") # os.path.join(get_cookies_dir(), "buckets", "my_bucket", "file.txt")
 ```
 
 ### `get_buckets`
@@ -125,27 +125,26 @@ def get_bucket_dir(*parts):
 ```python
 def get_buckets():
     """
-    Возвращает список всех существующих каталогов bucket.
-
-    Args:
-        None
+    Получает список директорий buckets.
 
     Returns:
-        list: Список имен каталогов bucket или `None`, если каталог не существует.
-
-    Как работает функция:
-    1. Формирует путь к каталогу buckets.
-    2. Пытается получить список подкаталогов в каталоге buckets.
-    3. Возвращает список каталогов, если они существуют, или `None`, если каталог buckets не существует.
-
-    Flowchart:
-    Получение пути к каталогу buckets --> Получение списка подкаталогов --> Возврат списка или None
-
-    Примеры:
-        >>> get_buckets()
-        ['bucket1', 'bucket2']
+        list[str] | None: Список имен директорий buckets или None, если директория не существует.
     """
-    ...
+```
+
+**Назначение**: Получает список всех доступных каталогов bucket.
+
+**Возвращает**:
+- `list[str] | None`: Список имен каталогов bucket, если они существуют. Возвращает `None`, если базовая директория не существует.
+
+**Как работает функция**:
+1. Получает путь к основной директории buckets.
+2. Пытается получить список всех директорий в этой директории.
+3. Возвращает список директорий или `None`, если основная директория не существует.
+
+**Примеры**:
+```python
+get_buckets() # ['bucket1', 'bucket2'], если существуют директории bucket1 и bucket2
 ```
 
 ### `spacy_refine_chunks`
@@ -153,33 +152,46 @@ def get_buckets():
 ```python
 def spacy_refine_chunks(source_iterator):
     """
-    Использует `spacy` для улучшения качества текста, разделенного на части.
+    Использует spaCy для улучшения текстовых чанков из итератора.
 
     Args:
-        source_iterator (Iterator[str]): Итератор, возвращающий части текста.
+        source_iterator (Iterator[str]): Итератор, предоставляющий текстовые чанки.
 
     Yields:
-        str: Улучшенные части текста.
+        str: Улучшенные текстовые чанки.
 
     Raises:
-        MissingRequirementsError: Если библиотека `spacy` не установлена.
-
-    Как работает функция:
-    1. Проверяет, установлена ли библиотека `spacy`. Если нет, вызывает исключение `MissingRequirementsError`.
-    2. Загружает модель `spacy` "en_core_web_sm".
-    3. Для каждой части текста создает объект `doc` с помощью `nlp`.
-    4. Извлекает предложения из `doc` и сортирует их по длине текста в обратном порядке.
-    5. Возвращает два самых длинных предложения из каждой части текста.
-
-    Flowchart:
-    Итератор частей текста --> Проверка наличия spacy --> Загрузка модели spacy --> Обработка каждой части текста --> Извлечение предложений --> Сортировка предложений --> Возврат двух самых длинных предложений
-
-    Примеры:
-        >>> iterator = iter(["This is the first sentence. This is the second sentence.", "Another sentence here."])
-        >>> list(spacy_refine_chunks(iterator))
-        ['This is the first sentence. This is the second sentence.', 'Another sentence here.']
+        MissingRequirementsError: Если библиотека spaCy не установлена.
     """
-    ...
+```
+
+**Назначение**: Улучшает текстовые фрагменты с использованием библиотеки `spaCy` для обработки естественного языка.
+
+**Параметры**:
+- `source_iterator` (Iterator[str]): Итератор, предоставляющий текстовые фрагменты для обработки.
+
+**Возвращает**:
+- `str`: Улучшенные текстовые фрагменты.
+
+**Вызывает исключения**:
+- `MissingRequirementsError`: Если библиотека `spaCy` не установлена.
+
+**Как работает функция**:
+1. Проверяет, установлена ли библиотека `spaCy`. Если нет, вызывает исключение `MissingRequirementsError`.
+2. Загружает модель `en_core_web_sm` из `spaCy`.
+3. Итерируется по текстовым фрагментам, предоставленным итератором `source_iterator`.
+4. Для каждого фрагмента создает объект `doc` с использованием `nlp(page)`.
+5. Извлекает предложения из документа `doc`.
+6. Сортирует предложения по длине текста в обратном порядке и выбирает два самых длинных.
+7. Выдает текст каждого выбранного предложения.
+
+**Примеры**:
+```python
+# Пример использования:
+# source_data = ["This is the first chunk.", "This is the second chunk."]
+# refined_chunks = spacy_refine_chunks(source_data)
+# for chunk in refined_chunks:
+#     print(chunk)
 ```
 
 ### `get_filenames`
@@ -187,30 +199,38 @@ def spacy_refine_chunks(source_iterator):
 ```python
 def get_filenames(bucket_dir: Path):
     """
-    Возвращает список имен файлов, хранящихся в файле `FILE_LIST` в указанном каталоге.
+    Получает список имен файлов из файла FILE_LIST в указанной директории bucket.
 
     Args:
-        bucket_dir (Path): Путь к каталогу bucket.
+        bucket_dir (Path): Путь к директории bucket.
 
     Returns:
-        list: Список имен файлов.
-
-    Как работает функция:
-    1. Формирует путь к файлу `FILE_LIST` в указанном каталоге.
-    2. Если файл существует, открывает его и считывает имена файлов построчно.
-    3. Удаляет пробельные символы в начале и конце каждой строки.
-    4. Возвращает список имен файлов.
-
-    Flowchart:
-    Путь к каталогу --> Формирование пути к файлу FILE_LIST --> Проверка существования файла --> Чтение имен файлов --> Возврат списка имен файлов
-
-    Примеры:
-        >>> bucket_dir = Path("/path/to/bucket")
-        >>> # Создаем файл FILE_LIST с содержимым "file1.txt\\nfile2.txt"
-        >>> get_filenames(bucket_dir)
-        ['file1.txt', 'file2.txt']
+        list[str]: Список имен файлов.
     """
-    ...
+```
+
+**Назначение**: Извлекает список имен файлов, хранящихся в файле `FILE_LIST` в указанном каталоге `bucket`.
+
+**Параметры**:
+- `bucket_dir` (Path): Путь к каталогу `bucket`.
+
+**Возвращает**:
+- `list[str]`: Список имен файлов, считанных из файла `FILE_LIST`.
+
+**Как работает функция**:
+1. Формирует путь к файлу `FILE_LIST` в каталоге `bucket`.
+2. Проверяет, существует ли файл `FILE_LIST`.
+3. Если файл существует, открывает его для чтения.
+4. Считывает каждую строку из файла, удаляет лишние пробелы в начале и конце строки.
+5. Возвращает список имен файлов.
+
+**Примеры**:
+```python
+bucket_dir = Path("/path/to/bucket")
+# Предположим, что файл FILE_LIST содержит:
+# file1.txt
+# file2.pdf
+get_filenames(bucket_dir) # ['file1.txt', 'file2.pdf']
 ```
 
 ### `stream_read_files`
@@ -218,34 +238,52 @@ def get_filenames(bucket_dir: Path):
 ```python
 def stream_read_files(bucket_dir: Path, filenames: list, delete_files: bool = False) -> Iterator[str]:
     """
-    Читает содержимое файлов из указанного каталога bucket и возвращает его в виде потока строк.
+    Считывает содержимое файлов из указанной директории bucket потоком.
 
     Args:
-        bucket_dir (Path): Путь к каталогу bucket.
+        bucket_dir (Path): Путь к директории bucket.
         filenames (list): Список имен файлов для чтения.
-        delete_files (bool): Удалять ли файлы после прочтения.
+        delete_files (bool): Если True, удаляет файлы после прочтения. По умолчанию False.
 
     Yields:
         str: Содержимое файлов.
-
-    Как работает функция:
-    1. Для каждого имени файла в списке `filenames` проверяет его существование и размер.
-    2. Если файл является ZIP-архивом, извлекает все файлы из него и рекурсивно вызывает `stream_read_files` для извлеченных файлов.
-    3. Если файл PDF, DOCX, ODT, EPUB, XLSX или HTML, использует соответствующие библиотеки для извлечения текста.
-    4. Если файл имеет одно из расширений, перечисленных в `PLAIN_FILE_EXTENSIONS`, читает его содержимое как обычный текст.
-    5. Если `delete_files` равно `True`, удаляет файл после прочтения.
-
-    Flowchart:
-    Путь к каталогу, список имен файлов --> Для каждого файла: проверка существования и размера --> Обработка в зависимости от типа файла --> Извлечение содержимого --> Если delete_files: удаление файла --> Возврат содержимого
-
-    Примеры:
-        >>> bucket_dir = Path("/path/to/bucket")
-        >>> filenames = ["file1.txt", "file2.pdf"]
-        >>> # Создаем файлы file1.txt и file2.pdf
-        >>> for chunk in stream_read_files(bucket_dir, filenames):
-        ...     print(chunk)
     """
-    ...
+```
+
+**Назначение**: Читает содержимое файлов из указанного каталога `bucket` потоком, поддерживая различные типы файлов и возможность их удаления после прочтения.
+
+**Параметры**:
+- `bucket_dir` (Path): Путь к каталогу `bucket`.
+- `filenames` (list): Список имен файлов для чтения.
+- `delete_files` (bool): Если `True`, файлы будут удалены после прочтения. По умолчанию `False`.
+
+**Возвращает**:
+- `str`: Содержимое файлов.
+
+**Как работает функция**:
+1. Итерируется по списку имен файлов.
+2. Для каждого файла проверяет его существование и размер (должен быть больше 0).
+3. В зависимости от расширения файла использует соответствующую библиотеку для чтения содержимого:
+   - `.zip`: извлекает все файлы и рекурсивно вызывает `stream_read_files` для каждого извлеченного файла. После обработки удаляет извлеченные файлы, если `delete_files` равен `True`.
+   - `.pdf`: использует `PyPDF2`, `pdfplumber` или `pdfminer` для извлечения текста.
+   - `.docx`: использует `docx` или `docx2txt` для извлечения текста.
+   - `.odt`: использует `odfpy` для извлечения текста.
+   - `.epub`: использует `ebooklib` для извлечения текста.
+   - `.xlsx`: использует `pandas` для чтения данных и объединения ячеек в строку.
+   - `.html`: использует `BeautifulSoup4` и `scrape_text` для извлечения текста.
+   - Остальные файлы (текстовые): читает содержимое файла как текст.
+
+**Примеры**:
+```python
+bucket_dir = Path("/path/to/bucket")
+filenames = ["file1.txt", "file2.pdf", "archive.zip"]
+# Содержимое file1.txt: "Hello, world!"
+# Содержимое file2.pdf: "This is a PDF document."
+# archive.zip содержит file3.txt с содержимым "Inside the archive."
+# stream_read_files(bucket_dir, filenames) выдаст:
+# "```file1.txt\nHello, world!\n```\n\n"
+# "```file2.pdf\nThis is a PDF document.\n```\n\n"
+# "```file3.txt\nInside the archive.\n```\n\n"
 ```
 
 ### `cache_stream`
@@ -253,32 +291,40 @@ def stream_read_files(bucket_dir: Path, filenames: list, delete_files: bool = Fa
 ```python
 def cache_stream(stream: Iterator[str], bucket_dir: Path) -> Iterator[str]:
     """
-    Кэширует поток данных в файл и возвращает поток данных.
+    Кэширует содержимое потока в файл и возвращает поток с данными из кэша.
 
     Args:
-        stream (Iterator[str]): Поток данных для кэширования.
-        bucket_dir (Path): Путь к каталогу bucket.
+        stream (Iterator[str]): Итератор, предоставляющий данные для кэширования.
+        bucket_dir (Path): Путь к директории bucket, где будет сохранен кэш.
 
     Yields:
-        str: Часть данных из потока.
-
-    Как работает функция:
-    1. Формирует пути к файлу кэша и временному файлу.
-    2. Если файл кэша существует, возвращает его содержимое.
-    3. Если файл кэша не существует, открывает временный файл для записи.
-    4. Для каждой части данных в потоке записывает ее во временный файл и возвращает.
-    5. После записи всех данных переименовывает временный файл в файл кэша.
-
-    Flowchart:
-    Поток данных, путь к каталогу --> Проверка существования файла кэша --> Если существует: возврат содержимого файла кэша --> Если не существует: открытие временного файла --> Запись данных во временный файл --> Переименование временного файла в файл кэша --> Возврат данных
-
-    Примеры:
-        >>> stream = iter(["chunk1", "chunk2"])
-        >>> bucket_dir = Path("/path/to/bucket")
-        >>> for chunk in cache_stream(stream, bucket_dir):
-        ...     print(chunk)
+        str: Данные из потока.
     """
-    ...
+```
+
+**Назначение**: Кэширует содержимое входного потока в файл для последующего использования и возвращает поток с данными из кэша.
+
+**Параметры**:
+- `stream` (Iterator[str]): Итератор, предоставляющий данные для кэширования.
+- `bucket_dir` (Path): Путь к каталогу `bucket`, где будет сохранен кэш.
+
+**Возвращает**:
+- `str`: Данные из потока.
+
+**Как работает функция**:
+1. Определяет пути к файлу кэша и временному файлу.
+2. Если файл кэша существует, читает его содержимое и выдает его.
+3. Если файл кэша не существует, открывает временный файл для записи.
+4. Итерируется по входному потоку, записывает каждый фрагмент во временный файл и выдает его.
+5. После завершения итерации переименовывает временный файл в файл кэша.
+
+**Примеры**:
+```python
+bucket_dir = Path("/path/to/bucket")
+data_stream = iter(["Chunk 1", "Chunk 2", "Chunk 3"])
+cached_stream = cache_stream(data_stream, bucket_dir)
+for chunk in cached_stream:
+    print(chunk)
 ```
 
 ### `is_complete`
@@ -286,31 +332,34 @@ def cache_stream(stream: Iterator[str], bucket_dir: Path) -> Iterator[str]:
 ```python
 def is_complete(data: str):
     """
-    Проверяет, является ли строка данных завершенной.
+    Проверяет, является ли переданная строка завершенным блоком данных.
 
     Args:
         data (str): Строка данных для проверки.
 
     Returns:
-        bool: `True`, если строка завершена, `False` в противном случае.
-
-    Как работает функция:
-    1. Проверяет, заканчивается ли строка данных последовательностью "\\n```\\n\\n".
-    2. Проверяет, является ли количество вхождений "```" в строке данных четным числом.
-    3. Возвращает `True`, если оба условия выполняются, `False` в противном случае.
-
-    Flowchart:
-    Строка данных --> Проверка окончания строки --> Проверка четности количества "```" --> Возврат True/False
-
-    Примеры:
-        >>> is_complete("some data\\n```\\n\\n")
-        True
-        >>> is_complete("some data```")
-        False
-        >>> is_complete("some data\\n```\\n\\n```")
-        False
+        bool: True, если строка является завершенным блоком данных, иначе False.
     """
-    ...
+```
+
+**Назначение**: Определяет, является ли переданная строка завершенным блоком данных на основе наличия маркеров начала и конца блока.
+
+**Параметры**:
+- `data` (str): Строка данных для проверки.
+
+**Возвращает**:
+- `bool`: `True`, если строка является завершенным блоком данных, и `False` в противном случае.
+
+**Как работает функция**:
+1. Проверяет, заканчивается ли строка подстрокой `"\\n\`\`\`\\n\\n"`.
+2. Проверяет, четно ли количество подстрок "\`\`\`" в строке.
+3. Возвращает `True`, если оба условия выполнены, и `False` в противном случае.
+
+**Примеры**:
+```python
+is_complete("Some data\\n```\\n\\n") # True
+is_complete("Some data\\n```\\n") # False
+is_complete("```Some data\\n```\\n\\n") # False (количество ``` нечетное)
 ```
 
 ### `read_path_chunked`
@@ -318,54 +367,38 @@ def is_complete(data: str):
 ```python
 def read_path_chunked(path: Path):
     """
-    Читает файл по частям (chunks) указанного размера.
+    Читает файл по частям, разделяя его на чанки определенного размера.
 
     Args:
-        path (Path): Путь к файлу.
+        path (Path): Путь к файлу для чтения.
 
     Yields:
-        str: Часть содержимого файла.
-
-    Как работает функция:
-
-    1. Открывает файл для чтения в кодировке UTF-8.
-    2. Инициализирует переменные `current_chunk_size` и `buffer` для отслеживания размера текущего чанка и его содержимого.
-    3. Итерируется по каждой строке в файле.
-        - Добавляет длину строки в байтах к `current_chunk_size`.
-        - Добавляет строку в `buffer`.
-        - Если `current_chunk_size` превышает 4096 байт:
-            - Проверяет, является ли `buffer` завершенным (с помощью функции `is_complete`) или `current_chunk_size` превышает 8192 байта.
-            - Если условие выполнено, возвращает `buffer` и сбрасывает `buffer` и `current_chunk_size`.
-    4. Если после завершения цикла в `buffer` осталось содержимое, возвращает его.
-
-    Flowchart:
-
-    ```
-    OpenFile  -->  InitVars --> LoopLines
-    LoopLines -->  AddLineToBuffer --> CheckChunkSize
-    CheckChunkSize --> (Size >= 4096) --> CheckIsComplete
-    CheckIsComplete --> (Complete OR Size >= 8192) --> YieldBuffer --> ResetVars --> LoopLines
-    CheckIsComplete --> (Not Complete) --> LoopLines
-    CheckChunkSize --> (Size < 4096) --> LoopLines
-    LoopLines --> (No More Lines) --> CheckBufferNotEmpty
-    CheckBufferNotEmpty --> (Buffer Not Empty) --> YieldBuffer
-    ```
-
-    Примеры:
-    ```python
-    # Создание временного файла для примера
-    with open("temp_file.txt", "w", encoding="utf-8") as f:
-        f.write("This is a line.\n" * 200)  # Создание файла с 200 строками
-
-    # Чтение файла по частям
-    for chunk in read_path_chunked(Path("temp_file.txt")):
-        print(f"Chunk size: {len(chunk)}, Content: {chunk[:50]}...")
-
-    # Удаление временного файла
-    os.remove("temp_file.txt")
-    ```
+        str: Часть файла.
     """
-    ...
+```
+
+**Назначение**: Читает файл по частям заданного размера, разделяя его на фрагменты и возвращая их в виде генератора.
+
+**Параметры**:
+- `path` (Path): Путь к файлу, который необходимо прочитать.
+
+**Возвращает**:
+- `str`: Часть файла.
+
+**Как работает функция**:
+1. Открывает файл для чтения в кодировке UTF-8.
+2. Инициализирует переменные для отслеживания текущего размера фрагмента и буфера.
+3. Итерируется по строкам файла.
+4. Добавляет каждую строку в буфер и обновляет текущий размер фрагмента.
+5. Если текущий размер фрагмента превышает 4096 байт, проверяет, является ли фрагмент завершенным (с помощью функции `is_complete`). Если фрагмент завершен или его размер превышает 8192 байта, выдает содержимое буфера и очищает буфер.
+6. Если после завершения итерации в буфере остались данные, выдает их.
+
+**Примеры**:
+```python
+file_path = Path("example.txt")
+# Содержимое example.txt: "This is a small file."
+# for chunk in read_path_chunked(file_path):
+#     print(chunk) # Выведет: "This is a small file."
 ```
 
 ### `read_bucket`
@@ -373,50 +406,40 @@ def read_path_chunked(path: Path):
 ```python
 def read_bucket(bucket_dir: Path):
     """
-    Читает содержимое bucket из кэшированных файлов.
+    Читает содержимое файлов кэша из указанной директории bucket.
 
     Args:
-        bucket_dir (Path): Путь к каталогу bucket.
+        bucket_dir (Path): Путь к директории bucket.
 
     Yields:
-        str: Содержимое кэшированных файлов.
-
-    Как работает функция:
-    1. Формирует пути к файлам кэша: основному и файлам, обработанным с помощью `spacy`.
-    2. Если существует основной файл кэша и не существует файл, обработанный с помощью `spacy`, возвращает содержимое основного файла кэша.
-    3. Перебирает файлы, обработанные с помощью `spacy`, и обычные файлы, начиная с индекса 1, и возвращает их содержимое.
-    4. Останавливается, когда файл с текущим индексом не существует.
-
-    Flowchart:
-
-    ```
-    GetCachePaths --> CheckMainCache --> (MainCacheExists AND NoSpacyCache) --> YieldMainCache
-    GetCachePaths --> LoopFiles --> CheckSpacyCache
-    CheckSpacyCache --> (SpacyCacheExists) --> YieldSpacyCache --> LoopFiles
-    CheckSpacyCache --> (NoSpacyCache) --> CheckPlainCache
-    CheckPlainCache --> (PlainCacheExists) --> YieldPlainCache --> LoopFiles
-    CheckPlainCache --> (NoPlainCache) --> BreakLoop
-    ```
-
-    Примеры:
-    ```python
-    # Создание временных файлов для примера
-    os.makedirs("temp_bucket", exist_ok=True)
-    with open("temp_bucket/plain_0001.cache", "w", encoding="utf-8") as f:
-        f.write("This is plain cache 1.")
-    with open("temp_bucket/spacy_0002.cache", "w", encoding="utf-8") as f:
-        f.write("This is spacy cache 2.")
-
-    # Чтение bucket
-    for chunk in read_bucket(Path("temp_bucket")):
-        print(f"Content: {chunk}")
-
-    # Удаление временных файлов
-    import shutil
-    shutil.rmtree("temp_bucket")
-    ```
+        str: Содержимое файлов кэша.
     """
-    ...
+```
+
+**Назначение**: Читает содержимое файлов кэша из указанного каталога bucket.
+
+**Параметры**:
+- `bucket_dir` (Path): Путь к каталогу bucket.
+
+**Возвращает**:
+- `str`: Содержимое файлов кэша.
+
+**Как работает функция**:
+1. Формирует пути к файлам кэша.
+2. Проверяет наличие файлов кэша и читает их содержимое.
+3. Если найден файл `spacy_file`, то отдает содержимое только его.
+4. Если `spacy_file` не найден, но найден `cache_file`, то отдает содержимое `cache_file`.
+5. Далее ищет файлы с префиксами `spacy_` и `plain_` с номерами от 0001 до 0999.
+6. Если найден файл `spacy_{idx:04d}.cache`, то отдает содержимое только его.
+7. Если найден файл `plain_{idx:04d}.cache`, то отдает содержимое только его.
+8. Если ни один из файлов не найден, завершает работу.
+
+**Примеры**:
+```python
+bucket_dir = Path("/path/to/bucket")
+# Файлы в bucket_dir: cache_file, spacy_0001.cache, plain_0002.cache
+# for chunk in read_bucket(bucket_dir):
+#     print(chunk) # Выведет содержимое cache_file, spacy_0001.cache и plain_0002.cache
 ```
 
 ### `stream_read_parts_and_refine`
@@ -424,116 +447,76 @@ def read_bucket(bucket_dir: Path):
 ```python
 def stream_read_parts_and_refine(bucket_dir: Path, delete_files: bool = False) -> Iterator[str]:
     """
-    Читает части файла из указанного каталога bucket, улучшает их с помощью `spacy` и возвращает в виде потока строк.
+    Читает и улучшает текстовые части из указанной директории bucket потоком.
 
     Args:
-        bucket_dir (Path): Путь к каталогу bucket.
-        delete_files (bool): Удалять ли исходные файлы после обработки.
+        bucket_dir (Path): Путь к директории bucket.
+        delete_files (bool): Если True, удаляет файлы после прочтения. По умолчанию False.
 
     Yields:
-        str: Улучшенные части файла.
-
-    Как работает функция:
-    1. Формирует пути к файлам кэша, обработанным с помощью `spacy`, и обычным файлам.
-    2. Если не существует файл, обработанный с помощью `spacy`, и обычный файл, но существует основной файл кэша, разбивает основной файл кэша на части с помощью `split_file_by_size_and_newline`.
-    3. Перебирает обычные файлы, начиная с индекса 1.
-    4. Для каждого обычного файла формирует пути к временному файлу и файлу кэша, обработанному с помощью `spacy`.
-    5. Если существует файл кэша, обработанный с помощью `spacy`, возвращает его содержимое.
-    6. Если файл кэша, обработанный с помощью `spacy`, не существует, открывает временный файл для записи.
-    7. Для каждой части текста, возвращенной функцией `spacy_refine_chunks`, записывает ее во временный файл и возвращает.
-    8. Переименовывает временный файл в файл кэша, обработанный с помощью `spacy`.
-    9. Если `delete_files` равно `True`, удаляет обычный файл.
-
-    Flowchart:
-
-    ```
-    GetCachePaths --> CheckFilesExist --> (NoSpacyAndNoPlain AND MainCacheExists) --> SplitMainCache
-    GetCachePaths --> LoopFiles --> CheckSpacyCache
-    CheckSpacyCache --> (SpacyCacheExists) --> YieldSpacyCache --> LoopFiles
-    CheckSpacyCache --> (NoSpacyCache) --> OpenTmpFile
-    OpenTmpFile --> SpacyRefine --> WriteToTmpFile --> YieldChunk --> SpacyRefine
-    SpacyRefine --> (NoMoreChunks) --> RenameTmpToCache --> DeletePlain --> LoopFiles
-    LoopFiles --> (NoMoreFiles) --> End
-    ```
-
-    Примеры:
-    ```python
-    # Создание временных файлов для примера
-    os.makedirs("temp_bucket", exist_ok=True)
-    with open("temp_bucket/plain_0001.cache", "w", encoding="utf-8") as f:
-        f.write("This is the first sentence. This is the second sentence.")
-
-    # Чтение и улучшение частей файла
-    for chunk in stream_read_parts_and_refine(Path("temp_bucket")):
-        print(f"Refined chunk: {chunk}")
-
-    # Удаление временных файлов
-    import shutil
-    shutil.rmtree("temp_bucket")
-    ```
+        str: Улучшенные текстовые части.
     """
-    ...
+```
+
+**Назначение**: Читает части файлов из указанного каталога bucket, улучшает их с помощью `spacy_refine_chunks` и возвращает улучшенные фрагменты потоком.
+
+**Параметры**:
+- `bucket_dir` (Path): Путь к каталогу bucket.
+- `delete_files` (bool: Если `True`, удаляет части файлов после обработки. По умолчанию `False`.
+
+**Возвращает**:
+- `str`: Улучшенные текстовые части.
+
+**Как работает функция**:
+1. Формирует пути к файлам кэша и частям файлов.
+2. Если файл `space_file` не существует, но существует `cache_file`, вызывает функцию `split_file_by_size_and_newline` для разделения `cache_file` на части.
+3. Итерируется по частям файлов (с именами `plain_{idx:04d}.cache`, где `idx` от 1 до 999).
+4. Для каждой части файла читает ее содержимое, улучшает с помощью `spacy_refine_chunks` и выдает улучшенные фрагменты.
+5. После обработки каждой части файла переименовывает временный файл с улучшенными фрагментами в файл кэша (`spacy_{idx:04d}.cache`).
+6. Если `delete_files` равен `True`, удаляет обработанную часть файла.
+
+**Примеры**:
+```python
+bucket_dir = Path("/path/to/bucket")
+# В bucket_dir существуют файлы: cache_file
+# После вызова split_file_by_size_and_newline будут созданы plain_0001.cache, plain_0002.cache и т.д.
+# for chunk in stream_read_parts_and_refine(bucket_dir, delete_files=True):
+#     print(chunk) # Выведет улучшенные фрагменты из каждой части файла
 ```
 
 ### `split_file_by_size_and_newline`
 
 ```python
-def split_file_by_size_and_newline(input_filename, output_dir, chunk_size_bytes=1024*1024):
-    """
-    Разделяет файл на части заданного размера, разделяя только по символу новой строки.
+def split_file_by_size_and_newline(input_filename, output_dir, chunk_size_bytes=1024*1024): # 1MB
+    """Splits a file into chunks of approximately chunk_size_bytes, splitting only at newline characters.
 
     Args:
-        input_filename: Путь к входному файлу.
-        output_dir: Каталог для выходных файлов.
-        chunk_size_bytes: Желаемый размер каждой части в байтах (по умолчанию 1MB).
-
-    Как работает функция:
-    1. Определяет префикс для выходных файлов на основе имени входного файла и выходного каталога.
-    2. Открывает входной файл для чтения в кодировке UTF-8.
-    3. Инициализирует переменные для отслеживания номера части, текущей части и ее размера.
-    4. Итерируется по каждой строке во входном файле:
-        - Добавляет строку в текущую часть.
-        - Добавляет размер строки в байтах к размеру текущей части.
-        - Если размер текущей части превышает заданный размер (`chunk_size_bytes`):
-            - Определяет имя выходного файла для текущей части.
-            - Открывает выходной файл для записи в кодировке UTF-8.
-            - Записывает текущую часть в выходной файл.
-            - Сбрасывает текущую часть и ее размер.
-            - Увеличивает номер части.
-    5. После завершения цикла записывает последнюю часть (если она не пуста) в отдельный файл.
-
-    Flowchart:
-
-    ```
-    OpenFile --> InitVars --> LoopLines
-    LoopLines --> AddLineToChunk --> UpdateChunkSize --> CheckChunkSize
-    CheckChunkSize --> (ChunkSize >= MaxSize) --> CreateOutputFile --> WriteChunkToFile
-    WriteChunkToFile --> ResetChunkVars --> IncChunkNum --> LoopLines
-    CheckChunkSize --> (ChunkSize < MaxSize) --> LoopLines
-    LoopLines --> (NoMoreLines) --> CheckLastChunkNotEmpty
-    CheckLastChunkNotEmpty --> (LastChunkNotEmpty) --> CreateOutputFile --> WriteChunkToFile
-    ```
-
-    Примеры:
-    ```python
-    # Создание временного файла для примера
-    with open("temp_file.txt", "w", encoding="utf-8") as f:
-        f.write("This is a line.\n" * 2000)  # Создание файла с 2000 строками
-
-    # Разделение файла на части
-    split_file_by_size_and_newline("temp_file.txt", "temp_output")
-
-    # Проверка, что файлы созданы
-    import os
-    print(f"Files created: {os.listdir('temp_output')}")
-
-    # Удаление временных файлов
-    import shutil
-    shutil.rmtree("temp_output")
-    os.remove("temp_file.txt")
-    ```
+        input_filename: Path to the input file.
+        output_prefix: Prefix for the output files (e.g., 'output_part_').
+        chunk_size_bytes: Desired size of each chunk in bytes.
     """
-    ...
+```
+
+**Назначение**: Разделяет файл на части заданного размера, разделяя только по символам новой строки.
+
+**Параметры**:
+- `input_filename`: Путь к входному файлу.
+- `output_dir`: Префикс для выходных файлов (например, 'output_part_').
+- `chunk_size_bytes`: Желаемый размер каждой части в байтах.
+
+**Как работает функция**:
+1. Открывает входной файл для чтения в кодировке UTF-8.
+2. Инициализирует переменные для отслеживания номера части, текущего содержимого части и ее размера.
+3. Итерируется по строкам входного файла.
+4. Добавляет каждую строку к текущему содержимому части и увеличивает размер части.
+5. Если размер текущей части превышает заданный размер (`chunk_size_bytes`), записывает текущую часть в выходной файл, создает новый файл и сбрасывает переменные.
+6. Записывает последнюю часть (если она не пуста) в выходной файл.
+
+**Примеры**:
+```python
+input_file = "input.txt"
+output_dir = "/path/to/output"
+# После вызова split_file_by_size_and_newline(input_file, output_dir) будут созданы файлы output_0001.txt, output_0002.txt и т.д.
 ```
 
 ### `get_filename`
@@ -541,47 +524,35 @@ def split_file_by_size_and_newline(input_filename, output_dir, chunk_size_bytes=
 ```python
 async def get_filename(response: ClientResponse) -> str:
     """
-    Пытается извлечь имя файла из HTTP-ответа.
+    Attempts to extract a filename from an aiohttp response. Prioritizes Content-Disposition, then URL.
 
     Args:
-        response (ClientResponse): Объект HTTP-ответа aiohttp.
+        response: The aiohttp ClientResponse object.
 
     Returns:
-        str: Имя файла или None, если не удалось определить.
-
-    Как работает функция:
-    1. Проверяет наличие заголовка Content-Disposition и пытается извлечь имя файла из него.
-    2. Если заголовок Content-Disposition отсутствует или не содержит имени файла, извлекает тип контента и URL из ответа.
-    3. Если тип контента и URL доступны, пытается определить расширение файла.
-    4. Генерирует имя файла на основе URL, хеша URL и расширения.
-    5. Возвращает очищенное имя файла или None, если не удалось определить имя файла.
-
-    Flowchart:
-
-    ```
-    GetContentDisposition --> (ContentDispositionExists) --> ExtractFilename --> ReturnFilename
-    GetContentDisposition --> (ContentDispositionMissing) --> GetContentTypeAndUrl --> CheckContentTypeAndUrl
-    CheckContentTypeAndUrl --> (ContentTypeAndUrlAvailable) --> GetFileExtension --> GenerateFilename
-    GenerateFilename --> ReturnFilename
-    CheckContentTypeAndUrl --> (ContentTypeOrUrlMissing) --> ReturnNone
-    ```
-
-    Примеры:
-    ```python
-    # Пример использования требует реального ClientResponse, который можно получить только в асинхронном контексте.
-    # Этот пример демонстрирует логику функции, а не ее выполнение.
-    # import aiohttp
-
-    # async def example():
-    #     async with aiohttp.ClientSession() as session:
-    #         async with session.get("https://example.com/file.pdf") as response:
-    #             filename = await get_filename(response)
-    #             print(filename)
-
-    # asyncio.run(example())
-    ```
+        The filename as a string, or None if it cannot be determined.
     """
-    ...
+```
+
+**Назначение**: Извлекает имя файла из ответа `aiohttp`, приоритезируя заголовок `Content-Disposition`, а затем URL.
+
+**Параметры**:
+- `response`: Объект `ClientResponse` из библиотеки `aiohttp`.
+
+**Возвращает**:
+- `str`: Имя файла в виде строки или `None`, если не удалось определить имя файла.
+
+**Как работает функция**:
+1. Пытается получить имя файла из заголовка `Content-Disposition`.
+2. Если заголовок `Content-Disposition` отсутствует или не содержит имени файла, пытается извлечь имя файла из URL.
+3. Если имя файла не удалось извлечь ни из заголовка, ни из URL, возвращает `None`.
+
+**Примеры**:
+```python
+# response.headers['Content-Disposition'] = 'attachment; filename="example.pdf"'
+# await get_filename(response) # Вернет: "example.pdf"
+# response.url = "http://example.com/files/document.docx"
+# await get_filename(response) # Вернет: "document.docx"
 ```
 
 ### `get_file_extension`
@@ -589,46 +560,36 @@ async def get_filename(response: ClientResponse) -> str:
 ```python
 async def get_file_extension(response: ClientResponse):
     """
-    Определяет расширение файла на основе HTTP-ответа.
+    Attempts to determine the file extension from an aiohttp response.  Improved to handle more types.
 
     Args:
-        response (ClientResponse): Объект HTTP-ответа aiohttp.
+        response: The aiohttp ClientResponse object.
 
     Returns:
-        str: Расширение файла (например, ".html", ".json", ".pdf", ".zip", ".md", ".txt") или None, если не удалось определить.
-
-    Как работает функция:
-    1. Извлекает заголовок Content-Type из ответа.
-    2. На основе типа контента определяет расширение файла.
-    3. Если тип контента не позволяет определить расширение, пытается извлечь расширение из URL.
-    4. Возвращает расширение файла или None, если не удалось определить.
-
-    Flowchart:
-
-    ```
-    GetContentType --> CheckContentType --> (ContentTypeExists) --> DetermineExtensionFromContentType
-    DetermineExtensionFromContentType --> ReturnExtension
-    CheckContentType --> (ContentTypeMissing) --> GetUrl --> ExtractExtensionFromUrl
-    ExtractExtensionFromUrl --> ReturnExtension
-    GetUrl --> (NoUrl) --> ReturnNone
-    ```
-
-    Примеры:
-    ```python
-    # Пример использования требует реального ClientResponse, который можно получить только в асинхронном контексте.
-    # Этот пример демонстрирует логику функции, а не ее выполнение.
-    # import aiohttp
-
-    # async def example():
-    #     async with aiohttp.ClientSession() as session:
-    #         async with session.get("https://example.com/file.pdf") as response:
-    #             extension = await get_file_extension(response)
-    #             print(extension)
-
-    # asyncio.run(example())
-    ```
+        The file extension (e.g., ".html", ".json", ".pdf", ".zip", ".md", ".txt") as a string,
+        or None if it cannot be determined.
     """
-    ...
+```
+
+**Назначение**: Определяет расширение файла из ответа `aiohttp`, анализируя заголовок `Content-Type` и URL.
+
+**Параметры**:
+- `response`: Объект `ClientResponse` из библиотеки `aiohttp`.
+
+**Возвращает**:
+- `str`: Расширение файла (например, ".html", ".json", ".pdf", ".zip", ".md", ".txt") в виде строки или `None`, если не удалось определить расширение.
+
+**Как работает функция**:
+1. Пытается определить расширение файла из заголовка `Content-Type`.
+2. Если заголовок `Content-Type` отсутствует или не содержит информации о расширении файла, пытается извлечь расширение из URL.
+3. Если расширение файла не удалось извлечь ни из заголовка, ни из URL, возвращает `None`.
+
+**Примеры**:
+```python
+# response.headers['Content-Type'] = 'application/pdf'
+# await get_file_extension(response) # Вернет: ".pdf"
+# response.url = "http://example.com/files/document.docx"
+# await get_file_extension(response) # Вернет: ".docx"
 ```
 
 ### `read_links`
@@ -636,37 +597,39 @@ async def get_file_extension(response: ClientResponse):
 ```python
 def read_links(html: str, base: str) -> set[str]:
     """
-    Извлекает ссылки из HTML-кода.
+    Извлекает ссылки из HTML-кода, используя BeautifulSoup4.
 
     Args:
-        html (str): HTML-код для анализа.
+        html (str): HTML-код для извлечения ссылок.
         base (str): Базовый URL для объединения относительных ссылок.
 
     Returns:
         set[str]: Множество URL-адресов, найденных в HTML-коде.
-
-    Как работает функция:
-    1. Использует BeautifulSoup для анализа HTML-кода.
-    2. Пытается найти основной контент, используя различные селекторы CSS.
-    3. Извлекает все ссылки из тегов `<a>`, исключая ссылки с атрибутом `rel="nofollow"`.
-    4. Объединяет относительные ссылки с базовым URL.
-    5. Возвращает множество уникальных URL-адресов.
-
-    Flowchart:
-
-    ```
-    ParseHtml --> FindMainContent --> ExtractLinks --> FilterLinks --> JoinRelativeLinks --> ReturnUniqueUrls
-    ```
-
-    Примеры:
-    ```python
-    html = '<a href="https://example.com">Example</a> <a href="/relative">Relative</a>'
-    base = "https://base.com"
-    links = read_links(html, base)
-    print(links)  # Вывод: {'https://example.com', 'https://base.com/relative'}
-    ```
     """
-    ...
+```
+
+**Назначение**: Извлекает все ссылки из HTML-кода, используя BeautifulSoup4, и возвращает их в виде множества полных URL-адресов.
+
+**Параметры**:
+- `html` (str): HTML-код, из которого необходимо извлечь ссылки.
+- `base` (str): Базовый URL-адрес для объединения относительных ссылок.
+
+**Возвращает**:
+- `set[str]`: Множество полных URL-адресов, найденных в HTML-коде.
+
+**Как работает функция**:
+1. Создает объект BeautifulSoup из HTML-кода.
+2. Пытается найти основной контент, используя селекторы CSS.
+3. Извлекает все ссылки (`<a>`) из основного контента.
+4. Фильтрует ссылки, удаляя те, у которых есть атрибут `rel` со значением `nofollow`.
+5. Объединяет относительные ссылки с базовым URL-адресом.
+6. Возвращает множество полных URL-адресов.
+
+**Примеры**:
+```python
+html_code = '<a href="https://example.com">Example</a><a href="/about">About</a>'
+base_url = "https://example.com"
+# read_links(html_code, base_url) # Вернет: {'https://example.com', 'https://example.com/about'}
 ```
 
 ### `download_urls`
@@ -685,52 +648,60 @@ async def download_urls(
     proxy: Optional[str] = None
 ) -> AsyncIterator[str]:
     """
-    Асинхронно скачивает файлы по URL-адресам.
+    Загружает файлы по списку URL-адресов асинхронно.
 
     Args:
-        bucket_dir (Path): Каталог для сохранения скачанных файлов.
-        urls (list[str]): Список URL-адресов для скачивания.
-        max_depth (int): Максимальная глубина рекурсивного скачивания HTML-страниц (по умолчанию 0).
-        loading_urls (set[str]): Множество URL-адресов, которые уже находятся в процессе скачивания (используется для предотвращения повторного скачивания).
-        lock (asyncio.Lock): Блокировка для синхронизации доступа к общим ресурсам (по умолчанию None).
-        delay (int): Задержка в секундах между запросами (по умолчанию 3).
-        new_urls (list[str]): Список новых URL-адресов, найденных на скачанных страницах (используется для рекурсивного скачивания) (по умолчанию пустой список).
-        group_size (int): Количество URL-адресов, которые будут скачиваться одновременно (по умолчанию 5).
-        timeout (int): Максимальное время ожидания ответа от сервера в секундах (по умолчанию 10).
-        proxy (Optional[str]): URL прокси-сервера (по умолчанию None).
+        bucket_dir (Path): Путь к директории bucket, куда будут загружены файлы.
+        urls (list[str]): Список URL-адресов для загрузки.
+        max_depth (int): Максимальная глубина рекурсивной загрузки ссылок с HTML-страниц. По умолчанию 0 (не рекурсивно).
+        loading_urls (set[str]): Множество URL-адресов, которые уже загружаются. Используется для предотвращения повторной загрузки.
+        lock (asyncio.Lock): Блокировка asyncio для синхронизации доступа к общим ресурсам.
+        delay (int): Задержка в секундах между запросами. По умолчанию 3 секунды.
+        new_urls (list[str]): Список для добавления новых URL-адресов, найденных на загруженных HTML-страницах.
+        group_size (int): Количество URL-адресов для одновременной загрузки. По умолчанию 5.
+        timeout (int): Время ожидания ответа от сервера в секундах. По умолчанию 10 секунд.
+        proxy (Optional[str]): Прокси-сервер для использования при загрузке файлов. По умолчанию None (без прокси).
 
     Yields:
-        str: Имя скачанного файла.
-
-    Как работает функция:
-    1.  Инициализирует `asyncio.Lock`, если он не был передан.
-
-    2.  Создает асинхронную сессию `ClientSession` с заданными параметрами (прокси, таймаут).
-
-    3.  Определяет внутреннюю асинхронную функцию `download_url`, которая выполняет скачивание одного URL:
-        *   Выполняет GET-запрос к URL.
-        *   Извлекает имя файла из ответа.
-        *   Проверяет, разрешено ли расширение файла и поддерживается ли оно.
-        *   Если это HTML-страница и `max_depth > 0`, извлекает ссылки со страницы и добавляет их в список `new_urls` для дальнейшего скачивания.
-        *   Сохраняет содержимое ответа в файл.
-        *   Возвращает имя файла.
-
-    4.  Запускает группу асинхронных задач `download_url` для всех URL-адресов в списке `urls`.
-
-    5.  Возвращает имена скачанных файлов.
-
-    6.  Если были найдены новые URL-адреса (`new_urls` не пуст), рекурсивно вызывает `download_urls` для каждой группы URL-адресов из `new_urls` с уменьшенной глубиной `max_depth`.
-
-    Flowchart:
-
-    ```
-    InitSession --> LoopUrls --> DownloadUrl --> (DownloadSuccess) --> YieldFilename
-    DownloadUrl --> (HtmlAndMaxDepth > 0) --> ExtractLinks --> AddToNewUrls
-    LoopUrls --> (DownloadFailed) --> Sleep --> LoopUrls
-    LoopUrls --> (NewUrlsNotEmpty) --> RecursiveCall
-    ```
+        str: Имя файла, который был успешно загружен.
     """
-    ...
+```
+
+**Назначение**: Асинхронно загружает файлы по списку URL-адресов, поддерживает рекурсивную загрузку ссылок с HTML-страниц и предотвращает повторную загрузку одних и тех же URL-адресов.
+
+**Параметры**:
+- `bucket_dir` (Path): Путь к каталогу `bucket`, куда будут загружены файлы.
+- `urls` (list[str]): Список URL-адресов для загрузки.
+- `max_depth` (int): Максимальная глубина рекурсивной загрузки ссылок с HTML-страниц. По умолчанию 0 (не рекурсивно).
+- `loading_urls` (set[str]): Множество URL-адресов, которые уже загружаются. Используется для предотвращения повторной загрузки.
+- `lock` (asyncio.Lock): Блокировка asyncio для синхронизации доступа к общим ресурсам.
+- `delay` (int): Задержка в секундах между запросами. По умолчанию 3 секунды.
+- `new_urls` (list[str]): Список для добавления новых URL-адресов, найденных на загруженных HTML-страницах.
+- `group_size` (int): Количество URL-адресов для одновременной загрузки. По умолчанию 5.
+- `timeout` (int): Время ожидания ответа от сервера в секундах. По умолчанию 10 секунд.
+- `proxy` (Optional[str]): Прокси-сервер для использования при загрузке файлов. По умолчанию `None` (без прокси).
+
+**Возвращает**:
+- `str`: Имя файла, который был успешно загружен.
+
+**Как работает функция**:
+1. Инициализирует `ClientSession` с использованием `get_connector` для поддержки прокси и заданного времени ожидания.
+2. Определяет внутреннюю асинхронную функцию `download_url`, которая загружает файл по заданному URL-адресу:
+   - Получает ответ от сервера.
+   - Извлекает имя файла из ответа, используя функцию `get_filename`.
+   - Если имя файла не удалось получить или расширение файла не поддерживается, возвращает `None`.
+   - Если расширение файла `.html` и `max_depth > 0`, извлекает ссылки из HTML-кода с помощью функции `read_links` и добавляет их в список `new_urls` для дальнейшей загрузки.
+   - Сохраняет содержимое файла в указанном каталоге `bucket`.
+   - Возвращает имя файла.
+3. Использует `asyncio.gather` для одновременной загрузки нескольких URL-адресов.
+4. После завершения загрузки всех URL-адресов из списка, рекурсивно вызывает себя для загрузки новых URL-адресов, найденных на загруженных HTML-страницах (если `max_depth > 0`).
+
+**Примеры**:
+```python
+bucket_dir = Path("/path/to/bucket")
+urls = ["http://example.com/file1.pdf", "http://example.com/file2.txt"]
+# async for filename in download_urls(bucket_dir, urls, max_depth=1):
+#     print(filename) # Выведет имена загруженных файлов
 ```
 
 ### `get_downloads_urls`
@@ -738,49 +709,36 @@ async def download_urls(
 ```python
 def get_downloads_urls(bucket_dir: Path, delete_files: bool = False) -> Iterator[str]:
     """
-    Получает список URL-адресов для скачивания из файла `DOWNLOADS_FILE`.
+    Получает список URL-адресов для загрузки из файла DOWNLOADS_FILE в указанной директории bucket.
 
     Args:
-        bucket_dir (Path): Путь к каталогу bucket.
-        delete_files (bool): Удалять ли файл `DOWNLOADS_FILE` после прочтения.
+        bucket_dir (Path): Путь к директории bucket.
+        delete_files (bool): Если True, удаляет файл DOWNLOADS_FILE после прочтения. По умолчанию False.
 
     Yields:
-        dict: Словарь с информацией о URL-адресах для скачивания.
-
-    Как работает функция:
-    1. Формирует путь к файлу `DOWNLOADS_FILE` в указанном каталоге.
-    2. Если файл существует, открывает его и загружает данные из него.
-    3. Если `delete_files` равно `True`, удаляет файл `DOWNLOADS_FILE`.
-    4. Перебирает элементы в загруженных данных.
-    5. Для каждого элемента проверяет наличие ключей "url" или "urls".
-    6. Возвращает словарь с информацией о URL-адресах для скачивания.
-
-    Flowchart:
-
-    ```
-    GetDownloadFile --> CheckDownloadFileExists --> (DownloadFileExists) --> LoadData
-    LoadData --> (DeleteFiles) --> DeleteDownloadFile
-    LoadData --> LoopItems --> CheckUrlKey --> (UrlKeyExists) --> YieldItem
-    CheckUrlKey --> (UrlKeyMissing) --> CheckUrlsKey --> (UrlsKeyExists) --> YieldItem
-    ```
+        dict: Словарь с информацией о URL-адресе (или URL-адресах) и дополнительных параметрах.
     """
-    ...
 ```
 
-### `read_and_download_urls`
+**Назначение**: Получает список URL-адресов для загрузки из файла `DOWNLOADS_FILE` в указанном каталоге `bucket`.
 
+**Параметры**:
+- `bucket_dir` (Path): Путь к каталогу `bucket`.
+- `delete_files` (bool): Если `True`, удаляет файл `DOWNLOADS_FILE` после прочтения. По умолчанию `False`.
+
+**Возвращает**:
+- `dict`: Словарь с информацией о URL-адресе (или URL-адресах) и дополнительных параметрах.
+
+**Как работает функция**:
+1. Формирует путь к файлу `DOWNLOADS_FILE` в каталоге `bucket`.
+2. Проверяет, существует ли файл `DOWNLOADS_FILE`.
+3. Если файл существует, открывает его для чтения.
+4. Загружает данные из файла в формате JSON.
+5. Если `delete_files` равен `True`, удаляет файл `DOWNLOADS_FILE`.
+6. Итерируется по списку элементов в загруженных данных и возвращает каждый элемент, содержащий URL-адрес (или URL-адреса).
+
+**Примеры**:
 ```python
-def read_and_download_urls(bucket_dir: Path, delete_files: bool = False, event_stream: bool = False) -> Iterator[str]:
-    """
-    Читает URL-адреса из файла загрузок и скачивает их.
-
-    Args:
-        bucket_dir (Path): Путь к каталогу bucket.
-        delete_files (bool): Удалять ли файл загрузок после прочтения.
-        event_stream (bool): Генерировать ли события о процессе скачивания.
-
-    Yields:
-        str: События о процессе скачивания, если `event_stream` равно `True`.
-
-    Как работает функция:
-    1. Получает список URL-адресов из файла загрузок с помощью `get_downloads_urls`.
+bucket_dir = Path("/path/to/bucket")
+# Файл DOWNLOADS_FILE содержит:
+# [{"url":

@@ -1,303 +1,347 @@
-# Модуль `website.py`
+# Документация модуля `website.py`
 
 ## Обзор
 
-Модуль `website.py` отвечает за настройку маршрутов веб-сайта и отображение соответствующих шаблонов. Он использует Flask для определения эндпоинтов и рендеринга HTML-страниц.
+Модуль `website.py` предназначен для настройки маршрутов и обработки запросов, связанных с веб-интерфейсом приложения `gpt4free`. Он использует Flask для определения эндпоинтов, отрисовки шаблонов и перенаправления пользователей.
 
 ## Подробнее
 
-Этот модуль является частью веб-интерфейса `gpt4free`, созданного с использованием Flask. Он определяет различные маршруты, такие как главная страница, страница чата, страница настроек и страница фона. Каждый маршрут связан с определенной функцией, которая обрабатывает запрос и возвращает соответствующий шаблон HTML.
+Модуль определяет класс `Website`, который инициализирует Flask-приложение и настраивает маршруты для различных страниц веб-интерфейса, таких как главная страница чата, страница настроек и страница отображения фона. Маршруты связаны с соответствующими функциями, которые обрабатывают запросы и отображают необходимые шаблоны.
 
 ## Классы
 
 ### `Website`
 
-**Описание**: Класс `Website` управляет маршрутами веб-сайта и связывает их с соответствующими функциями отображения.
-
-**Принцип работы**:
-Класс инициализируется с экземпляром Flask-приложения. Он определяет словарь `routes`, который содержит маршруты веб-сайта и связанные с ними функции и методы.
+**Описание**:
+Класс `Website` отвечает за настройку маршрутов веб-интерфейса и связывание их с соответствующими функциями обработки запросов.
 
 **Атрибуты**:
-- `app`: Экземпляр Flask-приложения.
-- `routes`: Словарь, содержащий маршруты веб-сайта и связанные с ними функции и методы.
+- `app`: Flask-приложение, для которого настраиваются маршруты.
+- `routes` (dict): Словарь, содержащий маршруты и связанные с ними функции и методы.
 
 **Методы**:
-- `__init__(self, app) -> None`: Инициализирует экземпляр класса `Website` с Flask-приложением.
-- `_chat(self, conversation_id)`: Отображает страницу чата для указанного `conversation_id`.
-- `_share_id(self, share_id, conversation_id: str = "")`: Отображает страницу общего доступа с заданными `share_id` и `conversation_id`.
-- `_index(self)`: Отображает главную страницу с новым `conversation_id`.
-- `_settings(self)`: Отображает страницу настроек с новым `conversation_id`.
-- `_background(self)`: Отображает страницу фона.
+- `__init__(self, app)`: Инициализирует класс `Website`, сохраняет ссылку на Flask-приложение и определяет маршруты.
+- `_chat(self, conversation_id)`: Обрабатывает запросы к странице чата с указанным `conversation_id`.
+- `_share_id(self, share_id, conversation_id: str = "")`: Обрабатывает запросы к странице чата с указанным `share_id` и `conversation_id`.
+- `_index(self)`: Обрабатывает запросы к главной странице чата.
+- `_settings(self)`: Обрабатывает запросы к странице настроек.
+- `_background(self)`: Обрабатывает запросы к странице отображения фона.
 
 ## Функции
 
-### `redirect_home()`
+### `redirect_home`
 
-**Назначение**: Выполняет перенаправление на страницу `/chat`.
+```python
+def redirect_home():
+    return redirect('/chat')
+```
+
+**Назначение**:
+Перенаправляет пользователя на главную страницу чата (`/chat`).
+
+**Возвращает**:
+- `flask.Response`: Объект ответа Flask, который перенаправляет пользователя.
 
 **Как работает функция**:
-Функция просто возвращает результат вызова `redirect('/chat')`, что приводит к перенаправлению пользователя на главную страницу чата.
-
-```
-A[Вызов redirect('/chat')]
-|
-B[Перенаправление на '/chat']
-```
+1. Функция `redirect_home` использует функцию `redirect` из библиотеки Flask для выполнения HTTP-перенаправления на URL `/chat`.
 
 **Примеры**:
 ```python
 from flask import Flask
-from unittest.mock import MagicMock
+from flask import redirect
 
 app = Flask(__name__)
-with app.test_request_context():
-    result = redirect_home()
-    print(result.location)  # Вывод: /chat
+
+@app.route('/menu/')
+def redirect_menu():
+    return redirect('/chat')
+
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
 
-### `Website.__init__(self, app) -> None`
+### `Website.__init__`
 
-**Назначение**: Инициализирует экземпляр класса `Website` и настраивает маршруты приложения.
+```python
+def __init__(self, app) -> None:
+    self.app = app
+    self.routes = {
+        '/chat/': {
+            'function': self._index,
+            'methods': ['GET', 'POST']
+        },
+        '/chat/<conversation_id>': {
+            'function': self._chat,
+            'methods': ['GET', 'POST']
+        },
+        '/chat/<share_id>/': {
+            'function': self._share_id,
+            'methods': ['GET', 'POST']
+        },
+        '/chat/<share_id>/<conversation_id>': {
+            'function': self._share_id,
+            'methods': ['GET', 'POST']
+        },
+        '/chat/menu/': {
+            'function': redirect_home,
+            'methods': ['GET', 'POST']
+        },
+        '/chat/settings/': {
+            'function': self._settings,
+            'methods': ['GET', 'POST']
+        },
+        '/images/': {
+            'function': redirect_home,
+            'methods': ['GET', 'POST']
+        },
+        '/background': {
+            'function': self._background,
+            'methods': ['GET']
+        },
+    }
+```
+
+**Назначение**:
+Инициализирует экземпляр класса `Website`, настраивая маршруты Flask-приложения.
 
 **Параметры**:
-- `app`: Экземпляр Flask-приложения.
+- `app`: Flask-приложение, для которого настраиваются маршруты.
 
 **Как работает функция**:
-1.  Принимает экземпляр Flask-приложения в качестве аргумента.
-2.  Сохраняет ссылку на приложение в атрибуте `self.app`.
-3.  Определяет словарь `self.routes`, содержащий маршруты и связанные с ними функции и методы.
+
+1.  Сохраняет ссылку на Flask-приложение в атрибуте `self.app`.
+2.  Определяет словарь `self.routes`, который содержит маршруты и связанные с ними функции и методы:
 
 ```
-A[Инициализация экземпляра Website]
-|
-B[Сохранение ссылки на Flask-приложение]
-|
-C[Определение маршрутов]
+       Сохраняет ссылку на Flask приложение
+           ↓
+    Определяет словарь маршрутов
+           ↓
+    Сопоставляет каждый маршрут с соответствующей функцией обработчиком
 ```
 
-### `Website._chat(self, conversation_id)`
+### `Website._chat`
 
-**Назначение**: Отображает страницу чата для указанного `conversation_id`.
+```python
+def _chat(self, conversation_id):
+    if conversation_id == "share":
+        return render_template('index.html', conversation_id=str(uuid.uuid4()))
+    return render_template('index.html', conversation_id=conversation_id)
+```
+
+**Назначение**:
+Обрабатывает запросы к странице чата с указанным `conversation_id`.
 
 **Параметры**:
-- `conversation_id`: Идентификатор разговора.
+- `conversation_id`: Идентификатор беседы.
+
+**Возвращает**:
+- `flask.Response`: Объект ответа Flask, который отображает шаблон `index.html` с указанным `conversation_id`.
 
 **Как работает функция**:
-1.  Проверяет, является ли `conversation_id` равным "share".
-2.  Если `conversation_id` равен "share", отображает шаблон `index.html` с новым `conversation_id`, сгенерированным с помощью `uuid.uuid4()`.
-3.  В противном случае отображает шаблон `index.html` с предоставленным `conversation_id`.
+
+1.  Проверяет, является ли `conversation_id` строкой `"share"`.
+2.  Если `conversation_id` равен `"share"`, генерирует новый UUID и передает его в шаблон `index.html` как `conversation_id`.
+3.  Если `conversation_id` не равен `"share"`, передает полученный `conversation_id` в шаблон `index.html`.
+4.  Отображает шаблон `index.html` с переданными параметрами.
 
 ```
-A[Проверка conversation_id == "share"]
-|
-B[Если да: Генерация нового conversation_id]
-|
-C[Отображение шаблона index.html с conversation_id]
+         Получает conversation_id
+                ↓
+     conversation_id == "share"?
+        /        \
+       да         нет
+       /            \
+  Генерирует UUID    Использует полученный conversation_id
+       \            /
+        Передает conversation_id в index.html
+              ↓
+          Отображает index.html
 ```
 
 **Примеры**:
 ```python
-from flask import Flask
-from unittest.mock import MagicMock
+from flask import Flask, render_template
+import uuid
 
 app = Flask(__name__)
-app.template_folder = 'templates'  # Укажите путь к вашей папке с шаблонами
 
 @app.route('/chat/<conversation_id>')
 def chat(conversation_id):
-    website = Website(app)
-    # Mock render_template для тестирования
-    website.render_template = MagicMock(return_value='Template Rendered')
-    result = website._chat(conversation_id)
-    return result
+    if conversation_id == "share":
+        return render_template('index.html', conversation_id=str(uuid.uuid4()))
+    return render_template('index.html', conversation_id=conversation_id)
 
-# Создаем фиктивный шаблон index.html
-with open('templates/index.html', 'w') as f:
-    f.write('<h1>Hello, World!</h1>')
-
-with app.test_request_context():
-    result1 = chat('123')
-    print(result1)
-    #website.render_template.assert_called_with('index.html', conversation_id='123')
-
-    result2 = chat('share')
-    print(result2)
-    #assert website.render_template.call_args[0][0] == 'index.html'
-    #assert 'conversation_id' in website.render_template.call_args[1]
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
 
-### `Website._share_id(self, share_id, conversation_id: str = "")`
+### `Website._share_id`
 
-**Назначение**: Отображает страницу общего доступа с заданными `share_id` и `conversation_id`.
+```python
+def _share_id(self, share_id, conversation_id: str = ""):
+    share_url = os.environ.get("G4F_SHARE_URL", "")
+    conversation_id = conversation_id if conversation_id else str(uuid.uuid4())
+    return render_template('index.html', share_url=share_url, share_id=share_id, conversation_id=conversation_id)
+```
+
+**Назначение**:
+Обрабатывает запросы к странице чата с указанными `share_id` и `conversation_id`.
 
 **Параметры**:
 - `share_id`: Идентификатор общего доступа.
-- `conversation_id` (optional): Идентификатор разговора. По умолчанию пустая строка.
+- `conversation_id` (str, optional): Идентификатор беседы. По умолчанию "".
+
+**Возвращает**:
+- `flask.Response`: Объект ответа Flask, который отображает шаблон `index.html` с указанными `share_url`, `share_id` и `conversation_id`.
 
 **Как работает функция**:
+
 1.  Получает значение переменной окружения `G4F_SHARE_URL`.
-2.  Если `conversation_id` не предоставлен, генерирует новый `conversation_id` с помощью `uuid.uuid4()`.
-3.  Отображает шаблон `index.html` с переменными `share_url`, `share_id` и `conversation_id`.
+2.  Если `conversation_id` не указан, генерирует новый UUID и использует его в качестве `conversation_id`.
+3.  Отображает шаблон `index.html` с переданными параметрами `share_url`, `share_id` и `conversation_id`.
 
 ```
-A[Получение G4F_SHARE_URL из окружения]
-|
-B[Проверка наличия conversation_id]
-|
-C[Если нет: Генерация нового conversation_id]
-|
-D[Отображение шаблона index.html с share_url, share_id и conversation_id]
+         Получает share_id и conversation_id
+                ↓
+      Получает G4F_SHARE_URL из окружения
+                ↓
+     conversation_id указан?
+        /        \
+       да         нет
+       /            \
+  Использует полученный conversation_id   Генерирует UUID
+       \            /
+        Передает share_url, share_id, conversation_id в index.html
+              ↓
+          Отображает index.html
 ```
 
 **Примеры**:
 ```python
-from flask import Flask
-from unittest.mock import MagicMock
+from flask import Flask, render_template
+import uuid
 import os
 
 app = Flask(__name__)
-app.template_folder = 'templates'  # Укажите путь к вашей папке с шаблонами
-os.environ["G4F_SHARE_URL"] = "http://example.com/share"
 
-@app.route('/share/<share_id>/<conversation_id>')
+@app.route('/chat/<share_id>/<conversation_id>')
 def share_id(share_id, conversation_id):
-    website = Website(app)
-    # Mock render_template для тестирования
-    website.render_template = MagicMock(return_value='Template Rendered')
-    result = website._share_id(share_id, conversation_id)
-    return result
+    share_url = os.environ.get("G4F_SHARE_URL", "")
+    return render_template('index.html', share_url=share_url, share_id=share_id, conversation_id=conversation_id)
 
-# Создаем фиктивный шаблон index.html
-with open('templates/index.html', 'w') as f:
-    f.write('<h1>Hello, World!</h1>')
-
-with app.test_request_context():
-    result1 = share_id('abc', '123')
-    print(result1)
-    #website.render_template.assert_called_with('index.html', share_url="http://example.com/share", share_id='abc', conversation_id='123')
-
-    result2 = share_id('abc', '')
-    print(result2)
-    #assert website.render_template.call_args[0][0] == 'index.html'
-    #assert 'share_url' in website.render_template.call_args[1]
-    #assert 'share_id' in website.render_template.call_args[1]
-    #assert 'conversation_id' in website.render_template.call_args[1]
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
 
-### `Website._index(self)`
+### `Website._index`
 
-**Назначение**: Отображает главную страницу с новым `conversation_id`.
+```python
+def _index(self):
+    return render_template('index.html', conversation_id=str(uuid.uuid4()))
+```
+
+**Назначение**:
+Обрабатывает запросы к главной странице чата.
+
+**Возвращает**:
+- `flask.Response`: Объект ответа Flask, который отображает шаблон `index.html` с новым `conversation_id`.
 
 **Как работает функция**:
-1.  Генерирует новый `conversation_id` с помощью `uuid.uuid4()`.
-2.  Отображает шаблон `index.html` с новым `conversation_id`.
+
+1.  Генерирует новый UUID для `conversation_id`.
+2.  Отображает шаблон `index.html` с переданным параметром `conversation_id`.
 
 ```
-A[Генерация нового conversation_id]
-|
-B[Отображение шаблона index.html с conversation_id]
+      Генерирует UUID для conversation_id
+                ↓
+        Передает conversation_id в index.html
+              ↓
+          Отображает index.html
 ```
 
 **Примеры**:
 ```python
-from flask import Flask
-from unittest.mock import MagicMock
+from flask import Flask, render_template
+import uuid
 
 app = Flask(__name__)
-app.template_folder = 'templates'  # Укажите путь к вашей папке с шаблонами
 
 @app.route('/')
 def index():
-    website = Website(app)
-    # Mock render_template для тестирования
-    website.render_template = MagicMock(return_value='Template Rendered')
-    result = website._index()
-    return result
+    return render_template('index.html', conversation_id=str(uuid.uuid4()))
 
-# Создаем фиктивный шаблон index.html
-with open('templates/index.html', 'w') as f:
-    f.write('<h1>Hello, World!</h1>')
-
-with app.test_request_context():
-    result = index()
-    print(result)
-    #assert website.render_template.call_args[0][0] == 'index.html'
-    #assert 'conversation_id' in website.render_template.call_args[1]
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
 
-### `Website._settings(self)`
+### `Website._settings`
 
-**Назначение**: Отображает страницу настроек с новым `conversation_id`.
+```python
+def _settings(self):
+    return render_template('index.html', conversation_id=str(uuid.uuid4()))
+```
+
+**Назначение**:
+Обрабатывает запросы к странице настроек.
+
+**Возвращает**:
+- `flask.Response`: Объект ответа Flask, который отображает шаблон `index.html` с новым `conversation_id`.
 
 **Как работает функция**:
-1.  Генерирует новый `conversation_id` с помощью `uuid.uuid4()`.
-2.  Отображает шаблон `index.html` с новым `conversation_id`.
+
+1.  Генерирует новый UUID для `conversation_id`.
+2.  Отображает шаблон `index.html` с переданным параметром `conversation_id`.
 
 ```
-A[Генерация нового conversation_id]
-|
-B[Отображение шаблона index.html с conversation_id]
+      Генерирует UUID для conversation_id
+                ↓
+        Передает conversation_id в index.html
+              ↓
+          Отображает index.html
 ```
 
 **Примеры**:
 ```python
-from flask import Flask
-from unittest.mock import MagicMock
+from flask import Flask, render_template
+import uuid
 
 app = Flask(__name__)
-app.template_folder = 'templates'  # Укажите путь к вашей папке с шаблонами
 
-@app.route('/settings')
+@app.route('/settings/')
 def settings():
-    website = Website(app)
-    # Mock render_template для тестирования
-    website.render_template = MagicMock(return_value='Template Rendered')
-    result = website._settings()
-    return result
+    return render_template('index.html', conversation_id=str(uuid.uuid4()))
 
-# Создаем фиктивный шаблон index.html
-with open('templates/index.html', 'w') as f:
-    f.write('<h1>Hello, World!</h1>')
-
-with app.test_request_context():
-    result = settings()
-    print(result)
-    #assert website.render_template.call_args[0][0] == 'index.html'
-    #assert 'conversation_id' in website.render_template.call_args[1]
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
 
-### `Website._background(self)`
+### `Website._background`
 
-**Назначение**: Отображает страницу фона.
+```python
+def _background(self):
+    return render_template('background.html')
+```
+
+**Назначение**:
+Обрабатывает запросы к странице отображения фона.
+
+**Возвращает**:
+- `flask.Response`: Объект ответа Flask, который отображает шаблон `background.html`.
 
 **Как работает функция**:
-Функция отображает шаблон `background.html`.
 
-```
-A[Отображение шаблона background.html]
-```
+1.  Отображает шаблон `background.html`.
 
 **Примеры**:
 ```python
-from flask import Flask
-from unittest.mock import MagicMock
+from flask import Flask, render_template
 
 app = Flask(__name__)
-app.template_folder = 'templates'  # Укажите путь к вашей папке с шаблонами
 
 @app.route('/background')
 def background():
-    website = Website(app)
-    # Mock render_template для тестирования
-    website.render_template = MagicMock(return_value='Template Rendered')
-    result = website._background()
-    return result
+    return render_template('background.html')
 
-# Создаем фиктивный шаблон background.html
-with open('templates/background.html', 'w') as f:
-    f.write('<h1>Background</h1>')
-
-with app.test_request_context():
-    result = background()
-    print(result)
-    #website.render_template.assert_called_with('background.html')
+if __name__ == '__main__':
+    app.run(debug=True)

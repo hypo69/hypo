@@ -1,88 +1,87 @@
-# Модуль `tiny_world`
+# Модуль `tiny_world.py`
 
 ## Обзор
 
-Модуль `tiny_world.py` предоставляет базовый класс `TinyWorld` для моделирования виртуальных сред, в которых взаимодействуют агенты (`TinyPerson`). Он включает в себя управление агентами, обработку действий, взаимодействие между агентами и сохранение/восстановление состояния среды. Модуль также содержит методы для запуска симуляций на определенное количество шагов или временных интервалов.
+Модуль определяет класс `TinyWorld`, который является базовым классом для моделирования окружения, в котором действуют агенты. Он предоставляет функциональность для управления агентами, выполнения шагов симуляции, обработки действий агентов и взаимодействия между агентами.
 
-## Подробней
+## Подробнее
 
-Этот модуль является центральным элементом для создания симуляций, в которых агенты взаимодействуют друг с другом и с окружающей средой. Он предоставляет инструменты для управления временем, добавления и удаления агентов, обработки действий агентов и трансляции сообщений между ними. Класс `TinyWorld` служит основой для создания более сложных и специализированных сред.
+Этот модуль играет центральную роль в создании симуляций, где агенты взаимодействуют друг с другом и с окружающей средой. Он позволяет моделировать различные сценарии и анализировать поведение агентов в этих сценариях. Класс `TinyWorld` предоставляет методы для добавления, удаления и управления агентами, а также для выполнения шагов симуляции и обработки действий агентов.
 
 ## Классы
 
 ### `TinyWorld`
 
-**Описание**: Базовый класс для моделирования виртуальных сред.
+**Описание**: Базовый класс для окружений.
 
-**Принцип работы**:
-Класс `TinyWorld` управляет агентами, временем и взаимодействиями в виртуальной среде. Он позволяет добавлять агентов, запускать симуляции, обрабатывать действия агентов и транслировать сообщения между ними. Состояние среды можно сохранять и восстанавливать.
+**Принцип работы**: Класс `TinyWorld` представляет собой окружение, в котором находятся и действуют агенты. Он управляет временем, агентами и их взаимодействиями. Класс предоставляет методы для выполнения шагов симуляции, обработки действий агентов и взаимодействия между агентами.
 
-**Аттрибуты**:
+**Атрибуты**:
 
-- `name` (str): Имя среды.
-- `current_datetime` (datetime): Текущая дата и время среды.
-- `broadcast_if_no_target` (bool): Если `True`, действия транслируются, если цель действия не найдена.
-- `simulation_id` (None): Идентификатор симуляции, к которой принадлежит среда.
-- `agents` (list): Список агентов в среде.
-- `name_to_agent` (dict): Словарь, сопоставляющий имена агентов с объектами агентов.
-- `_interventions` (list): Список интервенций, применяемых в среде на каждом шаге симуляции.
-- `_displayed_communications_buffer` (list): Буфер для хранения отображаемых коммуникаций.
-- `_target_display_communications_buffer` (list): Временный буфер для целей коммуникаций.
-- `_max_additional_targets_to_display` (int): Максимальное количество дополнительных целей для отображения в коммуникации.
-- `console` (Console): Объект консоли для отображения информации.
-- `all_environments` (dict): Словарь всех созданных сред.
-- `communication_display` (bool): Флаг, определяющий, отображать ли коммуникации среды.
+- `all_environments` (dict): Словарь, содержащий все созданные окружения. Ключ - имя окружения, значение - экземпляр `TinyWorld`.
+- `communication_display` (bool): Флаг, определяющий, следует ли отображать сообщения окружения.
+- `name` (str): Имя окружения.
+- `current_datetime` (datetime): Текущая дата и время в окружении.
+- `broadcast_if_no_target` (bool): Флаг, определяющий, следует ли широковещательно рассылать действия, если цель действия не найдена.
+- `simulation_id` (Any): Идентификатор симуляции, к которой принадлежит окружение.
+- `agents` (list): Список агентов в окружении.
+- `name_to_agent` (dict): Словарь, сопоставляющий имена агентов с их экземплярами.
+- `_interventions` (list): Список интервенций, применяемых в окружении на каждом шаге симуляции.
+- `_displayed_communications_buffer` (list): Буфер сообщений, отображенных на данный момент.
+- `_target_display_communications_buffer` (list): Временный буфер для упрощения отображения сообщений.
+- `_max_additional_targets_to_display` (int): Максимальное количество дополнительных целей для отображения в сообщении.
+- `console` (Console): Объект консоли для вывода сообщений.
 
 **Методы**:
 
-- `__init__(self, name: str="A TinyWorld", agents=[], initial_datetime=datetime.now(), interventions=[], broadcast_if_no_target=True, max_additional_targets_to_display=3)`: Инициализирует среду.
-- `_step(self, timedelta_per_step=None)`: Выполняет один шаг в среде.
-- `_advance_datetime(self, timedelta)`: Продвигает текущую дату и время среды на указанный интервал.
-- `run(self, steps: int, timedelta_per_step=None, return_actions=False)`: Запускает среду на заданное количество шагов.
-- `skip(self, steps: int, timedelta_per_step=None)`: Пропускает заданное количество шагов в среде.
-- `run_minutes(self, minutes: int)`: Запускает среду на заданное количество минут.
-- `skip_minutes(self, minutes: int)`: Пропускает заданное количество минут в среде.
-- `run_hours(self, hours: int)`: Запускает среду на заданное количество часов.
-- `skip_hours(self, hours: int)`: Пропускает заданное количество часов в среде.
-- `run_days(self, days: int)`: Запускает среду на заданное количество дней.
-- `skip_days(self, days: int)`: Пропускает заданное количество дней в среде.
-- `run_weeks(self, weeks: int)`: Запускает среду на заданное количество недель.
-- `skip_weeks(self, weeks: int)`: Пропускает заданное количество недель в среде.
-- `run_months(self, months: int)`: Запускает среду на заданное количество месяцев.
-- `skip_months(self, months: int)`: Пропускает заданное количество месяцев в среде.
-- `run_years(self, years: int)`: Запускает среду на заданное количество лет.
-- `skip_years(self, years: int)`: Пропускает заданное количество лет в среде.
-- `add_agents(self, agents: list)`: Добавляет список агентов в среду.
-- `add_agent(self, agent: TinyPerson)`: Добавляет агента в среду.
-- `remove_agent(self, agent: TinyPerson)`: Удаляет агента из среды.
-- `remove_all_agents(self)`: Удаляет всех агентов из среды.
-- `get_agent_by_name(self, name: str) -> TinyPerson`: Возвращает агента с указанным именем.
-- `add_intervention(self, intervention)`: Добавляет интервенцию в среду.
-- `_handle_actions(self, source: TinyPerson, actions: list)`: Обрабатывает действия, совершенные агентами.
-- `_handle_reach_out(self, source_agent: TinyPerson, content: str, target: str)`: Обрабатывает действие `REACH_OUT`.
-- `_handle_talk(self, source_agent: TinyPerson, content: str, target: str)`: Обрабатывает действие `TALK`.
-- `broadcast(self, speech: str, source: AgentOrWorld=None)`: Отправляет сообщение всем агентам в среде.
-- `broadcast_thought(self, thought: str, source: AgentOrWorld=None)`: Транслирует мысль всем агентам в среде.
-- `broadcast_internal_goal(self, internal_goal: str)`: Транслирует внутреннюю цель всем агентам в среде.
-- `broadcast_context_change(self, context: list)`: Транслирует изменение контекста всем агентам в среде.
-- `make_everyone_accessible(self)`: Делает всех агентов в среде доступными друг для друга.
-- `_display_step_communication(self, cur_step, total_steps, timedelta_per_step=None)`: Отображает информацию о текущем шаге.
-- `_display_intervention_communication(self, intervention)`: Отображает информацию об интервенции.
-- `_push_and_display_latest_communication(self, communication)`: Добавляет коммуникацию в буфер и отображает ее.
-- `pop_and_display_latest_communications(self)`: Извлекает коммуникации из буфера и отображает их.
-- `_display(self, communication: dict)`: Отображает коммуникацию.
-- `clear_communications_buffer(self)`: Очищает буфер коммуникаций.
-- `__repr__(self)`: Возвращает строковое представление объекта `TinyWorld`.
-- `_pretty_step(self, cur_step, total_steps, timedelta_per_step=None)`: Форматирует информацию о шаге для отображения.
-- `_pretty_intervention(self, intervention)`: Форматирует информацию об интервенции для отображения.
-- `pp_current_interactions(self, simplified=True, skip_system=True)`: Выводит на экран текущие взаимодействия агентов в удобочитаемом формате.
-- `pretty_current_interactions(self, simplified=True, skip_system=True, max_content_length=default["max_content_display_length"], first_n=None, last_n=None, include_omission_info: bool = True)`: Возвращает строку с текущими взаимодействиями агентов в удобочитаемом формате.
-- `encode_complete_state(self) -> dict`: Кодирует полное состояние среды в словарь.
-- `decode_complete_state(self, state: dict)`: Декодирует полное состояние среды из словаря.
-- `add_environment(environment)`: Добавляет среду в список всех сред.
-- `set_simulation_for_free_environments(simulation)`: Устанавливает симуляцию для свободных сред.
-- `get_environment_by_name(name: str)`: Возвращает среду с указанным именем.
-- `clear_environments()`: Очищает список всех сред.
+- `__init__`: Инициализирует окружение.
+- `_step`: Выполняет один шаг в окружении.
+- `_advance_datetime`: Продвигает текущую дату и время в окружении на заданный интервал.
+- `run`: Запускает окружение на заданное количество шагов.
+- `skip`: Пропускает заданное количество шагов в окружении.
+- `run_minutes`: Запускает окружение на заданное количество минут.
+- `skip_minutes`: Пропускает заданное количество минут в окружении.
+- `run_hours`: Запускает окружение на заданное количество часов.
+- `skip_hours`: Пропускает заданное количество часов в окружении.
+- `run_days`: Запускает окружение на заданное количество дней.
+- `skip_days`: Пропускает заданное количество дней в окружении.
+- `run_weeks`: Запускает окружение на заданное количество недель.
+- `skip_weeks`: Пропускает заданное количество недель в окружении.
+- `run_months`: Запускает окружение на заданное количество месяцев.
+- `skip_months`: Пропускает заданное количество месяцев в окружении.
+- `run_years`: Запускает окружение на заданное количество лет.
+- `skip_years`: Пропускает заданное количество лет в окружении.
+- `add_agents`: Добавляет список агентов в окружение.
+- `add_agent`: Добавляет агента в окружение.
+- `remove_agent`: Удаляет агента из окружения.
+- `remove_all_agents`: Удаляет всех агентов из окружения.
+- `get_agent_by_name`: Возвращает агента с указанным именем.
+- `add_intervention`: Добавляет интервенцию в окружение.
+- `_handle_actions`: Обрабатывает действия, выданные агентами.
+- `_handle_reach_out`: Обрабатывает действие `REACH_OUT`.
+- `_handle_talk`: Обрабатывает действие `TALK`.
+- `broadcast`: Отправляет сообщение всем агентам в окружении.
+- `broadcast_thought`: Отправляет мысль всем агентам в окружении.
+- `broadcast_internal_goal`: Отправляет внутреннюю цель всем агентам в окружении.
+- `broadcast_context_change`: Отправляет изменение контекста всем агентам в окружении.
+- `make_everyone_accessible`: Делает всех агентов в окружении доступными друг для друга.
+- `_display_step_communication`: Отображает сообщение о шаге симуляции.
+- `_display_intervention_communication`: Отображает сообщение об интервенции.
+- `_push_and_display_latest_communication`: Добавляет сообщение в буфер и отображает его.
+- `pop_and_display_latest_communications`: Извлекает сообщения из буфера и отображает их.
+- `_display`: Отображает сообщение в консоли.
+- `clear_communications_buffer`: Очищает буфер сообщений.
+- `__repr__`: Возвращает строковое представление объекта `TinyWorld`.
+- `_pretty_step`: Форматирует сообщение о шаге симуляции.
+- `_pretty_intervention`: Форматирует сообщение об интервенции.
+- `pp_current_interactions`: Выводит текущие сообщения агентов в окружении в консоль.
+- `pretty_current_interactions`: Возвращает отформатированную строку с текущими сообщениями агентов в этом окружении.
+- `encode_complete_state`: Кодирует полное состояние окружения в словарь.
+- `decode_complete_state`: Декодирует полное состояние окружения из словаря.
+- `add_environment`: Добавляет окружение в список всех окружений.
+- `set_simulation_for_free_environments`: Задает симуляцию для свободных окружений.
+- `get_environment_by_name`: Возвращает окружение с указанным именем.
+- `clear_environments`: Очищает список всех окружений.
 
 ## Функции
 
@@ -90,165 +89,184 @@
 
 ```python
 @transactional
-def _step(self, timedelta_per_step=None) -> dict:
+def _step(self, timedelta_per_step=None):
     """
-    Выполняет один шаг в среде. Эта реализация по умолчанию просто заставляет всех агентов в среде действовать и должным образом обрабатывает resulting actions. Подклассы могут переопределить этот метод для реализации различных политик.
-
-    Args:
-        timedelta_per_step (timedelta, optional): Временной интервал для каждого шага. По умолчанию `None`.
-
-    Returns:
-        dict: Словарь действий агентов. Формат: `{agent_name: [action_1, action_2, ...], ...}`.
+    Performs a single step in the environment. This default implementation
+    simply calls makes all agents in the environment act and properly
+    handle the resulting actions. Subclasses might override this method to implement 
+    different policies.
     """
-    ...
 ```
+
+**Назначение**: Выполняет один шаг в окружении.
+
+**Параметры**:
+
+- `timedelta_per_step` (timedelta, optional): Временной интервал для продвижения текущей даты и времени. По умолчанию `None`.
+
+**Возвращает**:
+
+- `dict`: Словарь, содержащий действия, выполненные агентами на этом шаге. Формат словаря: `{agent_name: [action_1, action_2, ...], ...}`.
 
 **Как работает функция**:
 
-1. **Продвижение времени**: Если указан `timedelta_per_step`, текущее время в среде увеличивается на этот интервал.
-2. **Применение интервенций**: Проверяется предусловие каждой интервенции. Если предусловие выполняется, применяется эффект интервенции. Информация об интервенции отображается, если включен режим отображения коммуникаций.
-3. **Действия агентов**: Каждый агент в среде выполняет действие. Результаты действий сохраняются в словаре `agents_actions`.
-4. **Обработка действий**: Вызывается метод `_handle_actions` для обработки действий, выполненных агентами.
-
-**ASCII flowchart**:
+1. Продвигает текущую дату и время в окружении на заданный интервал, если он указан.
+2. Применяет интервенции, если они удовлетворяют условиям.
+3. Даёт каждому агенту возможность совершить действие (`agent.act()`).
+4. Обрабатывает действия, выполненные каждым агентом, с помощью `self._handle_actions()`.
 
 ```
 Начало
-|
-V
-[Продвижение времени]
-|
-V
-[Применение интервенций]
-|
-V
-[Действия агентов]
-|
-V
-[Обработка действий]
-|
-V
+ |
+ | timedelta_per_step?
+ |  Да: Продвинуть время
+ |  Нет: Пропустить
+ |
+ | Применить интервенции
+ |
+ | Агенты действуют
+ |
+ | Обработка действий
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Пример вызова _step без указания временного интервала
+# Пример вызова функции _step без указания timedelta_per_step
+world = TinyWorld(name='TestWorld')
 actions = world._step()
+print(actions)  # Вывод: {} (если в мире нет агентов)
 
-# Пример вызова _step с указанием временного интервала
+# Пример вызова функции _step с указанием timedelta_per_step
+from datetime import timedelta
+world = TinyWorld(name='TestWorld')
 actions = world._step(timedelta_per_step=timedelta(minutes=10))
+print(actions)  # Вывод: {} (если в мире нет агентов)
 ```
 
 ### `_advance_datetime`
 
 ```python
-def _advance_datetime(self, timedelta: timedelta):
+def _advance_datetime(self, timedelta):
     """
-    Продвигает текущую дату и время среды на указанный интервал.
+    Advances the current datetime of the environment by the specified timedelta.
 
     Args:
-        timedelta (timedelta): Временной интервал, на который нужно продвинуть текущую дату и время.
+        timedelta (timedelta): The timedelta to advance the current datetime by.
     """
-    ...
 ```
+
+**Назначение**: Продвигает текущую дату и время в окружении на заданный интервал.
+
+**Параметры**:
+
+- `timedelta` (timedelta): Временной интервал для продвижения текущей даты и времени.
 
 **Как работает функция**:
 
-1. **Проверка наличия интервала**: Проверяется, был ли передан аргумент `timedelta`.
-2. **Продвижение времени**: Если `timedelta` не равен `None`, текущее время среды (`self.current_datetime`) увеличивается на значение `timedelta`. Если `timedelta` равен `None`, в лог записывается информационное сообщение о том, что время не было продвинуто.
-
-**ASCII flowchart**:
+1. Если `timedelta` не равен `None`, добавляет его к `self.current_datetime`.
+2. Если `timedelta` равен `None`, логирует информационное сообщение о том, что время не было продвинуто.
 
 ```
 Начало
-|
-V
-[Проверка наличия интервала]
-|
-V
-[Продвижение времени]
-|
-V
+ |
+ | timedelta?
+ |  Да: Продвинуть время
+ |  Нет: Логировать сообщение
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Пример вызова _advance_datetime с указанием временного интервала в 30 минут
-world._advance_datetime(timedelta=timedelta(minutes=30))
+# Пример вызова функции _advance_datetime с указанием timedelta
+from datetime import timedelta
+world = TinyWorld(name='TestWorld')
+world._advance_datetime(timedelta(days=1))
+print(world.current_datetime)  # Вывод: текущая дата + 1 день
 
-# Пример вызова _advance_datetime без указания временного интервала
-world._advance_datetime(timedelta=None)
+# Пример вызова функции _advance_datetime без указания timedelta
+world = TinyWorld(name='TestWorld')
+world._advance_datetime(None)  # В консоль будет выведено сообщение о том, что время не было продвинуто
 ```
 
 ### `run`
 
 ```python
 @transactional
-def run(self, steps: int, timedelta_per_step=None, return_actions=False) -> list | None:
+def run(self, steps: int, timedelta_per_step=None, return_actions=False):
     """
-    Запускает среду на заданное количество шагов.
+    Runs the environment for a given number of steps.
 
     Args:
-        steps (int): Количество шагов для запуска среды.
-        timedelta_per_step (timedelta, optional): Временной интервал между шагами. По умолчанию `None`.
-        return_actions (bool, optional): Если `True`, возвращает действия, предпринятые агентами. По умолчанию `False`.
-
+        steps (int): The number of steps to run the environment for.
+        timedelta_per_step (timedelta, optional): The time interval between steps. Defaults to None.
+        return_actions (bool, optional): If True, returns the actions taken by the agents. Defaults to False.
+    
     Returns:
-        list: Список действий, предпринятых агентами с течением времени, если `return_actions` имеет значение `True`. Список имеет следующий формат:
-              `[{agent_name: [action_1, action_2, ...]}, {agent_name_2: [action_1, action_2, ...]}, ...]`
-        None: Если `return_actions` имеет значение `False`.
+        list: A list of actions taken by the agents over time, if return_actions is True. The list has this format:
+              [{agent_name: [action_1, action_2, ...]}, {agent_name_2: [action_1, action_2, ...]}, ...]
     """
-    ...
 ```
+
+**Назначение**: Запускает окружение на заданное количество шагов.
+
+**Параметры**:
+
+- `steps` (int): Количество шагов для выполнения симуляции.
+- `timedelta_per_step` (timedelta, optional): Временной интервал между шагами. По умолчанию `None`.
+- `return_actions` (bool, optional): Флаг, определяющий, следует ли возвращать действия, выполненные агентами. По умолчанию `False`.
+
+**Возвращает**:
+
+- `list`: Список действий, выполненных агентами в течение времени, если `return_actions` равен `True`. Список имеет формат: `[{agent_name: [action_1, action_2, ...]}, {agent_name_2: [action_1, action_2, ...]}, ...]`
 
 **Как работает функция**:
 
-1. **Инициализация**: Создается пустой список `agents_actions_over_time` для хранения действий агентов на каждом шаге, если `return_actions` имеет значение `True`.
-2. **Цикл по шагам**: Выполняется цикл `steps` раз.
-3. **Отображение информации о шаге**: Если `TinyWorld.communication_display` имеет значение `True`, отображается информация о текущем шаге симуляции.
-4. **Выполнение шага**: Вызывается метод `_step` для выполнения одного шага симуляции. Результаты действий агентов сохраняются в `agents_actions`.
-5. **Сохранение действий**: Если `return_actions` имеет значение `True`, действия агентов добавляются в список `agents_actions_over_time`.
-6. **Возврат результатов**: Если `return_actions` имеет значение `True`, возвращается список `agents_actions_over_time`.
-
-**ASCII flowchart**:
+1. Выполняет цикл `steps` раз.
+2. На каждом шаге логирует информацию о текущем шаге симуляции.
+3. Отображает сообщение о шаге симуляции, если включен `TinyWorld.communication_display`.
+4. Выполняет один шаг симуляции с помощью `self._step(timedelta_per_step=timedelta_per_step)`.
+5. Если `return_actions` равен `True`, добавляет действия агентов в список `agents_actions_over_time`.
+6. Возвращает список `agents_actions_over_time`, если `return_actions` равен `True`.
 
 ```
 Начало
-|
-V
-[Инициализация]
-|
-V
-[Цикл по шагам]
-|
-V
-[Отображение информации о шаге]
-|
-V
-[Выполнение шага]
-|
-V
-[Сохранение действий]
-|
-V
-[Возврат результатов]
-|
-V
+ |
+ | Цикл steps раз
+ |  |
+ |  | Логировать информацию о шаге
+ |  |
+ |  | Отобразить сообщение о шаге
+ |  |
+ |  | Выполнить шаг симуляции
+ |  |
+ |  | return_actions?
+ |  |  Да: Добавить действия в список
+ |  |  Нет: Пропустить
+ |
+ | return_actions?
+ |  Да: Вернуть список действий
+ |  Нет: Завершить
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Пример запуска среды на 10 шагов без указания временного интервала и без возврата действий
+# Пример вызова функции run без указания timedelta_per_step и return_actions
+world = TinyWorld(name='TestWorld')
 world.run(steps=10)
 
-# Пример запуска среды на 5 шагов с временным интервалом в 1 час и с возвратом действий
-actions = world.run(steps=5, timedelta_per_step=timedelta(hours=1), return_actions=True)
+# Пример вызова функции run с указанием timedelta_per_step и return_actions
+from datetime import timedelta
+world = TinyWorld(name='TestWorld')
+actions = world.run(steps=10, timedelta_per_step=timedelta(minutes=5), return_actions=True)
+print(actions)  # Вывод: список действий, выполненных агентами
 ```
 
 ### `skip`
@@ -257,38 +275,44 @@ actions = world.run(steps=5, timedelta_per_step=timedelta(hours=1), return_actio
 @transactional
 def skip(self, steps: int, timedelta_per_step=None):
     """
-    Пропускает заданное количество шагов в среде. То есть время должно пройти, но никакие действия не будут предприняты агентами или какой-либо другой сущностью в среде.
+    Skips a given number of steps in the environment. That is to say, time shall pass, but no actions will be taken
+    by the agents or any other entity in the environment.
 
     Args:
-        steps (int): Количество шагов для пропуска.
-        timedelta_per_step (timedelta, optional): Временной интервал между шагами. По умолчанию `None`.
+        steps (int): The number of steps to skip.
+        timedelta_per_step (timedelta, optional): The time interval between steps. Defaults to None.
     """
-    ...
 ```
+
+**Назначение**: Пропускает заданное количество шагов в окружении.
+
+**Параметры**:
+
+- `steps` (int): Количество шагов для пропуска.
+- `timedelta_per_step` (timedelta, optional): Временной интервал между шагами. По умолчанию `None`.
 
 **Как работает функция**:
 
-1. **Продвижение времени**: Вызывается метод `_advance_datetime` для продвижения времени на `steps * timedelta_per_step`.
-
-**ASCII flowchart**:
+1. Продвигает текущую дату и время в окружении на `steps * timedelta_per_step` с помощью `self._advance_datetime()`.
 
 ```
 Начало
-|
-V
-[Продвижение времени]
-|
-V
+ |
+ | Продвинуть время на steps * timedelta_per_step
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Пример пропуска 10 шагов без указания временного интервала
-world.skip(steps=10)
+# Пример вызова функции skip без указания timedelta_per_step
+world = TinyWorld(name='TestWorld')
+world.skip(steps=5)
 
-# Пример пропуска 5 шагов с временным интервалом в 1 час
+# Пример вызова функции skip с указанием timedelta_per_step
+from datetime import timedelta
+world = TinyWorld(name='TestWorld')
 world.skip(steps=5, timedelta_per_step=timedelta(hours=1))
 ```
 
@@ -297,35 +321,29 @@ world.skip(steps=5, timedelta_per_step=timedelta(hours=1))
 ```python
 def run_minutes(self, minutes: int):
     """
-    Запускает среду на заданное количество минут.
+    Runs the environment for a given number of minutes.
 
     Args:
-        minutes (int): Количество минут для запуска среды.
+        minutes (int): The number of minutes to run the environment for.
     """
-    ...
 ```
+
+**Назначение**: Запускает окружение на заданное количество минут.
+
+**Параметры**:
+
+- `minutes` (int): Количество минут для выполнения симуляции.
 
 **Как работает функция**:
 
-1. **Запуск среды**: Вызывается метод `run` с параметрами `steps=minutes` и `timedelta_per_step=timedelta(minutes=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Запуск среды]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.run()` с параметрами `steps=minutes` и `timedelta_per_step=timedelta(minutes=1)`.
 
 **Примеры**:
 
 ```python
-# Пример запуска среды на 60 минут
-world.run_minutes(minutes=60)
+# Пример вызова функции run_minutes
+world = TinyWorld(name='TestWorld')
+world.run_minutes(minutes=30)
 ```
 
 ### `skip_minutes`
@@ -333,35 +351,29 @@ world.run_minutes(minutes=60)
 ```python
 def skip_minutes(self, minutes: int):
     """
-    Пропускает заданное количество минут в среде.
+    Skips a given number of minutes in the environment.
 
     Args:
-        minutes (int): Количество минут для пропуска.
+        minutes (int): The number of minutes to skip.
     """
-    ...
 ```
+
+**Назначение**: Пропускает заданное количество минут в окружении.
+
+**Параметры**:
+
+- `minutes` (int): Количество минут для пропуска.
 
 **Как работает функция**:
 
-1. **Пропуск времени**: Вызывается метод `skip` с параметрами `steps=minutes` и `timedelta_per_step=timedelta(minutes=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Пропуск времени]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.skip()` с параметрами `steps=minutes` и `timedelta_per_step=timedelta(minutes=1)`.
 
 **Примеры**:
 
 ```python
-# Пример пропуска 60 минут
-world.skip_minutes(minutes=60)
+# Пример вызова функции skip_minutes
+world = TinyWorld(name='TestWorld')
+world.skip_minutes(minutes=30)
 ```
 
 ### `run_hours`
@@ -369,35 +381,29 @@ world.skip_minutes(minutes=60)
 ```python
 def run_hours(self, hours: int):
     """
-    Запускает среду на заданное количество часов.
+    Runs the environment for a given number of hours.
 
     Args:
-        hours (int): Количество часов для запуска среды.
+        hours (int): The number of hours to run the environment for.
     """
-    ...
 ```
+
+**Назначение**: Запускает окружение на заданное количество часов.
+
+**Параметры**:
+
+- `hours` (int): Количество часов для выполнения симуляции.
 
 **Как работает функция**:
 
-1. **Запуск среды**: Вызывается метод `run` с параметрами `steps=hours` и `timedelta_per_step=timedelta(hours=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Запуск среды]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.run()` с параметрами `steps=hours` и `timedelta_per_step=timedelta(hours=1)`.
 
 **Примеры**:
 
 ```python
-# Пример запуска среды на 24 часа
-world.run_hours(hours=24)
+# Пример вызова функции run_hours
+world = TinyWorld(name='TestWorld')
+world.run_hours(hours=5)
 ```
 
 ### `skip_hours`
@@ -405,35 +411,29 @@ world.run_hours(hours=24)
 ```python
 def skip_hours(self, hours: int):
     """
-    Пропускает заданное количество часов в среде.
+    Skips a given number of hours in the environment.
 
     Args:
-        hours (int): Количество часов для пропуска.
+        hours (int): The number of hours to skip.
     """
-    ...
 ```
+
+**Назначение**: Пропускает заданное количество часов в окружении.
+
+**Параметры**:
+
+- `hours` (int): Количество часов для пропуска.
 
 **Как работает функция**:
 
-1. **Пропуск времени**: Вызывается метод `skip` с параметрами `steps=hours` и `timedelta_per_step=timedelta(hours=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Пропуск времени]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.skip()` с параметрами `steps=hours` и `timedelta_per_step=timedelta(hours=1)`.
 
 **Примеры**:
 
 ```python
-# Пример пропуска 24 часов
-world.skip_hours(hours=24)
+# Пример вызова функции skip_hours
+world = TinyWorld(name='TestWorld')
+world.skip_hours(hours=5)
 ```
 
 ### `run_days`
@@ -441,34 +441,28 @@ world.skip_hours(hours=24)
 ```python
 def run_days(self, days: int):
     """
-    Запускает среду на заданное количество дней.
+    Runs the environment for a given number of days.
 
     Args:
-        days (int): Количество дней для запуска среды.
+        days (int): The number of days to run the environment for.
     """
-    ...
 ```
+
+**Назначение**: Запускает окружение на заданное количество дней.
+
+**Параметры**:
+
+- `days` (int): Количество дней для выполнения симуляции.
 
 **Как работает функция**:
 
-1. **Запуск среды**: Вызывается метод `run` с параметрами `steps=days` и `timedelta_per_step=timedelta(days=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Запуск среды]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.run()` с параметрами `steps=days` и `timedelta_per_step=timedelta(days=1)`.
 
 **Примеры**:
 
 ```python
-# Пример запуска среды на 7 дней
+# Пример вызова функции run_days
+world = TinyWorld(name='TestWorld')
 world.run_days(days=7)
 ```
 
@@ -477,34 +471,28 @@ world.run_days(days=7)
 ```python
 def skip_days(self, days: int):
     """
-    Пропускает заданное количество дней в среде.
+    Skips a given number of days in the environment.
 
     Args:
-        days (int): Количество дней для пропуска.
+        days (int): The number of days to skip.
     """
-    ...
 ```
+
+**Назначение**: Пропускает заданное количество дней в окружении.
+
+**Параметры**:
+
+- `days` (int): Количество дней для пропуска.
 
 **Как работает функция**:
 
-1. **Пропуск времени**: Вызывается метод `skip` с параметрами `steps=days` и `timedelta_per_step=timedelta(days=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Пропуск времени]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.skip()` с параметрами `steps=days` и `timedelta_per_step=timedelta(days=1)`.
 
 **Примеры**:
 
 ```python
-# Пример пропуска 7 дней
+# Пример вызова функции skip_days
+world = TinyWorld(name='TestWorld')
 world.skip_days(days=7)
 ```
 
@@ -513,34 +501,28 @@ world.skip_days(days=7)
 ```python
 def run_weeks(self, weeks: int):
     """
-    Запускает среду на заданное количество недель.
+    Runs the environment for a given number of weeks.
 
     Args:
-        weeks (int): Количество недель для запуска среды.
+        weeks (int): The number of weeks to run the environment for.
     """
-    ...
 ```
+
+**Назначение**: Запускает окружение на заданное количество недель.
+
+**Параметры**:
+
+- `weeks` (int): Количество недель для выполнения симуляции.
 
 **Как работает функция**:
 
-1. **Запуск среды**: Вызывается метод `run` с параметрами `steps=weeks` и `timedelta_per_step=timedelta(weeks=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Запуск среды]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.run()` с параметрами `steps=weeks` и `timedelta_per_step=timedelta(weeks=1)`.
 
 **Примеры**:
 
 ```python
-# Пример запуска среды на 4 недели
+# Пример вызова функции run_weeks
+world = TinyWorld(name='TestWorld')
 world.run_weeks(weeks=4)
 ```
 
@@ -549,34 +531,28 @@ world.run_weeks(weeks=4)
 ```python
 def skip_weeks(self, weeks: int):
     """
-    Пропускает заданное количество недель в среде.
+    Skips a given number of weeks in the environment.
 
     Args:
-        weeks (int): Количество недель для пропуска.
+        weeks (int): The number of weeks to skip.
     """
-    ...
 ```
+
+**Назначение**: Пропускает заданное количество недель в окружении.
+
+**Параметры**:
+
+- `weeks` (int): Количество недель для пропуска.
 
 **Как работает функция**:
 
-1. **Пропуск времени**: Вызывается метод `skip` с параметрами `steps=weeks` и `timedelta_per_step=timedelta(weeks=1)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Пропуск времени]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.skip()` с параметрами `steps=weeks` и `timedelta_per_step=timedelta(weeks=1)`.
 
 **Примеры**:
 
 ```python
-# Пример пропуска 4 недель
+# Пример вызова функции skip_weeks
+world = TinyWorld(name='TestWorld')
 world.skip_weeks(weeks=4)
 ```
 
@@ -585,35 +561,29 @@ world.skip_weeks(weeks=4)
 ```python
 def run_months(self, months: int):
     """
-    Запускает среду на заданное количество месяцев.
+    Runs the environment for a given number of months.
 
     Args:
-        months (int): Количество месяцев для запуска среды.
+        months (int): The number of months to run the environment for.
     """
-    ...
 ```
+
+**Назначение**: Запускает окружение на заданное количество месяцев.
+
+**Параметры**:
+
+- `months` (int): Количество месяцев для выполнения симуляции.
 
 **Как работает функция**:
 
-1. **Запуск среды**: Вызывается метод `run` с параметрами `steps=months` и `timedelta_per_step=timedelta(weeks=4)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Запуск среды]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.run()` с параметрами `steps=months` и `timedelta_per_step=timedelta(weeks=4)`.
 
 **Примеры**:
 
 ```python
-# Пример запуска среды на 12 месяцев
-world.run_months(months=12)
+# Пример вызова функции run_months
+world = TinyWorld(name='TestWorld')
+world.run_months(months=6)
 ```
 
 ### `skip_months`
@@ -621,35 +591,29 @@ world.run_months(months=12)
 ```python
 def skip_months(self, months: int):
     """
-    Пропускает заданное количество месяцев в среде.
+    Skips a given number of months in the environment.
 
     Args:
-        months (int): Количество месяцев для пропуска.
+        months (int): The number of months to skip.
     """
-    ...
 ```
+
+**Назначение**: Пропускает заданное количество месяцев в окружении.
+
+**Параметры**:
+
+- `months` (int): Количество месяцев для пропуска.
 
 **Как работает функция**:
 
-1. **Пропуск времени**: Вызывается метод `skip` с параметрами `steps=months` и `timedelta_per_step=timedelta(weeks=4)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Пропуск времени]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.skip()` с параметрами `steps=months` и `timedelta_per_step=timedelta(weeks=4)`.
 
 **Примеры**:
 
 ```python
-# Пример пропуска 12 месяцев
-world.skip_months(months=12)
+# Пример вызова функции skip_months
+world = TinyWorld(name='TestWorld')
+world.skip_months(months=6)
 ```
 
 ### `run_years`
@@ -657,35 +621,29 @@ world.skip_months(months=12)
 ```python
 def run_years(self, years: int):
     """
-    Запускает среду на заданное количество лет.
+    Runs the environment for a given number of years.
 
     Args:
-        years (int): Количество лет для запуска среды.
+        years (int): The number of years to run the environment for.
     """
-    ...
 ```
+
+**Назначение**: Запускает окружение на заданное количество лет.
+
+**Параметры**:
+
+- `years` (int): Количество лет для выполнения симуляции.
 
 **Как работает функция**:
 
-1. **Запуск среды**: Вызывается метод `run` с параметрами `steps=years` и `timedelta_per_step=timedelta(days=365)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Запуск среды]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.run()` с параметрами `steps=years` и `timedelta_per_step=timedelta(days=365)`.
 
 **Примеры**:
 
 ```python
-# Пример запуска среды на 10 лет
-world.run_years(years=10)
+# Пример вызова функции run_years
+world = TinyWorld(name='TestWorld')
+world.run_years(years=2)
 ```
 
 ### `skip_years`
@@ -693,267 +651,312 @@ world.run_years(years=10)
 ```python
 def skip_years(self, years: int):
     """
-    Пропускает заданное количество лет в среде.
+    Skips a given number of years in the environment.
 
     Args:
-        years (int): Количество лет для пропуска.
+        years (int): The number of years to skip.
     """
-    ...
 ```
+
+**Назначение**: Пропускает заданное количество лет в окружении.
+
+**Параметры**:
+
+- `years` (int): Количество лет для пропуска.
 
 **Как работает функция**:
 
-1. **Пропуск времени**: Вызывается метод `skip` с параметрами `steps=years` и `timedelta_per_step=timedelta(days=365)`.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Пропуск времени]
-|
-V
-Конец
-```
+1. Вызывает функцию `self.skip()` с параметрами `steps=years` и `timedelta_per_step=timedelta(days=365)`.
 
 **Примеры**:
 
 ```python
-# Пример пропуска 10 лет
-world.skip_years(years=10)
+# Пример вызова функции skip_years
+world = TinyWorld(name='TestWorld')
+world.skip_years(years=2)
 ```
 
 ### `add_agents`
 
 ```python
-def add_agents(self, agents: list) -> "TinyWorld":
+def add_agents(self, agents: list):
     """
-    Добавляет список агентов в среду.
+    Adds a list of agents to the environment.
 
     Args:
-        agents (list): Список агентов для добавления в среду.
-
-    Returns:
-        TinyWorld: Среда (self) для поддержки цепочки вызовов.
+        agents (list): A list of agents to add to the environment.
     """
-    ...
 ```
+
+**Назначение**: Добавляет список агентов в окружение.
+
+**Параметры**:
+
+- `agents` (list): Список агентов для добавления в окружение.
+
+**Возвращает**:
+
+- `self`: Возвращает текущий экземпляр `TinyWorld` для возможности chaining.
 
 **Как работает функция**:
 
-1. **Перебор агентов**: Проходит по списку агентов, переданных в аргументе `agents`.
-2. **Добавление агента**: Для каждого агента вызывается метод `add_agent` для добавления его в среду.
-3. **Возврат среды**: Возвращает текущий объект среды (`self`) для обеспечения возможности chaining.
-
-**ASCII flowchart**:
+1. Перебирает список `agents`.
+2. Для каждого агента вызывает функцию `self.add_agent(agent)`.
+3. Возвращает `self`.
 
 ```
 Начало
-|
-V
-[Перебор агентов]
-|
-V
-[Добавление агента]
-|
-V
+ |
+ | Цикл по агентам в agents
+ |  |
+ |  | Добавить агента в окружение (self.add_agent(agent))
+ |
+ | Вернуть self
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Создание списка агентов
-agents = [TinyPerson(name='Alice'), TinyPerson(name='Bob')]
-
-# Добавление агентов в среду
-world.add_agents(agents)
+# Пример вызова функции add_agents
+agent1 = TinyPerson(name='Agent1')
+agent2 = TinyPerson(name='Agent2')
+world = TinyWorld(name='TestWorld')
+world.add_agents([agent1, agent2])
+print(len(world.agents))  # Вывод: 2
 ```
 
 ### `add_agent`
 
 ```python
-def add_agent(self, agent: TinyPerson) -> "TinyWorld":
+def add_agent(self, agent: TinyPerson):
     """
-    Добавляет агента в среду. Имя агента должно быть уникальным в пределах среды.
+    Adds an agent to the environment. The agent must have a unique name within the environment.
 
     Args:
-        agent (TinyPerson): Агент для добавления в среду.
-
+        agent (TinyPerson): The agent to add to the environment.
+    
     Raises:
-        ValueError: Если имя агента не является уникальным в пределах среды.
-
-    Returns:
-        TinyWorld: Среда (self) для поддержки цепочки вызовов.
+        ValueError: If the agent name is not unique within the environment.
     """
-    ...
 ```
+
+**Назначение**: Добавляет агента в окружение.
+
+**Параметры**:
+
+- `agent` (TinyPerson): Агент для добавления в окружение.
+
+**Вызывает исключения**:
+
+- `ValueError`: Если имя агента не является уникальным в окружении.
+
+**Возвращает**:
+
+- `self`: Возвращает текущий экземпляр `TinyWorld` для возможности chaining.
 
 **Как работает функция**:
 
-1. **Проверка наличия агента**: Проверяется, не находится ли уже агент в списке агентов среды (`self.agents`).
-2. **Проверка уникальности имени**: Если агент еще не добавлен, проверяется, не существует ли уже агент с таким же именем в словаре `self.name_to_agent`.
-3. **Добавление агента**: Если имя уникально, агенту присваивается ссылка на текущую среду (`agent.environment = self`), агент добавляется в список `self.agents` и в словарь `self.name_to_agent`.
-4. **Обработка исключения**: Если имя агента не уникально, вызывается исключение `ValueError`.
-5. **Возврат среды**: Возвращает текущий объект среды (`self`) для обеспечения возможности chaining.
-
-**ASCII flowchart**:
+1. Проверяет, что агента еще нет в списке агентов окружения.
+2. Проверяет, что имя агента уникально в окружении.
+3. Если все проверки пройдены, добавляет агента в список `self.agents`, сопоставляет имя агента с его экземпляром в `self.name_to_agent` и устанавливает `agent.environment = self`.
+4. Если имя агента не уникально, выбрасывает исключение `ValueError`.
+5. Возвращает `self`.
 
 ```
 Начало
-|
-V
-[Проверка наличия агента]
-|
-V
-[Проверка уникальности имени]
-|
-V
-[Добавление агента]
-|
-V
+ |
+ | Агент уже в окружении?
+ |  Да: Логировать предупреждение, Вернуть self
+ |  Нет: Продолжить
+ |
+ | Имя агента уникально?
+ |  Да: Добавить агента в окружение
+ |  Нет: Выбросить ValueError
+ |
+ | Вернуть self
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Создание агента
-agent = TinyPerson(name='Charlie')
-
-# Добавление агента в среду
+# Пример вызова функции add_agent
+agent = TinyPerson(name='Agent1')
+world = TinyWorld(name='TestWorld')
 world.add_agent(agent)
+print(len(world.agents))  # Вывод: 1
+
+# Пример вызова функции add_agent с неуникальным именем
+agent1 = TinyPerson(name='Agent1')
+agent2 = TinyPerson(name='Agent1')
+world = TinyWorld(name='TestWorld')
+world.add_agent(agent1)
+try:
+    world.add_agent(agent2)
+except ValueError as ex:
+    print(f"Ошибка: {ex}")  # Вывод: Ошибка: Agent names must be unique, but 'Agent1' is already in the environment.
 ```
 
 ### `remove_agent`
 
 ```python
-def remove_agent(self, agent: TinyPerson) -> "TinyWorld":
+def remove_agent(self, agent: TinyPerson):
     """
-    Удаляет агента из среды.
+    Removes an agent from the environment.
 
     Args:
-        agent (TinyPerson): Агент для удаления из среды.
-
-    Returns:
-        TinyWorld: Среда (self) для поддержки цепочки вызовов.
+        agent (TinyPerson): The agent to remove from the environment.
     """
-    ...
 ```
+
+**Назначение**: Удаляет агента из окружения.
+
+**Параметры**:
+
+- `agent` (TinyPerson): Агент для удаления из окружения.
+
+**Возвращает**:
+
+- `self`: Возвращает текущий экземпляр `TinyWorld` для возможности chaining.
 
 **Как работает функция**:
 
-1. **Удаление агента**: Удаляет агента из списка `self.agents` и из словаря `self.name_to_agent`.
-2. **Возврат среды**: Возвращает текущий объект среды (`self`) для обеспечения возможности chaining.
-
-**ASCII flowchart**:
+1. Логирует информацию об удалении агента.
+2. Удаляет агента из списка `self.agents`.
+3. Удаляет агента из словаря `self.name_to_agent`.
+4. Возвращает `self`.
 
 ```
 Начало
-|
-V
-[Удаление агента]
-|
-V
+ |
+ | Логировать информацию об удалении агента
+ |
+ | Удалить агента из списка agents
+ |
+ | Удалить агента из словаря name_to_agent
+ |
+ | Вернуть self
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Создание агента
-agent = TinyPerson(name='Charlie')
-
-# Добавление агента в среду
+# Пример вызова функции remove_agent
+agent = TinyPerson(name='Agent1')
+world = TinyWorld(name='TestWorld')
 world.add_agent(agent)
-
-# Удаление агента из среды
+print(len(world.agents))  # Вывод: 1
 world.remove_agent(agent)
+print(len(world.agents))  # Вывод: 0
 ```
 
 ### `remove_all_agents`
 
 ```python
-def remove_all_agents(self) -> "TinyWorld":
+def remove_all_agents(self):
     """
-    Удаляет всех агентов из среды.
-
-    Returns:
-        TinyWorld: Среда (self) для поддержки цепочки вызовов.
+    Removes all agents from the environment.
     """
-    ...
 ```
+
+**Назначение**: Удаляет всех агентов из окружения.
+
+**Возвращает**:
+
+- `self`: Возвращает текущий экземпляр `TinyWorld` для возможности chaining.
 
 **Как работает функция**:
 
-1. **Удаление всех агентов**: Очищает список `self.agents` и словарь `self.name_to_agent`.
-2. **Возврат среды**: Возвращает текущий объект среды (`self`) для обеспечения возможности chaining.
-
-**ASCII flowchart**:
+1. Логирует информацию об удалении всех агентов.
+2. Очищает список `self.agents`.
+3. Очищает словарь `self.name_to_agent`.
+4. Возвращает `self`.
 
 ```
 Начало
-|
-V
-[Удаление всех агентов]
-|
-V
+ |
+ | Логировать информацию об удалении всех агентов
+ |
+ | Очистить список agents
+ |
+ | Очистить словарь name_to_agent
+ |
+ | Вернуть self
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Удаление всех агентов из среды
+# Пример вызова функции remove_all_agents
+agent1 = TinyPerson(name='Agent1')
+agent2 = TinyPerson(name='Agent2')
+world = TinyWorld(name='TestWorld')
+world.add_agents([agent1, agent2])
+print(len(world.agents))  # Вывод: 2
 world.remove_all_agents()
+print(len(world.agents))  # Вывод: 0
 ```
 
 ### `get_agent_by_name`
 
 ```python
-def get_agent_by_name(self, name: str) -> TinyPerson | None:
+def get_agent_by_name(self, name: str) -> TinyPerson:
     """
-    Возвращает агента с указанным именем. Если в среде не существует агента с таким именем, возвращает `None`.
+    Returns the agent with the specified name. If no agent with that name exists in the environment, 
+    returns None.
 
     Args:
-        name (str): Имя агента для возврата.
+        name (str): The name of the agent to return.
 
     Returns:
-        TinyPerson | None: Агент с указанным именем или `None`, если агент не найден.
+        TinyPerson: The agent with the specified name.
     """
-    ...
 ```
+
+**Назначение**: Возвращает агента с указанным именем.
+
+**Параметры**:
+
+- `name` (str): Имя агента для поиска.
+
+**Возвращает**:
+
+- `TinyPerson`: Агент с указанным именем, или `None`, если агент не найден.
 
 **Как работает функция**:
 
-1. **Поиск агента**: Проверяет, существует ли агент с указанным именем в словаре `self.name_to_agent`.
-2. **Возврат агента**: Если агент найден, возвращает объект агента. Если агент не найден, возвращает `None`.
-
-**ASCII flowchart**:
+1. Проверяет, существует ли агент с указанным именем в словаре `self.name_to_agent`.
+2. Если агент существует, возвращает его.
+3. Если агент не существует, возвращает `None`.
 
 ```
 Начало
-|
-V
-[Поиск агента]
-|
-V
-[Возврат агента]
-|
-V
+ |
+ | Агент с именем name существует в name_to_agent?
+ |  Да: Вернуть агента
+ |  Нет: Вернуть None
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Получение агента по имени
-agent = world.get_agent_by_name('Alice')
-
-# Если агент не найден, agent будет равен None
-if agent is None:
-    print('Агент не найден')
+# Пример вызова функции get_agent_by_name
+agent = TinyPerson(name='Agent1')
+world = TinyWorld(name='TestWorld')
+world.add_agent(agent)
+found_agent = world.get_agent_by_name('Agent1')
+print(found_agent)  # Вывод: <tinytroupe.agent.TinyPerson object at ...>
+not_found_agent = world.get_agent_by_name('Agent2')
+print(not_found_agent)  # Вывод: None
 ```
 
 ### `add_intervention`
@@ -961,38 +964,41 @@ if agent is None:
 ```python
 def add_intervention(self, intervention):
     """
-    Добавляет интервенцию в среду.
+    Adds an intervention to the environment.
 
     Args:
-        intervention: Интервенция для добавления в среду.
+        intervention: The intervention to add to the environment.
     """
-    ...
 ```
+
+**Назначение**: Добавляет интервенцию в окружение.
+
+**Параметры**:
+
+- `intervention`: Интервенция для добавления в окружение.
 
 **Как работает функция**:
 
-1. **Добавление интервенции**: Добавляет переданную интервенцию в список `self._interventions`.
-
-**ASCII flowchart**:
+1. Добавляет интервенцию в список `self._interventions`.
 
 ```
 Начало
-|
-V
-[Добавление интервенции]
-|
-V
+ |
+ | Добавить intervention в список _interventions
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Создание объекта интервенции (предположим, что класс Intervention уже определен)
-intervention = Intervention(name='IncreaseFoodSupply', precondition=lambda: True, effect=lambda: print('Food supply increased'))
-
-# Добавление интервенции в среду
+# Пример вызова функции add_intervention
+class Intervention:
+    pass
+intervention = Intervention()
+world = TinyWorld(name='TestWorld')
 world.add_intervention(intervention)
+print(len(world._interventions))  # Вывод: 1
 ```
 
 ### `_handle_actions`
@@ -1000,145 +1006,53 @@ world.add_intervention(intervention)
 ```python
 @transactional
 def _handle_actions(self, source: TinyPerson, actions: list):
-    """
-    Обрабатывает действия, совершенные агентами.
+    """ 
+    Handles the actions issued by the agents.
 
     Args:
-        source (TinyPerson): Агент, совершивший действия.
-        actions (list): Список действий, совершенных агентами. Каждое действие является спецификацией JSON.
+        source (TinyPerson): The agent that issued the actions.
+        actions (list): A list of actions issued by the agents. Each action is actually a
+          JSON specification.
+        
     """
-    ...
 ```
+
+**Назначение**: Обрабатывает действия, выданные агентами.
+
+**Параметры**:
+
+- `source` (TinyPerson): Агент, выдавший действия.
+- `actions` (list): Список действий, выданных агентами. Каждое действие является JSON-спецификацией.
 
 **Как работает функция**:
 
-1. **Перебор действий**: Перебирает список действий (`actions`), совершенных агентом (`source`).
-2. **Определение типа действия**: Для каждого действия определяет его тип (`action_type`) и содержимое (`content`), если оно есть.
-3. **Обработка действия**: В зависимости от типа действия вызывается соответствующий обработчик:
-   - Если `action_type` равен `'REACH_OUT'`, вызывается метод `_handle_reach_out`.
-   - Если `action_type` равен `'TALK'`, вызывается метод `_handle_talk`.
-
-**ASCII flowchart**:
+1. Перебирает список действий `actions`.
+2. Для каждого действия определяет тип действия (`action_type`) и его содержимое (`content`) и цель (`target`).
+3. Логирует информацию об обрабатываемом действии.
+4. В зависимости от типа действия вызывает соответствующий обработчик:
+   - Если `action_type == "REACH_OUT"`, вызывает `self._handle_reach_out(source, content, target)`.
+   - Если `action_type == "TALK"`, вызывает `self._handle_talk(source, content, target)`.
 
 ```
 Начало
-|
-V
-[Перебор действий]
-|
-V
-[Определение типа действия]
-|
-V
-[Обработка действия]
-|
-V
+ |
+ | Цикл по действиям в actions
+ |  |
+ |  | Определить тип действия, содержимое и цель
+ |  |
+ |  | Логировать информацию о действии
+ |  |
+ |  | Тип действия?
+ |  |  REACH_OUT: Обработать REACH_OUT
+ |  |  TALK: Обработать TALK
+ |  |  Другое: Пропустить
+ |
 Конец
 ```
 
 **Примеры**:
 
 ```python
-# Пример списка действий
-actions = [
-    {'type': 'REACH_OUT', 'content': 'Hello', 'target': 'Bob'},
-    {'type': 'TALK', 'content': 'How are you?', 'target': 'Bob'}
-]
-
-# Обработка действий агентом Alice
-world._handle_actions(source=alice, actions=actions)
-```
-
-### `_handle_reach_out`
-
-```python
-@transactional
-def _handle_reach_out(self, source_agent: TinyPerson, content: str, target: str):
-    """
-    Обрабатывает действие `REACH_OUT`. Эта реализация по умолчанию всегда позволяет `REACH_OUT` завершиться успешно. Подклассы могут переопределить этот метод для реализации различных политик.
-
-    Args:
-        source_agent (TinyPerson): Агент, совершивший действие `REACH_OUT`.
-        content (str): Содержимое сообщения.
-        target (str): Цель сообщения.
-    """
-    ...
-```
-
-**Как работает функция**:
-
-1. **Поиск целевого агента**: Ищет целевого агента (`target_agent`) по имени в среде.
-2. **Установление доступности**: Если целевой агент найден, устанавливает взаимную доступность между исходным (`source_agent`) и целевым агентами.
-3. **Социализация**: Агенты уведомляются об успешном установлении контакта.
-4. **Обработка ошибки**: Если целевой агент не найден, в лог записывается отладочное сообщение об ошибке.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Поиск целевого агента]
-|
-V
-[Установление доступности]
-|
-V
-[Социализация]
-|
-V
-Конец
-```
-
-**Примеры**:
-
-```python
-# Агент Alice пытается установить контакт с агентом Bob
-world._handle_reach_out(source_agent=alice, content='Hello', target='Bob')
-```
-
-### `_handle_talk`
-
-```python
-@transactional
-def _handle_talk(self, source_agent: TinyPerson, content: str, target: str):
-    """
-    Обрабатывает действие `TALK`, доставляя указанное содержимое указанной цели.
-
-    Args:
-        source_agent (TinyPerson): Агент, совершивший действие `TALK`.
-        content (str): Содержимое сообщения.
-        target (str, optional): Цель сообщения.
-    """
-    ...
-```
-
-**Как работает функция**:
-
-1. **Поиск целевого агента**: Ищет целевого агента (`target_agent`) по имени в среде.
-2. **Доставка сообщения**: Если целевой агент найден, сообщение (`content`) доставляется целевому агенту.
-3. **Широковещательная передача**: Если целевой агент не найден и включена широковещательная передача (`self.broadcast_if_no_target`), сообщение транслируется всем агентам в среде.
-
-**ASCII flowchart**:
-
-```
-Начало
-|
-V
-[Поиск целевого агента]
-|
-V
-[Доставка сообщения]
-|
-V
-[Широковещательная передача]
-|
-V
-Конец
-```
-
-**Примеры**:
-
-```python
-# Агент Alice говорит с агентом Bob
-world._handle
+# Пример вызова функции _handle_actions
+class MockAgent(TinyPerson):
+    def __init__(self

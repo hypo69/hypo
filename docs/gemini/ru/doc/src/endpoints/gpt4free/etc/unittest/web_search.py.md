@@ -1,28 +1,28 @@
-# Модуль тестирования веб-поиска
+# Модуль для тестирования веб-поиска
 
 ## Обзор
 
-Модуль содержит юнит-тесты для проверки функциональности веб-поиска, используемого в проекте `hypotez`. Он использует библиотеку `duckduckgo_search` для выполнения поисковых запросов и `BeautifulSoup` для парсинга результатов. Тесты проверяют, что поисковый инструмент работает корректно и возвращает ожидаемые результаты.
+Модуль содержит юнит-тесты для проверки функциональности веб-поиска, интегрированного в проект `hypotez`. Он использует `unittest` для тестирования асинхронного клиента с мокированным провайдером (`YieldProviderMock`). В частности, проверяется корректность работы функции `search_tool` с различными параметрами.
 
-## Подробней
+## Подробнее
 
-Этот модуль предназначен для автоматизированного тестирования интеграции веб-поиска с AI-клиентом. Он проверяет, что при использовании различных конфигураций `tool_calls`, ответы AI-клиента содержат ожидаемые результаты веб-поиска. Модуль использует моки для имитации ответов провайдера, чтобы изолировать тесты от внешних зависимостей.
-Расположение файла в проекте указывает на то, что это юнит-тесты для функциональности веб-поиска в контексте `gpt4free`.
+Этот модуль предназначен для автоматизированной проверки интеграции веб-поиска DuckDuckGo с асинхронным клиентом `AsyncClient`. Он выполняет несколько тестов, имитируя вызовы `search_tool` с разными наборами аргументов и проверяя, что возвращаемые ответы содержат ожидаемый текст. Модуль также обрабатывает возможные исключения, возникающие при использовании DuckDuckGoSearch.
 
 ## Классы
 
 ### `TestIterListProvider`
 
-**Описание**: Класс `TestIterListProvider` содержит асинхронные тесты для проверки функциональности веб-поиска.
+**Описание**: Класс, содержащий асинхронные юнит-тесты для проверки функциональности веб-поиска.
 
 **Наследует**:
-- `unittest.IsolatedAsyncioTestCase`: Этот класс является базовым классом для написания асинхронных юнит-тестов.
+- `unittest.IsolatedAsyncioTestCase`
 
 **Методы**:
-- `setUp()`: Метод для подготовки к тестам. Проверяет, установлены ли необходимые зависимости для веб-поиска. Если зависимости не установлены, тест пропускается.
-- `test_search()`: Тест для проверки базовой функциональности поиска с различными параметрами, такими как `max_results`, `max_words`, `backend`, `add_text`, `timeout`, `region` и `instructions`.
-- `test_search2()`: Тест для проверки базовой функциональности поиска с минимальным набором параметров, а именно только с `query`.
-- `test_search3()`: Тест для проверки функциональности поиска с параметрами, переданными в формате JSON.
+
+- `setUp`: Подготавливает тестовую среду, проверяя наличие необходимых зависимостей.
+- `test_search`: Тестирует функцию `search_tool` с полным набором параметров, включая `query`, `max_results`, `max_words`, `backend`, `add_text`, `timeout`, `region` и `instructions`.
+- `test_search2`: Тестирует функцию `search_tool` с минимальным набором параметров, включающим только `query`.
+- `test_search3`: Тестирует функцию `search_tool`, передавая параметры в формате JSON.
 
 ## Функции
 
@@ -31,28 +31,33 @@
 ```python
 def setUp(self) -> None:
     """
-    Метод подготовки к тестам. Проверяет наличие необходимых зависимостей для веб-поиска.
-    Если зависимости не установлены, тест пропускается.
+    Подготавливает тестовую среду, проверяя наличие необходимых зависимостей.
+
+    Args:
+        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+
+    Returns:
+        None
+
+    Raises:
+        unittest.SkipTest: Если не установлены необходимые зависимости (`web search requirements`).
     """
     ...
 ```
 
-**Назначение**: Метод `setUp` выполняется перед каждым тестом. Он проверяет, установлены ли необходимые библиотеки (`duckduckgo_search`, `BeautifulSoup`) для выполнения тестов веб-поиска. Если библиотеки не установлены, тест пропускается.
-
-**Параметры**:
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
-
-**Возвращает**:
-- `None`
+**Назначение**:
+Подготовка тестовой среды перед выполнением каждого теста. Проверяет, установлены ли необходимые зависимости (в данном случае, библиотеки для веб-поиска). Если зависимости не установлены, тест пропускается.
 
 **Как работает функция**:
-1. Проверяет, установлены ли необходимые библиотеки `duckduckgo_search` и `BeautifulSoup`.
-2. Если хотя бы одна из библиотек не установлена, тест пропускается с помощью `self.skipTest`.
+
+1.  Проверяется глобальная переменная `has_requirements`. Если она `False`, это означает, что необходимые библиотеки не установлены.
+2.  Если зависимости отсутствуют, вызывается `self.skipTest` с сообщением о причине пропуска теста.
 
 **Примеры**:
+
 ```python
 class TestIterListProvider(unittest.IsolatedAsyncioTestCase):
-    def setUp(self) -> None:
+    def setUp(self):
         if not has_requirements:
             self.skipTest('web search requirements not passed')
 ```
@@ -62,55 +67,60 @@ class TestIterListProvider(unittest.IsolatedAsyncioTestCase):
 ```python
 async def test_search(self):
     """
-    Тест для проверки базовой функциональности поиска с различными параметрами, такими как `max_results`, `max_words`, `backend`, `add_text`, `timeout`, `region` и `instructions`.
+    Тестирует функцию `search_tool` с полным набором параметров, включая `query`, `max_results`, `max_words`, `backend`, `add_text`, `timeout`, `region` и `instructions`.
+
+    Args:
+        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+
+    Returns:
+        None
+
+    Raises:
+        unittest.SkipTest: Если возникает исключение `DuckDuckGoSearchException`.
     """
     ...
 ```
 
-**Назначение**: Метод `test_search` является асинхронным тестом, который проверяет базовую функциональность поиска с различными параметрами. Он создает `tool_calls` с параметрами для `search_tool`, выполняет поисковый запрос и проверяет, что ответ содержит ожидаемый текст.
-
-**Параметры**:
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `DuckDuckGoSearchException`: Если возникает ошибка при выполнении поискового запроса.
+**Назначение**:
+Проверка корректной работы функции `search_tool` при передаче всех возможных параметров. Это включает в себя параметры запроса, максимальное количество результатов, максимальное количество слов, бэкенд, добавление текста, таймаут, регион и инструкции.
 
 **Как работает функция**:
 
-```
-Создание клиента -> Определение tool_calls -> Выполнение поискового запроса -> Проверка результата
-```
-
-1. Создает экземпляр `AsyncClient` с моковым провайдером `YieldProviderMock`.
-2. Определяет структуру `tool_calls` с различными параметрами для `search_tool`, такими как `query`, `max_results`, `max_words`, `backend`, `add_text`, `timeout`, `region` и `instructions`.
-3. Выполняет поисковый запрос с помощью `client.chat.completions.create`.
-4. Проверяет, что ответ содержит текст "Using the provided web search results".
-5. Если возникает исключение `DuckDuckGoSearchException`, тест пропускается.
+1.  Создается экземпляр `AsyncClient` с мокированным провайдером `YieldProviderMock`.
+2.  Определяется структура `tool_calls`, содержащая параметры для `search_tool`.
+3.  Вызывается метод `client.chat.completions.create` с передачей структуры `tool_calls`.
+4.  Проверяется, что ответ содержит ожидаемый текст "Using the provided web search results".
+5.  В случае возникновения исключения `DuckDuckGoSearchException`, тест пропускается.
 
 **Примеры**:
+
 ```python
-    async def test_search(self):
-        client = AsyncClient(provider=YieldProviderMock)
-        tool_calls = [
-            {
-                "function": {
-                    "arguments": {
-                        "query": "search query", # content of last message: messages[-1]["content"]
-                        "max_results": 5, # maximum number of search results
-                        "max_words": 500, # maximum number of used words from search results for generating the response
-                        "backend": "html", # or "lite", "api": change it to pypass rate limits
-                        "add_text": True, # do scraping websites
-                        "timeout": 5, # in seconds for scraping websites
-                        "region": "wt-wt",
-                        "instructions": "Using the provided web search results, to write a comprehensive reply to the user request.\n"\
-                                        "Make sure to add the sources of cites using [[Number]](Url) notation after the reference. Example: [[0]](http://google.com)",
-                    },\n                    "name": "search_tool"\n                },\n                "type": "function"\n            }\n        ]\n        try:\n            response = await client.chat.completions.create([{"content": "", "role": "user"}], "", tool_calls=tool_calls)
-            self.assertIn("Using the provided web search results", response.choices[0].message.content)
-        except DuckDuckGoSearchException as e:
-            self.skipTest(f'DuckDuckGoSearchException: {e}')
+async def test_search(self):
+    client = AsyncClient(provider=YieldProviderMock)
+    tool_calls = [
+        {
+            "function": {
+                "arguments": {
+                    "query": "search query",
+                    "max_results": 5,
+                    "max_words": 500,
+                    "backend": "html",
+                    "add_text": True,
+                    "timeout": 5,
+                    "region": "wt-wt",
+                    "instructions": "Using the provided web search results, to write a comprehensive reply to the user request.\n"
+                                    "Make sure to add the sources of cites using [[Number]](Url) notation after the reference. Example: [[0]](http://google.com)",
+                },
+                "name": "search_tool"
+            },
+            "type": "function"
+        }
+    ]
+    try:
+        response = await client.chat.completions.create([{"content": "", "role": "user"}], "", tool_calls=tool_calls)
+        self.assertIn("Using the provided web search results", response.choices[0].message.content)
+    except DuckDuckGoSearchException as e:
+        self.skipTest(f'DuckDuckGoSearchException: {e}')
 ```
 
 ### `test_search2`
@@ -118,54 +128,52 @@ async def test_search(self):
 ```python
 async def test_search2(self):
     """
-    Тест для проверки базовой функциональности поиска с минимальным набором параметров, а именно только с `query`.
+    Тестирует функцию `search_tool` с минимальным набором параметров, включающим только `query`.
+
+    Args:
+        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+
+    Returns:
+        None
+
+    Raises:
+        unittest.SkipTest: Если возникает исключение `DuckDuckGoSearchException`.
     """
     ...
 ```
 
-**Назначение**: Метод `test_search2` является асинхронным тестом, который проверяет базовую функциональность поиска с минимальным набором параметров. Он создает `tool_calls` только с параметром `query` для `search_tool`, выполняет поисковый запрос и проверяет, что ответ содержит ожидаемый текст.
-
-**Параметры**:
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `DuckDuckGoSearchException`: Если возникает ошибка при выполнении поискового запроса.
+**Назначение**:
+Проверка работы `search_tool` при передаче минимального набора параметров, а именно только параметра `query`. Это позволяет убедиться, что функция корректно обрабатывает случай, когда остальные параметры не указаны.
 
 **Как работает функция**:
 
-```
-Создание клиента -> Определение tool_calls -> Выполнение поискового запроса -> Проверка результата
-```
-
-1. Создает экземпляр `AsyncClient` с моковым провайдером `YieldProviderMock`.
-2. Определяет структуру `tool_calls` только с параметром `query` для `search_tool`.
-3. Выполняет поисковый запрос с помощью `client.chat.completions.create`.
-4. Проверяет, что ответ содержит текст "Using the provided web search results".
-5. Если возникает исключение `DuckDuckGoSearchException`, тест пропускается.
+1.  Создается экземпляр `AsyncClient` с мокированным провайдером `YieldProviderMock`.
+2.  Определяется структура `tool_calls`, содержащая только параметр `query` для `search_tool`.
+3.  Вызывается метод `client.chat.completions.create` с передачей структуры `tool_calls`.
+4.  Проверяется, что ответ содержит ожидаемый текст "Using the provided web search results".
+5.  В случае возникновения исключения `DuckDuckGoSearchException`, тест пропускается.
 
 **Примеры**:
+
 ```python
-    async def test_search2(self):
-        client = AsyncClient(provider=YieldProviderMock)
-        tool_calls = [
-            {
-                "function": {
-                    "arguments": {
-                        "query": "search query",
-                    },
-                    "name": "search_tool"
+async def test_search2(self):
+    client = AsyncClient(provider=YieldProviderMock)
+    tool_calls = [
+        {
+            "function": {
+                "arguments": {
+                    "query": "search query",
                 },
-                "type": "function"
-            }
-        ]
-        try:
-            response = await client.chat.completions.create([{"content": "", "role": "user"}], "", tool_calls=tool_calls)
-            self.assertIn("Using the provided web search results", response.choices[0].message.content)
-        except DuckDuckGoSearchException as e:
-            self.skipTest(f'DuckDuckGoSearchException: {e}')
+                "name": "search_tool"
+            },
+            "type": "function"
+        }
+    ]
+    try:
+        response = await client.chat.completions.create([{"content": "", "role": "user"}], "", tool_calls=tool_calls)
+        self.assertIn("Using the provided web search results", response.choices[0].message.content)
+    except DuckDuckGoSearchException as e:
+        self.skipTest(f'DuckDuckGoSearchException: {e}')
 ```
 
 ### `test_search3`
@@ -173,53 +181,51 @@ async def test_search2(self):
 ```python
 async def test_search3(self):
     """
-    Тест для проверки функциональности поиска с параметрами, переданными в формате JSON.
+    Тестирует функцию `search_tool`, передавая параметры в формате JSON.
+
+    Args:
+        self (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
+
+    Returns:
+        None
+
+    Raises:
+        unittest.SkipTest: Если возникает исключение `DuckDuckGoSearchException`.
     """
     ...
 ```
 
-**Назначение**: Метод `test_search3` является асинхронным тестом, который проверяет функциональность поиска с параметрами, переданными в формате JSON. Он создает `tool_calls` с параметрами для `search_tool`, закодированными в JSON, выполняет поисковый запрос и проверяет, что ответ содержит ожидаемый текст.
-
-**Параметры**:
-- `self` (TestIterListProvider): Экземпляр класса `TestIterListProvider`.
-
-**Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `DuckDuckGoSearchException`: Если возникает ошибка при выполнении поискового запроса.
+**Назначение**:
+Проверка работы `search_tool` при передаче параметров в формате JSON. Это необходимо для проверки совместимости с различными способами передачи аргументов.
 
 **Как работает функция**:
 
-```
-Создание клиента -> Определение tool_calls -> Выполнение поискового запроса -> Проверка результата
-```
-
-1. Создает экземпляр `AsyncClient` с моковым провайдером `YieldProviderMock`.
-2. Определяет структуру `tool_calls` с параметрами для `search_tool`, закодированными в JSON. Параметры включают `query`, `max_results` и `max_words`.
-3. Выполняет поисковый запрос с помощью `client.chat.completions.create`.
-4. Проверяет, что ответ содержит текст "Using the provided web search results".
-5. Если возникает исключение `DuckDuckGoSearchException`, тест пропускается.
+1.  Создается экземпляр `AsyncClient` с мокированным провайдером `YieldProviderMock`.
+2.  Определяется структура `tool_calls`, содержащая параметры для `search_tool`, сериализованные в JSON.
+3.  Вызывается метод `client.chat.completions.create` с передачей структуры `tool_calls`.
+4.  Проверяется, что ответ содержит ожидаемый текст "Using the provided web search results".
+5.  В случае возникновения исключения `DuckDuckGoSearchException`, тест пропускается.
 
 **Примеры**:
+
 ```python
-    async def test_search3(self):
-        client = AsyncClient(provider=YieldProviderMock)
-        tool_calls = [
-            {
-                "function": {
-                    "arguments": json.dumps({
-                        "query": "search query", # content of last message: messages[-1]["content"]
-                        "max_results": 5, # maximum number of search results
-                        "max_words": 500, # maximum number of used words from search results for generating the response
-                    }),
-                    "name": "search_tool"
-                },
-                "type": "function"
-            }
-        ]
-        try:
-            response = await client.chat.completions.create([{"content": "", "role": "user"}], "", tool_calls=tool_calls)
-            self.assertIn("Using the provided web search results", response.choices[0].message.content)
-        except DuckDuckGoSearchException as e:
-            self.skipTest(f'DuckDuckGoSearchException: {e}')
+async def test_search3(self):
+    client = AsyncClient(provider=YieldProviderMock)
+    tool_calls = [
+        {
+            "function": {
+                "arguments": json.dumps({
+                    "query": "search query",
+                    "max_results": 5,
+                    "max_words": 500,
+                }),
+                "name": "search_tool"
+            },
+            "type": "function"
+        }
+    ]
+    try:
+        response = await client.chat.completions.create([{"content": "", "role": "user"}], "", tool_calls=tool_calls)
+        self.assertIn("Using the provided web search results", response.choices[0].message.content)
+    except DuckDuckGoSearchException as e:
+        self.skipTest(f'DuckDuckGoSearchException: {e}')

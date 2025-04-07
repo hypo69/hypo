@@ -1,178 +1,217 @@
-# Модуль для валидации TinyPerson с использованием OpenAI LLM
+# Модуль валидации TinyPerson
 
 ## Обзор
 
-Модуль `tiny_person_validator.py` содержит класс `TinyPersonValidator`, который используется для валидации экземпляров класса `TinyPerson` с помощью OpenAI LLM. Валидация включает отправку серии вопросов экземпляру `TinyPerson` и оценку его ответов. Модуль определяет логику и структуру для проверки соответствия ответов `TinyPerson` заданным ожиданиям и предоставляет оценку уверенности валидации.
+Модуль `tiny_person_validator.py` предназначен для валидации экземпляров класса `TinyPerson` с использованием OpenAI LLM. Он содержит класс `TinyPersonValidator` с методом `validate_person`, который оценивает соответствие экземпляра `TinyPerson` заданным ожиданиям.
 
-## Подробнее
+## Подробней
 
-Модуль предоставляет статический метод `validate_person`, который принимает экземпляр `TinyPerson`, ожидания и флаги для настройки процесса валидации. Он использует OpenAI LLM для генерации вопросов, отправляет их `TinyPerson`, анализирует ответы и возвращает оценку уверенности вместе с обоснованием. Этот модуль играет ключевую роль в обеспечении того, что `TinyPerson` ведет себя в соответствии с заданными критериями и ожиданиями.
+Этот модуль играет важную роль в проекте `hypotez`, обеспечивая механизм для проверки и подтверждения поведения и характеристик виртуальных личностей, созданных с использованием класса `TinyPerson`. Валидация осуществляется путем отправки серии вопросов экземпляру `TinyPerson` и оценки его ответов с использованием OpenAI LLM. Результатом валидации является оценка достоверности и обоснование этой оценки.
 
 ## Классы
 
 ### `TinyPersonValidator`
 
-**Описание**: Класс, предоставляющий функциональность для валидации экземпляров класса `TinyPerson` с использованием OpenAI LLM.
+**Описание**: Класс, предоставляющий статический метод для валидации экземпляров `TinyPerson`.
 
-**Принцип работы**: Класс содержит статический метод `validate_person`, который отправляет серию вопросов экземпляру `TinyPerson`, оценивает его ответы и возвращает оценку уверенности валидации. Он использует шаблоны mustache для генерации подсказок и OpenAI LLM для оценки ответов.
+**Принцип работы**: Класс `TinyPersonValidator` содержит один статический метод `validate_person`, который использует OpenAI LLM для оценки соответствия экземпляра `TinyPerson` заданным ожиданиям.
 
 **Методы**:
-- `validate_person`: Валидирует экземпляр `TinyPerson` с использованием OpenAI LLM.
+- `validate_person`: Статический метод для валидации экземпляра `TinyPerson`.
 
 ## Функции
 
 ### `validate_person`
 
 ```python
-@staticmethod
-def validate_person(person, expectations=None, include_agent_spec=True, max_content_length=default_max_content_display_length) -> tuple[float, str]:
-    """
-    Validate a TinyPerson instance using OpenAI's LLM.
+    @staticmethod
+    def validate_person(person, expectations=None, include_agent_spec=True, max_content_length=default_max_content_display_length) -> tuple[float, str]:
+        """
+        Validate a TinyPerson instance using OpenAI\'s LLM.
 
-    This method sends a series of questions to the TinyPerson instance to validate its responses using OpenAI's LLM.
-    The method returns a float value representing the confidence score of the validation process.
-    If the validation process fails, the method returns None.
+        This method sends a series of questions to the TinyPerson instance to validate its responses using OpenAI\'s LLM.\n
+        The method returns a float value representing the confidence score of the validation process.\n
+        If the validation process fails, the method returns None.\n
 
-    Args:
-        person (TinyPerson): The TinyPerson instance to be validated.
-        expectations (str, optional): The expectations to be used in the validation process. Defaults to None.
-        include_agent_spec (bool, optional): Whether to include the agent specification in the prompt. Defaults to False.
-        max_content_length (int, optional): The maximum length of the content to be displayed when rendering the conversation.
+        Args:\n
+            person (TinyPerson): The TinyPerson instance to be validated.\n
+            expectations (str, optional): The expectations to be used in the validation process. Defaults to None.\n
+            include_agent_spec (bool, optional): Whether to include the agent specification in the prompt. Defaults to False.\n
+            max_content_length (int, optional): The maximum length of the content to be displayed when rendering the conversation.\n
 
-    Returns:
-        float: The confidence score of the validation process (0.0 to 1.0), or None if the validation process fails.
-        str: The justification for the validation score, or None if the validation process fails.
-    """
+        Returns:\n
+            float: The confidence score of the validation process (0.0 to 1.0), or None if the validation process fails.\n
+            str: The justification for the validation score, or None if the validation process fails.\n
+        """
+        # Initiating the current messages
+        current_messages = []
+        
+        # Generating the prompt to check the person
+        check_person_prompt_template_path = os.path.join(os.path.dirname(__file__), \'prompts/check_person.mustache\')
+        with open(check_person_prompt_template_path, \'r\') as f:\n
+            check_agent_prompt_template = f.read()\n
+        \n
+        system_prompt = chevron.render(check_agent_prompt_template, {"expectations": expectations})\n
+
+        # use dedent\n
+        import textwrap\n
+        user_prompt = textwrap.dedent(\\\n
+        """\n
+        Now, based on the following characteristics of the person being interviewed, and following the rules given previously, \n
+        create your questions and interview the person. Good luck!\n\n
+        """)\n
+
+        if include_agent_spec:\n
+            user_prompt += f"\\n\\n{json.dumps(person._persona, indent=4)}"\n
+        else:\n
+            user_prompt += f"\\n\\nMini-biography of the person being interviewed: {person.minibio()}"\n\n\n
+
+        logger = logging.getLogger("tinytroupe")\n
+
+        logger.info(f"Starting validation of the person: {person.name}")\n
+
+        # Sending the initial messages to the LLM\n
+        current_messages.append({"role": "system", "content": system_prompt})\n
+        current_messages.append({"role": "user", "content": user_prompt})\n
+
+        message = openai_utils.client().send_message(current_messages)\n
+
+        # What string to look for to terminate the conversation\n
+        termination_mark = "```json"\n
+
+        while message is not None and not (termination_mark in message["content"]):\n
+            # Appending the questions to the current messages\n
+            questions = message["content"]\n
+            current_messages.append({"role": message["role"], "content": questions})\n
+            logger.info(f"Question validation:\\n{questions}")\n
+
+            # Asking the questions to the person\n
+            person.listen_and_act(questions, max_content_length=max_content_length)\n
+            responses = person.pop_actions_and_get_contents_for("TALK", False)\n
+            logger.info(f"Person reply:\\n{responses}")\n
+
+            # Appending the responses to the current conversation and checking the next message\n
+            current_messages.append({"role": "user", "content": responses})\n
+            message = openai_utils.client().send_message(current_messages)\n
+
+        if message is not None:\n
+            json_content = utils.extract_json(message[\'content\'])\n
+            # read score and justification\n
+            score = float(json_content["score"])\n
+            justification = json_content["justification"]\n
+            logger.info(f"Validation score: {score:.2f}; Justification: {justification}")\n
+            \n
+            return score, justification\n
+        \n
+        else:\n
+            return None, None\n
 ```
 
-**Назначение**: Валидирует экземпляр `TinyPerson`, отправляя ему вопросы и оценивая его ответы с помощью OpenAI LLM.
+**Назначение**: Валидация экземпляра `TinyPerson` с использованием OpenAI LLM.
 
 **Параметры**:
-- `person` (TinyPerson): Экземпляр `TinyPerson`, который необходимо проверить.
-- `expectations` (str, optional): Ожидания, используемые в процессе проверки. По умолчанию `None`.
-- `include_agent_spec` (bool, optional): Флаг, определяющий, следует ли включать спецификацию агента в запрос. По умолчанию `True`.
-- `max_content_length` (int, optional): Максимальная длина содержимого, отображаемого при рендеринге разговора.
+- `person` (TinyPerson): Экземпляр `TinyPerson`, который необходимо валидировать.
+- `expectations` (str, optional): Ожидания, используемые в процессе валидации. По умолчанию `None`.
+- `include_agent_spec` (bool, optional): Флаг, указывающий, следует ли включать спецификацию агента в запрос. По умолчанию `False`.
+- `max_content_length` (int, optional): Максимальная длина контента для отображения при рендеринге разговора. По умолчанию значение берется из конфигурации `config["OpenAI"].getint("MAX_CONTENT_DISPLAY_LENGTH", 1024)`.
 
 **Возвращает**:
-- `tuple[float, str]`: Кортеж, содержащий оценку уверенности валидации (от 0.0 до 1.0) и обоснование оценки. Возвращает `None, None`, если процесс валидации не удался.
-
-**Вызывает исключения**:
-- Отсутствуют явные исключения, но могут возникать исключения в процессе взаимодействия с OpenAI LLM или при обработке данных.
+- `tuple[float, str]`: Кортеж, содержащий оценку достоверности (от 0.0 до 1.0) и обоснование оценки. Возвращает `None, None`, если процесс валидации завершается неудачно.
 
 **Как работает функция**:
 
 1. **Инициализация**:
-   - Инициализирует список `current_messages` для хранения сообщений, которыми обмениваются с LLM.
-   - Определяет путь к шаблону запроса `check_person.mustache`.
-   - Читает шаблон запроса из файла.
+   - Инициализируется список `current_messages` для хранения сообщений в процессе валидации.
 
-2. **Формирование системного запроса**:
-   - Использует библиотеку `chevron` для рендеринга шаблона `check_agent_prompt_template` с учетом заданных `expectations`. Результат сохраняется в `system_prompt`.
+2. **Подготовка запроса**:
+   - Загружается шаблон запроса из файла `prompts/check_person.mustache`.
+   - Рендерится системный запрос `system_prompt` с использованием шаблона и заданных ожиданий (`expectations`).
+   - Формируется пользовательский запрос `user_prompt` на основе характеристик `TinyPerson`, которого необходимо проинтервьюировать. В зависимости от значения `include_agent_spec`, в запрос включается либо полная персона агента, либо мини-биография.
 
-3. **Формирование пользовательского запроса**:
-   - Формирует текст `user_prompt` с инструкциями для LLM, как проводить интервью с `TinyPerson`.
-   - Добавляет либо мини-биографию `TinyPerson`, либо полную спецификацию персоны в формате JSON, в зависимости от значения `include_agent_spec`.
+3. **Взаимодействие с LLM**:
+   - Системный и пользовательский запросы добавляются в `current_messages`.
+   - Отправляется запрос в OpenAI LLM с использованием `openai_utils.client().send_message(current_messages)`.
+   - В цикле происходит обмен сообщениями с LLM до тех пор, пока в ответе не появится маркер завершения `termination_mark` (```json).
 
-4. **Логирование начала валидации**:
-   - Получает экземпляр логгера "tinytroupe".
-   - Логирует начало процесса валидации для указанного `person.name`.
+4. **Обработка ответов**:
+   - Вопросы, полученные от LLM, добавляются в `current_messages`.
+   - `TinyPerson` "слушает" вопросы и "действует" на них (`person.listen_and_act`).
+   - Ответы `TinyPerson` извлекаются и добавляются в `current_messages`.
 
-5. **Отправка начальных сообщений LLM**:
-   - Добавляет `system_prompt` и `user_prompt` в список `current_messages`.
-   - Отправляет начальные сообщения в LLM с помощью `openai_utils.client().send_message(current_messages)`.
+5. **Извлечение результатов**:
+   - После получения сообщения с маркером завершения извлекается JSON-контент из сообщения.
+   - Из JSON-контента извлекаются оценка (`score`) и обоснование (`justification`).
+   - Результаты логируются с использованием `logger.info`.
 
-6. **Цикл взаимодействия с LLM**:
-   - Устанавливает `termination_mark` для определения конца разговора (наличие "```json" в ответе).
-   - В цикле `while` продолжает взаимодействие с LLM до тех пор, пока не будет достигнут `termination_mark` или не будет получен `None` в качестве сообщения.
-     - Добавляет вопросы от LLM в список `current_messages`.
-     - Логирует вопросы.
-     - Запрашивает у `person` ответы на вопросы, используя метод `person.listen_and_act`.
-     - Получает ответы от `person` и логирует их.
-     - Добавляет ответы в список `current_messages`.
-     - Отправляет обновленный список сообщений в LLM.
+6. **Возврат результатов**:
+   - Функция возвращает кортеж, содержащий оценку и обоснование. Если в процессе валидации произошла ошибка (например, не был получен маркер завершения), функция возвращает `None, None`.
 
-7. **Обработка финального сообщения**:
-   - После завершения цикла проверяет, что `message` не равно `None`.
-   - Извлекает JSON-контент из финального сообщения с помощью `utils.extract_json`.
-   - Извлекает оценку (`score`) и обоснование (`justification`) из JSON-контента.
-   - Логирует оценку и обоснование.
-   - Возвращает `score` и `justification`.
-
-8. **Обработка неуспешной валидации**:
-   - Если `message` равно `None`, возвращает `None, None`.
-
-**Внутренние функции**: отсутствуют.
+**ASCII Flowchart**:
 
 ```
-A: Инициализация (создание сообщений, чтение шаблона)
-|
-B: Формирование запроса (системного и пользовательского)
-|
-C: Отправка начальных сообщений LLM
-|
-D: Цикл взаимодействия с LLM (пока не termination_mark)
-|   |
-|   --> E: Добавление вопросов от LLM в список сообщений
-|   |
-|   --> F: Логирование вопросов
-|   |
-|   --> G: Получение ответов от person
-|   |
-|   --> H: Логирование ответов person
-|   |
-|   --> I: Добавление ответов в список сообщений
-|   |
-|   --> J: Отправка обновленного списка LLM
-|
-K: Извлечение score и justification из JSON
-|
-L: Возврат score и justification
+    Начало
+     ↓
+  Загрузка шаблона и рендеринг запроса
+     ↓
+  Формирование запроса пользователю
+     ↓
+  Отправка запроса в OpenAI LLM
+     ↓
+  Цикл (пока нет маркера завершения):
+   ├── Получение вопросов от LLM
+   │    ↓
+   │  Ответы TinyPerson на вопросы
+   │    ↓
+   └── Отправка ответов в OpenAI LLM
+     ↓
+  Извлечение JSON-контента из ответа
+     ↓
+  Извлечение оценки и обоснования
+     ↓
+    Конец
 ```
 
 **Примеры**:
 
 ```python
+# Пример использования функции validate_person
 from tinytroupe.agent import TinyPerson
-from tinytroupe.tinytroupe import config
+from tinytroupe.tinytroupe import StoryTeller
+from tinytroupe.world import World
+from tinytroupe.location import Location
+from tinytroupe.item import Item
+from src.logger import logger
 
-# Пример создания экземпляра TinyPerson (предполагается, что параметры соответствуют структуре TinyPerson)
-persona = {
-    "name": "Alice",
-    "description": "A friendly chatbot.",
-    "age": 25,
-    "occupation": "Software Engineer"
+# Создание экземпляра TinyPerson (в данном примере параметры сокращены для краткости)
+world = World()
+storyteller = StoryTeller(world=world)
+location = Location(storyteller=storyteller, name="Название локации", description="Описание локации")
+item = Item(name="Название предмета", description="Описание предмета")
+
+tiny_person_data = {
+    "name": "Тестовый персонаж",
+    "description": "Описание тестового персонажа",
+    "world": world.ref(),
+    "location": location.ref(),
+    "inventory": [item.ref()],
+    "occupation": "Тестировщик",
+    "persona": "Характер тестового персонажа",
+    "goals": "Цели тестового персонажа",
+    "current_action": "Тестирование",
 }
-alice = TinyPerson(persona=persona, actions=["TALK"])
+person = TinyPerson(**tiny_person_data)
 
-# Пример вызова validate_person с минимальными параметрами
-score, justification = TinyPersonValidator.validate_person(alice)
+# Валидация персонажа без ожиданий и без включения спецификации агента
+score, justification = TinyPersonValidator.validate_person(person)
 if score is not None:
-    print(f"Validation score: {score:.2f}")
-    print(f"Justification: {justification}")
+    print(f"Оценка: {score:.2f}, Обоснование: {justification}")
 else:
-    print("Validation failed.")
+    print("Валидация не удалась")
 
-# Пример вызова validate_person с указанием ожиданий
-expectations = "The chatbot should respond in a friendly and helpful manner."
-score, justification = TinyPersonValidator.validate_person(alice, expectations=expectations)
+# Валидация персонажа с ожиданиями и с включением спецификации агента
+expectations = "Персонаж должен быть дружелюбным и отзывчивым"
+score, justification = TinyPersonValidator.validate_person(person, expectations=expectations, include_agent_spec=True)
 if score is not None:
-    print(f"Validation score: {score:.2f}")
-    print(f"Justification: {justification}")
+    print(f"Оценка: {score:.2f}, Обоснование: {justification}")
 else:
-    print("Validation failed.")
-
-# Пример вызова validate_person без включения agent_spec
-score, justification = TinyPersonValidator.validate_person(alice, include_agent_spec=False)
-if score is not None:
-    print(f"Validation score: {score:.2f}")
-    print(f"Justification: {justification}")
-else:
-    print("Validation failed.")
-
-# Пример вызова validate_person с ограничением длины контента
-score, justification = TinyPersonValidator.validate_person(alice, max_content_length=512)
-if score is not None:
-    print(f"Validation score: {score:.2f}")
-    print(f"Justification: {justification}")
-else:
-    print("Validation failed.")
+    print("Валидация не удалась")

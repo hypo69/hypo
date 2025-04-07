@@ -1,12 +1,12 @@
-# Модуль для тестирования функциональности `ChatCompletion` в g4f
+# Модуль для тестирования функциональности ChatCompletion в g4f
 
 ## Обзор
 
-Модуль `test_chat_completion.py` предназначен для тестирования асинхронного и синхронного способов взаимодействия с API `g4f.ChatCompletion` для генерации текстовых ответов на основе предоставленных запросов.
+Этот модуль предназначен для тестирования асинхронных и синхронных запросов к API ChatCompletion библиотеки `g4f` (gpt4free). Он содержит примеры использования `g4f.ChatCompletion.create` и `g4f.ChatCompletion.create_async` для отправки запросов к модели по умолчанию и вывода результатов.
 
 ## Подробней
 
-Этот модуль тестирует функциональность `g4f.ChatCompletion`, который позволяет генерировать ответы от различных языковых моделей. Он использует как синхронный, так и асинхронный методы для отправки запросов и получения ответов. В частности, модуль проверяет возможность генерации текста в потоковом режиме (stream=True) и асинхронно. Этот код важен для проверки стабильности и корректности работы `ChatCompletion` при использовании различных моделей и провайдеров.
+Модуль демонстрирует, как использовать библиотеку `g4f` для взаимодействия с API ChatCompletion. Он включает в себя примеры отправки запросов как в синхронном, так и в асинхронном режимах. Код добавляет родительский каталог к пути поиска модулей, чтобы обеспечить доступ к модулю `g4f`. Затем он отправляет запрос на создание поэмы о дереве и выводит результат. Также демонстрируется асинхронный запрос с приветствием и выводом ответа.
 
 ## Функции
 
@@ -14,7 +14,7 @@
 
 ```python
 async def run_async():
-    """Асинхронно отправляет запрос к g4f.ChatCompletion и выводит ответ.
+    """Асинхронно отправляет запрос "hello!" и выводит полученный ответ.
 
     Args:
         None
@@ -23,59 +23,35 @@ async def run_async():
         None
 
     Raises:
-        Exception: Если происходит ошибка во время выполнения запроса.
-
-    Example:
-        >>> asyncio.run(run_async())
-        create_async: hello!
+        Exception: Пробрасывает исключения, возникшие при выполнении асинхронного запроса.
     """
+    ...
 ```
+
+**Назначение**: Асинхронно отправляет запрос "hello!" к модели по умолчанию и выводит полученный ответ.
+
+**Параметры**:
+-   `None`
+
+**Возвращает**:
+-   `None`
+
+**Вызывает исключения**:
+-   `Exception`: Пробрасывает исключения, возникшие при выполнении асинхронного запроса.
 
 **Как работает функция**:
 
-1.  Функция `run_async` использует асинхронный метод `g4f.ChatCompletion.create_async` для отправки запроса с сообщением "hello!".
-2.  Полученный ответ выводится в консоль с префиксом "create_async:".
+1.  **Отправка асинхронного запроса**: Функция использует `g4f.ChatCompletion.create_async` для отправки асинхронного запроса с сообщением "hello!".
+2.  **Вывод ответа**: Полученный ответ выводится в консоль с префиксом "create\_async:".
 
-```text
-run_async
-    │
-    ├── Асинхронный запрос к g4f.ChatCompletion ("hello!")
-    │
-    └── Вывод ответа в консоль ("create_async:")
+```
+Отправка запроса --> Получение ответа --> Вывод ответа
 ```
 
 **Примеры**:
 
 ```python
-asyncio.run(run_async())
-```
-
-## Код
-
-```python
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path(__file__).parent.parent.parent))
-
-import g4f, asyncio
-
-print("create:", end=" ", flush=True)
-for response in g4f.ChatCompletion.create(
-    model=g4f.models.default,
-    #provider=g4f.Provider.Bing,
-    messages=[{"role": "user", "content": "write a poem about a tree"}],
-    stream=True
-):
-    print(response, end="", flush=True)
-print()
-
-async def run_async():
-    response = await g4f.ChatCompletion.create_async(
-        model=g4f.models.default,
-        #provider=g4f.Provider.Bing,
-        messages=[{"role": "user", "content": "hello!"}],
-    )
-    print("create_async:", response)
-
-asyncio.run(run_async())
+import asyncio
+async def test():
+    await run_async()
+asyncio.run(test())

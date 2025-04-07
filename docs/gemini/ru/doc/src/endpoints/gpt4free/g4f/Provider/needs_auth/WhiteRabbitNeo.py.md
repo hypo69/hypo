@@ -1,27 +1,27 @@
-# Модуль WhiteRabbitNeo.py
+# Модуль WhiteRabbitNeo
 
 ## Обзор
 
-Модуль `WhiteRabbitNeo.py` предоставляет асинхронный интерфейс для взаимодействия с сервисом WhiteRabbitNeo. Он предназначен для генерации текста на основе предоставленных сообщений и поддерживает использование cookies для аутентификации. Этот модуль является частью проекта `hypotez` и предназначен для работы с различными поставщиками (providers) в асинхронном режиме.
+Модуль `WhiteRabbitNeo` предоставляет асинхронный генератор для взаимодействия с провайдером WhiteRabbitNeo. Он предназначен для обмена сообщениями, поддерживает историю сообщений и требует аутентификацию. Модуль использует `aiohttp` для асинхронных HTTP-запросов и предоставляет функциональность для получения ответов от API WhiteRabbitNeo.
 
-## Подробнее
+## Подробней
 
-Модуль использует библиотеку `aiohttp` для выполнения асинхронных HTTP-запросов. Он создает асинхронный генератор, который отправляет запросы к API WhiteRabbitNeo и возвращает чанки сгенерированного текста.
+Модуль `WhiteRabbitNeo` является частью проекта `hypotez` и предназначен для интеграции с сервисом WhiteRabbitNeo. Он обеспечивает асинхронное взаимодействие с API WhiteRabbitNeo, поддерживая передачу сообщений и получение ответов в режиме реального времени. Модуль требует аутентификации и использует файлы cookie для поддержания сессии.
 
 ## Классы
 
 ### `WhiteRabbitNeo`
 
-**Описание**: Класс `WhiteRabbitNeo` является асинхронным провайдером, который взаимодействует с сервисом WhiteRabbitNeo.
+**Описание**: Класс `WhiteRabbitNeo` является асинхронным провайдером генератора, который взаимодействует с API WhiteRabbitNeo.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Этот класс наследует функциональность асинхронного генератора от `AsyncGeneratorProvider`, позволяя асинхронно получать данные чанками.
+- `AsyncGeneratorProvider`: Класс наследует функциональность асинхронного генератора от `AsyncGeneratorProvider`.
 
 **Атрибуты**:
-- `url` (str): URL сервиса WhiteRabbitNeo (`"https://www.whiterabbitneo.com"`).
-- `working` (bool): Флаг, указывающий, что провайдер находится в рабочем состоянии (`True`).
-- `supports_message_history` (bool): Флаг, указывающий, что провайдер поддерживает историю сообщений (`True`).
-- `needs_auth` (bool): Флаг, указывающий, что для работы с провайдером требуется аутентификация (`True`).
+- `url` (str): URL-адрес сервиса WhiteRabbitNeo.
+- `working` (bool): Указывает, работает ли провайдер в данный момент.
+- `supports_message_history` (bool): Указывает, поддерживается ли история сообщений.
+- `needs_auth` (bool): Указывает, требуется ли аутенентификация.
 
 **Методы**:
 - `create_async_generator()`: Создает асинхронный генератор для взаимодействия с API WhiteRabbitNeo.
@@ -31,139 +31,119 @@
 ### `create_async_generator`
 
 ```python
-@classmethod
-async def create_async_generator(
-    cls,
-    model: str,
-    messages: Messages,
-    cookies: Cookies = None,
-    connector: BaseConnector = None,
-    proxy: str = None,
-    **kwargs
-) -> AsyncResult:
-    """Создает асинхронный генератор для взаимодействия с API WhiteRabbitNeo.
+    @classmethod
+    async def create_async_generator(
+        cls,
+        model: str,
+        messages: Messages,
+        cookies: Cookies = None,
+        connector: BaseConnector = None,
+        proxy: str = None,
+        **kwargs
+    ) -> AsyncResult:
+        """Создает асинхронный генератор для взаимодействия с API WhiteRabbitNeo.
 
-    Args:
-        model (str): Модель, используемая для генерации текста.
-        messages (Messages): Список сообщений для отправки в API.
-        cookies (Cookies, optional): Cookies для аутентификации. По умолчанию `None`.
-        connector (BaseConnector, optional): Aiohttp connector. По умолчанию `None`.
-        proxy (str, optional): Прокси-сервер для использования. По умолчанию `None`.
-        **kwargs: Дополнительные параметры.
+        Args:
+            model (str): Модель для использования.
+            messages (Messages): Список сообщений для отправки.
+            cookies (Cookies, optional): Cookie для аутентификации. Defaults to None.
+            connector (BaseConnector, optional): Connector для асинхронных запросов. Defaults to None.
+            proxy (str, optional): Proxy для использования. Defaults to None.
+            **kwargs: Дополнительные аргументы.
 
-    Returns:
-        AsyncResult: Асинхронный генератор, возвращающий чанки сгенерированного текста.
-
-    Raises:
-        Exception: Если возникает ошибка при выполнении запроса.
-
-    """
+        Returns:
+            AsyncResult: Асинхронный генератор, возвращающий ответы от API WhiteRabbitNeo.
+        """
 ```
 
-**Назначение**: Создает асинхронный генератор для взаимодействия с API WhiteRabbitNeo.
+**Назначение**: Функция `create_async_generator` создает и возвращает асинхронный генератор, который используется для взаимодействия с API WhiteRabbitNeo. Она отвечает за установку соединения, отправку запросов и получение ответов в режиме реального времени.
 
 **Параметры**:
-- `cls` (class): Ссылка на класс `WhiteRabbitNeo`.
--   `model` (str): Модель, используемая для генерации текста.
--   `messages` (Messages): Список сообщений для отправки в API.
--   `cookies` (Cookies, optional): Cookies для аутентификации. По умолчанию `None`. Если `cookies` не предоставлены, используются cookies, полученные для домена `"www.whiterabbitneo.com"`.
--   `connector` (BaseConnector, optional): Aiohttp connector. По умолчанию `None`.
--   `proxy` (str, optional): Прокси-сервер для использования. По умолчанию `None`.
--   `**kwargs`: Дополнительные параметры.
+- `model` (str): Модель, используемая для генерации ответов.
+- `messages` (Messages): Список сообщений, которые будут отправлены в API.
+- `cookies` (Cookies, optional): Cookie для аутентификации. Если не указаны, используются значения по умолчанию. По умолчанию `None`.
+- `connector` (BaseConnector, optional): Connector для асинхронных запросов. Если не указан, используется значение по умолчанию. По умолчанию `None`.
+- `proxy` (str, optional): Proxy-сервер для использования при отправке запросов. Если не указан, proxy не используется. По умолчанию `None`.
+- `**kwargs`: Дополнительные аргументы, которые могут быть переданы в функцию.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор, возвращающий чанки сгенерированного текста.
+- `AsyncResult`: Асинхронный генератор, возвращающий ответы от API WhiteRabbitNeo.
 
 **Вызывает исключения**:
-- `Exception`: Если возникает ошибка при выполнении запроса.
+- `Exception`: В случае возникновения ошибок при выполнении запроса или обработке ответа.
 
 **Как работает функция**:
 
-1.  **Инициализация**:
-    - Функция `create_async_generator` является classmethod, предназначенным для создания асинхронного генератора, который будет взаимодействовать с API WhiteRabbitNeo.
-    - Проверяется, предоставлены ли cookies. Если нет, используются cookies, полученные для домена `"www.whiterabbitneo.com"` с помощью функции `get_cookies`.
-    - Определяются HTTP-заголовки, включая `User-Agent`, `Accept`, `Referer`, `Content-Type` и другие. Заголовки имитируют запрос от браузера Firefox.
-    - Создается сессия `aiohttp.ClientSession` с заданными заголовками, cookies и коннектором (если предоставлен).
+1. **Инициализация**:
+   - Проверяет наличие `cookies`. Если `cookies` не предоставлены, функция пытается получить их с домена `"www.whiterabbitneo.com"` с помощью функции `get_cookies`.
+   - Определяет HTTP-заголовки, включая `User-Agent`, `Accept`, `Accept-Language`, `Content-Type` и другие.
 
-2.  **Формирование данных запроса**:
-    - Создается словарь `data`, содержащий сообщения (`messages`), случайный идентификатор (`id`), флаги `enhancePrompt` и `useFunctions`.
-    - Случайный идентификатор генерируется с помощью функции `get_random_string(6)`.
+2. **Создание сессии**:
+   - Создает асинхронную сессию `ClientSession` с заданными заголовками, cookie и connector. Connector используется для управления соединениями, а cookie для аутентификации.
 
-3.  **Выполнение POST-запроса**:
-    - Выполняется POST-запрос к API WhiteRabbitNeo (`f"{cls.url}/api/chat"`) с использованием асинхронной сессии.
-    - В теле запроса передаются данные в формате JSON, а также прокси-сервер (если указан).
+3. **Формирование данных**:
+   - Формирует словарь `data`, который содержит сообщения (`messages`), случайный идентификатор (`id`), а также флаги `enhancePrompt` и `useFunctions`.
 
-4.  **Обработка ответа**:
-    - Функция `raise_for_status` проверяет статус ответа и вызывает исключение в случае ошибки.
-    - Асинхронно итерируется по чанкам содержимого ответа (`response.content.iter_any()`).
-    - Каждый чанк декодируется в строку (с обработкой ошибок декодирования) и возвращается через `yield`, что делает функцию генератором.
-
-5.  **Завершение**:
-    - После завершения итерации по чанкам сессия `aiohttp.ClientSession` автоматически закрывается благодаря использованию `async with`.
-
-**Внутренние функции**: Нет внутренних функций.
-
-**Flowchart**:
+4. **Отправка запроса и обработка ответа**:
+   - Отправляет POST-запрос к API WhiteRabbitNeo (`f"{cls.url}/api/chat"`) с использованием сформированных данных и proxy.
+   - Использует `raise_for_status` для проверки статуса ответа и вызывает исключение в случае ошибки.
+   - Итерируется по содержимому ответа (`response.content.iter_any()`) и декодирует каждый чанк данных, возвращая его через `yield`.
 
 ```
-    Cookies Check
-    │
-    │ (Cookies are provided?)
-    │
-    No───────────────────────────Yes
-    │                               │
-    │                               │
-    Get Cookies from "www.whiterabbitneo.com"
-    │
-    │
-    Create Headers
-    │
-    │
-    Create ClientSession with Headers, Cookies, and Connector
-    │
-    │
-    Create Request Data (messages, id, flags)
-    │
-    │
-    POST Request to WhiteRabbitNeo API
-    │
-    │
-    Check Response Status
-    │
-    │ (Status is OK?)
-    │
-    No───────────────────────────Yes
-    │                               │
-    │                               │
-    Raise Exception                 Iterate over Response Chunks
-    │                               │
-    │                               Decode Chunk and Yield
-    │                               │
-    End of Function                 End of Iteration
+Инициализация -> Проверка Cookies -> Определение HTTP-заголовков
+     ↓
+Создание сессии ClientSession (headers, cookies, connector)
+     ↓
+Формирование данных (messages, id, enhancePrompt, useFunctions)
+     ↓
+Отправка POST-запроса к API (data, proxy)
+     ↓
+Проверка статуса ответа (raise_for_status)
+     ↓
+Итерация по содержимому ответа (response.content.iter_any()) -> Декодирование чанка данных (decode) -> yield chunk
+     ↓
+Конец
 ```
 
 **Примеры**:
 
 ```python
-# Пример использования (требуется асинхронный контекст)
-# from asyncio import run
-# async def main():
-#     messages = [{"role": "user", "content": "Hello, how are you?"}]
-#     async for chunk in WhiteRabbitNeo.create_async_generator(model="default", messages=messages):
-#         print(chunk, end="")
+# Пример вызова функции create_async_generator
+messages = [{"role": "user", "content": "Hello, how are you?"}]
+model = "default"
 
-# run(main())
+# Предположим, что cookies уже получены
+cookies = {"sessionid": "example_session_id"}
+
+# Вызов функции с cookies
+async_generator = WhiteRabbitNeo.create_async_generator(model=model, messages=messages, cookies=cookies)
+
+# Пример использования async generator
+async for chunk in async_generator:
+    print(chunk)
 ```
-
 ```python
-# Пример использования с cookies и прокси (требуется асинхронный контекст)
-# from asyncio import run
-# async def main():
-#     messages = [{"role": "user", "content": "Tell me a joke."}]
-#     cookies = {"some_cookie": "some_value"}
-#     proxy = "http://your_proxy:8080"
-#     async for chunk in WhiteRabbitNeo.create_async_generator(model="default", messages=messages, cookies=cookies, proxy=proxy):
-#         print(chunk, end="")
+# Пример вызова функции create_async_generator без cookies
+messages = [{"role": "user", "content": "Как дела?"}]
+model = "default"
 
-# run(main())
+# Вызов функции без cookies (cookies будут получены автоматически)
+async_generator = WhiteRabbitNeo.create_async_generator(model=model, messages=messages)
+
+# Пример использования async generator
+async for chunk in async_generator:
+    print(chunk)
+```
+```python
+# Пример вызова функции create_async_generator c использованием proxy
+messages = [{"role": "user", "content": "Tell me a joke."}]
+model = "default"
+proxy = "http://proxy.example.com:8080"
+
+# Вызов функции с proxy
+async_generator = WhiteRabbitNeo.create_async_generator(model=model, messages=messages, proxy=proxy)
+
+# Пример использования async generator
+async for chunk in async_generator:
+    print(chunk)
 ```

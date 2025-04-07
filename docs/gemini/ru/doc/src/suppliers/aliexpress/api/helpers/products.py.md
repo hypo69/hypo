@@ -1,12 +1,12 @@
-# Модуль для парсинга продуктов AliExpress
+# Модуль для парсинга информации о продуктах AliExpress
 
 ## Обзор
 
-Модуль содержит функции для обработки и преобразования данных о продуктах, полученных от AliExpress API. Основная цель - приведение данных к нужному формату для дальнейшего использования в проекте `hypotez`.
+Модуль `products.py` содержит функции для обработки и преобразования информации о продуктах, полученной от AliExpress API. Основная цель модуля - приведение данных о продуктах к нужному формату для дальнейшего использования в проекте `hypotez`. Модуль включает в себя функции для парсинга как одного продукта, так и списка продуктов.
 
-## Подробнее
+## Подробней
 
-Этот модуль предоставляет функции для парсинга как отдельных продуктов, так и списков продуктов. Он используется для обработки данных, возвращаемых API AliExpress, чтобы обеспечить их совместимость с остальной частью системы. Модуль включает функции `parse_product` и `parse_products`, которые выполняют необходимые преобразования данных.
+Этот модуль предоставляет функции для работы с данными о продуктах AliExpress. Он содержит функции, которые преобразуют информацию о продуктах, полученную из API, в более удобный формат для использования в проекте `hypotez`. В частности, модуль занимается обработкой URL-адресов маленьких изображений продуктов, приводя их к строковому типу.
 
 ## Функции
 
@@ -15,52 +15,72 @@
 ```python
 def parse_product(product):
     """
-    Преобразует данные об одном продукте.
+    Преобразует информацию об одном продукте.
 
     Args:
-        product: Объект продукта, полученный из API AliExpress.
+        product: Объект продукта, содержащий информацию о продукте.
 
     Returns:
-        product: Преобразованный объект продукта.
-
-    Как работает функция:
-    1. Извлекает строку из атрибута `product.product_small_image_urls`.
-    2. Возвращает обновленный объект продукта.
-
-    ASCII flowchart:
-    Получение объекта продукта
-    ↓
-    Извлечение product_small_image_urls.string
-    ↓
-    Возврат обновленного объекта продукта
-
+        product: Объект продукта с преобразованными URL-адресами маленьких изображений.
     """
-    product.product_small_image_urls = product.product_small_image_urls.string
-    return product
 ```
 
-**Параметры**:
+**Назначение**:
+Функция `parse_product` предназначена для обработки информации об одном продукте, полученной от AliExpress API. Она преобразует поле `product_small_image_urls` объекта продукта в строковый тип.
 
-- `product`: Объект продукта, полученный из API AliExpress.
+**Параметры**:
+- `product`: Объект продукта, содержащий информацию о продукте, полученную от AliExpress API.
 
 **Возвращает**:
-
-- `product`: Преобразованный объект продукта.
+- `product`: Объект продукта с преобразованным полем `product_small_image_urls`.
 
 **Как работает функция**:
 
-Функция `parse_product` принимает объект продукта в качестве аргумента и выполняет следующие действия:
+1. Функция принимает на вход объект `product`.
+2. Извлекает значение поля `product.product_small_image_urls` и преобразует его в строку с помощью `.string`.
+3. Возвращает обновленный объект `product`.
 
-1. **Извлечение строки из атрибута `product.product_small_image_urls`**: Заменяет значение `product.product_small_image_urls` строковым представлением этого атрибута. Это необходимо для обработки данных в нужном формате.
-2. **Возврат обновленного объекта продукта**: Возвращает объект продукта с измененным значением `product_small_image_urls`.
+**ASCII flowchart**:
+
+```
+Product
+   ↓
+Extract product_small_image_urls
+   ↓
+Convert to string
+   ↓
+Return Product
+```
 
 **Примеры**:
 
 ```python
-# Пример использования функции parse_product
-product = type('Product', (object,), {'product_small_image_urls': type('StringContainer', (object,), {'string': 'http://example.com/image.jpg'})})()
+# Пример вызова функции parse_product
+class Product:
+    def __init__(self):
+        self.product_small_image_urls = ['url1', 'url2']
+
+    @property
+    def product_small_image_urls(self):
+        return self._product_small_image_urls
+
+    @product_small_image_urls.setter
+    def product_small_image_urls(self, value):
+        if isinstance(value, str):
+             self._product_small_image_urls = value
+        else:
+            self._product_small_image_urls =  " ".join(value)
+    
+    def __repr__(self):
+        return f"Product(product_small_image_urls='{self.product_small_image_urls}')"
+
+
+product = Product()
+product.product_small_image_urls = ['url1', 'url2']
+
 parsed_product = parse_product(product)
-print(parsed_product.product_small_image_urls)  # Вывод: http://example.com/image.jpg
+print(parsed_product)
+# Вывод: Product(product_small_image_urls='url1 url2')
 ```
 
 ### `parse_products`
@@ -68,72 +88,76 @@ print(parsed_product.product_small_image_urls)  # Вывод: http://example.com
 ```python
 def parse_products(products):
     """
-    Преобразует список продуктов.
+    Преобразует информацию о списке продуктов.
 
     Args:
-        products: Список объектов продуктов, полученных из API AliExpress.
+        products: Список объектов продуктов.
 
     Returns:
-        new_products: Список преобразованных объектов продуктов.
-
-    Как работает функция:
-    1. Инициализирует пустой список `new_products`.
-    2. Перебирает каждый продукт в списке `products`.
-    3. Для каждого продукта вызывает функцию `parse_product` для преобразования.
-    4. Добавляет преобразованный продукт в список `new_products`.
-    5. Возвращает список преобразованных продуктов.
-
-    ASCII flowchart:
-    Получение списка продуктов
-    ↓
-    Инициализация пустого списка new_products
-    ↓
-    Перебор каждого продукта в списке products
-    ↓
-    Вызов parse_product для преобразования
-    ↓
-    Добавление преобразованного продукта в new_products
-    ↓
-    Возврат списка new_products
-
+        new_products: Список объектов продуктов с преобразованными URL-адресами маленьких изображений.
     """
-    new_products = []
-
-    for product in products:
-        new_products.append(parse_product(product))
-
-    return new_products
 ```
 
-**Параметры**:
+**Назначение**:
+Функция `parse_products` предназначена для обработки списка объектов продуктов, полученных от AliExpress API. Она итерируется по списку продуктов и применяет функцию `parse_product` к каждому продукту, чтобы преобразовать URL-адреса маленьких изображений.
 
-- `products`: Список объектов продуктов, полученных из API AliExpress.
+**Параметры**:
+- `products`: Список объектов продуктов, содержащих информацию о продуктах, полученную от AliExpress API.
 
 **Возвращает**:
-
-- `new_products`: Список преобразованных объектов продуктов.
+- `new_products`: Список объектов продуктов с преобразованными URL-адресами маленьких изображений.
 
 **Как работает функция**:
 
-Функция `parse_products` принимает список объектов продуктов в качестве аргумента и выполняет следующие действия:
+1. Функция принимает на вход список объектов `products`.
+2. Инициализирует пустой список `new_products`.
+3. Итерируется по списку `products`.
+4. Для каждого продукта вызывает функцию `parse_product(product)` для преобразования информации о продукте.
+5. Добавляет преобразованный продукт в список `new_products`.
+6. Возвращает список `new_products`.
 
-1. **Инициализация пустого списка `new_products`**: Создает пустой список для хранения преобразованных продуктов.
-2. **Перебор каждого продукта в списке `products`**: Итерируется по каждому элементу в списке `products`.
-3. **Вызов `parse_product` для преобразования**: Для каждого продукта вызывает функцию `parse_product`, чтобы выполнить необходимые преобразования.
-4. **Добавление преобразованного продукта в `new_products`**: Добавляет преобразованный объект продукта в список `new_products`.
-5. **Возврат списка `new_products`**: Возвращает список, содержащий все преобразованные объекты продуктов.
+**ASCII flowchart**:
+
+```
+Products List
+   ↓
+Initialize new_products list
+   ↓
+Iterate through Products
+   ↓
+For each Product: parse_product(product)
+   ↓
+Append to new_products
+   ↓
+Return new_products
+```
 
 **Примеры**:
 
 ```python
-# Пример использования функции parse_products
-products = [
-    type('Product', (object,), {'product_small_image_urls': type('StringContainer', (object,), {'string': 'http://example.com/image1.jpg'})})(),
-    type('Product', (object,), {'product_small_image_urls': type('StringContainer', (object,), {'string': 'http://example.com/image2.jpg'})})()
-]
+# Пример вызова функции parse_products
+class Product:
+    def __init__(self):
+        self.product_small_image_urls = ['url1', 'url2']
+
+    @property
+    def product_small_image_urls(self):
+        return self._product_small_image_urls
+
+    @product_small_image_urls.setter
+    def product_small_image_urls(self, value):
+        if isinstance(value, str):
+             self._product_small_image_urls = value
+        else:
+            self._product_small_image_urls =  " ".join(value)
+    
+    def __repr__(self):
+        return f"Product(product_small_image_urls='{self.product_small_image_urls}')"
+
+products = [Product(), Product()]
+for i, product in enumerate(products):
+    product.product_small_image_urls = [f'url{i}_1', f'url{i}_2']
+
 parsed_products = parse_products(products)
-for product in parsed_products:
-    print(product.product_small_image_urls)
-# Вывод:
-# http://example.com/image1.jpg
-# http://example.com/image2.jpg
+print(parsed_products)
+# Вывод: [Product(product_small_image_urls='url0_1 url0_2'), Product(product_small_image_urls='url1_1 url1_2')]

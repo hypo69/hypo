@@ -1,53 +1,33 @@
-# Модуль Bing.py
+# Модуль Bing
+
 ## Обзор
 
-Модуль предоставляет класс для взаимодействия с Bing AI через веб-сокеты для генерации текста. 
-Модуль включает в себя функции для создания диалога, отправки запросов и получения потоковых ответов.
+Модуль `Bing.py` предоставляет интерфейс для взаимодействия с чат-ботом Bing AI. Он использует веб-сокеты для потоковой передачи ответов и включает в себя функциональность для создания бесед, форматирования сообщений и управления контекстом.
 
-## Подробнее
+## Подробней
 
-Этот модуль предназначен для работы с Bing AI. Он использует веб-сокеты для установления соединения, отправки запросов и получения ответов в режиме реального времени. 
-В модуле реализована поддержка потоковой передачи данных, что позволяет получать ответы по частям, а не ждать завершения всей генерации.
-
-Модуль содержит следующие компоненты:
-
--   Настройки SSL для безопасного соединения.
--   Классы для определения наборов опций и значений по умолчанию.
--   Функции для создания и форматирования сообщений, установления соединения и обмена данными через веб-сокеты.
+Модуль предназначен для использования в проекте `hypotez` для обеспечения возможности взаимодействия с Bing AI через API. Он содержит классы для управления опциями, настройками по умолчанию и функциями для создания, форматирования сообщений и стриминга генерации ответов.
 
 ## Классы
 
 ### `optionsSets`
 
-**Описание**: Класс, предназначенный для хранения различных наборов опций, используемых при взаимодействии с Bing AI.
+**Описание**: Класс, содержащий наборы опций для настройки поведения чат-бота Bing AI.
 
-**Принцип работы**:
-Класс содержит два атрибута: `optionSet` и `jailbreak`. 
-`optionSet` представляет собой словарь, определяющий структуру набора опций с указанием типа данных для каждой опции. 
-`jailbreak` содержит список опций, используемых для "обхода" ограничений Bing AI.
-
-**Атрибуты**:
-
--   `optionSet` (dict): Словарь, определяющий структуру набора опций.
-    -   `tone` (str): Тип данных для опции "tone".
-    -   `optionsSets` (list): Тип данных для опции "optionsSets".
--   `jailbreak` (dict): Словарь, содержащий список опций для "обхода" ограничений Bing AI.
-    -   `optionsSets` (list): Список строк, представляющих опции для "обхода" ограничений.
+**Аттрибуты**:
+- `optionSet` (dict): Словарь, определяющий структуру набора опций.
+- `jailbreak` (dict): Словарь с набором опций, используемых для "взлома" (jailbreak) ограничений Bing AI.
 
 ### `Defaults`
 
-**Описание**: Класс, предназначенный для хранения значений по умолчанию, используемых при взаимодействии с Bing AI.
+**Описание**: Класс, содержащий значения по умолчанию для различных параметров и настроек, используемых при взаимодействии с Bing AI.
 
-**Принцип работы**:
-Класс содержит статические атрибуты, определяющие значения по умолчанию для различных параметров, таких как разделитель сообщений, IP-адрес, разрешенные типы сообщений, идентификаторы срезов и информация о местоположении.
-
-**Атрибуты**:
-
--   `delimiter` (str): Разделитель сообщений, используемый при обмене данными с Bing AI.
--   `ip_address` (str): IP-адрес, используемый для запросов к Bing AI.
--   `allowedMessageTypes` (list): Список разрешенных типов сообщений.
--   `sliceIds` (list): Список идентификаторов срезов.
--   `location` (dict): Словарь, содержащий информацию о местоположении пользователя.
+**Аттрибуты**:
+- `delimiter` (str): Разделитель, используемый для разделения сообщений в потоке данных.
+- `ip_address` (str): IP-адрес, используемый для обхода ограничений геолокации.
+- `allowedMessageTypes` (list): Список разрешенных типов сообщений.
+- `sliceIds` (list): Список идентификаторов срезов.
+- `location` (dict): Информация о местоположении пользователя.
 
 ## Функции
 
@@ -55,379 +35,205 @@
 
 ```python
 def _format(msg: dict) -> str:
-    """ Функция форматирует сообщение в JSON-формат и добавляет разделитель.
+    """
+    Форматирует сообщение в JSON-формат и добавляет разделитель в конце.
+
     Args:
-        msg (dict): Сообщение для форматирования.
+        msg (dict): Словарь с сообщением.
 
     Returns:
-        str: JSON-представление сообщения с добавленным разделителем.
+        str: JSON-представление сообщения с разделителем.
 
     Как работает функция:
-    1. Преобразует входящий словарь `msg` в JSON-строку с помощью `json.dumps`,
-       гарантируя, что не-ASCII символы будут корректно обработаны.
-    2. Добавляет к полученной JSON-строке разделитель `Defaults.delimiter`.
-    3. Возвращает отформатированную строку.
+    1. Преобразует входящий словарь `msg` в JSON-строку, используя `json.dumps` с отключением экранирования ASCII символов (ensure_ascii=False).
+    2. Добавляет к полученной JSON-строке разделитель, хранящийся в атрибуте `delimiter` класса `Defaults`.
+    3. Возвращает полученную строку.
+
+    ASCII flowchart:
+    msg (dict) --> JSON.dumps (ensure_ascii=False) --> JSON-строка + Defaults.delimiter --> str
+
+    Примеры:
+        >>> Defaults.delimiter = '\\x1e'
+        >>> _format({'key': 'value'})
+        '{"key": "value"}\\x1e'
     """
-```
-
-**Назначение**: Форматирование сообщения в JSON-формат с добавлением разделителя.
-
-**Параметры**:
-
--   `msg` (dict): Сообщение для форматирования.
-
-**Возвращает**:
-
--   `str`: JSON-представление сообщения с добавленным разделителем.
-
-**Как работает функция**:
-
-```
-      msg (dict)
-        |
-        V
-    json.dumps (ensure_ascii=False)
-        |
-        V
-    JSON-string + Defaults.delimiter
-        |
-        V
-    return string
-```
-
-**Примеры**:
-
-```python
-message = {"text": "Hello, Bing!"}
-formatted_message = _format(message)
-print(formatted_message)  # Пример вывода: {"text": "Hello, Bing!"}\x1e
+    ...
 ```
 
 ### `create_conversation`
 
 ```python
 async def create_conversation():
-    """ Функция создает диалог с Bing AI и возвращает идентификаторы и сигнатуру.
+    """
+    Создает разговор с Bing AI и возвращает идентификатор разговора, идентификатор клиента и подпись разговора.
 
     Returns:
         tuple[str, str, str]: Кортеж, содержащий conversationId, clientId и conversationSignature.
 
     Raises:
-        Exception: Если не удалось создать диалог после нескольких попыток.
+        Exception: Если не удается создать разговор после нескольких попыток.
 
     Как работает функция:
-    1. Пытается создать диалог с Bing AI, отправляя GET-запрос к `https://www.bing.com/turing/conversation/create`.
-    2. Извлекает из ответа `conversationId`, `clientId` и `conversationSignature`.
-    3. Если не удалось получить все необходимые идентификаторы после нескольких попыток, выбрасывает исключение.
+    1. Выполняет до 5 попыток создания разговора с Bing AI.
+    2. Отправляет GET-запрос к `https://www.bing.com/turing/conversation/create` с определенными заголовками, имитирующими запрос от браузера.
+    3. Извлекает из JSON-ответа `conversationId`, `clientId` и `conversationSignature`.
+    4. Если хотя бы один из параметров отсутствует после нескольких попыток, вызывает исключение.
+
+    ASCII flowchart:
+    Начало --> GET-запрос к Bing --> Извлечение conversationId, clientId, conversationSignature --> Возврат conversationId, clientId, conversationSignature
+
+    Примеры:
+        Функция не принимает аргументов, поэтому примеры вызова не требуются.
     """
-```
-
-**Назначение**: Создание диалога с Bing AI и получение идентификаторов и сигнатуры.
-
-**Возвращает**:
-
--   `tuple[str, str, str]`: Кортеж, содержащий `conversationId`, `clientId` и `conversationSignature`.
-
-**Вызывает исключения**:
-
--   `Exception`: Если не удалось создать диалог после нескольких попыток.
-
-**Как работает функция**:
-
-```
-    loop (5 times)
-        |
-        V
-    GET request to Bing API
-        |
-        V
-    Extract conversationId, clientId, conversationSignature
-        |
-        V
-    Check if all IDs are present
-        |
-        V
-    return conversationId, clientId, conversationSignature
-```
-
-**Примеры**:
-
-```python
-conversation_id, client_id, conversation_signature = await create_conversation()
-print(f"Conversation ID: {conversation_id}")
-print(f"Client ID: {client_id}")
-print(f"Conversation Signature: {conversation_signature}")
+    ...
 ```
 
 ### `stream_generate`
 
 ```python
-async def stream_generate(prompt: str, mode: optionsSets.optionSet = optionsSets.jailbreak, context: bool or str = False):
-    """ Функция генерирует текст с использованием Bing AI и возвращает потоковый ответ.
+async def stream_generate(prompt: str, mode: optionsSets.optionSet = optionsSets.jailbreak, context: bool | str = False):
+    """
+    Генерирует текст от Bing AI в потоковом режиме.
 
     Args:
         prompt (str): Текст запроса.
-        mode (optionsSets.optionSet): Набор опций. По умолчанию `optionsSets.jailbreak`.
-        context (bool or str): Контекст запроса. По умолчанию `False`.
+        mode (optionsSets.optionSet, optional): Набор опций для запроса. По умолчанию `optionsSets.jailbreak`.
+        context (bool | str, optional): Контекст для запроса. По умолчанию `False`.
 
     Yields:
         str: Часть сгенерированного текста.
 
     Raises:
-        Exception: Если произошла ошибка при генерации текста.
+        Exception: Если возникает ошибка при обработке ответа от Bing AI.
+
+    Как работает функция:
+    1. Устанавливает таймаут для запроса.
+    2. Создает сессию aiohttp.
+    3. Получает conversationId, clientId и conversationSignature с помощью `create_conversation()`.
+    4. Устанавливает соединение WebSocket с Bing AI.
+    5. Отправляет начальное сообщение для установки протокола.
+    6. Формирует структуру запроса с учетом параметров `prompt`, `mode` и `context`.
+    7. Отправляет запрос Bing AI через WebSocket.
+    8. Получает ответы от Bing AI, обрабатывает их и извлекает текст.
+    9. Возвращает текст частями через yield.
+
+    ASCII flowchart:
+    Начало --> create_conversation() --> WebSocket-соединение --> Отправка запроса --> Получение ответа --> Извлечение текста --> yield текст
+
+    Примеры:
+        Функция является асинхронной и требует event loop для выполнения.
     """
-```
-
-**Назначение**: Генерация текста с использованием Bing AI и получение потокового ответа.
-
-**Параметры**:
-
--   `prompt` (str): Текст запроса.
--   `mode` (optionsSets.optionSet): Набор опций. По умолчанию `optionsSets.jailbreak`.
--   `context` (bool or str): Контекст запроса. По умолчанию `False`.
-
-**Yields**:
-
--   `str`: Часть сгенерированного текста.
-
-**Вызывает исключения**:
-
--   `Exception`: Если произошла ошибка при генерации текста.
-
-**Как работает функция**:
-
-```
-    create_conversation()
-        |
-        V
-    ws_connect to Bing API
-        |
-        V
-    Send initial messages
-        |
-        V
-    Send prompt with context
-        |
-        V
-    Receive messages
-        |
-        V
-    Process messages to extract text
-        |
-        V
-    Yield text
-        |
-        V
-    Close connection
-```
-
-**Примеры**:
-
-```python
-async for token in stream_generate("Tell me a story."):
-    print(token, end="")
+    ...
 ```
 
 ### `run`
 
 ```python
 def run(generator):
-    """ Функция запускает асинхронный генератор и возвращает его значения.
+    """
+    Запускает асинхронный генератор и возвращает значения.
 
     Args:
         generator: Асинхронный генератор.
 
     Yields:
-        Any: Значение, возвращаемое генератором.
-
-    Raises:
-        StopAsyncIteration: Когда генератор завершает работу.
+        next_val: Значение, возвращаемое генератором.
 
     Как работает функция:
     1. Получает event loop.
-    2. Преобразует асинхронный генератор в асинхронный итератор.
-    3. Итерируется по асинхронному итератору, получая значения.
-    4. Возвращает значения, полученные от асинхронного итератора.
-    5. Завершает работу, когда асинхронный итератор выбрасывает исключение StopAsyncIteration.
+    2. Преобразует переданный генератор в асинхронный итератор.
+    3. В цикле пытается получить следующее значение из асинхронного итератора с помощью `loop.run_until_complete(gen.__anext__())`.
+    4. Возвращает полученное значение через `yield`.
+    5. Останавливает итерацию при возникновении исключения `StopAsyncIteration`.
+
+    ASCII flowchart:
+    generator --> __aiter__() --> gen --> loop.run_until_complete(gen.__anext__()) --> next_val --> yield next_val
+
+    Примеры:
+    Пример использования run с асинхронным генератором stream_generate:
+        >>> async def my_generator():
+        ...     yield "Hello"
+        ...     yield "World"
+        >>> generator = my_generator()
+        >>> for value in run(generator):
+        ...     print(value)
+        Hello
+        World
     """
-```
-
-**Назначение**: Запуск асинхронного генератора и возврат его значений.
-
-**Параметры**:
-
--   `generator`: Асинхронный генератор.
-
-**Yields**:
-
--   `Any`: Значение, возвращаемое генератором.
-
-**Вызывает исключения**:
-
--   `StopAsyncIteration`: Когда генератор завершает работу.
-
-**Как работает функция**:
-
-```
-    Get event loop
-        |
-        V
-    Convert async generator to async iterator
-        |
-        V
-    Iterate over async iterator
-        |
-        V
-    Return values from async iterator
-        |
-        V
-    Stop when StopAsyncIteration is raised
-```
-
-**Примеры**:
-
-```python
-def my_generator():
-    yield 1
-    yield 2
-    yield 3
-
-for value in run(my_generator()):
-    print(value)
+    ...
 ```
 
 ### `convert`
 
 ```python
 def convert(messages):
-    """ Функция преобразует список сообщений в контекст для Bing AI.
+    """
+    Преобразует список сообщений в строку контекста.
 
     Args:
-        messages (list): Список сообщений для преобразования.
+        messages (list): Список сообщений, где каждое сообщение - словарь с ключами 'role' и 'content'.
 
     Returns:
-        str: Контекст, отформатированный для Bing AI.
+        str: Строка контекста, сформированная из сообщений.
 
     Как работает функция:
-    1. Итерируется по списку сообщений.
-    2. Форматирует каждое сообщение в строку с использованием роли и содержимого.
-    3. Объединяет отформатированные строки в одну строку, разделяя их символами новой строки.
-    4. Возвращает полученную строку.
+    1. Инициализирует пустую строку `context`.
+    2. Проходит по каждому сообщению в списке `messages`.
+    3. Форматирует каждое сообщение в виде строки `"[роль](#message)\nсодержимое\n\n"` и добавляет его к строке `context`.
+
+    ASCII flowchart:
+    messages --> Цикл по сообщениям --> Форматирование сообщения --> Добавление сообщения в context --> str
+
+    Примеры:
+        >>> messages = [{'role': 'user', 'content': 'Привет'}, {'role': 'bot', 'content': 'Здравствуйте'}]
+        >>> convert(messages)
+        '[user](#message)\\nПривет\\n\\n[bot](#message)\\nЗдравствуйте\\n\\n'
     """
-```
-
-**Назначение**: Преобразование списка сообщений в контекст для Bing AI.
-
-**Параметры**:
-
--   `messages` (list): Список сообщений для преобразования.
-
-**Возвращает**:
-
--   `str`: Контекст, отформатированный для Bing AI.
-
-**Как работает функция**:
-
-```
-    messages (list)
-        |
-        V
-    Iterate over messages
-        |
-        V
-    Format each message as a string
-        |
-        V
-    Concatenate formatted strings
-        |
-        V
-    Return context string
-```
-
-**Примеры**:
-
-```python
-messages = [
-    {"role": "user", "content": "Hello"},
-    {"role": "assistant", "content": "Hi there"}
-]
-context = convert(messages)
-print(context)
+    ...
 ```
 
 ### `_create_completion`
 
 ```python
 def _create_completion(model: str, messages: list, stream: bool, **kwargs):
-    """ Функция создает запрос к Bing AI и возвращает ответ.
+    """
+    Создает запрос к Bing AI и возвращает ответ в виде потока токенов.
 
     Args:
-        model (str): Модель для использования.
-        messages (list): Список сообщений для отправки.
-        stream (bool): Флаг, указывающий, использовать ли потоковый режим.
+        model (str): Идентификатор модели.
+        messages (list): Список сообщений для контекста.
+        stream (bool): Флаг, указывающий на потоковую передачу данных.
         **kwargs: Дополнительные аргументы.
 
     Yields:
-        str: Часть ответа от Bing AI.
+        str: Токен ответа от Bing AI.
 
     Как работает функция:
-    1. Извлекает текст запроса и контекст из списка сообщений.
-    2. Запускает генерацию текста с использованием функции stream_generate.
-    3. Возвращает части ответа, полученные от Bing AI.
+    1. Определяет `prompt` и `context` в зависимости от количества сообщений:
+        - Если сообщение меньше двух, то первый элемент из `messages` присваивается переменной `prompt`, а `context` = `False`.
+        - Иначе `prompt` - это последний элемент `messages`, а `context` - все сообщения, кроме последнего, преобразованные функцией `convert`.
+    2. Запускает генерацию ответа с помощью `stream_generate` с параметрами `prompt`, `optionsSets.jailbreak` и `context`.
+    3. Возвращает токены ответа через `yield`.
+
+    ASCII flowchart:
+    messages --> Определение prompt и context --> stream_generate() --> Цикл по токенам --> yield token
+
+    Примеры:
+        Функция использует `stream_generate`, примеры вызова зависят от асинхронной природы этой функции.
     """
+    ...
 ```
 
-**Назначение**: Создание запроса к Bing AI и возврат ответа.
+### `params`
 
-**Параметры**:
+```python
+params = f\'g4f.Providers.{os.path.basename(__file__)[:-3]} supports: \' + \'(%s)\' % \', \'.join( [f"{name}: {get_type_hints(_create_completion)[name].__name__}" for name in _create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]])
+```
 
--   `model` (str): Модель для использования.
--   `messages` (list): Список сообщений для отправки.
--   `stream` (bool): Флаг, указывающий, использовать ли потоковый режим.
--   `**kwargs`: Дополнительные аргументы.
-
-**Yields**:
-
--   `str`: Часть ответа от Bing AI.
+**Описание**: Строка, содержащая информацию о поддерживаемых параметрах функцией `_create_completion`.
 
 **Как работает функция**:
-
-```
-    messages (list)
-        |
-        V
-    Extract prompt and context
-        |
-        V
-    stream_generate()
-        |
-        V
-    Yield tokens from response
-```
-
-**Примеры**:
-
-```python
-messages = [
-    {"role": "user", "content": "Tell me a joke."}
-]
-for token in _create_completion("gpt-4", messages, True):
-    print(token, end="")
-```
-
-### params
-
-```python
-params = f\'g4f.Providers.{os.path.basename(__file__)[:-3]} supports: \' + \\\n    \'(%s)\' % \', \'.join(\n        [f"{name}: {get_type_hints(_create_completion)[name].__name__}" for name in _create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]])
-```
-
-**Описание**: Строка, содержащая информацию о поддерживаемых параметрах функции `_create_completion`.
-
-**Назначение**: Формирование строки с информацией о поддерживаемых параметрах функции `_create_completion`.
-
-**Как работает**:
-
-1.  `os.path.basename(__file__)[:-3]`: Извлекает имя файла модуля без расширения `.py`.
-2.  `get_type_hints(_create_completion)`: Получает аннотации типов для параметров функции `_create_completion`.
-3.  `_create_completion.__code__.co_varnames[:_create_completion.__code__.co_argcount]`: Получает имена параметров функции `_create_completion`.
-4.  Формирует строку, содержащую информацию о поддерживаемых параметрах и их типах.
+1. Формирует строку, содержащую имя файла модуля и информацию о поддерживаемых параметрах функции `_create_completion`.
+2. Использует `get_type_hints` для получения аннотаций типов параметров функции `_create_completion`.
+3. Извлекает имена параметров из `_create_completion.__code__.co_varnames`.
+4. Объединяет информацию о параметрах в строку.

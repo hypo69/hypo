@@ -1,338 +1,316 @@
-# Модуль для интеграции с Google generative AI (Magenta)
+# Модуль `magenta.py`
 
 ## Обзор
 
-Модуль `magenta.py` предоставляет класс `MagentaMusic` для генерации музыки с использованием моделей Magenta. Он позволяет загружать MIDI-файлы в качестве затравки, генерировать мелодии, добавлять аккорды и барабаны, устанавливать темп и сохранять готовую композицию в MIDI-файл.
+Модуль предоставляет интеграцию с Google generative AI для создания музыки с использованием Magenta. Он включает класс `MagentaMusic`, который позволяет генерировать мелодии, добавлять аккорды и барабаны, устанавливать темп и сохранять готовую композицию в MIDI-файл.
 
 ## Подробней
 
-Этот модуль предназначен для интеграции с библиотекой Magenta от Google для генерации музыки с использованием моделей машинного обучения. Он предоставляет удобный интерфейс для создания музыкальных композиций, позволяя настраивать различные параметры, такие как модель, темп, температура и количество шагов.
+Модуль предназначен для автоматической генерации музыки с использованием различных моделей машинного обучения. Он предоставляет удобный интерфейс для настройки параметров генерации и сохранения результатов. Класс `MagentaMusic` инкапсулирует все необходимые шаги для создания музыкальной композиции, начиная с загрузки затравки и заканчивая сохранением MIDI-файла.
 
 ## Классы
 
 ### `MagentaMusic`
 
-**Описание**: Класс для генерации музыки с использованием моделей Magenta.
+**Описание**: Класс для генерации музыки с использованием Magenta.
 
 **Принцип работы**:
-Класс `MagentaMusic` инициализируется с заданными параметрами, такими как директория вывода, имя модели, температура, количество шагов, MIDI-файл затравки и темп. Он загружает MIDI-файл затравки или создает пустую NoteSequence, если файл не найден. Затем он генерирует мелодию, добавляет аккорды и барабаны, устанавливает темп и сохраняет готовую композицию в MIDI-файл.
+
+1.  Инициализация класса с заданными параметрами, такими как выходная директория, имя модели, температура, количество шагов, MIDI-файл затравки и темп.
+2.  Загрузка MIDI-файла затравки или создание пустой NoteSequence, если файл не найден.
+3.  Генерация мелодии с использованием модели `melody_rnn_sequence_generator`.
+4.  Добавление аккордов к мелодии.
+5.  Добавление барабанов к мелодии.
+6.  Установка темпа для музыкальной последовательности.
+7.  Сохранение готовой композиции в MIDI-файл.
 
 **Аттрибуты**:
 
-- `output_dir` (str): Директория для сохранения сгенерированных MIDI-файлов. По умолчанию 'generated_music_advanced'.
-- `model_name` (str): Имя модели Magenta для генерации музыки. По умолчанию 'attention_rnn'.
-- `temperature` (float): Параметр температуры для генерации мелодии. Влияет на случайность генерации. По умолчанию 1.2.
-- `num_steps` (int): Количество шагов для генерации мелодии. По умолчанию 256.
-- `primer_midi_file` (str): Путь к MIDI-файлу, используемому в качестве затравки для генерации. По умолчанию 'primer.mid'.
-- `tempo` (int): Темп композиции в ударах в минуту (BPM). По умолчанию 100.
-- `melody_rnn`: Объект класса `MelodyRnnSequenceGenerator` для генерации мелодий.
-- `primer_sequence`: Объект класса `NoteSequence`, представляющий затравку для генерации мелодии.
+*   `output_dir` (str): Директория для сохранения сгенерированной музыки.
+*   `model_name` (str): Имя используемой модели.
+*   `temperature` (float): Параметр температуры для генерации мелодии.
+*   `num_steps` (int): Количество шагов для генерации мелодии.
+*   `primer_midi_file` (str): Путь к MIDI-файлу затравки.
+*   `tempo` (int): Темп композиции.
+*   `melody_rnn` (melody_rnn_sequence_generator.MelodyRnnSequenceGenerator): Объект для генерации мелодии.
+*   `primer_sequence` (mm.NoteSequence): Загруженная затравка.
 
 **Методы**:
 
-- `__init__(self, output_dir='generated_music_advanced', model_name='attention_rnn', temperature=1.2, num_steps=256, primer_midi_file='primer.mid', tempo=100)`: Инициализирует класс `MagentaMusic` с заданными параметрами.
-- `_load_primer_sequence(self)`: Загружает MIDI-файл затравки или создает пустую NoteSequence, если файл не найден.
-- `generate_melody(self)`: Генерирует мелодию с заданными параметрами.
-- `add_chords(self, melody_sequence)`: Добавляет аккорды к мелодии.
-- `add_drums(self, melody_with_chords_sequence)`: Добавляет барабаны к мелодии.
-- `set_tempo(self, music_sequence)`: Устанавливает темп.
-- `save_midi(self, music_sequence, filename='full_music_advanced.mid')`: Сохраняет готовую композицию в MIDI-файл.
-- `generate_full_music(self)`: Объединяет все шаги в один вызов для удобства.
+*   `__init__`: Инициализирует класс `MagentaMusic` с заданными параметрами.
+*   `_load_primer_sequence`: Загружает MIDI-файл затравки или создаёт пустую NoteSequence, если файл не найден.
+*   `generate_melody`: Генерирует мелодию с заданными параметрами.
+*   `add_chords`: Добавляет аккорды к мелодии.
+*   `add_drums`: Добавляет барабаны к мелодии.
+*   `set_tempo`: Устанавливает темп.
+*   `save_midi`: Сохраняет готовую композицию в MIDI-файл.
+*   `generate_full_music`: Объединяет все шаги в один вызов для удобства.
 
 ## Функции
 
 ### `_load_primer_sequence`
 
 ```python
-    def _load_primer_sequence(self):
-        """Загружает MIDI-файл затравки или создает пустую NoteSequence, если файл не найден.
+    def _load_primer_sequence(self) -> mm.NoteSequence:
+        """Загружает MIDI-файл затравки или создаёт пустую NoteSequence, если файл не найден.
 
         Args:
-            self: Объект класса.
+            self: Экземпляр класса MagentaMusic.
 
         Returns:
-            NoteSequence: Объект NoteSequence, представляющий затравку для генерации мелодии.
+            mm.NoteSequence: Загруженная затравка или пустая NoteSequence.
         """
         ...
 ```
 
-**Назначение**: Загружает MIDI-файл затравки или создает пустую NoteSequence, если файл не найден.
+**Назначение**: Загружает MIDI-файл затравки или создает пустую мелодию, если файл не найден.
 
 **Параметры**:
-- `self`: Объект класса.
+
+*   `self`: Экземпляр класса `MagentaMusic`.
 
 **Возвращает**:
-- `NoteSequence`: Объект NoteSequence, представляющий затравку для генерации мелодии.
+
+*   `mm.NoteSequence`: Загруженная затравка или пустая NoteSequence.
 
 **Как работает функция**:
 
-1. Проверяет, существует ли файл, указанный в `self.primer_midi_file`.
-2. Если файл существует, загружает его содержимое как NoteSequence, используя `mm.midi_file_to_sequence_proto`.
-3. Если файл не существует, возвращает пустую NoteSequence.
+1.  Проверяет наличие файла затравки (`self.primer_midi_file`).
+2.  Если файл существует, загружает его и преобразует в объект `mm.NoteSequence`.
+3.  Если файл не найден, создает пустую `mm.NoteSequence`.
+4.  Возвращает загруженную или созданную последовательность.
 
-```
-Проверка наличия файла затравки
-│
-├───> Файл существует?
-│     │
-│     └───> Да: Загрузка NoteSequence из MIDI-файла
-│     │       │
-│     │       └───> Возврат NoteSequence
-│     │
-│     └───> Нет: Создание пустой NoteSequence
-│           │
-│           └───> Возврат пустой NoteSequence
-│
-Конец
+**Примеры**:
+
+```python
+music_generator = MagentaMusic(output_dir='my_music', primer_midi_file='primer.mid')
+primer_sequence = music_generator._load_primer_sequence()
 ```
 
 ### `generate_melody`
 
 ```python
-    def generate_melody(self):
+    def generate_melody(self) -> mm.NoteSequence:
         """Генерирует мелодию с заданными параметрами.
 
         Args:
-            self: Объект класса.
+            self: Экземпляр класса MagentaMusic.
 
         Returns:
-            NoteSequence: Объект NoteSequence, представляющий сгенерированную мелодию.
+            mm.NoteSequence: Сгенерированная мелодия.
         """
         ...
 ```
 
-**Назначение**: Генерирует мелодию с заданными параметрами.
+**Назначение**: Генерирует мелодию с использованием модели `melody_rnn_sequence_generator`.
 
 **Параметры**:
-- `self`: Объект класса.
+
+*   `self`: Экземпляр класса `MagentaMusic`.
 
 **Возвращает**:
-- `NoteSequence`: Объект NoteSequence, представляющий сгенерированную мелодию.
+
+*   `mm.NoteSequence`: Сгенерированная мелодия.
 
 **Как работает функция**:
 
-1. Вызывает метод `generate` объекта `self.melody_rnn` с параметрами `temperature`, `steps` и `primer_sequence`.
-2. Возвращает сгенерированную мелодию в виде объекта `NoteSequence`.
+1.  Вызывает метод `generate` объекта `self.melody_rnn` с заданными параметрами (`temperature`, `steps`, `primer_sequence`).
+2.  Возвращает сгенерированную мелодию в виде объекта `mm.NoteSequence`.
 
-```
-Генерация мелодии
-│
-└───> Вызов метода generate melody_rnn
-│     │
-│     └───> Возврат NoteSequence
-│
-Конец
+**Примеры**:
+
+```python
+music_generator = MagentaMusic()
+melody = music_generator.generate_melody()
 ```
 
 ### `add_chords`
 
 ```python
-    def add_chords(self, melody_sequence):
+    def add_chords(self, melody_sequence: mm.NoteSequence) -> mm.NoteSequence:
         """Добавляет аккорды к мелодии.
 
         Args:
-            melody_sequence (NoteSequence): Объект NoteSequence, представляющий мелодию.
+            melody_sequence (mm.NoteSequence): Мелодия, к которой нужно добавить аккорды.
 
         Returns:
-            NoteSequence: Объект NoteSequence, представляющий мелодию с добавленными аккордами.
+            mm.NoteSequence: Мелодия с добавленными аккордами.
         """
         ...
 ```
 
-**Назначение**: Добавляет аккорды к мелодии.
+**Назначение**: Добавляет аккорды к заданной мелодии.
 
 **Параметры**:
-- `melody_sequence` (NoteSequence): Объект NoteSequence, представляющий мелодию.
+
+*   `melody_sequence` (mm.NoteSequence): Мелодия, к которой нужно добавить аккорды.
 
 **Возвращает**:
-- `NoteSequence`: Объект NoteSequence, представляющий мелодию с добавленными аккордами.
+
+*   `mm.NoteSequence`: Мелодия с добавленными аккордами.
 
 **Как работает функция**:
 
-1. Создает список аккордов.
-2. Создает объект `ChordSequence` из списка аккордов.
-3. Объединяет мелодию и аккорды с помощью `mm.sequences_lib.concatenate_sequences`.
-4. Возвращает объединенную последовательность.
+1.  Определяет последовательность аккордов.
+2.  Создает объект `mm.ChordSequence` на основе этой последовательности.
+3.  Объединяет мелодию и аккорды с использованием `mm.sequences_lib.concatenate_sequences`.
+4.  Возвращает объединенную последовательность.
 
-```
-Добавление аккордов к мелодии
-│
-└───> Создание списка аккордов
-│     │
-│     └───> Создание ChordSequence из списка аккордов
-│     │
-│     └───> Объединение мелодии и аккордов
-│     │
-│     └───> Возврат объединенной последовательности
-│
-Конец
+**Примеры**:
+
+```python
+music_generator = MagentaMusic()
+melody = music_generator.generate_melody()
+melody_with_chords = music_generator.add_chords(melody)
 ```
 
 ### `add_drums`
 
 ```python
-    def add_drums(self, melody_with_chords_sequence):
-        """Добавляет барабаны к мелодии.
+    def add_drums(self, melody_with_chords_sequence: mm.NoteSequence) -> mm.NoteSequence:
+        """Добавляет барабаны к мелодии с аккордами.
 
         Args:
-            melody_with_chords_sequence (NoteSequence): Объект NoteSequence, представляющий мелодию с аккордами.
+            melody_with_chords_sequence (mm.NoteSequence): Мелодия с аккордами, к которой нужно добавить барабаны.
 
         Returns:
-            NoteSequence: Объект NoteSequence, представляющий мелодию с аккордами и барабанами.
+            mm.NoteSequence: Мелодия с аккордами и барабанами.
         """
         ...
 ```
 
-**Назначение**: Добавляет барабаны к мелодии.
+**Назначение**: Добавляет барабаны к заданной мелодии с аккордами.
 
 **Параметры**:
-- `melody_with_chords_sequence` (NoteSequence): Объект NoteSequence, представляющий мелодию с аккордами.
+
+*   `melody_with_chords_sequence` (mm.NoteSequence): Мелодия с аккордами, к которой нужно добавить барабаны.
 
 **Возвращает**:
-- `NoteSequence`: Объект NoteSequence, представляющий мелодию с аккордами и барабанами.
+
+*   `mm.NoteSequence`: Мелодия с аккордами и барабанами.
 
 **Как работает функция**:
 
-1. Создает объект `DrumTrack`, представляющий партию барабанов.
-2. Объединяет мелодию с аккордами и партию барабанов с помощью `mm.sequences_lib.concatenate_sequences`.
-3. Возвращает объединенную последовательность.
+1.  Определяет паттерн барабанов.
+2.  Создает объект `mm.DrumTrack` на основе этого паттерна.
+3.  Объединяет мелодию с аккордами и барабаны с использованием `mm.sequences_lib.concatenate_sequences`.
+4.  Возвращает объединенную последовательность.
 
-```
-Добавление барабанов к мелодии
-│
-└───> Создание DrumTrack
-│     │
-│     └───> Объединение мелодии с аккордами и барабанами
-│     │
-│     └───> Возврат объединенной последовательности
-│
-Конец
+**Примеры**:
+
+```python
+music_generator = MagentaMusic()
+melody = music_generator.generate_melody()
+melody_with_chords = music_generator.add_chords(melody)
+music_sequence = music_generator.add_drums(melody_with_chords)
 ```
 
 ### `set_tempo`
 
 ```python
-    def set_tempo(self, music_sequence):
-        """Устанавливает темп.
+    def set_tempo(self, music_sequence: mm.NoteSequence) -> mm.NoteSequence:
+        """Устанавливает темп для музыкальной последовательности.
 
         Args:
-            music_sequence (NoteSequence): Объект NoteSequence, представляющий музыкальную последовательность.
+            music_sequence (mm.NoteSequence): Музыкальная последовательность, для которой нужно установить темп.
 
         Returns:
-            NoteSequence: Объект NoteSequence с установленным темпом.
+            mm.NoteSequence: Музыкальная последовательность с установленным темпом.
         """
         ...
 ```
 
-**Назначение**: Устанавливает темп.
+**Назначение**: Устанавливает темп для заданной музыкальной последовательности.
 
 **Параметры**:
-- `music_sequence` (NoteSequence): Объект NoteSequence, представляющий музыкальную последовательность.
+
+*   `music_sequence` (mm.NoteSequence): Музыкальная последовательность, для которой нужно установить темп.
 
 **Возвращает**:
-- `NoteSequence`: Объект NoteSequence с установленным темпом.
+
+*   `mm.NoteSequence`: Музыкальная последовательность с установленным темпом.
 
 **Как работает функция**:
 
-1. Устанавливает значение `qpm` (ударов в минуту) первого элемента в списке `music_sequence.tempos` равным `self.tempo`.
-2. Возвращает музыкальную последовательность с установленным темпом.
+1.  Устанавливает значение `qpm` (количество четвертных нот в минуту) в первом элементе списка `music_sequence.tempos` равным `self.tempo`.
+2.  Возвращает музыкальную последовательность с установленным темпом.
 
-```
-Установка темпа
-│
-└───> Установка значения qpm
-│     │
-│     └───> Возврат музыкальной последовательности с установленным темпом
-│
-Конец
+**Примеры**:
+
+```python
+music_generator = MagentaMusic()
+melody = music_generator.generate_melody()
+melody_with_chords = music_generator.add_chords(melody)
+music_sequence = music_generator.add_drums(melody_with_chords)
+music_sequence = music_generator.set_tempo(music_sequence)
 ```
 
 ### `save_midi`
 
 ```python
-    def save_midi(self, music_sequence, filename='full_music_advanced.mid'):
-         """Сохраняет готовую композицию в MIDI-файл.
+    def save_midi(self, music_sequence: mm.NoteSequence, filename: str = 'full_music_advanced.mid') -> None:
+        """Сохраняет готовую композицию в MIDI-файл.
 
-         Args:
-             music_sequence (NoteSequence): Объект NoteSequence, представляющий музыкальную последовательность.
-             filename (str): Имя файла для сохранения MIDI-файла. По умолчанию 'full_music_advanced.mid'.
-         """
-         ...
+        Args:
+            music_sequence (mm.NoteSequence): Музыкальная последовательность для сохранения.
+            filename (str, optional): Имя файла для сохранения. По умолчанию 'full_music_advanced.mid'.
+        """
+        ...
 ```
 
-**Назначение**: Сохраняет готовую композицию в MIDI-файл.
+**Назначение**: Сохраняет музыкальную последовательность в MIDI-файл.
 
 **Параметры**:
-- `music_sequence` (NoteSequence): Объект NoteSequence, представляющий музыкальную последовательность.
-- `filename` (str): Имя файла для сохранения MIDI-файла. По умолчанию 'full_music_advanced.mid'.
+
+*   `music_sequence` (mm.NoteSequence): Музыкальная последовательность для сохранения.
+*   `filename` (str, optional): Имя файла для сохранения. По умолчанию `'full_music_advanced.mid'`.
 
 **Как работает функция**:
 
-1. Формирует полный путь к файлу, объединяя `self.output_dir` и `filename`.
-2. Сохраняет музыкальную последовательность в MIDI-файл с помощью `mm.sequence_proto_to_midi_file`.
+1.  Формирует полный путь к файлу, объединяя `self.output_dir` и `filename`.
+2.  Сохраняет музыкальную последовательность в MIDI-файл с использованием `mm.sequence_proto_to_midi_file`.
 
-```
-Сохранение в MIDI-файл
-│
-└───> Формирование полного пути к файлу
-│     │
-│     └───> Сохранение музыкальной последовательности в MIDI-файл
-│
-Конец
+**Примеры**:
+
+```python
+music_generator = MagentaMusic()
+melody = music_generator.generate_melody()
+melody_with_chords = music_generator.add_chords(melody)
+music_sequence = music_generator.add_drums(melody_with_chords)
+music_sequence = music_generator.set_tempo(music_sequence)
+music_generator.save_midi(music_sequence)
 ```
 
 ### `generate_full_music`
 
 ```python
-    def generate_full_music(self):
+    def generate_full_music(self) -> None:
         """Объединяет все шаги в один вызов для удобства.
+        Генерирует мелодию, добавляет аккорды, барабаны, устанавливает темп и сохраняет готовую композицию в MIDI-файл.
 
         Args:
-            self: Объект класса.
+            self: Экземпляр класса MagentaMusic.
         """
         ...
 ```
 
-**Назначение**: Объединяет все шаги в один вызов для удобства.
+**Назначение**: Генерирует полную музыкальную композицию, объединяя все шаги в один вызов.
 
 **Параметры**:
-- `self`: Объект класса.
+
+*   `self`: Экземпляр класса `MagentaMusic`.
 
 **Как работает функция**:
 
-1. Генерирует мелодию с помощью `self.generate_melody()`.
-2. Добавляет аккорды к мелодии с помощью `self.add_chords()`.
-3. Добавляет барабаны к мелодии с аккордами с помощью `self.add_drums()`.
-4. Устанавливает темп с помощью `self.set_tempo()`.
-5. Сохраняет полную композицию в MIDI-файл с помощью `self.save_midi()`.
-
-```
-Генерация полной композиции
-│
-├───> Генерация мелодии
-│   │
-│   └───> Добавление аккордов
-│       │
-│       └───> Добавление барабанов
-│           │
-│           └───> Установка темпа
-│               │
-│               └───> Сохранение в MIDI-файл
-│
-Конец
-```
+1.  Генерирует мелодию с использованием `self.generate_melody()`.
+2.  Добавляет аккорды к мелодии с использованием `self.add_chords(melody_sequence)`.
+3.  Добавляет барабаны к мелодии с аккордами с использованием `self.add_drums(melody_with_chords_sequence)`.
+4.  Устанавливает темп для музыкальной последовательности с использованием `self.set_tempo(music_sequence)`.
+5.  Сохраняет готовую композицию в MIDI-файл с использованием `self.save_midi(music_sequence)`.
 
 **Примеры**:
-- Создайте MIDI файлы primer.mid и primer2.mid, или оставьте их пустыми если не хотите использовать затравку.
-- Запустите скрипт: python magenta_music_class.py.
-- Сгенерированные композиции будут сохранены в папках my_music и my_music2.
-```python
-# Пример использования класса
-music_generator = MagentaMusic(output_dir='my_music', model_name='attention_rnn',
-                                temperature=1.1, num_steps=200, primer_midi_file='primer.mid', tempo=110)
-music_generator.generate_full_music()
 
-# Другой пример с другими параметрами
-music_generator2 = MagentaMusic(output_dir='my_music2', model_name='basic_rnn',
-                                temperature=0.9, num_steps=150, primer_midi_file='primer2.mid', tempo=120)
-music_generator2.generate_full_music()
+```python
+music_generator = MagentaMusic()
+music_generator.generate_full_music()
+```

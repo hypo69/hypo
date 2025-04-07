@@ -1,43 +1,39 @@
-# Модуль для работы с провайдером AmigoChat
-=========================================
-
-Модуль содержит класс `AmigoChat`, который используется для взаимодействия с сервисом AmigoChat для получения ответов от различных AI-моделей и генерации изображений.
+# Модуль `AmigoChat.py`
 
 ## Обзор
 
-Этот модуль предоставляет асинхронный интерфейс для взаимодействия с AmigoChat API. Он поддерживает как текстовые ответы, так и генерацию изображений. В модуле определены модели, поддерживаемые AmigoChat, и их соответствующие идентификаторы персон. Он также включает в себя обработку ошибок и повторные попытки.
+Модуль `AmigoChat.py` предназначен для взаимодействия с провайдером AmigoChat, предоставляющим доступ к различным моделям, включая модели для генерации текста и изображений. Он содержит класс `AmigoChat`, который реализует асинхронный генератор для работы с API AmigoChat.
 
-## Подробнее
+## Подробней
 
-Модуль `AmigoChat` предназначен для упрощения интеграции с AmigoChat API. Он автоматически управляет заголовками, формирует полезные нагрузки запросов и обрабатывает ответы, возвращая либо текст, сгенерированный AI-моделью, либо URL-адреса сгенерированных изображений.
-Он используется как один из провайдеров в проекте `hypotez`
+Модуль содержит модели для работы с API AmigoChat, такие как `gpt-4o-2024-11-20`, `gpt-4o-mini`, `flux-pro/v1.1` и другие. Он обеспечивает поддержку стриминга, системных сообщений и истории сообщений.
 
 ## Классы
 
 ### `AmigoChat`
 
-**Описание**: Класс для взаимодействия с AmigoChat API.
+**Описание**: Класс `AmigoChat` реализует функциональность асинхронного генератора для взаимодействия с API AmigoChat.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию ответов.
-- `ProviderModelMixin`: Добавляет поддержку выбора моделей.
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
+- `ProviderModelMixin`: Предоставляет методы для работы с моделями.
 
-**Атрибуты**:
-- `url` (str): Базовый URL сервиса AmigoChat.
-- `chat_api_endpoint` (str): URL для запросов чата.
-- `image_api_endpoint` (str): URL для запросов генерации изображений.
-- `working` (bool): Флаг, указывающий, работает ли провайдер.
-- `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер потоковую передачу.
-- `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения.
-- `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений.
-- `default_model` (str): Модель, используемая по умолчанию (`gpt-4o-mini`).
-- `chat_models` (list): Список поддерживаемых моделей чата.
-- `image_models` (list): Список поддерживаемых моделей генерации изображений.
-- `models` (list): Объединенный список моделей чата и изображений.
-- `model_aliases` (dict): Словарь псевдонимов моделей для удобства использования.
+**Аттрибуты**:
+- `url` (str): URL сервиса AmigoChat.
+- `chat_api_endpoint` (str): URL для API чата.
+- `image_api_endpoint` (str): URL для API генерации изображений.
+- `working` (bool): Флаг, указывающий на работоспособность провайдера.
+- `supports_stream` (bool): Флаг, указывающий на поддержку стриминга.
+- `supports_system_message` (bool): Флаг, указывающий на поддержку системных сообщений.
+- `supports_message_history` (bool): Флаг, указывающий на поддержку истории сообщений.
+- `default_model` (str): Модель, используемая по умолчанию.
+- `chat_models` (list): Список моделей для чата.
+- `image_models` (list): Список моделей для генерации изображений.
+- `models` (list): Объединенный список моделей для чата и генерации изображений.
+- `model_aliases` (dict): Словарь псевдонимов моделей.
 
 **Методы**:
-- `get_personaId(model: str) -> str`: Возвращает идентификатор персоны для заданной модели.
+- `get_personaId(model: str) -> str`: Возвращает `personaId` для указанной модели.
 - `generate_chat_id() -> str`: Генерирует уникальный идентификатор чата.
 - `create_async_generator(...) -> AsyncResult`: Создает асинхронный генератор для получения ответов от API.
 
@@ -46,54 +42,67 @@
 ```python
     @classmethod
     def get_personaId(cls, model: str) -> str:
-        """Получает идентификатор personaId для указанной модели.
+        """Возвращает personaId для указанной модели.
 
         Args:
             model (str): Название модели.
 
         Returns:
-            str: Идентификатор personaId для данной модели.
+            str: Значение persona_id для указанной модели.
 
         Raises:
-            ValueError: Если модель не найдена в списке поддерживаемых моделей.
+            ValueError: Если модель не найдена в списках `chat_models` и `image_models`.
         """
         ...
 ```
 
 **Назначение**:
-Метод `get_personaId` предназначен для получения идентификатора `personaId` для заданной модели. Он проверяет, является ли модель моделью чата или моделью изображения, и возвращает соответствующий `personaId` из словаря `MODELS`.
+Метод `get_personaId` извлекает идентификатор персоны (`persona_id`) для заданной модели из словаря `MODELS`.
 
 **Параметры**:
-- `model` (str): Название модели, для которой требуется получить `personaId`.
+- `model` (str): Название модели, для которой требуется получить `persona_id`.
 
 **Возвращает**:
-- `str`: Идентификатор `personaId` для указанной модели.
+- `str`: Значение `persona_id`, соответствующее указанной модели.
 
 **Вызывает исключения**:
-- `ValueError`: Если модель не найдена ни в списке моделей чата, ни в списке моделей изображений.
+- `ValueError`: Вызывается, если модель не найдена ни в списке моделей чата (`chat_models`), ни в списке моделей изображений (`image_models`).
 
 **Как работает функция**:
-1. **Проверка модели в списке моделей чата**:
-   - Функция проверяет, присутствует ли указанная модель в списке `cls.chat_models`.
-   - Если модель найдена, функция возвращает соответствующий `persona_id` из словаря `MODELS['chat'][model]['persona_id']`.
-2. **Проверка модели в списке моделей изображений**:
-   - Если модель не найдена в списке моделей чата, функция проверяет, присутствует ли модель в списке `cls.image_models`.
-   - Если модель найдена, функция возвращает соответствующий `persona_id` из словаря `MODELS['image'][model]['persona_id']`.
-3. **Генерация исключения `ValueError`**:
-   - Если модель не найдена ни в одном из списков моделей, функция вызывает исключение `ValueError` с сообщением об ошибке, указывающим, что модель не найдена.
 
+1. Проверяет, находится ли указанная модель в списке моделей чата (`cls.chat_models`).
+2. Если модель найдена в списке моделей чата, метод возвращает соответствующее значение `persona_id` из словаря `MODELS['chat'][model]['persona_id']`.
+3. Если модель не найдена в списке моделей чата, проверяет, находится ли она в списке моделей изображений (`cls.image_models`).
+4. Если модель найдена в списке моделей изображений, метод возвращает соответствующее значение `persona_id` из словаря `MODELS['image'][model]['persona_id']`.
+5. Если модель не найдена ни в одном из списков, метод вызывает исключение `ValueError` с сообщением об ошибке "Unknown model".
+
+```
+  ModelCheck -> ChatModelFound? --YES--> ChatModelPersonaId
+          |
+          NO
+          V
+  ImageModelCheck -> ImageModelFound? --YES--> ImageModelPersonaId
+                 |
+                 NO
+                 V
+                 ValueError
+```
 **Примеры**:
+
 ```python
+# Пример 1: Получение persona_id для модели чата
 persona_id = AmigoChat.get_personaId('gpt-4o-mini')
 print(persona_id)  # Вывод: amigo
 
-persona_id = AmigoChat.get_personaId('flux-pro/v1.1')
-print(persona_id)  # Вывод: flux-1-1-pro
+# Пример 2: Получение persona_id для модели изображений
+persona_id = AmigoChat.get_personaId('flux-dev')
+print(persona_id)  # Вывод: flux-dev
 
+# Пример 3: Попытка получения persona_id для несуществующей модели
 try:
-    persona_id = AmigoChat.get_personaId('unsupported-model')
+    persona_id = AmigoChat.get_personaId('non-existent-model')
 except ValueError as ex:
-    print(ex)  # Вывод: Unknown model: unsupported-model
+    print(ex)  # Вывод: Unknown model: non-existent-model
 ```
 
 ### `generate_chat_id`
@@ -101,30 +110,33 @@ except ValueError as ex:
 ```python
     @staticmethod
     def generate_chat_id() -> str:
-        """Генерирует идентификатор чата в формате: 8-4-4-4-12 шестнадцатеричных цифр.
-
-        Returns:
-            str: Уникальный идентификатор чата.
-        """
-        ...
+        """Generate a chat ID in format: 8-4-4-4-12 hexadecimal digits"""
+        return str(uuid.uuid4())
 ```
 
 **Назначение**:
-Метод `generate_chat_id` предназначен для генерации уникального идентификатора чата. Идентификатор генерируется в формате 8-4-4-4-12 шестнадцатеричных цифр с использованием библиотеки `uuid`.
+Метод `generate_chat_id` генерирует уникальный идентификатор чата в формате UUID (Universally Unique Identifier).
+
+**Параметры**:
+- Отсутствуют.
 
 **Возвращает**:
-- `str`: Уникальный идентификатор чата в формате UUID.
+- `str`: Уникальный идентификатор чата в виде строки, состоящей из 32 шестнадцатеричных цифр, разделенных дефисами в формате "8-4-4-4-12".
 
 **Как работает функция**:
-1. **Генерация UUID**:
-   - Функция использует `uuid.uuid4()` для генерации случайного UUID.
-2. **Преобразование в строку**:
-   - Функция преобразует UUID в строку с помощью `str()`.
+1. Использует функцию `uuid.uuid4()` из модуля `uuid` для генерации UUID.
+2. Преобразует UUID в строку с помощью `str()`.
+
+```
+UUIDgeneration -> UUIDstring
+```
 
 **Примеры**:
+
 ```python
+# Пример: Генерация chat_id
 chat_id = AmigoChat.generate_chat_id()
-print(chat_id)  # Вывод: Пример: a1b2c3d4-e5f6-7890-1234-567890abcdef
+print(chat_id)  # Вывод: Например, 'a1b2c3d4-e5f6-7890-1234-567890abcdef'
 ```
 
 ### `create_async_generator`
@@ -145,105 +157,109 @@ print(chat_id)  # Вывод: Пример: a1b2c3d4-e5f6-7890-1234-567890abcdef
         top_p: float = 0.95,
         **kwargs
     ) -> AsyncResult:
-        """Создает асинхронный генератор для взаимодействия с API AmigoChat.
+        """Создает асинхронный генератор для получения ответов от API AmigoChat.
 
         Args:
-            model (str): Название модели для использования.
-            messages (Messages): Список сообщений для отправки.
-            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
-            stream (bool, optional): Использовать ли потоковую передачу. По умолчанию `False`.
-            timeout (int, optional): Время ожидания ответа. По умолчанию 300.
-            frequency_penalty (float, optional): Штраф за частоту. По умолчанию 0.
-            max_tokens (int, optional): Максимальное количество токенов в ответе. По умолчанию 4000.
-            presence_penalty (float, optional): Штраф за присутствие. По умолчанию 0.
-            temperature (float, optional): Температура генерации. По умолчанию 0.5.
-            top_p (float, optional): Top P. По умолчанию 0.95.
+            model (str): Название используемой модели.
+            messages (Messages): Список сообщений для отправки в API.
+            proxy (str, optional): Прокси-сервер для использования. По умолчанию `None`.
+            stream (bool, optional): Флаг, указывающий на использование стриминга. По умолчанию `False`.
+            timeout (int, optional): Время ожидания ответа от сервера в секундах. По умолчанию `300`.
+            frequency_penalty (float, optional): Штраф за частоту слов. По умолчанию `0`.
+            max_tokens (int, optional): Максимальное количество токенов в ответе. По умолчанию `4000`.
+            presence_penalty (float, optional): Штраф за присутствие слов. По умолчанию `0`.
+            temperature (float, optional): Температура для генерации текста. По умолчанию `0.5`.
+            top_p (float, optional): Значение top_p для генерации текста. По умолчанию `0.95`.
             **kwargs: Дополнительные параметры.
 
         Returns:
-            AsyncResult: Асинхронный генератор для получения ответов от API.
+            AsyncResult: Асинхронный генератор, возвращающий ответы от API. Может возвращать текст или `ImageResponse` в случае генерации изображений.
 
         Raises:
-            Exception: Если возникает ошибка при взаимодействии с API после нескольких попыток.
+            Exception: Если достигнуто максимальное количество попыток переподключения.
         """
         ...
 ```
 
 **Назначение**:
-Метод `create_async_generator` предназначен для создания асинхронного генератора, который взаимодействует с AmigoChat API для получения ответов на основе предоставленных сообщений и параметров. Он поддерживает как текстовые ответы, так и генерацию изображений.
+Метод `create_async_generator` создает асинхронный генератор для взаимодействия с API AmigoChat, позволяя получать ответы в асинхронном режиме.
 
 **Параметры**:
-- `model` (str): Название модели для использования.
-- `messages` (Messages): Список сообщений для отправки.
-- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
-- `stream` (bool, optional): Использовать ли потоковую передачу. По умолчанию `False`.
-- `timeout` (int, optional): Время ожидания ответа. По умолчанию 300.
-- `frequency_penalty` (float, optional): Штраф за частоту. По умолчанию 0.
-- `max_tokens` (int, optional): Максимальное количество токенов в ответе. По умолчанию 4000.
-- `presence_penalty` (float, optional): Штраф за присутствие. По умолчанию 0.
-- `temperature` (float, optional): Температура генерации. По умолчанию 0.5.
-- `top_p` (float, optional): Top P. По умолчанию 0.95.
+- `model` (str): Название используемой модели.
+- `messages (Messages)`: Список сообщений для отправки в API.
+- `proxy (str, optional)`: Прокси-сервер для использования. По умолчанию `None`.
+- `stream (bool, optional)`: Флаг, указывающий на использование стриминга. По умолчанию `False`.
+- `timeout (int, optional)`: Время ожидания ответа от сервера в секундах. По умолчанию `300`.
+- `frequency_penalty (float, optional)`: Штраф за частоту слов. По умолчанию `0`.
+- `max_tokens (int, optional)`: Максимальное количество токенов в ответе. По умолчанию `4000`.
+- `presence_penalty (float, optional)`: Штраф за присутствие слов. По умолчанию `0`.
+- `temperature (float, optional)`: Температура для генерации текста. По умолчанию `0.5`.
+- `top_p (float, optional)`: Значение top_p для генерации текста. По умолчанию `0.95`.
 - `**kwargs`: Дополнительные параметры.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор для получения ответов от API. В случае генерации изображений возвращает `ImageResponse`.
+- `AsyncResult`: Асинхронный генератор, возвращающий ответы от API. Может возвращать текст или `ImageResponse` в случае генерации изображений.
 
 **Вызывает исключения**:
-- `Exception`: Если возникает ошибка при взаимодействии с API после нескольких попыток.
+- `Exception`: Если достигнуто максимальное количество попыток переподключения.
 
 **Как работает функция**:
-1. **Подготовка параметров**:
-   - Получает модель, используя `cls.get_model(model)`.
-   - Генерирует уникальный `device_uuid` для каждого запроса и устанавливает максимальное количество повторных попыток (`max_retries`).
+
+1. **Инициализация**:
+   - Определяет модель, используя `cls.get_model(model)`.
+   - Генерирует `device_uuid` для идентификации устройства.
+   - Устанавливает максимальное количество попыток `max_retries` равным 3.
+   - Инициализирует счетчик попыток `retry_count` равным 0.
+
 2. **Цикл повторных попыток**:
-   - Функция выполняет несколько попыток отправки запроса, если возникают ошибки.
-   - Устанавливает заголовки запроса, включая `user-agent`, `content-type` и `x-device-*`.
-3. **Создание асинхронной сессии**:
-   - Использует `StreamSession` для выполнения асинхронных HTTP-запросов.
-4. **Обработка моделей чата**:
-   - Если модель не является моделью изображения (`model not in cls.image_models`):
-     - Формирует полезную нагрузку запроса, включая `chatId`, `messages`, `model`, `personaId` и другие параметры.
-     - Отправляет POST-запрос на `cls.chat_api_endpoint`.
-     - Обрабатывает потоковый ответ, если `stream=True`:
-       - Читает ответ построчно.
-       - Извлекает контент из каждого фрагмента JSON и возвращает его через `yield`.
-5. **Обработка моделей изображений**:
-   - Если модель является моделью изображения:
-     - Извлекает `prompt` из последнего сообщения.
-     - Формирует полезную нагрузку запроса, включая `prompt`, `model` и `personaId`.
-     - Отправляет POST-запрос на `cls.image_api_endpoint`.
-     - Обрабатывает JSON-ответ и извлекает URL-адреса изображений.
-     - Возвращает `ImageResponse` с URL-адресами изображений и `prompt`.
+   - Запускает цикл `while retry_count < max_retries` для повторных попыток подключения в случае ошибок.
+
+3. **Формирование заголовков**:
+   - Определяет заголовки `headers` для HTTP-запроса, включая `user-agent`, `content-type` и другие необходимые параметры.
+
+4. **Создание сессии**:
+   - Использует `StreamSession` для создания асинхронной сессии с заданными заголовками и прокси-сервером.
+
+5. **Обработка моделей изображений и текста**:
+   - Проверяет, является ли модель моделью для генерации изображений (`model not in cls.image_models`).
+     - **Для текстовых моделей**:
+       - Формирует данные `data` для отправки в API чата, включая `chatId`, `messages`, `model`, `personaId` и другие параметры.
+       - Отправляет POST-запрос на `cls.chat_api_endpoint` с данными `data` и таймаутом `timeout`.
+       - Итерируется по строкам ответа, декодирует их и извлекает контент из JSON-структуры.
+       - Извлекает `content` из полей `delta` или `text` внутри `choices`.
+       - Возвращает `content` через `yield`.
+     - **Для моделей изображений**:
+       - Извлекает `prompt` из последнего сообщения в списке `messages`.
+       - Формирует данные `data` для отправки в API генерации изображений, включая `prompt`, `model` и `personaId`.
+       - Отправляет POST-запрос на `cls.image_api_endpoint` с данными `data`.
+       - Извлекает URL-адреса изображений из JSON-ответа и возвращает `ImageResponse` через `yield`.
+
 6. **Обработка ошибок**:
    - Перехватывает исключения `ResponseStatusError` и `Exception`.
-   - Повторяет запрос до `max_retries` раз.
-   - Если все попытки не удались, вызывает исключение.
+   - Увеличивает счетчик `retry_count` на 1.
+   - Если `retry_count` достигает `max_retries`, вызывает исключение.
+   - Генерирует новый `device_uuid` для следующей попытки.
+
+```
+Init -> ModelCheck -> TextModel? --YES--> TextRequest -> IterateLines -> ExtractContent -> YieldContent
+          |                                      ^ NO
+          NO                                     |
+          V                                      ImageRequest -> ExtractImageUrls -> YieldImageResponse
+          ^                                      |
+          |                                      Exception
+          Exception
+```
 
 **Примеры**:
+
 ```python
+# Пример 1: Использование create_async_generator для текстовой модели
 messages = [{"role": "user", "content": "Hello, how are you?"}]
-model = "gpt-4o-mini"
+async for content in AmigoChat.create_async_generator(model='gpt-4o-mini', messages=messages):
+    print(content)
 
-async def run_chat():
-    async for message in AmigoChat.create_async_generator(model=model, messages=messages):
-        print(message, end="")
-
-# Пример генерации изображений
-messages = [{"role": "user", "content": "A cat sitting on a mat"}]
-model = "flux-pro/v1.1"
-
-async def run_image():
-    async for response in AmigoChat.create_async_generator(model=model, messages=messages):
-        if isinstance(response, ImageResponse):
-            print(response.image_urls)
-
-# Пример обработки ошибок
-messages = [{"role": "user", "content": "Hello, how are you?"}]
-model = "unsupported-model"
-
-async def run_chat_error():
-    try:
-        async for message in AmigoChat.create_async_generator(model=model, messages=messages):
-            print(message, end="")
-    except Exception as ex:
-        print(f"Error: {ex}")
+# Пример 2: Использование create_async_generator для модели изображений
+messages = [{"role": "user", "content": "A cat in space"}]
+async for response in AmigoChat.create_async_generator(model='flux-dev', messages=messages):
+    if isinstance(response, ImageResponse):
+        print(response.image_urls)

@@ -2,34 +2,49 @@
 
 ## Обзор
 
-Модуль предназначен для управления рекламными кампаниями на платформе AliExpress, включая обработку данных о категориях и товарах, создание и редактирование JSON-файлов с информацией о кампаниях, а также использование AI для генерации данных о кампаниях.
+Модуль `ali_promo_campaign.py` предназначен для управления рекламными кампаниями на платформе AliExpress. Он включает в себя обработку данных о категориях и товарах, создание и редактирование JSON-файлов с информацией о кампаниях, а также использование AI для генерации данных о кампаниях.
 
-## Подробнее
+## Подробней
 
-Класс `AliPromoCampaign` позволяет загружать и обрабатывать данные рекламных кампаний, управлять категориями и товарами, а также использовать ИИ для генерации описаний и других данных. Модуль поддерживает различные языки и валюты, обеспечивая гибкость в настройке кампаний.
+Этот модуль предоставляет класс `AliPromoCampaign`, который позволяет загружать и обрабатывать данные рекламных кампаний, управлять категориями и товарами, а также использовать ИИ для генерации описаний и других данных. Поддерживаются различные языки и валюты, что обеспечивает гибкость в настройке кампаний.
 
 ## Классы
 
 ### `AliPromoCampaign`
 
-**Описание**: Управление рекламной кампанией.
+**Описание**: Класс для управления рекламными кампаниями AliExpress.
 
 **Принцип работы**:
-Класс `AliPromoCampaign` предназначен для управления рекламными кампаниями на платформе AliExpress. Он позволяет инициализировать рекламную кампанию, обрабатывать данные о категориях и товарах, использовать ИИ для генерации данных о кампаниях, а также сохранять сгенерированные данные в JSON-файлы. Класс поддерживает различные языки и валюты, обеспечивая гибкость в настройке кампаний.
+
+Класс `AliPromoCampaign` предназначен для обработки и управления рекламными кампаниями на AliExpress. Он инициализируется с названием кампании, языком и валютой. При инициализации класс проверяет наличие файла кампании и, если файл отсутствует, запускает процесс создания новой кампании. Класс использует AI модели (Google Gemini и OpenAI) для генерации контента для категорий и товаров.
+
+**Аттрибуты**:
+
+- `language` (str): Язык, используемый в кампании.
+- `currency` (str): Валюта, используемая в кампании.
+- `base_path` (Path): Базовый путь к файлам кампании.
+- `campaign_name` (str): Название кампании.
+- `campaign` (SimpleNamespace): Объект, представляющий данные кампании.
+- `campaign_ai` (SimpleNamespace): Объект, представляющий данные кампании, сгенерированные ИИ.
+- `gemini` (GoogleGenerativeAI): Объект для взаимодействия с моделью Google Gemini.
+- `openai` (OpenAIModel): Объект для взаимодействия с моделью OpenAI.
 
 **Методы**:
-- `__init__`: Инициализация объекта `AliPromoCampaign`.
-- `_models_payload`:
-- `process_campaign`: Итерируется по категориям рекламной кампании и обрабатывает товары категории через генератор партнерских ссылок.
-- `process_campaign_category`: Processes a specific category within a campaign for all languages and currencies.
-- `process_new_campaign`: Создание новой рекламной кампании.
-- `process_ai_category`: Processes the AI campaign for a specified category or all categories.
-- `process_category_products`: Processes products in a specific category.
-- `dump_category_products_files`: Сохранение данных о товарах в JSON файлы.
-- `set_categories_from_directories`: Устанавливает категории рекламной кампании из названий директорий в `category`.
-- `generate_output`:
-- `generate_html`: Creates an HTML file for the category and a root index file.
-- `generate_html_for_campaign`: Генерирует HTML-страницы для рекламной кампании.
+
+- `__init__`: Инициализация объекта AliPromoCampaign.
+- `_models_payload`: Инициализация моделей AI.
+- `process_campaign`: Итерируется по категориям кампании и обрабатывает товары.
+- `process_campaign_category`: Обрабатывает определенную категорию кампании для всех языков и валют.
+- `process_new_campaign`: Создает новую рекламную кампанию.
+- `process_ai_category`: Обрабатывает AI-генерацию данных для категории.
+- `process_category_products`: Обрабатывает товары в указанной категории.
+- `dump_category_products_files`: Сохраняет данные о товарах в JSON-файлы.
+- `set_categories_from_directories`: Устанавливает категории кампании на основе директорий.
+- `generate_output`: Сохраняет данные о товарах в различных форматах.
+- `generate_html`: Создает HTML-файлы для категорий.
+- `generate_html_for_campaign`: Генерирует HTML-страницы для кампании.
+
+## Функции
 
 ### `__init__`
 
@@ -40,117 +55,88 @@ def __init__(
     language: Optional[str] = None,
     currency: Optional[str] = None,
     model:str = 'openai'
-)
+) -> None:
+    """Инициализация объекта AliPromoCampaign для рекламной кампании.
+
+    Args:
+        campaign_file (Optional[str | Path]): Путь к файлу кампании или ссылка для загрузки кампании.
+        campaign_name (Optional[str]): Название кампании.
+        language (Optional[str | dict]): Язык, используемый в кампании.
+        currency (Optional[str]): Валюта, используемая в кампании.
+
+    Returns:
+        SimpleNamespace: Объект, представляющий кампанию.
+
+    Example:
+        >>> campaign = AliPromoCampaign(campaign_name="SummerSale", language="EN", currency="USD")
+        >>> print(campaign.campaign_name)
+
+    """
+    ...
 ```
 
-**Назначение**: Инициализация объекта AliPromoCampaign для рекламной кампании.
+**Назначение**: Инициализация экземпляра класса `AliPromoCampaign`.
 
 **Параметры**:
-- `campaign_name` (str): Название кампании.
-- `language` (Optional[str], optional): Язык, используемый в кампании. По умолчанию `None`.
-- `currency` (Optional[str], optional): Валюта, используемая в кампании. По умолчанию `None`.
-- `model` (str): Модель для обработки. По умолчанию `openai`.
 
-**Возвращает**:
-- `None`
+- `campaign_name` (str): Название кампании.
+- `language` (Optional[str]): Язык кампании. По умолчанию `None`.
+- `currency` (Optional[str]): Валюта кампании. По умолчанию `None`.
+- `model` (str): Используемая модель AI. По умолчанию `'openai'`.
 
 **Как работает функция**:
 
-1.  Функция инициализирует объект `AliPromoCampaign` с заданными параметрами, такими как название кампании, язык и валюта.
-2.  Определяется базовый путь к файлам кампании в Google Drive.
-3.  Загружается файл кампании, если он существует. Если файл не найден, запускается процесс создания новой рекламной кампании.
-4.  Инициализируются модели AI для дальнейшей обработки данных.
-
-```ascii
-   Начало
-     ↓
-   Определение базового пути к файлам кампании
-     ↓
-   Загрузка файла кампании (JSON)
-     ↓
-   Файл существует?
-     ├ Да: Продолжение работы с загруженными данными
-     └ Нет: Запуск процесса создания новой рекламной кампании
-     ↓
-   Инициализация моделей AI
-     ↓
-   Конец
-```
-
-**Примеры**:
-
-```python
-campaign = AliPromoCampaign(campaign_name="SummerSale", language="EN", currency="USD")
-print(campaign.campaign_name)
-```
+1.  Устанавливает базовый путь к файлам кампании.
+2.  Пытается загрузить файл кампании JSON. Если файл не найден, запускается процесс создания новой рекламной кампании с использованием `process_new_campaign`.
+3.  Если файл кампании найден, устанавливает язык и валюту кампании.
+4.  Вызывает метод `_models_payload` для инициализации AI моделей.
 
 ### `_models_payload`
 
 ```python
-def _models_payload(self):
+def _models_payload(self) -> None:
     """ """
+    ...
 ```
 
-**Назначение**:
+**Назначение**: Инициализация AI-моделей для генерации контента кампании.
 
 **Как работает функция**:
-1. Определяется путь к файлу с системными инструкциями для AI.
-2. Считываются системные инструкции из файла.
-3. Инициализируется модель Google Gemini с системными инструкциями.
 
-```ascii
-    Начало
-     ↓
-    Определение пути к файлу с системными инструкциями для AI
-     ↓
-    Считывание системных инструкций из файла
-     ↓
-    Инициализация модели Google Gemini с системными инструкциями
-     ↓
-    Конец
-```
+1.  Определяет путь к файлу с системными инструкциями для AI.
+2.  Считывает системные инструкции из файла.
+3.  Инициализирует `GoogleGenerativeAI` с системными инструкциями.
 
 ### `process_campaign`
 
 ```python
-def process_campaign(self):
+def process_campaign(self) -> None:
     """Функция итерируется по категориям рекламной кампании и обрабатывает товары категории через генератор партнерских ссылок.
 
     Example:
         >>> campaign.process_campaign()
     """
+    ...
 ```
 
-**Назначение**: Функция итерируется по категориям рекламной кампании и обрабатывает товары категории через генератор партнерских ссылок.
-
-**Параметры**:
-- `self` (AliPromoCampaign): Экземпляр класса `AliPromoCampaign`.
-
-**Возвращает**:
-- `None`
+**Назначение**: Обработка рекламной кампании путем итерации по категориям и обработки товаров.
 
 **Как работает функция**:
 
-1.  Функция получает список названий категорий из директорий в базовом пути кампании.
-2.  Для каждой категории вызывается метод `process_category_products` для обработки товаров в категории.
-3.  Затем вызывается метод `process_ai_category` для обработки данных категории с использованием AI.
+1.  Получает список названий категорий из директории `category`.
+2.  Итерируется по названиям категорий.
+3.  Для каждой категории вызывает методы `process_category_products` и `process_ai_category`.
 
 ```ascii
-   Начало
-     ↓
-   Получение списка названий категорий
-     ↓
-   Для каждой категории:
-     ├─> Обработка товаров в категории (`process_category_products`)
-     └─> Обработка данных категории с использованием AI (`process_ai_category`)
-     ↓
-   Конец
-```
-
-**Примеры**:
-
-```python
-campaign.process_campaign()
+    Начало
+    │
+    Получение списка названий категорий
+    │
+    Для каждой категории:
+    │   Обработка товаров категории
+    │   Обработка AI-генерации данных для категории
+    │
+    Конец
 ```
 
 ### `process_campaign_category`
@@ -167,24 +153,19 @@ def process_campaign_category(
     @param currency: Currency for the campaign.
     @return: List of product titles within the category.
     """
+    ...
 ```
 
-**Назначение**: Processes a specific category within a campaign for all languages and currencies.
+**Назначение**: Обрабатывает определенную категорию в рамках кампании для всех языков и валют.
+
+**Параметры**:
+
+- `category_name` (str): Название категории.
 
 **Как работает функция**:
 
-1.  Вызывается метод `process_category_products` для обработки товаров в категории.
-2.  Вызывается метод `process_ai_category` для обработки данных категории с использованием AI.
-
-```ascii
-     Начало
-      ↓
-     Обработка товаров в категории (process_category_products)
-      ↓
-     Обработка данных категории с использованием AI (process_ai_category)
-      ↓
-     Конец
-```
+1.  Вызывает `self.process_category_products` для обработки товаров в категории.
+2.  Вызывает `self.process_ai_category` для AI-генерации данных в категории.
 
 ### `process_new_campaign`
 
@@ -194,58 +175,102 @@ def process_new_campaign(
     campaign_name: str,
     language: Optional[str] = None,
     currency: Optional[str] = None,
-)
+) -> None:
+    """Создание новой рекламной кампании.
+    Условия для создания кампании:
+    - директория кампании с питоник названием
+    - вложенная директория `campaign`, в ней директории с питоник названиями категорий
+    - файл sources.txt и/или директория `sources` с файлами `<product)id>.html`
+
+    Args:
+        campaign_name (Optional[str]): Название рекламной кампании.
+        language (Optional[str]): Язык для кампании (необязательно).
+        currency (Optional[str]): Валюта для кампании (необязательно).
+
+    Returns:
+        List[Tuple[str, Any]]: Список кортежей с именами категорий и их обработанными результатами.
+
+    Example:
+        >>> campaign.process_new_campaign(campaign_name="HolidaySale", language="RU", currency="ILS")
+
+    Flowchart:
+    ┌──────────────────────────────────────────────┐
+    │ Start                                        │
+    └──────────────────────────────────────────────┘
+                      │
+                      ▼
+    ┌───────────────────────────────────────────────┐
+    │ Check if `self.language` and `self.currency`  │
+    │ are set                                       │
+    └───────────────────────────────────────────────┘
+                      │
+            ┌─────────┴──────────────────────────┐
+            │                                    │
+            ▼                                    ▼
+    ┌─────────────────────────────┐   ┌──────────────────────────────────────┐
+    │Yes: `locale` = `{language:  │   │No: `locale` = {                      │
+    │currency}`                   │   │     "EN": "USD",                     │
+    │                             │   │     "HE": "ILS",                     │
+    │                             │   │     "RU": "ILS"                      │
+    │                             │   │    }                                 │
+    └─────────────────────────────┘   └──────────────────────────────────────┘
+                     │                         │
+                     ▼                         ▼
+    ┌───────────────────────────────────────────────┐
+    │ For each `language`, `currency` in `locale`:  │
+    │ - Set `self.language`, `self.currency`        │
+    │ - Initialize `self.campaign`                  │
+    └───────────────────────────────────────────────┘
+                     │
+                     ▼
+    ┌───────────────────────────────────────────────┐
+    │ Call `self.set_categories_from_directories()` │
+    │ to populate categories                        │
+    └───────────────────────────────────────────────┘
+                     │
+                     ▼
+    ┌───────────────────────────────────────────────┐
+    │ Copy `self.campaign` to `self.campaign_ai`    │
+    │ and set `self.campaign_ai_file_name`          │
+    └───────────────────────────────────────────────┘
+                     │
+                     ▼
+    ┌───────────────────────────────────────────────┐
+    │ For each `category_name` in campaign:         │
+    │ - Call `self.process_category_products`       │
+    │ - Call `self.process_ai_category`             │
+    └───────────────────────────────────────────────┘
+                     │
+                     ▼
+    ┌──────────────────────────────────────────────┐
+    │ End                                          │
+    └──────────────────────────────────────────────┘
+
+    """
+    ...
 ```
 
-**Назначение**: Создание новой рекламной кампании.
+**Назначение**: Создает новую рекламную кампанию, если не найден файл кампании.
 
 **Параметры**:
-- `campaign_name` (str): Название рекламной кампании.
-- `language` (Optional[str], optional): Язык для кампании. По умолчанию `None`.
-- `currency` (Optional[str], optional): Валюта для кампании. По умолчанию `None`.
 
-**Возвращает**:
-- `None`
+-   `campaign_name` (str): Название кампании.
+-   `language` (Optional[str]): Язык кампании. По умолчанию `None`.
+-   `currency` (Optional[str]): Валюта кампании. По умолчанию `None`.
 
 **Как работает функция**:
 
-1.  Определяется локаль кампании (язык и валюта). Если язык и валюта не предоставлены, используются значения по умолчанию.
-2.  Для каждой локали устанавливаются язык и валюта кампании.
-3.  Инициализируется объект кампании.
-4.  Устанавливаются категории из названий директорий.
-5.  Создается копия кампании для AI.
-6.  Для каждой категории обрабатываются товары и AI-данные.
-7.  Сохраняются AI-данные кампании в JSON-файл.
-
-```ascii
-   Начало
-     ↓
-   Проверка наличия языка и валюты
-     ├ Нет: Использование локалей по умолчанию
-     ↓
-   Для каждой локали:
-     ├─> Установка языка и валюты кампании
-     ├─> Инициализация объекта кампании
-     ├─> Установка категорий из директорий
-     ├─> Создание копии кампании для AI
-     ├─> Для каждой категории:
-     │   ├─> Обработка товаров (`process_category_products`)
-     │   └─> Обработка AI-данных (`process_ai_category`)
-     └─> Сохранение AI-данных кампании в JSON-файл
-     ↓
-   Конец
-```
-
-**Примеры**:
-
-```python
-campaign.process_new_campaign(campaign_name="HolidaySale", language="RU", currency="ILS")
-```
+1.  Определяет языковые и валютные параметры, если они не предоставлены.
+2.  Для каждой комбинации языка и валюты инициализирует объект `self.campaign`.
+3.  Вызывает `self.set_categories_from_directories()` для установки категорий кампании.
+4.  Создает копию `self.campaign` в `self.campaign_ai` и устанавливает имя файла для AI-кампании.
+5.  Для каждой категории вызывает методы `self.process_category_products()` и `self.process_ai_category()`.
+6.  Сохраняет данные кампании в JSON файл.
 
 ### `process_ai_category`
 
 ```python
-def process_ai_category(self, category_name: Optional[str] = None):
+def process_ai_category(self, category_name: Optional[str] = None) -> None:
     """Processes the AI campaign for a specified category or all categories.
 
         This method processes AI-generated data for the specified category in the campaign.
@@ -300,66 +325,77 @@ def process_ai_category(self, category_name: Optional[str] = None):
         └──────────────────────────────────────────────┘
 
     """
+    ...
 ```
 
-**Назначение**: Processes the AI campaign for a specified category or all categories.
+**Назначение**: Обрабатывает AI-генерацию данных для указанной категории или всех категорий.
 
 **Параметры**:
-- `category_name` (Optional[str], optional): Имя категории для обработки. Если не указано, обрабатываются все категории.
+
+-   `category_name` (Optional[str]): Название категории для обработки. Если не указано, обрабатываются все категории.
 
 **Как работает функция**:
 
-1.  Создается копия объекта кампании для AI.
-2.  Определяется внутренняя функция `_process_category`, которая обрабатывает данные AI для указанной категории.
-    - Считываются названия товаров из файла.
-    - Формируется запрос для AI.
-    - Получается ответ от AI-модели.
-    - Обновляются или создаются данные категории в объекте кампании.
-3.  Для каждой категории вызывается функция `_process_category`.
-4.  Сохраняются обновленные данные кампании в файл.
+1.  Создает копию `self.campaign` в `campaign_ai`.
+
+2.  Определяет внутреннюю функцию `_process_category` для обработки данных категории:
+
+    *   Считывает заголовки продуктов из файла `product_titles.txt`.
+    *   Формирует запрос для AI-модели.
+    *   Получает ответ от AI-модели с помощью внутренней функции `get_response`.
+    *   Преобразует ответ в объект `SimpleNamespace`.
+    *   Обновляет или создает категорию в `campaign_ai.category` на основе ответа.
+
+3.  Итерируется по категориям в `campaign_ai.category` и вызывает `_process_category` для каждой категории.
+4.  Сохраняет обновленные данные кампании в JSON-файл.
 
 **Внутренние функции**:
 
 #### `_process_category`
 
 ```python
-def _process_category(category_name: str):
+def _process_category(category_name: str) -> None:
     """Processes AI-generated category data and updates the campaign category."""
+    ...
 ```
 
-**Назначение**: Processes AI-generated category data and updates the campaign category.
+**Назначение**: Обрабатывает AI-сгенерированные данные категории и обновляет категорию кампании.
 
 **Параметры**:
-- `category_name` (str): Имя категории для обработки.
+
+-   `category_name` (str): Название категории для обработки.
 
 **Как работает функция**:
 
-1.  Определяется путь к файлу с названиями товаров для указанной категории.
-2.  Считываются названия товаров из файла.
-3.  Формируется запрос для AI на основе языка кампании, названия категории и списка товаров.
-4.  Получается ответ от AI-модели.
-5.  Преобразуется ответ машины в объект `SimpleNamespace`.
-6.  Если категория существует, обновляются ее атрибуты. Если категория не существует, она создается.
-7.  Логируются сообщения об обновлении или создании категории.
+1.  Определяет путь к файлу `product_titles.txt`, содержащему заголовки продуктов.
+2.  Считывает заголовки продуктов из файла.
+3.  Формирует запрос (`prompt`) для AI-модели, включающий язык, название категории и заголовки продуктов.
+4.  Проверяет, инициализированы ли модели `self.gemini` или `self.openai`, и при необходимости вызывает `self._models_payload()`.
+5.  Вызывает внутреннюю функцию `get_response` для получения ответа от AI-модели.
+6.  Преобразует полученный ответ в объект `SimpleNamespace` (res_ns).
+7.  Обновляет или создает атрибуты категории в `campaign_ai.category` на основе данных из `res_ns`.
+8.  Логирует информацию об обновлении или создании категории.
+9.  Обрабатывает возможные исключения и логирует ошибки.
 
-##### `get_response`
+#### `get_response`
 
 ```python
-def get_response(_attempts: int = 5):
+def get_response(_attempts: int = 5) -> None:
     """Gets the response from the AI model."""
+    ...
 ```
 
-**Назначение**: Gets the response from the AI model.
+**Назначение**: Получает ответ от AI-модели.
+
+**Параметры**:
+
+-   `_attempts` (int): Количество попыток получения ответа от AI-модели. По умолчанию равно 5.
 
 **Как работает функция**:
-1. Выполняется запрос к модели gemini
 
-**Примеры**:
-
-```python
-campaign.process_ai_category("Electronics")
-campaign.process_ai_category()
-```
+1.  Формирует запрос (`prompt`), включающий язык, название категории и заголовки продуктов.
+2.  Вызывает `self.gemini.ask(prompt)` для получения ответа от AI-модели Gemini.
+3.  Возвращает полученный ответ.
 
 ### `process_category_products`
 
@@ -433,25 +469,27 @@ def process_category_products(
     └───────────────────────────────────────────────────────────┘
 
     """
+    ...
 ```
 
-**Назначение**: Processes products in a specific category.
+**Назначение**: Обрабатывает продукты в указанной категории.
 
 **Параметры**:
-- `category_name` (str): The name of the category.
+
+-   `category_name` (str): Название категории.
 
 **Возвращает**:
-- `Optional[List[SimpleNamespace]]`: A list of `SimpleNamespace` objects representing the products. Returns `None` if no products are found.
+
+-   `Optional[List[SimpleNamespace]]`: Список объектов `SimpleNamespace`, представляющих продукты. Возвращает `None`, если продукты не найдены.
 
 **Как работает функция**:
 
-1.  Определяется внутренняя функция `read_sources`, которая считывает источники продуктов и извлекает ID продуктов.
-2.  Вызывается функция `read_sources` для получения ID продуктов.
-3.  Если ID продуктов не найдены, логируется ошибка и возвращается `None`.
-4.  Инициализируется объект `AliAffiliatedProducts` с языком и валютой кампании.
-5.  Вызывается метод `process_affiliate_products` для обработки партнерских продуктов.
-6.  Если партнерские продукты не найдены, логируется ошибка и возвращается `None`.
-7.  Возвращается список партнерских продуктов.
+1.  Определяет внутреннюю функцию `read_sources` для считывания идентификаторов продуктов.
+2.  Вызывает `read_sources` для получения списка идентификаторов продуктов.
+3.  Если список идентификаторов продуктов пуст, логирует ошибку и возвращает `None`.
+4.  Инициализирует `AliAffiliatedProducts` с языком и валютой.
+5.  Вызывает `process_affiliate_products` для обработки аффилированных продуктов.
+6.  Возвращает список аффилированных продуктов.
 
 **Внутренние функции**:
 
@@ -476,41 +514,33 @@ def read_sources(category_name: str) -> Optional[List[str]]:
         This function looks for product IDs in both HTML files and a `sources.txt` file located
         in the category\'s `sources` directory. If no product IDs are found, it returns `None`.
     """
+    ...
 ```
 
-**Назначение**: Reads product sources and extracts product IDs.
+**Назначение**: Считывает источники продуктов и извлекает идентификаторы продуктов.
 
 **Параметры**:
-- `category_name` (str): The name of the category.
+
+-   `category_name` (str): Название категории.
 
 **Возвращает**:
-- `Optional[List[str]]`: A list of product IDs if found; otherwise, `None`.
+
+-   `Optional[List[str]]`: Список идентификаторов продуктов, если найдены; в противном случае `None`.
 
 **Как работает функция**:
 
-1.  Инициализируется пустой список `product_ids`.
-2.  Получаются имена HTML файлов из директории `sources` указанной категории.
-3.  Если HTML файлы найдены, извлекаются ID продуктов из HTML файлов и добавляются в список `product_ids`.
-4.  Считываются URL продуктов из файла `sources.txt`.
-5.  Если URL продуктов найдены, извлекаются ID продуктов из URL и добавляются в список `product_ids`.
-6.  Если список `product_ids` пуст, возвращается `None`.
-7.  Возвращается список `product_ids`.
-
-**Примеры**:
-
-```python
-products: List[SimpleNamespace] = campaign.process_category_products("Electronics")
-print(len(products))
-for product in products:
-    pprint(product)
-```
+1.  Инициализирует пустой список `product_ids`.
+2.  Ищет HTML-файлы в директории `sources` категории и извлекает идентификаторы продуктов из них.
+3.  Считывает URL-адреса продуктов из файла `sources.txt` и извлекает идентификаторы продуктов из них.
+4.  Если идентификаторы продуктов не найдены, возвращает `None`.
+5.  Возвращает список идентификаторов продуктов.
 
 ### `dump_category_products_files`
 
 ```python
 def dump_category_products_files(
     self, category_name: str, products: List[SimpleNamespace]
-):
+) -> None:
     """Сохранение данных о товарах в JSON файлы.
 
     Args:
@@ -520,33 +550,28 @@ def dump_category_products_files(
     Example:
         >>> campaign.dump_category_products_files("Electronics", products)
     """
+    ...
 ```
 
-**Назначение**: Сохранение данных о товарах в JSON файлы.
+**Назначение**: Сохраняет данные о товарах в JSON-файлы.
 
 **Параметры**:
-- `category_name` (str): Имя категории.
-- `products` (List[SimpleNamespace]): Список объектов SimpleNamespace, представляющих товары.
+
+-   `category_name` (str): Имя категории.
+-   `products` (List[SimpleNamespace]): Список объектов `SimpleNamespace`, представляющих товары.
 
 **Как работает функция**:
 
-1.  Проверяется, есть ли товары для сохранения. Если нет, функция завершается.
-2.  Определяется путь к директории категории.
-3.  Для каждого товара в списке:
-    - Извлекается `product_id`. Если его нет, товар пропускается.
-    - Данные товара сохраняются в JSON файл с именем `{product_id}.json` в директории категории.
-4.  Логируется сообщение о сохранении товара.
-
-**Примеры**:
-
-```python
-campaign.dump_category_products_files("Electronics", products)
-```
+1.  Проверяет, есть ли продукты для сохранения. Если нет, логирует предупреждение и завершает работу.
+2.  Определяет путь к директории категории.
+3.  Для каждого продукта в списке извлекает идентификатор продукта.
+4.  Если идентификатор продукта отсутствует, логирует предупреждение и переходит к следующему продукту.
+5.  Сохраняет данные продукта в JSON-файл с именем `<product_id>.json` в директории категории.
 
 ### `set_categories_from_directories`
 
 ```python
-def set_categories_from_directories(self):
+def set_categories_from_directories(self) -> None:
     """Устанавливает категории рекламной кампании из названий директорий в `category`.
 
     Преобразует каждый элемент списка категорий в объект `SimpleNamespace` с атрибутами
@@ -556,30 +581,22 @@ def set_categories_from_directories(self):
         >>> self.set_categories_from_directories()
         >>> print(self.campaign.category.category1.category_name)
     """
+    ...
 ```
 
 **Назначение**: Устанавливает категории рекламной кампании из названий директорий в `category`.
 
 **Как работает функция**:
 
-1.  Определяется путь к директории `category`.
-2.  Получается список названий директорий в директории `category`.
-3.  Проверяется, является ли `self.campaign.category` объектом `SimpleNamespace`. Если нет, он создается.
-4.  Для каждой категории в списке:
-    - Создается объект `SimpleNamespace` с атрибутами `category_name`, `title` и `description`.
-    - Этот объект устанавливается как атрибут `self.campaign.category` с именем категории.
-
-**Примеры**:
-
-```python
-self.set_categories_from_directories()
-print(self.campaign.category.category1.category_name)
-```
+1.  Определяет путь к директориям категорий.
+2.  Получает список названий директорий категорий.
+3.  Проверяет, является ли `self.campaign.category` объектом `SimpleNamespace`. Если нет, создает его.
+4.  Для каждого названия категории создает объект `SimpleNamespace` с атрибутами `category_name`, `title` и `description` и добавляет его в `self.campaign.category`.
 
 ### `generate_output`
 
 ```python
-async def generate_output(self, campaign_name: str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace):
+async def generate_output(self, campaign_name: str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace) -> None:
     """
     Saves product data in various formats:
 
@@ -598,9 +615,9 @@ async def generate_output(self, campaign_name: str, category_path: str | Path, p
 
     Example:
         >>> products_list: list[SimpleNamespace] = [
-        ...     SimpleNamespace(product_id="123", product_title="Product A", promotion_link="http://example.com/product_a",
+        ...     SimpleNamespace(product_id="123", product_title="Product A", promotion_link="http://example.com/product_a", 
         ...                     first_level_category_id=1, first_level_category_name="Category1",
-        ...                     second_level_category_id=2, second_level_category_name="Subcategory1",
+        ...                     second_level_category_id=2, second_level_category_name="Subcategory1", 
         ...                     product_main_image_url="http://example.com/image.png", product_video_url="http://example.com/video.mp4"),
         ...     SimpleNamespace(product_id="124", product_title="Product B", promotion_link="http://example.com/product_b",
         ...                     first_level_category_id=1, first_level_category_name="Category1",
@@ -661,32 +678,32 @@ async def generate_output(self, campaign_name: str, category_path: str | Path, p
     │ 4. Append `product_title` and                 │
     │ `promotion_link` to their respective lists.   │
     └───────────────────────────────────────────────┘
+                    │                                               
+                    ▼
+        ┌───────────────────────────────┐
+        │ Call `save_product_titles`    │
+        │ with `_product_titles` and    │
+        │ `category_path`.              │
+        └───────────────────────────────┘
                     │
                     ▼
-    ┌───────────────────────────────┐
-    │ Call `save_product_titles`    │
-    │ with `_product_titles` and    │
-    │ `category_path`.              │
-    └───────────────────────────────┘
+        ┌───────────────────────────────┐
+        │ Call `save_promotion_links`   │
+        │ with `_promotion_links_list`  │
+        │ and `category_path`.          │
+        └───────────────────────────────┘
                     │
                     ▼
-    ┌───────────────────────────────┐
-    │ Call `save_promotion_links`   │
-    │ with `_promotion_links_list`  │
-    │ and `category_path`.          │
-    └───────────────────────────────┘
+        ┌───────────────────────────────────┐
+        │ Call `generate_html` with         │
+        │ `campaign_name`, `category_path`, │
+        │ and `products_list`.              │
+        └───────────────────────────────────┘
                     │
                     ▼
-    ┌───────────────────────────────────┐
-    │ Call `generate_html` with         │
-    │ `campaign_name`, `category_path`, │
-    │ and `products_list`.              │
-    └───────────────────────────────────┘
-                    │
-                    ▼
-    ┌───────────────────────────────┐
-    │  End `generate_output`        │
-    └───────────────────────────────┘
+        ┌───────────────────────────────┐
+        │  End `generate_output`        │
+        └───────────────────────────────┘
 
     ### Flowchart Description
 
@@ -695,10 +712,10 @@ async def generate_output(self, campaign_name: str, category_path: str | Path, p
     3. **Check if `products_list` is a list**: Ensure that `products_list` is in list format.
     4. **Initialize `_data_for_openai`, `_promotion_links_list`, and `_product_titles` lists**: Prepare empty lists to collect data.
     5. **For each `product` in `products_list`**: Process each product in the list.
-    - **Create `categories_convertor` dictionary for `product`**: Create a dictionary for category conversion.
-    - **Add `categories_convertor` to `product`**: Attach this dictionary to the product.
-    - **Save `product` as `<product_id>.json`**: Save product details in a JSON file.
-    - **Append `product_title` and `promotion_link` to their respective lists**: Collect titles and links.
+        - **Create `categories_convertor` dictionary for `product`**: Create a dictionary for category conversion.
+        - **Add `categories_convertor` to `product`**: Attach this dictionary to the product.
+        - **Save `product` as `<product_id>.json`**: Save product details in a JSON file.
+        - **Append `product_title` and `promotion_link` to their respective lists**: Collect titles and links.
     6. **Call `save_product_titles` with `_product_titles` and `category_path`**: Save titles data to a file.
     7. **Call `save_promotion_links` with `_promotion_links_list` and `category_path`**: Save promotion links to a file.
     8. **Call `generate_html` with `campaign_name`, `category_path`, and `products_list`**: Generate HTML output for products.
@@ -707,61 +724,64 @@ async def generate_output(self, campaign_name: str, category_path: str | Path, p
     This flowchart captures the key steps and processes involved in the `generate_output` function.
 
     """
+    ...
 ```
 
-**Назначение**:
-Saves product data in various formats.
+**Назначение**: Сохраняет данные о товарах в различных форматах (JSON, TXT, HTML).
 
 **Параметры**:
-- `campaign_name` (str): The name of the campaign for the output files.
-- `category_path` (str | Path): The path to save the output files.
-- `products_list` (list[SimpleNamespace] | SimpleNamespace): List of products or a single product to save.
+
+-   `campaign_name` (str): Название кампании для выходных файлов.
+-   `category_path` (str | Path): Путь для сохранения выходных файлов.
+-   `products_list` (list[SimpleNamespace] | SimpleNamespace): Список продуктов или отдельный продукт для сохранения.
 
 **Как работает функция**:
 
-1.  Форматируется текущая дата и время для использования в именах файлов.
-2.  `products_list` преобразуется в список, если это не список.
-3.  Инициализируются пустые списки `_data_for_openai`, `_promotion_links_list` и `_product_titles`.
-4.  Для каждого товара в `products_list`:
-    - Создается словарь `categories_convertor`, содержащий информацию о категориях товара.
-    - `categories_convertor` добавляется в объект товара.
-    - Сохраняется JSON файл для каждого товара.
-    - Заголовок товара добавляется в список `_product_titles`.
-    - Ссылка на продвижение товара добавляется в список `_promotion_links_list`.
-5.  Вызывается `save_product_titles` для сохранения заголовков товаров.
-6.  Вызывается `save_promotion_links` для сохранения ссылок на продвижение товаров.
-7.  Вызывается `generate_html` для генерации HTML страницы для товаров.
+1.  Форматирует текущую дату и время для использования в именах файлов.
+2.  Преобразует `products_list` в список, если это не список.
+3.  Инициализирует пустые списки и словарь для сбора данных.
+4.  Для каждого продукта в `products_list`:
+    *   Создает словарь `categories_convertor` для преобразования категорий.
+    *   Добавляет `categories_convertor` в объект продукта.
+    *   Сохраняет данные продукта в JSON-файл с именем `<product_id>.json`.
+    *   Добавляет название продукта и ссылку на продвижение в соответствующие списки.
+5.  Вызывает `save_product_titles` для сохранения названий продуктов.
+6.  Вызывает `save_promotion_links` для сохранения ссылок на продвижение.
+7.  Вызывает `generate_html` для генерации HTML-файла.
 
 ### `generate_html`
 
 ```python
-async def generate_html(self, campaign_name:str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace):
+async def generate_html(self, campaign_name:str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace) -> None:
     """ Creates an HTML file for the category and a root index file.
 
     @param products_list: List of products to include in the HTML.
     @param category_path: Path to save the HTML file.
     """
+    ...
 ```
 
-**Назначение**:
-Creates an HTML file for the category and a root index file.
+**Назначение**: Создает HTML-файл для категории и корневой индексный файл.
 
 **Параметры**:
-- `products_list` (list[SimpleNamespace] | SimpleNamespace): List of products to include in the HTML.
-- `category_path` (str | Path): Path to save the HTML file.
+
+-   `campaign_name` (str): Название кампании.
+-   `category_path` (str | Path): Путь для сохранения HTML-файла.
+-   `products_list` (list[SimpleNamespace] | SimpleNamespace): Список продуктов для включения в HTML.
 
 **Как работает функция**:
 
 1.  Преобразует `products_list` в список, если это не список.
-2.  Определяет имя категории из пути `category_path`.
-3.  Инициализирует словарь `category` для хранения заголовков товаров.
-4.  Создает HTML-контент с заголовками товаров, ценами и ссылками для каждого товара в `products_list`.
-5.  Сохраняет HTML-контент в файл с именем категории.
-6.  Создает главную страницу `index.html` с ссылками на все категории.
+2.  Определяет имя категории из `category_path`.
+3.  Инициализирует словарь `category` для хранения данных о продуктах.
+4.  Создает HTML-контент, добавляя информацию о каждом продукте из `products_list`.
+5.  Сохраняет HTML-контент в файл `<category_name>.html`.
+6.  Генерирует корневой `index.html` файл, содержащий ссылки на все категории.
+
 ### `generate_html_for_campaign`
 
 ```python
-def generate_html_for_campaign(self, campaign_name: str):
+def generate_html_for_campaign(self, campaign_name: str) -> None:
     """Генерирует HTML-страницы для рекламной кампании.
 
     Args:
@@ -770,27 +790,22 @@ def generate_html_for_campaign(self, campaign_name: str):
     Example:
         >>> campaign.generate_html_for_campaign("HolidaySale")
     """
+    ...
 ```
 
 **Назначение**: Генерирует HTML-страницы для рекламной кампании.
 
 **Параметры**:
-- `campaign_name` (str): Имя рекламной кампании.
+
+-   `campaign_name` (str): Имя рекламной кампании.
 
 **Как работает функция**:
 
-1.  Определяется корневой путь к рекламной кампании.
-2.  Получается список категорий из директории `category`.
+1.  Определяет корневой путь кампании.
+2.  Получает список категорий.
 3.  Для каждой категории:
-    - Определяется путь к категории.
-    - Получаются товары для категории.
-    - Если товары найдены:
-        - Генерируются HTML-страницы для каждого товара с использованием `ProductHTMLGenerator`.
-        - Генерируется HTML-страница категории с использованием `CategoryHTMLGenerator`.
-    - Если товары не найдены, логируется предупреждение.
-4.  Генерируется HTML-страница рекламной кампании с использованием `CampaignHTMLGenerator`.
-
-**Примеры**:
-
-```python
-campaign.generate_html_for_campaign("HolidaySale")
+    *   Определяет путь к категории.
+    *   Получает список продуктов для категории.
+    *   Если продукты найдены, генерирует HTML-страницы для каждого продукта и для категории.
+    *   Если продукты не найдены, логирует предупреждение.
+4.  Генерирует HTML-страницу для всей рекламной кампании.

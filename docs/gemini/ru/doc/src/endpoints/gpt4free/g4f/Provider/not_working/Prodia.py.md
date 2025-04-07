@@ -2,39 +2,38 @@
 
 ## Обзор
 
-Модуль `Prodia` предназначен для взаимодействия с API сервиса Prodia для генерации изображений на основе текстовых запросов. Он предоставляет асинхронные функции для отправки запросов к API Prodia и получения сгенерированных изображений. Модуль поддерживает выбор различных моделей, задание параметров генерации и обработку ошибок.
+Модуль `Prodia` предоставляет интерфейс для взаимодействия с API сервиса Prodia, позволяющего генерировать изображения на основе текстовых запросов. Модуль включает в себя асинхронный генератор изображений и предоставляет возможность выбора различных моделей и параметров для генерации.
 
-## Подробнее
+## Подробней
 
-Модуль `Prodia` асинхронно взаимодействует с API Prodia для генерации изображений. Он использует `aiohttp` для асинхронных HTTP-запросов.
-Класс `Prodia` является подклассом `AsyncGeneratorProvider` и `ProviderModelMixin`, что позволяет ему использовать общую логику для асинхронных провайдеров и моделей.
+Модуль предназначен для интеграции с другими частями проекта `hypotez`, где требуется функциональность генерации изображений. Он использует `aiohttp` для выполнения асинхронных HTTP-запросов к API Prodia и предоставляет методы для настройки параметров генерации, таких как модель, промпт, количество шагов, и другие.
 
 ## Классы
 
 ### `Prodia`
 
-**Описание**: Класс для взаимодействия с API Prodia для генерации изображений.
-
-**Принцип работы**:
-Класс использует асинхронные запросы к API Prodia для генерации изображений на основе заданных параметров, таких как модель, текст запроса, негативный промпт и другие параметры генерации.
+**Описание**: Класс `Prodia` является асинхронным провайдером генерации изображений, который взаимодействует с API Prodia.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Предоставляет базовую функциональность для асинхронных провайдеров, генерирующих результаты.
-- `ProviderModelMixin`: Предоставляет функциональность для работы с моделями.
+
+- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
+- `ProviderModelMixin`: Предоставляет функциональность выбора и управления моделями.
 
 **Атрибуты**:
-- `url` (str): URL сервиса Prodia.
-- `api_endpoint` (str): URL API для генерации изображений.
-- `working` (bool): Указывает, работает ли провайдер.
-- `default_model` (str): Модель, используемая по умолчанию для генерации изображений.
-- `default_image_model` (str): Псевдоним для `default_model`.
-- `image_models` (List[str]): Список доступных моделей для генерации изображений.
+
+- `url` (str): Базовый URL сервиса Prodia (`https://app.prodia.com`).
+- `api_endpoint` (str): URL API для генерации изображений (`https://api.prodia.com/generate`).
+- `working` (bool): Флаг, указывающий на работоспособность провайдера (в данном случае `False`).
+- `default_model` (str): Модель, используемая по умолчанию (`absolutereality_v181.safetensors [3d9d4d2b]`).
+- `default_image_model` (str): Модель изображения по умолчанию (совпадает с `default_model`).
+- `image_models` (List[str]): Список доступных моделей изображений.
 - `models` (List[str]): Список всех доступных моделей (в данном случае совпадает с `image_models`).
 
 **Методы**:
-- `get_model(model: str) -> str`: Возвращает имя модели, используемой для генерации изображений.
-- `create_async_generator(model: str, messages: Messages, proxy: str = None, negative_prompt: str = "", steps: str = 20, cfg: str = 7, seed: Optional[int] = None, sampler: str = "DPM++ 2M Karras", aspect_ratio: str = "square", **kwargs) -> AsyncResult`: Создает асинхронный генератор для получения изображений от API Prodia.
-- `_poll_job(session: ClientSession, job_id: str, proxy: str, max_attempts: int = 30, delay: int = 2) -> str`: Опрашивает API Prodia для получения статуса задания и URL сгенерированного изображения.
+
+- `get_model(model: str) -> str`: Возвращает имя модели на основе переданного аргумента, используя псевдонимы или модель по умолчанию, если переданная модель не найдена.
+- `create_async_generator(...) -> AsyncResult`: Создает асинхронный генератор для генерации изображений на основе переданных параметров.
+- `_poll_job(session: ClientSession, job_id: str, proxy: str, max_attempts: int = 30, delay: int = 2) -> str`: Опрашивает API Prodia для получения статуса задачи генерации изображения и возвращает URL изображения после завершения.
 
 ## Функции
 
@@ -43,44 +42,45 @@
 ```python
     @classmethod
     def get_model(cls, model: str) -> str:
-        if model in cls.models:
-            return model
-        elif model in cls.model_aliases:
-            return cls.model_aliases[model]
-        else:
-            return cls.default_model
+        ...
 ```
 
-**Назначение**: Функция определяет, какая модель будет использоваться для генерации изображений.
+**Назначение**: Определяет и возвращает используемую модель на основе входных данных.
 
 **Параметры**:
-- `model` (str): Имя запрошенной модели.
+
+- `model` (str): Имя модели, которую необходимо получить.
 
 **Возвращает**:
-- `str`: Имя модели, которая будет использоваться.
+
+- `str`: Имя модели, если она найдена в списке доступных моделей или псевдонимов. В противном случае возвращает модель по умолчанию.
 
 **Как работает функция**:
-1. Проверяет, находится ли запрошенная модель в списке доступных моделей (`cls.models`). Если да, возвращает её.
-2. Если модель не найдена в списке доступных моделей, проверяет, есть ли она в псевдонимах моделей (`cls.model_aliases`). Если да, возвращает соответствующий псевдоним.
-3. Если модель не найдена ни в списке доступных моделей, ни в псевдонимах, возвращает модель по умолчанию (`cls.default_model`).
 
-```
-Проверка наличия модели в списке -> Проверка наличия псевдонима -> Возврат модели по умолчанию
+1.  **Проверка наличия модели в списке моделей**: Функция проверяет, содержится ли переданное имя модели (`model`) в списке доступных моделей (`cls.models`).
+2.  **Проверка наличия модели в псевдонимах**: Если модель не найдена в списке моделей, функция проверяет, содержится ли она в словаре псевдонимов (`cls.model_aliases`).
+3.  **Возврат модели по умолчанию**: Если модель не найдена ни в списке моделей, ни в псевдонимах, функция возвращает модель, используемую по умолчанию (`cls.default_model`).
+
+```text
+    Модель --> Проверка в списке моделей
+        |
+        Нет
+        |
+        --> Проверка в псевдонимах
+            |
+            Нет
+            |
+            --> Возврат модели по умолчанию
 ```
 
 **Примеры**:
 
 ```python
-# Пример 1: Модель есть в списке доступных моделей
+# Пример 1: Модель найдена в списке моделей
 model = Prodia.get_model('absolutereality_v181.safetensors [3d9d4d2b]')
 print(model)  # Вывод: absolutereality_v181.safetensors [3d9d4d2b]
 
-# Пример 2: Модель есть в псевдонимах моделей (предположим, что такой псевдоним существует)
-Prodia.model_aliases = {'default': 'absolutereality_v181.safetensors [3d9d4d2b]'}
-model = Prodia.get_model('default')
-print(model)  # Вывод: absolutereality_v181.safetensors [3d9d4d2b]
-
-# Пример 3: Модель отсутствует в списке и псевдонимах
+# Пример 2: Модель не найдена, возвращается модель по умолчанию
 model = Prodia.get_model('non_existent_model')
 print(model)  # Вывод: absolutereality_v181.safetensors [3d9d4d2b]
 ```
@@ -102,88 +102,63 @@ print(model)  # Вывод: absolutereality_v181.safetensors [3d9d4d2b]
         aspect_ratio: str = "square", # "square", "portrait", "landscape"
         **kwargs
     ) -> AsyncResult:
-        model = cls.get_model(model)
-        
-        if seed is None:
-            seed = random.randint(0, 10000)
-        
-        headers = {
-            "accept": "*/*",
-            "accept-language": "en-US,en;q=0.9",
-            "origin": cls.url,
-            "referer": f"{cls.url}/",
-            "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
-        }
-        
-        async with ClientSession(headers=headers) as session:
-            prompt = messages[-1][\'content\'] if messages else ""
-            
-            params = {
-                "new": "true",
-                "prompt": prompt,
-                "model": model,
-                "negative_prompt": negative_prompt,
-                "steps": steps,
-                "cfg": cfg,
-                "seed": seed,
-                "sampler": sampler,
-                "aspect_ratio": aspect_ratio
-            }
-            
-            async with session.get(cls.api_endpoint, params=params, proxy=proxy) as response:
-                response.raise_for_status()
-                job_data = await response.json()
-                job_id = job_data["job"]
-                
-                image_url = await cls._poll_job(session, job_id, proxy)
-                yield ImageResponse(image_url, alt=prompt)
+        ...
 ```
 
-**Назначение**: Функция создает асинхронный генератор для получения изображений от API Prodia.
+**Назначение**: Создает асинхронный генератор для генерации изображений на основе заданных параметров.
 
 **Параметры**:
-- `model` (str): Имя модели для генерации изображения.
-- `messages` (Messages): Список сообщений, содержащих запрос пользователя.
-- `proxy` (str, optional): Адрес прокси-сервера. По умолчанию `None`.
-- `negative_prompt` (str, optional): Негативный промпт для генерации изображения. По умолчанию "".
-- `steps` (str, optional): Количество шагов для генерации изображения. По умолчанию "20".
-- `cfg` (str, optional): CFG scale для генерации изображения. По умолчанию "7".
-- `seed` (Optional[int], optional): Зерно для генерации изображения. По умолчанию `None`.
-- `sampler` (str, optional): Сэмплер для генерации изображения. По умолчанию "DPM++ 2M Karras".
-- `aspect_ratio` (str, optional): Соотношение сторон для генерации изображения. По умолчанию "square".
-- `**kwargs`: Дополнительные аргументы.
+
+- `model` (str): Модель, используемая для генерации изображения.
+- `messages` (Messages): Список сообщений, содержащих текстовый запрос.
+- `proxy` (str, optional): Прокси-сервер для выполнения запросов. По умолчанию `None`.
+- `negative_prompt` (str, optional): Негативный промпт, указывающий, что не должно быть на изображении. По умолчанию пустая строка.
+- `steps` (str, optional): Количество шагов для генерации изображения. По умолчанию 20.
+- `cfg` (str, optional): Параметр CFG (Classifier-Free Guidance). По умолчанию 7.
+- `seed` (Optional[int], optional): Зерно для случайной генерации. Если не указано, генерируется случайное число.
+- `sampler` (str, optional): Сэмплер, используемый для генерации изображения. По умолчанию "DPM++ 2M Karras".
+- `aspect_ratio` (str, optional): Соотношение сторон изображения. По умолчанию "square".
+- `**kwargs`: Дополнительные параметры.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор, возвращающий объекты `ImageResponse` с URL сгенерированного изображения.
+
+- `AsyncResult`: Асинхронный генератор, возвращающий объект `ImageResponse` с URL сгенерированного изображения.
 
 **Как работает функция**:
-1. Получает имя модели с помощью `cls.get_model(model)`.
-2. Если `seed` не задан, генерирует случайное зерно.
-3. Определяет заголовки запроса.
-4. Создает асинхронную сессию `ClientSession` с заданными заголовками.
-5. Извлекает текст запроса из последнего сообщения в списке `messages`.
-6. Определяет параметры запроса, включая текст запроса, модель, негативный промпт и другие параметры генерации.
-7. Отправляет асинхронный GET-запрос к API Prodia с заданными параметрами и заголовками.
-8. Обрабатывает ответ API, извлекает `job_id` из JSON-ответа.
-9. Опрашивает API Prodia для получения URL сгенерированного изображения с помощью `cls._poll_job(session, job_id, proxy)`.
-10. Возвращает объект `ImageResponse` с URL сгенерированного изображения и текстом запроса.
 
-```
-Получение модели -> Генерация зерна (если не задано) -> Определение заголовков -> Создание сессии -> Извлечение текста запроса -> Определение параметров -> Отправка запроса -> Обработка ответа -> Опрос API -> Возврат ImageResponse
+1.  **Выбор модели**: Сначала функция вызывает `cls.get_model(model)` для определения используемой модели.
+2.  **Генерация зерна**: Если `seed` не указан, генерируется случайное целое число в диапазоне от 0 до 10000.
+3.  **Формирование заголовков**: Создаются заголовки HTTP-запроса, включающие `user-agent`, `referer` и другие необходимые параметры.
+4.  **Создание асинхронной сессии**: Используется `aiohttp.ClientSession` для выполнения асинхронных запросов.
+5.  **Извлечение промпта**: Извлекается текстовый запрос из списка сообщений `messages`.
+6.  **Формирование параметров запроса**: Создается словарь `params`, содержащий все параметры, необходимые для запроса к API Prodia.
+7.  **Выполнение запроса к API**: Выполняется `GET`-запрос к `cls.api_endpoint` с указанными параметрами и прокси (если указан).
+8.  **Получение ID задачи**: Извлекается `job_id` из JSON-ответа.
+9.  **Опрос статуса задачи**: Вызывается `cls._poll_job(session, job_id, proxy)` для ожидания завершения задачи генерации изображения.
+10. **Генерация результата**: Возвращается объект `ImageResponse` с URL сгенерированного изображения и альтернативным текстом (промптом).
+
+**Внутренняя функция**:
+*   `_poll_job(cls, session: ClientSession, job_id: str, proxy: str, max_attempts: int = 30, delay: int = 2) -> str`: Опрашивает API Prodia для получения статуса задачи генерации изображения и возвращает URL изображения после завершения.
+
+```text
+    Выбор модели --> Генерация зерна --> Формирование заголовков --> Создание асинхронной сессии --> Извлечение промпта
+    |
+    --> Формирование параметров запроса --> Выполнение запроса к API --> Получение ID задачи --> Опрос статуса задачи
+    |
+    --> Генерация результата (ImageResponse)
 ```
 
 **Примеры**:
 
 ```python
-# Пример 1: Генерация изображения с использованием модели по умолчанию
-messages = [{'content': 'A cat sitting on a mat'}]
-async for image_response in Prodia.create_async_generator(model=Prodia.default_model, messages=messages):
-    print(image_response.url)
-
-# Пример 2: Генерация изображения с заданным зерном и негативным промптом
-messages = [{'content': 'A dog playing in the park'}]
-async for image_response in Prodia.create_async_generator(model='absolutereality_v181.safetensors [3d9d4d2b]', messages=messages, seed=42, negative_prompt='ugly, deformed'):
-    print(image_response.url)
+# Пример использования (требуется асинхронный контекст)
+# async def main():
+#     model = "absolutereality_v181.safetensors [3d9d4d2b]"
+#     messages = [{"role": "user", "content": "A cat wearing a hat"}]
+#     async for image_response in Prodia.create_async_generator(model=model, messages=messages):
+#         print(image_response.url)
+#
+# asyncio.run(main())
 ```
 
 ### `_poll_job`
@@ -191,64 +166,59 @@ async for image_response in Prodia.create_async_generator(model='absolutereality
 ```python
     @classmethod
     async def _poll_job(cls, session: ClientSession, job_id: str, proxy: str, max_attempts: int = 30, delay: int = 2) -> str:
-        for _ in range(max_attempts):\
-            async with session.get(f"https://api.prodia.com/job/{job_id}", proxy=proxy) as response:\
-                response.raise_for_status()\
-                job_status = await response.json()\
-\
-                if job_status["status"] == "succeeded":\
-                    return f"https://images.prodia.xyz/{job_id}.png"\
-                elif job_status["status"] == "failed":\
-                    raise Exception("Image generation failed")\
-\
-            await asyncio.sleep(delay)\
-\
-        raise Exception("Timeout waiting for image generation")
+        ...
 ```
 
-**Назначение**: Функция опрашивает API Prodia для получения статуса задания и URL сгенерированного изображения.
+**Назначение**: Опрашивает API Prodia для получения статуса задачи генерации изображения.
 
 **Параметры**:
-- `session` (ClientSession): Асинхронная сессия для выполнения HTTP-запросов.
-- `job_id` (str): ID задания для отслеживания.
-- `proxy` (str): Адрес прокси-сервера.
-- `max_attempts` (int, optional): Максимальное количество попыток опроса API. По умолчанию 30.
-- `delay` (int, optional): Задержка в секундах между попытками опроса API. По умолчанию 2.
+
+- `session` (ClientSession): Асинхронная сессия для выполнения запросов.
+- `job_id` (str): ID задачи генерации изображения.
+- `proxy` (str): Прокси-сервер для выполнения запросов.
+- `max_attempts` (int, optional): Максимальное количество попыток опроса. По умолчанию 30.
+- `delay` (int, optional): Задержка в секундах между попытками опроса. По умолчанию 2.
 
 **Возвращает**:
-- `str`: URL сгенерированного изображения.
+
+- `str`: URL сгенерированного изображения, если задача успешно завершена.
 
 **Вызывает исключения**:
-- `Exception`: Если генерация изображения не удалась или истекло время ожидания.
+
+- `Exception`: Если задача завершилась с ошибкой или превышено максимальное количество попыток.
 
 **Как работает функция**:
-1. Выполняет цикл опроса API Prodia `max_attempts` раз.
-2. Внутри цикла отправляет асинхронный GET-запрос к API Prodia для получения статуса задания.
-3. Обрабатывает ответ API, извлекает статус задания из JSON-ответа.
-4. Если статус задания "succeeded", возвращает URL сгенерированного изображения.
-5. Если статус задания "failed", вызывает исключение `Exception` с сообщением об ошибке.
-6. Если после `max_attempts` попыток статус задания не "succeeded" и не "failed", вызывает исключение `Exception` с сообщением о таймауте.
-7. Между попытками опроса API ожидает `delay` секунд с помощью `asyncio.sleep(delay)`.
 
-```
-Цикл опроса -> Отправка запроса -> Обработка ответа -> Проверка статуса -> Возврат URL (если успешно) / Вызов исключения (если ошибка или таймаут) -> Задержка
+1.  **Цикл опроса**: Функция выполняет цикл опроса API Prodia до тех пор, пока не будет достигнуто максимальное количество попыток (`max_attempts`).
+2.  **Выполнение запроса к API**: В каждой итерации цикла выполняется `GET`-запрос к API Prodia для получения статуса задачи.
+3.  **Анализ статуса задачи**: Анализируется JSON-ответ, чтобы определить статус задачи.
+    -   Если статус `succeeded`, возвращается URL изображения.
+    -   Если статус `failed`, вызывается исключение `Exception`.
+4.  **Задержка**: После каждой попытки опроса выполняется задержка на `delay` секунд.
+5.  **Обработка таймаута**: Если после `max_attempts` попыток задача не завершилась, вызывается исключение `Exception` с сообщением о таймауте.
+
+```text
+    Цикл (max_attempts) --> Выполнение запроса к API --> Анализ статуса задачи
+    |                                             |
+    succeeded                                     failed
+    |                                             |
+    --> Возврат URL изображения                    --> Вызов исключения Exception
+    |
+    Задержка (delay)
+    |
+    Таймаут --> Вызов исключения Exception
 ```
 
 **Примеры**:
 
 ```python
-# Пример: Опрос API для получения URL сгенерированного изображения
-import asyncio
-from aiohttp import ClientSession
-
-async def main():
-    async with ClientSession() as session:
-        job_id = '12345'
-        try:
-            image_url = await Prodia._poll_job(session, job_id, proxy=None)
-            print(f'Image URL: {image_url}')
-        except Exception as ex:
-            print(f'Error: {ex}')
-
-if __name__ == "__main__":
-    asyncio.run(main())
+# Пример использования (требуется асинхронный контекст)
+# async def main():
+#     async with ClientSession() as session:
+#         try:
+#             image_url = await Prodia._poll_job(session, "some_job_id", None)
+#             print(image_url)
+#         except Exception as e:
+#             print(f"Error: {e}")
+#
+# asyncio.run(main())

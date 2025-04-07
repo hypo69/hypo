@@ -1,43 +1,40 @@
-# Модуль для создания клавиатур для Telegram бота
+# Модуль для создания клавиатур для Telegram-бота
+
 ## Обзор
 
-Модуль `keyboard.py` предназначен для создания и хранения различных встроенных клавиатур (InlineKeyboardMarkup) для Telegram-бота, используемого в проекте `hypotez`. Он содержит определения клавиатур для поиска фильмов и выбора типа контента (фильм или сериал).
+Этот модуль содержит определения для создания inline-клавиатур, используемых в Telegram-боте для взаимодействия с пользователем. Он предоставляет две inline-клавиатуры: `find_movie` и `choice`.
 
-## Подробней
+## Подробнее
 
-Этот модуль предоставляет готовые объекты `InlineKeyboardMarkup`, которые могут быть использованы при отправке сообщений пользователям Telegram. Клавиатуры создаются с помощью библиотеки `aiogram`.
+Модуль используется для создания интерактивных элементов в Telegram-боте, позволяющих пользователям выбирать опции или выполнять действия, такие как поиск новых фильмов или выбор типа контента (сериал или фильм). Клавиатуры создаются с использованием библиотеки `aiogram`.
 
 ## Классы
 
-В данном модуле классы отсутствуют.
+В этом модуле нет классов.
 
 ## Функции
 
-В данном модуле функции отсутствуют.
+В этом модуле нет функций.
 
-## InlineKeyboardMarkup
+## Переменные
 
 ### `find_movie`
 
-**Описание**: Клавиатура для поиска новых фильмов.
-
-**Принцип работы**:
-Клавиатура содержит одну кнопку с текстом "Найти", при нажатии на которую отправляется callback-data 'new_movies'.
-
-**Структура**:
-
-```
-InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Найти', callback_data='new_movies')]])
+```python
+find_movie = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Найти', callback_data='new_movies')]
+])
 ```
 
-**Элементы**:
-- `inline_keyboard`: Список списков, содержащих объекты `InlineKeyboardButton`.
+**Назначение**: Inline-клавиатура, содержащая кнопку "Найти" для поиска новых фильмов.
 
-**InlineKeyboardButton**:
-- `text`: Текст, отображаемый на кнопке ("Найти").
-- `callback_data`: Данные, отправляемые боту при нажатии на кнопку ('new_movies').
+**Как работает**:
 
-**Пример**:
+1.  Создается объект `InlineKeyboardMarkup`.
+2.  В `inline_keyboard` передается список списков, представляющий собой структуру клавиатуры.
+3.  Внутри списка создается кнопка `InlineKeyboardButton` с текстом "Найти" и `callback_data` "new_movies". `callback_data` используется для идентификации нажатой кнопки при обработке ответа от пользователя.
+
+**Примеры**:
 
 ```python
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -49,28 +46,24 @@ find_movie = InlineKeyboardMarkup(inline_keyboard=[
 
 ### `choice`
 
-**Описание**: Клавиатура для выбора типа контента (фильм или сериал).
-
-**Принцип работы**:
-Клавиатура содержит две кнопки: "Сериал" и "Фильм". При нажатии на кнопку "Сериал" отправляется callback-data 'series', а при нажатии на кнопку "Фильм" - callback-data 'film'.
-
-**Структура**:
-
-```
-InlineKeyboardMarkup(inline_keyboard=[
+```python
+choice = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Сериал', callback_data='series'),
      InlineKeyboardButton(text='Фильм', callback_data='film')]
 ])
 ```
 
-**Элементы**:
-- `inline_keyboard`: Список списков, содержащих объекты `InlineKeyboardButton`.
+**Назначение**: Inline-клавиатура, предлагающая пользователю выбор между сериалом и фильмом.
 
-**InlineKeyboardButton**:
-- `text`: Текст, отображаемый на кнопке ("Сериал" или "Фильм").
-- `callback_data`: Данные, отправляемые боту при нажатии на кнопку ('series' или 'film').
+**Как работает**:
 
-**Пример**:
+1.  Создается объект `InlineKeyboardMarkup`.
+2.  В `inline_keyboard` передается список списков, представляющий структуру клавиатуры.
+3.  Внутри списка создаются две кнопки `InlineKeyboardButton`:
+    *   Первая кнопка с текстом "Сериал" и `callback_data` "series".
+    *   Вторая кнопка с текстом "Фильм" и `callback_data` "film".
+
+**Примеры**:
 
 ```python
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup

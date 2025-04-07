@@ -1,39 +1,36 @@
-# Модуль для обработки событий Assistant API от OpenAI
+# Модуль `event_handler`
 
 ## Обзор
 
-Модуль `event_handler.py` предоставляет класс `EventHandler`, который используется для обработки событий, генерируемых ассистентом OpenAI. Он определяет, как должны обрабатываться различные события, такие как создание и обновление текста, а также вызовы инструментов (tool calls). Этот модуль позволяет организовать взаимодействие с API OpenAI Assistant, обрабатывая ответы в реальном времени.
+Модуль `event_handler.py` предназначен для обработки событий, генерируемых ассистентом OpenAI, и предоставляет класс `EventHandler`, который определяет, как обрабатывать эти события в потоке ответов. Этот модуль использует библиотеку OpenAI для взаимодействия с API ассистента и обработки текстовых и инструментальных вызовов.
 
-## Подробнее
+## Подробней
 
-Этот модуль содержит класс `EventHandler`, который наследует `AssistantEventHandler` из библиотеки `openai`. Он переопределяет несколько методов, чтобы определить, как реагировать на различные типы событий, генерируемые ассистентом OpenAI. В частности, он обрабатывает события создания и обновления текста, а также вызовы инструментов, отображая соответствующую информацию в консоли.
+Этот модуль важен для реализации асинхронного взаимодействия с ассистентом OpenAI, позволяя реагировать на различные события в реальном времени. Он позволяет обрабатывать текстовые ответы, вызовы инструментов и другие события, генерируемые ассистентом.
 
 ## Классы
 
 ### `EventHandler`
 
-**Описание**: Класс `EventHandler` предназначен для обработки событий, генерируемых ассистентом OpenAI. Он наследует класс `AssistantEventHandler` и переопределяет его методы для обработки различных типов событий.
+**Описание**: Класс `EventHandler` наследует `AssistantEventHandler` из библиотеки OpenAI и переопределяет методы для обработки различных событий, генерируемых ассистентом.
 
-**Наследует**:
-
-- `AssistantEventHandler` из библиотеки `openai`.
+**Принцип работы**:
+Класс `EventHandler` предназначен для настройки обработки событий, генерируемых ассистентом OpenAI. Он переопределяет методы `on_text_created`, `on_text_delta`, `on_tool_call_created` и `on_tool_call_delta`, чтобы определить, как реагировать на создание текста, изменение текста и вызовы инструментов.
 
 **Методы**:
+- `on_text_created(self, text: Text) -> None`: Вызывается при создании нового текстового блока.
+- `on_text_delta(self, delta: TextDelta, snapshot: Text) -> None`: Вызывается при изменении существующего текстового блока.
+- `on_tool_call_created(self, tool_call: ToolCall) -> None`: Вызывается при создании нового вызова инструмента.
+- `on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall) -> None`: Вызывается при изменении существующего вызова инструмента.
 
-- `on_text_created(self, text: Text) -> None`: Обработчик события создания текста.
-- `on_text_delta(self, delta: TextDelta, snapshot: Text)`: Обработчик события изменения текста.
-- `on_tool_call_created(self, tool_call: ToolCall)`: Обработчик события создания вызова инструмента.
-- `on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall)`: Обработчик события изменения вызова инструмента.
-
-### `EventHandler.on_text_created`
-
+### `on_text_created`
 ```python
 def on_text_created(self, text: Text) -> None:
     """
-    Обработчик события создания текста.
+    Вызывается при создании нового текстового блока.
 
     Args:
-        text (Text): Объект `Text`, представляющий созданный текст.
+        text (Text): Объект `Text`, содержащий информацию о созданном текстовом блоке.
 
     Returns:
         None
@@ -42,51 +39,39 @@ def on_text_created(self, text: Text) -> None:
     ...
 ```
 
-**Назначение**: Этот метод вызывается при создании нового текстового блока ассистентом.
-
 **Параметры**:
-
-- `text` (Text): Объект, содержащий информацию о созданном тексте.
+- `text` (Text): Объект `Text`, содержащий информацию о созданном текстовом блоке.
 
 **Возвращает**:
-
 - `None`
 
 **Как работает функция**:
-
-1.  Выводит в консоль строку "assistant > ".
-
-ASCII flowchart:
+1. Функция `on_text_created` вызывается при создании нового текстового блока ассистентом.
+2. Она выводит в консоль символ ">" для обозначения начала ответа ассистента.
 
 ```
 A
-↓
-B
+|
+Вывод ">" в консоль
 ```
-
-Где:
-
--   `A`: Получение события о создании текста.
--   `B`: Вывод в консоль строки "assistant > ".
 
 **Примеры**:
 
 ```python
 event_handler = EventHandler()
-text = Text(id='text_id', value='Привет, мир!', created_at=1678886400, thread_id='thread_id', run_id='run_id', object='text')
-event_handler.on_text_created(text)  # Выводит "\nassistant > " в консоль.
+text_object = Text(id='text_1', type='text', value='Hello')
+event_handler.on_text_created(text_object)  # Выведет ">" в консоль
 ```
 
-### `EventHandler.on_text_delta`
-
+### `on_text_delta`
 ```python
 def on_text_delta(self, delta: TextDelta, snapshot: Text):
     """
-    Обработчик события изменения текста.
+    Вызывается при изменении существующего текстового блока.
 
     Args:
-        delta (TextDelta): Объект `TextDelta`, содержащий информацию об изменении текста.
-        snapshot (Text): Объект `Text`, представляющий текущее состояние текста.
+        delta (TextDelta): Объект `TextDelta`, содержащий изменения в текстовом блоке.
+        snapshot (Text): Объект `Text`, представляющий текущее состояние текстового блока.
 
     Returns:
         None
@@ -95,52 +80,40 @@ def on_text_delta(self, delta: TextDelta, snapshot: Text):
     ...
 ```
 
-**Назначение**: Этот метод вызывается при изменении существующего текстового блока ассистентом.
-
 **Параметры**:
-
-- `delta` (TextDelta): Объект, содержащий информацию об изменении текста.
-- `snapshot` (Text): Объект, представляющий текущее состояние текста.
+- `delta` (TextDelta): Объект `TextDelta`, содержащий изменения в текстовом блоке.
+- `snapshot` (Text): Объект `Text`, представляющий текущее состояние текстового блока.
 
 **Возвращает**:
-
 - `None`
 
 **Как работает функция**:
-
-1.  Выводит в консоль значение `delta.value`.
-
-ASCII flowchart:
+1. Функция `on_text_delta` вызывается при изменении текстового блока ассистентом.
+2. Она выводит в консоль значение изменения (`delta.value`).
 
 ```
 A
-↓
-B
+|
+Вывод delta.value в консоль
 ```
-
-Где:
-
--   `A`: Получение события об изменении текста.
--   `B`: Вывод в консоль значения `delta.value`.
 
 **Примеры**:
 
 ```python
 event_handler = EventHandler()
-delta = TextDelta(value=' Дополнение', created_at=1678886401, thread_id='thread_id', run_id='run_id', object='text_delta', type='text_delta')
-snapshot = Text(id='text_id', value='Привет, мир!', created_at=1678886400, thread_id='thread_id', run_id='run_id', object='text')
-event_handler.on_text_delta(delta, snapshot)  # Выводит " Дополнение" в консоль.
+delta_object = TextDelta(id='delta_1', type='text_delta', value=' world!')
+snapshot_object = Text(id='text_1', type='text', value='Hello')
+event_handler.on_text_delta(delta_object, snapshot_object)  # Выведет " world!" в консоль
 ```
 
-### `EventHandler.on_tool_call_created`
-
+### `on_tool_call_created`
 ```python
 def on_tool_call_created(self, tool_call: ToolCall):
     """
-    Обработчик события создания вызова инструмента.
+    Вызывается при создании нового вызова инструмента.
 
     Args:
-        tool_call (ToolCall): Объект `ToolCall`, представляющий вызов инструмента.
+        tool_call (ToolCall): Объект `ToolCall`, содержащий информацию о вызове инструмента.
 
     Returns:
         None
@@ -149,50 +122,38 @@ def on_tool_call_created(self, tool_call: ToolCall):
     ...
 ```
 
-**Назначение**: Этот метод вызывается при создании нового вызова инструмента ассистентом.
-
 **Параметры**:
-
-- `tool_call` (ToolCall): Объект, содержащий информацию о вызове инструмента.
+- `tool_call` (ToolCall): Объект `ToolCall`, содержащий информацию о вызове инструмента.
 
 **Возвращает**:
-
 - `None`
 
 **Как работает функция**:
-
-1.  Выводит в консоль тип вызова инструмента.
-
-ASCII flowchart:
+1. Функция `on_tool_call_created` вызывается при создании вызова инструмента ассистентом.
+2. Она выводит в консоль тип вызова инструмента.
 
 ```
 A
-↓
-B
+|
+Вывод типа вызова инструмента в консоль
 ```
-
-Где:
-
--   `A`: Получение события о создании вызова инструмента.
--   `B`: Вывод в консоль типа вызова инструмента.
 
 **Примеры**:
 
 ```python
 event_handler = EventHandler()
-tool_call = ToolCall(id='tool_call_id', type='code_interpreter', code_interpreter=None, function=None, object='tool_call')
-event_handler.on_tool_call_created(tool_call)  # Выводит "\nassistant > code_interpreter\n" в консоль.
+tool_call_object = ToolCall(id='tool_call_1', type='code_interpreter', function=None)
+event_handler.on_tool_call_created(tool_call_object)  # Выведет тип инструмента в консоль
 ```
 
-### `EventHandler.on_tool_call_delta`
-
+### `on_tool_call_delta`
 ```python
 def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
     """
-    Обработчик события изменения вызова инструмента.
+    Вызывается при изменении существующего вызова инструмента.
 
     Args:
-        delta (ToolCallDelta): Объект `ToolCallDelta`, содержащий информацию об изменении вызова инструмента.
+        delta (ToolCallDelta): Объект `ToolCallDelta`, содержащий изменения в вызове инструмента.
         snapshot (ToolCall): Объект `ToolCall`, представляющий текущее состояние вызова инструмента.
 
     Returns:
@@ -202,49 +163,32 @@ def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
     ...
 ```
 
-**Назначение**: Этот метод вызывается при изменении существующего вызова инструмента ассистентом.
-
 **Параметры**:
-
-- `delta` (ToolCallDelta): Объект, содержащий информацию об изменении вызова инструмента.
-- `snapshot` (ToolCall): Объект, представляющий текущее состояние вызова инструмента.
+- `delta` (ToolCallDelta): Объект `ToolCallDelta`, содержащий изменения в вызове инструмента.
+- `snapshot` (ToolCall): Объект `ToolCall`, представляющий текущее состояние вызова инструмента.
 
 **Возвращает**:
-
 - `None`
 
 **Как работает функция**:
-
-1.  Проверяет, является ли тип вызова инструмента `code_interpreter`.
-2.  Если да, выводит в консоль ввод и вывод интерпретатора кода.
-
-ASCII flowchart:
+1. Функция `on_tool_call_delta` вызывается при изменении вызова инструмента ассистентом.
+2. Если тип инструмента - `code_interpreter`, она выводит входные и выходные данные интерпретатора кода в консоль.
 
 ```
 A
-↓
-B
-↓
-C
+|
+Проверка типа инструмента == code_interpreter
+|
+B (Если да)
+|
+Вывод входных и выходных данных интерпретатора кода в консоль
 ```
-
-Где:
-
--   `A`: Получение события об изменении вызова инструмента.
--   `B`: Проверка типа вызова инструмента (`code_interpreter`).
--   `C`: Вывод в консоль ввода и вывода интерпретатора кода (если тип соответствует).
 
 **Примеры**:
 
 ```python
 event_handler = EventHandler()
-delta = ToolCallDelta(type='code_interpreter', code_interpreter=ToolCallDelta.CodeInterpreter(input='print("Hello")', outputs=None), function=None)
-snapshot = ToolCall(id='tool_call_id', type='code_interpreter', code_interpreter=None, function=None, object='tool_call')
-event_handler.on_tool_call_delta(delta, snapshot)  # Выводит ввод интерпретатора кода в консоль.
-```
-```python
-event_handler = EventHandler()
-delta = ToolCallDelta(type='code_interpreter', code_interpreter=ToolCallDelta.CodeInterpreter(input=None, outputs=[{"type": "logs", "logs":"[LOGS] Hello from Python!"}]), function=None)
-snapshot = ToolCall(id='tool_call_id', type='code_interpreter', code_interpreter=None, function=None, object='tool_call')
-event_handler.on_tool_call_delta(delta, snapshot)  # Выводит вывод интерпретатора кода в консоль.
+delta_object = ToolCallDelta(id='delta_1', type='code_interpreter', code_interpreter=ToolCallDelta.CodeInterpreter(input='print("Hello")', outputs=[ToolCallDelta.CodeInterpreter.Output(type='logs', logs='Hello')]))
+snapshot_object = ToolCall(id='tool_call_1', type='code_interpreter', function=None)
+event_handler.on_tool_call_delta(delta_object, snapshot_object)  # Выведет входные и выходные данные code_interpreter в консоль
 ```

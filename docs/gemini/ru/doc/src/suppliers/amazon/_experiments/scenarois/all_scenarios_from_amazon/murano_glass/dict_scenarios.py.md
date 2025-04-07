@@ -2,11 +2,11 @@
 
 ## Обзор
 
-Модуль содержит словарь `scenario`, который определяет сценарий для поиска и категоризации товаров "Murano Glass" на сайте Amazon. Этот сценарий включает URL для поиска, условия поиска ("new"), категории PrestaShop для классификации товаров и правило ценообразования.
+Модуль содержит словарь `scenario`, который определяет параметры для сценария поиска и категоризации товаров "Murano Glass" на Amazon. Эти параметры включают URL для поиска, условие товара, категории PrestaShop и правило цены.
 
 ## Подробней
 
-Этот модуль предоставляет структуру данных, необходимую для автоматизации процесса поиска и категоризации товаров "Murano Glass" на Amazon. Словарь `scenario` содержит всю необходимую информацию для определения, как искать продукты, какие условия использовать и как их категоризировать в PrestaShop.
+Этот модуль предназначен для хранения конфигурации, необходимой для автоматизации процесса сбора и категоризации товаров "Murano Glass" с Amazon. Словарь `scenario` содержит всю необходимую информацию для определения источника данных, условий отбора товаров и правил их категоризации в PrestaShop.
 
 ## Переменные
 
@@ -18,54 +18,34 @@ scenario: dict = {
         "url": "https://www.amazon.com/s?k=Art+Deco+murano+glass&crid=24Q0ZZYVNOQMP&sprefix=art+deco+murano+glass%2Caps%2C230&ref=nb_sb_noss",
         "condition": "new",
         "presta_categories": {
-            "default_category":{"11209":"MURANO GLASS"}
+            "default_category": {"11209": "MURANO GLASS"}
         },
         "price_rule": 1
     }
 }
 ```
 
-**Описание**: Словарь, содержащий сценарий для поиска и категоризации товаров "Murano Glass" на Amazon.
+**Описание**: Словарь, содержащий параметры сценария для "Murano Glass".
 
-**Структура**:
+- `"Murano Glass"`: Ключ, идентифицирующий сценарий.
 
-- `"Murano Glass"` (str): Ключ, идентифицирующий сценарий для "Murano Glass".
-    - `"url"` (str): URL для поиска товаров "Art Deco murano glass" на Amazon.
-    - `"condition"` (str): Условие для поиска товаров, в данном случае "new" (новые).
-    - `"presta_categories"` (dict): Словарь категорий PrestaShop для классификации товаров.
-        - `"default_category"` (dict): Словарь, содержащий соответствие между идентификатором категории (11209) и названием категории ("MURANO GLASS").
-    - `"price_rule"` (int): Правило ценообразования, используемое для товаров (в данном случае 1).
+  - `"url"`: URL для поиска товаров "Art Deco murano glass" на Amazon.
+  - `"condition"`: Условие товара, в данном случае "new" (новый).
+  - `"presta_categories"`: Категории PrestaShop, в которые следует отнести товары.
+    - `"default_category"`: Словарь, связывающий ID категории (11209) с названием ("MURANO GLASS").
+  - `"price_rule"`: Правило цены, применяемое к товарам (в данном случае 1).
 
-**Как работает словарь `scenario`**:
+**Как работает переменная**:
 
-Словарь `scenario` определяет параметры для автоматического поиска и категоризации товаров "Murano Glass" на Amazon. Он указывает URL для поиска, условие (новые товары), категории PrestaShop для классификации товаров и правило ценообразования.
+Переменная `scenario` представляет собой структуру данных, которая определяет параметры для автоматизированного сценария сбора и категоризации товаров "Murano Glass" с Amazon. URL используется для поиска товаров на Amazon. Параметр "condition" указывает, что необходимо собирать только новые товары. "presta_categories" определяет, в какую категорию PrestaShop следует помещать товары. "price_rule" задает правило для определения цены товаров.
 
 **Примеры**:
 
 ```python
-scenario = {
-    "Murano Glass": {
-        "url": "https://www.amazon.com/s?k=Art+Deco+murano+glass&crid=24Q0ZZYVNOQMP&sprefix=art+deco+murano+glass%2Caps%2C230&ref=nb_sb_noss",
-        "condition": "new",
-        "presta_categories": {
-            "default_category":{"11209":"MURANO GLASS"}
-        },
-        "price_rule": 1
-    }
-}
-
-# Доступ к URL для поиска товаров "Murano Glass"
+# Пример использования словаря scenario для получения URL:
 url = scenario["Murano Glass"]["url"]
 print(url)  # Вывод: https://www.amazon.com/s?k=Art+Deco+murano+glass&crid=24Q0ZZYVNOQMP&sprefix=art+deco+murano+glass%2Caps%2C230&ref=nb_sb_noss
 
-# Доступ к условию для поиска товаров
-condition = scenario["Murano Glass"]["condition"]
-print(condition)  # Вывод: new
-
-# Доступ к категориям PrestaShop для классификации товаров
-presta_categories = scenario["Murano Glass"]["presta_categories"]
-print(presta_categories)  # Вывод: {'default_category': {'11209': 'MURANO GLASS'}}
-
-# Доступ к правилу ценообразования
-price_rule = scenario["Murano Glass"]["price_rule"]
-print(price_rule)  # Вывод: 1
+# Пример использования словаря scenario для получения ID категории PrestaShop:
+category_id = list(scenario["Murano Glass"]["presta_categories"]["default_category"].keys())[0]
+print(category_id)  # Вывод: 11209

@@ -2,121 +2,96 @@
 
 ## Обзор
 
-Модуль `Cloudflare` предоставляет асинхронный интерфейс для взаимодействия с AI-моделями, размещенными на платформе Cloudflare AI Playground. Он поддерживает потоковую передачу данных, системные сообщения и ведение истории сообщений. Модуль использует `nodriver` для получения аргументов сессии, если это возможно, или `curl_cffi` в качестве альтернативы.
+Модуль `Cloudflare` предоставляет асинхронный интерфейс для взаимодействия с AI-моделями, размещенными на платформе Cloudflare AI. Он поддерживает потоковую передачу данных и предоставляет функциональность для управления cookies и заголовками HTTP-запросов. Модуль предназначен для использования в проекте `hypotez`.
 
-## Подробнее
+## Подробней
 
-Модуль предназначен для упрощения взаимодействия с API Cloudflare AI, предоставляя методы для получения списка доступных моделей и создания асинхронных генераторов для обмена сообщениями с моделями. Он также управляет cookies для поддержания сессии и кэширует их для повторного использования.
+Модуль `Cloudflare` является провайдером AI-моделей и реализует асинхронный генератор для получения результатов. Он использует библиотеки `asyncio`, `json` и другие для асинхронной обработки запросов и потоковой передачи данных. Модуль также предоставляет функциональность для работы с cookies, заголовками HTTP-запросов и кэшированием аргументов для повышения производительности.
 
 ## Классы
 
 ### `Cloudflare`
 
-**Описание**: Класс `Cloudflare` является основным классом для взаимодействия с AI-моделями Cloudflare.
+**Описание**: Класс `Cloudflare` предоставляет асинхронный интерфейс для взаимодействия с AI-моделями на платформе Cloudflare AI.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность для асинхронных генераторов.
+- `AsyncGeneratorProvider`: Обеспечивает функциональность асинхронного генератора.
 - `ProviderModelMixin`: Предоставляет методы для работы с моделями.
-- `AuthFileMixin`: Предоставляет методы для аутентификации с использованием файлов.
+- `AuthFileMixin`: Добавляет поддержку аутентификации через файлы.
 
 **Атрибуты**:
 - `label` (str): Метка провайдера ("Cloudflare AI").
-- `url` (str): URL AI Playground ("https://playground.ai.cloudflare.com").
-- `working` (bool): Указывает, работает ли провайдер (True).
-- `use_nodriver` (bool): Указывает, использовать ли `nodriver` (True).
-- `api_endpoint` (str): URL для API-выводов ("https://playground.ai.cloudflare.com/api/inference").
+- `url` (str): URL главной страницы Cloudflare AI ("https://playground.ai.cloudflare.com").
+- `working` (bool): Флаг, указывающий, работает ли провайдер (True).
+- `use_nodriver` (bool): Флаг, указывающий, использовать ли nodriver (True).
+- `api_endpoint` (str): URL API для инференса ("https://playground.ai.cloudflare.com/api/inference").
 - `models_url` (str): URL для получения списка моделей ("https://playground.ai.cloudflare.com/api/models").
-- `supports_stream` (bool): Указывает, поддерживает ли потоковую передачу (True).
-- `supports_system_message` (bool): Указывает, поддерживает ли системные сообщения (True).
-- `supports_message_history` (bool): Указывает, поддерживает ли историю сообщений (True).
+- `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер потоковую передачу данных (True).
+- `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения (True).
+- `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений (True).
 - `default_model` (str): Модель по умолчанию ("@cf/meta/llama-3.3-70b-instruct-fp8-fast").
-- `model_aliases` (dict): Псевдонимы моделей.
+- `model_aliases` (dict): Алиасы моделей.
 - `_args` (dict): Аргументы для сессии.
 
 **Методы**:
-- `get_models()`: Возвращает список доступных моделей.
-- `create_async_generator()`: Создает асинхронный генератор для взаимодействия с моделью.
-
-## Функции
+- `get_models()`: Получает список доступных моделей.
+- `create_async_generator()`: Создает асинхронный генератор для получения результатов от AI-модели.
 
 ### `get_models`
 
 ```python
 @classmethod
 def get_models(cls) -> str:
-    """Возвращает список доступных моделей.
+    """Получает список доступных моделей из Cloudflare AI.
 
     Args:
-        cls (Cloudflare): Класс Cloudflare.
+        cls (Cloudflare): Ссылка на класс `Cloudflare`.
 
     Returns:
         str: Список доступных моделей.
+
+    Raises:
+        ResponseStatusError: Если возникает ошибка при получении списка моделей.
+
+    Как работает функция:
+    1. Проверяет, если список моделей уже загружен. Если да, возвращает его.
+    2. Проверяет, если аргументы сессии (`cls._args`) не инициализированы. Если да, пытается получить их из кэша,
+       используя `get_args_from_nodriver` или устанавливает значения по умолчанию.
+    3. Создает HTTP-сессию с использованием аргументов сессии.
+    4. Отправляет GET-запрос к `cls.models_url` для получения списка моделей.
+    5. Обновляет cookies из ответа в аргументах сессии.
+    6. Обрабатывает возможные ошибки статуса ответа.
+    7. Извлекает имена моделей из JSON-ответа и сохраняет их в `cls.models`.
+    8. Возвращает список моделей.
+
+    ASCII Flowchart:
+    A [Проверка наличия моделей в cls.models]
+    |
+    B [Если модели есть: Возврат cls.models]
+    |
+    C [Если моделей нет: Проверка cls._args]
+    |
+    D [Если cls._args нет: Получение аргументов сессии (из кэша или nodriver)]
+    |
+    E [Создание HTTP-сессии]
+    |
+    F [GET-запрос к cls.models_url]
+    |
+    G [Обновление cookies]
+    |
+    H [Обработка ошибок статуса ответа]
+    |
+    I [Извлечение имен моделей из JSON]
+    |
+    J [Сохранение моделей в cls.models]
+    |
+    K [Возврат cls.models]
+
+    Примеры:
+    >>> Cloudflare.get_models()
+    ['@cf/meta/llama-3.3-70b-instruct-fp8-fast', ...]
     """
-```
-
-**Назначение**:
-Метод `get_models` предназначен для получения списка доступных AI-моделей с платформы Cloudflare AI Playground. Если список моделей еще не был получен, метод выполняет HTTP-запрос к API Cloudflare для получения списка моделей и сохраняет его в атрибуте класса `cls.models`.
-
-**Как работает функция**:
-
-1. **Проверка наличия моделей в кэше**:
-   - Функция сначала проверяет, был ли уже получен список моделей и сохранен в атрибуте `cls.models`. Если список уже существует, он возвращается немедленно.
-
-2. **Инициализация аргументов сессии**:
-   - Если `cls.models` пуст, функция проверяет, инициализированы ли аргументы сессии `cls._args`.
-   - Если `cls._args` равен `None`, происходит попытка его инициализации:
-     - Сначала проверяется наличие `nodriver`. Если `nodriver` доступен, он используется для получения аргументов сессии.
-     - Если `nodriver` недоступен, проверяется наличие `curl_cffi`. Если `curl_cffi` недоступен, возвращается текущее значение `cls.models` (которое, вероятно, является пустым списком).
-     - Если `curl_cffi` доступен, используются стандартные заголовки `DEFAULT_HEADERS` и пустые cookies для инициализации `cls._args`.
-
-3. **Получение списка моделей с использованием HTTP-запроса**:
-   - Используется `Session` (из модуля `requests`) для выполнения HTTP-запроса к `cls.models_url`.
-   - Cookies, полученные в ответе, объединяются с существующими cookies в `cls._args`.
-   - Обрабатываются возможные ошибки HTTP-ответа с использованием `raise_for_status`. В случае ошибки возвращается текущее значение `cls.models`.
-   - Если запрос успешен, извлекается JSON-данные из ответа и извлекается список имен моделей из поля `models`. Этот список сохраняется в `cls.models`.
-
-4. **Возврат списка моделей**:
-   - В конце функция возвращает список моделей `cls.models`.
-
-**ASII flowchart**:
-
-```
-A: Проверка cls.models
-|
-N: cls.models существует?
-|   \___Y: Возврат cls.models
-|
-|   N: Инициализация cls._args
-|   |
-|   N: has_nodriver?
-|   |   \___Y: Получение аргументов сессии с использованием nodriver
-|   |
-|   N: has_curl_cffi?
-|   |   \___Y: Использование DEFAULT_HEADERS и cookies
-|   |       \___N: Возврат cls.models
-|
-B: Создание HTTP-сессии
-|
-C: Выполнение GET-запроса к cls.models_url
-|
-D: Обработка ответа
-|
-E: Извлечение списка моделей из JSON
-|
-F: Сохранение списка моделей в cls.models
-|
-G: Возврат cls.models
-```
-
-**Примеры**:
-
-```python
-# Пример вызова функции get_models
-models = Cloudflare.get_models()
-if models:
-    print(f"Доступные модели: {models}")
-else:
-    print("Не удалось получить список моделей")
+    ...
 ```
 
 ### `create_async_generator`
@@ -133,88 +108,137 @@ async def create_async_generator(
     timeout: int = 300,
     **kwargs
 ) -> AsyncResult:
-    """Создает асинхронный генератор для взаимодействия с моделью.
+    """Создает асинхронный генератор для получения результатов от AI-модели.
 
     Args:
-        cls (Cloudflare): Класс Cloudflare.
-        model (str): Имя модели.
-        messages (Messages): Список сообщений.
-        proxy (str, optional): URL прокси-сервера. По умолчанию None.
-        max_tokens (int, optional): Максимальное количество токенов. По умолчанию 2048.
-        cookies (Cookies, optional): Cookies для сессии. По умолчанию None.
-        timeout (int, optional): Время ожидания запроса. По умолчанию 300.
+        cls (Cloudflare): Ссылка на класс `Cloudflare`.
+        model (str): Имя модели для использования.
+        messages (Messages): Список сообщений для отправки в модель.
+        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        max_tokens (int, optional): Максимальное количество токенов в ответе. По умолчанию 2048.
+        cookies (Cookies, optional): Cookies для отправки с запросом. По умолчанию `None`.
+        timeout (int, optional): Время ожидания ответа в секундах. По умолчанию 300.
         **kwargs: Дополнительные аргументы.
 
     Returns:
-        AsyncResult: Асинхронный генератор для взаимодействия с моделью.
+        AsyncResult: Асинхронный генератор для получения результатов.
+
+    Raises:
+        ResponseStatusError: Если возникает ошибка при отправке запроса.
+
+    Как работает функция:
+    1. Получает путь к файлу кэша.
+    2. Проверяет, если аргументы сессии (`cls._args`) не инициализированы. Если да, пытается загрузить их из кэша
+       или получает их с помощью `get_args_from_nodriver`.
+    3. Преобразует имя модели с помощью `cls.get_model`.
+    4. Формирует JSON-данные для отправки в API.
+    5. Создает асинхронную HTTP-сессию с использованием `StreamSession`.
+    6. Отправляет POST-запрос к `cls.api_endpoint` с JSON-данными.
+    7. Обновляет cookies из ответа в аргументах сессии.
+    8. Обрабатывает возможные ошибки статуса ответа.
+    9. Итерируется по строкам ответа и извлекает данные.
+    10. Извлекает информацию об использовании и причине завершения из строк ответа.
+    11. Сохраняет аргументы сессии в файл кэша.
+    12. Возвращает асинхронный генератор.
+
+    ASCII Flowchart:
+    A [Получение пути к файлу кэша]
+    |
+    B [Проверка наличия cls._args]
+    |
+    C [Если cls._args нет: Загрузка из кэша или получение с помощью get_args_from_nodriver]
+    |
+    D [Преобразование имени модели]
+    |
+    E [Формирование JSON-данных]
+    |
+    F [Создание асинхронной HTTP-сессии]
+    |
+    G [POST-запрос к cls.api_endpoint]
+    |
+    H [Обновление cookies]
+    |
+    I [Обработка ошибок статуса ответа]
+    |
+    J [Итерация по строкам ответа]
+    |
+    K [Извлечение данных из строк]
+    |
+    L [Извлечение информации об использовании и причине завершения]
+    |
+    M [Сохранение cls._args в файл кэша]
+    |
+    N [Возврат асинхронного генератора]
+
+    Примеры:
+    >>> async for result in Cloudflare.create_async_generator(model='@cf/meta/llama-3.3-70b-instruct-fp8-fast', messages=[{'role': 'user', 'content': 'Hello'}]):
+    ...     print(result)
     """
+    ...
 ```
 
-**Назначение**:
-Метод `create_async_generator` создает асинхронный генератор, который позволяет взаимодействовать с AI-моделью Cloudflare. Он принимает модель, список сообщений и параметры конфигурации, такие как прокси, максимальное количество токенов, cookies и время ожидания.
+## Функции
 
-**Как работает функция**:
-
-1. **Инициализация аргументов сессии**:
-   - Проверяется, инициализированы ли аргументы сессии `cls._args`. Если нет, то происходит попытка их инициализации из кэш-файла, с использованием `nodriver` или стандартных заголовков и cookies.
-
-2. **Подготовка данных для запроса**:
-   - Преобразует список сообщений в формат, требуемый API Cloudflare.
-
-3. **Выполнение POST-запроса к API**:
-   - Используется `StreamSession` для выполнения асинхронного POST-запроса к `cls.api_endpoint` с подготовленными данными.
-   - Cookies, полученные в ответе, объединяются с существующими cookies в `cls._args`.
-
-4. **Обработка потоковых данных**:
-   - Асинхронно итерируется по строкам в ответе.
-   - Если строка начинается с `b'0:'`, она декодируется как JSON и возвращается.
-   - Если строка начинается с `b'e:'`, она декодируется как JSON, извлекаются данные об использовании и причина завершения, которые также возвращаются.
-
-5. **Кэширование аргументов сессии**:
-   - После завершения запроса аргументы сессии сохраняются в кэш-файл.
-
-**ASII flowchart**:
-
-```
-A: Проверка cls._args
-|
-N: cls._args существует?
-|   \___Y: Использование существующих cls._args
-|
-|   N: Попытка инициализации из кэш-файла
-|   |
-|   N: Кэш-файл существует?
-|   |   \___Y: Загрузка cls._args из кэш-файла
-|   |
-|   N: Использование nodriver?
-|   |   \___Y: Получение аргументов сессии с использованием nodriver
-|   |
-|   Использование DEFAULT_HEADERS и cookies
-|
-B: Подготовка данных для запроса
-|
-C: Создание StreamSession и выполнение POST-запроса к cls.api_endpoint
-|
-D: Обработка потоковых данных
-|
-E: Декодирование и возврат JSON-данных
-|
-F: Извлечение и возврат данных об использовании и причины завершения
-|
-G: Кэширование cls._args в файл
-```
-
-**Примеры**:
+### `get_running_loop`
 
 ```python
-# Пример вызова функции create_async_generator
-import asyncio
+from ..typing import AsyncResult, Messages, Cookies
+from .base_provider import AsyncGeneratorProvider, ProviderModelMixin, AuthFileMixin, get_running_loop
+from ..requests import Session, StreamSession, get_args_from_nodriver, raise_for_status, merge_cookies
+from ..requests import DEFAULT_HEADERS, has_nodriver, has_curl_cffi
+from ..providers.response import FinishReason, Usage
+from ..errors import ResponseStatusError, ModelNotFoundError
+```
 
-async def main():
-    messages = [{"role": "user", "content": "Hello, how are you?"}]
-    generator = await Cloudflare.create_async_generator(model="@cf/meta/llama-3-8b-instruct", messages=messages)
-    async for item in generator:
-        print(item)
+**Назначение**: Импортирует необходимые модули и классы для работы `Cloudflare`.
 
-if __name__ == "__main__":
-    asyncio.run(main())
+**Параметры**:
+- `AsyncResult`: Тип для асинхронных результатов.
+- `Messages`: Тип для сообщений.
+- `Cookies`: Тип для cookies.
+- `AsyncGeneratorProvider`: Базовый класс для асинхронных провайдеров-генераторов.
+- `ProviderModelMixin`: Миксин для работы с моделями провайдера.
+- `AuthFileMixin`: Миксин для аутентификации через файл.
+- `get_running_loop`: Функция для получения текущего event loop.
+- `Session`: Класс для HTTP-сессий.
+- `StreamSession`: Класс для потоковых HTTP-сессий.
+- `get_args_from_nodriver`: Функция для получения аргументов из nodriver.
+- `raise_for_status`: Функция для проверки статуса ответа.
+- `merge_cookies`: Функция для объединения cookies.
+- `DEFAULT_HEADERS`: Заголовки HTTP по умолчанию.
+- `has_nodriver`: Проверка наличия nodriver.
+- `has_curl_cffi`: Проверка наличия curl_cffi.
+- `FinishReason`: Тип для причины завершения.
+- `Usage`: Тип для информации об использовании.
+- `ResponseStatusError`: Ошибка статуса ответа.
+- `ModelNotFoundError`: Ошибка, если модель не найдена.
+
+**Как работает функция**:
+1. Импортирует все необходимые модули и классы.
+2. Определяет типы и базовые классы, используемые в модуле `Cloudflare`.
+
+**Примеры**:
+```python
+from ..typing import AsyncResult, Messages, Cookies
+from .base_provider import AsyncGeneratorProvider, ProviderModelMixin, AuthFileMixin, get_running_loop
+from ..requests import Session, StreamSession, get_args_from_nodriver, raise_for_status, merge_cookies
+from ..requests import DEFAULT_HEADERS, has_nodriver, has_curl_cffi
+from ..providers.response import FinishReason, Usage
+from ..errors import ResponseStatusError, ModelNotFoundError
+```
+
+## Переменные
+
+### `DEFAULT_HEADERS`
+
+**Назначение**: `DEFAULT_HEADERS` - словарь, содержащий заголовки HTTP по умолчанию, используемые при выполнении запросов к API Cloudflare.
+
+**Описание**:
+- Этот словарь содержит стандартные заголовки, которые обычно включают информацию о типе контента (`Content-Type`) и User-Agent.
+
+**Пример**:
+```python
+DEFAULT_HEADERS = {
+    "Content-Type": "application/json",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}

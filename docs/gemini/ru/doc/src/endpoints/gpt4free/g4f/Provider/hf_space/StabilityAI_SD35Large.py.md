@@ -1,198 +1,183 @@
 # Модуль StabilityAI_SD35Large
-
 ## Обзор
 
-Модуль `StabilityAI_SD35Large` предоставляет асинхронный генератор для взаимодействия с Stability AI SD-3.5-Large API. Он позволяет генерировать изображения на основе текстовых запросов, используя API Stability AI.
-Модуль поддерживает настройку различных параметров генерации изображений, таких как соотношение сторон, размеры изображения, seed и другие.
+Модуль `StabilityAI_SD35Large` предоставляет асинхронный генератор для создания изображений с использованием модели Stability AI SD-3.5-Large. Он интегрируется с API Stability AI через HTTP запросы и обрабатывает ответы для предоставления URL-адресов сгенерированных изображений.
 
-## Подробнее
+## Подробней
 
-Этот модуль является частью набора инструментов для работы с различными моделями генерации изображений. Он предоставляет удобный интерфейс для асинхронного взаимодействия с API Stability AI, позволяя генерировать изображения на основе текстовых запросов. Модуль использует `aiohttp` для асинхронных HTTP-запросов и предоставляет функциональность для обработки ответов API, включая обработку ошибок и извлечение URL-адресов изображений.
+Этот модуль используется для генерации изображений на основе текстовых запросов с использованием модели Stability AI SD-3.5-Large. Он поддерживает настройку параметров генерации, таких как негативные подсказки, соотношение сторон, размеры изображения, масштаб направляющих указаний, количество шагов вывода и зерно для воспроизводимости результатов. Модуль обрабатывает ответы от API Stability AI, включая ошибки и промежуточные результаты, такие как превью изображений.
 
 ## Классы
 
 ### `StabilityAI_SD35Large`
 
-**Описание**: Класс `StabilityAI_SD35Large` предоставляет методы для взаимодействия с Stability AI SD-3.5-Large API для генерации изображений.
+**Описание**: Класс `StabilityAI_SD35Large` предоставляет функциональность для генерации изображений с использованием модели Stability AI SD-3.5-Large.
 
 **Наследует**:
 - `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию данных.
-- `ProviderModelMixin`: Предоставляет общую функциональность для работы с моделями.
+- `ProviderModelMixin`: Предоставляет общие методы для работы с моделями.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера ("StabilityAI SD-3.5-Large").
-- `url` (str): URL API ("https://stabilityai-stable-diffusion-3-5-large.hf.space").
-- `api_endpoint` (str): Эндпоинт API ("/gradio_api/call/infer").
-- `working` (bool): Указывает, работает ли провайдер (True).
-- `default_model` (str): Модель по умолчанию ('stabilityai-stable-diffusion-3-5-large').
-- `default_image_model` (str): Модель изображения по умолчанию.
-- `model_aliases` (dict): Алиасы моделей ({"sd-3.5": default_model}).
-- `image_models` (list): Список моделей изображений.
-- `models` (list): Список моделей.
-
-**Методы**:
-- `create_async_generator()`: Создает асинхронный генератор для генерации изображений.
-
-## Функции
+- `label` (str): Метка провайдера, "StabilityAI SD-3.5-Large".
+- `url` (str): URL API Stability AI, "https://stabilityai-stable-diffusion-3-5-large.hf.space".
+- `api_endpoint` (str): Endpoint API для вызова, "/gradio_api/call/infer".
+- `working` (bool): Указывает, работает ли провайдер, `True`.
+- `default_model` (str): Модель по умолчанию, 'stabilityai-stable-diffusion-3-5-large'.
+- `default_image_model` (str): Модель изображения по умолчанию, совпадает с `default_model`.
+- `model_aliases` (dict): Псевдонимы моделей, `{"sd-3.5": default_model}`.
+- `image_models` (list): Список моделей изображений, полученный из ключей `model_aliases`.
+- `models` (list): Список поддерживаемых моделей, совпадает с `image_models`.
 
 ### `create_async_generator`
 
 ```python
-    @classmethod
-    async def create_async_generator(
-        cls, model: str, messages: Messages,
-        prompt: str = None,
-        negative_prompt: str = None,
-        api_key: str = None, 
-        proxy: str = None,
-        aspect_ratio: str = "1:1",
-        width: int = None,
-        height: int = None,
-        guidance_scale: float = 4.5,
-        num_inference_steps: int = 50,
-        seed: int = 0,
-        randomize_seed: bool = True,
-        **kwargs
-    ) -> AsyncResult:
-        """
-        Создает асинхронный генератор для генерации изображений с использованием Stability AI SD-3.5-Large API.
+@classmethod
+async def create_async_generator(
+    cls, model: str, messages: Messages,
+    prompt: str = None,
+    negative_prompt: str = None,
+    api_key: str = None, 
+    proxy: str = None,
+    aspect_ratio: str = "1:1",
+    width: int = None,
+    height: int = None,
+    guidance_scale: float = 4.5,
+    num_inference_steps: int = 50,
+    seed: int = 0,
+    randomize_seed: bool = True,
+    **kwargs
+) -> AsyncResult:
+    """ Асинхронно генерирует изображения на основе предоставленных параметров, используя API Stability AI.
 
-        Args:
-            cls (type): Класс, для которого вызывается метод.
-            model (str): Используемая модель.
-            messages (Messages): Список сообщений для формирования запроса.
-            prompt (str, optional): Положительный запрос для генерации изображения. Defaults to None.
-            negative_prompt (str, optional): Отрицательный запрос для генерации изображения. Defaults to None.
-            api_key (str, optional): API ключ для доступа к Stability AI API. Defaults to None.
-            proxy (str, optional): Адрес прокси-сервера. Defaults to None.
-            aspect_ratio (str, optional): Соотношение сторон изображения. Defaults to "1:1".
-            width (int, optional): Ширина изображения. Defaults to None.
-            height (int, optional): Высота изображения. Defaults to None.
-            guidance_scale (float, optional): Масштаб соответствия запросу. Defaults to 4.5.
-            num_inference_steps (int, optional): Количество шагов для генерации изображения. Defaults to 50.
-            seed (int, optional): Seed для генерации изображения. Defaults to 0.
-            randomize_seed (bool, optional): Флаг для рандомизации seed. Defaults to True.
-            **kwargs: Дополнительные параметры.
+    Args:
+        cls (StabilityAI_SD35Large): Ссылка на класс.
+        model (str): Используемая модель.
+        messages (Messages): Список сообщений для формирования запроса.
+        prompt (str, optional): Основной текст запроса. Defaults to None.
+        negative_prompt (str, optional): Негативный текст запроса. Defaults to None.
+        api_key (str, optional): API ключ для доступа к Stability AI. Defaults to None.
+        proxy (str, optional): Адрес прокси-сервера. Defaults to None.
+        aspect_ratio (str, optional): Соотношение сторон изображения. Defaults to "1:1".
+        width (int, optional): Ширина изображения. Defaults to None.
+        height (int, optional): Высота изображения. Defaults to None.
+        guidance_scale (float, optional): Масштаб направляющих указаний. Defaults to 4.5.
+        num_inference_steps (int, optional): Количество шагов вывода. Defaults to 50.
+        seed (int, optional): Зерно для воспроизводимости результатов. Defaults to 0.
+        randomize_seed (bool, optional): Флаг рандомизации зерна. Defaults to True.
+        **kwargs: Дополнительные параметры.
 
-        Returns:
-            AsyncResult: Асинхронный генератор, возвращающий объекты `ImagePreview` и `ImageResponse`.
+    Returns:
+        AsyncResult: Асинхронный генератор, возвращающий объекты `ImagePreview` и `ImageResponse` с URL-адресами изображений.
 
-        Raises:
-            ResponseError: Если превышен лимит токенов GPU.
-            RuntimeError: Если не удалось разобрать URL изображения.
-        """
-        ...
+    Raises:
+        ResponseError: Если превышен лимит токенов GPU.
+        RuntimeError: Если не удалось распарсить URL изображения из ответа.
+
+    Внутренние функции:
+        Отсутствуют.
+    """
+    ...
 ```
 
-**Назначение**: Функция `create_async_generator` создает асинхронный генератор для взаимодействия с Stability AI SD-3.5-Large API. Она принимает различные параметры для настройки генерации изображений и возвращает асинхронный генератор, который выдает предварительные просмотры и окончательные изображения.
-
 **Параметры**:
-- `cls` (type): Класс, для которого вызывается метод.
+- `cls` (StabilityAI_SD35Large): Ссылка на класс.
 - `model` (str): Используемая модель.
 - `messages` (Messages): Список сообщений для формирования запроса.
-- `prompt` (str, optional): Положительный запрос для генерации изображения. По умолчанию `None`.
-- `negative_prompt` (str, optional): Отрицательный запрос для генерации изображения. По умолчанию `None`.
-- `api_key` (str, optional): API ключ для доступа к Stability AI API. По умолчанию `None`.
-- `proxy` (str, optional): Адрес прокси-сервера. По умолчанию `None`.
-- `aspect_ratio` (str, optional): Соотношение сторон изображения. По умолчанию `"1:1"`.
-- `width` (int, optional): Ширина изображения. По умолчанию `None`.
-- `height` (int, optional): Высота изображения. По умолчанию `None`.
-- `guidance_scale` (float, optional): Масштаб соответствия запросу. По умолчанию `4.5`.
-- `num_inference_steps` (int, optional): Количество шагов для генерации изображения. По умолчанию `50`.
-- `seed` (int, optional): Seed для генерации изображения. По умолчанию `0`.
-- `randomize_seed` (bool, optional): Флаг для рандомизации seed. По умолчанию `True`.
+- `prompt` (str, optional): Основной текст запроса. Defaults to None.
+- `negative_prompt` (str, optional): Негативный текст запроса. Defaults to None.
+- `api_key` (str, optional): API ключ для доступа к Stability AI. Defaults to None.
+- `proxy` (str, optional): Адрес прокси-сервера. Defaults to None.
+- `aspect_ratio` (str, optional): Соотношение сторон изображения. Defaults to "1:1".
+- `width` (int, optional): Ширина изображения. Defaults to None.
+- `height` (int, optional): Высота изображения. Defaults to None.
+- `guidance_scale` (float, optional): Масштаб направляющих указаний. Defaults to 4.5.
+- `num_inference_steps` (int, optional): Количество шагов вывода. Defaults to 50.
+- `seed` (int, optional): Зерно для воспроизводимости результатов. Defaults to 0.
+- `randomize_seed` (bool, optional): Флаг рандомизации зерна. Defaults to True.
 - `**kwargs`: Дополнительные параметры.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор, возвращающий объекты `ImagePreview` и `ImageResponse`.
+- `AsyncResult`: Асинхронный генератор, возвращающий объекты `ImagePreview` и `ImageResponse` с URL-адресами изображений.
 
 **Вызывает исключения**:
 - `ResponseError`: Если превышен лимит токенов GPU.
-- `RuntimeError`: Если не удалось разобрать URL изображения.
+- `RuntimeError`: Если не удалось распарсить URL изображения из ответа.
 
 **Как работает функция**:
 
-1. **Подготовка заголовков**: Формируются заголовки запроса, включая `Content-Type` и `Authorization` (если предоставлен `api_key`).
-2. **Создание сессии**: Создается асинхронная сессия `ClientSession` с заданными заголовками.
-3. **Формирование запроса**: Формируется запрос на основе предоставленных параметров, включая `prompt`, `negative_prompt`, `seed`, `randomize_seed`, `width`, `height`, `guidance_scale` и `num_inference_steps`.
-4. **Отправка запроса**: Отправляется POST-запрос к API Stability AI с сформированными данными.
-5. **Обработка ответа**: Обрабатывается ответ от API, включая проверку на ошибки и извлечение `event_id`.
-6. **Получение событий**: Отправляется GET-запрос для получения событий, связанных с `event_id`.
-7. **Асинхронный стриминг**: Асинхронно обрабатываются чанки данных из ответа.
-8. **Обработка событий**:
-   - Если событие `error`, вызывается исключение `ResponseError`.
-   - Если событие `generating`, извлекается URL изображения и возвращается объект `ImagePreview`.
-   - Если событие `complete`, извлекается URL изображения и возвращается объект `ImageResponse`, после чего генератор завершает работу.
-
-**ASII flowchart**:
+1. **Формирование заголовков запроса**: Функция формирует заголовки HTTP-запроса, включая `Content-Type` и `Authorization` (если предоставлен API-ключ).
+2. **Создание сессии**: Создается асинхронная сессия `ClientSession` с использованием сформированных заголовков.
+3. **Форматирование запроса**: Текстовый запрос формируется с использованием функции `format_image_prompt`.
+4. **Настройка параметров изображения**: Параметры изображения, такие как ширина и высота, настраиваются с использованием функции `use_aspect_ratio`.
+5. **Формирование данных запроса**: Данные запроса формируются в виде словаря, включающего текст запроса, негативный текст запроса, зерно, флаг рандомизации зерна, ширину, высоту, масштаб направляющих указаний и количество шагов вывода.
+6. **Отправка запроса**: Отправляется POST-запрос к API Stability AI.
+7. **Обработка ответа**: Обрабатывается ответ от API, включая промежуточные результаты и ошибки.
+8. **Получение event_id**: Из JSON ответа извлекается `event_id`.
+9. **Получение данных о событии**: С использованием `event_id` отправляется GET-запрос.
+10. **Обработка чанков ответа**: Из потока чанков ответа извлекаются данные о статусе генерации.
+11. **Обработка ошибок**: Если в событии приходит статус `error`, вызывается исключение `ResponseError`.
+12. **Обработка статусов "complete" и "generating"**: Если статус равен `complete` или `generating`, происходит попытка извлечения URL изображения из JSON-данных.
+13. **Генерация объектов `ImagePreview` и `ImageResponse`**: В зависимости от статуса, генерируются объекты `ImagePreview` (для промежуточных результатов) и `ImageResponse` (для окончательного результата).
+14. **Завершение**: Генератор завершает работу после получения окончательного результата.
 
 ```
-   Подготовка заголовков и создание сессии
-   ↓
-   Формирование запроса
-   ↓
-   Отправка POST-запроса к API
-   ↓
-   Обработка ответа и извлечение event_id
-   ↓
-   Отправка GET-запроса для получения событий
-   │
-   Асинхронный стриминг чанков данных
-   │
-   Обработка событий:
-   ├───> event == "error"  --> ResponseError
-   ├───> event == "generating" --> ImagePreview
-   └───> event == "complete"   --> ImageResponse --> Завершение
+Формирование заголовков запроса
+     ↓
+Создание сессии
+     ↓
+Форматирование запроса
+     ↓
+Настройка параметров изображения
+     ↓
+Формирование данных запроса
+     ↓
+Отправка POST-запроса к API
+     ↓
+Обработка ответа
+     ↓
+Извлечение event_id
+     ↓
+Отправка GET-запроса к API с event_id
+     ↓
+Обработка чанков ответа
+     ↓
+Обработка ошибок / Обработка статусов "complete" и "generating"
+     ↓
+Генерация объектов ImagePreview и ImageResponse
+     ↓
+Завершение
 ```
 
 **Примеры**:
 
+Пример 1: Генерация изображения с использованием минимального набора параметров.
+
 ```python
-# Пример использования create_async_generator
-import asyncio
-from typing import AsyncGenerator, Optional, List
+model = 'stabilityai-stable-diffusion-3-5-large'
+messages = [{'role': 'user', 'content': 'Generate a futuristic cityscape'}]
+async for image in StabilityAI_SD35Large.create_async_generator(model=model, messages=messages):
+    print(image.url)
+```
 
-from ...typing import Messages
-from .hf_space.StabilityAI_SD35Large import StabilityAI_SD35Large
-from ...providers.response import ImageResponse, ImagePreview
+Пример 2: Генерация изображения с указанием негативного запроса и API-ключа.
 
-async def main():
-    model: str = "stabilityai-stable-diffusion-3-5-large"
-    messages: Messages = [{"role": "user", "content": "A cat"}]
-    prompt: str = "A cat in a hat"
-    negative_prompt: str = "ugly, deformed"
-    api_key: Optional[str] = None
-    proxy: Optional[str] = None
-    aspect_ratio: str = "1:1"
-    width: Optional[int] = None
-    height: Optional[int] = None
-    guidance_scale: float = 4.5
-    num_inference_steps: int = 50
-    seed: int = 0
-    randomize_seed: bool = True
+```python
+model = 'stabilityai-stable-diffusion-3-5-large'
+messages = [{'role': 'user', 'content': 'Generate a realistic portrait'}]
+negative_prompt = 'blurry, low quality'
+api_key = 'YOUR_API_KEY'
+async for image in StabilityAI_SD35Large.create_async_generator(model=model, messages=messages, negative_prompt=negative_prompt, api_key=api_key):
+    print(image.url)
+```
 
-    generator: AsyncGenerator[ImageResponse | ImagePreview, None] = StabilityAI_SD35Large.create_async_generator(
-        model=model,
-        messages=messages,
-        prompt=prompt,
-        negative_prompt=negative_prompt,
-        api_key=api_key,
-        proxy=proxy,
-        aspect_ratio=aspect_ratio,
-        width=width,
-        height=height,
-        guidance_scale=guidance_scale,
-        num_inference_steps=num_inference_steps,
-        seed=seed,
-        randomize_seed=randomize_seed
-    )
+Пример 3: Генерация изображения с использованием прокси и указанием размеров изображения.
 
-    async for item in generator:
-        if isinstance(item, ImagePreview):
-            print(f"Preview URL: {item.image_url}")
-        elif isinstance(item, ImageResponse):
-            print(f"Final URL: {item.image_url}")
-            break
-
-if __name__ == "__main__":
-    asyncio.run(main())
+```python
+model = 'stabilityai-stable-diffusion-3-5-large'
+messages = [{'role': 'user', 'content': 'Generate a landscape'}]
+proxy = 'http://your_proxy:8080'
+width = 512
+height = 512
+async for image in StabilityAI_SD35Large.create_async_generator(model=model, messages=messages, proxy=proxy, width=width, height=height):
+    print(image.url)
+```

@@ -1,49 +1,52 @@
-# Документация для генерации контекстов персонажей
+# Генерация контекстов для создания описаний персон
 
 ## Обзор
 
-Этот документ описывает структуру и формат запросов к системе для генерации контекстов персонажей. Задача системы - создание множества контекстов, которые будут использоваться в качестве основы для генерации списка персонажей.
-Идея состоит в том, чтобы получить широкий контекст с некоторыми деталями о персонажах, которых мы хотим сгенерировать, такими как демографические параметры, физические характеристики, поведение, убеждения и т.д., а затем создать множество других контекстов, более специфичных, но производных от более общего.
+Этот документ описывает структуру и назначение запроса, используемого для генерации контекстов, которые в дальнейшем будут использоваться для создания описаний персон. Запрос предназначен для получения широкого контекста с деталями о персонах, которых необходимо сгенерировать (демографические параметры, физические характеристики, поведение, убеждения и т.д.), а затем создания множества других, более специфических контекстов, основанных на исходном.
 
 ## Подробней
 
-Этот модуль используется для создания описаний персонажей на основе заданных контекстов. Он принимает общие параметры и генерирует на их основе более конкретные контексты для дальнейшего использования. 
-Код анализирует входящие запросы и преобразует их в JSON-массив контекстов, каждый из которых содержит детализированное описание персонажа.
-Эти контексты используются в других частях проекта `hypotez` для генерации разнообразных и уникальных персонажей.
+Этот запрос используется для создания разнообразных и детализированных описаний персон. Он принимает общий контекст и генерирует на его основе несколько более конкретных контекстов, которые затем используются для формирования окончательных описаний персон.
 
 ## Функции
 
-### `Генерация контекста персонажа`
+### `Генерация контекстов`
 
-```python
-  Ваша задача - создать множество контекстов, которые будут использоваться в качестве базы для генерации списка персонажей.
-  Идея состоит в том, чтобы получить широкий контекст, с некоторыми деталями о персонажах, которых мы хотим сгенерировать, например, демографические параметры, физические характеристики, поведение, убеждения и т.д.; а затем создать много других контекстов, более конкретных, но производных от более общего.
-  Ваш ответ должен быть массивом в формате JSON. Каждый элемент массива должен быть контекстом, который будет использоваться для генерации описания человека.
+```
+   Your task is create many contexts that will be used as base to generate a list of persons.
+   The idea is receive a broad context, with some  details of persons we want to generate, like demographics parameters, physical characteristics, behaviors, believes, etc; and then create many other contexts, more specifics, but derivaded of the more generic one.
+   Your response must be an array in JSON format. Each element of the array must be a context that will be used to generate a person description.
 
-  Пример:
-    - INPUT:
-      Пожалуйста, сгенерируйте описание 3 человек на основе следующего широкого контекста: Латиноамериканцы, в возрасте от 20 до 40 лет, экономический статус может варьироваться от бедного до богатого, может быть религиозным или нет, может быть женат или нет, может иметь детей или нет, может быть профессионалом или нет, может быть работником или нет.
-    - OUTPUT:
-      ["Мексиканец, получивший образование юриста, но сейчас работающий в другой области, холост, любит спорт и кино", "Создать бразильца, который является врачом, любит домашних животных и природу, а также любит хэви-метал.", "Создать колумбийца, который является юристом, любит читать и пить кофе и женат, имеет 2 детей."]
+   Example:
+     - INPUT:
+       Please, generate 3 person(s) description(s) based on the following broad context: Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not
+     - OUTPUT:
+       ["Mexican person that has formed as lawyer but now works in other are, is single, like sports and movies", "Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.", "Create a Colombian person that is a lawyer, like to read and drink coffee and is married with 2 children."]
+
 ```
 
+**Назначение**: Генерация контекстов для создания списка персон.
+
+**Параметры**:
+- Нет явных параметров, кроме инструкции в строке запроса. В инструкции указывается широкий контекст с деталями о персонах, которых нужно сгенерировать.
+
+**Возвращает**:
+- `array`: Массив в формате JSON, где каждый элемент является контекстом, используемым для генерации описания персоны.
+
+**Вызывает исключения**:
+- Не описаны.
+
 **Как работает функция**:
+1. Получает широкий контекст с деталями о персонах (демография, физические характеристики, поведение, убеждения и т.д.).
+2. Создает множество более специфических контекстов, основанных на исходном.
+3. Формирует массив в формате JSON, где каждый элемент представляет собой отдельный контекст для генерации описания персоны.
 
-1.  **Получение широкого контекста**: Функция принимает на вход запрос, содержащий общее описание персонажей (например, "Латиноамериканцы, возраст от 20 до 40 лет, различный экономический статус").
-2.  **Создание детализированных контекстов**: На основе этого общего описания функция генерирует несколько более конкретных контекстов. Каждый из этих контекстов содержит детализированное описание отдельного персонажа (например, "Мексиканец, получивший образование юриста, но сейчас работающий в другой области, холост, любит спорт и кино").
-3.  **Форматирование вывода**: Функция формирует массив JSON, где каждый элемент этого массива представляет собой один из сгенерированных контекстов персонажа.
-
-```mermaid
-graph TD
-    A[Получение широкого контекста] --> B{Создание детализированных контекстов};
-    B --> C{Форматирование вывода в JSON};
-    C --> D[Возврат JSON-массива контекстов];
+```
+Генерация широкого контекста --> Создание специфических контекстов --> Формирование JSON массива
 ```
 
 **Примеры**:
 
-```json
-  {
-    "INPUT": "Please, generate 3 person(s) description(s) based on the following broad context: Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not",
-    "OUTPUT": ["Mexican person that has formed as lawyer but now works in other are, is single, like sports and movies", "Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.", "Create a Colombian person that is a lawyer, like to read and drink coffee and is married with 2 children."]
-  }
+**Пример 1**:
+- Вход: `Please, generate 3 person(s) description(s) based on the following broad context: Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not`
+- Выход: `["Mexican person that has formed as lawyer but now works in other are, is single, like sports and movies", "Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.", "Create a Colombian person that is a lawyer, like to read and drink coffee and is married with 2 children."]`

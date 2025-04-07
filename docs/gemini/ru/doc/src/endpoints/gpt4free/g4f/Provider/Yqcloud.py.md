@@ -1,56 +1,45 @@
 # Модуль Yqcloud
-
 ## Обзор
 
-Модуль `Yqcloud` предоставляет асинхронный генератор для взаимодействия с сервисом `chat9.yqcloud.top`. 
-Он позволяет генерировать текст на основе предоставленных сообщений, поддерживая потоковую передачу данных, системные сообщения и историю сообщений.
+Модуль предоставляет класс `Yqcloud`, который является асинхронным провайдером для взаимодействия с API Yqcloud (https://chat9.yqcloud.top). Он позволяет генерировать текст на основе предоставленных сообщений с использованием модели GPT-4. Модуль поддерживает потоковую передачу данных, системные сообщения и историю сообщений.
 
 ## Подробней
 
-Модуль предназначен для интеграции с API `binjie.fun` через асинхронные запросы. Он использует `aiohttp` для выполнения HTTP-запросов и предоставляет возможность работы через прокси. Поддерживает сохранение истории разговоров и возвращает её при необходимости.
+Модуль `Yqcloud` предназначен для асинхронного взаимодействия с API Yqcloud для генерации текста. Он использует `aiohttp` для выполнения HTTP-запросов. Класс `Yqcloud` наследуется от `AsyncGeneratorProvider` и `ProviderModelMixin`, что позволяет ему предоставлять асинхронные генераторы для обработки ответов от API. Модуль также включает класс `Conversation` для управления историей сообщений и идентификатором пользователя.
 
 ## Классы
 
 ### `Conversation`
 
-**Описание**: Класс для хранения информации о разговоре.
-
-**Наследует**:
-
-- `JsonConversation`: Предоставляет функциональность для сериализации и десериализации разговора в JSON.
+**Описание**: Класс для хранения истории сообщений и идентификатора пользователя в рамках одного диалога.
+   
+**Наследует**: `JsonConversation`
 
 **Атрибуты**:
-
-- `userId` (str): Уникальный идентификатор пользователя. По умолчанию `None`.
-- `message_history` (Messages): Список сообщений в истории разговора. По умолчанию `[]`.
-- `model` (str): Модель, используемая в разговоре.
+- `userId` (str): Уникальный идентификатор пользователя.
+- `message_history` (Messages): Список сообщений в формате `typing.Messages`.
 
 **Методы**:
-
-- `__init__(self, model: str)`: Инициализирует новый экземпляр класса `Conversation`.
-    - `model` (str): Модель, используемая в разговоре.
-    - Устанавливает `self.model` в переданное значение `model`.
-    - Генерирует уникальный `userId` на основе текущего времени.
+- `__init__(self, model: str)`: Инициализирует объект `Conversation` с указанной моделью и генерирует уникальный `userId`.
 
 ### `Yqcloud`
 
-**Описание**: Класс, реализующий асинхронный генератор для взаимодействия с API `Yqcloud`.
+**Описание**: Класс, предоставляющий функциональность для взаимодействия с API Yqcloud.
 
-**Наследует**:
-
-- `AsyncGeneratorProvider`: Предоставляет базовую функциональность для асинхронных генераторов.
-- `ProviderModelMixin`: Добавляет функциональность для работы с моделями.
+**Наследует**: `AsyncGeneratorProvider`, `ProviderModelMixin`
 
 **Атрибуты**:
+- `url` (str): URL сервиса Yqcloud.
+- `api_endpoint` (str): URL API для генерации текста.
+- `working` (bool): Флаг, указывающий, работает ли провайдер.
+- `supports_stream` (bool): Флаг, указывающий, поддерживает ли провайдер потоковую передачу данных.
+- `supports_system_message` (bool): Флаг, указывающий, поддерживает ли провайдер системные сообщения.
+- `supports_message_history` (bool): Флаг, указывающий, поддерживает ли провайдер историю сообщений.
+- `default_model` (str): Модель, используемая по умолчанию ("gpt-4").
+- `models` (list[str]): Список поддерживаемых моделей (в данном случае только "gpt-4").
 
-- `url` (str): Базовый URL сервиса `chat9.yqcloud.top`.
-- `api_endpoint` (str): URL API для генерации текста `api.binjie.fun/api/generateStream`.
-- `working` (bool): Указывает, работает ли провайдер. Всегда `True`.
-- `supports_stream` (bool): Указывает, поддерживает ли провайдер потоковую передачу данных. Всегда `True`.
-- `supports_system_message` (bool): Указывает, поддерживает ли провайдер системные сообщения. Всегда `True`.
-- `supports_message_history` (bool): Указывает, поддерживает ли провайдер историю сообщений. Всегда `True`.
-- `default_model` (str): Модель, используемая по умолчанию `"gpt-4"`.
-- `models` (list): Список поддерживаемых моделей `[default_model]`.
+**Методы**:
+- `create_async_generator(model: str, messages: Messages, stream: bool = True, proxy: str = None, conversation: Conversation = None, return_conversation: bool = False, **kwargs) -> AsyncResult`: Создает асинхронный генератор для получения ответов от API Yqcloud.
 
 ## Функции
 
@@ -68,127 +57,109 @@ async def create_async_generator(
     return_conversation: bool = False,
     **kwargs
 ) -> AsyncResult:
-    """Создает асинхронный генератор для генерации текста с использованием API Yqcloud.
+    """
+    Создает асинхронный генератор для получения ответов от API Yqcloud.
 
     Args:
-        model (str): Модель для генерации текста.
+        model (str): Имя используемой модели.
         messages (Messages): Список сообщений для отправки в API.
-        stream (bool, optional): Флаг, указывающий, использовать ли потоковую передачу данных. По умолчанию `True`.
-        proxy (str, optional): URL прокси-сервера для использования. По умолчанию `None`.
-        conversation (Conversation, optional): Объект разговора для сохранения истории. По умолчанию `None`.
-        return_conversation (bool, optional): Флаг, указывающий, возвращать ли объект разговора после завершения. По умолчанию `False`.
-        **kwargs: Дополнительные параметры.
+        stream (bool): Флаг, указывающий, использовать ли потоковую передачу данных. По умолчанию `True`.
+        proxy (str): Адрес прокси-сервера для использования при подключении к API. По умолчанию `None`.
+        conversation (Conversation): Объект `Conversation` для хранения истории сообщений. По умолчанию `None`.
+        return_conversation (bool): Флаг, указывающий, возвращать ли объект `Conversation` вместе с результатом. По умолчанию `False`.
+        **kwargs: Дополнительные аргументы.
 
     Returns:
-        AsyncResult: Асинхронный генератор, возвращающий текст от API.
+        AsyncResult: Асинхронный генератор, возвращающий ответы от API.
 
-    Как работает функция:
-     1. **Инициализация**:
-        - Получает модель, используя `cls.get_model(model)`.
-        - Определяет заголовки запроса, включая `accept`, `accept-language`, `content-type`, `origin`, `referer` и `user-agent`.
-     2. **Обработка истории разговора**:
-        - Если `conversation` не предоставлен, создает новый экземпляр `Conversation(model)`.
-        - Если `conversation` предоставлен, добавляет последнее сообщение из `messages` в историю разговора.
-     3. **Извлечение системного сообщения**:
-        - Проверяет, есть ли системное сообщение в начале списка сообщений. Если есть, извлекает его содержимое и удаляет из списка.
-     4. **Формирование запроса**:
-        - Форматирует сообщения с помощью `format_prompt(current_messages)`.
-        - Формирует данные для отправки в API, включая `prompt`, `userId`, `network`, `system`, `withoutContext` и `stream`.
-     5. **Отправка запроса и обработка ответа**:
-        - Использует `aiohttp.ClientSession` для отправки POST-запроса к `cls.api_endpoint` с данными и заголовками.
-        - Обрабатывает ответ от API по частям (chunks) и декодирует каждую часть.
-        - Передает декодированные части через генератор.
-     6. **Сохранение истории и завершение**:
-        - Если `return_conversation` установлен в `True`, добавляет ответ ассистента в историю разговора и передает объект разговора через генератор.
-        - Завершает генератор, передавая `FinishReason("stop")`.
+    Raises:
+        Exception: Если возникает ошибка при выполнении запроса к API.
+    """
+    ...
+```
 
-    ASCII flowchart:
+**Назначение**: Создание асинхронного генератора для взаимодействия с API Yqcloud и получения ответов на основе предоставленных сообщений.
 
-    ```
+**Параметры**:
+- `cls`: Ссылка на класс `Yqcloud`.
+- `model` (str): Имя модели, которую необходимо использовать.
+- `messages` (Messages): Список сообщений, отправляемых в API.
+- `stream` (bool, optional): Флаг, указывающий, использовать ли потоковую передачу данных. По умолчанию `True`.
+- `proxy` (str, optional): Адрес прокси-сервера. По умолчанию `None`.
+- `conversation` (Conversation, optional): Объект `Conversation` для хранения истории сообщений. По умолчанию `None`.
+- `return_conversation` (bool, optional): Флаг, указывающий, возвращать ли объект `Conversation` вместе с результатом. По умолчанию `False`.
+- `**kwargs`: Дополнительные параметры.
+
+**Возвращает**:
+- `AsyncResult`: Асинхронный генератор, который возвращает ответы от API.
+
+**Вызывает исключения**:
+- `aiohttp.ClientResponseError`: Если возникает HTTP ошибка при запросе.
+
+**Как работает функция**:
+1. **Подготовка**:
+   - Извлекает модель, приводя ее к допустимому значению.
+   - Формирует заголовки запроса, включая `accept`, `accept-language`, `content-type`, `origin`, `referer` и `user-agent`.
+   - Если объект `conversation` не предоставлен, создает новый экземпляр `Conversation`.
+   - Обновляет историю сообщений в объекте `conversation`.
+   - Извлекает системное сообщение из истории сообщений, если оно присутствует.
+
+2. **Выполнение запроса**:
+   - Использует `aiohttp.ClientSession` для выполнения асинхронного POST-запроса к `cls.api_endpoint`.
+   - Формирует JSON-данные для запроса, включая `prompt`, `userId`, `network`, `system`, `withoutContext` и `stream`.
+
+3. **Обработка ответа**:
+   - Итерируется по чанкам в ответе, декодирует каждый чанк и передает его в генератор.
+   - Собирает все чанки в `full_message`.
+
+4. **Завершение**:
+   - Если `return_conversation` установлен в `True`, добавляет ответ ассистента в историю сообщений и передает объект `conversation` в генератор.
+   - Передает `FinishReason("stop")` в генератор, сигнализируя о завершении работы.
+
+```text
     Начало
     │
-    Получение модели
+    ├──►  Извлечение модели
     │
-    Определение заголовков
+    ├──►  Формирование заголовков
     │
-    Обработка истории разговора
+    ├──►  Создание/обновление conversation
     │
-    Извлечение системного сообщения
+    ├──►  Извлечение системного сообщения (если есть)
     │
-    Формирование запроса
+    ├──►  Создание сессии aiohttp
+    │   │
+    │   └──► Формирование данных запроса
+    │   │
+    │   └──► POST запрос к API
+    │       │
+    │       └──► Обработка чанков ответа
+    │           │
+    │           └──► Сборка полного сообщения
     │
-    Отправка POST-запроса
+    └──►  Возврат conversation (если return_conversation)
     │
-    Обработка ответа по частям
-    │
-    Сохранение истории (если нужно)
-    │
-    Завершение
-    │
-    Конец
-    ```
+    └──►  Завершение
+```
 
-    Примеры:
-    ```python
-    # Пример вызова функции с минимальными параметрами
-    async for message in Yqcloud.create_async_generator(model="gpt-4", messages=[{"role": "user", "content": "Hello"}]):
-        print(message)
+**Примеры**:
 
-    # Пример вызова функции с использованием прокси и возвратом истории разговора
-    async for message in Yqcloud.create_async_generator(model="gpt-4", messages=[{"role": "user", "content": "Hello"}], proxy="http://proxy.example.com", return_conversation=True):
-        print(message)
+```python
+# Пример 1: Использование с минимальными параметрами
+async for message in Yqcloud.create_async_generator(model="gpt-4", messages=[{"role": "user", "content": "Hello"}]):
+    print(message)
 
-    # Пример с указанием conversation
-    conversation = Conversation(model="gpt-4")
-    async for message in Yqcloud.create_async_generator(model="gpt-4", messages=[{"role": "user", "content": "Hello"}], conversation=conversation):
-        print(message)
-    ```
-    """
-    model = cls.get_model(model)
-    headers = {
-        "accept": "application/json, text/plain, */*",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/json",
-        "origin": f"{cls.url}",
-        "referer": f"{cls.url}/",
-        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-    }
-    
-    if conversation is None:
-        conversation = Conversation(model)
-        conversation.message_history = messages
+# Пример 2: Использование с прокси и возвратом conversation
+conversation = None
+async for message in Yqcloud.create_async_generator(model="gpt-4", messages=[{"role": "user", "content": "Как дела?"}], proxy="http://proxy.example.com", return_conversation=True, conversation=conversation):
+    if isinstance(message, Conversation):
+        conversation = message
     else:
-        conversation.message_history.append(messages[-1])
+        print(message)
 
-    # Extract system message if present
-    system_message = ""
-    current_messages = conversation.message_history
-    if current_messages and current_messages[0]["role"] == "system":
-        system_message = current_messages[0]["content"]
-        current_messages = current_messages[1:]
-    
-    async with ClientSession(headers=headers) as session:
-        prompt = format_prompt(current_messages)
-        data = {
-            "prompt": prompt,
-            "userId": conversation.userId,
-            "network": True,
-            "system": system_message,
-            "withoutContext": False,
-            "stream": stream
-        }
-        
-        async with session.post(cls.api_endpoint, json=data, proxy=proxy) as response:
-            await raise_for_status(response)
-            full_message = ""
-            async for chunk in response.content:
-                if chunk:
-                    message = chunk.decode()
-                    yield message
-                    full_message += message
+if conversation:
+    print(conversation.message_history)
 
-            if return_conversation:
-                conversation.message_history.append({"role": "assistant", "content": full_message})
-                yield conversation
-            
-            yield FinishReason("stop")
+# Пример 3: Использование с системным сообщением
+async for message in Yqcloud.create_async_generator(model="gpt-4", messages=[{"role": "system", "content": "Ты полезный ассистент"}, {"role": "user", "content": "Hello"}]):
+    print(message)

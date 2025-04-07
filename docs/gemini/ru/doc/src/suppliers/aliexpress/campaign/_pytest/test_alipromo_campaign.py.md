@@ -1,20 +1,25 @@
-# Модуль для тестирования AliPromoCampaign
+# Модуль тестирования AliPromoCampaign
+
 ## Обзор
 
-Модуль `test_alipromo_campaign.py` содержит набор тестов для проверки функциональности класса `AliPromoCampaign`, который предназначен для работы с рекламными кампаниями AliExpress. Тесты охватывают различные аспекты работы класса, включая инициализацию кампании, получение данных о продуктах, создание пространств имен и сохранение данных.
-## Подробней
+Этот модуль содержит набор тестов для проверки функциональности класса `AliPromoCampaign`, который используется для управления рекламными кампаниями AliExpress. Он включает тесты для инициализации кампании, получения продуктов категории, создания пространства имен продуктов, подготовки продуктов и сохранения данных о продуктах.
 
-Модуль использует библиотеку `pytest` для организации и запуска тестов, а также библиотеки `pathlib`, `types` и модуль `src.utils.jjson` для работы с файлами и данными. Fixtures используются для создания экземпляров класса `AliPromoCampaign` и мокирования функций.
-Тесты проверяют корректность работы методов класса `AliPromoCampaign` в различных сценариях, включая случаи, когда данные отсутствуют или содержат ошибки.
+## Подробнее
+
+Модуль использует библиотеку `pytest` для организации и запуска тестов. Он также использует `mocker` для имитации внешних зависимостей и упрощения тестирования отдельных компонентов. Тесты охватывают различные сценарии, включая случаи, когда JSON-файлы отсутствуют или присутствуют, и проверяют правильность обработки данных и вызова методов.
 
 ## Классы
 
-### `campaign`
+### `AliPromoCampaign`
 
-**Описание**: Fixture для создания экземпляра класса `AliPromoCampaign` для использования в тестах.
+**Описание**: Класс для управления рекламными кампаниями AliExpress.
 
 **Принцип работы**:
-Создает и возвращает экземпляр класса `AliPromoCampaign` с заданными параметрами: `campaign_name`, `category_name`, `language` и `currency`.
+Класс `AliPromoCampaign` предоставляет методы для инициализации кампании, получения продуктов из категорий, создания пространств имен для продуктов, категорий и кампаний, подготовки продуктов и сохранения данных о продуктах. Он использует различные утилиты, такие как `j_dumps`, `j_loads_ns`, `save_text_file` и `read_text_file`, для работы с данными и файлами.
+
+## Функции
+
+### `campaign`
 
 ```python
 @pytest.fixture
@@ -22,46 +27,36 @@ def campaign():
     """Fixture for creating a campaign instance."""
     return AliPromoCampaign(campaign_name, category_name, language, currency)
 ```
-## Функции
 
-### `test_initialize_campaign`
-
-```python
-def test_initialize_campaign(mocker, campaign):
-    """Test the initialize_campaign method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `initialize_campaign` класса `AliPromoCampaign`.
+**Назначение**: Фикстура для создания экземпляра класса `AliPromoCampaign` для использования в тестах.
 
 **Параметры**:
-- `mocker`: Fixture из библиотеки `pytest-mock` для мокирования функций и методов.
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- Отсутствуют.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если кампания не инициализируется правильно.
+- `AliPromoCampaign`: Экземпляр класса `AliPromoCampaign`, инициализированный с тестовыми данными.
 
 **Как работает функция**:
-1. Создается мок данных JSON, представляющих структуру кампании.
-2. Мокируется функция `src.utils.jjson.j_loads_ns`, которая должна возвращать мок данных JSON.
-3. Вызывается метод `initialize_campaign` объекта `campaign`.
-4. Проверяется, что атрибуты объекта `campaign.campaign` установлены правильно, сравнивая их со значениями из мок данных JSON.
 
-**ASII flowchart**:
+1. Создает экземпляр класса `AliPromoCampaign` с заданными параметрами: `campaign_name`, `category_name`, `language` и `currency`.
+2. Возвращает созданный экземпляр.
+
 ```
-Создание мок данных JSON
-↓
-Мокирование j_loads_ns
-↓
-Вызов campaign.initialize_campaign()
-↓
-Проверка атрибутов campaign.campaign
+Создание экземпляра AliPromoCampaign
+│
+└───> Возврат экземпляра
 ```
 
 **Примеры**:
+
+```python
+# Фикстура campaign автоматически внедряется в тестовые функции
+def test_example(campaign):
+    assert isinstance(campaign, AliPromoCampaign)
+```
+
+### `test_initialize_campaign`
+
 ```python
 def test_initialize_campaign(mocker, campaign):
     """Test the initialize_campaign method."""
@@ -86,44 +81,42 @@ def test_initialize_campaign(mocker, campaign):
     assert campaign.campaign.category.test_category.name == category_name
 ```
 
-### `test_get_category_products_no_json_files`
-
-```python
-def test_get_category_products_no_json_files(mocker, campaign):
-    """Test get_category_products method when no JSON files are present."""
-    ...
-```
-
-**Назначение**: Тестирует метод `get_category_products` класса `AliPromoCampaign` в ситуации, когда отсутствуют JSON-файлы.
+**Назначение**: Тестирует метод `initialize_campaign` класса `AliPromoCampaign`.
 
 **Параметры**:
-- `mocker`: Fixture из библиотеки `pytest-mock` для мокирования функций и методов.
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `mocker`: Фикстура `pytest-mock` для имитации объектов.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если метод возвращает непустой список продуктов.
+- Отсутствует.
 
 **Как работает функция**:
-1. Мокируется функция `src.utils.file.get_filenames`, чтобы она возвращала пустой список, имитируя отсутствие JSON-файлов.
-2. Мокируется функция `src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.fetch_product_data`, чтобы она возвращала пустой список.
-3. Вызывается метод `get_category_products` объекта `campaign` с параметром `force=True`.
-4. Проверяется, что метод возвращает пустой список.
 
-**ASII flowchart**:
+1. Определяет моковые данные JSON для имитации загрузки данных кампании.
+2. Использует `mocker.patch` для имитации функции `j_loads_ns` и возвращает моковые данные.
+3. Вызывает метод `initialize_campaign` на экземпляре `campaign`.
+4. Проверяет, что данные кампании были правильно инициализированы, сравнивая значения атрибутов с ожидаемыми значениями.
+
 ```
-Мокирование get_filenames (возвращает [])
-↓
-Мокирование fetch_product_data (возвращает [])
-↓
-Вызов campaign.get_category_products(force=True)
-↓
-Проверка, что возвращен пустой список
+Определение моковых данных
+│
+└───> Имитация функции j_loads_ns
+│
+└───> Вызов метода initialize_campaign
+│
+└───> Проверка инициализации данных кампании
 ```
 
 **Примеры**:
+
+```python
+def test_initialize_campaign(mocker, campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_get_category_products_no_json_files`
+
 ```python
 def test_get_category_products_no_json_files(mocker, campaign):
     """Test get_category_products method when no JSON files are present."""
@@ -134,47 +127,42 @@ def test_get_category_products_no_json_files(mocker, campaign):
     assert products == []
 ```
 
-### `test_get_category_products_with_json_files`
-
-```python
-def test_get_category_products_with_json_files(mocker, campaign):
-    """Test get_category_products method when JSON files are present."""
-    ...
-```
-
-**Назначение**: Тестирует метод `get_category_products` класса `AliPromoCampaign` в ситуации, когда JSON-файлы присутствуют.
+**Назначение**: Тестирует метод `get_category_products` класса `AliPromoCampaign` в случае, когда отсутствуют JSON-файлы.
 
 **Параметры**:
-- `mocker`: Fixture из библиотеки `pytest-mock` для мокирования функций и методов.
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `mocker`: Фикстура `pytest-mock` для имитации объектов.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если метод возвращает неверное количество продуктов или неверные данные о продуктах.
+- Отсутствует.
 
 **Как работает функция**:
-1. Создается мок данных продукта `SimpleNamespace`, представляющий данные, которые должны быть загружены из JSON-файла.
-2. Мокируется функция `src.utils.file.get_filenames`, чтобы она возвращала список с именем файла продукта (`product_123.json`).
-3. Мокируется функция `src.utils.jjson.j_loads_ns`, чтобы она возвращала мок данных продукта.
-4. Вызывается метод `get_category_products` объекта `campaign`.
-5. Проверяется, что метод возвращает список, содержащий один продукт, и что атрибуты этого продукта соответствуют мок данным продукта.
 
-**ASII flowchart**:
+1. Использует `mocker.patch` для имитации функции `get_filenames` и возвращает пустой список, имитируя отсутствие JSON-файлов.
+2. Использует `mocker.patch` для имитации метода `fetch_product_data` и возвращает пустой список.
+3. Вызывает метод `get_category_products` на экземпляре `campaign` с параметром `force=True`.
+4. Проверяет, что возвращаемый список продуктов пуст.
+
 ```
-Создание мок данных продукта
-↓
-Мокирование get_filenames (возвращает список с именем файла продукта)
-↓
-Мокирование j_loads_ns (возвращает мок данных продукта)
-↓
-Вызов campaign.get_category_products()
-↓
-Проверка, что возвращен список с одним продуктом и его атрибуты
+Имитация отсутствия JSON-файлов
+│
+└───> Имитация метода fetch_product_data
+│
+└───> Вызов метода get_category_products
+│
+└───> Проверка, что список продуктов пуст
 ```
 
 **Примеры**:
+
+```python
+def test_get_category_products_no_json_files(mocker, campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_get_category_products_with_json_files`
+
 ```python
 def test_get_category_products_with_json_files(mocker, campaign):
     """Test get_category_products method when JSON files are present."""
@@ -188,40 +176,45 @@ def test_get_category_products_with_json_files(mocker, campaign):
     assert products[0].product_title == "Test Product"
 ```
 
-### `test_create_product_namespace`
-
-```python
-def test_create_product_namespace(campaign):
-    """Test create_product_namespace method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `create_product_namespace` класса `AliPromoCampaign`.
+**Назначение**: Тестирует метод `get_category_products` класса `AliPromoCampaign` в случае, когда JSON-файлы присутствуют.
 
 **Параметры**:
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `mocker`: Фикстура `pytest-mock` для имитации объектов.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если атрибуты созданного пространства имен продукта не соответствуют заданным данным.
+- Отсутствует.
 
 **Как работает функция**:
-1. Определяются данные продукта в виде словаря.
-2. Вызывается метод `create_product_namespace` объекта `campaign` с данными продукта.
-3. Проверяется, что атрибуты созданного пространства имен продукта соответствуют значениям, указанным в словаре данных продукта.
 
-**ASII flowchart**:
+1. Определяет моковые данные продукта для имитации загрузки данных из JSON-файла.
+2. Использует `mocker.patch` для имитации функции `get_filenames` и возвращает список с именем фиктивного JSON-файла.
+3. Использует `mocker.patch` для имитации функции `j_loads_ns` и возвращает моковые данные продукта.
+4. Вызывает метод `get_category_products` на экземпляре `campaign`.
+5. Проверяет, что возвращаемый список продуктов содержит один элемент и что данные продукта соответствуют ожидаемым значениям.
+
 ```
-Определение данных продукта
-↓
-Вызов campaign.create_product_namespace(**product_data)
-↓
-Проверка атрибутов созданного пространства имен продукта
+Определение моковых данных продукта
+│
+└───> Имитация функции get_filenames
+│
+└───> Имитация функции j_loads_ns
+│
+└───> Вызов метода get_category_products
+│
+└───> Проверка возвращаемого списка продуктов и данных продукта
 ```
 
 **Примеры**:
+
+```python
+def test_get_category_products_with_json_files(mocker, campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_create_product_namespace`
+
 ```python
 def test_create_product_namespace(campaign):
     """Test create_product_namespace method."""
@@ -234,40 +227,38 @@ def test_create_product_namespace(campaign):
     assert product.product_title == "Test Product"
 ```
 
-### `test_create_category_namespace`
-
-```python
-def test_create_category_namespace(campaign):
-    """Test create_category_namespace method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `create_category_namespace` класса `AliPromoCampaign`.
+**Назначение**: Тестирует метод `create_product_namespace` класса `AliPromoCampaign`.
 
 **Параметры**:
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если атрибуты созданного пространства имен категории не соответствуют заданным данным.
+- Отсутствует.
 
 **Как работает функция**:
-1. Определяются данные категории в виде словаря.
-2. Вызывается метод `create_category_namespace` объекта `campaign` с данными категории.
-3. Проверяется, что атрибуты созданного пространства имен категории соответствуют значениям, указанным в словаре данных категории.
 
-**ASII flowchart**:
+1. Определяет словарь с данными продукта.
+2. Вызывает метод `create_product_namespace` на экземпляре `campaign` с данными продукта.
+3. Проверяет, что возвращаемый объект имеет атрибуты `product_id` и `product_title` с ожидаемыми значениями.
+
 ```
-Определение данных категории
-↓
-Вызов campaign.create_category_namespace(**category_data)
-↓
-Проверка атрибутов созданного пространства имен категории
+Определение данных продукта
+│
+└───> Вызов метода create_product_namespace
+│
+└───> Проверка атрибутов возвращаемого объекта
 ```
 
 **Примеры**:
+
+```python
+def test_create_product_namespace(campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_create_category_namespace`
+
 ```python
 def test_create_category_namespace(campaign):
     """Test create_category_namespace method."""
@@ -282,40 +273,38 @@ def test_create_category_namespace(campaign):
     assert category.tags == "tag1, tag2"
 ```
 
-### `test_create_campaign_namespace`
-
-```python
-def test_create_campaign_namespace(campaign):
-    """Test create_campaign_namespace method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `create_campaign_namespace` класса `AliPromoCampaign`.
+**Назначение**: Тестирует метод `create_category_namespace` класса `AliPromoCampaign`.
 
 **Параметры**:
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если атрибуты созданного пространства имен кампании не соответствуют заданным данным.
+- Отсутствует.
 
 **Как работает функция**:
-1. Определяются данные кампании в виде словаря.
-2. Вызывается метод `create_campaign_namespace` объекта `campaign` с данными кампании.
-3. Проверяется, что атрибуты созданного пространства имен кампании соответствуют значениям, указанным в словаре данных кампании.
 
-**ASII flowchart**:
+1. Определяет словарь с данными категории.
+2. Вызывает метод `create_category_namespace` на экземпляре `campaign` с данными категории.
+3. Проверяет, что возвращаемый объект имеет атрибуты `name` и `tags` с ожидаемыми значениями.
+
 ```
-Определение данных кампании
-↓
-Вызов campaign.create_campaign_namespace(**campaign_data)
-↓
-Проверка атрибутов созданного пространства имен кампании
+Определение данных категории
+│
+└───> Вызов метода create_category_namespace
+│
+└───> Проверка атрибутов возвращаемого объекта
 ```
 
 **Примеры**:
+
+```python
+def test_create_category_namespace(campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_create_campaign_namespace`
+
 ```python
 def test_create_campaign_namespace(campaign):
     """Test create_campaign_namespace method."""
@@ -331,50 +320,38 @@ def test_create_campaign_namespace(campaign):
     assert camp.title == "Test Campaign"
 ```
 
-### `test_prepare_products`
-
-```python
-def test_prepare_products(mocker, campaign):
-    """Test prepare_products method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `prepare_products` класса `AliPromoCampaign`.
+**Назначение**: Тестирует метод `create_campaign_namespace` класса `AliPromoCampaign`.
 
 **Параметры**:
-- `mocker`: Fixture из библиотеки `pytest-mock` для мокирования функций и методов.
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если метод `process_affiliate_products` не был вызван один раз.
+- Отсутствует.
 
 **Как работает функция**:
-1. Мокируется метод `get_prepared_products`, чтобы возвращать пустой список.
-2. Мокируется функция `src.utils.file.read_text_file`, чтобы возвращать строку `source_data`.
-3. Мокируется функция `src.utils.file.get_filenames`, чтобы возвращать список с именем файла `source.html`.
-4. Мокируется метод `process_affiliate_products`.
-5. Вызывается метод `prepare_products` объекта `campaign`.
-6. Проверяется, что метод `process_affiliate_products` был вызван один раз.
 
-**ASII flowchart**:
+1. Определяет словарь с данными кампании.
+2. Вызывает метод `create_campaign_namespace` на экземпляре `campaign` с данными кампании.
+3. Проверяет, что возвращаемый объект имеет атрибуты `name` и `title` с ожидаемыми значениями.
+
 ```
-Мокирование get_prepared_products
-↓
-Мокирование read_text_file
-↓
-Мокирование get_filenames
-↓
-Мокирование process_affiliate_products
-↓
-Вызов campaign.prepare_products()
-↓
-Проверка вызова process_affiliate_products
+Определение данных кампании
+│
+└───> Вызов метода create_campaign_namespace
+│
+└───> Проверка атрибутов возвращаемого объекта
 ```
 
 **Примеры**:
+
+```python
+def test_create_campaign_namespace(campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_prepare_products`
+
 ```python
 def test_prepare_products(mocker, campaign):
     """Test prepare_products method."""
@@ -387,47 +364,48 @@ def test_prepare_products(mocker, campaign):
     campaign.process_affiliate_products.assert_called_once()
 ```
 
-### `test_fetch_product_data`
-
-```python
-def test_fetch_product_data(mocker, campaign):
-    """Test fetch_product_data method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `fetch_product_data` класса `AliPromoCampaign`.
+**Назначение**: Тестирует метод `prepare_products` класса `AliPromoCampaign`.
 
 **Параметры**:
-- `mocker`: Fixture из библиотеки `pytest-mock` для мокирования функций и методов.
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `mocker`: Фикстура `pytest-mock` для имитации объектов.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если метод возвращает неверное количество продуктов или неверные данные о продуктах.
+- Отсутствует.
 
 **Как работает функция**:
-1. Определяется список идентификаторов продуктов `product_ids`.
-2. Создается мок списка продуктов `mock_products`.
-3. Мокируется метод `process_affiliate_products`, чтобы он возвращал мок списка продуктов.
-4. Вызывается метод `fetch_product_data` объекта `campaign` с списком идентификаторов продуктов.
-5. Проверяется, что метод возвращает список с двумя продуктами и что атрибуты этих продуктов соответствуют мок данным.
 
-**ASII flowchart**:
+1. Использует `mocker.patch` для имитации метода `get_prepared_products` и возвращает пустой список.
+2. Использует `mocker.patch` для имитации функции `read_text_file` и возвращает фиктивные данные.
+3. Использует `mocker.patch` для имитации функции `get_filenames` и возвращает список с именем фиктивного HTML-файла.
+4. Использует `mocker.patch` для имитации метода `process_affiliate_products`.
+5. Вызывает метод `prepare_products` на экземпляре `campaign`.
+6. Проверяет, что метод `process_affiliate_products` был вызван один раз.
+
 ```
-Определение списка идентификаторов продуктов
-↓
-Создание мок списка продуктов
-↓
-Мокирование process_affiliate_products
-↓
-Вызов campaign.fetch_product_data(product_ids)
-↓
-Проверка возвращенных продуктов
+Имитация метода get_prepared_products
+│
+└───> Имитация функции read_text_file
+│
+└───> Имитация функции get_filenames
+│
+└───> Имитация метода process_affiliate_products
+│
+└───> Вызов метода prepare_products
+│
+└───> Проверка вызова метода process_affiliate_products
 ```
 
 **Примеры**:
+
+```python
+def test_prepare_products(mocker, campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_fetch_product_data`
+
 ```python
 def test_fetch_product_data(mocker, campaign):
     """Test fetch_product_data method."""
@@ -441,47 +419,45 @@ def test_fetch_product_data(mocker, campaign):
     assert products[1].product_id == "456"
 ```
 
-### `test_save_product`
-
-```python
-def test_save_product(mocker, campaign):
-    """Test save_product method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `save_product` класса `AliPromoCampaign`.
+**Назначение**: Тестирует метод `fetch_product_data` класса `AliPromoCampaign`.
 
 **Параметры**:
-- `mocker`: Fixture из библиотеки `pytest-mock` для мокирования функций и методов.
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `mocker`: Фикстура `pytest-mock` для имитации объектов.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если метод `Path.write_text` не был вызван один раз с правильными аргументами.
+- Отсутствует.
 
 **Как работает функция**:
-1. Создается мок объекта продукта `SimpleNamespace`.
-2. Мокируется функция `src.utils.jjson.j_dumps`, чтобы возвращать строку "{}".
-3. Мокируется метод `pathlib.Path.write_text`.
-4. Вызывается метод `save_product` объекта `campaign` с мок объектом продукта.
-5. Проверяется, что метод `Path.write_text` был вызван один раз с аргументом "{}" и кодировкой 'utf-8'.
 
-**ASII flowchart**:
+1. Определяет список идентификаторов продуктов.
+2. Определяет список фиктивных продуктов с соответствующими идентификаторами.
+3. Использует `mocker.patch` для имитации метода `process_affiliate_products` и возвращает список фиктивных продуктов.
+4. Вызывает метод `fetch_product_data` на экземпляре `campaign` с списком идентификаторов продуктов.
+5. Проверяет, что возвращаемый список продуктов содержит два элемента и что идентификаторы продуктов соответствуют ожидаемым значениям.
+
 ```
-Создание мок объекта продукта
-↓
-Мокирование j_dumps
-↓
-Мокирование Path.write_text
-↓
-Вызов campaign.save_product(product)
-↓
-Проверка вызова Path.write_text
+Определение списка идентификаторов продуктов
+│
+└───> Определение списка фиктивных продуктов
+│
+└───> Имитация метода process_affiliate_products
+│
+└───> Вызов метода fetch_product_data
+│
+└───> Проверка возвращаемого списка продуктов и идентификаторов продуктов
 ```
 
 **Примеры**:
+
+```python
+def test_fetch_product_data(mocker, campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_save_product`
+
 ```python
 def test_save_product(mocker, campaign):
     """Test save_product method."""
@@ -493,46 +469,45 @@ def test_save_product(mocker, campaign):
     Path.write_text.assert_called_once_with("{}", encoding='utf-8')
 ```
 
-### `test_list_campaign_products`
-
-```python
-def test_list_campaign_products(campaign):
-    """Test list_campaign_products method."""
-    ...
-```
-
-**Назначение**: Тестирует метод `list_campaign_products` класса `AliPromoCampaign`.
+**Назначение**: Тестирует метод `save_product` класса `AliPromoCampaign`.
 
 **Параметры**:
-- `campaign`: Fixture, создающая экземпляр класса `AliPromoCampaign`.
+- `mocker`: Фикстура `pytest-mock` для имитации объектов.
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
 
 **Возвращает**:
-- `None`
-
-**Вызывает исключения**:
-- `AssertionError`: Если метод возвращает неверный список заголовков продуктов.
+- Отсутствует.
 
 **Как работает функция**:
-1. Создаются два мок объекта продукта `SimpleNamespace`.
-2. Мок объектам продукта присваиваются значения `product_title`.
-3. Мок объекты продукта добавляются в список `campaign.category.products`.
-4. Вызывается метод `list_campaign_products` объекта `campaign`.
-5. Проверяется, что метод возвращает список заголовков продуктов, соответствующий значениям `product_title` мок объектов продукта.
 
-**ASII flowchart**:
+1. Определяет фиктивный продукт с атрибутами `product_id` и `product_title`.
+2. Использует `mocker.patch` для имитации функции `j_dumps` и возвращает пустую строку JSON.
+3. Использует `mocker.patch` для имитации метода `write_text` класса `pathlib.Path`.
+4. Вызывает метод `save_product` на экземпляре `campaign` с фиктивным продуктом.
+5. Проверяет, что метод `write_text` был вызван один раз с ожидаемыми аргументами (пустая строка JSON и кодировка 'utf-8').
+
 ```
-Создание мок объектов продукта
-↓
-Присвоение значений product_title
-↓
-Добавление в campaign.category.products
-↓
-Вызов campaign.list_campaign_products()
-↓
-Проверка возвращенного списка
+Определение фиктивного продукта
+│
+└───> Имитация функции j_dumps
+│
+└───> Имитация метода write_text
+│
+└───> Вызов метода save_product
+│
+└───> Проверка вызова метода write_text
 ```
 
 **Примеры**:
+
+```python
+def test_save_product(mocker, campaign):
+    # (см. код выше)
+    pass
+```
+
+### `test_list_campaign_products`
+
 ```python
 def test_list_campaign_products(campaign):
     """Test list_campaign_products method."""
@@ -542,3 +517,36 @@ def test_list_campaign_products(campaign):
 
     product_titles = campaign.list_campaign_products()
     assert product_titles == ["Product 1", "Product 2"]
+```
+
+**Назначение**: Тестирует метод `list_campaign_products` класса `AliPromoCampaign`.
+
+**Параметры**:
+- `campaign`: Фикстура `campaign`, создающая экземпляр `AliPromoCampaign`.
+
+**Возвращает**:
+- Отсутствует.
+
+**Как работает функция**:
+
+1. Создает два фиктивных продукта с атрибутами `product_title`.
+2. Присваивает список фиктивных продуктов атрибуту `products` объекта `campaign.category`.
+3. Вызывает метод `list_campaign_products` на экземпляре `campaign`.
+4. Проверяет, что возвращаемый список заголовков продуктов соответствует ожидаемому списку.
+
+```
+Создание фиктивных продуктов
+│
+└───> Присвоение списка продуктов атрибуту campaign.category.products
+│
+└───> Вызов метода list_campaign_products
+│
+└───> Проверка возвращаемого списка заголовков продуктов
+```
+
+**Примеры**:
+
+```python
+def test_list_campaign_products(campaign):
+    # (см. код выше)
+    pass

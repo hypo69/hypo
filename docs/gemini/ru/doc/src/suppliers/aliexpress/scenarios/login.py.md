@@ -1,13 +1,12 @@
-# Модуль для выполнения сценария входа в AliExpress
+# Модуль `login`
 
 ## Обзор
 
-Модуль содержит функцию `login`, которая автоматизирует процесс входа пользователя на сайт AliExpress с использованием веб-драйвера. Модуль предназначен для интеграции с классом `Supplier`, который предоставляет необходимые параметры, такие как драйвер веб-браузера и локаторы элементов страницы.
+Модуль `login` предназначен для автоматизации процесса входа в учетную запись на сайте AliExpress с использованием веб-драйвера. Он содержит функцию `login`, которая принимает объект поставщика `Supplier` с настроенным веб-драйвером и локаторами элементов страницы входа.
 
-## Подробней
+## Подробнее
 
-Этот модуль выполняет сценарий входа на сайт AliExpress. Он использует веб-драйвер для взаимодействия с элементами на странице, такими как поля ввода email, пароля и кнопки входа.
-Основная цель модуля - автоматизировать процесс входа пользователя в систему, что может быть полезно для задач, требующих авторизованного доступа к сайту AliExpress.
+Этот модуль является частью системы автоматизации для работы с поставщиками на платформе AliExpress. Он использует веб-драйвер для эмуляции действий пользователя, таких как ввод email, пароля и нажатие кнопки входа.
 
 ## Функции
 
@@ -15,133 +14,89 @@
 
 ```python
 def login(s) -> bool:
-    """Выполняет вход на AliExpress через веб-драйвер.
+    """
+    Выполняет вход в AliExpress с использованием веб-драйвера.
+
     Args:
-        s (Supplier): Класс поставщика с запущенным экземпляром веб-драйвера и настроенными локаторами.
+        s (Supplier): Класс поставщика с запущенным веб-драйвером и локаторами.
 
     Returns:
-        bool: Возвращает `True` в случае успешного входа (в текущей реализации всегда `True` для отладки).
+        bool: Всегда возвращает `True` (в текущей реализации).
 
-    Raises:
-        Exception: Если возникают ошибки при выполнении действий входа.
-
-    Example:
-        >>> from src.suppliers.aliexpress.aliexpress import Supplier
-        >>> s = Supplier()
-        >>> s.driver = # some webdriver instance
-        >>> s.locators = {'login': {'cookies_accept': ..., 'open_login': ..., 'email_locator': ..., 'password_locator': ..., 'loginbutton_locator': ...}}
-        >>> login(s)
-        True
     """
 ```
 
-**Назначение**: Функция автоматизирует процесс входа пользователя на сайт AliExpress с использованием веб-драйвера.
+**Назначение**: Функция `login` автоматизирует процесс входа пользователя в систему AliExpress, используя предоставленные локаторы элементов веб-страницы.
 
 **Параметры**:
-- `s` (Supplier): Класс поставщика с запущенным экземпляром веб-драйвера и настроенными локаторами.
+- `s` (Supplier): Объект класса `Supplier`, который содержит настроенный веб-драйвер (`driver`) и локаторы элементов страницы входа (`locators['login']`).
 
 **Возвращает**:
-- `bool`: Возвращает `True` в случае успешного входа (в текущей реализации всегда `True` для отладки).
+- `bool`: В текущей реализации всегда возвращает `True` (используется для отладки).
 
 **Как работает функция**:
-
-1.  **Инициализация**: Функция получает экземпляр класса `Supplier`, содержащий настроенный веб-драйвер и локаторы элементов страницы.
-2.  **Получение URL**: Загружает страницу AliExpress, используя метод `_d.get_url()`.
-3.  **Выполнение действий**: Выполняет клики и ввод данных в поля email, пароля и кнопки входа, используя метод `_d.execute_locator()`.
-4.  **Обработка ошибок**: В случае неуспешного выполнения какого-либо из действий входа, предусмотрена логика обработки ошибок (TODO).
-5.  **Завершение**: После выполнения всех действий возвращает `True` (в текущей реализации для отладки).
+1. **Инициализация**: Получает веб-драйвер (`_d`) и локаторы элементов входа (`_l`) из объекта поставщика `s`.
+2. **Переход на страницу AliExpress**: Открывает главную страницу AliExpress (`https://www.aliexpress.com`) с помощью `_d.get_url()`.
+3. **Принятие cookies**: Выполняет нажатие на кнопку принятия cookies, используя локатор `_l['cookies_accept']`.
+4. **Открытие формы входа**: Кликает на элемент, открывающий форму входа, используя локатор `_l['open_login']`.
+5. **Ввод email и пароля**: Вводит email и пароль, используя локаторы `_l['email_locator']` и `_l['password_locator']` соответственно.
+6. **Нажатие кнопки входа**: Нажимает кнопку входа, используя локатор `_l['loginbutton_locator']`.
+7. **TODO**: Присутствуют закомментированные участки кода и TODO-комментарии, указывающие на необходимость реализации логики обработки ошибок и установки языка/валюты/страны доставки.
 
 **ASCII flowchart**:
 
 ```
-    Supplier (s)
-    |
-    V
-    Получение веб-драйвера (_d) и локаторов (_l)
-    |
-    V
-    Загрузка страницы AliExpress (_d.get_url())
-    |
-    V
-    Принятие cookies (_d.execute_locator(_l['cookies_accept']))
-    |
-    V
-    Открытие формы входа (_d.execute_locator(_l['open_login']))
-    |
-    V
-    Ввод email (_d.execute_locator(_l['email_locator']))
-    |
-    V
-    Ввод пароля (_d.execute_locator(_l['password_locator']))
-    |
-    V
-    Нажатие кнопки входа (_d.execute_locator(_l['loginbutton_locator']))
-    |
-    V
-    Возврат True
+Начало
+  ↓
+Получение веб-драйвера и локаторов из объекта поставщика (s)
+  ↓
+Открытие главной страницы AliExpress
+  ↓
+Принятие cookies
+  ↓
+Открытие формы входа
+  ↓
+Ввод email
+  ↓
+Ввод пароля
+  ↓
+Нажатие кнопки входа
+  ↓
+Конец
 ```
 
 **Примеры**:
 
-```python
-from src.suppliers.aliexpress.aliexpress import Supplier
-import selenium.webdriver as WebDriver
+Поскольку функция принимает объект класса `Supplier`, примеры её вызова зависят от структуры и инициализации этого класса. Вот пример, как может выглядеть вызов, предполагая, что `Supplier` содержит необходимые атрибуты:
 
-# Создаем экземпляр класса Supplier (пример с Chrome)
-s = Supplier()
-s.driver = WebDriver.Chrome() # инициализация драйвера Chrome
-s.locators = {
+```python
+# Предполагаемый пример создания и использования объекта Supplier
+class Supplier:
+    def __init__(self, driver, locators):
+        self.driver = driver
+        self.locators = locators
+
+# Пример локаторов (нужно адаптировать под реальные значения)
+login_locators = {
     'login': {
         'cookies_accept': {'by': 'XPATH', 'selector': '//button[@id="accept-cookies"]'},
-        'open_login': {'by': 'XPATH', 'selector': '//a[@id="open-login-form"]'},
-        'email_locator': {'by': 'XPATH', 'selector': '//input[@id="email"]'},
-        'password_locator': {'by': 'XPATH', 'selector': '//input[@id="password"]'},
-        'loginbutton_locator': {'by': 'XPATH', 'selector': '//button[@id="login-button"]'}
+        'open_login': {'by': 'XPATH', 'selector': '//a[@class="login-button"]'},
+        'email_locator': {'by': 'ID', 'selector': 'email'},
+        'password_locator': {'by': 'ID', 'selector': 'password'},
+        'loginbutton_locator': {'by': 'XPATH', 'selector': '//button[@type="submit"]'}
     }
 }
 
-# Выполняем вход
-result = login(s)
-print(result)  # Вывод: True
+# Инициализация веб-драйвера (пример с Firefox)
+from selenium import webdriver
+driver = webdriver.Firefox()
+
+# Создание объекта Supplier
+supplier = Supplier(driver, login_locators)
+
+# Вызов функции login
+result = login(supplier)
+print(f"Login successful: {result}")
 ```
-```python
-from src.suppliers.aliexpress.aliexpress import Supplier
-import selenium.webdriver as WebDriver
 
-# Создаем экземпляр класса Supplier (пример с Firefox)
-s = Supplier()
-s.driver = WebDriver.Firefox() # инициализация драйвера Firefox
-s.locators = {
-    'login': {
-        'cookies_accept': {'by': 'XPATH', 'selector': '//button[@id="accept-cookies"]'},
-        'open_login': {'by': 'XPATH', 'selector': '//a[@id="open-login-form"]'},
-        'email_locator': {'by': 'XPATH', 'selector': '//input[@id="email"]'},
-        'password_locator': {'by': 'XPATH', 'selector': '//input[@id="password"]'},
-        'loginbutton_locator': {'by': 'XPATH', 'selector': '//button[@id="login-button"]'}
-    }
-}
-
-# Выполняем вход
-result = login(s)
-print(result)  # Вывод: True
-```
-```python
-from src.suppliers.aliexpress.aliexpress import Supplier
-import selenium.webdriver as WebDriver
-
-# Создаем экземпляр класса Supplier (пример с Edge)
-s = Supplier()
-s.driver = WebDriver.Edge() # инициализация драйвера Edge
-s.locators = {
-    'login': {
-        'cookies_accept': {'by': 'XPATH', 'selector': '//button[@id="accept-cookies"]'},
-        'open_login': {'by': 'XPATH', 'selector': '//a[@id="open-login-form"]'},
-        'email_locator': {'by': 'XPATH', 'selector': '//input[@id="email"]'},
-        'password_locator': {'by': 'XPATH', 'selector': '//input[@id="password"]'},
-        'loginbutton_locator': {'by': 'XPATH', 'selector': '//button[@id="login-button"]'}
-    }
-}
-
-# Выполняем вход
-result = login(s)
-print(result)  # Вывод: True
+Этот пример демонстрирует, как можно создать объект `Supplier` с необходимыми атрибутами и передать его в функцию `login`.

@@ -1,37 +1,34 @@
-# Модуль для работы с FlowGpt
-===========================
-
-Модуль содержит класс `FlowGpt`, который предоставляет асинхронный генератор для взаимодействия с различными моделями через FlowGPT API.
+# Модуль `FlowGpt.py`
 
 ## Обзор
 
-Этот модуль позволяет взаимодействовать с различными моделями, такими как `gpt-3.5-turbo`, `gpt-4-turbo`, `google-gemini` и другими, используя API FlowGPT. Он поддерживает историю сообщений и системные сообщения, что позволяет создавать более контекстно-зависимые ответы.
+Модуль предоставляет асинхронтный интерфейс для взаимодействия с платформой FlowGPT. Он позволяет генерировать текст с использованием различных моделей, таких как GPT-3.5 Turbo, GPT-4 Turbo, Google Gemini и других. Модуль поддерживает сохранение истории сообщений и использование системных сообщений для управления поведением модели.
 
-## Подробнее
+## Подробней
 
-Модуль использует `aiohttp` для выполнения асинхронных HTTP-запросов к API FlowGPT. Он также включает логику для формирования заголовков запроса, включая подпись, и обработки ответов в режиме реального времени.
+Этот модуль является частью проекта `hypotez` и предназначен для интеграции с платформой FlowGPT для генерации текста на основе предоставленных сообщений и выбранной модели. Он использует асинхронные запросы для взаимодействия с API FlowGPT и предоставляет результаты в виде асинхронного генератора.
 
 ## Классы
 
 ### `FlowGpt`
 
-**Описание**: Класс `FlowGpt` является асинхронным генератором провайдера и предоставляет методы для взаимодействия с API FlowGPT.
+**Описание**: Класс `FlowGpt` предоставляет асинхронный интерфейс для взаимодействия с платформой FlowGPT.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает асинхронную генерацию ответов.
-- `ProviderModelMixin`: Добавляет функциональность для работы с моделями.
+- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность для асинхронных генераторов.
+- `ProviderModelMixin`: Предоставляет методы для работы с моделями.
 
 **Атрибуты**:
-- `url` (str): URL для взаимодействия с FlowGPT API (`https://flowgpt.com/chat`).
-- `working` (bool): Указывает, работает ли провайдер. В данном случае всегда `False`.
+- `url` (str): URL для взаимодействия с FlowGPT (`https://flowgpt.com/chat`).
+- `working` (bool): Указывает, работает ли провайдер (в данном случае `False`).
 - `supports_message_history` (bool): Указывает, поддерживает ли провайдер историю сообщений (`True`).
 - `supports_system_message` (bool): Указывает, поддерживает ли провайдер системные сообщения (`True`).
 - `default_model` (str): Модель, используемая по умолчанию (`gpt-3.5-turbo`).
 - `models` (List[str]): Список поддерживаемых моделей.
-- `model_aliases` (Dict[str, str]): Словарь псевдонимов моделей.
+- `model_aliases` (Dict[str, str]): Словарь с псевдонимами моделей.
 
 **Методы**:
-- `create_async_generator`: Создает асинхронный генератор для получения ответов от FlowGPT API.
+- `create_async_generator()`: Создает асинхронный генератор для получения ответов от FlowGPT.
 
 ## Функции
 
@@ -48,126 +45,106 @@ async def create_async_generator(
     **kwargs
 ) -> AsyncResult:
     """
-    Создает асинхронный генератор для получения ответов от FlowGPT API.
+    Создает асинхронный генератор для получения ответов от FlowGPT.
 
     Args:
-        cls (FlowGpt): Ссылка на класс.
-        model (str): Модель для использования.
-        messages (Messages): Список сообщений для отправки.
-        proxy (str, optional): Прокси-сервер для использования. По умолчанию `None`.
-        temperature (float, optional): Температура для генерации ответов. По умолчанию `0.7`.
-        **kwargs: Дополнительные параметры.
+        cls (FlowGpt): Класс FlowGpt.
+        model (str): Название модели для использования.
+        messages (Messages): Список сообщений для отправки в FlowGPT.
+        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        temperature (float, optional): Температура генерации. По умолчанию `0.7`.
+        **kwargs: Дополнительные аргументы.
 
     Returns:
-        AsyncResult: Асинхронный генератор, возвращающий ответы от FlowGPT API.
+        AsyncResult: Асинхронный генератор, выдающий ответы от FlowGPT.
 
     Raises:
-        Exception: Если возникает ошибка при взаимодействии с API.
+        Exception: В случае ошибок при взаимодействии с API FlowGPT.
     """
 ```
 
-**Назначение**: Создает асинхронный генератор для получения ответов от FlowGPT API.
+**Назначение**: Создает асинхронный генератор для получения ответов от FlowGPT.
 
 **Параметры**:
-- `cls` (FlowGpt): Ссылка на класс.
-- `model` (str): Модель для использования.
-- `messages` (Messages): Список сообщений для отправки.
-- `proxy` (str, optional): Прокси-сервер для использования. По умолчанию `None`.
-- `temperature` (float, optional): Температура для генерации ответов. По умолчанию `0.7`.
-- `**kwargs`: Дополнительные параметры.
+- `cls` (FlowGpt): Класс `FlowGpt`.
+- `model` (str): Название модели для использования.
+- `messages` (Messages): Список сообщений для отправки в FlowGPT.
+- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
+- `temperature` (float, optional): Температура генерации. По умолчанию `0.7`.
+- `**kwargs`: Дополнительные аргументы.
 
 **Возвращает**:
-- `AsyncResult`: Асинхронный генератор, возвращающий ответы от FlowGPT API.
+- `AsyncResult`: Асинхронный генератор, выдающий ответы от FlowGPT.
 
 **Вызывает исключения**:
-- `Exception`: Если возникает ошибка при взаимодействии с API.
+- `Exception`: В случае ошибок при взаимодействии с API FlowGPT.
 
 **Как работает функция**:
-1. **Получение модели**: Извлекает имя модели, используя `cls.get_model(model)`. Если передан псевдоним модели (например, "gemini"), он будет заменен на полное имя ("google-gemini").
-2. **Формирование заголовков**:
-   - Генерирует `timestamp`, `nonce` и `signature` для аутентификации.
-   - Создает словарь `headers` с необходимыми HTTP-заголовками, включая User-Agent, Content-Type и Authorization.
-3. **Подготовка данных**:
-   - Извлекает историю сообщений из `messages`, исключая системные сообщения.
-   - Формирует системное сообщение, объединяя все сообщения с ролью "system". Если системные сообщения отсутствуют, используется сообщение по умолчанию: "You are helpful assistant. Follow the user's instructions carefully." (Ты полезный помощник. Внимательно следуйте инструкциям пользователя.).
-   - Создает словарь `data` с данными для отправки в API, включая модель, вопрос, историю сообщений, системное сообщение и температуру.
+
+1. **Получение модели**: Извлекает название модели, используя `cls.get_model(model)`, чтобы учесть возможные псевдонимы.
+2. **Подготовка заголовков**:
+   - Генерирует `timestamp`, `nonce`, `auth` и `signature` для аутентификации запроса.
+   - Формирует словарь `headers` с необходимыми HTTP-заголовками, включая сгенерированные значения и User-Agent.
+3. **Формирование данных запроса**:
+   - Извлекает историю сообщений и системное сообщение из списка `messages`.
+   - Если системное сообщение отсутствует, устанавливает его значение по умолчанию.
+   - Создает словарь `data` с параметрами запроса, включая модель, вопрос, историю сообщений, системное сообщение и другие параметры.
 4. **Отправка запроса и обработка ответа**:
-   - Использует `aiohttp.ClientSession` для отправки POST-запроса к API FlowGPT.
-   - Обрабатывает ответ по частям (`chunk`) и извлекает текстовые данные из каждого чанка.
-   - Для каждого чанка проверяет наличие события "text" и извлекает данные (`message["data"]`).
-   - Генерирует текстовые данные, полученные из API.
+   - Использует `ClientSession` для отправки асинхронного POST-запроса к API FlowGPT (`https://prod-backend-k8s.flowgpt.com/v3/chat-anonymous`).
+   - Проверяет статус ответа с помощью `raise_for_status`.
+   - Итерируется по чанкам ответа и извлекает текстовые данные, генерируя их через `yield`.
+
+**Внутренние функции**: Отсутствуют
+
+**ASCII flowchart**:
 
 ```
-A: Получение модели
-|
-B: Формирование заголовков
-|
-C: Подготовка данных
-|
-D: Отправка запроса и обработка ответа
-|
-E: Генерация данных
+    Получение модели
+        ↓
+    Подготовка заголовков (timestamp, nonce, auth, signature, headers)
+        ↓
+    Формирование данных запроса (data)
+        ↓
+    Отправка POST-запроса к API FlowGPT
+        ↓
+    Проверка статуса ответа
+        ↓
+    Итерация по чанкам ответа
+        |
+    Извлечение текстовых данных из JSON
+        |
+    Генерация данных (yield)
 ```
-
-**Внутренние функции**: Нет
 
 **Примеры**:
 
 ```python
-# Пример использования create_async_generator
-import asyncio
-from typing import List, Dict, AsyncGenerator, Optional
-
+# Пример вызова функции
+messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "Hello, how are you?"}
+]
 async def main():
-    model: str = "gpt-3.5-turbo"
-    messages: List[Dict[str, str]] = [
-        {"role": "user", "content": "Привет!"}
-    ]
-    proxy: Optional[str] = None
-    temperature: float = 0.7
+    generator = await FlowGpt.create_async_generator(model="gpt-3.5-turbo", messages=messages)
+    async for message in generator:
+        print(message)
 
-    async def process_generator(generator: AsyncGenerator[str, None]):
-        async for message in generator:
-            print(f"Message: {message}")
-
-    generator: AsyncGenerator[str, None] = await FlowGpt.create_async_generator(
-        model=model,
-        messages=messages,
-        proxy=proxy,
-        temperature=temperature
-    )
-
-    await process_generator(generator)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+# Запуск примера
+# import asyncio
+# asyncio.run(main())
 ```
+
 ```python
-# Пример 2 с использованием системного сообщения:
-import asyncio
-from typing import List, Dict, AsyncGenerator, Optional
-
+# Пример вызова функции с прокси
+messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "Hello, how are you?"}
+]
 async def main():
-    model: str = "gpt-3.5-turbo"
-    messages: List[Dict[str, str]] = [
-        {"role": "system", "content": "Ты - полезный ассистент."},
-        {"role": "user", "content": "Привет!"}
-    ]
-    proxy: Optional[str] = None
-    temperature: float = 0.7
+    generator = await FlowGpt.create_async_generator(model="gpt-3.5-turbo", messages=messages, proxy="http://your_proxy:8080")
+    async for message in generator:
+        print(message)
 
-    async def process_generator(generator: AsyncGenerator[str, None]):
-        async for message in generator:
-            print(f"Message: {message}")
-
-    generator: AsyncGenerator[str, None] = await FlowGpt.create_async_generator(
-        model=model,
-        messages=messages,
-        proxy=proxy,
-        temperature=temperature
-    )
-
-    await process_generator(generator)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+# Запуск примера
+# import asyncio
+# asyncio.run(main())

@@ -1,583 +1,409 @@
-# Модуль тестирования асинхронного взаимодействия с ChatCompletion
+# Модуль для тестирования асинхронных функций ChatCompletion
 
 ## Обзор
 
-Этот модуль содержит набор тестов для проверки асинхронной функциональности `ChatCompletion` в библиотеке `g4f`. Он включает тесты для обработки исключений, создания чатов и использования генераторов. Модуль использует mock-объекты для имитации различных поставщиков (providers) и обеспечивает всестороннее тестирование асинхронных возможностей библиотеки.
+Этот модуль содержит юнит-тесты для проверки асинхронной функциональности `ChatCompletion` в библиотеке `g4f`. Он включает тесты для обработки исключений, создания чатов, использования генераторов и асинхронных провайдеров.
 
-## Подробней
+## Подробнее
 
-Модуль предназначен для проверки корректности работы асинхронных вызовов `ChatCompletion` с использованием различных mock-провайдеров. Он включает тесты для обработки исключений, возникающих при отсутствии библиотеки `nest_asyncio`, а также тесты для успешного создания чатов и использования асинхронных генераторов.
+Модуль использует `unittest` и `asyncio` для тестирования асинхронных функций. Он также использует моки (`ProviderMock`, `AsyncProviderMock`, `AsyncGeneratorProviderMock`) для имитации различных провайдеров чатов.
 
 ## Классы
 
 ### `TestChatCompletion`
 
-**Описание**: Класс содержит тесты для синхронного `ChatCompletion` с асинхронными mock-провайдерами.
+**Описание**: Класс, содержащий тесты для синхронной версии `ChatCompletion`.
 
 **Принцип работы**:
-
-1.  Инициализация: Проверяет наличие установленной библиотеки `nest_asyncio`.
-2.  Тестирование исключений: Проверяет, что при отсутствии `nest_asyncio` выбрасывается исключение `g4f.errors.NestAsyncioError`.
-3.  Тестирование создания чата: Проверяет, что `ChatCompletion.create` возвращает ожидаемый результат при использовании асинхронного mock-провайдера.
-4.  Тестирование генератора: Проверяет, что `ChatCompletion.create` возвращает ожидаемый результат при использовании асинхронного mock-провайдера-генератора.
-5.  Тестирование асинхронного колбэка: Проверяет, что асинхронный колбэк возвращает ожидаемый результат.
+Этот класс использует `unittest.TestCase` для определения набора тестов. Он проверяет, правильно ли обрабатываются исключения, создаются чаты и используются генераторы при синхронном вызове `ChatCompletion.create`.
 
 **Методы**:
-
-*   `run_exception`: Асинхронная функция, вызывающая `ChatCompletion.create` для проверки исключения.
-*   `test_exception`: Проверяет выброс исключения `g4f.errors.NestAsyncioError` при отсутствии `nest_asyncio`.
-*   `test_create`: Проверяет успешное создание чата с асинхронным mock-провайдером.
-*   `test_create_generator`: Проверяет успешное создание чата с асинхронным mock-провайдером-генератором.
-*   `test_await_callback`: Проверяет успешное выполнение асинхронного колбэка.
-
-#### `run_exception`
-
-```python
-async def run_exception(self):
-    """
-    Вызывает `ChatCompletion.create` для проверки исключения.
-
-    Args:
-        self (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-    Returns:
-        None
-
-    Raises:
-        g4f.errors.NestAsyncioError: Если `nest_asyncio` не установлен.
-    """
-    ...
-```
-
-**Назначение**: Асинхронно вызывает `ChatCompletion.create` с использованием асинхронного mock-провайдера для проверки обработки исключения `NestAsyncioError`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-**Возвращает**:
-
-*   `None`
-
-**Вызывает исключения**:
-
-*   `g4f.errors.NestAsyncioError`: Если `nest_asyncio` не установлен.
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create` с параметрами по умолчанию и асинхронным mock-провайдером.
-2.  Если `nest_asyncio` не установлен, ожидается исключение `NestAsyncioError`.
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-async def test_run_exception(self):
-    await self.run_exception()
-```
-
-#### `test_exception`
-
-```python
-def test_exception(self):
-    """
-    Проверяет выброс исключения `g4f.errors.NestAsyncioError` при отсутствии `nest_asyncio`.
-
-    Args:
-        self (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что при отсутствии установленной библиотеки `nest_asyncio` выбрасывается исключение `g4f.errors.NestAsyncioError` при попытке запуска асинхронного кода.
-
-**Параметры**:
-
-*   `self` (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-**Возвращает**:
-
-*   `None`
-
-**Вызывает исключения**:
-
-*   `g4f.errors.NestAsyncioError`: Если `nest_asyncio` не установлен.
-
-**Как работает функция**:
-
-1.  Проверяет, установлена ли библиотека `nest_asyncio`.
-2.  Если `nest_asyncio` установлена, тест пропускается.
-3.  Если `nest_asyncio` не установлена, функция пытается запустить асинхронную функцию `self.run_exception()` с помощью `asyncio.run()`.
-4.  Ожидается, что при этом будет выброшено исключение `g4f.errors.NestAsyncioError`.
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-def test_test_exception(self):
-    self.test_exception()
-```
-
-#### `test_create`
-
-```python
-def test_create(self):
-    """
-    Проверяет успешное создание чата с асинхронным mock-провайдером.
-
-    Args:
-        self (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании асинхронного mock-провайдера `AsyncProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create` с моделью по умолчанию, сообщением по умолчанию и асинхронным mock-провайдером `AsyncProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-def test_test_create(self):
-    self.test_create()
-```
-
-#### `test_create_generator`
-
-```python
-def test_create_generator(self):
-    """
-    Проверяет успешное создание чата с асинхронным mock-провайдером-генератором.
-
-    Args:
-        self (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании асинхронного mock-провайдера-генератора `AsyncGeneratorProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create` с моделью по умолчанию, сообщением по умолчанию и асинхронным mock-провайдером-генератором `AsyncGeneratorProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-def test_test_create_generator(self):
-    self.test_create_generator()
-```
-
-#### `test_await_callback`
-
-```python
-def test_await_callback(self):
-    """
-    Проверяет успешное выполнение асинхронного колбэка.
-
-    Args:
-        self (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что асинхронный колбэк успешно выполняется и возвращает ожидаемый результат "Mock".
-
-**Параметры**:
-
-*   `self` (TestChatCompletion): Экземпляр класса `TestChatCompletion`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Создает экземпляр класса `Client` с использованием асинхронного mock-провайдера-генератора `AsyncGeneratorProviderMock`.
-2.  Вызывает метод `client.chat.completions.create` с параметрами по умолчанию.
-3.  Проверяет, что возвращаемый результат `response.choices[0].message.content` равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-def test_test_await_callback(self):
-    self.test_await_callback()
-```
+- `run_exception()`: Асинхронная функция, которая вызывает `ChatCompletion.create` с `AsyncProviderMock` для проверки обработки исключений.
+- `test_exception()`: Проверяет, возникает ли исключение `g4f.errors.NestAsyncioError`, когда `asyncio.run` вызывается с `run_exception()`.
+- `test_create()`: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncProviderMock`.
+- `test_create_generator()`: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock`.
+- `test_await_callback()`: Проверяет, возвращает ли `client.chat.completions.create` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock` и асинхронного клиента.
 
 ### `TestChatCompletionAsync`
 
-**Описание**: Класс содержит тесты для асинхронного `ChatCompletion` с различными mock-провайдерами.
+**Описание**: Класс, содержащий тесты для асинхронной версии `ChatCompletion`.
 
 **Принцип работы**:
-
-1.  Тестирование базового асинхронного вызова: Проверяет, что `ChatCompletion.create_async` возвращает ожидаемый результат при использовании синхронного mock-провайдера.
-2.  Тестирование асинхронного вызова: Проверяет, что `ChatCompletion.create_async` возвращает ожидаемый результат при использовании асинхронного mock-провайдера.
-3.  Тестирование асинхронного генератора: Проверяет, что `ChatCompletion.create_async` возвращает ожидаемый результат при использовании асинхронного mock-провайдера-генератора.
+Этот класс использует `unittest.IsolatedAsyncioTestCase` для определения набора асинхронных тестов. Он проверяет, правильно ли создаются чаты и используются генераторы при асинхронном вызове `ChatCompletion.create_async`.
 
 **Методы**:
-
-*   `test_base`: Проверяет успешное выполнение асинхронного вызова с синхронным mock-провайдером.
-*   `test_async`: Проверяет успешное выполнение асинхронного вызова с асинхронным mock-провайдером.
-*   `test_create_generator`: Проверяет успешное выполнение асинхронного вызова с асинхронным mock-провайдером-генератором.
-
-#### `test_base`
-
-```python
-async def test_base(self):
-    """
-    Проверяет успешное выполнение асинхронного вызова с синхронным mock-провайдером.
-
-    Args:
-        self (TestChatCompletionAsync): Экземпляр класса `TestChatCompletionAsync`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create_async` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании синхронного mock-провайдера `ProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletionAsync): Экземпляр класса `TestChatCompletionAsync`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create_async` с моделью по умолчанию, сообщением по умолчанию и синхронным mock-провайдером `ProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-async def test_test_base(self):
-    await self.test_base()
-```
-
-#### `test_async`
-
-```python
-async def test_async(self):
-    """
-    Проверяет успешное выполнение асинхронного вызова с асинхронным mock-провайдером.
-
-    Args:
-        self (TestChatCompletionAsync): Экземпляр класса `TestChatCompletionAsync`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create_async` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании асинхронного mock-провайдера `AsyncProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletionAsync): Экземпляр класса `TestChatCompletionAsync`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create_async` с моделью по умолчанию, сообщением по умолчанию и асинхронным mock-провайдером `AsyncProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-async def test_test_async(self):
-    await self.test_async()
-```
-
-#### `test_create_generator`
-
-```python
-async def test_create_generator(self):
-    """
-    Проверяет успешное выполнение асинхронного вызова с асинхронным mock-провайдером-генератором.
-
-    Args:
-        self (TestChatCompletionAsync): Экземпляр класса `TestChatCompletionAsync`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create_async` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании асинхронного mock-провайдера-генератора `AsyncGeneratorProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletionAsync): Экземпляр класса `TestChatCompletionAsync`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create_async` с моделью по умолчанию, сообщением по умолчанию и асинхронным mock-провайдером-генератором `AsyncGeneratorProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-async def test_test_create_generator(self):
-    await self.test_create_generator()
-```
+- `test_base()`: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `ProviderMock`.
+- `test_async()`: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `AsyncProviderMock`.
+- `test_create_generator()`: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock`.
 
 ### `TestChatCompletionNestAsync`
 
-**Описание**: Класс содержит тесты для `ChatCompletion` с использованием `nest_asyncio`.
+**Описание**: Класс, содержащий тесты для `ChatCompletion` с использованием `nest_asyncio`.
 
 **Принцип работы**:
-
-1.  Инициализация: Проверяет наличие установленной библиотеки `nest_asyncio` и применяет `nest_asyncio.apply()`.
-2.  Тестирование создания чата: Проверяет, что `ChatCompletion.create_async` возвращает ожидаемый результат при использовании синхронного mock-провайдера.
-3.  Тестирование вложенного асинхронного вызова: Проверяет, что `ChatCompletion.create` возвращает ожидаемый результат при использовании асинхронного mock-провайдера.
-4.  Тестирование вложенного асинхронного генератора: Проверяет, что `ChatCompletion.create` возвращает ожидаемый результат при использовании асинхронного mock-провайдера-генератора.
+Этот класс использует `unittest.IsolatedAsyncioTestCase` для определения набора асинхронных тестов, которые выполняются с применением `nest_asyncio`. Это позволяет запускать асинхронные тесты внутри синхронных тестовых функций.
 
 **Методы**:
-
-*   `setUp`: Выполняется перед каждым тестом, проверяет наличие `nest_asyncio` и применяет его.
-*   `test_create`: Проверяет успешное создание чата с синхронным mock-провайдером.
-*   `_test_nested`: Проверяет успешное выполнение вложенного асинхронного вызова с асинхронным mock-провайдером.
-*   `_test_nested_generator`: Проверяет успешное выполнение вложенного асинхронного вызова с асинхронным mock-провайдером-генератором.
-
-#### `setUp`
-
-```python
-def setUp(self) -> None:
-    """
-    Выполняется перед каждым тестом, проверяет наличие `nest_asyncio` и применяет его.
-
-    Args:
-        self (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Метод `setUp` вызывается перед каждым тестовым методом в классе. Он проверяет, установлена ли библиотека `nest_asyncio`, и если она не установлена, тест пропускается. Если `nest_asyncio` установлена, то применяется функция `nest_asyncio.apply()`, которая позволяет вкладывать асинхронные вызовы друг в друга.
-
-**Параметры**:
-
-*   `self` (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Проверяет, установлена ли библиотека `nest_asyncio` (переменная `has_nest_asyncio`).
-2.  Если `nest_asyncio` не установлена, тест пропускается с помощью `self.skipTest('"nest_asyncio" not installed')`.
-3.  Если `nest_asyncio` установлена, применяется функция `nest_asyncio.apply()`.
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-def test_setup(self):
-    self.setUp()
-```
-
-#### `test_create`
-
-```python
-async def test_create(self):
-    """
-    Проверяет успешное создание чата с синхронным mock-провайдером.
-
-    Args:
-        self (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create_async` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании синхронного mock-провайдера `ProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create_async` с моделью по умолчанию, сообщением по умолчанию и синхронным mock-провайдером `ProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-async def test_test_create(self):
-    await self.test_create()
-```
-
-#### `_test_nested`
-
-```python
-async def _test_nested(self):
-    """
-    Проверяет успешное выполнение вложенного асинхронного вызова с асинхронным mock-провайдером.
-
-    Args:
-        self (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании асинхронного mock-провайдера `AsyncProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create` с моделью по умолчанию, сообщением по умолчанию и асинхронным mock-провайдером `AsyncProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-async def test__test_nested(self):
-    await self._test_nested()
-```
-
-#### `_test_nested_generator`
-
-```python
-async def _test_nested_generator(self):
-    """
-    Проверяет успешное выполнение вложенного асинхронного вызова с асинхронным mock-провайдером-генератором.
-
-    Args:
-        self (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-    Returns:
-        None
-    """
-    ...
-```
-
-**Назначение**: Проверяет, что функция `ChatCompletion.create` успешно создает чат и возвращает ожидаемый результат "Mock" при использовании асинхронного mock-провайдера-генератора `AsyncGeneratorProviderMock`.
-
-**Параметры**:
-
-*   `self` (TestChatCompletionNestAsync): Экземпляр класса `TestChatCompletionNestAsync`.
-
-**Возвращает**:
-
-*   `None`
-
-**Как работает функция**:
-
-1.  Вызывает `ChatCompletion.create` с моделью по умолчанию, сообщением по умолчанию и асинхронным mock-провайдером-генератором `AsyncGeneratorProviderMock`.
-2.  Проверяет, что возвращаемый результат равен "Mock".
-
-**Примеры**:
-
-```python
-# Пример вызова функции
-async def test__test_nested_generator(self):
-    await self._test_nested_generator()
-```
+- `setUp()`: Метод, который вызывается перед каждым тестом. Он проверяет, установлен ли `nest_asyncio`, и применяет его, если установлен.
+- `test_create()`: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `ProviderMock`.
+- `_test_nested()`: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncProviderMock` внутри `nest_asyncio`.
+- `_test_nested_generator()`: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock` внутри `nest_asyncio`.
 
 ## Функции
 
-### `main`
+### `run_exception`
 
 ```python
-if __name__ == '__main__':
-    unittest.main()
+    async def run_exception(self):
+        """ Функция вызывает ChatCompletion.create с AsyncProviderMock для проверки обработки исключений.
+        Args:
+            self: Экземпляр класса TestChatCompletion.
+
+        Returns:
+            None
+
+        Raises:
+            g4f.errors.NestAsyncioError: Если nest_asyncio не установлен.
+        """
 ```
 
-**Назначение**: Запускает тесты, если скрипт запущен как основной.
+**Назначение**: Вызывает `ChatCompletion.create` с `AsyncProviderMock` для проверки обработки исключений.
+
+**Как работает функция**:
+1. Функция вызывает `ChatCompletion.create`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `AsyncProviderMock` в качестве аргументов.
+2.  Если `nest_asyncio` не установлен, то будет вызвано исключение `g4f.errors.NestAsyncioError`.
+
+```
+    Вызов ChatCompletion.create (DEFAULT_MESSAGES, AsyncProviderMock)
+    |
+    Выполнение асинхронного запроса к AsyncProviderMock
+    |
+    Возвращение результата или исключения
+```
+
+### `test_exception`
+
+```python
+    def test_exception(self):
+        """ Проверяет, возникает ли исключение g4f.errors.NestAsyncioError при вызове asyncio.run с run_exception().
+
+        Args:
+            self: Экземпляр класса TestChatCompletion.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возникает ли исключение `g4f.errors.NestAsyncioError` при вызове `asyncio.run` с `run_exception()`.
+
+**Как работает функция**:
+1.  Функция проверяет, установлен ли `nest_asyncio`.
+2.  Если `nest_asyncio` установлен, тест пропускается.
+3.  Если `nest_asyncio` не установлен, функция вызывает `asyncio.run` с `self.run_exception()` и проверяет, возникает ли исключение `g4f.errors.NestAsyncioError`.
+
+```
+    Проверка наличия nest_asyncio
+    |
+    Если nest_asyncio установлен:
+    |   Пропуск теста
+    |
+    Если nest_asyncio не установлен:
+    |   Вызов asyncio.run(self.run_exception())
+    |   |
+    |   Проверка возникновения исключения g4f.errors.NestAsyncioError
+```
+
+### `test_create` (синхронный)
+
+```python
+    def test_create(self):
+        """ Проверяет, возвращает ли ChatCompletion.create ожидаемый результат ("Mock") при использовании AsyncProviderMock.
+
+        Args:
+            self: Экземпляр класса TestChatCompletion.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncProviderMock`.
 
 **Как работает функция**:
 
-1.  Проверяет, является ли текущий скрипт основным ( `__name__ == '__main__'` ).
-2.  Если да, запускает тесты с помощью `unittest.main()`.
+1. Функция вызывает `ChatCompletion.create`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `AsyncProviderMock` в качестве аргументов.
+2. Функция проверяет, равен ли результат "Mock".
 
-## TOC
+```
+    Вызов ChatCompletion.create (DEFAULT_MESSAGES, AsyncProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```
 
-*   [TestChatCompletion](#TestChatCompletion)
-    *   [run_exception](#run_exception)
-    *   [test_exception](#test_exception)
-    *   [test_create](#test_create)
-    *   [test_create_generator](#test_create_generator)
-    *   [test_await_callback](#test_await_callback)
-*   [TestChatCompletionAsync](#TestChatCompletionAsync)
-    *   [test_base](#test_base)
-    *   [test_async](#test_async)
-    *   [test_create_generator](#test_create_generator)
-*   [TestChatCompletionNestAsync](#TestChatCompletionNestAsync)
-    *   [setUp](#setUp)
-    *   [test_create](#test_create)
-    *   [_test_nested](#_test_nested)
-    *   [_test_nested_generator](#_test_nested_generator)
-*   [main](#main)
+### `test_create_generator` (синхронный)
+
+```python
+    def test_create_generator(self):
+        """ Проверяет, возвращает ли ChatCompletion.create ожидаемый результат ("Mock") при использовании AsyncGeneratorProviderMock.
+
+        Args:
+            self: Экземпляр класса TestChatCompletion.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock`.
+
+**Как работает функция**:
+
+1.  Функция вызывает `ChatCompletion.create`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `AsyncGeneratorProviderMock` в качестве аргументов.
+2.  Функция проверяет, равен ли результат "Mock".
+
+```
+    Вызов ChatCompletion.create (DEFAULT_MESSAGES, AsyncGeneratorProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```
+
+### `test_await_callback`
+
+```python
+    def test_await_callback(self):
+        """ Проверяет, возвращает ли client.chat.completions.create ожидаемый результат ("Mock") при использовании AsyncGeneratorProviderMock и асинхронного клиента.
+
+        Args:
+            self: Экземпляр класса TestChatCompletion.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `client.chat.completions.create` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock` и асинхронного клиента.
+
+**Как работает функция**:
+1. Создается экземпляр `Client` с `AsyncGeneratorProviderMock` в качестве провайдера.
+2. Вызывается `client.chat.completions.create` с `DEFAULT_MESSAGES`, пустой строкой и `max_tokens=0`.
+3. Проверяется, равен ли `response.choices[0].message.content` значению "Mock".
+
+```
+    Создание экземпляра Client с AsyncGeneratorProviderMock
+    |
+    Вызов client.chat.completions.create (DEFAULT_MESSAGES, "", max_tokens=0)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли response.choices[0].message.content значению "Mock"
+```
+
+### `test_base` (асинхронный)
+
+```python
+    async def test_base(self):
+        """ Проверяет, возвращает ли ChatCompletion.create_async ожидаемый результат ("Mock") при использовании ProviderMock.
+
+        Args:
+            self: Экземпляр класса TestChatCompletionAsync.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `ProviderMock`.
+
+**Как работает функция**:
+
+1. Функция вызывает `ChatCompletion.create_async`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `ProviderMock` в качестве аргументов.
+2. Функция проверяет, равен ли результат "Mock".
+
+```
+    Вызов ChatCompletion.create_async (DEFAULT_MESSAGES, ProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```
+
+### `test_async` (асинхронный)
+
+```python
+    async def test_async(self):
+        """ Проверяет, возвращает ли ChatCompletion.create_async ожидаемый результат ("Mock") при использовании AsyncProviderMock.
+
+        Args:
+            self: Экземпляр класса TestChatCompletionAsync.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `AsyncProviderMock`.
+
+**Как работает функция**:
+
+1. Функция вызывает `ChatCompletion.create_async`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `AsyncProviderMock` в качестве аргументов.
+2. Функция проверяет, равен ли результат "Mock".
+
+```
+    Вызов ChatCompletion.create_async (DEFAULT_MESSAGES, AsyncProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```
+
+### `test_create_generator` (асинхронный)
+
+```python
+    async def test_create_generator(self):
+        """ Проверяет, возвращает ли ChatCompletion.create_async ожидаемый результат ("Mock") при использовании AsyncGeneratorProviderMock.
+
+        Args:
+            self: Экземпляр класса TestChatCompletionAsync.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock`.
+
+**Как работает функция**:
+
+1. Функция вызывает `ChatCompletion.create_async`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `AsyncGeneratorProviderMock` в качестве аргументов.
+2. Функция проверяет, равен ли результат "Mock".
+
+```
+    Вызов ChatCompletion.create_async (DEFAULT_MESSAGES, AsyncGeneratorProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```
+
+### `setUp`
+
+```python
+    def setUp(self) -> None:
+        """ Метод, который вызывается перед каждым тестом. Он проверяет, установлен ли `nest_asyncio`, и применяет его, если установлен.
+
+        Args:
+            self: Экземпляр класса TestChatCompletionNestAsync.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Выполняет настройку перед каждым тестом, проверяя и применяя `nest_asyncio`.
+
+**Как работает функция**:
+1. Функция проверяет, установлен ли `nest_asyncio`.
+2. Если `nest_asyncio` не установлен, тест пропускается.
+3. Если `nest_asyncio` установлен, функция применяет `nest_asyncio.apply()`.
+
+```
+    Проверка наличия nest_asyncio
+    |
+    Если nest_asyncio не установлен:
+    |   Пропуск теста
+    |
+    Если nest_asyncio установлен:
+    |   Применение nest_asyncio.apply()
+```
+
+### `test_create` (nest_asyncio)
+
+```python
+    async def test_create(self):
+        """ Проверяет, возвращает ли ChatCompletion.create_async ожидаемый результат ("Mock") при использовании ProviderMock.
+
+        Args:
+            self: Экземпляр класса TestChatCompletionNestAsync.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create_async` ожидаемый результат ("Mock") при использовании `ProviderMock` в контексте `nest_asyncio`.
+
+**Как работает функция**:
+
+1. Функция вызывает `ChatCompletion.create_async`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `ProviderMock` в качестве аргументов.
+2. Функция проверяет, равен ли результат "Mock".
+
+```
+    Вызов ChatCompletion.create_async (DEFAULT_MESSAGES, ProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```
+
+### `_test_nested`
+
+```python
+    async def _test_nested(self):
+        """ Проверяет, возвращает ли ChatCompletion.create ожидаемый результат ("Mock") при использовании AsyncProviderMock внутри nest_asyncio.
+
+        Args:
+            self: Экземпляр класса TestChatCompletionNestAsync.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncProviderMock` внутри `nest_asyncio`.
+
+**Как работает функция**:
+
+1. Функция вызывает `ChatCompletion.create`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `AsyncProviderMock` в качестве аргументов.
+2. Функция проверяет, равен ли результат "Mock".
+
+```
+    Вызов ChatCompletion.create (DEFAULT_MESSAGES, AsyncProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```
+
+### `_test_nested_generator`
+
+```python
+    async def _test_nested_generator(self):
+        """ Проверяет, возвращает ли ChatCompletion.create ожидаемый результат ("Mock") при использовании AsyncGeneratorProviderMock внутри nest_asyncio.
+
+        Args:
+            self: Экземпляр класса TestChatCompletionNestAsync.
+
+        Returns:
+            None
+        """
+```
+
+**Назначение**: Проверяет, возвращает ли `ChatCompletion.create` ожидаемый результат ("Mock") при использовании `AsyncGeneratorProviderMock` внутри `nest_asyncio`.
+
+**Как работает функция**:
+
+1. Функция вызывает `ChatCompletion.create`, передавая `g4f.models.default`, `DEFAULT_MESSAGES` и `AsyncGeneratorProviderMock` в качестве аргументов.
+2. Функция проверяет, равен ли результат "Mock".
+
+```
+    Вызов ChatCompletion.create (DEFAULT_MESSAGES, AsyncGeneratorProviderMock)
+    |
+    Возвращение результата
+    |
+    Проверка, равен ли результат "Mock"
+```

@@ -1,48 +1,65 @@
-# Модуль `Glider`
+# Модуль Glider
 
 ## Обзор
 
-Модуль `Glider` предоставляет класс `Glider`, который является подклассом `OpenaiTemplate` и предназначен для взаимодействия с сервисом Glider. Он определяет параметры подключения и доступные модели для этого сервиса.
+Модуль `Glider` предоставляет класс `Glider`, который является наследником класса `OpenaiTemplate` и предназначен для взаимодействия с сервисом `Glider`. Он определяет endpoint, поддерживает список моделей, предоставляет алиасы для моделей и указывает на работоспособность сервиса.
 
 ## Подробнее
 
-Модуль определяет класс `Glider`, который наследуется от `OpenaiTemplate`. Он задает URL, endpoint API и список поддерживаемых моделей, а также их псевдонимы.
+Модуль содержит определение класса `Glider`, который специализируется на работе с API сервиса `Glider`. Он устанавливает конкретные параметры, такие как URL, endpoint API и список поддерживаемых моделей, а также их альтернативные названия. Класс используется для унификации доступа к различным моделям через интерфейс, предоставляемый `OpenaiTemplate`.
 
 ## Классы
 
-### `Glider`
+### `Glider(OpenaiTemplate)`
 
-**Описание**: Класс `Glider` предназначен для взаимодействия с сервисом Glider.
+**Описание**: Класс `Glider` наследуется от `OpenaiTemplate` и представляет собой адаптер для работы с сервисом Glider.
 
 **Наследует**:
-- `OpenaiTemplate`: Предоставляет базовую структуру для взаимодействия с API, подобными OpenAI.
+- `OpenaiTemplate`: Предоставляет базовый интерфейс для взаимодействия с OpenAI-подобными API.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера "Glider".
-- `url` (str): URL сервиса Glider ("https://glider.so").
-- `api_endpoint` (str): Endpoint API для чата ("https://glider.so/api/chat").
-- `working` (bool): Индикатор работоспособности провайдера (True).
-- `default_model` (str): Модель по умолчанию ('chat-llama-3-1-70b').
-- `models` (list[str]): Список поддерживаемых моделей.
-- `model_aliases` (dict[str, str]): Словарь псевдонимов моделей.
+- `label` (str): Название провайдера - `"Glider"`.
+- `url` (str): URL сервиса - `"https://glider.so"`.
+- `api_endpoint` (str): Endpoint API для чата - `"https://glider.so/api/chat"`.
+- `working` (bool): Указывает на работоспособность сервиса - `True`.
+- `default_model` (str): Модель, используемая по умолчанию - `'chat-llama-3-1-70b'`.
+- `models` (List[str]): Список поддерживаемых моделей.
+- `model_aliases` (Dict[str, str]): Словарь, содержащий алиасы для моделей.
 
 **Методы**:
-- Нет специфических методов, кроме унаследованных от `OpenaiTemplate`.
+- Нет собственных методов, использует методы родительского класса `OpenaiTemplate`.
 
-## Примеры
+## Функции
+
+В данном модуле нет отдельных функций, только класс `Glider` с атрибутами, определяющими конфигурацию для работы с API Glider.
+
+**Как работает класс**:
+
+1. **Инициализация**: Класс `Glider` инициализируется как подкласс `OpenaiTemplate`.
+2. **Конфигурация**: При инициализации устанавливаются значения атрибутов, такие как `label`, `url`, `api_endpoint`, `working`, `default_model`, `models` и `model_aliases`, которые определяют параметры для взаимодействия с API Glider.
+3. **Использование**: Класс используется для создания экземпляра, который затем может быть использован для отправки запросов к API Glider с использованием методов, унаследованных от `OpenaiTemplate`.
+
+```ascii
+    Glider(OpenaiTemplate)
+    │
+    ├───label, url, api_endpoint, working, default_model, models, model_aliases (Установка атрибутов)
+    │
+    └───Использование методов OpenaiTemplate для взаимодействия с API Glider
+```
+
+**Примеры**:
 
 ```python
-from g4f.Provider import Glider
+from src.endpoints.gpt4free.g4f.Provider.Glider import Glider
 
 # Создание экземпляра класса Glider
-glider = Glider()
+glider_provider = Glider()
 
 # Получение информации о провайдере
-print(f"Провайдер: {glider.label}")
-print(f"URL: {glider.url}")
-print(f"API Endpoint: {glider.api_endpoint}")
-print(f"Работоспособность: {glider.working}")
-print(f"Модель по умолчанию: {glider.default_model}")
-print(f"Поддерживаемые модели: {glider.models}")
-print(f"Псевдонимы моделей: {glider.model_aliases}")
-```
+print(f"Label: {glider_provider.label}")
+print(f"URL: {glider_provider.url}")
+print(f"API Endpoint: {glider_provider.api_endpoint}")
+print(f"Working: {glider_provider.working}")
+print(f"Default Model: {glider_provider.default_model}")
+print(f"Models: {glider_provider.models}")
+print(f"Model Aliases: {glider_provider.model_aliases}")

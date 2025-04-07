@@ -1,40 +1,41 @@
-# Модуль DuckDuckGo.py
+# Модуль DuckDuckGo
 
 ## Обзор
 
-Модуль предоставляет асинхронный интерфейс для взаимодействия с чат-ботом DuckDuckGo, используя библиотеку `duckduckgo_search`. Он позволяет генерировать ответы чат-бота на основе предоставленных сообщений, поддерживая стриминг, системные сообщения и историю сообщений.
+Модуль `DuckDuckGo.py` предоставляет асинхронный интерфейс для взаимодействия с чат-ботом DuckDuckGo AI через библиотеку `duckduckgo_search`. Он позволяет генерировать ответы на основе предоставленных сообщений, используя различные модели, поддерживаемые DuckDuckGo. Модуль также включает механизм аутентификации через `nodriver` для получения необходимых заголовков для API запросов.
 
 ## Подробней
 
-Этот модуль является частью проекта `hypotez` и предназначен для интеграции с другими компонентами, требующими доступа к возможностям чат-бота DuckDuckGo.
-Он включает в себя обработку зависимостей, аутентификацию через `nodriver` (если доступно) и асинхронную генерацию ответов. Модуль также предоставляет псевдонимы для моделей, чтобы упростить их использование.
+Этот модуль является частью проекта `hypotez` и предназначен для интеграции с другими компонентами, требующими доступа к возможностям чат-бота DuckDuckGo AI. Он обеспечивает асинхронную генерацию ответов, что позволяет эффективно использовать ресурсы и обрабатывать запросы параллельно.
 
 ## Классы
 
 ### `DuckDuckGo`
 
-**Описание**: Класс `DuckDuckGo` предоставляет асинхронный интерфейс для взаимодействия с чат-ботом DuckDuckGo. Он наследует функциональность от `AsyncGeneratorProvider` и `ProviderModelMixin`.
+**Описание**: Класс `DuckDuckGo` является асинхронным провайдером, который использует API DuckDuckGo для генерации ответов на основе предоставленных сообщений.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает базовую структуру для асинхронных генераторов.
-- `ProviderModelMixin`: Предоставляет методы для работы с моделями.
+- `AsyncGeneratorProvider`: Предоставляет базовую функциональность для асинхронных провайдеров генерации.
+- `ProviderModelMixin`: Предоставляет утилиты для работы с моделями.
 
 **Атрибуты**:
-- `label` (str): Метка провайдера, `"Duck.ai (duckduckgo_search)"`.
-- `url` (str): URL чат-бота DuckDuckGo, `"https://duckduckgo.com/aichat"`.
-- `api_base` (str): Базовый URL API DuckDuckGo, `"https://duckduckgo.com/duckchat/v1/"`.
-- `working` (bool): Флаг, указывающий на работоспособность провайдера, `False`.
-- `supports_stream` (bool): Флаг, указывающий на поддержку стриминга, `True`.
-- `supports_system_message` (bool): Флаг, указывающий на поддержку системных сообщений, `True`.
-- `supports_message_history` (bool): Флаг, указывающий на поддержку истории сообщений, `True`.
-- `default_model` (str): Модель, используемая по умолчанию, `"gpt-4o-mini"`.
-- `models` (list): Список поддерживаемых моделей, `[default_model, "meta-llama/Llama-3.3-70B-Instruct-Turbo", "claude-3-haiku-20240307", "o3-mini", "mistralai/Mistral-Small-24B-Instruct-2501"]`.
-- `ddgs` (DDGS): Инстанс класса `DDGS` из библиотеки `duckduckgo_search`.
-- `model_aliases` (dict): Словарь псевдонимов моделей, например `{"gpt-4": "gpt-4o-mini", ...}`.
+- `label` (str): Метка провайдера (отображаемое имя) - `"Duck.ai (duckduckgo_search)"`.
+- `url` (str): URL чат-бота DuckDuckGo - `"https://duckduckgo.com/aichat"`.
+- `api_base` (str): Базовый URL API DuckDuckGo - `"https://duckduckgo.com/duckchat/v1/"`.
+- `working` (bool): Указывает, работает ли провайдер в данный момент (по умолчанию `False`).
+- `supports_stream` (bool): Указывает, поддерживает ли провайдер потоковую передачу ответов (по умолчанию `True`).
+- `supports_system_message` (bool): Указывает, поддерживает ли провайдер системные сообщения (по умолчанию `True`).
+- `supports_message_history` (bool): Указывает, поддерживает ли провайдер историю сообщений (по умолчанию `True`).
+- `default_model` (str): Модель, используемая по умолчанию - `"gpt-4o-mini"`.
+- `models` (List[str]): Список поддерживаемых моделей.
+- `ddgs` (DDGS): Инстанс класса `DDGS` из библиотеки `duckduckgo_search` (инициализируется при первом использовании).
+- `model_aliases` (dict): Словарь псевдонимов моделей для удобства использования.
 
 **Методы**:
-- `create_async_generator`: Создает асинхронный генератор для получения ответов от чат-бота DuckDuckGo.
-- `nodriver_auth`: Выполняет аутентификацию с использованием `nodriver` для получения необходимых токенов.
+- `create_async_generator`: Создает асинхронный генератор для получения ответов от DuckDuckGo AI.
+- `nodriver_auth`: Аутентифицируется с использованием `nodriver` для получения необходимых заголовков для API запросов.
+
+## Функции
 
 ### `create_async_generator`
 
@@ -48,113 +49,163 @@ async def create_async_generator(
     timeout: int = 60,
     **kwargs
 ) -> AsyncResult:
-    """
-    Создает асинхронный генератор для получения ответов от чат-бота DuckDuckGo.
+    """Создает асинхронный генератор для получения ответов от DuckDuckGo AI.
 
     Args:
+        cls (DuckDuckGo): Класс DuckDuckGo.
         model (str): Имя используемой модели.
         messages (Messages): Список сообщений для передачи в чат-бот.
-        proxy (str, optional): Адрес прокси-сервера. По умолчанию `None`.
-        timeout (int, optional): Время ожидания ответа от чат-бота. По умолчанию `60`.
-        **kwargs: Дополнительные параметры.
+        proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        timeout (int, optional): Максимальное время ожидания запроса в секундах. По умолчанию 60.
+        **kwargs: Дополнительные аргументы.
 
     Returns:
-        AsyncResult: Асинхронный генератор, выдающий ответы от чат-бота.
+        AsyncResult: Асинхронный генератор, возвращающий части ответа от DuckDuckGo AI.
 
     Raises:
         ImportError: Если не установлена библиотека `duckduckgo_search`.
-        DuckDuckGoSearchException: Если во время запроса к DuckDuckGo произошла ошибка.
-        RatelimitException: Если превышен лимит запросов.
-        ConversationLimitException: Если превышен лимит на количество сообщений в разговоре.
-
-    Как работает функция:
-    1. Проверяет, установлена ли библиотека `duckduckgo_search`. Если нет, вызывает исключение `ImportError`.
-    2. Если `cls.ddgs` не инициализирован, создает экземпляр `DDGS` с заданными параметрами прокси и таймаута, а также выполняет аутентификацию через `nodriver_auth`, если доступен `nodriver`.
-    3. Получает псевдоним модели с помощью `cls.get_model(model)`.
-    4. Использует `cls.ddgs.chat_yield` для получения асинхронного генератора ответов от чат-бота, передавая последнее сообщение пользователя, модель и таймаут.
-    5. Передает каждый чанк ответа через `yield`.
-
-    ASCII flowchart:
-
-    Проверка duckduckgo_search -> Создание DDGS (если не существует) -> nodriver_auth (если has_nodriver) -> Получение псевдонима модели -> chat_yield -> Выдача чанков
-
-    Примеры:
-        Пример 1: Создание генератора с использованием модели по умолчанию
-        >>> model = "gpt-4o-mini"
-        >>> messages = [{"role": "user", "content": "Hello"}]
-        >>> generator = DuckDuckGo.create_async_generator(model=model, messages=messages)
-
-        Пример 2: Создание генератора с использованием прокси и таймаута
-        >>> model = "gpt-4o-mini"
-        >>> messages = [{"role": "user", "content": "Hello"}]
-        >>> proxy = "http://proxy.example.com"
-        >>> timeout = 30
-        >>> generator = DuckDuckGo.create_async_generator(model=model, messages=messages, proxy=proxy, timeout=timeout)
     """
-    if not has_requirements:
-        raise ImportError("duckduckgo_search is not installed. Install it with `pip install duckduckgo-search`.")
-    if cls.ddgs is None:
-        cls.ddgs = DDGS(proxy=proxy, timeout=timeout)
-        if has_nodriver:
-            await cls.nodriver_auth(proxy=proxy)
-    model = cls.get_model(model)
-    for chunk in cls.ddgs.chat_yield(get_last_user_message(messages), model, timeout):
-        yield chunk
+```
+
+**Назначение**:
+Создает асинхронный генератор для получения ответов от DuckDuckGo AI. Эта функция отвечает за подготовку и отправку запроса в DuckDuckGo AI, а также за обработку потока ответов.
+
+**Параметры**:
+- `cls` (DuckDuckGo): Класс DuckDuckGo.
+- `model` (str): Имя используемой модели.
+- `messages (Messages)`: Список сообщений для передачи в чат-бот.
+- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
+- `timeout` (int, optional): Максимальное время ожидания запроса в секундах. По умолчанию 60.
+- `**kwargs`: Дополнительные аргументы.
+
+**Возвращает**:
+- `AsyncResult`: Асинхронный генератор, возвращающий части ответа от DuckDuckGo AI.
+
+**Вызывает исключения**:
+- `ImportError`: Если не установлена библиотека `duckduckgo_search`.
+
+**Как работает функция**:
+1. **Проверка зависимостей**:
+   - Проверяет, установлена ли библиотека `duckduckgo_search`. Если нет, вызывает исключение `ImportError`.
+2. **Инициализация DDGS**:
+   - Если `cls.ddgs` еще не инициализирован, создает экземпляр `DDGS` с использованием предоставленных параметров `proxy` и `timeout`.
+   - Если `has_nodriver` равен `True`, вызывает функцию `cls.nodriver_auth` для аутентификации через `nodriver`.
+3. **Получение модели**:
+   - Вызывает `cls.get_model(model)` для получения имени модели.
+4. **Генерация ответа**:
+   - Вызывает `cls.ddgs.chat_yield` для получения асинхронного генератора, возвращающего части ответа от DuckDuckGo AI.
+   - Передает в `cls.ddgs.chat_yield` последнее сообщение пользователя из списка сообщений, имя модели и время ожидания.
+5. **Возврат генератора**:
+   - Возвращает асинхронный генератор, который можно использовать для получения частей ответа.
+
+```
+A: Проверка зависимостей и инициализация
+|
+-- B: Аутентификация через nodriver (если необходимо)
+|
+C: Получение модели
+|
+D: Генерация ответа через ddgs.chat_yield
+|
+E: Возврат асинхронного генератора
+```
+
+**Примеры**:
+
+```python
+# Пример использования create_async_generator
+import asyncio
+from typing import List, Dict, AsyncGenerator, Optional
+
+from src.endpoints.gpt4free.g4f.typing import Messages
+from src.endpoints.gpt4free.g4f.Provider.DuckDuckGo import DuckDuckGo
+
+async def main():
+    model: str = "gpt-4o-mini"
+    messages: Messages = [{"role": "user", "content": "Привет, как дела?"}]
+    proxy: Optional[str] = None
+    timeout: int = 60
+
+    generator: AsyncGenerator = await DuckDuckGo.create_async_generator(
+        model=model, messages=messages, proxy=proxy, timeout=timeout
+    )
+
+    async for chunk in generator:
+        print(chunk, end="")
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 ### `nodriver_auth`
 
 ```python
-@classmethod
-async def nodriver_auth(cls, proxy: str = None):
-    """
-    Выполняет аутентификацию с использованием `nodriver` для получения необходимых токенов.
+    @classmethod
+    async def nodriver_auth(cls, proxy: str = None):
+        """Аутентифицируется с использованием `nodriver` для получения необходимых заголовков для API запросов.
 
-    Args:
-        proxy (str, optional): Адрес прокси-сервера. По умолчанию `None`.
-
-    Как работает функция:
-    1. Получает экземпляр браузера и функцию для его остановки с помощью `get_nodriver`.
-    2. Определяет функцию `on_request`, которая будет вызываться при каждом запросе. Эта функция проверяет, содержит ли URL запроса `cls.api_base`. Если да, она извлекает значения `X-Vqd-4`, `X-Vqd-Hash-1` и `F-Fe-Version` из заголовков запроса и сохраняет их в атрибуты `cls.ddgs._chat_vqd`, `cls.ddgs._chat_vqd_hash` и `cls.ddgs._chat_xfe` соответственно.
-    3. Активирует перехват сетевых запросов с помощью `page.send(nodriver.cdp.network.enable())`.
-    4. Добавляет обработчик `on_request` для события `nodriver.cdp.network.RequestWillBeSent`.
-    5. Открывает страницу `cls.url` в браузере.
-    6. Ожидает, пока не будет установлено значение `cls.ddgs._chat_vqd`.
-    7. Закрывает страницу и останавливает браузер.
-
-    ASCII flowchart:
-
-    get_nodriver -> Определение on_request -> Активация перехвата запросов -> Добавление обработчика on_request -> Открытие страницы cls.url -> Ожидание cls.ddgs._chat_vqd -> Закрытие страницы -> Остановка браузера
-    """
-    browser, stop_browser = await get_nodriver(proxy=proxy)
-    try:
-        page = browser.main_tab
-        def on_request(event: nodriver.cdp.network.RequestWillBeSent, page=None):
-            """
-            Обработчик сетевых запросов для извлечения токенов аутентификации.
-
-            Args:
-                event (nodriver.cdp.network.RequestWillBeSent): Объект события, содержащий информацию о запросе.
-                page: Страница браузера.
-            """
-            if cls.api_base in event.request.url:
-                if "X-Vqd-4" in event.request.headers:
-                    cls.ddgs._chat_vqd = event.request.headers["X-Vqd-4"]
-                if "X-Vqd-Hash-1" in event.request.headers:
-                    cls.ddgs._chat_vqd_hash = event.request.headers["X-Vqd-Hash-1"]
-                if "F-Fe-Version" in event.request.headers:
-                    cls.ddgs._chat_xfe = event.request.headers["F-Fe-Version" ]
-        await page.send(nodriver.cdp.network.enable())
-        page.add_handler(nodriver.cdp.network.RequestWillBeSent, on_request)
-        page = await browser.get(cls.url)
-        while True:
-            if cls.ddgs._chat_vqd:
-                break
-            await asyncio.sleep(1)
-        await page.close()
-    finally:
-        stop_browser()
+        Args:
+            cls (DuckDuckGo): Класс DuckDuckGo.
+            proxy (str, optional): URL прокси-сервера. По умолчанию `None`.
+        """
 ```
 
-## Функции
-В данном модуле функции отсутствуют.
+**Назначение**:
+Аутентифицируется с использованием `nodriver` для получения необходимых заголовков (`X-Vqd-4`, `X-Vqd-Hash-1`, `F-Fe-Version`) для API запросов к DuckDuckGo.
+
+**Параметры**:
+- `cls` (DuckDuckGo): Класс DuckDuckGo.
+- `proxy` (str, optional): URL прокси-сервера. По умолчанию `None`.
+
+**Как работает функция**:
+1. **Запуск браузера `nodriver`**:
+   - Запускает браузер с использованием `get_nodriver` с переданным `proxy`. Функция возвращает объект браузера и функцию остановки браузера (`stop_browser`).
+2. **Обработка запросов**:
+   - Определяет функцию `on_request`, которая будет вызываться при каждом запросе, отправленном браузером.
+   - Внутри `on_request` проверяется, содержит ли URL запроса `cls.api_base`. Если да, то извлекаются заголовки `X-Vqd-4`, `X-Vqd-Hash-1` и `F-Fe-Version` из заголовков запроса и сохраняются в атрибутах `cls.ddgs._chat_vqd`, `cls.ddgs._chat_vqd_hash` и `cls.ddgs._chat_xfe` соответственно.
+3. **Подключение обработчика запросов**:
+   - Включает перехват сетевых запросов с помощью `page.send(nodriver.cdp.network.enable())`.
+   - Добавляет обработчик `on_request` для события `nodriver.cdp.network.RequestWillBeSent`.
+4. **Переход на страницу**:
+   - Открывает страницу `cls.url` в браузере с использованием `browser.get(cls.url)`.
+5. **Ожидание аутентификации**:
+   - Ожидает, пока не будет установлен атрибут `cls.ddgs._chat_vqd`. Это означает, что необходимые заголовки были получены.
+6. **Закрытие страницы**:
+   - Закрывает текущую страницу с помощью `page.close()`.
+7. **Остановка браузера**:
+   - В блоке `finally` вызывается функция `stop_browser()` для остановки браузера, независимо от того, произошла ли ошибка или нет.
+
+```
+A: Запуск браузера nodriver
+|
+-- B: Определение функции on_request для перехвата заголовков
+|
+C: Подключение обработчика запросов
+|
+D: Переход на страницу cls.url
+|
+E: Ожидание аутентификации (получения заголовков)
+|
+F: Закрытие страницы
+|
+G: Остановка браузера (finally)
+```
+
+**Примеры**:
+
+```python
+# Пример использования nodriver_auth
+import asyncio
+from src.endpoints.gpt4free.g4f.Provider.DuckDuckGo import DuckDuckGo
+
+async def main():
+    proxy: str = None  # Замените на ваш прокси, если необходимо
+
+    await DuckDuckGo.nodriver_auth(proxy=proxy)
+
+    print(f"Чат VQD: {DuckDuckGo.ddgs._chat_vqd}")
+    print(f"Чат VQD Hash: {DuckDuckGo.ddgs._chat_vqd_hash}")
+    print(f"Чат XFE: {DuckDuckGo.ddgs._chat_xfe}")
+
+if __name__ == "__main__":
+    asyncio.run(main())

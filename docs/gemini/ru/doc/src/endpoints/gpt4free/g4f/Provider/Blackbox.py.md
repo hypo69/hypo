@@ -2,324 +2,457 @@
 
 ## Обзор
 
-Модуль `Blackbox` предоставляет класс `Blackbox`, который является асинхронным провайдером для взаимодействия с API Blackbox AI. Он поддерживает текстовые и визуальные модели, а также различные режимы агентов. Этот модуль предназначен для интеграции с платформой g4f (gpt4free) и обеспечивает функциональность для генерации текста и изображений с использованием Blackbox AI.
+Модуль `Blackbox` предоставляет класс `Blackbox`, который является асинхронным провайдером для взаимодействия с API Blackbox AI. Он поддерживает различные модели, включая модели для генерации текста и изображений, а также предоставляет механизмы для управления сессиями и проверки авторизации.
 
 ## Подробней
 
-Модуль `Blackbox` предназначен для упрощения взаимодействия с API Blackbox AI, предоставляя удобные методы для создания сессий, запроса моделей и генерации контента. Он также включает механизмы для автоматического обнаружения и использования премиум-аккаунтов, если они доступны через HAR-файлы. Это позволяет пользователям получать доступ к полному списку моделей и функций, предоставляемых Blackbox AI.
+Модуль предназначен для интеграции с сервисом Blackbox AI, предоставляя удобный интерфейс для отправки запросов и получения ответов. Он включает в себя поддержку различных моделей, управление сессиями, проверку премиум-доступа и обработку изображений.
 
 ## Классы
 
-### `Conversation(JsonConversation)`
+### `Conversation`
 
-**Описание**: Класс `Conversation` представляет собой разговор с AI. Он хранит информацию о текущем состоянии разговора, такую как ID чата, историю сообщений и модель, используемую в разговоре.
+**Описание**: Класс `Conversation` представляет собой структуру данных для хранения информации о текущем разговоре с Blackbox AI.
 
 **Наследует**:
-- `JsonConversation`: Этот класс, вероятно, предоставляет базовую функциональность для работы с разговорами в формате JSON, такую как сериализация и десериализация.
+
+- `JsonConversation`: Расширяет класс `JsonConversation`, предоставляя функциональность для работы с JSON-форматом данных в контексте разговора.
 
 **Атрибуты**:
-- `validated_value` (str): Строка, представляющая собой валидированное значение для текущего разговора.
-- `chat_id` (str): Уникальный идентификатор текущего чата.
-- `message_history` (Messages): Список сообщений в истории разговора. Тип `Messages` предполагает, что это список, содержащий структуру сообщений, специфичную для данного модуля.
+
+- `validated_value` (str): Строка, содержащая проверенное значение, используемое для аутентификации или валидации запросов.
+- `chat_id` (str): Уникальный идентификатор чата, используемый для отслеживания и управления разговором.
+- `message_history` (Messages): Список сообщений, составляющих историю разговора.
 - `model` (str): Модель, используемая в разговоре.
 
 **Методы**:
-- `__init__(self, model: str)`: Инициализирует новый экземпляр класса `Conversation`.
 
-### `Blackbox(AsyncGeneratorProvider, ProviderModelMixin)`
+- `__init__(self, model: str)`:
+    - **Описание**: Конструктор класса `Conversation`.
+    - **Параметры**:
+        - `model` (str): Модель, используемая в разговоре.
+    - **Как работает функция**:
+        1. Инициализирует атрибут `model` экземпляра класса.
 
-**Описание**: Класс `Blackbox` является асинхронным провайдером для взаимодействия с API Blackbox AI. Он поддерживает потоковую генерацию текста и изображений, а также предоставляет методы для управления сессиями и выбора моделей.
+### `Blackbox`
+
+**Описание**: Класс `Blackbox` предоставляет асинхронный интерфейс для взаимодействия с API Blackbox AI.
 
 **Наследует**:
-- `AsyncGeneratorProvider`: Обеспечивает базовую функциональность для асинхронной генерации контента.
-- `ProviderModelMixin`: Предоставляет методы для управления и выбора моделей.
+
+- `AsyncGeneratorProvider`: Расширяет класс `AsyncGeneratorProvider`, предоставляя функциональность для асинхронной генерации данных.
+- `ProviderModelMixin`: Расширяет класс `ProviderModelMixin`, предоставляя функциональность для работы с моделями провайдера.
 
 **Атрибуты**:
-- `label` (str): "Blackbox AI" - название провайдера.
-- `url` (str): "https://www.blackbox.ai" - URL главной страницы Blackbox AI.
-- `api_endpoint` (str): "https://www.blackbox.ai/api/chat" - URL API для чата.
-- `working` (bool): `True` - указывает, что провайдер в рабочем состоянии.
-- `supports_stream` (bool): `True` - указывает, что провайдер поддерживает потоковую генерацию.
-- `supports_system_message` (bool): `True` - указывает, что провайдер поддерживает системные сообщения.
-- `supports_message_history` (bool): `True` - указывает, что провайдер поддерживает историю сообщений.
-- `default_model` (str): "blackboxai" - модель, используемая по умолчанию.
-- `default_vision_model` (str): "blackboxai" - модель для работы с изображениями, используемая по умолчанию.
-- `default_image_model` (str): 'flux' - модель для генерации изображений, используемая по умолчанию.
-- `fallback_models` (list): Список моделей, доступных для неавторизованных пользователей.
+
+- `label` (str): Метка провайдера (Blackbox AI).
+- `url` (str): URL главной страницы Blackbox AI.
+- `api_endpoint` (str): URL API для чата Blackbox AI.
+- `working` (bool): Флаг, указывающий на работоспособность провайдера.
+- `supports_stream` (bool): Флаг, указывающий на поддержку потоковой передачи данных.
+- `supports_system_message` (bool): Флаг, указывающий на поддержку системных сообщений.
+- `supports_message_history` (bool): Флаг, указывающий на поддержку истории сообщений.
+- `default_model` (str): Модель, используемая по умолчанию ("blackboxai").
+- `default_vision_model` (str): Модель для работы с изображениями по умолчанию.
+- `default_image_model` (str): Модель для генерации изображений по умолчанию ('flux').
+- `fallback_models` (list): Список моделей, используемых в случае отсутствия авторизации.
 - `image_models` (list): Список моделей для работы с изображениями.
-- `vision_models` (list): Список моделей, поддерживающих зрение.
+- `vision_models` (list): Список моделей для анализа изображений.
 - `userSelectedModel` (list): Список моделей, выбранных пользователем.
-- `agentMode` (dict): Конфигурации для режимов агентов.
-- `trendingAgentMode` (dict): Конфигурации для популярных режимов агентов.
-- `_all_models` (list): Полный список всех доступных моделей.
-- `models` (list): Инициализируется как `fallback_models` - список доступных моделей.
-- `model_aliases` (dict): Псевдонимы моделей для упрощения использования.
+- `agentMode` (dict): Конфигурация режимов агента для различных моделей.
+- `trendingAgentMode` (dict): Конфигурация популярных режимов агента.
+- `_all_models` (list): Полный список всех моделей (для авторизованных пользователей).
+- `models` (list): Список моделей, доступных для использования (инициализируется `fallback_models`).
+- `model_aliases` (dict): Словарь псевдонимов моделей.
 
 **Методы**:
-- `generate_session(cls, id_length: int = 21, days_ahead: int = 365) -> dict`: Генерирует динамическую сессию с правильным форматом ID и срока действия.
-- `fetch_validated(cls, url: str = "https://www.blackbox.ai", force_refresh: bool = False) -> Optional[str]`: Извлекает валидированное значение с веб-сайта Blackbox AI.
-- `generate_id(cls, length: int = 7) -> str`: Генерирует случайный ID заданной длины.
-- `get_models(cls) -> list`: Возвращает список доступных моделей в зависимости от статуса авторизации пользователя.
-- `_check_premium_access(cls) -> bool`: Проверяет наличие авторизованной сессии в HAR-файлах.
-- `create_async_generator(...) -> AsyncResult`: Создает асинхронный генератор для взаимодействия с API Blackbox AI.
+
+- `generate_session(cls, id_length: int = 21, days_ahead: int = 365) -> dict`
+- `fetch_validated(cls, url: str = "https://www.blackbox.ai", force_refresh: bool = False) -> Optional[str]`
+- `generate_id(cls, length: int = 7) -> str`
+- `get_models(cls) -> list`
+- `_check_premium_access(cls) -> bool`
+- `generate_session(cls, id_length: int = 21, days_ahead: int = 365) -> dict`
+- `fetch_validated(cls, url: str = "https://www.blackbox.ai", force_refresh: bool = False) -> Optional[str]`
+- `generate_id(cls, length: int = 7) -> str`
+- `async create_async_generator(...) -> AsyncResult`
 
 ## Функции
 
-### `generate_session(cls, id_length: int = 21, days_ahead: int = 365) -> dict`
+### `generate_session`
 
-**Назначение**: Генерирует динамическую сессию с правильным форматом ID и срока действия. Эта функция создает сессионный словарь, содержащий информацию о пользователе и сроке действия сессии.
+```python
+    @classmethod
+    def generate_session(cls, id_length: int = 21, days_ahead: int = 365) -> dict:
+        """
+        Generate a dynamic session with proper ID and expiry format.
+        
+        Args:
+            id_length: Length of the numeric ID (default: 21)
+            days_ahead: Number of days ahead for expiry (default: 365)
+        
+        Returns:
+            dict: A session dictionary with user information and expiry
+        """
+        # Generate numeric ID
+        numeric_id = ''.join(random.choice('0123456789') for _ in range(id_length))
+        
+        # Generate future expiry date
+        future_date = datetime.now() + timedelta(days=days_ahead)
+        expiry = future_date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+        
+        # Decode the encoded email
+        encoded_email = "Z2lzZWxlQGJsYWNrYm94LmFp"  # Base64 encoded email
+        email = base64.b64decode(encoded_email).decode('utf-8')
+        
+        # Generate random image ID for the new URL format
+        chars = string.ascii_letters + string.digits + "-"
+        random_img_id = ''.join(random.choice(chars) for _ in range(48))
+        image_url = f"https://lh3.googleusercontent.com/a/ACg8oc{random_img_id}=s96-c"
+        
+        return {
+            "user": {
+                "name": "BLACKBOX AI", 
+                "email": email, 
+                "image": image_url, 
+                "id": numeric_id
+            }, 
+            "expires": expiry
+        }
+```
+
+**Назначение**: Генерация динамической сессии с правильным идентификатором и форматом срока действия.
 
 **Параметры**:
-- `id_length` (int): Длина числового ID (по умолчанию: 21).
+
+- `id_length` (int): Длина числового идентификатора (по умолчанию: 21).
 - `days_ahead` (int): Количество дней до истечения срока действия (по умолчанию: 365).
 
 **Возвращает**:
+
 - `dict`: Словарь сессии с информацией о пользователе и сроке действия.
 
 **Как работает функция**:
-1. **Генерация числового ID**: Функция генерирует случайный числовой ID указанной длины.
-2. **Генерация даты истечения срока действия**: Вычисляет будущую дату истечения срока действия на основе текущей даты и заданного количества дней.
-3. **Декодирование закодированного email**: Декодирует email адрес из base64 строки.
-4. **Генерация случайного ID изображения**: Генерирует случайный ID для URL изображения.
-5. **Формирование словаря сессии**: Создает и возвращает словарь, содержащий имя пользователя, email, URL изображения, ID и срок действия.
+
+1. **Генерация числового идентификатора**:
+   - Генерируется случайный числовой идентификатор указанной длины (`id_length`).
+
+2. **Генерация даты истечения срока действия**:
+   - Вычисляется дата истечения срока действия на основе текущей даты и количества дней (`days_ahead`).
+   - Дата форматируется в строку в формате `YYYY-MM-DDTHH:MM:SS.fffZ`.
+
+3. **Декодирование закодированной электронной почты**:
+   - Закодированная строка электронной почты ("Z2lzZWxlQGJsYWNrYm94LmFp") декодируется из Base64 в UTF-8.
+
+4. **Генерация случайного идентификатора изображения**:
+   - Генерируется случайный идентификатор изображения для нового формата URL.
+
+5. **Формирование словаря сессии**:
+   - Формируется словарь, содержащий информацию о пользователе (имя, электронная почта, URL изображения, идентификатор) и сроке действия сессии.
 
 ```
-    A: Генерация числового ID
+    Генерация ID сессии
     │
-    B: Генерация даты истечения срока действия
+    ├── Генерация числового ID
+    │   │
+    │   └── Генерация случайного числа длиной id_length
     │
-    C: Декодирование закодированного email
-    │
-    D: Генерация случайного ID изображения
-    │
-    E: Формирование словаря сессии
-    │
-    F: Возврат словаря сессии
+    └── Генерация даты истечения сессии
+        │
+        ├── Вычисление даты истечения (текущая дата + days_ahead)
+        │   │
+        │   └── Форматирование даты в строку
+        │
+        └── Декодирование email
+            │
+            └── Декодирование email из base64
+            │
+            └── Генерация Image URL
+                │
+                └── Вычисление случайного id для image_url
+                │
+                └──  Формирование словаря сессии
 ```
 
 **Примеры**:
-```python
-session = Blackbox.generate_session()
-print(session)
-# {'user': {'name': 'BLACKBOX AI', 'email': 'gisele@blackbox.ai', 'image': 'https://lh3.googleusercontent.com/a/ACg8oc...=s96-c', 'id': '...'}, 'expires': '2025-05-22T12:34:56.789Z'}
 
-session = Blackbox.generate_session(id_length=10, days_ahead=100)
-print(session)
-# {'user': {'name': 'BLACKBOX AI', 'email': 'gisele@blackbox.ai', 'image': 'https://lh3.googleusercontent.com/a/ACg8oc...=s96-c', 'id': '...'}, 'expires': '2024-08-31T12:34:56.789Z'}
+```python
+session_data = Blackbox.generate_session(id_length=25, days_ahead=400)
+print(session_data)
+# {'user': {'name': 'BLACKBOX AI', 'email': 'gisele@blackbox.ai', 'image': 'https://lh3.googleusercontent.com/a/ACg8oc...=s96-c', 'id': '...'}, 'expires': '...'}
 ```
 
-### `fetch_validated(cls, url: str = "https://www.blackbox.ai", force_refresh: bool = False) -> Optional[str]`
+---
 
-**Назначение**: Извлекает валидированное значение с веб-сайта Blackbox AI. Эта функция пытается получить `validated_value` из кэша, если он существует, или извлекает его с веб-сайта Blackbox AI, используя регулярные выражения для поиска JavaScript-файлов и UUID.
+### `fetch_validated`
+
+```python
+    @classmethod
+    async def fetch_validated(cls, url: str = "https://www.blackbox.ai", force_refresh: bool = False) -> Optional[str]:
+        cache_file = Path(get_cookies_dir()) / 'blackbox.json'
+        
+        if not force_refresh and cache_file.exists():
+            try:
+                with open(cache_file, 'r') as f:
+                    data = json.load(f)
+                    if data.get('validated_value'):
+                        return data['validated_value']
+            except Exception as e:
+                debug.log(f"Blackbox: Error reading cache: {e}")
+        
+        js_file_pattern = r'static/chunks/\d{4}-[a-fA-F0-9]+\.js'
+        uuid_pattern = r'["\']([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["\']'
+
+        def is_valid_context(text: str) -> bool:
+            return any(char + '=' in text for char in 'abcdefghijklmnopqrstuvwxyz')
+
+        async with ClientSession() as session:
+            try:
+                async with session.get(url) as response:
+                    if response.status != 200:
+                        return None
+
+                    page_content = await response.text()
+                    js_files = re.findall(js_file_pattern, page_content)
+
+                for js_file in js_files:
+                    js_url = f"{url}/_next/{js_file}"
+                    async with session.get(js_url) as js_response:
+                        if js_response.status == 200:
+                            js_content = await js_response.text()
+                            for match in re.finditer(uuid_pattern, js_content):
+                                start = max(0, match.start() - 10)
+                                end = min(len(js_content), match.end() + 10)
+                                context = js_content[start:end]
+
+                                if is_valid_context(context):
+                                    validated_value = match.group(1)
+                                    
+                                    cache_file.parent.mkdir(exist_ok=True)
+                                    try:
+                                        with open(cache_file, 'w') as f:
+                                            json.dump({'validated_value': validated_value}, f)
+                                    except Exception as e:
+                                        debug.log(f"Blackbox: Error writing cache: {e}")
+                                        
+                                    return validated_value
+
+            except Exception as e:
+                debug.log(f"Blackbox: Error retrieving validated_value: {e}")
+
+        return None
+```
+
+**Назначение**: Получение проверенного значения из кэша или с веб-страницы.
 
 **Параметры**:
-- `url` (str): URL для извлечения валидированного значения (по умолчанию: "https://www.blackbox.ai").
-- `force_refresh` (bool): Если `True`, принудительно обновляет кэш (по умолчанию: `False`).
+
+- `url` (str): URL для получения данных (по умолчанию: "https://www.blackbox.ai").
+- `force_refresh` (bool): Флаг, указывающий на необходимость принудительного обновления кэша (по умолчанию: `False`).
 
 **Возвращает**:
-- `Optional[str]`: Валидированное значение или `None`, если не удалось получить.
+
+- `Optional[str]`: Проверенное значение или `None` в случае ошибки.
 
 **Как работает функция**:
-1. **Проверка кэша**: Функция проверяет, существует ли файл кэша и содержит ли он валидированное значение. Если да, возвращает его.
-2. **Поиск JavaScript-файлов**: Если кэш не найден или `force_refresh` установлен в `True`, функция извлекает содержимое веб-страницы и ищет JavaScript-файлы, соответствующие определенному шаблону.
-3. **Поиск UUID**: В каждом найденном JavaScript-файле функция ищет UUID, используя регулярные выражения.
-4. **Проверка контекста**: Проверяет, является ли контекст вокруг найденного UUID валидным.
-5. **Кэширование валидированного значения**: Если UUID найден и контекст валиден, функция сохраняет валидированное значение в кэш.
-6. **Возврат валидированного значения**: Возвращает найденное и кэшированное валидированное значение.
+
+1. **Проверка кэша**:
+   - Проверяет наличие кэшированного файла `blackbox.json` в директории cookies.
+   - Если файл существует и `force_refresh` равен `False`, пытается прочитать проверенное значение из файла.
+   - В случае успеха возвращает значение из кэша.
+   - В случае ошибки чтения кэша логирует ошибку.
+
+2. **Поиск значения на веб-странице**:
+   - Если кэш не найден или `force_refresh` равен `True`, выполняет следующие действия:
+     - Формирует регулярные выражения для поиска JS-файлов и UUID на веб-странице.
+     - Загружает содержимое веб-страницы по указанному URL.
+     - Извлекает список JS-файлов из содержимого страницы.
+     - Для каждого JS-файла:
+       - Загружает содержимое JS-файла.
+       - Ищет UUID в содержимом JS-файла.
+       - Проверяет контекст найденного UUID на валидность.
+       - Если контекст валиден, сохраняет UUID в кэш и возвращает его.
+
+3. **Обработка ошибок**:
+   - В случае ошибок при загрузке веб-страницы или JS-файлов логирует ошибки.
 
 ```
-    A: Проверка кэша
+    Получение validated_value
     │
-    B: Извлечение содержимого веб-страницы
+    ├── Проверка кэша (blackbox.json)
+    │   │
+    │   └── Чтение validated_value из кэша (если есть и не force_refresh)
+    │   │
+    │   └── Возврат validated_value из кэша
     │
-    C: Поиск JavaScript-файлов
-    │
-    D: Поиск UUID в JavaScript-файлах
-    │
-    E: Проверка контекста UUID
-    │
-    F: Кэширование валидированного значения
-    │
-    G: Возврат валидированного значения
+    └── Получение validated_value с веб-страницы
+        │
+        ├── Загрузка содержимого веб-страницы
+        │   │
+        │   └── Поиск JS-файлов на странице
+        │
+        └── Для каждого JS-файла
+            │
+            ├── Загрузка содержимого JS-файла
+            │   │
+            │   └── Поиск UUID в JS-файле
+            │   │
+            │   └── Проверка контекста UUID на валидность
+            │   │
+            │   └── Сохранение UUID в кэш
+            │   │
+            │   └── Возврат validated_value
+            │
+            └── Обработка ошибок
 ```
 
 **Примеры**:
-```python
-validated_value = await Blackbox.fetch_validated()
-print(validated_value)
-# "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
+```python
 validated_value = await Blackbox.fetch_validated(force_refresh=True)
-print(validated_value)
-# "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+if validated_value:
+    print(f"Validated value: {validated_value}")
+else:
+    print("Failed to fetch validated value.")
+# Validated value: 123e4567-e89b-12d3-a456-426614174000
 ```
 
-### `generate_id(cls, length: int = 7) -> str`
+---
 
-**Назначение**: Генерирует случайный ID заданной длины. Эта функция создает случайную строку, состоящую из букв и цифр.
+### `generate_id`
+
+```python
+    @classmethod
+    def generate_id(cls, length: int = 7) -> str:
+        chars = string.ascii_letters + string.digits
+        return ''.join(random.choice(chars) for _ in range(length))
+```
+
+**Назначение**: Генерация случайного идентификатора указанной длины.
 
 **Параметры**:
-- `length` (int): Длина генерируемого ID (по умолчанию: 7).
+
+- `length` (int): Длина идентификатора (по умолчанию: 7).
 
 **Возвращает**:
-- `str`: Случайный ID.
+
+- `str`: Случайный идентификатор.
 
 **Как работает функция**:
-1. **Определение набора символов**: Определяет набор символов, из которых будет генерироваться ID (буквы и цифры).
-2. **Генерация случайного ID**: Генерирует случайную строку заданной длины, выбирая случайные символы из определенного набора.
-3. **Возврат ID**: Возвращает сгенерированный ID.
+
+1. **Определение набора символов**:
+   - Определяется набор символов, включающий буквы ASCII и цифры.
+
+2. **Генерация идентификатора**:
+   - Генерируется случайный идентификатор путем выбора случайных символов из определенного набора указанное количество раз (`length`).
 
 ```
-    A: Определение набора символов
+    Генерация ID
     │
-    B: Генерация случайного ID
+    ├── Определение набора символов (буквы ASCII + цифры)
     │
-    C: Возврат ID
+    └── Генерация случайного ID
+        │
+        └── Выбор случайных символов из набора length раз
+        │
+        └── Объединение символов в строку
 ```
 
 **Примеры**:
-```python
-id = Blackbox.generate_id()
-print(id)
-# "aBc12De"
 
-id = Blackbox.generate_id(length=10)
-print(id)
-# "1aB2cDeF3g"
+```python
+random_id = Blackbox.generate_id(length=10)
+print(random_id)
+# 4a9b2c1d5e
 ```
 
-### `get_models(cls) -> list`
+---
 
-**Назначение**: Возвращает список доступных моделей в зависимости от статуса авторизации пользователя. Авторизованные пользователи получают полный список моделей, в то время как неавторизованные пользователи получают только `fallback_models`.
+### `get_models`
+
+```python
+    @classmethod
+    def get_models(cls) -> list:
+        """
+        Returns a list of available models based on authorization status.
+        Authorized users get the full list of models.
+        Unauthorized users only get fallback_models.
+        """
+        # Check if there are valid session data in HAR files
+        has_premium_access = cls._check_premium_access()
+        
+        if has_premium_access:
+            # For authorized users - all models
+            debug.log(f"Blackbox: Returning full model list with {len(cls._all_models)} models")
+            return cls._all_models
+        else:
+            # For demo accounts - only free models
+            debug.log(f"Blackbox: Returning free model list with {len(cls.fallback_models)} models")
+            return cls.fallback_models
+```
+
+**Назначение**: Получение списка доступных моделей в зависимости от статуса авторизации пользователя.
 
 **Возвращает**:
+
 - `list`: Список доступных моделей.
 
 **Как работает функция**:
-1. **Проверка премиум-доступа**: Функция проверяет наличие премиум-доступа, используя метод `_check_premium_access`.
-2. **Возврат списка моделей**: Если премиум-доступ подтвержден, возвращается полный список моделей (`_all_models`). В противном случае возвращается список `fallback_models`.
+
+1. **Проверка премиум-доступа**:
+   - Вызывается метод `_check_premium_access()` для определения, имеет ли пользователь премиум-доступ.
+
+2. **Формирование списка моделей**:
+   - Если пользователь имеет премиум-доступ, возвращается полный список моделей (`cls._all_models`).
+   - Если пользователь не имеет премиум-доступа, возвращается список fallback-моделей (`cls.fallback_models`).
 
 ```
-    A: Проверка премиум-доступа
+    Получение списка моделей
     │
-    B: Возврат списка моделей (полный или fallback)
+    ├── Проверка премиум-доступа
+    │   │
+    │   └── Вызов _check_premium_access()
+    │
+    └── Формирование списка моделей
+        │
+        ├── Если премиум-доступ:
+        │   │
+        │   └── Возврат _all_models
+        │
+        └── Иначе:
+            │
+            └── Возврат fallback_models
 ```
 
 **Примеры**:
+
 ```python
 models = Blackbox.get_models()
 print(models)
-# ["blackboxai", "gpt-4o-mini", ...] (если нет премиум-доступа)
-
-models = Blackbox.get_models()
-print(models)
-# ["blackboxai", "GPT-4o", "flux", ...] (если есть премиум-доступ)
+# ['blackboxai', 'gpt-4o-mini', ...]
 ```
 
-### `_check_premium_access(cls) -> bool`
+---
 
-**Назначение**: Проверяет наличие авторизованной сессии в HAR-файлах. Функция ищет HAR-файлы в определенной директории и анализирует их содержимое для определения, имеет ли пользователь премиум-доступ.
+### `_check_premium_access`
 
-**Возвращает**:
-- `bool`: `True`, если найдена валидная сессия, отличная от демонстрационной, иначе `False`.
-
-**Как работает функция**:
-1. **Проверка директории HAR**: Функция проверяет, существует ли директория с HAR-файлами и имеет ли у пользователя права на чтение этой директории.
-2. **Поиск HAR-файлов**: Функция ищет HAR-файлы в указанной директории.
-3. **Анализ HAR-файлов**: Для каждого найденного HAR-файла функция пытается проанализировать его содержимое и найти записи, относящиеся к API Blackbox AI.
-4. **Извлечение данных сессии**: Извлекает данные сессии из ответов API Blackbox AI.
-5. **Проверка сессии**: Проверяет, является ли найденная сессия валидной и отличается ли она от демонстрационной сессии.
-6. **Возврат результата**: Если найдена валидная сессия, отличная от демонстрационной, функция возвращает `True`, иначе `False`.
-
-```
-    A: Проверка директории HAR
-    │
-    B: Поиск HAR-файлов
-    │
-    C: Анализ HAR-файлов
-    │
-    D: Извлечение данных сессии
-    │
-    E: Проверка сессии
-    │
-    F: Возврат результата
-```
-
-**Примеры**:
 ```python
-has_premium_access = Blackbox._check_premium_access()
-print(has_premium_access)
-# True (если премиум-доступ подтвержден)
-
-has_premium_access = Blackbox._check_premium_access()
-print(has_premium_access)
-# False (если премиум-доступ не подтвержден)
-```
-
-### `create_async_generator(cls, model: str, messages: Messages, prompt: str = None, proxy: str = None, media: MediaListType = None, top_p: float = None, temperature: float = None, max_tokens: int = None, conversation: Conversation = None, return_conversation: bool = False, **kwargs) -> AsyncResult`
-
-**Назначение**: Создает асинхронный генератор для взаимодействия с API Blackbox AI. Эта функция отправляет сообщения в API Blackbox AI и возвращает асинхронный генератор, который выдает ответы по мере их поступления.
-
-**Параметры**:
-- `model` (str): Модель, используемая для генерации ответа.
-- `messages` (Messages): Список сообщений для отправки в API.
-- `prompt` (str): Дополнительный промпт для генерации (по умолчанию: `None`).
-- `proxy` (str): Прокси-сервер для использования (по умолчанию: `None`).
-- `media` (MediaListType): Список медиа-файлов для отправки в API (по умолчанию: `None`).
-- `top_p` (float): Параметр top_p для управления случайностью генерации (по умолчанию: `None`).
-- `temperature` (float): Параметр temperature для управления случайностью генерации (по умолчанию: `None`).
-- `max_tokens` (int): Максимальное количество токенов в ответе (по умолчанию: `None`).
-- `conversation` (Conversation): Объект разговора для сохранения истории (по умолчанию: `None`).
-- `return_conversation` (bool): Если `True`, возвращает объект разговора в конце генерации (по умолчанию: `False`).
-- `**kwargs`: Дополнительные аргументы.
-
-**Возвращает**:
-- `AsyncResult`: Асинхронный генератор, выдающий ответы от API.
-
-**Как работает функция**:
-1. **Выбор модели**: Функция выбирает модель для генерации ответа, используя метод `get_model`.
-2. **Создание заголовков**: Создает заголовки для HTTP-запроса.
-3. **Инициализация разговора**: Если объект разговора не предоставлен или не имеет `chat_id`, функция создает новый объект разговора и генерирует `validated_value` и `chat_id`.
-4. **Формирование сообщений**: Функция формирует список сообщений для отправки в API, добавляя информацию об ID сообщения, содержимом и роли.
-5. **Обработка медиа-файлов**: Если предоставлены медиа-файлы, функция добавляет их в последнее сообщение.
-6. **Получение данных сессии**: Функция пытается получить данные сессии из HAR-файлов или генерирует новую сессию, если HAR-файлы не найдены.
-7. **Формирование данных запроса**: Функция формирует словарь данных для отправки в API, включая сообщения, параметры генерации и данные сессии.
-8. **Отправка запроса в API**: Функция отправляет POST-запрос в API Blackbox AI с сформированными данными.
-9. **Обработка ответа**: Функция обрабатывает ответ от API, извлекая сгенерированный текст или URL изображения (для моделей генерации изображений).
-10. **Возврат асинхронного генератора**: Функция возвращает асинхронный генератор, который выдает ответы по мере их поступления.
-
-```
-    A: Выбор модели
-    │
-    B: Создание заголовков
-    │
-    C: Инициализация разговора
-    │
-    D: Формирование сообщений
-    │
-    E: Обработка медиа-файлов
-    │
-    F: Получение данных сессии
-    │
-    G: Формирование данных запроса
-    │
-    H: Отправка запроса в API
-    │
-    I: Обработка ответа
-    │
-    J: Возврат асинхронного генератора
-```
-
-**Примеры**:
-```python
-messages = [{"role": "user", "content": "Hello, how are you?"}]
-async_generator = await Blackbox.create_async_generator(model="blackboxai", messages=messages)
-async for message in async_generator:
-    print(message)
-# "I am doing well, thank you for asking!"
-
-messages = [{"role": "user", "content": "Draw me a cat."}]
-async_generator = await Blackbox.create_async_generator(model=Blackbox.default_image_model, messages=messages)
-async for message in async_generator:
-    print(message)
-# ImageResponse(images=["https://example.com/image.jpg"], alt="Draw me a cat.")
+    @classmethod
+    def _check_premium_access(cls) -> bool:
+        """
+        Checks for an authorized session in HAR files.
+        Returns True if a valid session is found that differs from the demo.
+        """
+        try:
+            har_dir = get_cookies_dir()
+            if not os.access(har_dir, os.R_OK):
+                return False
+                
+            for root, _, files in os.walk(har_dir):
+                for file in files:
+                    if file.endswith(".har"):
+                        try:
+                            with open(os.path.join(root, file), 'rb') as f:
+                                har_data = json.load(f)
+                                
+                            for entry in har_data['log']['entries']

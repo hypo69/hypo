@@ -1,210 +1,282 @@
 # Модуль для рендеринга и разметки в Tiny Troupe
-=========================================================
+=================================================
 
-Модуль содержит функции и класс :class:`RichTextStyle`, предназначенные для стилизации и форматирования текста, а также для внедрения HTML и CSS стилей.
+Модуль предоставляет утилиты для обработки текста, стилизации и форматирования, используемые для рендеринга контента в проекте Tiny Troupe. Включает функции для инъекции стилей, обрезки текста, форматирования дат и времени, а также управления стилями текста.
 
 ## Обзор
 
-Этот модуль предоставляет инструменты для улучшения визуального представления текста, используемого в приложении Tiny Troupe. Он включает функции для внедрения стилей, обрезки текста, форматирования даты и времени, а также класс для управления стилями текста.
+Модуль содержит функции и класс `RichTextStyle`, которые используются для стилизации текста и форматирования данных, предназначенных для отображения в интерфейсе пользователя или логах. Функции модуля позволяют добавлять CSS стили, обрезать длинные строки, форматировать даты и удалять лишние пробелы.
 
-## Подробней
+## Подробнее
 
-Модуль предназначен для работы с текстом, отображаемым в интерфейсе пользователя Tiny Troupe. Он предоставляет функции для стилизации, форматирования и обрезки текста, чтобы он выглядел аккуратно и соответствовал дизайну приложения. Также модуль включает класс `RichTextStyle`, который позволяет задавать различные стили для разных типов событий.
+Этот модуль предоставляет набор инструментов для улучшения читаемости и представления текста и данных. Он включает методы для динамического изменения стилей HTML, обрезки длинных текстов, форматирования дат и управления стилями для консольного вывода с использованием библиотеки `rich`.
 
 ## Функции
 
 ### `inject_html_css_style_prefix`
 
-**Назначение**: Внедряет префикс стиля ко всем атрибутам стиля в заданной HTML строке.
+```python
+def inject_html_css_style_prefix(html, style_prefix_attributes):
+    """
+    Injects a style prefix to all style attributes in the given HTML string.
+
+    For example, if you want to add a style prefix to all style attributes in the HTML string
+    ``<div style="color: red;">Hello</div>``, you can use this function as follows:
+    inject_html_css_style_prefix(\'<div style="color: red;">Hello</div>\', \'font-size: 20px;\')
+    """
+    ...
+```
+
+**Назначение**: Добавляет префикс стиля ко всем атрибутам `style` в переданной HTML строке.
 
 **Параметры**:
-- `html` (str): HTML строка, в которую нужно внедрить префикс стиля.
-- `style_prefix_attributes` (str): Префикс стиля, который нужно внедрить.
+- `html`: HTML строка, в которой необходимо добавить префикс к стилям.
+- `style_prefix_attributes`: Строка с префиксом стилей, которую нужно добавить.
 
 **Возвращает**:
-- `str`: HTML строка с внедренным префиксом стиля.
+- HTML строка с добавленным префиксом стилей.
 
 **Как работает функция**:
-1. Функция заменяет все вхождения `style="` в HTML строке на `style="{style_prefix_attributes};`, добавляя префикс стиля к существующим стилям.
+1. Функция берет входную HTML строку и строку с префиксом стилей.
+2. Использует метод `replace` для поиска всех вхождений `style="` и заменяет их на `style="{style_prefix_attributes};`, добавляя указанный префикс.
+3. Возвращает измененную HTML строку.
 
 ```
-HTML строка -> Замена 'style="' на 'style="{style_prefix_attributes};' -> HTML строка с префиксом стиля
+HTML_String --> Replace 'style="' with 'style="{style_prefix_attributes};' --> Измененная_HTML_Строка
 ```
 
 **Примеры**:
+
 ```python
 html = '<div style="color: red;">Hello</div>'
-style_prefix_attributes = 'font-size: 20px;'
-result = inject_html_css_style_prefix(html, style_prefix_attributes)
-print(result)  # Вывод: <div style="font-size: 20px;;color: red;">Hello</div>
+style_prefix = 'font-size: 20px'
+result = inject_html_css_style_prefix(html, style_prefix)
+print(result) # Вывод: <div style="font-size: 20px;color: red;">Hello</div>
 ```
 
 ### `break_text_at_length`
 
-**Назначение**: Обрезает текст (или JSON) до указанной длины, вставляя строку "(...)" в точке обрыва.
+```python
+def break_text_at_length(text: Union[str, dict], max_length: int=None) -> str:
+    """
+    Breaks the text (or JSON) at the specified length, inserting a "(...)" string at the break point.
+    If the maximum length is `None`, the content is returned as is.
+    """
+    ...
+```
+
+**Назначение**: Обрезает текст или JSON до указанной длины, добавляя строку "(...)" в точке обрыва.
 
 **Параметры**:
-- `text` (str | dict): Текст или JSON, который нужно обрезать.
-- `max_length` (int, optional): Максимальная длина текста. Если `None`, контент возвращается без изменений. По умолчанию `None`.
+- `text` (str | dict): Текст или словарь, который нужно обрезать.
+- `max_length` (int, optional): Максимальная длина текста. Если `None`, текст не обрезается. По умолчанию `None`.
 
 **Возвращает**:
-- `str`: Обрезанный текст или JSON.
+- Обрезанная строка с добавленным "(...)" или исходный текст, если `max_length` равен `None` или длина текста меньше `max_length`.
 
 **Как работает функция**:
-1. Проверяется, является ли входной текст словарем. Если да, он преобразуется в JSON строку с отступами.
-2. Если `max_length` не указана или длина текста меньше или равна `max_length`, возвращается исходный текст.
-3. Иначе текст обрезается до `max_length`, и к нему добавляется строка "(...)".
+1. Функция проверяет, является ли входной параметр словарем. Если да, преобразует его в JSON строку с отступами.
+2. Проверяет, равен ли `max_length` `None` или длина текста меньше или равна `max_length`. Если да, возвращает текст без изменений.
+3. Иначе, обрезает текст до `max_length` символов и добавляет в конце строку "(...)".
 
 ```
-Входной текст -> Проверка типа (словарь?) -> Преобразование в JSON (если словарь) -> Проверка длины -> Обрезка и добавление " (...)" (если необходимо) -> Возвращаемый текст
+Text --> Is_Dictionary? --> Yes: Convert_to_JSON
+|       No: -
+|
+Check max_length --> None or len(text) <= max_length? --> Yes: Return Text
+|                                                     No: обрезанный_текст + " (...)"
 ```
 
 **Примеры**:
+
 ```python
-text = "This is a long text that needs to be truncated."
-max_length = 20
-result = break_text_at_length(text, max_length)
+text = "This is a long text that needs to be broken."
+result = break_text_at_length(text, max_length=20)
 print(result)  # Вывод: This is a long text (...)
 
-data = {"name": "John", "age": 30, "city": "New York"}
-max_length = 50
-result = break_text_at_length(data, max_length)
+data = {"key": "value", "another_key": "another_value"}
+result = break_text_at_length(data, max_length=30)
 print(result)
 ```
 
 ### `pretty_datetime`
 
-**Назначение**: Возвращает строковое представление объекта datetime в формате "YYYY-MM-DD HH:MM".
+```python
+def pretty_datetime(dt: datetime) -> str:
+    """
+    Returns a pretty string representation of the specified datetime object.
+    """
+    ...
+```
+
+**Назначение**: Преобразует объект `datetime` в строку в формате "YYYY-MM-DD HH:MM".
 
 **Параметры**:
-- `dt` (datetime): Объект datetime, который нужно преобразовать.
+- `dt` (datetime): Объект `datetime`, который нужно отформатировать.
 
 **Возвращает**:
-- `str`: Строковое представление даты и времени.
+- Строковое представление даты и времени в формате "YYYY-MM-DD HH:MM".
 
 **Как работает функция**:
-1. Функция форматирует объект `datetime` в строку, используя формат "%Y-%m-%d %H:%M".
+1. Функция принимает объект `datetime`.
+2. Использует метод `strftime` для форматирования даты и времени в указанный формат.
+3. Возвращает отформатированную строку.
 
 ```
-Объект datetime -> Форматирование в строку -> Строковое представление даты и времени
+Datetime_Object --> strftime("%Y-%m-%d %H:%M") --> Отформатированная_Строка
 ```
 
 **Примеры**:
+
 ```python
-now = datetime.now()
-result = pretty_datetime(now)
-print(result)  # Вывод: 2024-07-26 10:00 (пример)
+from datetime import datetime
+
+dt = datetime(2023, 1, 1, 12, 30)
+result = pretty_datetime(dt)
+print(result)  # Вывод: 2023-01-01 12:30
 ```
 
 ### `dedent`
 
-**Назначение**: Удаляет все начальные пробелы и отступы из заданной строки.
+```python
+def dedent(text: str) -> str:
+    """
+    Dedents the specified text, removing any leading whitespace and identation.
+    """
+    ...
+```
+
+**Назначение**: Удаляет общие начальные пробелы из каждой строки текста.
 
 **Параметры**:
-- `text` (str): Строка, из которой нужно удалить отступы.
+- `text` (str): Текст, из которого нужно удалить отступы.
 
 **Возвращает**:
-- `str`: Строка без начальных пробелов и отступов.
+- Текст без начальных пробелов и отступов.
 
 **Как работает функция**:
-1. Функция использует `textwrap.dedent` для удаления общих начальных пробелов из каждой строки в тексте.
-2. Затем удаляются начальные и конечные пробелы с помощью `strip()`.
+1. Функция принимает строку текста.
+2. Использует `textwrap.dedent` для удаления общих начальных пробелов.
+3. Использует `strip()` для удаления всех начальных и конечных пробелов.
+4. Возвращает обработанный текст.
 
 ```
-Входной текст -> Удаление отступов -> Удаление начальных и конечных пробелов -> Очищенный текст
+Текст --> textwrap.dedent() --> strip() --> Текст_Без_Отступов
 ```
 
 **Примеры**:
+
 ```python
-text = """
-    This is a
-    multiline string
-    with indentation.
-"""
+text = "   Hello\n    World"
 result = dedent(text)
-print(result)
-# Вывод:
-# This is a
-# multiline string
-# with indentation.
+print(result)  # Вывод: Hello\nWorld
 ```
 
 ### `wrap_text`
 
-**Назначение**: Переносит текст на указанную ширину.
+```python
+def wrap_text(text: str, width: int=100) -> str:
+    """
+    Wraps the text at the specified width.
+    """
+    ...
+```
+
+**Назначение**: Переносит текст на новую строку, если он превышает указанную ширину.
 
 **Параметры**:
 - `text` (str): Текст, который нужно перенести.
-- `width` (int, optional): Ширина, на которую нужно перенести текст. По умолчанию 100.
+- `width` (int, optional): Максимальная ширина строки. По умолчанию 100.
 
 **Возвращает**:
-- `str`: Перенесенный текст.
+- Текст, перенесенный на новые строки в соответствии с заданной шириной.
 
 **Как работает функция**:
-1. Функция использует `textwrap.fill` для переноса текста на указанную ширину.
+1. Функция принимает строку текста и ширину.
+2. Использует `textwrap.fill` для переноса текста на новые строки с учетом заданной ширины.
+3. Возвращает переформатированный текст.
 
 ```
-Входной текст -> Перенос текста на указанную ширину -> Перенесенный текст
+Текст, Ширина --> textwrap.fill(text, width=width) --> Переформатированный_Текст
 ```
 
 **Примеры**:
+
 ```python
-text = "This is a long text that needs to be wrapped to a specific width."
-width = 40
-result = wrap_text(text, width)
+text = "This is a long text that needs to be wrapped."
+result = wrap_text(text, width=20)
 print(result)
-# Вывод:
-# This is a long text that needs to be
-# wrapped to a specific width.
 ```
 
 ## Классы
 
 ### `RichTextStyle`
 
-**Описание**: Класс, содержащий предопределенные стили для различных типов событий.
+**Описание**: Класс, определяющий стили текста для использования с библиотекой `rich`.
 
-**Аттрибуты**:
-- `STIMULUS_CONVERSATION_STYLE` (str): Стиль для реплик в разговоре.
-- `STIMULUS_THOUGHT_STYLE` (str): Стиль для мыслей.
-- `STIMULUS_DEFAULT_STYLE` (str): Стиль по умолчанию для стимулов.
-- `ACTION_DONE_STYLE` (str): Стиль для завершенных действий.
-- `ACTION_TALK_STYLE` (str): Стиль для речи.
-- `ACTION_THINK_STYLE` (str): Стиль для мыслей.
-- `ACTION_DEFAULT_STYLE` (str): Стиль по умолчанию для действий.
-- `INTERVENTION_DEFAULT_STYLE` (str): Стиль по умолчанию для вмешательств.
+**Атрибуты**:
+- `STIMULUS_CONVERSATION_STYLE` (str): Стиль для текста стимула в контексте разговора (bold italic cyan1).
+- `STIMULUS_THOUGHT_STYLE` (str): Стиль для текста стимула, представляющего мысль (dim italic cyan1).
+- `STIMULUS_DEFAULT_STYLE` (str): Стиль для текста стимула по умолчанию (italic).
+- `ACTION_DONE_STYLE` (str): Стиль для текста действия, которое завершено (grey82).
+- `ACTION_TALK_STYLE` (str): Стиль для текста действия, представляющего речь (bold green3).
+- `ACTION_THINK_STYLE` (str): Стиль для текста действия, представляющего мысль (green).
+- `ACTION_DEFAULT_STYLE` (str): Стиль для текста действия по умолчанию (purple).
+- `INTERVENTION_DEFAULT_STYLE` (str): Стиль для текста интервенции по умолчанию (bright_magenta).
 
 **Методы**:
-- `get_style_for(kind: str, event_type: str = None) -> str`: Возвращает стиль для указанного типа события.
+- `get_style_for(kind: str, event_type: str = None)`: Возвращает стиль для указанного типа события и категории.
 
 #### `get_style_for`
 
-**Назначение**: Возвращает стиль для указанного типа события.
+```python
+@classmethod
+def get_style_for(cls, kind:str, event_type:str=None):
+    """
+    Возвращает стиль для указанного типа события и категории.
+    """
+    ...
+```
+
+**Назначение**: Определяет и возвращает стиль текста на основе типа события и категории (stimulus, action, intervention).
 
 **Параметры**:
-- `kind` (str): Тип события ("stimulus", "action", "intervention").
-- `event_type` (str, optional): Подтип события ("CONVERSATION", "THOUGHT", "DONE", "TALK", "THINK"). По умолчанию `None`.
+- `kind` (str): Тип категории ("stimulus", "action", "intervention").
+- `event_type` (str, optional): Тип события ("CONVERSATION", "THOUGHT", "DONE", "TALK", "THINK"). По умолчанию `None`.
 
 **Возвращает**:
-- `str`: Стиль для указанного типа события.
+- Строка, представляющая стиль текста.
 
 **Как работает функция**:
-1. Функция проверяет тип события (`kind`) и подтип события (`event_type`).
-2. В зависимости от типа и подтипа возвращается соответствующий стиль из предопределенных атрибутов класса.
-3. Если подтип не указан, возвращается стиль по умолчанию для данного типа события.
+1. Принимает тип категории (`kind`) и тип события (`event_type`).
+2. Если `kind` равен "stimulus" или "stimuli":
+   - Если `event_type` равен "CONVERSATION", возвращает `STIMULUS_CONVERSATION_STYLE`.
+   - Если `event_type` равен "THOUGHT", возвращает `STIMULUS_THOUGHT_STYLE`.
+   - Иначе возвращает `STIMULUS_DEFAULT_STYLE`.
+3. Если `kind` равен "action":
+   - Если `event_type` равен "DONE", возвращает `ACTION_DONE_STYLE`.
+   - Если `event_type` равен "TALK", возвращает `ACTION_TALK_STYLE`.
+   - Если `event_type` равен "THINK", возвращает `ACTION_THINK_STYLE`.
+   - Иначе возвращает `ACTION_DEFAULT_STYLE`.
+4. Если `kind` равен "intervention", возвращает `INTERVENTION_DEFAULT_STYLE`.
 
 ```
-Тип события (kind) -> Подтип события (event_type) -> Выбор стиля -> Возвращаемый стиль
+Kind, Event_Type --> Kind == "stimulus" or "stimuli"? --> Yes: Event_Type == "CONVERSATION"? --> Yes: STIMULUS_CONVERSATION_STYLE
+|                                                         No: Event_Type == "THOUGHT"? --> Yes: STIMULUS_THOUGHT_STYLE
+|                                                         No: STIMULUS_DEFAULT_STYLE
+|                   No: Kind == "action"? --> Yes: Event_Type == "DONE"? --> Yes: ACTION_DONE_STYLE
+|                                          No: Event_Type == "TALK"? --> Yes: ACTION_TALK_STYLE
+|                                          No: Event_Type == "THINK"? --> Yes: ACTION_THINK_STYLE
+|                                          No: ACTION_DEFAULT_STYLE
+|                   No: Kind == "intervention"? --> Yes: INTERVENTION_DEFAULT_STYLE
 ```
 
 **Примеры**:
+
 ```python
 style = RichTextStyle.get_style_for("stimulus", "CONVERSATION")
 print(style)  # Вывод: bold italic cyan1
 
-style = RichTextStyle.get_style_for("action", "DONE")
-print(style)  # Вывод: grey82
-
-style = RichTextStyle.get_style_for("intervention")
-print(style)  # Вывод: bright_magenta
+style = RichTextStyle.get_style_for("action", "TALK")
+print(style)  # Вывод: bold green3
 ```

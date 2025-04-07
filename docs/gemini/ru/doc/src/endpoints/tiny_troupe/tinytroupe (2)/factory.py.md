@@ -2,521 +2,503 @@
 
 ## Обзор
 
-Модуль `factory.py` содержит классы и функции для создания агентов `TinyPerson` с использованием OpenAI LLM. Он включает механизмы кэширования и обеспечивает уникальность создаваемых агентов.
+Модуль `factory.py` предназначен для создания фабрик, которые генерируют экземпляры класса `TinyPerson`. Он содержит базовый класс `TinyFactory`, который служит основой для различных типов фабрик, и класс `TinyPersonFactory`, который специализируется на создании персонажей `TinyPerson` на основе контекста и подсказок. Фабрики можно кэшировать для повышения производительности, особенно в транзакционных средах.
 
 ## Подробней
 
-Модуль предоставляет базовый класс `TinyFactory`, от которого наследуется `TinyPersonFactory`. `TinyFactory` содержит общую логику для фабрик, включая управление списком фабрик и механизмы кэширования. `TinyPersonFactory` специализируется на создании экземпляров `TinyPerson` на основе контекста и шаблонов, используя OpenAI для генерации спецификаций агентов. Модуль обеспечивает возможность генерации нескольких фабрик агентов на основе заданного контекста.
+Этот модуль играет ключевую роль в системе, обеспечивая механизм для создания и управления агентами (`TinyPerson`). Он включает в себя функциональность для генерации описаний персонажей на основе широкого контекста, а также для создания самих персонажей с определенными характеристиками. Модуль поддерживает кэширование фабрик и сгенерированных агентов, что позволяет избежать повторной генерации и повысить эффективность системы.
 
 ## Классы
 
 ### `TinyFactory`
 
-**Описание**: Базовый класс для различных типов фабрик.
+**Описание**:
+Базовый класс для различных типов фабрик. Обеспечивает основу для расширения системы и управления кэшированием в транзакционных средах.
 
 **Принцип работы**:
-`TinyFactory` служит базовым классом для создания различных фабрик в системе. Он предоставляет основные механизмы для управления фабриками, такие как добавление, удаление и кэширование. Класс также обеспечивает методы для кодирования и декодирования состояния фабрики, что важно для сохранения состояния при кэшировании транзакций.
+`TinyFactory` предоставляет базовую функциональность для создания и управления фабриками. Он содержит методы для добавления фабрик в глобальный список, очистки списка фабрик, кодирования и декодирования состояния фабрики. Класс также обеспечивает механизм кэширования фабрик в транзакционном режиме, что необходимо для обеспечения согласованности при кэшировании агентов, генерируемых фабриками.
 
-**Аттрибуты**:
+**Атрибуты**:
 - `all_factories` (dict): Словарь, содержащий все созданные фабрики. Ключ - имя фабрики, значение - экземпляр фабрики.
-- `name` (str): Уникальное имя фабрики.
-- `simulation_id` (str): ID симуляции, к которой принадлежит фабрика.
+- `name` (str): Имя фабрики. Генерируется автоматически при создании экземпляра фабрики.
+- `simulation_id` (str, optional): Идентификатор симуляции, к которой принадлежит фабрика. По умолчанию `None`.
 
 **Методы**:
-- `__init__(simulation_id: str = None) -> None`: Инициализирует экземпляр `TinyFactory`.
-- `__repr__() -> str`: Возвращает строковое представление объекта `TinyFactory`.
-- `set_simulation_for_free_factories(simulation)`: Устанавливает симуляцию для свободных фабрик.
-- `add_factory(factory)`: Добавляет фабрику в список всех фабрик.
-- `clear_factories()`: Очищает глобальный список всех фабрик.
-- `encode_complete_state() -> dict`: Кодирует полное состояние фабрики.
-- `decode_complete_state(state: dict)`: Декодирует полное состояние фабрики.
+- `__init__(self, simulation_id: str = None) -> None`:
+    - Инициализирует экземпляр `TinyFactory`.
+    - Параметр `simulation_id` позволяет связать фабрику с определенной симуляцией.
+- `__repr__(self)`:
+    - Возвращает строковое представление объекта `TinyFactory`.
+- `set_simulation_for_free_factories(simulation)`:
+    - Устанавливает симуляцию для свободных фабрик (с `simulation_id=None`).
+    - Позволяет захватывать свободные окружения конкретными областями симуляции.
+- `add_factory(factory)`:
+    - Добавляет фабрику в список всех фабрик.
+    - Вызывает исключение, если фабрика с таким именем уже существует.
+- `clear_factories()`:
+    - Очищает глобальный список всех фабрик.
+- `encode_complete_state() -> dict`:
+    - Кодирует полное состояние фабрики в словарь.
+    - Переопределяется подклассами, если они содержат несериализуемые элементы.
+- `decode_complete_state(state: dict)`:
+    - Декодирует состояние фабрики из словаря.
+    - Переопределяется подклассами, если они содержат несериализуемые элементы.
 
 ### `TinyPersonFactory`
 
-**Описание**: Класс для создания экземпляров `TinyPerson`.
-
-**Наследует**:
-- `TinyFactory`: Наследует функциональность базовой фабрики.
+**Описание**:
+Класс, специализирующийся на создании экземпляров `TinyPerson` на основе контекста и подсказок. Наследуется от `TinyFactory`.
 
 **Принцип работы**:
-`TinyPersonFactory` специализируется на создании агентов `TinyPerson` с использованием OpenAI LLM. Он использует контекстный текст и шаблоны для генерации спецификаций агентов. Класс включает механизмы для отслеживания сгенерированных агентов и обеспечения их уникальности. Также предоставляет методы для настройки агентов и выполнения вызовов к модели OpenAI с использованием декоратора `transactional` для кэширования.
+`TinyPersonFactory` использует OpenAI LLM для генерации персонажей `TinyPerson`. Он принимает контекстный текст, который используется для создания подсказок для LLM. Затем LLM генерирует описания персонажей, которые используются для создания экземпляров `TinyPerson`. Фабрика также отслеживает сгенерированных персонажей, чтобы избежать повторной генерации одних и тех же персонажей.
 
-**Аттрибуты**:
-- `person_prompt_template_path` (str): Путь к шаблону prompt для генерации персоны.
+**Наследует**:
+- `TinyFactory`: Предоставляет базовую функциональность для создания и управления фабриками.
+
+**Атрибуты**:
+- `person_prompt_template_path` (str): Путь к шаблону подсказки для генерации персонажа.
 - `context_text` (str): Контекстный текст, используемый для генерации экземпляров `TinyPerson`.
-- `generated_minibios` (list): Список сгенерированных `minibio` для отслеживания созданных персон.
-- `generated_names` (list): Список сгенерированных имен для обеспечения уникальности персон.
+- `generated_minibios` (list): Список сгенерированных мини-биографий персонажей.
+- `generated_names` (list): Список сгенерированных имен персонажей.
 
 **Методы**:
-- `__init__(context_text, simulation_id: str = None)`: Инициализирует экземпляр `TinyPersonFactory`.
-- `generate_person_factories(number_of_factories, generic_context_text)`: Генерирует список экземпляров `TinyPersonFactory` с использованием OpenAI LLM.
-- `generate_person(agent_particularities: str = None, temperature: float = 1.5, attepmpts: int = 5)`: Генерирует экземпляр `TinyPerson` с использованием OpenAI LLM.
-- `_aux_model_call(messages, temperature)`: Вспомогательный метод для выполнения вызова модели.
-- `_setup_agent(agent, configuration)`: Настраивает агента с необходимыми элементами.
+- `__init__(self, context_text, simulation_id: str = None)`:
+    - Инициализирует экземпляр `TinyPersonFactory`.
+    - Принимает контекстный текст и идентификатор симуляции.
+- `generate_person_factories(number_of_factories, generic_context_text)`:
+    - Генерирует список экземпляров `TinyPersonFactory` с использованием OpenAI LLM.
+    - Использует системную подсказку из файла `prompts/generate_person_factory.md`.
+    - Извлекает описания персонажей из ответа LLM и создает фабрики.
+- `generate_person(self, agent_particularities: str = None, temperature: float = 1.5, attepmpts: int = 5)`:
+    - Генерирует экземпляр `TinyPerson` с использованием OpenAI LLM.
+    - Использует шаблон подсказки из файла `prompts/generate_person.mustache`.
+    - Вызывает вспомогательную функцию `aux_generate` для выполнения вызова модели.
+    - Создает экземпляр `TinyPerson` на основе сгенерированных параметров.
+- `_aux_model_call(self, messages, temperature)`:
+    - Вспомогательный метод для выполнения вызова модели.
+    - Используется для кэширования вызова модели в транзакционном режиме.
+- `_setup_agent(self, agent, configuration)`:
+    - Настраивает агента с использованием предоставленной конфигурации.
+    - Определяет атрибуты агента на основе значений в конфигурации.
 
 ## Функции
 
-### `TinyFactory.__init__`
-
-```python
-def __init__(self, simulation_id:str=None) -> None:
-    """
-    Initialize a TinyFactory instance.
-
-    Args:
-        simulation_id (str, optional): The ID of the simulation. Defaults to None.
-    """
-    ...
-```
-
-**Назначение**: Инициализирует экземпляр `TinyFactory`.
+### `TinyFactory.set_simulation_for_free_factories(simulation)`
+**Назначение**: Устанавливает симуляцию для всех "свободных" фабрик, у которых `simulation_id` равен `None`. Это позволяет привязать фабрики, не привязанные к конкретной симуляции, к определенной симуляции.
 
 **Параметры**:
-- `simulation_id` (str, optional): ID симуляции, к которой принадлежит фабрика. По умолчанию `None`.
-
-**Как работает функция**:
-1. Присваивает фабрике уникальное имя, используя `utils.fresh_id()`.
-2. Устанавливает ID симуляции.
-3. Добавляет фабрику в статический словарь `TinyFactory.all_factories`.
-
-```
-Создание имени фабрики --> Присвоение ID симуляции --> Добавление фабрики в общий список
-```
-
-**Примеры**:
-```python
-factory = TinyFactory(simulation_id="sim123")
-print(factory.name)  # Вывод: Factory <id>
-```
-
-### `TinyFactory.__repr__`
-
-```python
-def __repr__(self):
-    """
-    Returns:
-        str: Строковое представление объекта `TinyFactory`.
-    """
-    ...
-```
-
-**Назначение**: Возвращает строковое представление объекта `TinyFactory`.
+- `simulation` (Simulation): Объект симуляции, к которой нужно привязать "свободные" фабрики.
 
 **Возвращает**:
-- `str`: Строковое представление объекта `TinyFactory`.
+- `None`: Функция ничего не возвращает.
 
 **Как работает функция**:
-Функция формирует строковое представление объекта `TinyFactory`, которое включает имя фабрики.
+
+1. **Перебор фабрик**: Функция итерируется по всем фабрикам, хранящимся в `TinyFactory.all_factories`.
+2. **Проверка `simulation_id`**: Для каждой фабрики проверяется, является ли её атрибут `simulation_id` равным `None`.
+3. **Привязка к симуляции**: Если `simulation_id` равен `None`, то вызывается метод `add_factory` объекта `simulation`, чтобы привязать фабрику к данной симуляции.
 
 ```
-Формирование строки --> Возврат строки
+Начало
+  |
+  V
+Перебор фабрик в TinyFactory.all_factories
+  |
+  V
+Проверка: factory.simulation_id is None?
+  |
+  +-> Да: Привязка фабрики к симуляции (simulation.add_factory(factory))
+  |
+  +-> Нет: Следующая фабрика
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-factory = TinyFactory(simulation_id="sim123")
-print(repr(factory))  # Вывод: TinyFactory(name='Factory <id>')
-```
-
-### `TinyFactory.set_simulation_for_free_factories`
-
-```python
-@staticmethod
-def set_simulation_for_free_factories(simulation):
-    """
-    Sets the simulation if it is None. This allows free environments to be captured by specific simulation scopes
-    if desired.
-    """
-    ...
-```
-
-**Назначение**: Устанавливает симуляцию для фабрик, у которых `simulation_id` равен `None`.
-
-**Параметры**:
-- `simulation`: Объект симуляции, который нужно установить для свободных фабрик.
-
-**Как работает функция**:
-1. Проходит по всем фабрикам в `TinyFactory.all_factories`.
-2. Если у фабрики `simulation_id` равен `None`, добавляет фабрику в симуляцию.
-
-```
-Перебор фабрик --> Проверка на отсутствие ID симуляции --> Добавление фабрики в симуляцию
-```
-
-**Примеры**:
-```python
-from tinytroupe.simulation import Simulation  # Предполагается, что класс Simulation существует
-
+# Создание экземпляра симуляции
 simulation = Simulation()
-factory1 = TinyFactory(simulation_id=None)
-factory2 = TinyFactory(simulation_id="sim123")
+
+# Создание "свободной" фабрики (без указания simulation_id)
+factory = TinyFactory()
+
+# Привязка "свободной" фабрики к симуляции
 TinyFactory.set_simulation_for_free_factories(simulation)
-# factory1 будет добавлена в simulation
 ```
 
-### `TinyFactory.add_factory`
+### `TinyFactory.add_factory(factory)`
 
-```python
-@staticmethod
-def add_factory(factory):
-    """
-    Adds a factory to the list of all factories. Factory names must be unique,
-    so if an factory with the same name already exists, an error is raised.
-    """
-    ...
-```
-
-**Назначение**: Добавляет фабрику в список всех фабрик.
+**Назначение**: Добавляет фабрику в глобальный список всех фабрик (`TinyFactory.all_factories`).
 
 **Параметры**:
-- `factory`: Фабрика, которую нужно добавить.
+- `factory` (TinyFactory): Экземпляр фабрики, который нужно добавить.
+
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
 
 **Вызывает исключения**:
 - `ValueError`: Если фабрика с таким именем уже существует.
 
 **Как работает функция**:
-1. Проверяет, существует ли фабрика с таким именем в `TinyFactory.all_factories`.
-2. Если фабрика с таким именем уже существует, выбрасывает исключение `ValueError`.
-3. Иначе добавляет фабрику в `TinyFactory.all_factories`.
+
+1. **Проверка имени**: Функция проверяет, существует ли фабрика с таким же именем (`factory.name`) в словаре `TinyFactory.all_factories`.
+2. **Добавление фабрики**: Если фабрики с таким именем не существует, она добавляется в словарь `TinyFactory.all_factories`, где ключом является имя фабрики, а значением - сам объект фабрики.
+3. **Выброс исключения**: Если фабрика с таким именем уже существует, выбрасывается исключение `ValueError` с соответствующим сообщением об ошибке.
 
 ```
-Проверка имени фабрики на уникальность --> Добавление фабрики в общий список (если имя уникально)
+Начало
+  |
+  V
+Проверка: factory.name in TinyFactory.all_factories?
+  |
+  +-> Да: Выброс исключения ValueError
+  |
+  +-> Нет: Добавление фабрики в TinyFactory.all_factories (TinyFactory.all_factories[factory.name] = factory)
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-factory = TinyFactory(simulation_id="sim123")
+# Создание экземпляра фабрики
+factory = TinyFactory()
+
+# Добавление фабрики в глобальный список
 TinyFactory.add_factory(factory)
 ```
 
-### `TinyFactory.clear_factories`
+### `TinyFactory.clear_factories()`
 
-```python
-@staticmethod
-def clear_factories():
-    """
-    Clears the global list of all factories.
-    """
-    ...
-```
+**Назначение**: Очищает глобальный список всех фабрик (`TinyFactory.all_factories`).
 
-**Назначение**: Очищает глобальный список всех фабрик.
+**Параметры**:
+- `Нет параметров`.
+
+**Возвращает**:
+- `None`: Функция ничего не возвращает.
 
 **Как работает функция**:
-Функция присваивает `TinyFactory.all_factories` пустой словарь, очищая список фабрик.
+
+1. **Очистка списка**: Функция присваивает атрибуту `TinyFactory.all_factories` пустой словарь (`{}`), что приводит к удалению всех фабрик из глобального списка.
 
 ```
-Очистка списка фабрик
+Начало
+  |
+  V
+Очистка TinyFactory.all_factories (TinyFactory.all_factories = {})
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
+# Очистка глобального списка фабрик
 TinyFactory.clear_factories()
 ```
 
-### `TinyFactory.encode_complete_state`
+### `TinyFactory.encode_complete_state()`
 
-```python
-def encode_complete_state(self) -> dict:
-    """
-    Encodes the complete state of the factory. If subclasses have elmements that are not serializable, they should override this method.
-    """
-    ...
-```
+**Назначение**: Кодирует полное состояние фабрики в словарь для последующего сохранения или передачи.
 
-**Назначение**: Кодирует полное состояние фабрики.
+**Параметры**:
+- `Нет параметров`.
 
 **Возвращает**:
-- `dict`: Словарь, представляющий состояние фабрики.
+- `dict`: Словарь, представляющий полное состояние фабрики.
 
 **Как работает функция**:
-1. Создает глубокую копию словаря `__dict__` фабрики.
-2. Возвращает словарь, представляющий состояние фабрики.
+
+1. **Создание копии**: Функция создает глубокую копию словаря `self.__dict__`, который содержит все атрибуты объекта фабрики.
+2. **Возврат состояния**: Функция возвращает созданную копию словаря.
 
 ```
-Копирование состояния фабрики --> Возврат состояния
+Начало
+  |
+  V
+Создание глубокой копии self.__dict__
+  |
+  V
+Возврат копии
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-factory = TinyFactory(simulation_id="sim123")
+# Создание экземпляра фабрики
+factory = TinyFactory()
+
+# Кодирование состояния фабрики
 state = factory.encode_complete_state()
-print(state)  # Вывод: Словарь с состоянием фабрики
 ```
 
-### `TinyFactory.decode_complete_state`
+### `TinyFactory.decode_complete_state(state: dict)`
 
-```python
-def decode_complete_state(self, state:dict):
-    """
-    Decodes the complete state of the factory. If subclasses have elmements that are not serializable, they should override this method.
-    """
-    ...
-```
-
-**Назначение**: Декодирует полное состояние фабрики.
+**Назначение**: Декодирует состояние фабрики из словаря, восстанавливая её атрибуты.
 
 **Параметры**:
-- `state` (dict): Словарь, представляющий состояние фабрики.
+- `state` (dict): Словарь, содержащий состояние фабрики.
 
 **Возвращает**:
-- `self`: Объект `TinyFactory` с восстановленным состоянием.
+- `TinyFactory`: Экземпляр фабрики с восстановленным состоянием.
 
 **Как работает функция**:
-1. Создает глубокую копию переданного словаря `state`.
-2. Обновляет словарь `__dict__` фабрики с использованием состояния из словаря `state`.
-3. Возвращает объект `TinyFactory` с восстановленным состоянием.
+
+1. **Создание копии**: Функция создает глубокую копию словаря `state`, чтобы избежать изменения исходного словаря.
+2. **Обновление атрибутов**: Функция обновляет атрибуты объекта фабрики (`self.__dict__`) значениями из словаря `state`.
+3. **Возврат фабрики**: Функция возвращает экземпляр фабрики с восстановленным состоянием.
 
 ```
-Копирование состояния --> Обновление состояния фабрики --> Возврат фабрики с восстановленным состоянием
+Начало
+  |
+  V
+Создание глубокой копии state
+  |
+  V
+Обновление self.__dict__ значениями из state
+  |
+  V
+Возврат self
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-factory = TinyFactory(simulation_id="sim123")
-state = {"name": "Factory123", "simulation_id": "sim456"}
-factory.decode_complete_state(state)
-print(factory.simulation_id)  # Вывод: sim456
+# Создание экземпляра фабрики
+factory = TinyFactory()
+
+# Кодирование состояния фабрики
+state = factory.encode_complete_state()
+
+# Создание нового экземпляра фабрики
+new_factory = TinyFactory()
+
+# Декодирование состояния в новый экземпляр
+new_factory.decode_complete_state(state)
 ```
 
-### `TinyPersonFactory.__init__`
+### `TinyPersonFactory.generate_person_factories(number_of_factories, generic_context_text)`
 
-```python
-def __init__(self, context_text, simulation_id:str=None):
-    """
-    Initialize a TinyPersonFactory instance.
-
-    Args:
-        context_text (str): The context text used to generate the TinyPerson instances.
-        simulation_id (str, optional): The ID of the simulation. Defaults to None.
-    """
-    ...
-```
-
-**Назначение**: Инициализирует экземпляр `TinyPersonFactory`.
+**Назначение**: Генерирует список экземпляров `TinyPersonFactory` на основе предоставленного контекста, используя OpenAI LLM.
 
 **Параметры**:
-- `context_text` (str): Контекстный текст, используемый для генерации экземпляров `TinyPerson`.
-- `simulation_id` (str, optional): ID симуляции. По умолчанию `None`.
+- `number_of_factories` (int): Количество фабрик персонажей, которые необходимо сгенерировать.
+- `generic_context_text` (str): Общий контекстный текст, который будет использоваться для генерации описаний фабрик персонажей.
+
+**Возвращает**:
+- `list[TinyPersonFactory] | None`: Список сгенерированных экземпляров `TinyPersonFactory` или `None`, если не удалось сгенерировать фабрики.
 
 **Как работает функция**:
-1. Вызывает конструктор базового класса `TinyFactory` с переданным `simulation_id`.
-2. Устанавливает путь к шаблону prompt для генерации персоны (`person_prompt_template_path`).
-3. Сохраняет контекстный текст (`context_text`).
-4. Инициализирует пустой список для хранения сгенерированных `minibio` (`generated_minibios`).
-5. Инициализирует пустой список для хранения сгенерированных имен (`generated_names`).
+
+1. **Логирование**: Записывает информацию о начале генерации фабрик персонажей в лог.
+2. **Чтение системной подсказки**: Считывает содержимое файла `prompts/generate_person_factory.md`, который содержит системную подсказку для LLM.
+3. **Формирование сообщения для LLM**: Создает сообщение для LLM, содержащее системную подсказку и пользовательский запрос на генерацию описаний фабрик персонажей на основе предоставленного контекста.
+4. **Отправка запроса в LLM**: Отправляет сообщение в LLM и получает ответ.
+5. **Извлечение JSON из ответа**: Извлекает JSON из содержимого ответа LLM, который содержит описания фабрик персонажей.
+6. **Создание экземпляров фабрик**: Создает экземпляры `TinyPersonFactory` на основе извлеченных описаний и добавляет их в список.
+7. **Возврат списка фабрик**: Возвращает список сгенерированных экземпляров `TinyPersonFactory`.
 
 ```
-Вызов конструктора базового класса --> Установка пути к шаблону --> Сохранение контекстного текста --> Инициализация списков для сгенерированных данных
+Начало
+  |
+  V
+Логирование: начало генерации фабрик персонажей
+  |
+  V
+Чтение системной подсказки из prompts/generate_person_factory.md
+  |
+  V
+Формирование сообщения для LLM
+  |
+  V
+Отправка запроса в LLM
+  |
+  V
+Извлечение JSON из ответа
+  |
+  V
+Создание экземпляров TinyPersonFactory на основе извлеченных описаний
+  |
+  V
+Возврат списка фабрик
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-factory = TinyPersonFactory(context_text="Some context", simulation_id="sim123")
-print(factory.context_text)  # Вывод: Some context
+# Генерация 3 фабрик персонажей на основе контекста "городская жизнь"
+factories = TinyPersonFactory.generate_person_factories(3, "городская жизнь")
 ```
 
-### `TinyPersonFactory.generate_person_factories`
+### `TinyPersonFactory.generate_person(self, agent_particularities: str = None, temperature: float = 1.5, attepmpts: int = 5)`
 
-```python
-@staticmethod
-def generate_person_factories(number_of_factories, generic_context_text):
-    """
-    Generate a list of TinyPersonFactory instances using OpenAI's LLM.
-
-    Args:
-        number_of_factories (int): The number of TinyPersonFactory instances to generate.
-        generic_context_text (str): The generic context text used to generate the TinyPersonFactory instances.
-
-    Returns:
-        list: A list of TinyPersonFactory instances.
-    """
-    ...
-```
-
-**Назначение**: Генерирует список экземпляров `TinyPersonFactory` с использованием OpenAI LLM.
+**Назначение**: Генерирует экземпляр `TinyPerson` (агента) на основе контекста фабрики и дополнительных особенностей, используя OpenAI LLM.
 
 **Параметры**:
-- `number_of_factories` (int): Количество экземпляров `TinyPersonFactory` для генерации.
-- `generic_context_text` (str): Общий контекстный текст, используемый для генерации экземпляров `TinyPersonFactory`.
+- `agent_particularities` (str, optional): Дополнительные особенности агента, которые будут включены в запрос к LLM. По умолчанию `None`.
+- `temperature` (float, optional): Температура для управления случайностью при генерации текста LLM. Более высокие значения делают вывод более случайным. По умолчанию `1.5`.
+- `attepmpts` (int, optional): Количество попыток генерации агента в случае неудачи. По умолчанию `5`.
 
 **Возвращает**:
-- `list`: Список экземпляров `TinyPersonFactory`.
-
-**Как работает функция**:
-1. Формирует системный prompt на основе файла `prompts/generate_person_factory.md`.
-2. Формирует пользовательский prompt, запрашивая `number_of_factories` описаний персон на основе `generic_context_text`.
-3. Отправляет сообщение в OpenAI LLM.
-4. Извлекает JSON из ответа LLM.
-5. Создает экземпляры `TinyPersonFactory` на основе извлеченных JSON.
-6. Возвращает список созданных фабрик.
-
-```
-Формирование системного prompt --> Формирование пользовательского prompt --> Отправка сообщения в OpenAI --> Извлечение JSON из ответа --> Создание экземпляров TinyPersonFactory --> Возврат списка фабрик
-```
-
-**Примеры**:
-```python
-factories = TinyPersonFactory.generate_person_factories(number_of_factories=2, generic_context_text="Some generic context")
-print(len(factories))  # Вывод: 2
-```
-
-### `TinyPersonFactory.generate_person`
-
-```python
-def generate_person(self, agent_particularities:str=None, temperature:float=1.5, attepmpts:int=5):
-    """
-    Generate a TinyPerson instance using OpenAI's LLM.
-
-    Args:
-        agent_particularities (str): The particularities of the agent.
-        temperature (float): The temperature to use when sampling from the LLM.
-
-    Returns:
-        TinyPerson: A TinyPerson instance generated using the LLM.
-    """
-    ...
-```
-
-**Назначение**: Генерирует экземпляр `TinyPerson` с использованием OpenAI LLM.
-
-**Параметры**:
-- `agent_particularities` (str): Особенности агента.
-- `temperature` (float): Температура для выборки из LLM.
-- `attepmpts` (int): Число попыток генерации агента
-
-**Возвращает**:
-- `TinyPerson`: Экземпляр `TinyPerson`, сгенерированный с использованием LLM.
-
-**Как работает функция**:
-1.  Формирует prompt на основе шаблона `person_prompt_template_path`, контекстного текста, особенностей агента и уже сгенерированных `minibio`.
-2.  Определяет внутреннюю функцию `aux_generate` для выполнения вызова модели.
-3.  Вызывает `aux_generate` в цикле `attepmpts` раз, пока не будет сгенерирован подходящий агент или не истекут попытки.
-4.  Если агент сгенерирован, создает экземпляр `TinyPerson`, настраивает его с помощью `_setup_agent`, добавляет `minibio` и имя агента в списки сгенерированных данных.
-5.  Возвращает сгенерированного агента.
+- `TinyPerson | None`: Сгенерированный экземпляр `TinyPerson` или `None`, если не удалось сгенерировать агента после нескольких попыток.
 
 **Внутренние функции**:
-
-#### `aux_generate`
-
-```python
-def aux_generate():
-    """
-    Внутренняя функция для выполнения вызова модели OpenAI.
-
-    Returns:
-        dict | None: Спецификация агента, если агент сгенерирован и его имя уникально, иначе `None`.
-    """
-    ...
-```
-
-**Назначение**: Внутренняя функция для выполнения вызова модели OpenAI.
+- `aux_generate()`:
+    - **Назначение**: Внутренняя функция для выполнения вызова модели LLM и извлечения параметров агента.
+    - **Как работает**:
+        1. **Формирование сообщений**: Создает список сообщений для LLM, включающий системную подсказку и запрос пользователя на основе контекста фабрики и особенностей агента.
+        2. **Вызов модели**: Вызывает метод `_aux_model_call` для отправки запроса в LLM и получения ответа.
+        3. **Извлечение JSON**: Извлекает JSON из содержимого ответа LLM, который содержит параметры агента.
+        4. **Проверка имени**: Проверяет, не было ли имя агента уже сгенерировано ранее. Если имя уникально, возвращает параметры агента.
+        5. **Возврат None**: Если не удалось сгенерировать подходящего агента, возвращает `None`.
 
 **Как работает функция**:
-1. Формирует список сообщений для отправки в OpenAI LLM.
-2. Вызывает метод `_aux_model_call` для отправки сообщения в LLM и получения ответа.
-3. Извлекает JSON из ответа LLM.
-4. Проверяет, что имя агента не содержится в списке уже сгенерированных имен.
-5. Если имя уникально, возвращает спецификацию агента, иначе возвращает `None`.
+
+1. **Логирование**: Записывает информацию о начале генерации персонажа в лог.
+2. **Формирование подсказки**: Создает подсказку для LLM на основе контекста фабрики, особенностей агента и списка уже сгенерированных мини-биографий.
+3. **Попытки генерации**: Пытается сгенерировать агента несколько раз (определяется параметром `attepmpts`) до тех пор, пока не будет получен успешный результат или не будут исчерпаны все попытки.
+4. **Вызов внутренней функции**: Внутри цикла вызывает внутреннюю функцию `aux_generate` для выполнения вызова модели LLM и извлечения параметров агента.
+5. **Создание агента**: Если удалось получить параметры агента, создает экземпляр `TinyPerson` на основе этих параметров.
+6. **Настройка агента**: Вызывает метод `_setup_agent` для настройки атрибутов агента на основе сгенерированной конфигурации.
+7. **Добавление в списки**: Добавляет мини-биографию и имя агента в списки сгенерированных агентов, чтобы избежать повторной генерации.
+8. **Логирование ошибки**: Если не удалось сгенерировать агента после всех попыток, записывает сообщение об ошибке в лог.
 
 ```
-Формирование списка сообщений --> Вызов _aux_model_call --> Извлечение JSON из ответа --> Проверка уникальности имени --> Возврат спецификации агента или None
-```
-
-```
-Формирование prompt --> Цикл попыток генерации:
-    --> Вызов aux_generate:
-        --> Формирование списка сообщений
-        --> Вызов _aux_model_call
-        --> Извлечение JSON из ответа
-        --> Проверка уникальности имени
-        --> Возврат спецификации агента или None
-    --> Создание экземпляра TinyPerson
-    --> Настройка агента
-    --> Добавление данных в списки сгенерированных данных
-    --> Возврат агента
+Начало
+  |
+  V
+Логирование: начало генерации персонажа
+  |
+  V
+Формирование подсказки для LLM
+  |
+  V
+Цикл: попытки генерации агента (attepmpts раз)
+  |
+  V
+Вызов aux_generate()
+  |
+  V
+Проверка: удалось сгенерировать агента?
+  |
+  +-> Да: Создание экземпляра TinyPerson
+  |     |
+  |     V
+  |     Настройка агента (_setup_agent)
+  |     |
+  |     V
+  |     Добавление мини-биографии и имени в списки сгенерированных агентов
+  |     |
+  |     V
+  |     Возврат TinyPerson
+  |
+  +-> Нет: Следующая попытка
+  |
+  V
+Логирование ошибки: не удалось сгенерировать агента после всех попыток
+  |
+  V
+Возврат None
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-factory = TinyPersonFactory(context_text="Some context")
-person = factory.generate_person(agent_particularities="Some particularities")
-if person:
-    print(person.name)
+# Создание фабрики персонажей
+factory = TinyPersonFactory("Работает в офисе")
+
+# Генерация агента с особенностями "любит кофе"
+agent = factory.generate_person(agent_particularities="любит кофе")
 ```
 
-### `TinyPersonFactory._aux_model_call`
+### `TinyPersonFactory._aux_model_call(self, messages, temperature)`
 
-```python
-@transactional
-def _aux_model_call(self, messages, temperature):
-    """
-    Auxiliary method to make a model call. This is needed in order to be able to use the transactional decorator,
-    due too a technicality - otherwise, the agent creation would be skipped during cache reutilization, and
-    we don't want that.
-    """
-    ...
-```
-
-**Назначение**: Вспомогательный метод для выполнения вызова модели.
+**Назначение**: Вспомогательный метод для отправки запроса в OpenAI LLM и получения ответа. Используется декоратор `@transactional` для обеспечения кэширования вызова модели в транзакционном режиме.
 
 **Параметры**:
-- `messages`: Список сообщений для отправки в LLM.
-- `temperature`: Температура для выборки из LLM.
+- `messages` (list): Список сообщений, которые будут отправлены в LLM.
+- `temperature` (float): Температура для управления случайностью при генерации текста LLM.
 
 **Возвращает**:
-- Ответ от OpenAI LLM.
+- `dict`: Ответ от OpenAI LLM.
 
 **Как работает функция**:
-Функция отправляет сообщение в OpenAI LLM с использованием `openai_utils.client().send_message` и возвращает ответ. Декоратор `@transactional` обеспечивает кэширование результата вызова.
+
+1. **Отправка запроса**: Отправляет запрос в OpenAI LLM, используя метод `openai_utils.client().send_message()`.
+2. **Возврат ответа**: Возвращает ответ, полученный от LLM.
 
 ```
-Отправка сообщения в OpenAI --> Возврат ответа
+Начало
+  |
+  V
+Отправка запроса в OpenAI LLM (openai_utils.client().send_message())
+  |
+  V
+Возврат ответа
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-factory = TinyPersonFactory(context_text="Some context")
-messages = [{"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Tell me a joke."}]
-response = factory._aux_model_call(messages=messages, temperature=0.7)
-print(response)
+# Создание списка сообщений для LLM
+messages = [{"role": "system", "content": "Ты - полезный ассистент"}, {"role": "user", "content": "Напиши короткое стихотворение"}]
+
+# Вызов метода для отправки запроса в LLM
+response = factory._aux_model_call(messages, temperature=0.7)
 ```
 
-### `TinyPersonFactory._setup_agent`
+### `TinyPersonFactory._setup_agent(self, agent, configuration)`
 
-```python
-@transactional
-def _setup_agent(self, agent, configuration):
-    """
-    Sets up the agent with the necessary elements.
-    """
-    ...
-```
-
-**Назначение**: Настраивает агента с необходимыми элементами.
+**Назначение**: Настраивает атрибуты агента (`TinyPerson`) на основе предоставленной конфигурации.
 
 **Параметры**:
-- `agent`: Агент для настройки.
-- `configuration`: Словарь конфигурации агента.
+- `agent` (TinyPerson): Экземпляр агента, который необходимо настроить.
+- `configuration` (dict): Словарь, содержащий конфигурацию агента. Ключи словаря соответствуют именам атрибутов агента, значения - значениям атрибутов.
 
 **Как работает функция**:
-1. Проходит по всем элементам в словаре конфигурации.
-2. Если значение элемента является списком, вызывает `agent.define_several` для определения нескольких значений для ключа.
-3. Иначе вызывает `agent.define` для определения одного значения для ключа.
+
+1. **Итерация по конфигурации**: Функция итерируется по парам ключ-значение в словаре `configuration`.
+2. **Определение атрибутов**: Для каждой пары ключ-значение функция определяет атрибут агента с именем, соответствующим ключу, и значением, соответствующим значению. Если значение является списком, используется метод `agent.define_several()`, иначе используется метод `agent.define()`.
 
 ```
-Перебор элементов конфигурации --> Определение значений для агента (define_several или define)
+Начало
+  |
+  V
+Итерация по configuration
+  |
+  V
+Проверка: value - список?
+  |
+  +-> Да: Вызов agent.define_several(key, value)
+  |
+  +-> Нет: Вызов agent.define(key, value)
+  |
+  V
+Конец итерации
+  |
+  V
+Конец
 ```
 
 **Примеры**:
 ```python
-from tinytroupe.agent import TinyPerson  # Предполагается, что класс TinyPerson существует
+# Создание экземпляра агента
+agent = TinyPerson("Иван")
 
-factory = TinyPersonFactory(context_text="Some context")
-agent = TinyPerson(name="John Doe")
-configuration = {"age": 30, "hobbies": ["reading", "hiking"]}
-factory._setup_agent(agent=agent, configuration=configuration)
-print(agent.get("age"))  # Вывод: 30
-print(agent.get("hobbies"))  # Вывод: ['reading', 'hiking']
-```
+# Создание конфигурации агента
+configuration = {"возраст": 30, "профессия": "врач", "интересы": ["чтение", "путешествия"]}
+
+# Настройка атрибутов агента
+factory._setup_agent(agent, configuration)
